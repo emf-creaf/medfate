@@ -76,7 +76,7 @@ Cáceres (CREAF), Víctor Granda (CREAF), Rafael Poyatos (CREAF), Teresa
 Gimeno (CREAF), Nicolas Martin-StPaul (INRAE), Antoine Cabon (WSL),
 Vincenzo Saponaro (U. Tuscia)</h4>
             
-            <h4 data-toc-skip class="date">2024-03-19</h4>
+            <h4 data-toc-skip class="date">2024-03-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -90,7 +90,7 @@ Vincenzo Saponaro (U. Tuscia)</h4>
 </h2>
 <p>This document presents <strong>medfate</strong> (<strong>ver.
 4.0.0</strong>) model evaluation results at stand-level, using data from
-a set of <strong>19 experimental forest plots</strong>. The main source
+a set of <strong>20 experimental forest plots</strong>. The main source
 of observed data are SAPFLUXNET database (<a href="https://essd.copernicus.org/articles/13/2607/2021/" class="external-link">Poyatos et
 al. 2021</a>) and FLUXNET 2015 dataset (<a href="https://doi.org/10.1038/s41597-020-0534-3" class="external-link">Pastorello et
 al. 2020</a>).</p>
@@ -151,6 +151,22 @@ AUS_RIC_EUC_ELE
 </td>
 <td style="text-align:left;">
 AU-Cum
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Denmark
+</td>
+<td style="text-align:left;">
+Soroe
+</td>
+<td style="text-align:left;">
+European beech forest
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+DK-Sor
 </td>
 </tr>
 <tr>
@@ -222,22 +238,6 @@ FR-Fbn
 </tr>
 <tr>
 <td style="text-align:left;">
-Italy
-</td>
-<td style="text-align:left;">
-Collelongo
-</td>
-<td style="text-align:left;">
-European beech forest
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-IT-Col
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Israel
 </td>
 <td style="text-align:left;">
@@ -251,6 +251,22 @@ ISR_YAT_YAT
 </td>
 <td style="text-align:left;">
 IL-Yat
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Italy
+</td>
+<td style="text-align:left;">
+Collelongo
+</td>
+<td style="text-align:left;">
+European beech forest
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+IT-Col
 </td>
 </tr>
 <tr>
@@ -3231,10 +3247,942 @@ sureau
 </div>
 </div>
 <div class="section level2">
-<h2 id="puéchabon">Puéchabon<a class="anchor" aria-label="anchor" href="#pu%C3%A9chabon"></a>
+<h2 id="soroe">Soroe<a class="anchor" aria-label="anchor" href="#soroe"></a>
 </h2>
 <div class="section level3">
 <h3 id="general-information-2">General information<a class="anchor" aria-label="anchor" href="#general-information-2"></a>
+</h3>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Attribute
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Plot name
+</td>
+<td style="text-align:left;">
+Soroe
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+Denmark
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET contributor (affiliation)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUXNET/ICOS code
+</td>
+<td style="text-align:left;">
+DK-Sor
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUXNET/ICOS contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Andreas Ibrom (Technical University of Denmark)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Latitude (º)
+</td>
+<td style="text-align:left;">
+11.6446
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Longitude (º)
+</td>
+<td style="text-align:left;">
+55.4859
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Elevation (m)
+</td>
+<td style="text-align:left;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Slope (º)
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Aspect (º)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Parent material
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Soil texture
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAT (ºC)
+</td>
+<td style="text-align:left;">
+8.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAP (mm)
+</td>
+<td style="text-align:left;">
+660
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Forest stand
+</td>
+<td style="text-align:left;">
+European beech forest
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stand LAI
+</td>
+<td style="text-align:left;">
+4.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stand description DOI
+</td>
+<td style="text-align:left;">
+10.1016/j.agrformet.2011.02.013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Species simulated
+</td>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Species parameter table
+</td>
+<td style="text-align:left;">
+SpParamsFR
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Simulation period
+</td>
+<td style="text-align:left;">
+2003-2006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Evaluation period
+</td>
+<td style="text-align:left;">
+2003-2006
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="model-inputs-2">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-2"></a>
+</h3>
+<div class="section level4">
+<h4 id="vegetation-2">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:right;">
+DBH
+</th>
+<th style="text-align:right;">
+Height
+</th>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:left;">
+Z50
+</th>
+<th style="text-align:left;">
+Z95
+</th>
+<th style="text-align:right;">
+LAI
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+24.28232
+</td>
+<td style="text-align:right;">
+2099
+</td>
+<td style="text-align:right;">
+352.987
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="soil-2">Soil<a class="anchor" aria-label="anchor" href="#soil-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;">
+widths
+</th>
+<th style="text-align:right;">
+clay
+</th>
+<th style="text-align:right;">
+sand
+</th>
+<th style="text-align:right;">
+om
+</th>
+<th style="text-align:right;">
+bd
+</th>
+<th style="text-align:right;">
+rfc
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+400
+</td>
+<td style="text-align:right;">
+25.10564
+</td>
+<td style="text-align:right;">
+50.35046
+</td>
+<td style="text-align:right;">
+5.42
+</td>
+<td style="text-align:right;">
+1.28
+</td>
+<td style="text-align:right;">
+7.48
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+39.17794
+</td>
+<td style="text-align:right;">
+34.30827
+</td>
+<td style="text-align:right;">
+2.18
+</td>
+<td style="text-align:right;">
+1.58
+</td>
+<td style="text-align:right;">
+6.10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3000
+</td>
+<td style="text-align:right;">
+19.60000
+</td>
+<td style="text-align:right;">
+55.45000
+</td>
+<td style="text-align:right;">
+1.78
+</td>
+<td style="text-align:right;">
+1.65
+</td>
+<td style="text-align:right;">
+7.55
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-2">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:right;">
+Vmax298
+</th>
+<th style="text-align:right;">
+Jmax298
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+94.5
+</td>
+<td style="text-align:right;">
+159.9
+</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="remarks-2">Remarks<a class="anchor" aria-label="anchor" href="#remarks-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Title
+</th>
+<th style="text-align:left;">
+Remark
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Soil
+</td>
+<td style="text-align:left;">
+Taken from SoilGrids
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vegetation
+</td>
+<td style="text-align:left;">
+No understory
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Weather
+</td>
+<td style="text-align:left;">
+From V. saponaro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sapflow
+</td>
+<td style="text-align:left;">
+Not available
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Soil moisture
+</td>
+<td style="text-align:left;">
+Taken from FLUXNET
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Eddy covariance
+</td>
+<td style="text-align:left;">
+Variables H_F_MDS and LE_F_MDS for sensible and latent heat
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3 id="climate-2">Climate<a class="anchor" aria-label="anchor" href="#climate-2"></a>
+</h3>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-129-1.png" width="768" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="evaluation-results-2">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-2"></a>
+</h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Stand-level sensible heat turbulent flux -->
+<div class="section level4">
+<h4 id="sensible-heat-turbulent-flux-2">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+-0.0114444
+</td>
+<td style="text-align:right;">
+-7.345382
+</td>
+<td style="text-align:right;">
+5.138805
+</td>
+<td style="text-align:right;">
+3298.261
+</td>
+<td style="text-align:right;">
+0.2617815
+</td>
+<td style="text-align:right;">
+-0.9770041
+</td>
+<td style="text-align:right;">
+-0.4520364
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+0.9116669
+</td>
+<td style="text-align:right;">
+585.138979
+</td>
+<td style="text-align:right;">
+5.079781
+</td>
+<td style="text-align:right;">
+3260.377
+</td>
+<td style="text-align:right;">
+0.2896053
+</td>
+<td style="text-align:right;">
+-1.0040455
+</td>
+<td style="text-align:right;">
+-0.4353583
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-146-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-147-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Stand-level latent heat turbulent flux -->
+</div>
+<div class="section level4">
+<h4 id="latent-heat-turbulent-flux-2">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+0.3541141
+</td>
+<td style="text-align:right;">
+12.24971
+</td>
+<td style="text-align:right;">
+1.663846
+</td>
+<td style="text-align:right;">
+57.55667
+</td>
+<td style="text-align:right;">
+0.7676642
+</td>
+<td style="text-align:right;">
+0.3627526
+</td>
+<td style="text-align:right;">
+0.3744198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+-0.6140044
+</td>
+<td style="text-align:right;">
+-21.23998
+</td>
+<td style="text-align:right;">
+1.796290
+</td>
+<td style="text-align:right;">
+62.13826
+</td>
+<td style="text-align:right;">
+0.6800386
+</td>
+<td style="text-align:right;">
+0.3745353
+</td>
+<td style="text-align:right;">
+0.3246228
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-153-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-154-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Stand-level GPP -->
+</div>
+<div class="section level4">
+<h4 id="gross-primary-productivity-2">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+-1.0311428
+</td>
+<td style="text-align:right;">
+-18.818418
+</td>
+<td style="text-align:right;">
+1.629660
+</td>
+<td style="text-align:right;">
+29.74139
+</td>
+<td style="text-align:right;">
+0.9216787
+</td>
+<td style="text-align:right;">
+0.8174417
+</td>
+<td style="text-align:right;">
+0.6802058
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+0.4230811
+</td>
+<td style="text-align:right;">
+7.721255
+</td>
+<td style="text-align:right;">
+1.873587
+</td>
+<td style="text-align:right;">
+34.19308
+</td>
+<td style="text-align:right;">
+0.9281780
+</td>
+<td style="text-align:right;">
+0.7857508
+</td>
+<td style="text-align:right;">
+0.6323389
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+-0.3537221
+</td>
+<td style="text-align:right;">
+-6.455450
+</td>
+<td style="text-align:right;">
+1.535733
+</td>
+<td style="text-align:right;">
+28.02722
+</td>
+<td style="text-align:right;">
+0.9270986
+</td>
+<td style="text-align:right;">
+0.8462465
+</td>
+<td style="text-align:right;">
+0.6986373
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-160-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-161-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Soil moisture content -->
+</div>
+<div class="section level4">
+<h4 id="soil-moisture-content-2">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-2"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+0.0432781
+</td>
+<td style="text-align:right;">
+19.009809
+</td>
+<td style="text-align:right;">
+0.0528259
+</td>
+<td style="text-align:right;">
+23.20367
+</td>
+<td style="text-align:right;">
+0.4624766
+</td>
+<td style="text-align:right;">
+-0.4028728
+</td>
+<td style="text-align:right;">
+-0.1588938
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+0.0033695
+</td>
+<td style="text-align:right;">
+1.480059
+</td>
+<td style="text-align:right;">
+0.0360444
+</td>
+<td style="text-align:right;">
+15.83242
+</td>
+<td style="text-align:right;">
+0.7171145
+</td>
+<td style="text-align:right;">
+0.4288492
+</td>
+<td style="text-align:right;">
+0.2092590
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOROE
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1461
+</td>
+<td style="text-align:right;">
+0.0445277
+</td>
+<td style="text-align:right;">
+19.558707
+</td>
+<td style="text-align:right;">
+0.0536575
+</td>
+<td style="text-align:right;">
+23.56894
+</td>
+<td style="text-align:right;">
+0.5812315
+</td>
+<td style="text-align:right;">
+-0.3202118
+</td>
+<td style="text-align:right;">
+-0.1771366
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-167-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-168-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
+<!-- Leaf water potential -->
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="puéchabon">Puéchabon<a class="anchor" aria-label="anchor" href="#pu%C3%A9chabon"></a>
+</h2>
+<div class="section level3">
+<h3 id="general-information-3">General information<a class="anchor" aria-label="anchor" href="#general-information-3"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3426,10 +4374,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-2">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-2"></a>
+<h3 id="model-inputs-3">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-3"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-2">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-2"></a>
+<h4 id="vegetation-3">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3541,7 +4489,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-2">Soil<a class="anchor" aria-label="anchor" href="#soil-2"></a>
+<h4 id="soil-3">Soil<a class="anchor" aria-label="anchor" href="#soil-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3679,7 +4627,7 @@ VG_theta_res
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-2">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-2"></a>
+<h4 id="custom-traits-3">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3936,7 +4884,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-2">Remarks<a class="anchor" aria-label="anchor" href="#remarks-2"></a>
+<h4 id="remarks-3">Remarks<a class="anchor" aria-label="anchor" href="#remarks-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3969,17 +4917,17 @@ Using B. sempervirens as understory
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-2">Climate<a class="anchor" aria-label="anchor" href="#climate-2"></a>
+<h3 id="climate-3">Climate<a class="anchor" aria-label="anchor" href="#climate-3"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-129-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-180-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-2">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-2"></a>
+<h3 id="evaluation-results-3">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-3"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
 <div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-2">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-2"></a>
+<h4 id="sensible-heat-turbulent-flux-3">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4081,12 +5029,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-146-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-147-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-198-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
-<h4 id="latent-heat-turbulent-flux-2">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-2"></a>
+<h4 id="latent-heat-turbulent-flux-3">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4188,12 +5136,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-153-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-154-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-204-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-205-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 </div>
 <div class="section level4">
-<h4 id="gross-primary-productivity-2">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-2"></a>
+<h4 id="gross-primary-productivity-3">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4327,12 +5275,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-160-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-161-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-211-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-212-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-content-2">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-2"></a>
+<h4 id="soil-moisture-content-3">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4466,8 +5414,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-167-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-168-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-218-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-219-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -4617,7 +5565,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-174-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-174-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-225-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-225-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -4817,7 +5765,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-179-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-179-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -4825,7 +5773,7 @@ sureau
 <h2 id="hesse">Hesse<a class="anchor" aria-label="anchor" href="#hesse"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-3">General information<a class="anchor" aria-label="anchor" href="#general-information-3"></a>
+<h3 id="general-information-4">General information<a class="anchor" aria-label="anchor" href="#general-information-4"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5016,10 +5964,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-3">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-3"></a>
+<h3 id="model-inputs-4">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-4"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-3">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-3"></a>
+<h4 id="vegetation-4">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5105,7 +6053,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-3">Soil<a class="anchor" aria-label="anchor" href="#soil-3"></a>
+<h4 id="soil-4">Soil<a class="anchor" aria-label="anchor" href="#soil-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5228,7 +6176,7 @@ VG_theta_sat
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-3">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-3"></a>
+<h4 id="custom-traits-4">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5250,7 +6198,7 @@ Fagus sylvatica
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-3">Remarks<a class="anchor" aria-label="anchor" href="#remarks-3"></a>
+<h4 id="remarks-4">Remarks<a class="anchor" aria-label="anchor" href="#remarks-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5291,17 +6239,17 @@ Scaling using species-level Huber value
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-3">Climate<a class="anchor" aria-label="anchor" href="#climate-3"></a>
+<h3 id="climate-4">Climate<a class="anchor" aria-label="anchor" href="#climate-4"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-188-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-239-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-3">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-3"></a>
+<h3 id="evaluation-results-4">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-4"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
 <div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-3">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-3"></a>
+<h4 id="sensible-heat-turbulent-flux-4">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5403,12 +6351,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-205-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-206-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-257-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
-<h4 id="latent-heat-turbulent-flux-3">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-3"></a>
+<h4 id="latent-heat-turbulent-flux-4">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5510,13 +6458,13 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-212-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-213-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-263-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-264-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-content-3">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-3"></a>
+<h4 id="soil-moisture-content-4">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5650,8 +6598,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-220-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-221-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-271-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-272-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -5801,7 +6749,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-278-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-278-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -5810,7 +6758,7 @@ sureau
 <h2 id="fontainebleau-barbeau">Fontainebleau-Barbeau<a class="anchor" aria-label="anchor" href="#fontainebleau-barbeau"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-4">General information<a class="anchor" aria-label="anchor" href="#general-information-4"></a>
+<h3 id="general-information-5">General information<a class="anchor" aria-label="anchor" href="#general-information-5"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6002,10 +6950,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-4">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-4"></a>
+<h3 id="model-inputs-5">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-5"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-4">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-4"></a>
+<h4 id="vegetation-5">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6082,7 +7030,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-4">Soil<a class="anchor" aria-label="anchor" href="#soil-4"></a>
+<h4 id="soil-5">Soil<a class="anchor" aria-label="anchor" href="#soil-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6190,7 +7138,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-4">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-4"></a>
+<h4 id="custom-traits-5">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6222,7 +7170,7 @@ Carpinus betulus
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-4">Remarks<a class="anchor" aria-label="anchor" href="#remarks-4"></a>
+<h4 id="remarks-5">Remarks<a class="anchor" aria-label="anchor" href="#remarks-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6279,17 +7227,17 @@ Variables H_F_MDS and LE_F_MDS for sensible and latent heat
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-4">Climate<a class="anchor" aria-label="anchor" href="#climate-4"></a>
+<h3 id="climate-5">Climate<a class="anchor" aria-label="anchor" href="#climate-5"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-237-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-288-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-4">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-4"></a>
+<h3 id="evaluation-results-5">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-5"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
 <div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-4">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-4"></a>
+<h4 id="sensible-heat-turbulent-flux-5">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6391,12 +7339,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-254-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-255-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-305-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-306-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
-<h4 id="latent-heat-turbulent-flux-4">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-4"></a>
+<h4 id="latent-heat-turbulent-flux-5">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6498,12 +7446,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-261-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-312-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-313-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 </div>
 <div class="section level4">
-<h4 id="gross-primary-productivity-3">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-3"></a>
+<h4 id="gross-primary-productivity-4">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6637,8 +7585,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-268-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-269-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-319-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-320-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 <!-- Plant transpiration -->
 </div>
@@ -6894,7 +7842,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-276-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-276-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-276-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-276-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-327-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-327-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-327-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-327-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -6903,7 +7851,7 @@ sureau
 <h2 id="font-blanche">Font-Blanche<a class="anchor" aria-label="anchor" href="#font-blanche"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-5">General information<a class="anchor" aria-label="anchor" href="#general-information-5"></a>
+<h3 id="general-information-6">General information<a class="anchor" aria-label="anchor" href="#general-information-6"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7093,10 +8041,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-5">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-5"></a>
+<h3 id="model-inputs-6">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-6"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-5">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-5"></a>
+<h4 id="vegetation-6">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7234,7 +8182,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-5">Soil<a class="anchor" aria-label="anchor" href="#soil-5"></a>
+<h4 id="soil-6">Soil<a class="anchor" aria-label="anchor" href="#soil-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7342,7 +8290,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-5">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-5"></a>
+<h4 id="custom-traits-6">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7598,7 +8546,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-5">Remarks<a class="anchor" aria-label="anchor" href="#remarks-5"></a>
+<h4 id="remarks-6">Remarks<a class="anchor" aria-label="anchor" href="#remarks-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7638,17 +8586,17 @@ Missing values for some dates
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-5">Climate<a class="anchor" aria-label="anchor" href="#climate-5"></a>
+<h3 id="climate-6">Climate<a class="anchor" aria-label="anchor" href="#climate-6"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-286-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-337-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-5">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-5"></a>
+<h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
 <div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-5">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-5"></a>
+<h4 id="sensible-heat-turbulent-flux-6">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7750,12 +8698,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-303-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-354-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-355-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
-<h4 id="latent-heat-turbulent-flux-5">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-5"></a>
+<h4 id="latent-heat-turbulent-flux-6">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7857,13 +8805,13 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-310-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-311-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-361-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-362-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-content-4">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-4"></a>
+<h4 id="soil-moisture-content-5">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7997,8 +8945,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-318-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-319-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-369-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-370-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -8253,7 +9201,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-325-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-325-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-325-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-325-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-376-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-376-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-376-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-376-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -8605,801 +9553,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-330-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-330-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-330-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-330-4.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="collelongo">Collelongo<a class="anchor" aria-label="anchor" href="#collelongo"></a>
-</h2>
-<div class="section level3">
-<h3 id="general-information-6">General information<a class="anchor" aria-label="anchor" href="#general-information-6"></a>
-</h3>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Attribute
-</th>
-<th style="text-align:left;">
-Value
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Plot name
-</td>
-<td style="text-align:left;">
-Collelongo
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-Italy
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SAPFLUXNET code
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SAPFLUXNET contributor (affiliation)
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FLUXNET/ICOS code
-</td>
-<td style="text-align:left;">
-IT-Col
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FLUXNET/ICOS contributor (affiliation)
-</td>
-<td style="text-align:left;">
-Giorgio Matteucci (IEIF CNR)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Latitude (º)
-</td>
-<td style="text-align:left;">
-13.5881
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Longitude (º)
-</td>
-<td style="text-align:left;">
-41.8494
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Elevation (m)
-</td>
-<td style="text-align:left;">
-1560
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Slope (º)
-</td>
-<td style="text-align:left;">
-19.29
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Aspect (º)
-</td>
-<td style="text-align:left;">
-252
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Parent material
-</td>
-<td style="text-align:left;">
-Calcareous
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Soil texture
-</td>
-<td style="text-align:left;">
-Silt loam
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-MAT (ºC)
-</td>
-<td style="text-align:left;">
-6.3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-MAP (mm)
-</td>
-<td style="text-align:left;">
-1180
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Forest stand
-</td>
-<td style="text-align:left;">
-European beech forest
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Stand LAI
-</td>
-<td style="text-align:left;">
-5.5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Stand description DOI
-</td>
-<td style="text-align:left;">
-10.1111/j.1365-2486.1996.tb00072.x
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Species simulated
-</td>
-<td style="text-align:left;">
-Fagus sylvatica
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Species parameter table
-</td>
-<td style="text-align:left;">
-SpParamsFR
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Simulation period
-</td>
-<td style="text-align:left;">
-2011-2014
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Evaluation period
-</td>
-<td style="text-align:left;">
-2011-2014
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level3">
-<h3 id="model-inputs-6">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-6"></a>
-</h3>
-<div class="section level4">
-<h4 id="vegetation-6">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-6"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Species
-</th>
-<th style="text-align:right;">
-DBH
-</th>
-<th style="text-align:right;">
-Height
-</th>
-<th style="text-align:right;">
-N
-</th>
-<th style="text-align:left;">
-Z50
-</th>
-<th style="text-align:left;">
-Z95
-</th>
-<th style="text-align:right;">
-LAI
-</th>
-<th style="text-align:right;">
-CR
-</th>
-</tr></thead>
-<tbody><tr>
-<td style="text-align:left;">
-Fagus sylvatica
-</td>
-<td style="text-align:right;">
-20.2
-</td>
-<td style="text-align:right;">
-1898.9
-</td>
-<td style="text-align:right;">
-899.9668
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-5.5
-</td>
-<td style="text-align:right;">
-0.5
-</td>
-</tr></tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="soil-6">Soil<a class="anchor" aria-label="anchor" href="#soil-6"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:right;">
-widths
-</th>
-<th style="text-align:right;">
-clay
-</th>
-<th style="text-align:right;">
-sand
-</th>
-<th style="text-align:right;">
-om
-</th>
-<th style="text-align:right;">
-bd
-</th>
-<th style="text-align:right;">
-rfc
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-300
-</td>
-<td style="text-align:right;">
-15.0
-</td>
-<td style="text-align:right;">
-40.45
-</td>
-<td style="text-align:right;">
-5.916667
-</td>
-<td style="text-align:right;">
-0.97
-</td>
-<td style="text-align:right;">
-17.4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-700
-</td>
-<td style="text-align:right;">
-19.2
-</td>
-<td style="text-align:right;">
-30.00
-</td>
-<td style="text-align:right;">
-1.955000
-</td>
-<td style="text-align:right;">
-1.37
-</td>
-<td style="text-align:right;">
-20.9
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2000
-</td>
-<td style="text-align:right;">
-31.2
-</td>
-<td style="text-align:right;">
-33.70
-</td>
-<td style="text-align:right;">
-1.430000
-</td>
-<td style="text-align:right;">
-1.44
-</td>
-<td style="text-align:right;">
-22.8
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="custom-traits-6">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-6"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Species
-</th>
-<th style="text-align:right;">
-Vmax298
-</th>
-<th style="text-align:right;">
-Jmax298
-</th>
-</tr></thead>
-<tbody><tr>
-<td style="text-align:left;">
-Fagus sylvatica
-</td>
-<td style="text-align:right;">
-94.5
-</td>
-<td style="text-align:right;">
-159.9
-</td>
-</tr></tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="remarks-6">Remarks<a class="anchor" aria-label="anchor" href="#remarks-6"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Title
-</th>
-<th style="text-align:left;">
-Remark
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Soil
-</td>
-<td style="text-align:left;">
-Taken from SoilGrids
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Vegetation
-</td>
-<td style="text-align:left;">
-No understory
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Weather
-</td>
-<td style="text-align:left;">
-From V. saponaro
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Sapflow
-</td>
-<td style="text-align:left;">
-Not available
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Eddy covariance
-</td>
-<td style="text-align:left;">
-Variables H_F_MDS and LE_F_MDS for sensible and latent heat
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section level3">
-<h3 id="climate-6">Climate<a class="anchor" aria-label="anchor" href="#climate-6"></a>
-</h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-339-1.png" width="768" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level3">
-<h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
-</h3>
-<!-- Stand-level evapotranspiration -->
-<!-- Stand-level sensible heat turbulent flux -->
-<div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-6">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-6"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-0.8242391
-</td>
-<td style="text-align:right;">
-28.75834
-</td>
-<td style="text-align:right;">
-3.801817
-</td>
-<td style="text-align:right;">
-132.6483
-</td>
-<td style="text-align:right;">
-0.3175324
-</td>
-<td style="text-align:right;">
--2.107375
-</td>
-<td style="text-align:right;">
--0.5695046
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-1.3190415
-</td>
-<td style="text-align:right;">
-46.02238
-</td>
-<td style="text-align:right;">
-3.795647
-</td>
-<td style="text-align:right;">
-132.4331
-</td>
-<td style="text-align:right;">
-0.3389705
-</td>
-<td style="text-align:right;">
--2.082017
-</td>
-<td style="text-align:right;">
--0.5669577
-</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-356-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-357-1.png" width="864" style="display: block; margin: auto;"></p>
-<!-- Stand-level latent heat turbulent flux -->
-</div>
-<div class="section level4">
-<h4 id="latent-heat-turbulent-flux-6">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-6"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-0.9030251
-</td>
-<td style="text-align:right;">
-30.72248
-</td>
-<td style="text-align:right;">
-2.172957
-</td>
-<td style="text-align:right;">
-73.92777
-</td>
-<td style="text-align:right;">
-0.7308965
-</td>
-<td style="text-align:right;">
--0.6902411
-</td>
-<td style="text-align:right;">
-0.0046748
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-0.3434785
-</td>
-<td style="text-align:right;">
-11.68574
-</td>
-<td style="text-align:right;">
-1.877623
-</td>
-<td style="text-align:right;">
-63.88000
-</td>
-<td style="text-align:right;">
-0.7111945
-</td>
-<td style="text-align:right;">
--0.1972674
-</td>
-<td style="text-align:right;">
-0.1399528
-</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-363-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-364-1.png" width="864" style="display: block; margin: auto;"></p>
-<!-- Stand-level GPP -->
-</div>
-<div class="section level4">
-<h4 id="gross-primary-productivity-4">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-4"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-0.5248764
-</td>
-<td style="text-align:right;">
-12.556725
-</td>
-<td style="text-align:right;">
-1.415196
-</td>
-<td style="text-align:right;">
-33.85601
-</td>
-<td style="text-align:right;">
-0.9311753
-</td>
-<td style="text-align:right;">
-0.7942805
-</td>
-<td style="text-align:right;">
-0.6761068
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-1.1332537
-</td>
-<td style="text-align:right;">
-27.111060
-</td>
-<td style="text-align:right;">
-1.907865
-</td>
-<td style="text-align:right;">
-45.64225
-</td>
-<td style="text-align:right;">
-0.9109614
-</td>
-<td style="text-align:right;">
-0.6071964
-</td>
-<td style="text-align:right;">
-0.5633504
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
-0.4088814
-</td>
-<td style="text-align:right;">
-9.781754
-</td>
-<td style="text-align:right;">
-1.331843
-</td>
-<td style="text-align:right;">
-31.86195
-</td>
-<td style="text-align:right;">
-0.9232397
-</td>
-<td style="text-align:right;">
-0.8081209
-</td>
-<td style="text-align:right;">
-0.6951836
-</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-370-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-371-1.png" width="864" style="display: block; margin: auto;"></p>
-<!-- Soil moisture content -->
-<!-- Plant transpiration -->
-<!-- Leaf water potential -->
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-381-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-381-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-381-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-381-4.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -9957,7 +10111,7 @@ Scaling done using stand density and stand LAI
 <div class="section level3">
 <h3 id="climate-7">Climate<a class="anchor" aria-label="anchor" href="#climate-7"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-384-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-390-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="evaluation-results-7">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-7"></a>
@@ -10067,8 +10221,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-401-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-402-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-407-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
@@ -10174,8 +10328,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-409-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-414-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-415-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 </div>
 <div class="section level4">
@@ -10313,12 +10467,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-415-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-416-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-421-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-422-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-content-5">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-5"></a>
+<h4 id="soil-moisture-content-6">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10452,8 +10606,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-422-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-423-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-428-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-429-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -10603,7 +10757,939 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-429-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-429-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-435-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-435-2.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="collelongo">Collelongo<a class="anchor" aria-label="anchor" href="#collelongo"></a>
+</h2>
+<div class="section level3">
+<h3 id="general-information-8">General information<a class="anchor" aria-label="anchor" href="#general-information-8"></a>
+</h3>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Attribute
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Plot name
+</td>
+<td style="text-align:left;">
+Collelongo
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET contributor (affiliation)
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUXNET/ICOS code
+</td>
+<td style="text-align:left;">
+IT-Col
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUXNET/ICOS contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Giorgio Matteucci (IEIF CNR)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Latitude (º)
+</td>
+<td style="text-align:left;">
+13.5881
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Longitude (º)
+</td>
+<td style="text-align:left;">
+41.8494
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Elevation (m)
+</td>
+<td style="text-align:left;">
+1560
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Slope (º)
+</td>
+<td style="text-align:left;">
+19.29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Aspect (º)
+</td>
+<td style="text-align:left;">
+252
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Parent material
+</td>
+<td style="text-align:left;">
+Calcareous
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Soil texture
+</td>
+<td style="text-align:left;">
+Silt loam
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAT (ºC)
+</td>
+<td style="text-align:left;">
+6.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAP (mm)
+</td>
+<td style="text-align:left;">
+1180
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Forest stand
+</td>
+<td style="text-align:left;">
+European beech forest
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stand LAI
+</td>
+<td style="text-align:left;">
+5.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stand description DOI
+</td>
+<td style="text-align:left;">
+10.1111/j.1365-2486.1996.tb00072.x
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Species simulated
+</td>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Species parameter table
+</td>
+<td style="text-align:left;">
+SpParamsFR
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Simulation period
+</td>
+<td style="text-align:left;">
+2011-2013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Evaluation period
+</td>
+<td style="text-align:left;">
+2011-2013
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="model-inputs-8">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-8"></a>
+</h3>
+<div class="section level4">
+<h4 id="vegetation-8">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-8"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:right;">
+DBH
+</th>
+<th style="text-align:right;">
+Height
+</th>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:left;">
+Z50
+</th>
+<th style="text-align:left;">
+Z95
+</th>
+<th style="text-align:right;">
+LAI
+</th>
+<th style="text-align:right;">
+CR
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+20.2
+</td>
+<td style="text-align:right;">
+1898.9
+</td>
+<td style="text-align:right;">
+899.9668
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="soil-8">Soil<a class="anchor" aria-label="anchor" href="#soil-8"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;">
+widths
+</th>
+<th style="text-align:right;">
+clay
+</th>
+<th style="text-align:right;">
+sand
+</th>
+<th style="text-align:right;">
+om
+</th>
+<th style="text-align:right;">
+bd
+</th>
+<th style="text-align:right;">
+rfc
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+15.0
+</td>
+<td style="text-align:right;">
+40.45
+</td>
+<td style="text-align:right;">
+5.916667
+</td>
+<td style="text-align:right;">
+0.97
+</td>
+<td style="text-align:right;">
+17.4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:right;">
+19.2
+</td>
+<td style="text-align:right;">
+30.00
+</td>
+<td style="text-align:right;">
+1.955000
+</td>
+<td style="text-align:right;">
+1.37
+</td>
+<td style="text-align:right;">
+20.9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2000
+</td>
+<td style="text-align:right;">
+31.2
+</td>
+<td style="text-align:right;">
+33.70
+</td>
+<td style="text-align:right;">
+1.430000
+</td>
+<td style="text-align:right;">
+1.44
+</td>
+<td style="text-align:right;">
+22.8
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-8">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-8"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:right;">
+Vmax298
+</th>
+<th style="text-align:right;">
+Jmax298
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+94.5
+</td>
+<td style="text-align:right;">
+159.9
+</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="remarks-8">Remarks<a class="anchor" aria-label="anchor" href="#remarks-8"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Title
+</th>
+<th style="text-align:left;">
+Remark
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Soil
+</td>
+<td style="text-align:left;">
+Taken from SoilGrids
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vegetation
+</td>
+<td style="text-align:left;">
+No understory
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Weather
+</td>
+<td style="text-align:left;">
+From V. saponaro
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sapflow
+</td>
+<td style="text-align:left;">
+Not available
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Eddy covariance
+</td>
+<td style="text-align:left;">
+Variables H_F_MDS and LE_F_MDS for sensible and latent heat
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3 id="climate-8">Climate<a class="anchor" aria-label="anchor" href="#climate-8"></a>
+</h3>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-445-1.png" width="768" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="evaluation-results-8">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-8"></a>
+</h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Stand-level sensible heat turbulent flux -->
+<div class="section level4">
+<h4 id="sensible-heat-turbulent-flux-8">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-8"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+0.766281
+</td>
+<td style="text-align:right;">
+25.94143
+</td>
+<td style="text-align:right;">
+3.903588
+</td>
+<td style="text-align:right;">
+132.1508
+</td>
+<td style="text-align:right;">
+0.3302051
+</td>
+<td style="text-align:right;">
+-2.188988
+</td>
+<td style="text-align:right;">
+-0.5960275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+1.154773
+</td>
+<td style="text-align:right;">
+39.09329
+</td>
+<td style="text-align:right;">
+3.891384
+</td>
+<td style="text-align:right;">
+131.7376
+</td>
+<td style="text-align:right;">
+0.3464114
+</td>
+<td style="text-align:right;">
+-2.125349
+</td>
+<td style="text-align:right;">
+-0.5910378
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-462-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-463-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Stand-level latent heat turbulent flux -->
+</div>
+<div class="section level4">
+<h4 id="latent-heat-turbulent-flux-8">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-8"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+1.1450066
+</td>
+<td style="text-align:right;">
+42.54925
+</td>
+<td style="text-align:right;">
+2.213874
+</td>
+<td style="text-align:right;">
+82.26913
+</td>
+<td style="text-align:right;">
+0.7116817
+</td>
+<td style="text-align:right;">
+-1.009512
+</td>
+<td style="text-align:right;">
+-0.0826326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+0.6958129
+</td>
+<td style="text-align:right;">
+25.85690
+</td>
+<td style="text-align:right;">
+1.905552
+</td>
+<td style="text-align:right;">
+70.81168
+</td>
+<td style="text-align:right;">
+0.7113830
+</td>
+<td style="text-align:right;">
+-0.455273
+</td>
+<td style="text-align:right;">
+0.0681434
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-469-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-470-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Stand-level GPP -->
+</div>
+<div class="section level4">
+<h4 id="gross-primary-productivity-6">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-6"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+0.6563005
+</td>
+<td style="text-align:right;">
+16.43032
+</td>
+<td style="text-align:right;">
+1.550724
+</td>
+<td style="text-align:right;">
+38.82198
+</td>
+<td style="text-align:right;">
+0.9204553
+</td>
+<td style="text-align:right;">
+0.7389007
+</td>
+<td style="text-align:right;">
+0.6309216
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+1.0819459
+</td>
+<td style="text-align:right;">
+27.08625
+</td>
+<td style="text-align:right;">
+1.973487
+</td>
+<td style="text-align:right;">
+49.40575
+</td>
+<td style="text-align:right;">
+0.8871793
+</td>
+<td style="text-align:right;">
+0.5471799
+</td>
+<td style="text-align:right;">
+0.5303023
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+0.5371444
+</td>
+<td style="text-align:right;">
+13.44728
+</td>
+<td style="text-align:right;">
+1.460514
+</td>
+<td style="text-align:right;">
+36.56361
+</td>
+<td style="text-align:right;">
+0.9104779
+</td>
+<td style="text-align:right;">
+0.7577763
+</td>
+<td style="text-align:right;">
+0.6523918
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-476-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-477-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Soil moisture content -->
+</div>
+<div class="section level4">
+<h4 id="soil-moisture-content-7">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-7"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+-0.1162294
+</td>
+<td style="text-align:right;">
+-37.39886
+</td>
+<td style="text-align:right;">
+0.1216393
+</td>
+<td style="text-align:right;">
+39.13959
+</td>
+<td style="text-align:right;">
+0.2081035
+</td>
+<td style="text-align:right;">
+-2.535388
+</td>
+<td style="text-align:right;">
+-0.9859776
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+-0.1360515
+</td>
+<td style="text-align:right;">
+-43.77697
+</td>
+<td style="text-align:right;">
+0.1372920
+</td>
+<td style="text-align:right;">
+44.17612
+</td>
+<td style="text-align:right;">
+0.4340115
+</td>
+<td style="text-align:right;">
+-3.014617
+</td>
+<td style="text-align:right;">
+-1.2415356
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COLLELONGO
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+1096
+</td>
+<td style="text-align:right;">
+-0.1283009
+</td>
+<td style="text-align:right;">
+-41.28307
+</td>
+<td style="text-align:right;">
+0.1298188
+</td>
+<td style="text-align:right;">
+41.77149
+</td>
+<td style="text-align:right;">
+0.4468586
+</td>
+<td style="text-align:right;">
+-2.655989
+</td>
+<td style="text-align:right;">
+-1.1195227
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-483-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-484-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -10612,7 +11698,7 @@ sureau
 <h2 id="mitra">Mitra<a class="anchor" aria-label="anchor" href="#mitra"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-8">General information<a class="anchor" aria-label="anchor" href="#general-information-8"></a>
+<h3 id="general-information-9">General information<a class="anchor" aria-label="anchor" href="#general-information-9"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10804,10 +11890,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-8">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-8"></a>
+<h3 id="model-inputs-9">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-9"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-8">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-8"></a>
+<h4 id="vegetation-9">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10893,7 +11979,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-8">Soil<a class="anchor" aria-label="anchor" href="#soil-8"></a>
+<h4 id="soil-9">Soil<a class="anchor" aria-label="anchor" href="#soil-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11001,7 +12087,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-8">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-8"></a>
+<h4 id="custom-traits-9">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11173,7 +12259,7 @@ Quercus ilex
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-8">Remarks<a class="anchor" aria-label="anchor" href="#remarks-8"></a>
+<h4 id="remarks-9">Remarks<a class="anchor" aria-label="anchor" href="#remarks-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11222,12 +12308,12 @@ Not enough quality for evaluation
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-8">Climate<a class="anchor" aria-label="anchor" href="#climate-8"></a>
+<h3 id="climate-9">Climate<a class="anchor" aria-label="anchor" href="#climate-9"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-439-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-496-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-8">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-8"></a>
+<h3 id="evaluation-results-9">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-9"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -11382,7 +12468,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-460-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-460-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-517-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-517-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -11391,7 +12477,7 @@ sureau
 <h2 id="rinconada">Rinconada<a class="anchor" aria-label="anchor" href="#rinconada"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-9">General information<a class="anchor" aria-label="anchor" href="#general-information-9"></a>
+<h3 id="general-information-10">General information<a class="anchor" aria-label="anchor" href="#general-information-10"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11580,10 +12666,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-9">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-9"></a>
+<h3 id="model-inputs-10">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-10"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-9">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-9"></a>
+<h4 id="vegetation-10">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11669,7 +12755,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-9">Soil<a class="anchor" aria-label="anchor" href="#soil-9"></a>
+<h4 id="soil-10">Soil<a class="anchor" aria-label="anchor" href="#soil-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11833,7 +12919,7 @@ VG_theta_res
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-9">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-9"></a>
+<h4 id="custom-traits-10">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11879,7 +12965,7 @@ Quercus pyrenaica
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-9">Remarks<a class="anchor" aria-label="anchor" href="#remarks-9"></a>
+<h4 id="remarks-10">Remarks<a class="anchor" aria-label="anchor" href="#remarks-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11928,12 +13014,12 @@ Sapflow scaling needs to be revised
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-9">Climate<a class="anchor" aria-label="anchor" href="#climate-9"></a>
+<h3 id="climate-10">Climate<a class="anchor" aria-label="anchor" href="#climate-10"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-470-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-527-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-9">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-9"></a>
+<h3 id="evaluation-results-10">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-10"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -11941,7 +13027,7 @@ Sapflow scaling needs to be revised
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-6">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-6"></a>
+<h4 id="soil-moisture-content-8">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12075,8 +13161,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-490-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-491-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-547-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-548-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -12226,7 +13312,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-497-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-497-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-554-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-554-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -12426,7 +13512,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-502-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-502-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-559-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-559-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -12434,7 +13520,7 @@ sureau
 <h2 id="vallcebre-barrol">Vallcebre (Barrol)<a class="anchor" aria-label="anchor" href="#vallcebre-barrol"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-10">General information<a class="anchor" aria-label="anchor" href="#general-information-10"></a>
+<h3 id="general-information-11">General information<a class="anchor" aria-label="anchor" href="#general-information-11"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12624,10 +13710,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-10">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-10"></a>
+<h3 id="model-inputs-11">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-11"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-10">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-10"></a>
+<h4 id="vegetation-11">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12739,7 +13825,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-10">Soil<a class="anchor" aria-label="anchor" href="#soil-10"></a>
+<h4 id="soil-11">Soil<a class="anchor" aria-label="anchor" href="#soil-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12847,7 +13933,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-10">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-10"></a>
+<h4 id="custom-traits-11">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12879,7 +13965,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-10">Remarks<a class="anchor" aria-label="anchor" href="#remarks-10"></a>
+<h4 id="remarks-11">Remarks<a class="anchor" aria-label="anchor" href="#remarks-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12929,12 +14015,12 @@ Huber values
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-10">Climate<a class="anchor" aria-label="anchor" href="#climate-10"></a>
+<h3 id="climate-11">Climate<a class="anchor" aria-label="anchor" href="#climate-11"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-511-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-568-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-10">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-10"></a>
+<h3 id="evaluation-results-11">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-11"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -12942,7 +14028,7 @@ Huber values
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-7">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-7"></a>
+<h4 id="soil-moisture-content-9">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13076,8 +14162,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-531-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-532-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-588-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-589-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -13227,7 +14313,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-538-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-538-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-595-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-595-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -13236,7 +14322,7 @@ sureau
 <h2 id="vallcebre-sort">Vallcebre (Sort)<a class="anchor" aria-label="anchor" href="#vallcebre-sort"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-11">General information<a class="anchor" aria-label="anchor" href="#general-information-11"></a>
+<h3 id="general-information-12">General information<a class="anchor" aria-label="anchor" href="#general-information-12"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13426,10 +14512,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-11">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-11"></a>
+<h3 id="model-inputs-12">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-12"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-11">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-11"></a>
+<h4 id="vegetation-12">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-12"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13541,7 +14627,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-11">Soil<a class="anchor" aria-label="anchor" href="#soil-11"></a>
+<h4 id="soil-12">Soil<a class="anchor" aria-label="anchor" href="#soil-12"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13629,7 +14715,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-11">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-11"></a>
+<h4 id="custom-traits-12">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-12"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13661,7 +14747,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-11">Remarks<a class="anchor" aria-label="anchor" href="#remarks-11"></a>
+<h4 id="remarks-12">Remarks<a class="anchor" aria-label="anchor" href="#remarks-12"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13712,12 +14798,12 @@ Huber values
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-11">Climate<a class="anchor" aria-label="anchor" href="#climate-11"></a>
+<h3 id="climate-12">Climate<a class="anchor" aria-label="anchor" href="#climate-12"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-548-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-605-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-11">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-11"></a>
+<h3 id="evaluation-results-12">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-12"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -13725,7 +14811,7 @@ Huber values
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-8">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-8"></a>
+<h4 id="soil-moisture-content-10">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -13859,8 +14945,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-568-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-569-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-625-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-626-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -14010,7 +15096,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-575-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-575-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-632-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-632-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -14019,7 +15105,7 @@ sureau
 <h2 id="prades">Prades<a class="anchor" aria-label="anchor" href="#prades"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-12">General information<a class="anchor" aria-label="anchor" href="#general-information-12"></a>
+<h3 id="general-information-13">General information<a class="anchor" aria-label="anchor" href="#general-information-13"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -14209,10 +15295,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-12">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-12"></a>
+<h3 id="model-inputs-13">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-13"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-12">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-12"></a>
+<h4 id="vegetation-13">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-13"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -14324,7 +15410,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-12">Soil<a class="anchor" aria-label="anchor" href="#soil-12"></a>
+<h4 id="soil-13">Soil<a class="anchor" aria-label="anchor" href="#soil-13"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -14432,7 +15518,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-12">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-12"></a>
+<h4 id="custom-traits-13">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-13"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -14671,7 +15757,7 @@ Quercus ilex
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-12">Remarks<a class="anchor" aria-label="anchor" href="#remarks-12"></a>
+<h4 id="remarks-13">Remarks<a class="anchor" aria-label="anchor" href="#remarks-13"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -14712,12 +15798,12 @@ No scaling required (already per leaf area)
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-12">Climate<a class="anchor" aria-label="anchor" href="#climate-12"></a>
+<h3 id="climate-13">Climate<a class="anchor" aria-label="anchor" href="#climate-13"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-585-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-642-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-12">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-12"></a>
+<h3 id="evaluation-results-13">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-13"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -14725,7 +15811,7 @@ No scaling required (already per leaf area)
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-9">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-9"></a>
+<h4 id="soil-moisture-content-11">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -14859,8 +15945,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-605-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-606-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-662-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-663-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -15115,7 +16201,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-612-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-612-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-612-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-612-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-669-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-669-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-669-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-669-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -15467,7 +16553,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-617-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-617-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-617-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-617-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-674-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-674-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-674-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-674-4.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -15475,7 +16561,7 @@ sureau
 <h2 id="can-balasc">Can Balasc<a class="anchor" aria-label="anchor" href="#can-balasc"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-13">General information<a class="anchor" aria-label="anchor" href="#general-information-13"></a>
+<h3 id="general-information-14">General information<a class="anchor" aria-label="anchor" href="#general-information-14"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -15665,10 +16751,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-13">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-13"></a>
+<h3 id="model-inputs-14">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-14"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-13">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-13"></a>
+<h4 id="vegetation-14">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-14"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -15962,7 +17048,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-13">Soil<a class="anchor" aria-label="anchor" href="#soil-13"></a>
+<h4 id="soil-14">Soil<a class="anchor" aria-label="anchor" href="#soil-14"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -16070,7 +17156,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-13">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-13"></a>
+<h4 id="custom-traits-14">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-14"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -16574,7 +17660,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-13">Remarks<a class="anchor" aria-label="anchor" href="#remarks-13"></a>
+<h4 id="remarks-14">Remarks<a class="anchor" aria-label="anchor" href="#remarks-14"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -16616,12 +17702,12 @@ required
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-13">Climate<a class="anchor" aria-label="anchor" href="#climate-13"></a>
+<h3 id="climate-14">Climate<a class="anchor" aria-label="anchor" href="#climate-14"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-626-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-683-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-13">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-13"></a>
+<h3 id="evaluation-results-14">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-14"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -16629,7 +17715,7 @@ required
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-10">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-10"></a>
+<h4 id="soil-moisture-content-12">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-12"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -16763,8 +17849,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-646-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-647-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-703-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-704-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -17229,7 +18315,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-653-8.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-8.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -17238,7 +18324,7 @@ sureau
 <h2 id="alto-tajo-armallones">Alto-Tajo Armallones<a class="anchor" aria-label="anchor" href="#alto-tajo-armallones"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-14">General information<a class="anchor" aria-label="anchor" href="#general-information-14"></a>
+<h3 id="general-information-15">General information<a class="anchor" aria-label="anchor" href="#general-information-15"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -17428,10 +18514,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-14">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-14"></a>
+<h3 id="model-inputs-15">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-15"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-14">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-14"></a>
+<h4 id="vegetation-15">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-15"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -17569,7 +18655,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-14">Soil<a class="anchor" aria-label="anchor" href="#soil-14"></a>
+<h4 id="soil-15">Soil<a class="anchor" aria-label="anchor" href="#soil-15"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -17677,7 +18763,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-14">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-14"></a>
+<h4 id="custom-traits-15">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-15"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -17993,7 +19079,7 @@ Quercus ilex
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-14">Remarks<a class="anchor" aria-label="anchor" href="#remarks-14"></a>
+<h4 id="remarks-15">Remarks<a class="anchor" aria-label="anchor" href="#remarks-15"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -18034,12 +19120,12 @@ Scaling done using tree density and LAI
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-14">Climate<a class="anchor" aria-label="anchor" href="#climate-14"></a>
+<h3 id="climate-15">Climate<a class="anchor" aria-label="anchor" href="#climate-15"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-663-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-720-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-14">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-14"></a>
+<h3 id="evaluation-results-15">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-15"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -18047,7 +19133,7 @@ Scaling done using tree density and LAI
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-11">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-11"></a>
+<h4 id="soil-moisture-content-13">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-13"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -18181,8 +19267,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-683-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-684-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-740-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-741-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -18542,7 +19628,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-690-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-690-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-690-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-690-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-690-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-690-6.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-747-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-747-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-747-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-747-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-747-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-747-6.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -19046,7 +20132,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-695-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-695-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-695-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-695-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-695-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-695-6.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-752-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-752-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-752-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-752-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-752-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-752-6.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -19054,7 +20140,7 @@ sureau
 <h2 id="ronda">Ronda<a class="anchor" aria-label="anchor" href="#ronda"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-15">General information<a class="anchor" aria-label="anchor" href="#general-information-15"></a>
+<h3 id="general-information-16">General information<a class="anchor" aria-label="anchor" href="#general-information-16"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -19243,10 +20329,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-15">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-15"></a>
+<h3 id="model-inputs-16">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-16"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-15">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-15"></a>
+<h4 id="vegetation-16">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-16"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -19346,7 +20432,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-15">Soil<a class="anchor" aria-label="anchor" href="#soil-15"></a>
+<h4 id="soil-16">Soil<a class="anchor" aria-label="anchor" href="#soil-16"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -19484,7 +20570,7 @@ VG_theta_res
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-15">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-15"></a>
+<h4 id="custom-traits-16">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-16"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -19525,7 +20611,7 @@ Taxus baccata
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-15">Remarks<a class="anchor" aria-label="anchor" href="#remarks-15"></a>
+<h4 id="remarks-16">Remarks<a class="anchor" aria-label="anchor" href="#remarks-16"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -19574,12 +20660,12 @@ Species-level Huber value used for scaling. Revise scaling.
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-15">Climate<a class="anchor" aria-label="anchor" href="#climate-15"></a>
+<h3 id="climate-16">Climate<a class="anchor" aria-label="anchor" href="#climate-16"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-704-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-761-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-15">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-15"></a>
+<h3 id="evaluation-results-16">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-16"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -19587,7 +20673,7 @@ Species-level Huber value used for scaling. Revise scaling.
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-12">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-12"></a>
+<h4 id="soil-moisture-content-14">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-14"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -19721,8 +20807,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-724-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-725-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-781-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-782-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -19977,7 +21063,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-731-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-731-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-731-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-731-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-788-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-788-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-788-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-788-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -19986,7 +21072,7 @@ sureau
 <h2 id="davos-seehornwald">Davos Seehornwald<a class="anchor" aria-label="anchor" href="#davos-seehornwald"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-16">General information<a class="anchor" aria-label="anchor" href="#general-information-16"></a>
+<h3 id="general-information-17">General information<a class="anchor" aria-label="anchor" href="#general-information-17"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20177,10 +21263,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-16">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-16"></a>
+<h3 id="model-inputs-17">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-17"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-16">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-16"></a>
+<h4 id="vegetation-17">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-17"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20232,7 +21318,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-16">Soil<a class="anchor" aria-label="anchor" href="#soil-16"></a>
+<h4 id="soil-17">Soil<a class="anchor" aria-label="anchor" href="#soil-17"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20340,7 +21426,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-16">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-16"></a>
+<h4 id="custom-traits-17">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-17"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20362,7 +21448,7 @@ Picea abies
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-16">Remarks<a class="anchor" aria-label="anchor" href="#remarks-16"></a>
+<h4 id="remarks-17">Remarks<a class="anchor" aria-label="anchor" href="#remarks-17"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20411,17 +21497,17 @@ Species-level Huber value used for scaling
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-16">Climate<a class="anchor" aria-label="anchor" href="#climate-16"></a>
+<h3 id="climate-17">Climate<a class="anchor" aria-label="anchor" href="#climate-17"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-741-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-798-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-16">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-16"></a>
+<h3 id="evaluation-results-17">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-17"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
 <div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-8">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-8"></a>
+<h4 id="sensible-heat-turbulent-flux-9">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20523,12 +21609,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-758-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-759-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-815-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-816-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
-<h4 id="latent-heat-turbulent-flux-8">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-8"></a>
+<h4 id="latent-heat-turbulent-flux-9">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20630,12 +21716,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-765-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-766-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-822-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-823-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 </div>
 <div class="section level4">
-<h4 id="gross-primary-productivity-6">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-6"></a>
+<h4 id="gross-primary-productivity-7">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20769,12 +21855,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-772-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-773-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-829-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-830-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-content-13">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-13"></a>
+<h4 id="soil-moisture-content-15">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-15"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -20908,8 +21994,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-779-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-780-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-836-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-837-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -21059,7 +22145,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-786-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-786-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-843-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-843-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -21068,7 +22154,7 @@ sureau
 <h2 id="morgan-monroe">Morgan-Monroe<a class="anchor" aria-label="anchor" href="#morgan-monroe"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-17">General information<a class="anchor" aria-label="anchor" href="#general-information-17"></a>
+<h3 id="general-information-18">General information<a class="anchor" aria-label="anchor" href="#general-information-18"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21258,10 +22344,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-17">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-17"></a>
+<h3 id="model-inputs-18">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-18"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-17">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-17"></a>
+<h4 id="vegetation-18">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-18"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21425,7 +22511,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-17">Soil<a class="anchor" aria-label="anchor" href="#soil-17"></a>
+<h4 id="soil-18">Soil<a class="anchor" aria-label="anchor" href="#soil-18"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21533,7 +22619,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-17">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-17"></a>
+<h4 id="custom-traits-18">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-18"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21581,7 +22667,7 @@ Quercus alba
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-17">Remarks<a class="anchor" aria-label="anchor" href="#remarks-17"></a>
+<h4 id="remarks-18">Remarks<a class="anchor" aria-label="anchor" href="#remarks-18"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21638,17 +22724,17 @@ Scaling and tree selection to be revised
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-17">Climate<a class="anchor" aria-label="anchor" href="#climate-17"></a>
+<h3 id="climate-18">Climate<a class="anchor" aria-label="anchor" href="#climate-18"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-796-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-853-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-17">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-17"></a>
+<h3 id="evaluation-results-18">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-18"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
 <div class="section level4">
-<h4 id="sensible-heat-turbulent-flux-9">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-9"></a>
+<h4 id="sensible-heat-turbulent-flux-10">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21750,12 +22836,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-813-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-814-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-870-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-871-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
 </div>
 <div class="section level4">
-<h4 id="latent-heat-turbulent-flux-9">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-9"></a>
+<h4 id="latent-heat-turbulent-flux-10">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21857,12 +22943,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-820-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-821-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-877-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-878-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
 </div>
 <div class="section level4">
-<h4 id="gross-primary-productivity-7">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-7"></a>
+<h4 id="gross-primary-productivity-8">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -21996,12 +23082,12 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-827-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-828-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-884-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-885-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-content-14">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-14"></a>
+<h4 id="soil-moisture-content-16">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-16"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -22135,8 +23221,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-834-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-835-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-891-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-892-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -22601,7 +23687,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-841-8.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-898-8.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -22610,7 +23696,7 @@ sureau
 <h2 id="sevilleta">Sevilleta<a class="anchor" aria-label="anchor" href="#sevilleta"></a>
 </h2>
 <div class="section level3">
-<h3 id="general-information-18">General information<a class="anchor" aria-label="anchor" href="#general-information-18"></a>
+<h3 id="general-information-19">General information<a class="anchor" aria-label="anchor" href="#general-information-19"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -22799,10 +23885,10 @@ Evaluation period
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-18">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-18"></a>
+<h3 id="model-inputs-19">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-19"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-18">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-18"></a>
+<h4 id="vegetation-19">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-19"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -22914,7 +24000,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-18">Soil<a class="anchor" aria-label="anchor" href="#soil-18"></a>
+<h4 id="soil-19">Soil<a class="anchor" aria-label="anchor" href="#soil-19"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -23052,7 +24138,7 @@ VG_theta_res
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-18">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-18"></a>
+<h4 id="custom-traits-19">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-19"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -23084,7 +24170,7 @@ Juniperus monosperma
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-18">Remarks<a class="anchor" aria-label="anchor" href="#remarks-18"></a>
+<h4 id="remarks-19">Remarks<a class="anchor" aria-label="anchor" href="#remarks-19"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -23117,12 +24203,12 @@ Understory not considered
 </div>
 </div>
 <div class="section level3">
-<h3 id="climate-18">Climate<a class="anchor" aria-label="anchor" href="#climate-18"></a>
+<h3 id="climate-19">Climate<a class="anchor" aria-label="anchor" href="#climate-19"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-851-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-908-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-18">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-18"></a>
+<h3 id="evaluation-results-19">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-19"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Stand-level sensible heat turbulent flux -->
@@ -23130,7 +24216,7 @@ Understory not considered
 <!-- Stand-level GPP -->
 <!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-content-15">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-15"></a>
+<h4 id="soil-moisture-content-17">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-17"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -23264,8 +24350,8 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-871-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-872-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-928-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-929-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -23520,7 +24606,7 @@ sureau
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-878-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-878-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-878-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-878-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-935-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-935-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-935-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-935-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
