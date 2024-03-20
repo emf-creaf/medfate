@@ -14,7 +14,7 @@
   if(model!="pwb") {
     TYPES = c(TYPES, 
               "Soil volume (mm) content" = "SoilVol",
-              "Water table depth" = "WTD")
+              "Saturated water depth" = "SaturatedDepth")
   }
   TYPES = c(TYPES, 
             "Plant extraction from soil"= "PlantExtraction",
@@ -550,9 +550,9 @@
       theme_bw()
     return(g)
   } 
-  else if(type=="WTD") {
-    if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
-    xv = Soil$WTD
+  else if(type=="SaturatedDepth") {
+    if(is.null(ylab)) ylab = expression(paste("Saturated water depth  (mm)"))
+    xv = Soil$SaturatedDepth
     names(xv) = row.names(Soil)
     if(!is.null(dates)) xv = xv[names(xv) %in% as.character(dates)]
     if(!is.null(summary.freq)) {

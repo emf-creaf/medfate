@@ -4,6 +4,7 @@
 #include "soil.h"
 #include "root.h"
 #include "hydraulics.h"
+#include "biophysicsutils.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -545,17 +546,11 @@ NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector
 //'   
 //' @name hydrology_soilFlows
 // [[Rcpp::export("hydrology_soilFlows")]]
-NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
-                 bool modifySoil = true) {
+NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, 
+                        bool freeDrainage = true, bool modifySoil = true) {
   
-  NumericVector dVec = soil["dVec"];
-  double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/m2/s
-  NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
-  NumericVector dZ_m = dVec*0.001; //mm to m
-  NumericVector rfc = soil["rfc"];
-
   if(!modifySoil) soil = clone(soil);
-    
+  
   double maxSource =  max(abs(sourceSink));
   if(maxSource > 10) nsteps = 48;
   if(maxSource > 20) nsteps = 96;
@@ -565,8 +560,15 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   double tstep = 86400.0/((double) nsteps);
   double halftstep = tstep/2.0;
   
-  //Estimate layer interfaces
+  NumericVector dVec = soil["dVec"];
   int nlayers = dVec.size();
+  double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/m2/s
+  NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
+  NumericVector dZ_m = dVec*0.001; //mm to m
+  NumericVector rfc = soil["rfc"];
+  double SoilDepth_m = sum(dZ_m);
+
+  //Estimate layer interfaces
   NumericVector dZUp(nlayers), dZDown(nlayers), lambda(nlayers);
   for(int l=0;l<nlayers;l++) {
     lambda[l] = 1.0 - (rfc[l]/100.0);
@@ -588,18 +590,26 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector alpha = soil["VG_alpha"];
   NumericVector theta_res = soil["VG_theta_res"];
   NumericVector theta_sat = soil["VG_theta_sat"];
-
+  NumericVector Tsoil = soil["Temp"];
   
   //Estimate Theta, Psi, C, K
   NumericVector Theta = theta(soil, "VG");
   NumericVector Ksat(nlayers);
   NumericVector Psi(nlayers), K(nlayers), C(nlayers);
   NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers), K_ms05(nlayers), C_m05(nlayers);
+  NumericVector waterFluidity(nlayers, 1.0);
   for(int l=0;l<nlayers;l++) {
+    if(!NumericVector::is_na(Tsoil[l])) {
+      if(Tsoil[l]>0) {
+        waterFluidity[l] = 1.0/waterDynamicViscosity(Tsoil[l]); 
+      } else {
+        waterFluidity[l] = 0.0;
+      }
+    }
     Ksat[l] = Ksat_ori[l]*lambda[l];//Multiply K for the space available for water movement
     Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
     C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-    K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+    K[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
     Psi_m[l]= Psi[l]/mTOMPa; // MPa to m
     K_ms[l] = 0.01*K[l]/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
     C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
@@ -633,7 +643,11 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         K_up = 0.5*(K_ms[l-1] + K_ms[l]);
         K_down = K_ms[l];
         a[l] = -1.0*K_up/dZUp[l];
-        c[l] = 0.0;
+        if(freeDrainage) {
+          c[l] = 0.0;
+        } else {
+          c[l] = -1.0*K_down/dZDown[l];
+        }
         b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - a[l] - c[l];
         d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down + sourceSink_m3s[l];
       }
@@ -643,7 +657,7 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
     //Calculate K and C at t05
     for(int l=0;l<nlayers;l++) {
       double C_05 = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_t05[l]);
-      double K_05 = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_t05[l]);
+      double K_05 = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_t05[l]);
       K_ms05[l] = 0.01*K_05/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
       C_m05[l] = C_05*mTOMPa; //From MPa-1 to m-1
     }
@@ -667,21 +681,26 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         K_up = 0.5*(K_ms05[l-1] + K_ms05[l]);
         K_down = K_ms05[l];
         a[l] = -1.0*K_up/(2.0*dZUp[l]);
-        c[l] = 0.0;
-        b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l];
-        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down + sourceSink_m3s[l];
+        if(freeDrainage) {
+          c[l] = 0.0;
+          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down + sourceSink_m3s[l];
+        } else {
+          c[l] = -1.0*K_down/(2.0*dZDown[l]);
+          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) - c[l]*(Psi_m[l] - 0.0) + K_up - K_down + sourceSink_m3s[l];
+        }
+        b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l] - c[l];
       }
     }
     NumericVector Psi_m_t1 = tridiagonalSolving(a,b,c,d);
     NumericVector Psi_t1 = Psi_m_t1*mTOMPa; // m to MPa
-    //calculate free drainage (m3)
+    //calculate drainage (m3)
     drainage += std::max(0.0, K_ms05[nlayers -1]*tstep);
     //Update psi, capacitances and conductances for next step
     for(int l=0;l<nlayers;l++) {
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
       Psi[l] = Psi_t1[l];
       C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-      K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+      K[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
       Psi_m[l]= Psi[l]/mTOMPa; // MPa to m
       K_ms[l] = 0.01*K[l]/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
       C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
@@ -691,8 +710,8 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector W = soil["W"];
   for(int l=0;l<nlayers;l++) {
     double theta_fc = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], -0.033);
-    Theta[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-    W[l] = Theta[l]/theta_fc;
+    double theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+    W[l] = theta/theta_fc;
   }
   
   double Vfin_mm = sum(water(soil, "VG"));

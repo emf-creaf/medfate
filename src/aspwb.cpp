@@ -75,6 +75,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   List control = x["control"];
   List soil = x["soil"];
   bool snowpack = control["snowpack"];
+  bool freeDrainage = control["freeDrainage"];
   String soilFunctions = control["soilFunctions"];
   String infiltrationMode = control["infiltrationMode"];
   
@@ -128,7 +129,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
     sourceSinkVec[l] += IVec[l] - ExtractionVec[l];
     if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
-  NumericVector sf = soilFlows(soil, sourceSinkVec, 24, true);
+  NumericVector sf = soilFlows(soil, sourceSinkVec, 24, freeDrainage, true);
   double DeepDrainage = sf["deep_drainage"];
   Runoff += sf["saturation_excess"];
   
@@ -238,7 +239,7 @@ DataFrame defineAgricultureSoilWaterBalanceDailyOutput(CharacterVector dateStrin
   NumericMatrix Wdays(numDays, nlayers); //Soil moisture content in relation to field capacity
   NumericMatrix psidays(numDays, nlayers);
   NumericMatrix MLdays(numDays, nlayers);
-  NumericVector WaterTable(numDays, NA_REAL);
+  NumericVector SaturatedDepth(numDays, NA_REAL);
   NumericVector MLTot(numDays, 0.0);
   NumericVector SWE(numDays, 0.0);
   
@@ -246,7 +247,7 @@ DataFrame defineAgricultureSoilWaterBalanceDailyOutput(CharacterVector dateStrin
   Wdays(0,_) = clone(Wini);
   
   DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
-                                    _["WTD"] = WaterTable,
+                                    _["SaturatedDepth"] = SaturatedDepth,
                                     _["SWE"] = SWE, 
                                     _["psi"]=psidays); 
   SWB.attr("row.names") = dateStrings;
@@ -315,7 +316,7 @@ void fillAgricultureSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List s
   NumericVector psi = sb["psi"];
 
   NumericVector MLTot = as<Rcpp::NumericVector>(SWB["MLTot"]);
-  NumericVector WaterTable = as<Rcpp::NumericVector>(SWB["WTD"]);
+  NumericVector SaturatedDepth = as<Rcpp::NumericVector>(SWB["SaturatedDepth"]);
   NumericVector SWE = as<Rcpp::NumericVector>(SWB["SWE"]);
   
   for(int l=0; l<nlayers; l++) {
@@ -334,7 +335,7 @@ void fillAgricultureSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List s
     MLTot[iday] = MLTot[iday] + MLdays[iday];
   }
   SWE[iday] = soil["SWE"];
-  WaterTable[iday] = waterTableDepth(soil, soilFunctions);
+  SaturatedDepth[iday] = saturatedWaterDepth(soil, soilFunctions);
 }
 
 // [[Rcpp::export(".fillASPWBDailyOutput")]]

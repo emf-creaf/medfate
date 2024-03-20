@@ -4,7 +4,13 @@
 \alias{hydrology_soilFlows}
 \title{Soil flows}
 \usage{
-hydrology_soilFlows(soil, sourceSink, nsteps = 24L, modifySoil = TRUE)
+hydrology_soilFlows(
+  soil,
+  sourceSink,
+  nsteps = 24L,
+  freeDrainage = TRUE,
+  modifySoil = TRUE
+)
 }
 \arguments{
 \item{soil}{Object of class \code{\link{soil}}.}

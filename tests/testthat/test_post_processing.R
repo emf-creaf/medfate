@@ -19,7 +19,7 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_s3_class(plot(S1, "PET_NetRain"), "ggplot")
   expect_s3_class(plot(S1, "Snow"), "ggplot")
   expect_s3_class(plot(S1, "Export"), "ggplot")
-  expect_s3_class(plot(S1, "WTD"), "ggplot")
+  expect_s3_class(plot(S1, "SaturatedDepth"), "ggplot")
   expect_s3_class(plot(S1, "Evapotranspiration"), "ggplot")
   expect_s3_class(plot(S1, "SoilPsi"), "ggplot")
   expect_s3_class(plot(S1, "SoilRWC"), "ggplot")

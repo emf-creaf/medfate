@@ -42,6 +42,7 @@ A list, with the following options (default values in brackets):
       \item{\code{leafPhenology [= TRUE]}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
+      \item{\code{freeDrainage [= TRUE]}: Boolean flag to indicate that the lower boundary condition for water flow is free drainage.}
       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
       \item{\code{interceptionMode [= "Gash1995"]}: Infiltration model, either "Gash1995" or "Liu2001".}
       \item{\code{infiltrationMode [= "GreenAmpt1911"]}: Infiltration model, either "GreenAmpt1911" or "Boughton1989".}

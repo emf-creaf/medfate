@@ -27,8 +27,8 @@ soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
 \value{
 Function \code{soil} returns a list of class \code{soil} with the following elements:
 \itemize{
-  \item{\code{SoilDepth}: Soil depth (in mm).}
   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
+  \item{\code{SWE}: Initial snow water equivalent of the snow pack on the soil surface (mm).}
   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
   \item{\code{dVec}: Width of soil layers (in mm).}

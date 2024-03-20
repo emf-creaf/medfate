@@ -1751,8 +1751,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'   
 #'   
 #' @name hydrology_soilFlows
-hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRUE) {
-    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, modifySoil)
+hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, freeDrainage = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, freeDrainage, modifySoil)
 }
 
 .gammln <- function(xx) {
@@ -2804,7 +2804,7 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
 #' \item{\code{soil_waterFC()} and \code{soil_thetaFC()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.}
 #' \item{\code{soil_waterWP()} and \code{soil_thetaWP()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively. }
 #' \item{\code{soil_waterSAT()}, \code{soil_thetaSATSX()} and \code{soil_thetaSAT()} calculate the saturated water volume (in mm) and moisture content (as percent of soil volume) of each soil layer.}
-#' \item{\code{soil_waterTableDepth()} returns water table depth in mm from surface.}
+#' \item{\code{soil_saturatedWaterDepth()} returns the depth to saturation in mm from surface.}
 #' \item{\code{soil_rockWeight2Volume()} transforms rock percentage from weight to volume basis.}
 #' \item{\code{soil_retentionCurvePlot()} allows ploting the water retention curve of a given soil layer.}
 #' }
@@ -2958,8 +2958,8 @@ soil_capacitance <- function(soil, model = "SX") {
 }
 
 #' @rdname soil_texture
-soil_waterTableDepth <- function(soil, model = "SX") {
-    .Call(`_medfate_waterTableDepth`, soil, model)
+soil_saturatedWaterDepth <- function(soil, model = "SX") {
+    .Call(`_medfate_saturatedWaterDepth`, soil, model)
 }
 
 #' @rdname soil_texture
@@ -2989,8 +2989,8 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' @return
 #' Function \code{soil} returns a list of class \code{soil} with the following elements:
 #' \itemize{
-#'   \item{\code{SoilDepth}: Soil depth (in mm).}
 #'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
+#'   \item{\code{SWE}: Initial snow water equivalent of the snow pack on the soil surface (mm).}
 #'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
 #'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 #'   \item{\code{dVec}: Width of soil layers (in mm).}

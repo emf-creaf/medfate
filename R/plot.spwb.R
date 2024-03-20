@@ -32,7 +32,7 @@
 #'   \item{\code{"SoilVol"}: Soil water volumetric content (in mm).}
 #'   \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer.}
 #'   \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
-#'   \item{\code{"WTD"}: Water table depth.}
+#'   \item{\code{"SaturatedDepth"}: Saturated water depth.}
 #'   \item{\code{"LAI"}: Expanded and dead leaf area index of the whole stand.}
 #'   \item{\code{"PlantLAI"}: Plant cohort leaf area index (expanded leaves).}
 #'   \item{\code{"PlantLAIlive"}: Plant cohort leaf area index ("live" leaves).}
@@ -175,7 +175,7 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""
   if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration", "Snow",
-                 "WTD", "Export", "SoilVol")) {
+                 "SaturatedDepth", "Export", "SoilVol")) {
     return(.plot_wb(WaterBalance = x$WaterBalance, Soil = x$Soil, input_soil = input$soil, 
                     type = type, dates = dates, 
                     xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
@@ -436,7 +436,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
     input_soil = x$GrowthResults[[1]]$growthInput$soil
     
     if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration" ,"Snow",
-                   "WTD", "Export", "SoilVol")) {
+                   "SaturatedDepth", "Export", "SoilVol")) {
       input_soil = x$GrowthResults[[1]]$growthInput$soil
       WaterBalance = summary(x, freq = "days", output = "WaterBalance")
       Soil = summary(x, freq = "days", output = "Soil")

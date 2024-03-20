@@ -33,4 +33,4 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
                               double runon = 0.0,
                               bool snowpack = true, bool modifySoil = true);
 NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
-                        bool modifySoil = true);
+                        bool freeDrainage = true, bool modifySoil = true);

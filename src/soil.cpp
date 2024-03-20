@@ -79,7 +79,7 @@ CharacterVector layerNames(int nlayers) {
 //' \item{\code{soil_waterFC()} and \code{soil_thetaFC()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.}
 //' \item{\code{soil_waterWP()} and \code{soil_thetaWP()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively. }
 //' \item{\code{soil_waterSAT()}, \code{soil_thetaSATSX()} and \code{soil_thetaSAT()} calculate the saturated water volume (in mm) and moisture content (as percent of soil volume) of each soil layer.}
-//' \item{\code{soil_waterTableDepth()} returns water table depth in mm from surface.}
+//' \item{\code{soil_saturatedWaterDepth()} returns the depth to saturation in mm from surface.}
 //' \item{\code{soil_rockWeight2Volume()} transforms rock percentage from weight to volume basis.}
 //' \item{\code{soil_retentionCurvePlot()} allows ploting the water retention curve of a given soil layer.}
 //' }
@@ -654,21 +654,24 @@ NumericVector conductivity(List soil, String model="SX") {
  }
 
 //' @rdname soil_texture
-// [[Rcpp::export("soil_waterTableDepth")]]
-double waterTableDepth(List soil, String model = "SX") {
+// [[Rcpp::export("soil_saturatedWaterDepth")]]
+double saturatedWaterDepth(List soil, String model = "SX") {
   NumericVector dVec = soil["dVec"];
   NumericVector W = soil["W"];
   NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector Theta_SAT = thetaSAT(soil, model);
   int nlayers = W.length();
   double z = 0.0;
+  int nunsaturated = 0;
   for(int l=0;l<nlayers;l++) {
     if(W[l]>1.0) {
       z = z + dVec[l]*(Theta_SAT[l]-Theta_FC[l]*W[l])/(Theta_SAT[l]-Theta_FC[l]);
     } else {
       z = z + dVec[l];
+      nunsaturated++;
     }
   }
+  if(nunsaturated==nlayers) z = NA_REAL;
   return(z);
 }
 
@@ -773,8 +776,8 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' @return
 //' Function \code{soil} returns a list of class \code{soil} with the following elements:
 //' \itemize{
-//'   \item{\code{SoilDepth}: Soil depth (in mm).}
 //'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
+//'   \item{\code{SWE}: Initial snow water equivalent of the snow pack on the soil surface (mm).}
 //'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
 //'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 //'   \item{\code{dVec}: Width of soil layers (in mm).}
@@ -832,7 +835,6 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
           NumericVector W = NumericVector::create(1.0), 
           double SWE = 0.0) {
-  double SoilDepth = 0.0;
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
 
@@ -908,22 +910,20 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     if(NumericVector::is_na(VG_n[l])) VG_n[l] = vgl[1];
     if(NumericVector::is_na(VG_theta_res[l])) VG_theta_res[l] = vgl[2];
     if(NumericVector::is_na(VG_theta_sat[l])) VG_theta_sat[l] = vgl[3];
-    SoilDepth +=dVec[l];
   }
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
-  List l = List::create(_["SoilDepth"] = SoilDepth,
-                      _["W"] = W, 
-                      _["SWE"] = SWE,
-                      _["Temp"] = temperature,
-                      _["Gsoil"] = Gsoil,
-                      _["dVec"] = dVec,
-                      _["sand"] = sand, _["clay"] = clay, _["om"] = om,
-                      _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
-                      _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
-                      _["Ksat"] = Ksat,
-                      _["macro"] = macro,
-                      _["bd"] = bd,
-                      _["rfc"] = rfc);
+  List l = List::create(_["W"] = W, 
+                       _["SWE"] = SWE,
+                       _["Temp"] = temperature,
+                       _["Gsoil"] = Gsoil,
+                       _["dVec"] = dVec,
+                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
+                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
+                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
+                       _["Ksat"] = Ksat,
+                       _["macro"] = macro,
+                       _["bd"] = bd,
+                       _["rfc"] = rfc);
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }
@@ -954,7 +954,6 @@ void modifySoilLayerParam(List soil, String paramName, int layer, double newValu
   int nlayers = dVec.size();
 
   //Parameters to be re-calculated
-  double SoilDepth = 0.0;
   CharacterVector usda_Type(nlayers);
   for(int l=0;l<nlayers;l++) {
     usda_Type[l] = USDAType(clay[l],sand[l]);
@@ -974,11 +973,7 @@ void modifySoilLayerParam(List soil, String paramName, int layer, double newValu
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
     Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]);
-    SoilDepth +=dVec[l];
   }
-  //Update SoilDepth
-  soil["SoilDepth"] = SoilDepth;
-  
 }
 
 /**

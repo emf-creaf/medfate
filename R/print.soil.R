@@ -6,7 +6,7 @@
 #' 
 print.soil<-function(x, model="SX",...) {
   #Depth
-  cat(paste("Soil depth (mm):", round(x$SoilDepth, digits=0),"\n"))
+  cat(paste("Soil depth (mm):", round(sum(x$dVec), digits=0),"\n"))
   #Soil parameters related to texture
   nlayers = length(x$dVec)
   dini = 0;
@@ -40,5 +40,5 @@ print.soil<-function(x, model="SX",...) {
   cat(paste("Total soil extractable water (mm):", round(sum(Water_EXTR), digits=0),"\n"))  
   cat(paste("Total soil current Volume (mm):",round(sum(x$W*Water_FC), digits=0),"\n"))
   cat(paste("\nSnow pack water equivalent (mm):",round(x$SWE, digits=0),"\n"))
-  cat(paste("Soil water table depth (mm):",round(soil_waterTableDepth(x, model), digits=0),"\n\n"))
+  cat(paste("Saturated water depth (mm):",round(soil_saturatedWaterDepth(x, model), digits=0),"\n\n"))
 }

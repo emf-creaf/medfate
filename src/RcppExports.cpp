@@ -2575,23 +2575,24 @@ RcppExport SEXP _medfate_soilWaterInputs(SEXP soilSEXP, SEXP soilFunctionsSEXP, 
     return rcpp_result_gen;
 }
 // soilFlows
-NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps, bool modifySoil);
-static SEXP _medfate_soilFlows_try(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP modifySoilSEXP) {
+NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps, bool freeDrainage, bool modifySoil);
+static SEXP _medfate_soilFlows_try(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP freeDrainageSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type sourceSink(sourceSinkSEXP);
     Rcpp::traits::input_parameter< int >::type nsteps(nstepsSEXP);
+    Rcpp::traits::input_parameter< bool >::type freeDrainage(freeDrainageSEXP);
     Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilFlows(soil, sourceSink, nsteps, modifySoil));
+    rcpp_result_gen = Rcpp::wrap(soilFlows(soil, sourceSink, nsteps, freeDrainage, modifySoil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soilFlows(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP modifySoilSEXP) {
+RcppExport SEXP _medfate_soilFlows(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP freeDrainageSEXP, SEXP modifySoilSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soilFlows_try(soilSEXP, sourceSinkSEXP, nstepsSEXP, modifySoilSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soilFlows_try(soilSEXP, sourceSinkSEXP, nstepsSEXP, freeDrainageSEXP, modifySoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4576,22 +4577,22 @@ RcppExport SEXP _medfate_capacitance(SEXP soilSEXP, SEXP modelSEXP) {
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// waterTableDepth
-double waterTableDepth(List soil, String model);
-static SEXP _medfate_waterTableDepth_try(SEXP soilSEXP, SEXP modelSEXP) {
+// saturatedWaterDepth
+double saturatedWaterDepth(List soil, String model);
+static SEXP _medfate_saturatedWaterDepth_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(waterTableDepth(soil, model));
+    rcpp_result_gen = Rcpp::wrap(saturatedWaterDepth(soil, model));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_waterTableDepth(SEXP soilSEXP, SEXP modelSEXP) {
+RcppExport SEXP _medfate_saturatedWaterDepth(SEXP soilSEXP, SEXP modelSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_waterTableDepth_try(soilSEXP, modelSEXP));
+        rcpp_result_gen = PROTECT(_medfate_saturatedWaterDepth_try(soilSEXP, modelSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5518,7 +5519,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_infiltrationAmount)(double,double,List,String,String)");
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,String,double,double,double,double,double,double,double,double,double,double,bool,bool)");
-        signatures.insert("NumericVector(*hydrology_soilFlows)(List,NumericVector,int,bool)");
+        signatures.insert("NumericVector(*hydrology_soilFlows)(List,NumericVector,int,bool,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,double,bool)");
         signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
@@ -5542,7 +5543,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_psi)(List,String)");
         signatures.insert("NumericVector(*soil_conductivity)(List,String)");
         signatures.insert("NumericVector(*soil_capacitance)(List,String)");
-        signatures.insert("double(*soil_waterTableDepth)(List,String)");
+        signatures.insert("double(*soil_saturatedWaterDepth)(List,String)");
         signatures.insert("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
         signatures.insert("NumericVector(*soil_campbellParamsClappHornberger)(String)");
         signatures.insert("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
@@ -5609,7 +5610,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_psi", (DL_FUNC)_medfate_psi_try);
     R_RegisterCCallable("medfate", "_medfate_soil_conductivity", (DL_FUNC)_medfate_conductivity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_capacitance", (DL_FUNC)_medfate_capacitance_try);
-    R_RegisterCCallable("medfate", "_medfate_soil_waterTableDepth", (DL_FUNC)_medfate_waterTableDepth_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_saturatedWaterDepth", (DL_FUNC)_medfate_saturatedWaterDepth_try);
     R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsCarsel", (DL_FUNC)_medfate_vanGenuchtenParamsCarsel_try);
     R_RegisterCCallable("medfate", "_medfate_soil_campbellParamsClappHornberger", (DL_FUNC)_medfate_campbellParamsClappHornberger_try);
     R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth", (DL_FUNC)_medfate_vanGenuchtenParamsToth_try);
@@ -5772,7 +5773,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_infiltrationAmount", (DL_FUNC) &_medfate_infiltrationAmount, 5},
     {"_medfate_snowMelt", (DL_FUNC) &_medfate_snowMelt, 4},
     {"_medfate_soilWaterInputs", (DL_FUNC) &_medfate_soilWaterInputs, 15},
-    {"_medfate_soilFlows", (DL_FUNC) &_medfate_soilFlows, 4},
+    {"_medfate_soilFlows", (DL_FUNC) &_medfate_soilFlows, 5},
     {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
     {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},
     {"_medfate_incbeta", (DL_FUNC) &_medfate_incbeta, 3},
@@ -5874,7 +5875,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
     {"_medfate_conductivity", (DL_FUNC) &_medfate_conductivity, 2},
     {"_medfate_capacitance", (DL_FUNC) &_medfate_capacitance, 2},
-    {"_medfate_waterTableDepth", (DL_FUNC) &_medfate_waterTableDepth, 2},
+    {"_medfate_saturatedWaterDepth", (DL_FUNC) &_medfate_saturatedWaterDepth, 2},
     {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
     {"_medfate_campbellParamsClappHornberger", (DL_FUNC) &_medfate_campbellParamsClappHornberger, 1},
     {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},

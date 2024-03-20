@@ -25,7 +25,7 @@
 \alias{soil_psi}
 \alias{soil_conductivity}
 \alias{soil_capacitance}
-\alias{soil_waterTableDepth}
+\alias{soil_saturatedWaterDepth}
 \alias{soil_vanGenuchtenParamsCarsel}
 \alias{soil_campbellParamsClappHornberger}
 \alias{soil_vanGenuchtenParamsToth}
@@ -85,7 +85,7 @@ soil_conductivity(soil, model = "SX")
 
 soil_capacitance(soil, model = "SX")
 
-soil_waterTableDepth(soil, model = "SX")
+soil_saturatedWaterDepth(soil, model = "SX")
 
 soil_vanGenuchtenParamsCarsel(soilType)
 
@@ -166,7 +166,7 @@ Low-level functions relating soil texture with soil hydraulics and soil water co
 \item{\code{soil_waterFC()} and \code{soil_thetaFC()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.}
 \item{\code{soil_waterWP()} and \code{soil_thetaWP()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively. }
 \item{\code{soil_waterSAT()}, \code{soil_thetaSATSX()} and \code{soil_thetaSAT()} calculate the saturated water volume (in mm) and moisture content (as percent of soil volume) of each soil layer.}
-\item{\code{soil_waterTableDepth()} returns water table depth in mm from surface.}
+\item{\code{soil_saturatedWaterDepth()} returns the depth to saturation in mm from surface.}
 \item{\code{soil_rockWeight2Volume()} transforms rock percentage from weight to volume basis.}
 \item{\code{soil_retentionCurvePlot()} allows ploting the water retention curve of a given soil layer.}
 }
