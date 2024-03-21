@@ -53,6 +53,15 @@ custom_df |>
   kable_styling()
 ```
 
+### Custom control
+
+```{r, max.print=5}
+df_site$SiteData[[1]]$customControl |> 
+  as.data.frame() |>
+  kbl() |>
+  kable_styling()
+```
+
 ### Remarks
 
 ```{r, max.print=5}
