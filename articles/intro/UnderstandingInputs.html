@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-03-20</h4>
+            <h4 data-toc-skip class="date">2024-03-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1377,10 +1377,10 @@ same name:</p>
 soil parameters needed for soil water balance simulations:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Gsoil"       </span></span>
-<span><span class="co">##  [6] "dVec"         "sand"         "clay"         "om"           "VG_alpha"    </span></span>
-<span><span class="co">## [11] "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"         "macro"       </span></span>
-<span><span class="co">## [16] "bd"           "rfc"</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] "W"            "SWE"          "Temp"         "Gsoil"        "dVec"        </span></span>
+<span><span class="co">##  [6] "sand"         "clay"         "om"           "VG_alpha"     "VG_n"        </span></span>
+<span><span class="co">## [11] "VG_theta_res" "VG_theta_sat" "Ksat"         "macro"        "bd"          </span></span>
+<span><span class="co">## [16] "rfc"</span></span></code></pre>
 <p>For example, <code>macro</code> specifies the macroporosity of each
 layer; <code>Gsoil</code> and <code>Ksoil</code> are parameters needed
 to model the process of evaporation from the bare soil. The meaning of
@@ -1412,7 +1412,7 @@ object using its <code>print</code> function:</p>
 <span><span class="co">## Total soil current Volume (mm): 185 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Snow pack water equivalent (mm): 0 </span></span>
-<span><span class="co">## Soil water table depth (mm): 1000</span></span></code></pre>
+<span><span class="co">## Saturated water depth (mm): NA</span></span></code></pre>
 <p>Importantly, the soil object is used to store the degree of moisture
 of each soil layer. In particular, element <code>W</code> contains the
 state variable that represents moisture content - the proportion of
@@ -1468,7 +1468,7 @@ texture:</p>
 <span><span class="co">## Total soil current Volume (mm): 185 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Snow pack water equivalent (mm): 0 </span></span>
-<span><span class="co">## Soil water table depth (mm): 1000</span></span></code></pre>
+<span><span class="co">## Saturated water depth (mm): NA</span></span></code></pre>
 <p>While Saxton equations use texture and organic matter as inputs, the
 Van Genuchten-Mualem equations need other parameters, which are
 estimated using pedotransfer functions and their names start with
@@ -1539,49 +1539,49 @@ parameterization is obtained using function
 <span><span class="co">##  [17] "defaultCO2"                       "defaultRainfallIntensityPerMonth"</span></span>
 <span><span class="co">##  [19] "snowpack"                         "leafPhenology"                   </span></span>
 <span><span class="co">##  [21] "bareSoilEvaporation"              "unlimitedSoilWater"              </span></span>
-<span><span class="co">##  [23] "interceptionMode"                 "infiltrationMode"                </span></span>
-<span><span class="co">##  [25] "rhizosphereOverlap"               "unfoldingDD"                     </span></span>
-<span><span class="co">##  [27] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
-<span><span class="co">##  [29] "segmentedXylemVulnerability"      "stemCavitationRecovery"          </span></span>
-<span><span class="co">##  [31] "leafCavitationRecovery"           "hydraulicRedistributionFraction" </span></span>
-<span><span class="co">##  [33] "ndailysteps"                      "nsubsteps"                       </span></span>
-<span><span class="co">##  [35] "taper"                            "multiLayerBalance"               </span></span>
-<span><span class="co">##  [37] "sapFluidityVariation"             "TPhase_gmin"                     </span></span>
-<span><span class="co">##  [39] "Q10_1_gmin"                       "Q10_2_gmin"                      </span></span>
-<span><span class="co">##  [41] "rootRadialConductance"            "averageFracRhizosphereResistance"</span></span>
-<span><span class="co">##  [43] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
-<span><span class="co">##  [45] "cavitationRecoveryMaximumRate"    "sunlitShade"                     </span></span>
-<span><span class="co">##  [47] "numericParams"                    "leafCavitationEffects"           </span></span>
-<span><span class="co">##  [49] "stemCavitationEffects"            "stomatalSubmodel"                </span></span>
-<span><span class="co">##  [51] "plantCapacitance"                 "cavitationFlux"                  </span></span>
-<span><span class="co">##  [53] "soilDisconnection"                "leafCuticularTranspiration"      </span></span>
-<span><span class="co">##  [55] "stemCuticularTranspiration"       "C_SApoInit"                      </span></span>
-<span><span class="co">##  [57] "C_LApoInit"                       "k_SSym"                          </span></span>
-<span><span class="co">##  [59] "fractionLeafSymplasm"             "gs_NightFrac"                    </span></span>
-<span><span class="co">##  [61] "JarvisPAR"                        "fTRBToLeaf"                      </span></span>
-<span><span class="co">##  [63] "gCrown0"                          "subdailyCarbonBalance"           </span></span>
-<span><span class="co">##  [65] "allowDessication"                 "allowStarvation"                 </span></span>
-<span><span class="co">##  [67] "sinkLimitation"                   "shrubDynamics"                   </span></span>
-<span><span class="co">##  [69] "herbDynamics"                     "allocationStrategy"              </span></span>
-<span><span class="co">##  [71] "phloemConductanceFactor"          "nonSugarConcentration"           </span></span>
-<span><span class="co">##  [73] "equilibriumOsmoticConcentration"  "minimumRelativeStarchForGrowth"  </span></span>
-<span><span class="co">##  [75] "constructionCosts"                "senescenceRates"                 </span></span>
-<span><span class="co">##  [77] "maximumRelativeGrowthRates"       "mortalityMode"                   </span></span>
-<span><span class="co">##  [79] "mortalityBaselineRate"            "mortalityRelativeSugarThreshold" </span></span>
-<span><span class="co">##  [81] "mortalityRWCThreshold"            "recrTreeDBH"                     </span></span>
-<span><span class="co">##  [83] "recrTreeDensity"                  "ingrowthTreeDBH"                 </span></span>
-<span><span class="co">##  [85] "ingrowthTreeDensity"              "allowSeedBankDynamics"           </span></span>
-<span><span class="co">##  [87] "allowRecruitment"                 "allowResprouting"                </span></span>
-<span><span class="co">##  [89] "recruitmentMode"                  "removeEmptyCohorts"              </span></span>
-<span><span class="co">##  [91] "minimumTreeCohortDensity"         "minimumShrubCohortCover"         </span></span>
-<span><span class="co">##  [93] "dynamicallyMergeCohorts"          "seedRain"                        </span></span>
-<span><span class="co">##  [95] "seedProductionTreeHeight"         "seedProductionShrubHeight"       </span></span>
-<span><span class="co">##  [97] "probRecr"                         "minTempRecr"                     </span></span>
-<span><span class="co">##  [99] "minMoistureRecr"                  "minFPARRecr"                     </span></span>
-<span><span class="co">## [101] "recrTreeHeight"                   "recrShrubCover"                  </span></span>
-<span><span class="co">## [103] "recrShrubHeight"                  "recrTreeZ50"                     </span></span>
-<span><span class="co">## [105] "recrShrubZ50"                     "recrTreeZ95"                     </span></span>
-<span><span class="co">## [107] "recrShrubZ95"</span></span></code></pre>
+<span><span class="co">##  [23] "freeDrainage"                     "interceptionMode"                </span></span>
+<span><span class="co">##  [25] "infiltrationMode"                 "rhizosphereOverlap"              </span></span>
+<span><span class="co">##  [27] "unfoldingDD"                      "verticalLayerSize"               </span></span>
+<span><span class="co">##  [29] "windMeasurementHeight"            "segmentedXylemVulnerability"     </span></span>
+<span><span class="co">##  [31] "stemCavitationRecovery"           "leafCavitationRecovery"          </span></span>
+<span><span class="co">##  [33] "hydraulicRedistributionFraction"  "ndailysteps"                     </span></span>
+<span><span class="co">##  [35] "nsubsteps"                        "taper"                           </span></span>
+<span><span class="co">##  [37] "multiLayerBalance"                "sapFluidityVariation"            </span></span>
+<span><span class="co">##  [39] "TPhase_gmin"                      "Q10_1_gmin"                      </span></span>
+<span><span class="co">##  [41] "Q10_2_gmin"                       "rootRadialConductance"           </span></span>
+<span><span class="co">##  [43] "averageFracRhizosphereResistance" "thermalCapacityLAI"              </span></span>
+<span><span class="co">##  [45] "boundaryLayerSize"                "cavitationRecoveryMaximumRate"   </span></span>
+<span><span class="co">##  [47] "sunlitShade"                      "numericParams"                   </span></span>
+<span><span class="co">##  [49] "leafCavitationEffects"            "stemCavitationEffects"           </span></span>
+<span><span class="co">##  [51] "stomatalSubmodel"                 "plantCapacitance"                </span></span>
+<span><span class="co">##  [53] "cavitationFlux"                   "soilDisconnection"               </span></span>
+<span><span class="co">##  [55] "leafCuticularTranspiration"       "stemCuticularTranspiration"      </span></span>
+<span><span class="co">##  [57] "C_SApoInit"                       "C_LApoInit"                      </span></span>
+<span><span class="co">##  [59] "k_SSym"                           "fractionLeafSymplasm"            </span></span>
+<span><span class="co">##  [61] "gs_NightFrac"                     "JarvisPAR"                       </span></span>
+<span><span class="co">##  [63] "fTRBToLeaf"                       "gCrown0"                         </span></span>
+<span><span class="co">##  [65] "subdailyCarbonBalance"            "allowDessication"                </span></span>
+<span><span class="co">##  [67] "allowStarvation"                  "sinkLimitation"                  </span></span>
+<span><span class="co">##  [69] "shrubDynamics"                    "herbDynamics"                    </span></span>
+<span><span class="co">##  [71] "allocationStrategy"               "phloemConductanceFactor"         </span></span>
+<span><span class="co">##  [73] "nonSugarConcentration"            "equilibriumOsmoticConcentration" </span></span>
+<span><span class="co">##  [75] "minimumRelativeStarchForGrowth"   "constructionCosts"               </span></span>
+<span><span class="co">##  [77] "senescenceRates"                  "maximumRelativeGrowthRates"      </span></span>
+<span><span class="co">##  [79] "mortalityMode"                    "mortalityBaselineRate"           </span></span>
+<span><span class="co">##  [81] "mortalityRelativeSugarThreshold"  "mortalityRWCThreshold"           </span></span>
+<span><span class="co">##  [83] "recrTreeDBH"                      "recrTreeDensity"                 </span></span>
+<span><span class="co">##  [85] "ingrowthTreeDBH"                  "ingrowthTreeDensity"             </span></span>
+<span><span class="co">##  [87] "allowSeedBankDynamics"            "allowRecruitment"                </span></span>
+<span><span class="co">##  [89] "allowResprouting"                 "recruitmentMode"                 </span></span>
+<span><span class="co">##  [91] "removeEmptyCohorts"               "minimumTreeCohortDensity"        </span></span>
+<span><span class="co">##  [93] "minimumShrubCohortCover"          "dynamicallyMergeCohorts"         </span></span>
+<span><span class="co">##  [95] "seedRain"                         "seedProductionTreeHeight"        </span></span>
+<span><span class="co">##  [97] "seedProductionShrubHeight"        "probRecr"                        </span></span>
+<span><span class="co">##  [99] "minTempRecr"                      "minMoistureRecr"                 </span></span>
+<span><span class="co">## [101] "minFPARRecr"                      "recrTreeHeight"                  </span></span>
+<span><span class="co">## [103] "recrShrubCover"                   "recrShrubHeight"                 </span></span>
+<span><span class="co">## [105] "recrTreeZ50"                      "recrShrubZ50"                    </span></span>
+<span><span class="co">## [107] "recrTreeZ95"                      "recrShrubZ95"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

@@ -193,7 +193,7 @@ or the forest dynamics model (see <code><a href="fordyn.html">fordyn</a></code>)
 <li><p><code>"SoilVol"</code>: Soil water volumetric content (in mm).</p></li>
 <li><p><code>"PlantExtraction"</code>: Water extracted by plants from each soil layer.</p></li>
 <li><p><code>"HydraulicRedistribution"</code>: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.</p></li>
-<li><p><code>"WTD"</code>: Water table depth.</p></li>
+<li><p><code>"SaturatedDepth"</code>: Saturated water depth.</p></li>
 <li><p><code>"LAI"</code>: Expanded and dead leaf area index of the whole stand.</p></li>
 <li><p><code>"PlantLAI"</code>: Plant cohort leaf area index (expanded leaves).</p></li>
 <li><p><code>"PlantLAIlive"</code>: Plant cohort leaf area index ("live" leaves).</p></li>
@@ -313,22 +313,22 @@ or the forest dynamics model (see <code><a href="fordyn.html">fordyn</a></code>)
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 5.25043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 190.317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 5.25152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 205.238</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00114829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00114829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 5.48975</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 5.48975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -5.78142e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -5.78142e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 20.4108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 20.4108</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 326 Runoff (mm) 44 Deep drainage (mm) 156</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 16  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 186  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 324  Saturation excess (mm) 1 Runoff (mm) 46 Deep drainage (mm) 141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 13  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 187  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Plot results</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></span>

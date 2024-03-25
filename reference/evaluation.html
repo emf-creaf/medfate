@@ -218,36 +218,36 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 322.866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05832</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 345.583</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00151384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00151384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 31.9909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 31.9909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.000278913</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.000278913</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 54.7076</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 54.7076</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 325 Runoff (mm) 45 Deep drainage (mm) 127</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 16  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 187  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 323  Saturation excess (mm) 27 Runoff (mm) 74 Deep drainage (mm) 78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 14  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 187  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.002178275  -0.684413198   0.007515571   2.361389876 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.969546409   0.936494713   0.748304328 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.00000000   0.00951785   2.99050521   0.01338937   4.20693439   0.91471197 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          NSE      NSE.abs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.76094789   0.55159155 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#NSE only</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9364947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7609479</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -255,7 +255,7 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 855.6326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 823.6831</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

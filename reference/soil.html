@@ -96,8 +96,8 @@
     <h2>Value</h2>
     
 
-<p>Function <code>soil</code> returns a list of class <code>soil</code> with the following elements:</p><ul><li><p><code>SoilDepth</code>: Soil depth (in mm).</p></li>
-<li><p><code>W</code>: State variable with relative water content of each layer (in as proportion relative to FC).</p></li>
+<p>Function <code>soil</code> returns a list of class <code>soil</code> with the following elements:</p><ul><li><p><code>W</code>: State variable with relative water content of each layer (in as proportion relative to FC).</p></li>
+<li><p><code>SWE</code>: Initial snow water equivalent of the snow pack on the soil surface (mm).</p></li>
 <li><p><code>Temp</code>: State variable with temperature (in ºC) of each layer.</p></li>
 <li><p><code>Gsoil</code>: Gamma parameter for bare soil evaporation (see <code><a href="hydrology_soilEvaporation.html">hydrology_soilEvaporationAmount</a></code>).</p></li>
 <li><p><code>dVec</code>: Width of soil layers (in mm).</p></li>
@@ -179,7 +179,7 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Prints soil characteristics according to Van Genuchten's water retention curve</span></span></span>
@@ -220,7 +220,7 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add columns 'VG_theta_sat' and 'VG_theta_res' with custom values</span></span></span>
@@ -266,7 +266,7 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 275 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
