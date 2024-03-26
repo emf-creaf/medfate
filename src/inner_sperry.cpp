@@ -530,6 +530,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   // Rcout<<"input\n";
   NumericVector zWind = input["zWind"];
   double Patm = input["Patm"];
+  double f_dry = input["f_dry"];
   IntegerVector iLayerCohort = input["iLayerCohort"];
   IntegerVector iLayerSunlit = input["iLayerSunlit"];
   IntegerVector iLayerShade = input["iLayerShade"];
@@ -632,8 +633,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         Temp_SL(c,n)= photoSunlit["LeafTemperature"];
         
         //Scale photosynthesis
-        double Agsum = Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n);
-        double Ansum = An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n);
+        double Agsum = (Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n));
+        double Ansum = (An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n));
         Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
         Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
         
@@ -665,7 +666,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         RootCrownPsiVEC[c] = psiRootCrown[iPM]; 
         
         //Scale from instantaneous flow to water volume in the time step
-        Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
+        Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep*f_dry; 
         
         NumericVector Esoilcn(nlayerscon[c],0.0);
         NumericVector ElayersVEC(nlayerscon[c],0.0);
@@ -679,7 +680,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         NumericVector newStemPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
         StemPsiVEC[c] = newStemPsi[iPM]; 
         for(int lc=0;lc<nlayerscon[c];lc++) {
-          ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
+          ElayersVEC[lc] = ERhizo(iPM,lc)*tstep*f_dry; //Scale according to the time step
         }
         
         //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
@@ -711,7 +712,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         
         //Scale soil water extracted from leaf to cohort level
         for(int lc=0;lc<nlayerscon[c];lc++) {
-          Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]; //Scale from flow to water volume in the time step
+          Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]*f_dry; //Scale from flow to water volume in the time step
         }
         
         //Balance between extraction and transpiration

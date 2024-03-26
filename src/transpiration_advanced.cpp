@@ -82,6 +82,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double wind = meteovec["wind"];
   double Catm = meteovec["Catm"];
   double Patm = meteovec["Patm"];
+  double pet = meteovec["pet"];
   
   //Atmospheric pressure (if missing)
   if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
@@ -412,7 +413,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   ////////////////////////////////////////
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
   NumericVector net_LWR_can(ntimesteps),LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), Ebal(ntimesteps);
-  NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEsoil_heat(ntimesteps);
+  NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEVsoil(ntimesteps), LEFsoil(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
   NumericMatrix Tcan_mat(ntimesteps, ncanlayers);
   NumericMatrix VPcan_mat(ntimesteps, ncanlayers);
@@ -765,6 +766,24 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   ////////////////////////////////////////
   for(int n=0;n<ntimesteps;n++) { //Time loop
     
+    // Determine soil evaporation and snow melt for the corresponding step
+    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum(abs_SWR_soil));
+    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum(abs_SWR_soil));
+    //Canopy evaporation (mm) in the current step and fraction of dry canopy
+    double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
+    double f_dry = 1.0;
+    if(canEvapStep>0.0) {
+      f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
+    }
+    if(sum(abs_SWR_soil)==0.0) { // avoid zero sums
+      soilEvapStep = 0.0; 
+      snowMeltStep = 0.0;
+    }
+    if(sum(abs_SWR_can)==0.0) { // avoid zero sums
+      canEvapStep = 0.0;
+      f_dry = 1.0;
+    }
+    
     //Retrieve fraction of sunlit and short-wave radiation absorbed for the current time step
     NumericVector absPAR_SL_COH = abs_PAR_SL_COH_list[n];
     NumericVector absPAR_SH_COH = abs_PAR_SH_COH_list[n];
@@ -828,6 +847,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     if(transpirationMode =="Sperry") {
       innerInput = List::create(_["Patm"] = Patm,
                                 _["zWind"] = zWind,
+                                _["f_dry"] = f_dry,
                                 _["iLayerCohort"] = iLayerCohort,
                                 _["iLayerSunlit"] = iLayerSunlit,
                                 _["iLayerShade"] = iLayerShade,
@@ -841,6 +861,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       //To do, create initial plant state
       innerInput = List::create(_["Patm"] = Patm,
                                 _["zWind"] = zWind,
+                                _["f_dry"] = f_dry,
                                 _["iLayerCohort"] = iLayerCohort,
                                 _["iLayerSunlit"] = iLayerSunlit,
                                 _["iLayerShade"] = iLayerShade,
@@ -881,14 +902,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         LWR_SH(c,n) = sum(Lnet_cohort_layer(_,c)*(1.0 - fsunlit));
       }
     }
-    // Determine soil evaporation and snow melt for the corresponding step
-    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum(abs_SWR_soil));
-    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum(abs_SWR_soil));
-    if(sum(abs_SWR_soil)==0.0) { // avoid zero sums
-      soilEvapStep = 0.0; 
-      snowMeltStep = 0.0;
-    }
-    
+
     if(transpirationMode == "Sperry") {
       innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions);
@@ -972,12 +986,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     //Soil latent heat (soil evaporation)
     //Latent heat (snow fusion) as J/m2/s
     if(SWE>0.0) abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present 
-    double LEsoilevap = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
-    double LEsnow = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
-    LEsoil_heat[n] = LEsoilevap + LEsnow;
-    
-    //Canopy evaporation (mm) in the current step
-    double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
+    LEVsoil[n] = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
+    LEFsoil[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
 
     //Herbaceous transpiration (mm) in the current step
     double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum(abs_SWR_can));
@@ -1004,7 +1014,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       
       //Soil energy balance including exchange with canopy
-      Ebalsoil[n] = abs_SWR_soil[n] + net_LWR_soil[n] + Hcansoil[n] - LEsoil_heat[n]; //Here we use all energy escaping to atmosphere
+      Ebalsoil[n] = abs_SWR_soil[n] + net_LWR_soil[n] + Hcansoil[n] - LEVsoil[n]- LEFsoil[n]; //Here we use all energy escaping to atmosphere
       
       
       //Soil temperature changes
@@ -1116,7 +1126,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         }
         
         //Soil energy balance including exchange with canopy
-        double Ebalsoils =  abs_SWR_soil[n] + net_LWR_soil[n]  - LEsoil_heat[n] + Hcansoils; //Here we use all energy escaping to atmosphere
+        double Ebalsoils =  abs_SWR_soil[n] + net_LWR_soil[n]  - LEVsoil[n] - LEFsoil[n] + Hcansoils; //Here we use all energy escaping to atmosphere
         Ebalsoil[n] +=Ebalsoils;
         Hcansoil[n] +=Hcansoils;
         //Soil temperature changes
@@ -1177,7 +1187,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                         _["SWRcan"] = abs_SWR_can, _["LWRcan"] = net_LWR_can,
                                         _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
   DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
+                                        _["Hcansoil"] = Hcansoil, _["LEVsoil"] = LEVsoil, _["LEFsoil"] = LEFsoil, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
                                         _["Ebalsoil"] = Ebalsoil);
   List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst,
                          _["TemperatureLayers"] = NA_REAL, _["VaporPressureLayers"] = NA_REAL);

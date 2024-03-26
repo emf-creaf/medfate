@@ -785,7 +785,8 @@
     df[["SWR abs."]] = EnergyBalance$SWRsoil
     df[["Net LWR"]] = EnergyBalance$LWRsoil
     df[["Convection soil/can."]] = EnergyBalance$Hcansoil
-    df[["Latent heat"]] = -EnergyBalance$LEsoil
+    df[["Latent heat vaporisation"]] = -EnergyBalance$LEVsoil
+    df[["Latent heat fusion"]] = -EnergyBalance$LEFsoil
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)

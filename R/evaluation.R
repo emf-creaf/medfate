@@ -11,7 +11,7 @@
 #'       \item{\code{"ETR"}: Total evapotranspiration}
 #'       \item{\code{"SE+TR"}: Modelled soil evaporation + plant transpiration against observed total evapotranspiration}
 #'       \item{\code{"E"}: Transpiration per leaf area}
-#'       \item{\code{"LE"}: Latent heat turbulent flux}
+#'       \item{\code{"LE"}: Latent heat (vaporisation) turbulent flux}
 #'       \item{\code{"H"}: Canopy sensible heat turbulent flux}
 #'       \item{\code{"GPP"}: Stand-level gross primary productivity}
 #'       \item{\code{"LFMC"}: Live fuel moisture content}
@@ -189,7 +189,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     df$Observed[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
   }
   else if(type=="LE") {
-    LEmod = out$EnergyBalance$LEcan + out$EnergyBalance$LEsoil
+    LEmod = out$EnergyBalance$LEcan + out$EnergyBalance$LEVsoil
     d = rownames(out$EnergyBalance)
     df = data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod)
     if(!("LE" %in% names(measuredData))) stop(paste0("Column 'LE' not found in measured data frame."))

@@ -849,6 +849,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
   // Rcout<<"input\n";
   NumericVector zWind = input["zWind"];
   double Patm = input["Patm"];
+  double f_dry = input["f_dry"];
   IntegerVector iLayerCohort = input["iLayerCohort"];
   IntegerVector iLayerSunlit = input["iLayerSunlit"];
   IntegerVector iLayerShade = input["iLayerShade"];
@@ -1034,7 +1035,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           for(int l=0;l < kSoil.size();l++) {
             double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoil[l] - Psi_SApo);
             ElayersVEC[l] += fluxSoilToStem_mmolm2s;
-            fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*dt);
+            fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*f_dry*dt);
           }
           EinstVEC[c] += ((double) network["Einst"]);
           ElimVEC[c] += ((double) network["Elim"]);
@@ -1109,7 +1110,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
       
       //Scale from instantaneous flow to water volume in the time step
-      Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
+      Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*f_dry*tstep;
       
       
       //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers

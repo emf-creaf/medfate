@@ -1111,7 +1111,8 @@ DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings) {
   NumericVector SWRcan(numDays, NA_REAL);
   NumericVector LWRcan(numDays, NA_REAL);
   NumericVector LEcan_heat(numDays, NA_REAL);
-  NumericVector LEsoil_heat(numDays, NA_REAL);
+  NumericVector LEVsoil(numDays, NA_REAL);
+  NumericVector LEFsoil(numDays, NA_REAL);
   NumericVector Hcan_heat(numDays, NA_REAL);
   NumericVector Ebalcan(numDays, NA_REAL);
   NumericVector SWRsoil(numDays, NA_REAL);
@@ -1122,7 +1123,7 @@ DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings) {
   DataFrame DEB = DataFrame::create(_["SWRcan"] = SWRcan, _["LWRcan"] = LWRcan,
                                     _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebalcan, 
                                     _["Hcansoil"] = Hcansoil, _["SWRsoil"] = SWRsoil, _["LWRsoil"] = LWRsoil, 
-                                    _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil);  
+                                    _["LEVsoil"] = LEVsoil, _["LEFsoil"] = LEFsoil, _["Ebalsoil"] = Ebalsoil);  
   DEB.attr("row.names") = dateStrings;
   return(DEB);
 }
@@ -1509,12 +1510,14 @@ void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday) {
   Ebalcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Ebalcan"]))*tstep;
   NumericVector SWRsoil = DEB["SWRsoil"];
   NumericVector LWRsoil = DEB["LWRsoil"];
-  NumericVector LEsoil_heat = DEB["LEsoil"];
+  NumericVector LEVsoil = DEB["LEVsoil"];
+  NumericVector LEFsoil = DEB["LEFsoil"];
   NumericVector Hcansoil = DEB["Hcansoil"];
   NumericVector Ebalsoil = DEB["Ebalsoil"];
   SWRsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["SWRsoil"]))*tstep;
   LWRsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoil"]))*tstep;
-  LEsoil_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEsoil"]))*tstep;
+  LEVsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEVsoil"]))*tstep;
+  LEFsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEFsoil"]))*tstep;
   Hcansoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Hcansoil"]))*tstep;
   Ebalsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Ebalsoil"]))*tstep;
 
