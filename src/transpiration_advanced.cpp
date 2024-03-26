@@ -1280,6 +1280,11 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
   
   double prec = Precipitation[day-1];
   double rad = Radiation[day-1];
@@ -1298,7 +1303,9 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
-
+  
+  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  
   NumericVector meteovec = NumericVector::create(
     Named("tmin") = tmin, 
     Named("tmax") = tmax,
@@ -1311,7 +1318,8 @@ List transpirationSperry(List x, DataFrame meteo, int day,
     Named("rad") = rad, 
     Named("wind") = wind, 
     Named("Catm") = Catm,
-    Named("Patm") = Patm[day-1]);
+    Named("Patm") = Patm[day-1],
+    Named("pet") = pet);
   return(transpirationAdvanced(x, meteovec,
                      latitude, elevation, slope, aspect,
                      solarConstant, delta,
@@ -1353,6 +1361,11 @@ List transpirationSureau(List x, DataFrame meteo, int day,
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
   
   double prec = Precipitation[day-1];
   double rad = Radiation[day-1];
@@ -1372,6 +1385,8 @@ List transpirationSureau(List x, DataFrame meteo, int day,
   double Catm = CO2[day-1];
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   
+  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  
   NumericVector meteovec = NumericVector::create(
     Named("tmin") = tmin, 
     Named("tmax") = tmax,
@@ -1384,7 +1399,8 @@ List transpirationSureau(List x, DataFrame meteo, int day,
     Named("rad") = rad, 
     Named("wind") = wind, 
     Named("Catm") = Catm,
-    Named("Patm") = Patm[day-1]);
+    Named("Patm") = Patm[day-1],
+    Named("pet") = pet);
   return(transpirationAdvanced(x, meteovec,
                              latitude, elevation, slope, aspect,
                              solarConstant, delta,
