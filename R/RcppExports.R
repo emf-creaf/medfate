@@ -1736,6 +1736,7 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 #'        as mm/day.
 #' @param nsteps  Number of time steps per day
+#' @param freeDrainage Boolean flag to indicate that lower boundary condition is free drainage.
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}

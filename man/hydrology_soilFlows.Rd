@@ -20,6 +20,8 @@ as mm/day.}
 
 \item{nsteps}{Number of time steps per day}
 
+\item{freeDrainage}{Boolean flag to indicate that lower boundary condition is free drainage.}
+
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }
 \value{
