@@ -35,8 +35,6 @@ NumericVector psi2thetasoil(List soil, NumericVector psi, String model="SX");
   
 double saturatedWaterDepth(List soil, String model = "SX");
 
-NumericVector thermalConductivity(List soil, String model = "SX");
-NumericVector thermalCapacity(List soil, String model = "SX");
 
 String USDAType(double clay, double sand);
 
@@ -47,9 +45,3 @@ NumericVector campbellParamsClappHornberger(String soilType);
 List soil(List SoilParams, String VG_PTF = "Carsel", 
           NumericVector W = NumericVector::create(1.0,1.0,1.0),
           double SWE = 0.0);
-
-NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC);
-NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
-                                NumericVector sand, NumericVector clay, 
-                                NumericVector W, NumericVector Theta_FC,
-                                double Gdown);

@@ -569,7 +569,6 @@ List E2psiBelowground(double E, List hydraulicNetwork,
   
   List numericParams = hydraulicNetwork["numericParams"];
   int ntrial = numericParams["ntrial"];
-  int maxNsteps  = numericParams["maxNsteps"];
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   

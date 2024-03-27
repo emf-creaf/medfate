@@ -15,6 +15,7 @@
 #include "spwb.h"
 #include "root.h"
 #include "soil.h"
+#include "soil_thermodynamics.h"
 #include "inner_sperry.h"
 #include "inner_sureau.h"
 #include <meteoland.h>
@@ -1018,8 +1019,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       
       //Soil temperature changes
-      NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoil[n]);
-      for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
+      NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoil[n], tstep);
+      for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
       
     } else { //Multilayer canopy balance
@@ -1130,8 +1131,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         Ebalsoil[n] +=Ebalsoils;
         Hcansoil[n] +=Hcansoils;
         //Soil temperature changes
-        NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoils);
-        for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tsubstep);
+        NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoils, tsubstep);
+        for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       }
       Hcansoil[n] = Hcansoil[n]/((double) nsubsteps);
       Ebalsoil[n] = Ebalsoil[n]/((double) nsubsteps);

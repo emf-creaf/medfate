@@ -4898,8 +4898,8 @@ RcppExport SEXP _medfate_temperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
     return rcpp_result_gen;
 }
 // temperatureChange
-NumericVector temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown);
-static SEXP _medfate_temperatureChange_try(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
+NumericVector temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown, double tstep);
+static SEXP _medfate_temperatureChange_try(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
@@ -4909,15 +4909,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Theta_FC(Theta_FCSEXP);
     Rcpp::traits::input_parameter< double >::type Gdown(GdownSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown));
+    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown, tstep));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_temperatureChange(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
+RcppExport SEXP _medfate_temperatureChange(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP, SEXP tstepSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_temperatureChange_try(dVecSEXP, TempSEXP, sandSEXP, claySEXP, WSEXP, Theta_FCSEXP, GdownSEXP));
+        rcpp_result_gen = PROTECT(_medfate_temperatureChange_try(dVecSEXP, TempSEXP, sandSEXP, claySEXP, WSEXP, Theta_FCSEXP, GdownSEXP, tstepSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5552,7 +5553,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_thermalCapacity)(List,String)");
         signatures.insert("NumericVector(*soil_thermalConductivity)(List,String)");
         signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
-        signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double)");
+        signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double,double)");
         signatures.insert("List(*spwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,bool)");
         signatures.insert("List(*.defineSPWBDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillSPWBDailyOutput)(List,List,List,int)");
@@ -5884,7 +5885,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
     {"_medfate_temperatureGradient", (DL_FUNC) &_medfate_temperatureGradient, 2},
-    {"_medfate_temperatureChange", (DL_FUNC) &_medfate_temperatureChange, 7},
+    {"_medfate_temperatureChange", (DL_FUNC) &_medfate_temperatureChange, 8},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 9},
     {"_medfate_defineSPWBDailyOutput", (DL_FUNC) &_medfate_defineSPWBDailyOutput, 6},
     {"_medfate_fillSPWBDailyOutput", (DL_FUNC) &_medfate_fillSPWBDailyOutput, 4},

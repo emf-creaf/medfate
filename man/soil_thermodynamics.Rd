@@ -14,7 +14,7 @@ soil_thermalConductivity(soil, model = "SX")
 
 soil_temperatureGradient(dVec, Temp)
 
-soil_temperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown)
+soil_temperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown, tstep)
 }
 \arguments{
 \item{soil}{Soil object (returned by function \code{\link{soil}}).}

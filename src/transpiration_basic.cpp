@@ -252,7 +252,7 @@ List transpirationBasic(List x, NumericVector meteovec,
     double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
     double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
     double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-    double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+    // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
     
     //Extraction from soil (can later be modified if there are changes in plant water content)
     if(!plantWaterPools) {
