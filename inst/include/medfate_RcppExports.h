@@ -1176,17 +1176,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown, double tstep) {
-        typedef SEXP(*Ptr_soil_temperatureChange)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline NumericVector soil_temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC, double Gdown, double tstep) {
+        typedef SEXP(*Ptr_soil_temperatureChange)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil_temperatureChange p_soil_temperatureChange = NULL;
         if (p_soil_temperatureChange == NULL) {
-            validateSignature("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double,double)");
+            validateSignature("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double,double)");
             p_soil_temperatureChange = (Ptr_soil_temperatureChange)R_GetCCallable("medfate", "_medfate_soil_temperatureChange");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_temperatureChange(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(Theta_FC)), Shield<SEXP>(Rcpp::wrap(Gdown)), Shield<SEXP>(Rcpp::wrap(tstep)));
+            rcpp_result_gen = p_soil_temperatureChange(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(Theta_SAT)), Shield<SEXP>(Rcpp::wrap(Theta_FC)), Shield<SEXP>(Rcpp::wrap(Gdown)), Shield<SEXP>(Rcpp::wrap(tstep)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

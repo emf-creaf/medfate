@@ -189,7 +189,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     df$Observed[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
   }
   else if(type=="LE") {
-    LEmod = out$EnergyBalance$LEcan + out$EnergyBalance$LEVsoil
+    LEmod = out$EnergyBalance$LEVcan + out$EnergyBalance$LEVsoil
     d = rownames(out$EnergyBalance)
     df = data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod)
     if(!("LE" %in% names(measuredData))) stop(paste0("Column 'LE' not found in measured data frame."))

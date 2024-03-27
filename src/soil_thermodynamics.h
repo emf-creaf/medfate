@@ -5,8 +5,10 @@
 #endif
 using namespace Rcpp;
 
-NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC);
+NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, 
+                                       NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
+                                       NumericVector Temp);
 NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
                                 NumericVector sand, NumericVector clay, 
-                                NumericVector W, NumericVector Theta_FC,
+                                NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
                                 double Gdown, double tstep);

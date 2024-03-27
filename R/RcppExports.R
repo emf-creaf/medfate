@@ -3114,8 +3114,8 @@ soil_temperatureGradient <- function(dVec, Temp) {
 }
 
 #' @name soil_thermodynamics
-soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown, tstep) {
-    .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_FC, Gdown, tstep)
+soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep) {
+    .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
 }
 
 #' Single-day simulation

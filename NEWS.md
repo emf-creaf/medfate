@@ -22,6 +22,7 @@
 - Van Genuchten parameters and Ksat can be specified directly when initializing soil
 - Saturation excess in soil flows
 - Evaluation of GPP, H and LE
+- Soil thermodynamics revised
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions

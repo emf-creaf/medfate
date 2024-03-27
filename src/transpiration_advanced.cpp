@@ -105,6 +105,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   int nlayers = dVec.length();
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Theta_FC = thetaFC(soil, soilFunctions);
+  NumericVector Theta_SAT = thetaSAT(soil, soilFunctions);
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
   NumericVector Tsoil = soil["Temp"]; 
@@ -413,8 +414,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   // STEP 3b. Above-canopy air temperature and long-wave radiation emission for sub-steps
   ////////////////////////////////////////
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
-  NumericVector net_LWR_can(ntimesteps),LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), Ebal(ntimesteps);
-  NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEVsoil(ntimesteps), LEFsoil(ntimesteps);
+  NumericVector net_LWR_can(ntimesteps),LEVcan(ntimesteps), Hcan_heat(ntimesteps), Ebal(ntimesteps);
+  NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEVsoil(ntimesteps), LEFsnow(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
   NumericMatrix Tcan_mat(ntimesteps, ncanlayers);
   NumericMatrix VPcan_mat(ntimesteps, ncanlayers);
@@ -986,9 +987,12 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     
     //Soil latent heat (soil evaporation)
     //Latent heat (snow fusion) as J/m2/s
-    if(SWE>0.0) abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present 
+    if(SWE>0.0) {
+      abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present
+      net_LWR_soil[n] = 0.0; //Set net LWR to zero
+    } 
     LEVsoil[n] = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
-    LEFsoil[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
+    LEFsnow[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
 
     //Herbaceous transpiration (mm) in the current step
     double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum(abs_SWR_can));
@@ -1001,12 +1005,16 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       //Soil-canopy turbulent heat exchange
       double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
       double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
-      Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
+      if(SWE==0.0) {
+        Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
+      } else {
+        Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
+      } 
       //Latent heat (evaporation + transpiration)
       double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep + herbTranspStep)/tstep;
-      LEcan_heat[n] = LEwat; 
+      LEVcan[n] = LEwat; 
       //Canopy temperature changes
-      Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEcan_heat[n] - Hcan_heat[n] - Hcansoil[n];
+      Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEVcan[n] - LEFsnow[n] - Hcan_heat[n] - Hcansoil[n];
       double canopyAirThermalCapacity = meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG;
       double canopyThermalCapacity =  canopyAirThermalCapacity + (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
       double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*Ebal[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
@@ -1015,11 +1023,17 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       
       //Soil energy balance including exchange with canopy
-      Ebalsoil[n] = abs_SWR_soil[n] + net_LWR_soil[n] + Hcansoil[n] - LEVsoil[n]- LEFsoil[n]; //Here we use all energy escaping to atmosphere
+      if(SWE==0.0) {
+        Ebalsoil[n] = abs_SWR_soil[n] + net_LWR_soil[n] + Hcansoil[n] - LEVsoil[n]; //Here we use all energy escaping to atmosphere
+      } else {
+        //Heat conduction between soil and snow
+        double Hcond_snow = 0.05*(0.0 - Tsoil[0]);//0.05 Wm-1K-1 for fresh snow
+        Ebalsoil[n] = Hcond_snow - net_LWR_soil[n] - LEVsoil[n]; 
+      }
       
       
       //Soil temperature changes
-      NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoil[n], tstep);
+      NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
       for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
       
@@ -1035,7 +1049,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(lwrExtinction["LWR_layer"]);
       NumericVector LWRnet_layer = LWR_layer["Lnet"];
       Ebal[n] = 0.0;
-      LEcan_heat[n] = 0.0;
+      LEVcan[n] = 0.0;
       NumericVector Tairnext(ncanlayers), LElayer(ncanlayers), absSWRlayer(ncanlayers), Rnlayer(ncanlayers), Hleaflayer(ncanlayers);
       NumericVector layerThermalCapacity(ncanlayers);
       NumericVector moistureET(ncanlayers), rho(ncanlayers), moistureLayer(ncanlayers), moistureLayernext(ncanlayers);
@@ -1060,7 +1074,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         // 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer); 
         double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(ElayerInst + layerEvapInst+ herbTranspInst);
         LElayer[i] = LEwat; //Energy spent in vaporisation
-        LEcan_heat[n] = LElayer[i];
+        if(i==0) LElayer[i] = LElayer[i] - LEFsnow[n]; //Add latent heat of fusion to first layer
+        LEVcan[n] = LElayer[i];
         // layerThermalCapacity[i] = (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI/((double) ncanlayers);
         layerThermalCapacity[i] =  (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
         
@@ -1127,11 +1142,19 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         }
         
         //Soil energy balance including exchange with canopy
-        double Ebalsoils =  abs_SWR_soil[n] + net_LWR_soil[n]  - LEVsoil[n] - LEFsoil[n] + Hcansoils; //Here we use all energy escaping to atmosphere
+        double Ebalsoils = 0.0;
+        //Soil energy balance including exchange with canopy
+        if(SWE==0.0) {
+          Ebalsoils = abs_SWR_soil[n] + net_LWR_soil[n]  - LEVsoil[n] + Hcansoils; //Here we use all energy escaping to atmosphere
+        } else {
+          //Heat conduction between soil and snow
+          double Hcond_snow = 0.05*(0.0 - Tsoil[0]);//0.05 Wm-1K-1 for fresh snow
+          Ebalsoils = Hcond_snow - net_LWR_soil[n] - LEVsoil[n]; 
+        }
         Ebalsoil[n] +=Ebalsoils;
         Hcansoil[n] +=Hcansoils;
         //Soil temperature changes
-        NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoils, tsubstep);
+        NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoils, tsubstep);
         for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       }
       Hcansoil[n] = Hcansoil[n]/((double) nsubsteps);
@@ -1144,7 +1167,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       // stop("kk");
       // Rcout<< n << " "<<abs_SWR_can[n]<< " = "<< sum(absSWRlayer)<<" = "<< (sum(absSWR_SL_ML) + sum(absSWR_SH_ML))<<" "<<net_LWR_can[n]<< " = "<< sum(LWRnet_layer)<<"\n";
       //Canopy energy balance
-      Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEcan_heat[n] - Hcan_heat[n] - Hcansoil[n];
+      Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEVcan[n] - Hcan_heat[n] - Hcansoil[n];
       if(n<(ntimesteps-1)) {
         Tcan[n+1] = sum(Tair*LAIpx)/sum(LAIpx); 
         Tsoil_mat(n+1,_)= Tsoil;
@@ -1186,9 +1209,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   VPcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
   DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                         _["SWRcan"] = abs_SWR_can, _["LWRcan"] = net_LWR_can,
-                                        _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
+                                        _["LEVcan"] = LEVcan, _["LEFsnow"] = LEFsnow, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
   DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["Hcansoil"] = Hcansoil, _["LEVsoil"] = LEVsoil, _["LEFsoil"] = LEFsoil, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
+                                        _["Hcansoil"] = Hcansoil, _["LEVsoil"] = LEVsoil, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
                                         _["Ebalsoil"] = Ebalsoil);
   List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst,
                          _["TemperatureLayers"] = NA_REAL, _["VaporPressureLayers"] = NA_REAL);

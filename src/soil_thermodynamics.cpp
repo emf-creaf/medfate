@@ -34,7 +34,9 @@ NumericVector midpoints(NumericVector dVec) {
  * Dharssi, I., Vidale, P.L., Verhoef, A., MacPherson, B., Jones, C., & Best, M. 2009. New soil physical properties implemented in the Unified Model at PS18. 9–12.
  * Best et al. 2011
  */
-NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
+NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, 
+                                       NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
+                                       NumericVector Temp) {
   int nlayers = sand.length();
   NumericVector thermalCond(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
@@ -56,7 +58,9 @@ NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, N
  *  returns - J·m-3·K-1
  * Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., & Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
  */
-NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
+NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay, 
+                                   NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
+                                   NumericVector Temp) {
   int nlayers = sand.length();
   NumericVector thermalCap(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
@@ -118,8 +122,12 @@ NumericVector thermalCapacity(List soil, String model = "SX") {
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector W = soil["W"];
+  NumericVector Temp = soil["Temp"];
   NumericVector Theta_FC = thetaFC(soil, model);
-  return(layerThermalCapacity(sand, clay, W, Theta_FC));
+  NumericVector Theta_SAT = thetaSAT(soil, model);
+  return(layerThermalCapacity(sand, clay, 
+                              W, Theta_SAT, Theta_FC,
+                              Temp));
 }
 
 //' @rdname soil_thermodynamics
@@ -129,7 +137,11 @@ NumericVector thermalConductivity(List soil, String model = "SX") {
   NumericVector clay = soil["clay"];
   NumericVector W = soil["W"];
   NumericVector Theta_FC = thetaFC(soil, model);
-  return(layerThermalConductivity(sand, clay, W, Theta_FC));
+  NumericVector Theta_SAT = thetaSAT(soil, model);
+  NumericVector Temp = soil["Temp"];
+  return(layerThermalConductivity(sand, clay, 
+                                  W, Theta_SAT, Theta_FC,
+                                  Temp));
 }
 
 
@@ -155,10 +167,14 @@ NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp) {
 // [[Rcpp::export("soil_temperatureChange")]]
 NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
                                 NumericVector sand, NumericVector clay,
-                                NumericVector W, NumericVector Theta_FC,
+                                NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
                                 double Gdown, double tstep) {
-  NumericVector k = layerThermalConductivity(sand, clay, W, Theta_FC);
-  NumericVector Cv = layerThermalCapacity(sand, clay, W, Theta_FC);
+  NumericVector k = layerThermalConductivity(sand, clay, 
+                                             W, Theta_SAT, Theta_FC, 
+                                             Temp);
+  NumericVector Cv = layerThermalCapacity(sand, clay, 
+                                          W, Theta_SAT, Theta_FC, 
+                                          Temp);
   int nlayers = Temp.length();
 
   NumericVector dZ_m = dVec*0.001; //mm to m

@@ -570,7 +570,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Balance"]] = EB$CanopyEnergyBalance$Ebalcan
     df[["SWR abs."]] = EB$CanopyEnergyBalance$SWRcan 
     df[["LWR net"]] = EB$CanopyEnergyBalance$LWRcan
-    df[["Latent heat"]] = -EB$CanopyEnergyBalance$LEcan
+    df[["Latent heat vaporisation"]] = -EB$CanopyEnergyBalance$LEVcan
+    df[["Latent heat snow fusion"]] = -EB$CanopyEnergyBalance$LEFsnow
     df[["Convection can./atm."]] = -EB$CanopyEnergyBalance$Hcan
     df[["Convection soil/can."]] = -EB$SoilEnergyBalance$Hcansoil
     g<-.multiple_subday_dynamics(as.matrix(df), ylab=ylab, ylim = ylim)
@@ -587,7 +588,6 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["LWR net"]] = EB$SoilEnergyBalance$LWRsoil
     df[["Convection soil/can."]] = EB$SoilEnergyBalance$Hcansoil
     df[["Latent heat vaporisation"]] = -EB$SoilEnergyBalance$LEVsoil
-    df[["Latent heat fusion"]] = -EB$SoilEnergyBalance$LEFsoil
     g<-.multiple_subday_dynamics(as.matrix(df), ylab=ylab, ylim = ylim)
     
     # legend("topright", bty="n", col=c("red","brown","orange", "blue", "gray", "black"), lty=1,

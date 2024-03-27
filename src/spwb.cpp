@@ -1110,9 +1110,9 @@ DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings) {
   int numDays = dateStrings.length();
   NumericVector SWRcan(numDays, NA_REAL);
   NumericVector LWRcan(numDays, NA_REAL);
-  NumericVector LEcan_heat(numDays, NA_REAL);
+  NumericVector LEVcan(numDays, NA_REAL);
   NumericVector LEVsoil(numDays, NA_REAL);
-  NumericVector LEFsoil(numDays, NA_REAL);
+  NumericVector LEFsnow(numDays, NA_REAL);
   NumericVector Hcan_heat(numDays, NA_REAL);
   NumericVector Ebalcan(numDays, NA_REAL);
   NumericVector SWRsoil(numDays, NA_REAL);
@@ -1121,9 +1121,9 @@ DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings) {
   NumericVector Hcansoil(numDays, NA_REAL);
 
   DataFrame DEB = DataFrame::create(_["SWRcan"] = SWRcan, _["LWRcan"] = LWRcan,
-                                    _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebalcan, 
+                                    _["LEVcan"] = LEVcan, _["LEFsnow"] = LEFsnow, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebalcan, 
                                     _["Hcansoil"] = Hcansoil, _["SWRsoil"] = SWRsoil, _["LWRsoil"] = LWRsoil, 
-                                    _["LEVsoil"] = LEVsoil, _["LEFsoil"] = LEFsoil, _["Ebalsoil"] = Ebalsoil);  
+                                    _["LEVsoil"] = LEVsoil, _["Ebalsoil"] = Ebalsoil);  
   DEB.attr("row.names") = dateStrings;
   return(DEB);
 }
@@ -1500,27 +1500,26 @@ void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday) {
   
   NumericVector SWRcan = DEB["SWRcan"];
   NumericVector LWRcan = DEB["LWRcan"];
-  NumericVector LEcan_heat = DEB["LEcan"];
+  NumericVector LEVcan = DEB["LEVcan"];
+  NumericVector LEFsnow = DEB["LEFsnow"];
   NumericVector Hcan_heat = DEB["Hcan"];
   NumericVector Ebalcan = DEB["Ebalcan"];
   SWRcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["SWRcan"]))*tstep;
   LWRcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRcan"]))*tstep;
-  LEcan_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LEcan"]))*tstep;
+  LEVcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LEVcan"]))*tstep;
+  LEFsnow[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LEFsnow"]))*tstep;
   Hcan_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Hcan"]))*tstep;
   Ebalcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Ebalcan"]))*tstep;
   NumericVector SWRsoil = DEB["SWRsoil"];
   NumericVector LWRsoil = DEB["LWRsoil"];
   NumericVector LEVsoil = DEB["LEVsoil"];
-  NumericVector LEFsoil = DEB["LEFsoil"];
   NumericVector Hcansoil = DEB["Hcansoil"];
   NumericVector Ebalsoil = DEB["Ebalsoil"];
   SWRsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["SWRsoil"]))*tstep;
   LWRsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoil"]))*tstep;
   LEVsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEVsoil"]))*tstep;
-  LEFsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEFsoil"]))*tstep;
   Hcansoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Hcansoil"]))*tstep;
   Ebalsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Ebalsoil"]))*tstep;
-
 }
 
 void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday) {

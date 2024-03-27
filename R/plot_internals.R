@@ -770,7 +770,8 @@
     df[["Balance"]] = EnergyBalance$Ebalcan
     df[["SWR abs."]] = EnergyBalance$SWRcan 
     df[["Net LWR"]] = EnergyBalance$LWRcan
-    df[["Latent heat"]] = -EnergyBalance$LEcan
+    df[["Latent heat vaporisation"]] = -EnergyBalance$LEVcan
+    df[["Latent heat fusion"]] = -EnergyBalance$LEFsnow
     df[["Convection can./atm."]] = -EnergyBalance$Hcan
     df[["Convection soil/can."]] = -EnergyBalance$Hcansoil
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
@@ -786,7 +787,6 @@
     df[["Net LWR"]] = EnergyBalance$LWRsoil
     df[["Convection soil/can."]] = EnergyBalance$Hcansoil
     df[["Latent heat vaporisation"]] = -EnergyBalance$LEVsoil
-    df[["Latent heat fusion"]] = -EnergyBalance$LEFsoil
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
@@ -929,7 +929,8 @@
     df[["Balance"]] = ceb$Ebalcan
     df[["SWR abs."]] = ceb$SWRcan 
     df[["LWR net"]] = ceb$LWRcan
-    df[["Latent heat"]] = -ceb$LEcan
+    df[["Latent heat vaporisation"]] = -ceb$LEVcan
+    df[["Latent heat fusion"]] = -seb$LEFsnow
     df[["Convection can./atm."]] = -ceb$Hcan
     df[["Convection soil/can."]] = -seb$Hcansoil
     return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -942,7 +943,7 @@
     df[["SWR abs."]] = seb$SWRsoil
     df[["LWR net"]] = seb$LWRsoil
     df[["Convection soil/can."]] = seb$Hcansoil
-    df[["Latent heat"]] = -seb$LEsoil
+    df[["Latent heat vaporisation"]] = -seb$LEVsoil
     return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
   }
   else if(type=="PlantExtraction") {
