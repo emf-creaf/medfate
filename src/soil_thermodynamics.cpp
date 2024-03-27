@@ -85,8 +85,10 @@ NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay,
 //' @param clay Percentage of clay (in percent weight) for each layer.
 //' @param sand Percentage of sand (in percent weight) for each layer.
 //' @param W Soil moisture (in percent of field capacity) for each layer.
+//' @param Theta_SAT Relative water content (in percent volume) at saturation for each layer.
 //' @param Theta_FC Relative water content (in percent volume) at field capacity for each layer.
 //' @param Gdown Downward heat flux from canopy to soil (in W·m-2).
+//' @param tstep Time step (interval) in seconds.
 //' 
 //' @return 
 //' Function \code{soil_thermalConductivity} returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer. 
