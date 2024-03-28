@@ -152,11 +152,12 @@ List spwbDay_basic(List x, NumericVector meteovec,
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-  bool freeDrainage = control["freeDrainage"];
   String soilFunctions = control["soilFunctions"];
   String interceptionMode = control["interceptionMode"];
   String infiltrationMode = control["infiltrationMode"];
-
+  String soilDomains = control["soilDomains"];
+  bool freeDrainage = control["freeDrainage"];
+  
   //Soil parameters
   List soil = x["soil"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
@@ -240,40 +241,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
                                               Cm, LgroundPAR, LgroundSWR, 
                                               runon,
                                               snowpack, true);
-
-  //STEP 3 - Net Runoff and infiltration
   double RainfallInput = hydroInputs["RainfallInput"];
   double Snowmelt = hydroInputs["Snowmelt"];
-  double Infiltration = 0.0;
-  double SaturationExcess = 0.0;
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector IVec(nlayers,0.0);
-  NumericMatrix IVecPools(numCohorts, nlayers);
-  if(!plantWaterPools) {
-    Infiltration = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
-                                             soilFunctions, infiltrationMode);
-    IVec = infiltrationRepartition(Infiltration, dVec, macro);
-  } else {
-    NumericVector poolProportions = belowdf["poolProportions"];
-    for(int c=0;c<numCohorts;c++) {
-      //Get soil pool
-      List soil_c =  soilPools[c];
-      double Infiltration_c = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
-                                          soilFunctions, infiltrationMode);
-      NumericVector IVec_c = infiltrationRepartition(Infiltration_c, dVec, macro);
-      //Update average soil evaporation and herbaceous transpiration 
-      for(int l=0;l<nlayers;l++) {
-        IVecPools(c,l) = IVec_c[l];
-        IVec[l] = IVec[l] + poolProportions[c]*IVec_c[l]; 
-      }
-    }
-    Infiltration = sum(IVec);
-  }
-  double Runoff = RainfallInput - Infiltration;
   
-  
-  //STEP 4 - Evaporation from bare soil and herbaceous transpiration
+  //STEP 3 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
   double Esoil = 0.0;
   NumericVector EsoilPools(numCohorts, 0.0);
@@ -303,7 +274,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
   }
 
-  //STEP 5 - Woody plant transpiration  (does not modify soil, only plants)
+  //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
   List transp = transpirationBasic(x, meteovec, elevation, true);
   //Determine hydraulic redistribution and source sink for overall soil
   NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
@@ -318,19 +289,25 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
   }
   
-  //STEP 6 - Soil flows
+  //STEP 5 - Soil flows
   double DeepDrainage = 0.0;
+  double Infiltration = 0.0;
+  double Runoff = 0.0;
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += IVec[l] - ExtractionVec[l] - EherbVec[l];
-    if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
+    sourceSinkVec[l] -= (ExtractionVec[l] + EherbVec[l]);
+    if(l ==0) sourceSinkVec[l] -= Esoil;
   }
+  
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
-    NumericVector sf = soilFlows(soil, sourceSinkVec, 24, freeDrainage, true);
-    DeepDrainage = sf["deep_drainage"];
-    SaturationExcess = sf["saturation_excess"];
-    Runoff += sf["saturation_excess"];
+    NumericVector sf = soilFlows(soil, soilFunctions,
+                                 RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                                 infiltrationMode, soilDomains, freeDrainage, 
+                                 24, true);
+    DeepDrainage = sf["DeepDrainage"];
+    Infiltration = sf["Infiltration"];
+    Runoff = sf["Runoff"];
   } else { //Apply soil flows to water pools
     NumericVector poolProportions = belowdf["poolProportions"];
     List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
@@ -352,16 +329,19 @@ List spwbDay_basic(List x, NumericVector meteovec,
       List soil_c = soilPools[c];
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
-        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolMat(c,l) - EherbPools(c,l);
-        if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
-        // sourceSinkCheck[l] +=sourceSinkPoolVec[l]*poolProportions[c];
+        sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
+        if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
       }
-      NumericVector sf_c = soilFlows(soil_c, sourceSinkPoolVec, 24, freeDrainage, true);
-      double DeepDrainage_c = sf_c["deep_drainage"];
-      double Saturation_Excess_c = sf_c["saturation_excess"];
+      NumericVector sf_c = soilFlows(soil_c, soilFunctions,
+                                     RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec,
+                                     infiltrationMode, soilDomains, freeDrainage, 
+                                     24, true);
+      double DeepDrainage_c = sf_c["DeepDrainage"];
+      double Infiltration_c = sf_c["Infiltration"];
+      double Runoff_c = sf_c["Runoff"];
       DeepDrainage = DeepDrainage + DeepDrainage_c*poolProportions[c]; 
-      Runoff = Runoff + Saturation_Excess_c*poolProportions[c]; 
-      SaturationExcess = SaturationExcess + Saturation_Excess_c*poolProportions[c]; 
+      Runoff = Runoff + Runoff_c*poolProportions[c]; 
+      Infiltration = Infiltration + Infiltration_c*poolProportions[c]; 
       
       //copy to Wpool and update Wsoil
       NumericVector W_c = soil_c["W"];
@@ -375,7 +355,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   
-  //STEP 7 - Fire hazard
+  //STEP 6 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
   NumericVector fireHazard(1,NA_REAL);
   if(fireHazardResults) fireHazard = fccsHazard(x, meteovec, transp, slope);
@@ -392,7 +372,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
                                            _["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = Snowmelt,
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, 
-                                           _["SaturationExcess"] = SaturationExcess,
                                            _["DeepDrainage"] = DeepDrainage,
                                            _["SoilEvaporation"] = Esoil, _["HerbTranspiration"] = sum(EherbVec),
                                            _["PlantExtraction"] = sum(ExtractionVec), _["Transpiration"] = sum(Eplant),
@@ -428,16 +407,16 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   
   //Control parameters
   List control = x["control"];
+  int ntimesteps = control["ndailysteps"];
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
   bool snowpack = control["snowpack"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-  bool freeDrainage = control["freeDrainage"];
   String soilFunctions = control["soilFunctions"];
-  int ntimesteps = control["ndailysteps"];
-  String transpirationMode = control["transpirationMode"];
-  String infiltrationMode = control["infiltrationMode"];
   String interceptionMode = control["interceptionMode"];
+  String infiltrationMode = control["infiltrationMode"];
+  String soilDomains = control["soilDomains"];
+  bool freeDrainage = control["freeDrainage"];
   
   //Soil parameters
   List soil = x["soil"];
@@ -515,40 +494,10 @@ List spwbDay_advanced(List x, NumericVector meteovec,
                                               Cm, LgroundPAR, LgroundSWR, 
                                               runon,
                                               snowpack, true);
-  
-  //STEP 3 - Net Runoff and infiltration
   double RainfallInput = hydroInputs["RainfallInput"];
   double Snowmelt = hydroInputs["Snowmelt"];
-  double Infiltration = 0.0;
-  double SaturationExcess = 0.0;
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector IVec(nlayers,0.0);
-  NumericMatrix IVecPools(numCohorts, nlayers);
-  if(!plantWaterPools) {
-    Infiltration = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
-                                      soilFunctions, infiltrationMode);
-    IVec = infiltrationRepartition(Infiltration, dVec, macro);
-  } else {
-    NumericVector poolProportions = belowdf["poolProportions"];
-    for(int c=0;c<numCohorts;c++) {
-      //Get soil pool
-      List soil_c =  soilPools[c];
-      double Infiltration_c = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
-                                                 soilFunctions, infiltrationMode);
-      NumericVector IVec_c = infiltrationRepartition(Infiltration_c, dVec, macro);
-      //Update average soil evaporation and herbaceous transpiration 
-      for(int l=0;l<nlayers;l++) {
-        IVecPools(c,l) = IVec_c[l];
-        IVec[l] = IVec[l] + poolProportions[c]*IVecPools(c,l); 
-      }
-    }
-    Infiltration = sum(IVec);
-  }
-  double Runoff = RainfallInput - Infiltration;
   
-  
-  //STEP 4 - Evaporation from bare soil and herbaceous transpiration
+  //STEP 3 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
   double Esoil = 0.0;
   NumericVector EsoilPools(numCohorts, 0.0);
@@ -578,7 +527,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     }
   }
   
-  //STEPS 5-9 - Energy balance, transpiration, photosynthesis, uptake 
+  //STEPS 4-8 - Energy balance, transpiration, photosynthesis, uptake 
   List transp = transpirationAdvanced(x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
@@ -602,20 +551,24 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     ExtractionVec[l] = sum(soilLayerExtractInst(l,_));
   }
 
-  //STEP 10 - SOIL FLOWS
+  //STEP 9 - SOIL FLOWS
   double DeepDrainage = 0.0;
+  double Infiltration = 0.0;
+  double Runoff = 0.0;
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += IVec[l] - ExtractionVec[l] - EherbVec[l];
-    if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
+    sourceSinkVec[l] -= (ExtractionVec[l] + EherbVec[l]);
+    if(l ==0) sourceSinkVec[l] -= Esoil;
   }
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
-    NumericVector sf = soilFlows(soil, sourceSinkVec, 24, freeDrainage, true);
-    DeepDrainage = sf["deep_drainage"];
-    SaturationExcess = sf["saturation_excess"];
-    Runoff += sf["saturation_excess"];
-    Infiltration -= sf["saturation_excess"];
+    NumericVector sf = soilFlows(soil, soilFunctions,
+                                 RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                                 infiltrationMode, soilDomains, freeDrainage, 
+                                 24, true);
+    DeepDrainage = sf["DeepDrainage"];
+    Infiltration = sf["Infiltration"];
+    Runoff = sf["Runoff"];
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
     List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
@@ -636,16 +589,19 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       List soil_c = soilPools[c];
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
-        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolMat(c,l) - EherbPools(c,l);
-        if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
+        sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
+        if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
       }
-      NumericVector sf_c = soilFlows(soil_c, sourceSinkPoolVec, 24, freeDrainage, true);
-      double DeepDrainage_c = sf_c["deep_drainage"];
-      double Saturation_Excess_c = sf_c["saturation_excess"];
+      NumericVector sf_c = soilFlows(soil_c, soilFunctions,
+                                     RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec,
+                                     infiltrationMode, soilDomains, freeDrainage, 
+                                     24, true);
+      double DeepDrainage_c = sf_c["DeepDrainage"];
+      double Infiltration_c = sf_c["Infiltration"];
+      double Runoff_c = sf_c["Runoff"];
       DeepDrainage = DeepDrainage + DeepDrainage_c*poolProportions[c]; 
-      SaturationExcess = SaturationExcess + Saturation_Excess_c*poolProportions[c];
-      Runoff = Runoff + Saturation_Excess_c*poolProportions[c]; 
-      Infiltration = Infiltration - Saturation_Excess_c*poolProportions[c]; 
+      Runoff = Runoff + Runoff_c*poolProportions[c]; 
+      Infiltration = Infiltration + Infiltration_c*poolProportions[c]; 
       
       //copy to Wpool and update Wsoil
       NumericVector W_c = soil_c["W"];
@@ -672,7 +628,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
                                            _["Snowmelt"] = Snowmelt,
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, 
-                                           _["SaturationExcess"] = SaturationExcess,
                                            _["DeepDrainage"] = DeepDrainage,
                                            _["SoilEvaporation"] = Esoil, _["HerbTranspiration"] = sum(EherbVec),
                                            _["PlantExtraction"] = sum(ExtractionVec), _["Transpiration"] = sum(Eplant),
@@ -1063,14 +1018,14 @@ DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String tran
   NumericVector PET(numDays), Precipitation(numDays), Evapotranspiration(numDays);
   NumericVector Runoff(numDays),Rain(numDays),Snow(numDays);
   NumericVector Snowmelt(numDays),NetRain(numDays);
-  NumericVector Interception(numDays),Infiltration(numDays),SaturationExcess(numDays),DeepDrainage(numDays);
+  NumericVector Interception(numDays),Infiltration(numDays), DeepDrainage(numDays);
   NumericVector SoilEvaporation(numDays), HerbTranspiration(numDays), Transpiration(numDays),PlantExtraction(numDays);
   NumericVector HydraulicRedistribution(numDays, 0.0);
   
   DataFrame DWB = DataFrame::create(_["PET"]=PET, 
                           _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
                           _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration,
-                          _["SaturationExcess"] = SaturationExcess, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                          _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                             _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, 
                             _["SoilEvaporation"]=SoilEvaporation, _["HerbTranspiration"] = HerbTranspiration,
                             _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
@@ -1387,7 +1342,6 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   NumericVector Precipitation = DWB["Precipitation"];
   NumericVector DeepDrainage = DWB["DeepDrainage"];
   NumericVector Infiltration = DWB["Infiltration"];
-  NumericVector SaturationExcess = DWB["SaturationExcess"];
   NumericVector Runoff = DWB["Runoff"];
   NumericVector Rain = DWB["Rain"];
   NumericVector Snow = DWB["Snow"];
@@ -1401,7 +1355,6 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   NumericVector Evapotranspiration = DWB["Evapotranspiration"];
   DeepDrainage[iday] = db["DeepDrainage"];
   Infiltration[iday] = db["Infiltration"];
-  SaturationExcess[iday] = db["SaturationExcess"];
   Runoff[iday] = db["Runoff"];
   Rain[iday] = db["Rain"];
   Snow[iday] = db["Snow"];
@@ -1791,7 +1744,6 @@ void printWaterBalanceResult(List outputList, List x,
   NumericVector Precipitation = DWB["Precipitation"];
   NumericVector DeepDrainage = DWB["DeepDrainage"];
   NumericVector Infiltration = DWB["Infiltration"];
-  NumericVector SaturationExcess = DWB["SaturationExcess"];
   NumericVector Runoff = DWB["Runoff"];
   NumericVector Rain = DWB["Rain"];
   NumericVector Snow = DWB["Snow"];
@@ -1814,7 +1766,6 @@ void printWaterBalanceResult(List outputList, List x,
   double SoilEvaporationsum = sum(SoilEvaporation);
   double Runoffsum  = sum(Runoff);
   double Infiltrationsum  = sum(Infiltration);
-  double SaturationExcesssum = sum(SaturationExcess);
   double DeepDrainagesum = sum(DeepDrainage);
   double Transpirationsum = sum(Transpiration);
   double Snowmeltsum = sum(Snowmelt);
@@ -1836,7 +1787,6 @@ void printWaterBalanceResult(List outputList, List x,
   Rcout<<"  Rain (mm) "  <<round(Rainfallsum) <<" Snow (mm) "  <<round(Snowsum) <<"\n";
   Rcout<<"  Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
   Rcout<<"  Infiltration (mm) " << round(Infiltrationsum)  <<
-    "  Saturation excess (mm) " << round(SaturationExcesssum)  <<
     " Runoff (mm) " << round(Runoffsum) <<
       " Deep drainage (mm) "  << round(DeepDrainagesum)  <<"\n";
   Rcout<<"  Soil evaporation (mm) " << round(SoilEvaporationsum);

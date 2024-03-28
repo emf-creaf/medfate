@@ -525,11 +525,29 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
 //'   
 //' @name hydrology_soilFlows
 // [[Rcpp::export("hydrology_soilFlows")]]
-NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, 
-                        bool freeDrainage = true, bool modifySoil = true) {
+NumericVector soilFlows(List soil, String soilFunctions, 
+                        double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
+                        String infiltrationMode = "GreenAmpt1911", String soilDomains = "single", bool freeDrainage = true, 
+                        int nsteps = 24, bool modifySoil = true) {
   
   if(!modifySoil) soil = clone(soil);
+
+  NumericVector dVec = soil["dVec"];
+  int nlayers = dVec.size();
+  NumericVector macro = soil["macro"];
   
+  //Infiltration
+  double Infiltration = infiltrationAmount(rainfallInput, rainfallIntensity, soil, 
+                                           soilFunctions, infiltrationMode);
+  double Runoff = rainfallInput - Infiltration;
+  NumericVector IVec = infiltrationRepartition(Infiltration, dVec, macro);
+  
+  //Add infiltration and snow-melt to source/sinks
+  for(int l=0;l<nlayers;l++) {
+    sourceSink[l] += IVec[l];
+  }
+  sourceSink[0] += snowmelt;
+    
   double maxSource =  max(abs(sourceSink));
   if(maxSource > 10) nsteps = 48;
   if(maxSource > 20) nsteps = 96;
@@ -539,8 +557,6 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   double tstep = 86400.0/((double) nsteps);
   double halftstep = tstep/2.0;
   
-  NumericVector dVec = soil["dVec"];
-  int nlayers = dVec.size();
   double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/m2/s
   NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
   NumericVector dZ_m = dVec*0.001; //mm to m
@@ -708,9 +724,13 @@ NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   
   double Vfin_mm = sum(water(soil, "VG"));
   double balance_mm = sum(sourceSink) - drainage_mm + Vini_mm - Vfin_mm;
-  //If positive balance (more inputs than outputs) create saturation excess
-  double saturation_excess_mm = std::max(0.0, balance_mm); 
+  
+  //If positive balance (more inputs than outputs) create new drainage saturation excess via macropore circulation
+  drainage_mm += std::max(0.0, balance_mm); 
   //If negative (more outputs than inputs) reduce drainage
   drainage_mm += std::min(0.0, balance_mm); 
-  return(NumericVector::create(_["deep_drainage"] = drainage_mm, _["saturation_excess"] = saturation_excess_mm));
+  
+  return(NumericVector::create(_["DeepDrainage"] = drainage_mm, 
+                               _["Runoff"] = Runoff,
+                               _["Infiltration"] = Infiltration));
 }

@@ -1752,8 +1752,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'   
 #'   
 #' @name hydrology_soilFlows
-hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, freeDrainage = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, freeDrainage, modifySoil)
+hydrology_soilFlows <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode = "GreenAmpt1911", soilDomains = "single", freeDrainage = TRUE, nsteps = 24L, modifySoil = TRUE) {
+    .Call(`_medfate_soilFlows`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode, soilDomains, freeDrainage, nsteps, modifySoil)
 }
 
 .gammln <- function(xx) {

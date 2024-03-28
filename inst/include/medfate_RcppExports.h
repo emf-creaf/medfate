@@ -484,17 +484,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool freeDrainage = true, bool modifySoil = true) {
-        typedef SEXP(*Ptr_hydrology_soilFlows)(SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline NumericVector hydrology_soilFlows(List soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, String infiltrationMode = "GreenAmpt1911", String soilDomains = "single", bool freeDrainage = true, int nsteps = 24, bool modifySoil = true) {
+        typedef SEXP(*Ptr_hydrology_soilFlows)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilFlows p_hydrology_soilFlows = NULL;
         if (p_hydrology_soilFlows == NULL) {
-            validateSignature("NumericVector(*hydrology_soilFlows)(List,NumericVector,int,bool,bool)");
+            validateSignature("NumericVector(*hydrology_soilFlows)(List,String,double,double,double,NumericVector,String,String,bool,int,bool)");
             p_hydrology_soilFlows = (Ptr_hydrology_soilFlows)R_GetCCallable("medfate", "_medfate_hydrology_soilFlows");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_soilFlows(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sourceSink)), Shield<SEXP>(Rcpp::wrap(nsteps)), Shield<SEXP>(Rcpp::wrap(freeDrainage)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
+            rcpp_result_gen = p_hydrology_soilFlows(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(rainfallInput)), Shield<SEXP>(Rcpp::wrap(rainfallIntensity)), Shield<SEXP>(Rcpp::wrap(snowmelt)), Shield<SEXP>(Rcpp::wrap(sourceSink)), Shield<SEXP>(Rcpp::wrap(infiltrationMode)), Shield<SEXP>(Rcpp::wrap(soilDomains)), Shield<SEXP>(Rcpp::wrap(freeDrainage)), Shield<SEXP>(Rcpp::wrap(nsteps)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

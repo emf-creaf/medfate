@@ -75,9 +75,10 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   List control = x["control"];
   List soil = x["soil"];
   bool snowpack = control["snowpack"];
-  bool freeDrainage = control["freeDrainage"];
   String soilFunctions = control["soilFunctions"];
   String infiltrationMode = control["infiltrationMode"];
+  String soilDomains = control["soilDomains"];
+  bool freeDrainage = control["freeDrainage"];
   
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
   
@@ -96,19 +97,13 @@ List aspwb_day_internal(List x, NumericVector meteovec,
                                                          tday, rad, elevation,
                                                          LgroundSWR, runon,
                                                          snowpack, true);
-
-  //Soil infiltration and percolation (update W)
   double RainfallInput = hydroInputs["RainfallInput"];
-  double Snowmelt = hydroInputs["Snowmelt"];
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector psiVec = psi(soil, soilFunctions); 
-  double Infiltration = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
-                                           soilFunctions, infiltrationMode);
-  NumericVector IVec = infiltrationRepartition(Infiltration, dVec, macro);
-  double Runoff = RainfallInput - Infiltration;
+  double Snowmelt = hydroInputs["Snowmelt"];  
   
+
+  NumericVector dVec = soil["dVec"];
+  NumericVector psiVec = psi(soil, soilFunctions); 
+
   //Evaporation from bare soil (if there is no snow), do not update soil yet
   double Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
   
@@ -122,17 +117,22 @@ List aspwb_day_internal(List x, NumericVector meteovec,
     ExtractionVec[l] = V[l]*transp_max * exp(-0.6931472*pow(std::abs(psiVec[l]/(-2.0)),3.0)); //Reduce transpiration when soil is dry 
   }
   
-  //Modify soil with soil evaporation, herb transpiration and woody plant transpiration
-  //and determine water flows, returning deep drainage
+  //Define source/sink with soil evaporation, herb transpiration and woody plant transpiration
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += IVec[l] - ExtractionVec[l];
-    if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
+    sourceSinkVec[l] -= ExtractionVec[l];
+    if(l ==0) sourceSinkVec[l] -= Esoil;
   }
-  NumericVector sf = soilFlows(soil, sourceSinkVec, 24, freeDrainage, true);
-  double DeepDrainage = sf["deep_drainage"];
-  Runoff += sf["saturation_excess"];
   
+  //Determine water flows, returning deep drainage
+  NumericVector sf = soilFlows(soil, soilFunctions,
+                               RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                               infiltrationMode, soilDomains, freeDrainage, 
+                               24, true);
+  double Infiltration = sf["Infiltration"];
+  double DeepDrainage = sf["DeepDrainage"];
+  double Runoff = sf["Runoff"];
+
   //Recalculate current soil water potential for output
   psiVec = psi(soil, soilFunctions); 
   

@@ -6,9 +6,15 @@
 \usage{
 hydrology_soilFlows(
   soil,
+  soilFunctions,
+  rainfallInput,
+  rainfallIntensity,
+  snowmelt,
   sourceSink,
-  nsteps = 24L,
+  infiltrationMode = "GreenAmpt1911",
+  soilDomains = "single",
   freeDrainage = TRUE,
+  nsteps = 24L,
   modifySoil = TRUE
 )
 }
@@ -18,9 +24,9 @@ hydrology_soilFlows(
 \item{sourceSink}{Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 as mm/day.}
 
-\item{nsteps}{Number of time steps per day}
-
 \item{freeDrainage}{Boolean flag to indicate that lower boundary condition is free drainage.}
+
+\item{nsteps}{Number of time steps per day}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }
