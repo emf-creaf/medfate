@@ -505,10 +505,16 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
 //' Function \code{hydrology_soilFlows} estimates water movement within the soil according to Richards equation.
 //' 
 //' @param soil Object of class \code{\link{soil}}.
-//' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
+//' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+//' @param rainfallInput Amount of water from rainfall event (after excluding interception), in mm.
+//' @param rainfallIntensity Rainfall intensity, in mm/h.
+//' @param snowmelt Amount of water originated from snow melt, in mm.
+//' @param sourceSink Source/sink term for each soil layer (from soil evaporation or plant transpiration/redistribution)
 //'        as mm/day.
-//' @param nsteps  Number of time steps per day
+//' @param infiltrationMode Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+//' @param soilDomains Either "single" (for single-domain) or "dual" (for dual-permeability).
 //' @param freeDrainage Boolean flag to indicate that lower boundary condition is free drainage.
+//' @param nsteps  Number of time steps per day
 //' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 //' 
 //' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
@@ -516,10 +522,11 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
 //' @return
-//'   Returns a named vector with two elements:
+//'   Returns a named vector with three elements:
 //'   \itemize{
-//'     \item{\code{deep_drainage}: the water draining from the bottom layer.}
-//'     \item{\code{saturation_excess}: surface runoff generated via saturation excess.}
+//'     \item{\code{Infiltration}: water infiltrated into the soil.}
+//'     \item{\code{Runoff}: surface runoff generated.}
+//'     \item{\code{DeepDrainage}: the water draining from the bottom layer.}
 //'   }
 //'   
 //'   
@@ -730,7 +737,7 @@ NumericVector soilFlows(List soil, String soilFunctions,
   //If negative (more outputs than inputs) reduce drainage
   drainage_mm += std::min(0.0, balance_mm); 
   
-  return(NumericVector::create(_["DeepDrainage"] = drainage_mm, 
+  return(NumericVector::create(_["Infiltration"] = Infiltration,
                                _["Runoff"] = Runoff,
-                               _["Infiltration"] = Infiltration));
+                               _["DeepDrainage"] = drainage_mm));
 }

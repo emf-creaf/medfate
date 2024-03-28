@@ -21,8 +21,20 @@ hydrology_soilFlows(
 \arguments{
 \item{soil}{Object of class \code{\link{soil}}.}
 
-\item{sourceSink}{Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
+\item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
+
+\item{rainfallInput}{Amount of water from rainfall event (after excluding interception), in mm.}
+
+\item{rainfallIntensity}{Rainfall intensity, in mm/h.}
+
+\item{snowmelt}{Amount of water originated from snow melt, in mm.}
+
+\item{sourceSink}{Source/sink term for each soil layer (from soil evaporation or plant transpiration/redistribution)
 as mm/day.}
+
+\item{infiltrationMode}{Infiltration model, either "GreenAmpt1911" or "Boughton1989"}
+
+\item{soilDomains}{Either "single" (for single-domain) or "dual" (for dual-permeability).}
 
 \item{freeDrainage}{Boolean flag to indicate that lower boundary condition is free drainage.}
 
@@ -31,10 +43,11 @@ as mm/day.}
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }
 \value{
-Returns a named vector with two elements:
+Returns a named vector with three elements:
   \itemize{
-    \item{\code{deep_drainage}: the water draining from the bottom layer.}
-    \item{\code{saturation_excess}: surface runoff generated via saturation excess.}
+    \item{\code{Infiltration}: water infiltrated into the soil.}
+    \item{\code{Runoff}: surface runoff generated.}
+    \item{\code{DeepDrainage}: the water draining from the bottom layer.}
   }
 }
 \description{
