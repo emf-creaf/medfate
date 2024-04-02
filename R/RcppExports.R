@@ -2880,6 +2880,10 @@ soil_psi2kVG <- function(ksat, n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2kVanGenuchten`, ksat, n, alpha, theta_res, theta_sat, psi)
 }
 
+soil_psi2kVGmic <- function(k_b, n, alpha, theta_res, theta_sat, psi, psi_b) {
+    .Call(`_medfate_psi2kVanGenuchtenMicropores`, k_b, n, alpha, theta_res, theta_sat, psi, psi_b)
+}
+
 #' @rdname soil_texture
 soil_psi2cVG <- function(n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2cVanGenuchten`, n, alpha, theta_res, theta_sat, psi)

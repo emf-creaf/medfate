@@ -3977,6 +3977,46 @@ RcppExport SEXP _medfate_psi2kVanGenuchten(SEXP ksatSEXP, SEXP nSEXP, SEXP alpha
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// psi2kVanGenuchtenMicropores
+double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double theta_res, double theta_sat, double psi, double psi_b);
+static SEXP _medfate_psi2kVanGenuchtenMicropores_try(SEXP k_bSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP, SEXP psi_bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type k_b(k_bSEXP);
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
+    Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type psi_b(psi_bSEXP);
+    rcpp_result_gen = Rcpp::wrap(psi2kVanGenuchtenMicropores(k_b, n, alpha, theta_res, theta_sat, psi, psi_b));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_psi2kVanGenuchtenMicropores(SEXP k_bSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP, SEXP psi_bSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_psi2kVanGenuchtenMicropores_try(k_bSEXP, nSEXP, alphaSEXP, theta_resSEXP, theta_satSEXP, psiSEXP, psi_bSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // psi2cVanGenuchten
 double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
 static SEXP _medfate_psi2cVanGenuchten_try(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
@@ -5534,6 +5574,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*soil_theta2psiSX)(double,double,double,double)");
         signatures.insert("double(*soil_psi2thetaSX)(double,double,double,double)");
         signatures.insert("double(*soil_psi2kVG)(double,double,double,double,double,double)");
+        signatures.insert("double(*soil_psi2kVGmic)(double,double,double,double,double,double,double)");
         signatures.insert("double(*soil_psi2cVG)(double,double,double,double,double)");
         signatures.insert("double(*soil_psi2thetaVG)(double,double,double,double,double)");
         signatures.insert("double(*soil_theta2psiVG)(double,double,double,double,double)");
@@ -5601,6 +5642,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_theta2psiSX", (DL_FUNC)_medfate_theta2psiSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi2thetaSX", (DL_FUNC)_medfate_psi2thetaSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi2kVG", (DL_FUNC)_medfate_psi2kVanGenuchten_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_psi2kVGmic", (DL_FUNC)_medfate_psi2kVanGenuchtenMicropores_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi2cVG", (DL_FUNC)_medfate_psi2cVanGenuchten_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi2thetaVG", (DL_FUNC)_medfate_psi2thetaVanGenuchten_try);
     R_RegisterCCallable("medfate", "_medfate_soil_theta2psiVG", (DL_FUNC)_medfate_theta2psiVanGenuchten_try);
@@ -5866,6 +5908,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
     {"_medfate_psi2kVanGenuchten", (DL_FUNC) &_medfate_psi2kVanGenuchten, 6},
+    {"_medfate_psi2kVanGenuchtenMicropores", (DL_FUNC) &_medfate_psi2kVanGenuchtenMicropores, 7},
     {"_medfate_psi2cVanGenuchten", (DL_FUNC) &_medfate_psi2cVanGenuchten, 5},
     {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},
     {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
