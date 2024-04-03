@@ -589,12 +589,14 @@ NumericVector soilFlows(List soil, String soilFunctions,
     
   double maxSource =  max(abs(sourceSinkDef));
   if(soilDomains=="dual") maxSource +=infiltrationMatrixExcess;
+  // Rcout<<infiltrationMatrix<< " "<<maxSource<<"\n";
   if(maxSource > 10.0) nsteps = 48;
   if(maxSource > 20.0) nsteps = 96;
   if(maxSource > 30.0) nsteps = 144;
   if(maxSource > 40.0) nsteps = 192;
   if(maxSource > 50.0) nsteps = 240;
   if(maxSource > 60.0) nsteps = 288;
+  if(maxSource > 70.0) nsteps = 336;
   
   double tstep = 86400.0/((double) nsteps);
   double halftstep = tstep/2.0;
@@ -789,27 +791,36 @@ NumericVector soilFlows(List soil, String soilFunctions,
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
       Psi[l] = Psi_t1[l];
       if(soilDomains=="single") {
-        // if(Psi[l] > 0.0) { //oversaturation
-        //   double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-        //   double res_mm = std::abs(theta_sat[l] - new_theta)*dVec[l]*lambda[l];
-        //   Runoff += res_mm;
-        //   infiltrationMatrix -=res_mm;
-        //   Psi[l] = 0.0;
-        // }
+        if((Psi[l] > -0.0001)) { //oversaturation generates macropore drainage
+          // Rcout<< s <<" os "<< l <<"\n";
+          double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+          double res_mm = std::abs(theta_sat[l] - new_theta)*dVec[l]*lambda[l];
+          drainage_macropores += res_mm;
+          Psi[l] = -0.0001;
+        }
       } else {
-        //Update theta_micro for the next step
+        double excess_theta = 0.0;
+        if((Psi[l] > -0.0001)) { //oversaturation generates macropore drainage
+          // Rcout<< s <<" os "<< l <<"\n";
+          double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+          excess_theta += std::abs(theta_sat[l] - new_theta);
+          Psi[l] = -0.0001;
+        }
+          //Update theta_micro for the next step
         double new_theta_micro = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
         //If needed, add exceeding moisture to the macropores and correct Psi
         if(new_theta_micro > theta_b[l]) {
-          double excess_theta = std::max(new_theta_micro - theta_b[l], 0.0);
-          // Rcout<< excess_theta <<" to macropores in "<<l<<"\n";
-          theta_macro[l] = theta_macro[l] + excess_theta;
-          S_macro[l] = theta_macro[l]/e_macro[l];
-          Kmacro_ms[l] = (Ksat_ms[l] - Ksat_b_ms[l])*pow(S_macro[l], kin_exp);
+          excess_theta += std::max(new_theta_micro - theta_b[l], 0.0);
           theta_micro[l] = theta_b[l];
           Psi[l] = Psi_b;
         } else {
           theta_micro[l] = new_theta_micro;
+        }
+        if(excess_theta>0.0){
+          // Rcout<< excess_theta <<" to macropores in "<<l<<"\n";
+          theta_macro[l] = theta_macro[l] + excess_theta;
+          S_macro[l] = theta_macro[l]/e_macro[l];
+          Kmacro_ms[l] = (Ksat_ms[l] - Ksat_b_ms[l])*pow(S_macro[l], kin_exp);
         }
       }
     }
@@ -958,14 +969,16 @@ NumericVector soilFlows(List soil, String soilFunctions,
       Theta[l] = theta_micro[l] + theta_macro[l];
     }
     W[l] = Theta[l]/Theta_FC[l];
-    // Rcout<< "Final layer " << l << " theta_b " << theta_b[l]<<" e_macro " << e_macro[l]<<" Psi " << Psi[l]<<" theta_micro " << theta_micro[l]<< " S_macro " << S_macro[l] << " theta_macro " << theta_macro[l] << " theta " << Theta[l] <<" W "<< W[l] << "\n";
+    // Rcout<< "Final layer " << l << " theta_b  " << theta_b[l]<<" e_macro " << e_macro[l]<<" Psi " << Psi[l]<<" theta_micro " << theta_micro[l]<< " S_macro " << S_macro[l] << " theta_macro " << theta_macro[l] << " theta " << Theta[l] <<" W "<< W[l] << "\n";
   }
   
   double Vfin_mm = sum(water(soil, "VG"));
   double balance_mm = sum(sourceSink) + snowmelt + infiltrationMatrix + infiltrationMacropores - drainage_matrix_mm - drainage_macropores_mm;
    
+  double correction = balance_mm + Vini_mm - Vfin_mm;
+  // Rcout<< "correction " << correction<<"\n";
   // Correct possible mismatch between balance and volume change
-  drainage_macropores_mm += balance_mm + Vini_mm - Vfin_mm;
+  drainage_macropores_mm += correction;
 
   NumericVector res;
   if(soilDomains=="dual") {
