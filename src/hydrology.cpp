@@ -500,7 +500,20 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
 // }
 
 
-
+//Imbitition from macropores to micropores following Larsbo et al. 2005, eq. 6-7
+//Diffusion equation with gradients in water content as driving force
+//Returns m3/m3/s
+double microporeImbibitionRate(double theta_b, double theta_micro, 
+                               double D_theta_b, double D_theta_micro,
+                               double S_macro) {
+  double G_f = 3.0;//geometry factor
+  double gamma_w = 0.1; //Scaling factor
+  double D_w = ((D_theta_b + D_theta_micro)/2.0)*S_macro;//Effective water diffusivity
+  double d = 9.35*1e-3; //Effective diffusion pathlength in m
+  double S_w = ((G_f*D_w*gamma_w)/pow(d, 2.0))*(theta_b - theta_micro);
+  // Rcout<< "D_w " << D_w << " S_w "<< S_w<<"\n";
+  return(S_w);
+}
 
 //' Soil flows
 //' 
@@ -576,10 +589,12 @@ NumericVector soilFlows(List soil, String soilFunctions,
     
   double maxSource =  max(abs(sourceSinkDef));
   if(soilDomains=="dual") maxSource +=infiltrationMatrixExcess;
-  if(maxSource > 10) nsteps = 48;
-  if(maxSource > 20) nsteps = 96;
-  if(maxSource > 30) nsteps = 144;
-  if(maxSource > 40) nsteps = 192;
+  if(maxSource > 10.0) nsteps = 48;
+  if(maxSource > 20.0) nsteps = 96;
+  if(maxSource > 30.0) nsteps = 144;
+  if(maxSource > 40.0) nsteps = 192;
+  if(maxSource > 50.0) nsteps = 240;
+  if(maxSource > 60.0) nsteps = 288;
   
   double tstep = 86400.0/((double) nsteps);
   double halftstep = tstep/2.0;
@@ -820,7 +835,8 @@ NumericVector soilFlows(List soil, String soilFunctions,
       int N_max = 100;
       double infiltrationMacropores_step = 0.0;
       for(int l=0;l<nlayers;l++) {
-        double sourceSink_macro_m3s = 0.0;
+        //Set imbibition as sink for macropore
+        double sourceSink_macro_m3s = -1.0*matrixImbibition_m3s[l];
         if(l==0) { //first layer
           K_up = 0.0;
           //Infiltration into macropores
@@ -884,8 +900,6 @@ NumericVector soilFlows(List soil, String soilFunctions,
         }
         if(!found) {
           stop("Not found");
-        } else {
-          // Rcout<< " layer "<< l << " step "<< s <<" Si_t "<< Si_t <<" bisection steps "<< N<<" Si_t1 "<< S_macro[l]<<" f_c " <<f_c<<"\n";
         }
           
         
@@ -893,6 +907,19 @@ NumericVector soilFlows(List soil, String soilFunctions,
         Kmacro_ms[l] = (Ksat_ms[l] - Ksat_b_ms[l])*pow(S_macro[l], kin_exp);
         //Drainage
         if(l==(nlayers-1)) drainage_macropores += Kmacro_ms[l]*tstep;
+        //Update imbibition rate (m3s)
+        double Ksat_fict_ms = psi2kVanGenuchtenMicropores(Ksat_b_ms[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                                                                           0.0, Psi_b);
+        double D_theta_b_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                                             Psi_b);
+        double D_theta_micro_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                                                 Psi[l]);
+        //Calculate imbibition rate in m3/m3/s = s-1
+        double imbibitionRate = microporeImbibitionRate(theta_b[l], theta_micro[l], 
+                                                        D_theta_b_m2s, D_theta_micro_m2s, 
+                                                        S_macro[l]);
+        matrixImbibition_m3s[l] = dZ_m[l]*lambda[l]*imbibitionRate;
+        // Rcout<< " layer "<< l << " step "<< s <<" Si_t "<< Si_t <<" bisection steps "<< N<<" Si_t1 "<< S_macro[l]<<" f_c " <<f_c<< " Imbibition (m3s) "<< matrixImbibition_m3s[l]<<"\n";
       }
       
       //Update theta_macro for the next step

@@ -631,27 +631,6 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline double soil_psi2kVGmic(double k_b, double n, double alpha, double theta_res, double theta_sat, double psi, double psi_b) {
-        typedef SEXP(*Ptr_soil_psi2kVGmic)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_soil_psi2kVGmic p_soil_psi2kVGmic = NULL;
-        if (p_soil_psi2kVGmic == NULL) {
-            validateSignature("double(*soil_psi2kVGmic)(double,double,double,double,double,double,double)");
-            p_soil_psi2kVGmic = (Ptr_soil_psi2kVGmic)R_GetCCallable("medfate", "_medfate_soil_psi2kVGmic");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_psi2kVGmic(Shield<SEXP>(Rcpp::wrap(k_b)), Shield<SEXP>(Rcpp::wrap(n)), Shield<SEXP>(Rcpp::wrap(alpha)), Shield<SEXP>(Rcpp::wrap(theta_res)), Shield<SEXP>(Rcpp::wrap(theta_sat)), Shield<SEXP>(Rcpp::wrap(psi)), Shield<SEXP>(Rcpp::wrap(psi_b)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
     inline double soil_psi2cVG(double n, double alpha, double theta_res, double theta_sat, double psi) {
         typedef SEXP(*Ptr_soil_psi2cVG)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil_psi2cVG p_soil_psi2cVG = NULL;

@@ -293,7 +293,7 @@ double third_cubic_root(double p, double q, double r) {
   // Terms of the solution
   double Q = (pow(p, 2.0) - 3.0*q)/9.0;
   double R = (2.0*pow(p, 3.0) - 9.0*p*q + 27.0*r)/54.0;
-  bool sol = pow(R,2.0) < pow(Q, 3.0);
+  // bool sol = pow(R,2.0) < pow(Q, 3.0);
   double theta = std::acos(R/pow(Q, 3.0/2.0));
   //Third root of the cubic equation (Numerical Recipes in C, Press et al. 1989)
   double x3 = -2.0*pow(Q, 0.5)*cos((theta - 2.0*M_PI)/3.0) - (p/3.0);

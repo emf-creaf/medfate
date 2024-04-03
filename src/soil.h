@@ -18,7 +18,8 @@ double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double th
 double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi);
 double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double theta_res, double theta_sat, 
                                    double psi, double psi_b);
-  
+double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
+                         double psi);
 double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
 
 NumericVector waterExtractable(List soil, String model="SX", double minPsi = -5.0);

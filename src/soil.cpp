@@ -328,7 +328,6 @@ double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, 
   return(k);
 }
 
-// [[Rcpp::export("soil_psi2kVGmic")]]
 double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double theta_res, double theta_sat, 
                                    double psi, double psi_b){
   double m = 1.0 - (1.0/n);
@@ -337,6 +336,20 @@ double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double th
   double k = k_b*pow(Se/Se_b,0.5)*pow(1.0 - pow(1.0 - pow(Se, 1.0/m), m), 2.0)/pow(1.0 - pow(1.0 - pow(Se_b, 1.0/m), m), 2.0);
   return(k);
 }
+
+//From Larsbo et al. (2005) eq. 8
+double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
+                         double psi){
+  double m = 1.0 - (1.0/n);
+  double l = 0.5;
+  double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
+  double f_1 = ((1.0 - m)*k_sat)/(alpha*m*(theta_sat - theta_res));
+  double f_2 = pow(Se, l - 1.0/m);
+  double f_3 = pow(1.0 - pow(Se, 1.0/m),-1.0*m) + pow(1.0 - pow(Se, 1.0/m), m) - 2.0;
+  return(f_1*f_2*f_3);
+}
+
+
 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_psi2cVG")]]
