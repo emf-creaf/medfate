@@ -794,8 +794,8 @@ NumericVector soilFlows(List soil, String soilFunctions,
         if((Psi[l] > -0.0001)) { //oversaturation generates macropore drainage
           // Rcout<< s <<" os "<< l <<"\n";
           double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-          double res_mm = std::abs(theta_sat[l] - new_theta)*dVec[l]*lambda[l];
-          drainage_macropores += res_mm;
+          double res_m3m2 = std::abs(theta_sat[l] - new_theta)*(dVec[l]/1000.0)*lambda[l];
+          drainage_macropores += res_m3m2;
           Psi[l] = -0.0001;
         }
       } else {
