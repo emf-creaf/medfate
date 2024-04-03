@@ -267,7 +267,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
     String usda = USDAType(clay[0], sand[0]);
     NumericVector cp = campbellParamsClappHornberger(usda);
     NumericVector theta_dry = theta(soil, soilFunctions);
-    double t = rainfallInput/rainfallIntensity; // time in hours
+    double t = std::min(24.0, rainfallInput/rainfallIntensity); // time in hours
     double b = cp["b"];
     double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
     double theta_sat = cp["theta_sat"];
@@ -553,8 +553,7 @@ NumericVector soilFlows(List soil, String soilFunctions,
   double infiltrationMacropores = 0.0;
   double infiltrationMatrixExcess = rainfallInput - infiltrationMatrix;
   double Runoff = 0.0;
-  double Infiltration = 0.0; 
-  
+
   //Copy sinks
   NumericVector sourceSinkDef(nlayers);
   for(int l=0;l<nlayers;l++) {
@@ -563,16 +562,13 @@ NumericVector soilFlows(List soil, String soilFunctions,
   //Add snow-melt to source/sinks
   sourceSinkDef[0] += snowmelt;
   if(soilDomains=="single") {
-    Infiltration = infiltrationMatrix;
     Runoff = infiltrationMatrixExcess;
-    NumericVector IVec = infiltrationRepartition(Infiltration, dVec, macro);
+    NumericVector IVec = infiltrationRepartition(infiltrationMatrix, dVec, macro);
     //Add infiltration to matrix def source/sinks
     for(int l=0;l<nlayers;l++) {
       sourceSinkDef[l] += IVec[l];
     }
   } else {
-    //Initial matrix infiltration
-    Infiltration = infiltrationMatrix;
     //Add matrix infiltration to first layer
     sourceSinkDef[0] += infiltrationMatrix;
   }
@@ -611,7 +607,7 @@ NumericVector soilFlows(List soil, String soilFunctions,
   //boundary condition of water table (if freeDrainage = FALSE)
   double Psi_bc = 0.0;
   //Boundary water potential for dual porosity
-  double Psi_b = 0.1*mTOMPa; // 10 cm = 0.1 m
+  double Psi_b = -0.1*mTOMPa; // 10 cm = 0.1 m 
   double kin_exp = 2.23; //Kinematic exponent reflecting macropore size distribution and tortuosity
   
   //Retrieve VG parameters
@@ -775,14 +771,24 @@ NumericVector soilFlows(List soil, String soilFunctions,
     
     for(int l=0;l<nlayers;l++) {
       //Update Psi
-      Psi[l] = Psi_t1[l];
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
-      if(soilDomains=="dual") {
+      Psi[l] = Psi_t1[l];
+      if(soilDomains=="single") {
+        // if(Psi[l] > 0.0) { //oversaturation
+        //   double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+        //   double res_mm = std::abs(theta_sat[l] - new_theta)*dVec[l]*lambda[l];
+        //   Runoff += res_mm;
+        //   infiltrationMatrix -=res_mm;
+        //   Psi[l] = 0.0;
+        // }
+      } else {
         //Update theta_micro for the next step
         double new_theta_micro = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
         //If needed, add exceeding moisture to the macropores and correct Psi
         if(new_theta_micro > theta_b[l]) {
-          theta_macro[l] = theta_macro[l] + std::max(new_theta_micro - theta_b[l], 0.0);
+          double excess_theta = std::max(new_theta_micro - theta_b[l], 0.0);
+          // Rcout<< excess_theta <<" to macropores in "<<l<<"\n";
+          theta_macro[l] = theta_macro[l] + excess_theta;
           S_macro[l] = theta_macro[l]/e_macro[l];
           Kmacro_ms[l] = (Ksat_ms[l] - Ksat_b_ms[l])*pow(S_macro[l], kin_exp);
           theta_micro[l] = theta_b[l];
@@ -819,7 +825,8 @@ NumericVector soilFlows(List soil, String soilFunctions,
           K_up = 0.0;
           //Infiltration into macropores
           if(infiltrationMatrixExcess > 0.0) {
-            infiltrationMacropores_step = std::min(infiltrationMatrixExcess, rainfallIntensity*((double) nsteps)/24.0);
+            //Maximum infiltration in this time step
+            infiltrationMacropores_step = std::min(infiltrationMatrixExcess, rainfallIntensity*24.0/((double) nsteps));
             // Rcout << "infiltration step " << infiltrationMacropores_step<<"\n";
             double infiltrationMacropores_step_m3s = infiltrationMacropores_step*((double) nsteps)*mm_day_2_m3_s; //From mm/h to m3s
             sourceSink_macro_m3s += infiltrationMacropores_step_m3s;
@@ -849,7 +856,7 @@ NumericVector soilFlows(List soil, String soilFunctions,
         double c = NA_REAL;
         double Kc = NA_REAL;
         double f_c = NA_REAL;
-        double tol = 1e-4;
+        double tol = 1e-6;
         bool has_to_stop = false;
         bool found = false;
         while(!has_to_stop) {
@@ -924,17 +931,15 @@ NumericVector soilFlows(List soil, String soilFunctions,
       Theta[l] = theta_micro[l] + theta_macro[l];
     }
     W[l] = Theta[l]/Theta_FC[l];
-    Rcout<< "Final layer " << l << " theta_b " << theta_b[l]<<" theta_micro " << theta_micro[l]<< " S_macro " << S_macro[l] << " theta_macro " << theta_macro[l] << " theta " << Theta[l] <<" W "<< W[l] << "\n";
+    // Rcout<< "Final layer " << l << " theta_b " << theta_b[l]<<" e_macro " << e_macro[l]<<" Psi " << Psi[l]<<" theta_micro " << theta_micro[l]<< " S_macro " << S_macro[l] << " theta_macro " << theta_macro[l] << " theta " << Theta[l] <<" W "<< W[l] << "\n";
   }
   
   double Vfin_mm = sum(water(soil, "VG"));
   double balance_mm = sum(sourceSink) + snowmelt + infiltrationMatrix + infiltrationMacropores - drainage_matrix_mm - drainage_macropores_mm;
-  // 
-  // //If positive balance (more inputs than outputs) create new drainage saturation excess via macropore circulation
-  // drainage_matrix_mm += std::max(0.0, balance_matrix_mm); 
-  // //If negative (more outputs than inputs) reduce drainage
-  // drainage_matrix_mm += std::min(0.0, balance_matrix_mm); 
-  
+   
+  // Correct possible mismatch between balance and volume change
+  drainage_macropores_mm += balance_mm + Vini_mm - Vfin_mm;
+
   NumericVector res;
   if(soilDomains=="dual") {
     res = NumericVector::create(_["Snowmelt"] = snowmelt,
@@ -947,15 +952,15 @@ NumericVector soilFlows(List soil, String soilFunctions,
                                 _["DrainageMacropores"] = drainage_macropores_mm,
                                 _["DeepDrainage"] = drainage_macropores_mm + drainage_matrix_mm,
                                 _["VolumeChange"] = Vfin_mm - Vini_mm,
-                                _["WaterBalance"] = balance_mm);
+                                _["UncorrectedWaterBalance"] = balance_mm);
   } else {
     res = NumericVector::create(_["Snowmelt"] = snowmelt,
                                 _["Source/sinks"] = sum(sourceSink),
                                 _["Infiltration"] = infiltrationMatrix,
                                 _["Runoff"] = Runoff,
-                                _["DeepDrainage"] = drainage_matrix_mm,
+                                _["DeepDrainage"] = drainage_macropores_mm + drainage_matrix_mm,
                                 _["VolumeChange"] = Vfin_mm - Vini_mm,
-                                _["WaterBalance"] = balance_mm);
+                                _["UncorrectedWaterBalance"] = balance_mm);
   } 
   return(res);
 }
