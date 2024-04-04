@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-03-27</h4>
+            <h4 data-toc-skip class="date">2024-04-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -326,28 +326,28 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 6276.32</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 165.462</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 165.462</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 6276.79</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 165.926</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 165.926</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
 <span><span class="co">##   Structural balance (g/m2) 81 Labile balance (g/m2) 94</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 175 Mortality loss (g/m2) 10</span></span>
-<span><span class="co">## Final plant water content (mm): 7.08072</span></span>
-<span><span class="co">## Final soil water content (mm): 339.83</span></span>
+<span><span class="co">## Final plant water content (mm): 7.0807</span></span>
+<span><span class="co">## Final soil water content (mm): 344.402</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.0221252</span></span>
-<span><span class="co">## Plant water balance result (mm): 0.000151534</span></span>
-<span><span class="co">## Change in soil water content (mm): 48.9555</span></span>
-<span><span class="co">## Soil water balance result (mm): 48.9555</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0221083</span></span>
+<span><span class="co">## Plant water balance result (mm): 7.19311e-05</span></span>
+<span><span class="co">## Change in soil water content (mm): 53.5268</span></span>
+<span><span class="co">## Soil water balance result (mm): 57.5067</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): 1.42109e-14</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513</span></span>
 <span><span class="co">##   Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 92 Net rainfall (mm) 370</span></span>
-<span><span class="co">##   Infiltration (mm) 322  Saturation excess (mm) 39 Runoff (mm) 87 Deep drainage (mm) 76</span></span>
-<span><span class="co">##   Soil evaporation (mm) 14  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 182</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 182  Plant water balance (mm) 0 Hydraulic redistribution (mm) 3</span></span></code></pre>
+<span><span class="co">##   Infiltration (mm) 322 Runoff (mm) 48 Deep drainage (mm) 106</span></span>
+<span><span class="co">##   Soil evaporation (mm) 13  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 182</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 182  Plant water balance (mm) 0 Hydraulic redistribution (mm) 2</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -394,31 +394,31 @@ form of data frame:</p>
 <span><span class="co">##  [3] "Precipitation"           "Rain"                   </span></span>
 <span><span class="co">##  [5] "Snow"                    "NetRain"                </span></span>
 <span><span class="co">##  [7] "Snowmelt"                "Infiltration"           </span></span>
-<span><span class="co">##  [9] "SaturationExcess"        "Runoff"                 </span></span>
-<span><span class="co">## [11] "DeepDrainage"            "Evapotranspiration"     </span></span>
-<span><span class="co">## [13] "Interception"            "SoilEvaporation"        </span></span>
-<span><span class="co">## [15] "HerbTranspiration"       "PlantExtraction"        </span></span>
-<span><span class="co">## [17] "Transpiration"           "HydraulicRedistribution"</span></span>
-<span><span class="co">## [19] "LAI"                     "LAIherb"                </span></span>
-<span><span class="co">## [21] "LAIlive"                 "LAIexpanded"            </span></span>
-<span><span class="co">## [23] "LAIdead"                 "Cm"                     </span></span>
-<span><span class="co">## [25] "LgroundPAR"              "LgroundSWR"             </span></span>
-<span><span class="co">## [27] "W.1"                     "W.2"                    </span></span>
-<span><span class="co">## [29] "W.3"                     "W.4"                    </span></span>
-<span><span class="co">## [31] "ML.1"                    "ML.2"                   </span></span>
-<span><span class="co">## [33] "ML.3"                    "ML.4"                   </span></span>
-<span><span class="co">## [35] "MLTot"                   "SaturatedDepth"         </span></span>
-<span><span class="co">## [37] "SWE"                     "PlantExt.1"             </span></span>
-<span><span class="co">## [39] "PlantExt.2"              "PlantExt.3"             </span></span>
-<span><span class="co">## [41] "PlantExt.4"              "HydraulicInput.1"       </span></span>
-<span><span class="co">## [43] "HydraulicInput.2"        "HydraulicInput.3"       </span></span>
-<span><span class="co">## [45] "HydraulicInput.4"        "psi.1"                  </span></span>
-<span><span class="co">## [47] "psi.2"                   "psi.3"                  </span></span>
-<span><span class="co">## [49] "psi.4"                   "GrossPrimaryProduction" </span></span>
-<span><span class="co">## [51] "MaintenanceRespiration"  "SynthesisRespiration"   </span></span>
-<span><span class="co">## [53] "NetPrimaryProduction"    "StructuralBalance"      </span></span>
-<span><span class="co">## [55] "LabileBalance"           "PlantBalance"           </span></span>
-<span><span class="co">## [57] "MortalityLoss"           "CohortBalance"</span></span></code></pre>
+<span><span class="co">##  [9] "Runoff"                  "DeepDrainage"           </span></span>
+<span><span class="co">## [11] "Evapotranspiration"      "Interception"           </span></span>
+<span><span class="co">## [13] "SoilEvaporation"         "HerbTranspiration"      </span></span>
+<span><span class="co">## [15] "PlantExtraction"         "Transpiration"          </span></span>
+<span><span class="co">## [17] "HydraulicRedistribution" "LAI"                    </span></span>
+<span><span class="co">## [19] "LAIherb"                 "LAIlive"                </span></span>
+<span><span class="co">## [21] "LAIexpanded"             "LAIdead"                </span></span>
+<span><span class="co">## [23] "Cm"                      "LgroundPAR"             </span></span>
+<span><span class="co">## [25] "LgroundSWR"              "W.1"                    </span></span>
+<span><span class="co">## [27] "W.2"                     "W.3"                    </span></span>
+<span><span class="co">## [29] "W.4"                     "ML.1"                   </span></span>
+<span><span class="co">## [31] "ML.2"                    "ML.3"                   </span></span>
+<span><span class="co">## [33] "ML.4"                    "MLTot"                  </span></span>
+<span><span class="co">## [35] "SaturatedDepth"          "SWE"                    </span></span>
+<span><span class="co">## [37] "PlantExt.1"              "PlantExt.2"             </span></span>
+<span><span class="co">## [39] "PlantExt.3"              "PlantExt.4"             </span></span>
+<span><span class="co">## [41] "HydraulicInput.1"        "HydraulicInput.2"       </span></span>
+<span><span class="co">## [43] "HydraulicInput.3"        "HydraulicInput.4"       </span></span>
+<span><span class="co">## [45] "psi.1"                   "psi.2"                  </span></span>
+<span><span class="co">## [47] "psi.3"                   "psi.4"                  </span></span>
+<span><span class="co">## [49] "GrossPrimaryProduction"  "MaintenanceRespiration" </span></span>
+<span><span class="co">## [51] "SynthesisRespiration"    "NetPrimaryProduction"   </span></span>
+<span><span class="co">## [53] "StructuralBalance"       "LabileBalance"          </span></span>
+<span><span class="co">## [55] "PlantBalance"            "MortalityLoss"          </span></span>
+<span><span class="co">## [57] "CohortBalance"</span></span></code></pre>
 <p>These data frames are easy handle in R or can be written into text
 files for post-processing with other programs.</p>
 </div>
@@ -507,9 +507,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          n       Bias   Bias.rel        MAE    MAE.rel          r        NSE </span></span>
-<span><span class="co">## 12.0000000 -0.1266650 -9.6561056  0.1294347  9.8672451  0.9974968  0.9758338 </span></span>
+<span><span class="co">## 12.0000000 -0.1255690 -9.5725492  0.1283386  9.7836887  0.9974732  0.9761872 </span></span>
 <span><span class="co">##    NSE.abs </span></span>
-<span><span class="co">##  0.8678295</span></span></code></pre>
+<span><span class="co">##  0.8689487</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
