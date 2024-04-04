@@ -1730,7 +1730,7 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 
 #' Soil flows
 #' 
-#' Function \code{hydrology_soilFlows} estimates water movement within the soil according to Richards equation.
+#' Function \code{hydrology_soilFlows} estimates water balance of soil layers given water inputs/outputs, including the simulation of water movement within the soil.
 #' 
 #' @param soil Object of class \code{\link{soil}}.
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
@@ -1747,20 +1747,51 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' 
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
 #' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' @author 
+#' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' \enc{María González Sanchís}{Maria Gonzalez Sanchis}, UPV-CTFC
 #' 
 #' @return
-#'   Returns a named vector with three elements:
+#'   Returns a named vector with different elements, depending on \code{soilDomains}. If
+#'   \code{soilDomains == "single"}:
 #'   \itemize{
-#'     \item{\code{Infiltration}: water infiltrated into the soil.}
-#'     \item{\code{Runoff}: surface runoff generated.}
-#'     \item{\code{DeepDrainage}: the water draining from the bottom layer.}
+#'     \item{\code{Snowmelt}: Snowmelt input (mm).}
+#'     \item{\code{Source/sinks}: Sum of source/sink input across layers (mm).}
+#'     \item{\code{Infiltration}: Water infiltrated into the soil (mm).}
+#'     \item{\code{Runoff}: Surface runoff generated (mm).}
+#'     \item{\code{DeepDrainage}: Water draining from the bottom layer (mm). This quantity is corrected to close the water balance.}
+#'     \item{\code{VolumeChange}: Change in soil water volume (mm).}
+#'     \item{\code{UncorrectedWaterBalance}: Uncorrected balance of inputs/outputs (mm).}
+#'   }
+#'  If \code{soilDomains == "dual"} the named vector contains the following additional elements:
+#'   \itemize{
+#'     \item{\code{Lateral flows}: Sum of water circulating between micropores and macropores, positive when filling micropores (mm).}
+#'     \item{\code{InfiltrationMicropores}: Water infiltrated into the soil matrix (mm).}
+#'     \item{\code{InfiltrationMacropores}: Water infiltrated into the soil macropore domain (mm).}
+#'     \item{\code{DrainageMicropores}: Water draining from the bottom layer of the micropore domain (mm). This quantity is corrected to close water balance in the micropore domain.}
+#'     \item{\code{DrainageMacropores}: Water draining from the bottom layer of the macropore domain (mm). This quantity is corrected to close the water balance in the macropore domain.}
+#'     \item{\code{MicroporeVolumeChange}: Change in soil water volume in the micropore domain (mm).}
+#'     \item{\code{UncorrectedMicroporeBalance}: Uncorrected balance of inputs/outputs in the micropore domain (mm).}
+#'     \item{\code{MacroporeVolumeChange}: Change in soil water volume in the macropore domain (mm).}
+#'     \item{\code{UncorrectedMacroporeBalance}: Uncorrected balance of inputs/outputs in the macropore domain (mm).}
 #'   }
 #'   
+#' @examples
+#' # Initialize soil example
+#' examplesoil <- soil(defaultSoilParams(4))
+#' 
+#' # Water balance in a single-domain simulation (Richards equation)
+#' hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+#'                            soilDomains = "single", modifySoil = FALSE)
+#'                     
+#' # Water balance in a dual-permeability model (MACRO)
+#' hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+#'                            soilDomains = "dual", modifySoil = FALSE)
 #'   
-#' @name hydrology_soilFlows
-hydrology_soilFlows <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode = "GreenAmpt1911", soilDomains = "single", freeDrainage = TRUE, nsteps = 24L, modifySoil = TRUE) {
-    .Call(`_medfate_soilFlows`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode, soilDomains, freeDrainage, nsteps, modifySoil)
+#' @name hydrology_soilWaterBalance
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode = "GreenAmpt1911", soilDomains = "single", freeDrainage = TRUE, nsteps = 24L, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode, soilDomains, freeDrainage, nsteps, modifySoil)
 }
 
 .gammln <- function(xx) {

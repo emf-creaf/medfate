@@ -125,10 +125,10 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   }
   
   //Determine water flows, returning deep drainage
-  NumericVector sf = soilFlows(soil, soilFunctions,
-                               RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
-                               infiltrationMode, soilDomains, freeDrainage, 
-                               24, true);
+  NumericVector sf = soilWaterBalance(soil, soilFunctions,
+                                      RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                                      infiltrationMode, soilDomains, freeDrainage, 
+                                      24, true);
   double Infiltration = sf["Infiltration"];
   double DeepDrainage = sf["DeepDrainage"];
   double Runoff = sf["Runoff"];

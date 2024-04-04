@@ -32,7 +32,7 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
                               double Cm, double LgroundPAR, double LgroundSWR, 
                               double runon = 0.0,
                               bool snowpack = true, bool modifySoil = true);
-NumericVector soilFlows(List soil, String soilFunctions, 
-                        double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
-                        String infiltrationMode = "GreenAmpt1911", String soilDomains = "single", bool freeDrainage = true, 
-                        int nsteps = 24, bool modifySoil = true);
+NumericVector soilWaterBalance(List soil, String soilFunctions, 
+                               double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
+                               String infiltrationMode = "GreenAmpt1911", String soilDomains = "single", bool freeDrainage = true, 
+                               int nsteps = 24, bool modifySoil = true);

@@ -301,10 +301,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
-    NumericVector sf = soilFlows(soil, soilFunctions,
-                                 RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
-                                 infiltrationMode, soilDomains, freeDrainage, 
-                                 24, true);
+    NumericVector sf = soilWaterBalance(soil, soilFunctions,
+                                        RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                                        infiltrationMode, soilDomains, freeDrainage, 
+                                        24, true);
     DeepDrainage = sf["DeepDrainage"];
     Infiltration = sf["Infiltration"];
     Runoff = sf["Runoff"];
@@ -332,10 +332,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
         sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
         if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
       }
-      NumericVector sf_c = soilFlows(soil_c, soilFunctions,
-                                     RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec,
-                                     infiltrationMode, soilDomains, freeDrainage, 
-                                     24, true);
+      NumericVector sf_c = soilWaterBalance(soil_c, soilFunctions,
+                                            RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec,
+                                            infiltrationMode, soilDomains, freeDrainage, 
+                                            24, true);
       double DeepDrainage_c = sf_c["DeepDrainage"];
       double Infiltration_c = sf_c["Infiltration"];
       double Runoff_c = sf_c["Runoff"];
@@ -562,10 +562,10 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   }
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
-    NumericVector sf = soilFlows(soil, soilFunctions,
-                                 RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
-                                 infiltrationMode, soilDomains, freeDrainage, 
-                                 24, true);
+    NumericVector sf = soilWaterBalance(soil, soilFunctions,
+                                        RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                                        infiltrationMode, soilDomains, freeDrainage, 
+                                        24, true);
     DeepDrainage = sf["DeepDrainage"];
     Infiltration = sf["Infiltration"];
     Runoff = sf["Runoff"];
@@ -592,10 +592,10 @@ List spwbDay_advanced(List x, NumericVector meteovec,
         sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
         if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
       }
-      NumericVector sf_c = soilFlows(soil_c, soilFunctions,
-                                     RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec,
-                                     infiltrationMode, soilDomains, freeDrainage, 
-                                     24, true);
+      NumericVector sf_c = soilWaterBalance(soil_c, soilFunctions,
+                                            RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec,
+                                            infiltrationMode, soilDomains, freeDrainage, 
+                                            24, true);
       double DeepDrainage_c = sf_c["DeepDrainage"];
       double Infiltration_c = sf_c["Infiltration"];
       double Runoff_c = sf_c["Runoff"];
