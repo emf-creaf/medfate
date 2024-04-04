@@ -895,7 +895,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
       theta_micro[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
 
       if((soilDomains=="single") || (!micropore_excess)) {
-        if((Psi[l] > -0.0001)) { //oversaturation generates macropore drainage
+        if((Psi[l] > -0.0001)) { //oversaturation generates micropore drainage
           // Rcout<< s <<" os "<< l <<"\n";
           double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
           double res_m3m2 = std::abs(theta_sat[l] - new_theta)*(dVec[l]/1000.0)*lambda[l];
@@ -903,20 +903,23 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
           Psi[l] = -0.0001;
         }
       } else {
-        double excess_theta = 0.0;
-        if((Psi[l] > -0.0001)) { //oversaturation generates macropore drainage
+        if((Psi[l] > -0.0001)) { //oversaturation generates micropore drainage
           // Rcout<< s <<" os "<< l <<"\n";
           double new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
-          excess_theta += std::abs(theta_sat_fict[l] - new_theta);
+          double res_m3m2 = std::abs(theta_sat_fict[l] - new_theta)*(dVec[l]/1000.0)*lambda[l];
+          drainage_matrix += res_m3m2;
           Psi[l] = -0.0001;
         }
           //Update theta_micro for the next step
         double new_theta_micro = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
         //If needed, add exceeding moisture to the macropores and correct Psi
+        double excess_theta = 0.0;
         if(new_theta_micro > theta_b[l]) {
-          excess_theta += std::max(new_theta_micro - theta_b[l], 0.0);
-          theta_micro[l] = theta_b[l];
-          Psi[l] = Psi_b;
+          //Maximum macropore capacity 
+          double C_macro = (1.0 - S_macro[l])*(theta_sat[l] - theta_b[l]);
+          double excess_theta = std::min(new_theta_micro - theta_b[l], C_macro);
+          theta_micro[l] -= excess_theta;
+          Psi[l] = theta2psiVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], theta_micro[l]);
         } 
         if(excess_theta>0.0){
           lateralFlows[l] -= excess_theta*dVec[l]*lambda[l]; //negative flow (in mm/step)
@@ -969,8 +972,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
         S_macro[l] = S_t1;
         //Update macropore conductances for next step (sets K_up for next layer)
         Kmacro_ms[l] = (Ksat_ms[l] - Ksat_b_ms[l])*pow(S_macro[l], kin_exp);
-        //Drainage
-        if(l==(nlayers-1)) drainage_macropores += Kmacro_ms[l]*tstep;
+
         if(micropore_imbibition) {
           //Update imbibition rate (m3s)
           double Ksat_fict_ms = psi2kVanGenuchtenMicropores(Ksat_b_ms[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
@@ -998,8 +1000,9 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
           // Rcout << " layer "<< l <<" residue "<< res_mm<<"\n";
           theta_macro[l] = e_macro[l];
           S_macro[l] = 1.0; //Correct S_macro to saturation
+          Kmacro_ms[l] = (Ksat_ms[l] - Ksat_b_ms[l])*pow(S_macro[l], kin_exp);
           if(l==0) {
-            infiltrationMacropores_step = std::max(0.0, infiltrationMacropores_step - res_mm); 
+            infiltrationMacropores_step = infiltrationMacropores_step - res_mm; 
             // Rcout << " layer "<< l <<" infiltration "<< infiltrationMacropores_step<<"\n";
           }
         } else {
@@ -1008,6 +1011,8 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
       }
       //Generate runoff if there was some residue in the top layer
       Runoff = Runoff + res_mm;
+      //Drainage
+      drainage_macropores += Kmacro_ms[nlayers-1]*tstep;
       //Update infiltration matrix excess
       infiltrationMacropores += infiltrationMacropores_step;
     }
