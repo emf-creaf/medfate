@@ -49,26 +49,35 @@ Returns a named vector with different elements, depending on \code{soilDomains}.
     \item{\code{Snowmelt}: Snowmelt input (mm).}
     \item{\code{Source/sinks}: Sum of source/sink input across layers (mm).}
     \item{\code{Infiltration}: Water infiltrated into the soil (mm).}
+    \item{\code{SaturationExcess}: Excess saturation in the topmost layer (mm) leading to an increase in runoff.}
     \item{\code{Runoff}: Surface runoff generated (mm).}
     \item{\code{DeepDrainage}: Water draining from the bottom layer (mm). This quantity is corrected to close the water balance.}
+    \item{\code{DrainageCorrection}: Amount of water (mm) added to deep drainage to correct the water balance.}
     \item{\code{VolumeChange}: Change in soil water volume (mm).}
-    \item{\code{UncorrectedWaterBalance}: Uncorrected balance of inputs/outputs (mm).}
+    \item{\code{Substep}: Time step of the moisture solving (seconds).}
   }
  If \code{soilDomains == "dual"} the named vector contains the following additional elements:
   \itemize{
     \item{\code{Lateral flows}: Sum of water circulating between micropores and macropores, positive when filling micropores (mm).}
     \item{\code{InfiltrationMicropores}: Water infiltrated into the soil matrix (mm).}
     \item{\code{InfiltrationMacropores}: Water infiltrated into the soil macropore domain (mm).}
+    \item{\code{SaturationExcessMicropores/SaturationExcessMacropores}: Excess saturation in the topmost layer (mm) leading to an increase in runoff.}
     \item{\code{DrainageMicropores}: Water draining from the bottom layer of the micropore domain (mm). This quantity is corrected to close water balance in the micropore domain.}
     \item{\code{DrainageMacropores}: Water draining from the bottom layer of the macropore domain (mm). This quantity is corrected to close the water balance in the macropore domain.}
+    \item{\code{DrainageMicroporeCorrection}: Amount of water (mm) added to deep drainage of micropores to correct the water balance.}
+    \item{\code{DrainageMacroporeCorrection}: Amount of water (mm) added to deep drainage of macropores to correct the water balance.}
     \item{\code{MicroporeVolumeChange}: Change in soil water volume in the micropore domain (mm).}
-    \item{\code{UncorrectedMicroporeBalance}: Uncorrected balance of inputs/outputs in the micropore domain (mm).}
     \item{\code{MacroporeVolumeChange}: Change in soil water volume in the macropore domain (mm).}
-    \item{\code{UncorrectedMacroporeBalance}: Uncorrected balance of inputs/outputs in the macropore domain (mm).}
   }
 }
 \description{
 Function \code{hydrology_soilFlows} estimates water balance of soil layers given water inputs/outputs, including the simulation of water movement within the soil.
+}
+\details{
+The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
+Bonan et al. (2019).
+
+The dual-permeability model is an implementation of the model MACRO 2.0 (Jarvis et al. 1991; Larsbo et al. 2005).
 }
 \examples{
 # Initialize soil example
@@ -82,6 +91,13 @@ hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1),
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
                            soilDomains = "dual", modifySoil = FALSE)
   
+}
+\references{
+Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK. 
+
+Jarvis, N.J., Jansson, P‐E., Dik, P.E. & Messing, I. (1991). Modelling water and solute transport in macroporous soil. I. Model description and sensitivity analysis. Journal of Soil Science, 42, 59–70. 
+
+Larsbo, M., Roulier, S., Stenemo, F., Kasteel, R. & Jarvis, N. (2005). An Improved Dual‐Permeability Model of Water Flow and Solute Transport in the Vadose Zone. Vadose Zone Journal, 4, 398–406.
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
