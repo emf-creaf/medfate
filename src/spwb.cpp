@@ -1888,6 +1888,8 @@ void printWaterBalanceResult(List outputList, List x,
 //'     \item{\code{"Snow"}: Precipitation as snow (in mm).}
 //'     \item{\code{"NetRain"}: Net rain, after accounting for interception (in mm).}
 //'     \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
+//'     \item{\code{"InfiltrationExcess"}: Excess infiltration in the topmost layer leading to an increase in runoff (in mm).}
+//'     \item{\code{"SaturationExcess"}: Excess saturation in the topmost layer leading to an increase in runoff (in mm).}
 //'     \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
 //'     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
 //'     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
