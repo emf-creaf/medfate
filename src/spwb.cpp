@@ -1833,7 +1833,7 @@ void printWaterBalanceResult(List outputList, List x,
   Rcout<<"Water balance components:\n";
   Rcout<<"  Precipitation (mm) "  <<round(Precipitationsum) << " Rain (mm) "  <<round(Rainfallsum) <<" Snow (mm) "  <<round(Snowsum) <<"\n";
   Rcout<<"  Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
-  Rcout<<"  Infiltration (mm) " << round(Infiltrationsum)  << " InfiltrationExcess (mm) " << round(InfiltrationExcesssum) << " SaturationExcess (mm) " << round(SaturationExcesssum) << " Capillarity rise (mm) " << round(CapillarityRisesum)  <<"\n";
+  Rcout<<"  Infiltration (mm) " << round(Infiltrationsum)  << " Infiltration excess (mm) " << round(InfiltrationExcesssum) << " Saturation excess (mm) " << round(SaturationExcesssum) << " Capillarity rise (mm) " << round(CapillarityRisesum)  <<"\n";
   Rcout<<"  Soil evaporation (mm) " << round(SoilEvaporationsum);
   Rcout<<"  Herbaceous transpiration (mm) " << round(HerbTranspirationsum);
   Rcout<<" Woody plant transpiration (mm) "  <<round(Transpirationsum) <<"\n";
