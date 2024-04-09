@@ -15,6 +15,7 @@ hydrology_soilWaterBalance(
   soilDomains = "single",
   freeDrainage = TRUE,
   nsteps = 24L,
+  max_nsubsteps = 3600L,
   modifySoil = TRUE
 )
 }
@@ -39,6 +40,8 @@ as mm/day.}
 \item{freeDrainage}{Boolean flag to indicate that lower boundary condition is free drainage.}
 
 \item{nsteps}{Number of time steps per day}
+
+\item{max_nsubsteps}{Maximum number of substeps per time step}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }

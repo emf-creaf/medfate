@@ -34,6 +34,8 @@ A list, with the following options (default values in brackets):
       \item{\code{soilFunctions [= "VG"]}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
                  If \code{transpirationMode} is 'Sperry' or 'Sureau' then soilFunctions is forced to \code{'VG'}.
                  Only simulations with 'Granier' are allowed to use Saxton functions.}
+      \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of soil water balance, stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
+      \item{\code{max_nsubsteps_soil [= 3600]}: Maximum number of substeps for soil water balance solving.}
       \item{\code{defaultWindSpeed [= 2.5]}: Default wind speed value (in m/s) to be used when missing from data. }
       \item{\code{defaultCO2 [= 386]}: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input. }
       \item{\code{defaultRainfallIntensityPerMonth [= c(1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5.6, 5.6, 5.6, 5.6, 5.6, 1.5)]}: A vector of twelve values indicating the rainfall intensity (mm/h) per month. 
@@ -74,8 +76,7 @@ A list, with the following options (default values in brackets):
     }
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"} or \code{traspirationMode = "Sureau"}):
     \itemize{
-      \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
-      \item{\code{nsubsteps [= 3600]}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
+      \item{\code{nsubsteps_canopy [= 3600]}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
       \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
       \item{\code{sapFluidityVariation [= TRUE]}: Flag to indicate that temperature affects sap fluidity (and indirectly plant conductance).}
       \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}

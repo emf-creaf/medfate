@@ -1742,7 +1742,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' @param infiltrationMode Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 #' @param soilDomains Either "single" (for single-domain) or "dual" (for dual-permeability).
 #' @param freeDrainage Boolean flag to indicate that lower boundary condition is free drainage.
-#' @param nsteps  Number of time steps per day
+#' @param nsteps Number of time steps per day
+#' @param max_nsubsteps Maximum number of substeps per time step
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
@@ -1806,8 +1807,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'                            soilDomains = "dual", modifySoil = FALSE)
 #'   
 #' @name hydrology_soilWaterBalance
-hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode = "GreenAmpt1911", soilDomains = "single", freeDrainage = TRUE, nsteps = 24L, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode, soilDomains, freeDrainage, nsteps, modifySoil)
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode = "GreenAmpt1911", soilDomains = "single", freeDrainage = TRUE, nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode, soilDomains, freeDrainage, nsteps, max_nsubsteps, modifySoil)
 }
 
 .gammln <- function(xx) {

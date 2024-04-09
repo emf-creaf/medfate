@@ -24,6 +24,7 @@
 - Evaluation of GPP, H and LE
 - Soil thermodynamics revised
 - Single-domain and dual-permeability soil water flows
+- Infiltration and saturation excess reported
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions

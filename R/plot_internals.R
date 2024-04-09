@@ -565,6 +565,8 @@
   else if(type=="Export") {
     if(is.null(ylab)) ylab =  expression(L%.%m^{-2})    
     df = data.frame(row.names=row.names(WaterBalance))
+    df[["InfiltrationExcess"]] = WaterBalance$InfiltrationExcess
+    df[["SaturationExcess"]] = WaterBalance$SaturationExcess
     df[["Export"]] = WaterBalance$DeepDrainage + WaterBalance$Runoff
     df[["DeepDrainage"]] = WaterBalance$DeepDrainage
     df[["Runoff"]] = WaterBalance$Runoff 
@@ -573,6 +575,8 @@
     if(!is.null(summary.freq)) {
       date.factor = cut(as.Date(df$Date), breaks=summary.freq)
       df = data.frame(Date = as.Date(as.character(levels(date.factor))),
+                      InfiltrationExcess = tapply(df$InfiltrationExcess,INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      SaturationExcess = tapply(df$SaturationExcess,INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       Export = tapply(df$Export,INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       DeepDrainage = tapply(df$DeepDrainage,INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       Runoff = tapply(df$Runoff,INDEX=date.factor, FUN=sum, na.rm=TRUE))
@@ -580,8 +584,12 @@
     g<-ggplot(df)+
       geom_line(aes(x=.data$Date, y=.data$Export, col="Export"))+
       geom_line(aes(x=.data$Date, y=.data$DeepDrainage, col="Deep drainage"))+
+      geom_line(aes(x=.data$Date, y=.data$InfiltrationExcess, col="Infiltration excess"))+
+      geom_line(aes(x=.data$Date, y=.data$SaturationExcess, col="Saturation excess"))+
       geom_line(aes(x=.data$Date, y=.data$Runoff, col="Runoff"))+
-      scale_color_manual(name="", values=c("Export"="black", "Deep drainage" = "blue", "Runoff" = "red"))+
+      scale_color_manual(name="", values=c("Export"="black", "Deep drainage" = "blue", 
+                                           "Infiltration excess" = "yellow", "Saturation excess" = "lightblue",
+                                           "Runoff" = "red"))+
       ylab(ylab)+ xlab(xlab)+
       theme_bw()
     return(g)

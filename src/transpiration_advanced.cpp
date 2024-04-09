@@ -57,7 +57,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   
 
   int ntimesteps = control["ndailysteps"];
-  int nsubsteps = control["nsubsteps"];
+  int nsubsteps = control["nsubsteps_canopy"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double verticalLayerSize = control["verticalLayerSize"];
