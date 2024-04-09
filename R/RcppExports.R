@@ -7,8 +7,8 @@ aspwbInput <- function(crop_factor, control, soil) {
 }
 
 #' @rdname aspwb
-aspwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_aspwb_day`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
+aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_aspwb_day`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 .defineASPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
@@ -22,6 +22,7 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, run
 #' Simulation in agricultural areas
 #'
 #' Function \code{aspwb_day} performs water balance for a single day in an agriculture location.
+#' Function \code{aspwb} performs water balance for multiple days in an agriculture location.
 #' 
 #' @param crop_factor Agriculture crop factor.
 #' @param soil An object of class \code{\link{soil}}.
@@ -33,7 +34,10 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, run
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #'   
 #' @author
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -47,12 +51,21 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, run
 #' examplesoil <- soil(defaultSoilParams())
 #' x <- aspwbInput(0.75, control, examplesoil)
 #' 
-#' #Call simulation function
+#' # Day to be simulated
+#' d <- 100
+#' meteovec <- unlist(examplemeteo[d,-1])
+#' date <- as.character(examplemeteo$dates[d])
+#' 
+#' #Call simulation function for a single days
+#' sd <- aspwb_day(x, date, meteovec,  
+#'                latitude = 41.82592, elevation = 100) 
+#' 
+#' #Call simulation function for multiple days
 #' S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
 #' @name aspwb
-aspwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
-    .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect)
+aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, waterTableDepth = NA_real_) {
+    .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect, waterTableDepth)
 }
 
 #' Physical and biophysical utility functions
@@ -932,8 +945,8 @@ mortality_dailyProbability <- function(stressValue, stressThreshold) {
 }
 
 #' @rdname spwb_day
-growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
+growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 .defineGrowthDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
@@ -956,6 +969,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' 
 #' @details
 #' Detailed model description is available in the medfate book. 
@@ -1080,8 +1094,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #' }
 #'       
-growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0)) {
-    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear)
+growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
+    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
 #' Hydraulic confuctance functions
@@ -1693,7 +1707,6 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' @param Cm Canopy water storage capacity.
 #' @param LgroundPAR Percentage of photosynthetically-active radiation (PAR) reaching the ground.
 #' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
-#' @param runon Surface water amount running on the target area from upslope (in mm).
 #' @param snowpack Boolean flag to indicate the simulation of snow accumulation and melting.
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
@@ -1707,11 +1720,8 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' \item{Rain}{Precipitation as rainfall.}
 #' \item{Snow}{Precipitation as snow.}
 #' \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
-#' \item{NetRain}{Rainfall reaching the ground (throughfall).}
 #' \item{Snowmelt}{Snow melted during the day, and added to the water infiltrated.}
-#' \item{Runon}{Surface water amount running on the target area from upslope.}
-#' \item{RainfallInput}{Rainfall input, including runon and net rain.}
-#' \item{TotalInput}{Total soil input, including runon, snowmelt and net rain.}
+#' \item{NetRain}{Rainfall reaching the ground.}
 #' 
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -1724,24 +1734,26 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' @param interceptionMode Infiltration model, either "Gash1995" or "Liu2001".
 #' 
 #' @name hydrology_verticalInputs
-hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
+hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, snowpack = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, snowpack, modifySoil)
 }
 
-#' Soil flows
+#' Soil water balance
 #' 
-#' Function \code{hydrology_soilFlows} estimates water balance of soil layers given water inputs/outputs, including the simulation of water movement within the soil.
+#' Function \code{hydrology_soilWaterBalance} estimates water balance of soil layers given water inputs/outputs, including the simulation of water movement within the soil.
 #' 
 #' @param soil Object of class \code{\link{soil}}.
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 #' @param rainfallInput Amount of water from rainfall event (after excluding interception), in mm.
 #' @param rainfallIntensity Rainfall intensity, in mm/h.
 #' @param snowmelt Amount of water originated from snow melt, in mm.
-#' @param sourceSink Source/sink term for each soil layer (from soil evaporation or plant transpiration/redistribution)
+#' @param sourceSink Local source/sink term for each soil layer (from soil evaporation or plant transpiration/redistribution)
 #'        as mm/day.
+#' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param infiltrationMode Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 #' @param soilDomains Either "single" (for single-domain) or "dual" (for dual-permeability).
-#' @param freeDrainage Boolean flag to indicate that lower boundary condition is free drainage.
 #' @param nsteps Number of time steps per day
 #' @param max_nsubsteps Maximum number of substeps per time step
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
@@ -1752,7 +1764,7 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
 #' Bonan et al. (2019).
 #' 
-#' The dual-permeability model is an implementation of the model MACRO 2.0 (Jarvis et al. 1991; Larsbo et al. 2005).
+#' The dual-permeability model is an implementation of the model MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005).
 #' 
 #' @author 
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -1770,6 +1782,7 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'     \item{\code{SaturationExcess}: Excess saturation in the topmost layer (mm) leading to an increase in runoff.}
 #'     \item{\code{Runoff}: Surface runoff generated by saturation excess or infiltration excess (mm).}
 #'     \item{\code{DeepDrainage}: Water draining from the bottom layer (mm). This quantity is corrected to close the water balance.}
+#'     \item{\code{CapillarityRise}: Water entering the soil via capillarity rise (mm) from the water table, if \code{waterTableDepth} is supplied.}
 #'     \item{\code{Correction}: Amount of water (mm) added to deep drainage to correct the water balance.}
 #'     \item{\code{VolumeChange}: Change in soil water volume (mm).}
 #'     \item{\code{Substep}: Time step of the moisture solving (seconds).}
@@ -1809,8 +1822,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'                            soilDomains = "dual", modifySoil = FALSE)
 #'   
 #' @name hydrology_soilWaterBalance
-hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode = "GreenAmpt1911", soilDomains = "single", freeDrainage = TRUE, nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, infiltrationMode, soilDomains, freeDrainage, nsteps, max_nsubsteps, modifySoil)
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, soilDomains, nsteps, max_nsubsteps, modifySoil)
 }
 
 .gammln <- function(xx) {
@@ -3188,6 +3201,8 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_SAT, Theta_F
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 #' 
 #' @details
@@ -3302,8 +3317,8 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_SAT, Theta_F
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' @name spwb_day
-spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
+spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 .defineSPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
@@ -3348,6 +3363,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 #' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' 
 #' @details 
 #' The simulation functions allow using three different sub-models of transpiration and photosynthesis:
@@ -3379,6 +3395,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'     \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
 #'     \item{\code{"InfiltrationExcess"}: Excess infiltration in the topmost layer leading to an increase in runoff (in mm).}
 #'     \item{\code{"SaturationExcess"}: Excess saturation in the topmost layer leading to an increase in runoff (in mm).}
+#'     \item{\code{"CapillarityRise"}: Water entering the soil via capillarity rise (mm) from the water table, if \code{waterTableDepth} is supplied.}
 #'     \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
 #'     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
 #'     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
@@ -3530,8 +3547,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' }
 #'                 
 #' @name spwb
-spwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0)) {
-    .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear)
+spwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
+    .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
 #' @rdname spwb
@@ -3542,7 +3559,7 @@ spwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, asp
 #' @param soilEvaporation A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.
 #' @param herbTranspiration A vector of daily herbaceous transpiration values (mm). The length should match the number of rows in \code{meteo}.
 #' 
-pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), herbTranspiration = numeric(0), CO2ByYear = numeric(0)) {
+pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), herbTranspiration = numeric(0), CO2ByYear = numeric(0)) {
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, CO2ByYear)
 }
 

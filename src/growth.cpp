@@ -364,9 +364,10 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   }
 }
 List growthDayInner(List x, NumericVector meteovec, 
-                    double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
-                    double solarConstant = NA_REAL, double delta = NA_REAL, 
-                    double runon=0.0, bool verbose = false) {
+                    double latitude, double elevation, double slope, double aspect,
+                    double solarConstant, double delta, 
+                    double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
+                    bool verbose = false) {
   
   
   //Get previous PLC so that defoliation occurs only when PLC increases
@@ -404,12 +405,14 @@ List growthDayInner(List x, NumericVector meteovec,
   if(transpirationMode=="Granier") {
     spwbOut = spwbDay_basic(x, meteovec, 
                        elevation, slope, aspect,
-                       runon, verbose); 
+                       runon, lateralFlows, waterTableDepth,
+                       verbose); 
   } else {
     spwbOut = spwbDay_advanced(x, meteovec, 
                        latitude, elevation, slope, aspect,
                        solarConstant, delta, 
-                       runon, verbose);
+                       runon, lateralFlows, waterTableDepth,
+                       verbose);
   }
   //Weather
   double tday = meteovec["tday"];
@@ -1535,8 +1538,9 @@ List growthDayInner(List x, NumericVector meteovec,
 //' @rdname spwb_day
 // [[Rcpp::export("growth_day")]]
 List growthDay(List x, CharacterVector date, NumericVector meteovec, 
-               double latitude, double elevation, double slope, double aspect,  
-               double runon=0.0, bool modifyInput = true) {
+               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
+               bool modifyInput = true) {
   
   double tmin = meteovec["MinTemperature"];
   double tmax = meteovec["MaxTemperature"];
@@ -1636,7 +1640,8 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   List s = growthDayInner(x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, 
-                     runon, verbose);
+                     runon, lateralFlows, waterTableDepth,
+                     verbose);
   return(s);
 }
 
@@ -2086,6 +2091,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 //' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
+//' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //' 
 //' @details
 //' Detailed model description is available in the medfate book. 
@@ -2212,8 +2218,8 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //'       
 // [[Rcpp::export("growth")]]
 List growth(List x, DataFrame meteo, double latitude, 
-            double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL,
-            NumericVector CO2ByYear = NumericVector(0)) {
+            double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+            NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
 
   //Clone input
   x = clone(x);
@@ -2465,7 +2471,8 @@ List growth(List x, DataFrame meteo, double latitude,
         s = growthDayInner(x, meteovec_inner,  
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
-                           0.0, false); //No Runon in simulations for a single cell
+                           0.0, R_NilValue, waterTableDepth,
+                           false); //No Runon in simulations for a single cell
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -2500,7 +2507,8 @@ List growth(List x, DataFrame meteo, double latitude,
         s = growthDayInner(x, meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
-                           0.0, verbose);
+                           0.0, R_NilValue, waterTableDepth,
+                           verbose);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;

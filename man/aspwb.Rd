@@ -14,9 +14,11 @@ aspwb_day(
   meteovec,
   latitude,
   elevation,
-  slope,
-  aspect,
+  slope = NA_real_,
+  aspect = NA_real_,
   runon = 0,
+  lateralFlows = NULL,
+  waterTableDepth = NA_real_,
   modifyInput = TRUE
 )
 
@@ -24,9 +26,10 @@ aspwb(
   x,
   meteo,
   latitude,
-  elevation = NA_real_,
+  elevation,
   slope = NA_real_,
-  aspect = NA_real_
+  aspect = NA_real_,
+  waterTableDepth = NA_real_
 )
 }
 \arguments{
@@ -48,12 +51,17 @@ aspwb(
 
 \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 
+\item{lateralFlows}{Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.}
+
+\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
+
 \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 
 \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 }
 \description{
 Function \code{aspwb_day} performs water balance for a single day in an agriculture location.
+Function \code{aspwb} performs water balance for multiple days in an agriculture location.
 }
 \examples{
 
@@ -61,7 +69,16 @@ control <- defaultControl()
 examplesoil <- soil(defaultSoilParams())
 x <- aspwbInput(0.75, control, examplesoil)
 
-#Call simulation function
+# Day to be simulated
+d <- 100
+meteovec <- unlist(examplemeteo[d,-1])
+date <- as.character(examplemeteo$dates[d])
+
+#Call simulation function for a single days
+sd <- aspwb_day(x, date, meteovec,  
+               latitude = 41.82592, elevation = 100) 
+
+#Call simulation function for multiple days
 S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
 }

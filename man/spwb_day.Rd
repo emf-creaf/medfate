@@ -11,9 +11,11 @@ growth_day(
   meteovec,
   latitude,
   elevation,
-  slope,
-  aspect,
+  slope = NA_real_,
+  aspect = NA_real_,
   runon = 0,
+  lateralFlows = NULL,
+  waterTableDepth = NA_real_,
   modifyInput = TRUE
 )
 
@@ -23,9 +25,11 @@ spwb_day(
   meteovec,
   latitude,
   elevation,
-  slope,
-  aspect,
+  slope = NA_real_,
+  aspect = NA_real_,
   runon = 0,
+  lateralFlows = NULL,
+  waterTableDepth = NA_real_,
   modifyInput = TRUE
 )
 }
@@ -41,6 +45,10 @@ spwb_day(
 \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
 \item{runon}{Surface water amount running on the target area from upslope (in mm).}
+
+\item{lateralFlows}{Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.}
+
+\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
 
 \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 }

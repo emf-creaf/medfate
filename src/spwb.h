@@ -38,12 +38,15 @@ void printWaterBalanceResult(List outputList, List x,
 NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope);
 
 List spwbDay(List x, CharacterVector date, NumericVector meteovec,
-             double latitude, double elevation, double slope, double aspect,  
-             double runon=0.0, bool modifyInput = true);
+             double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+             double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+             bool modifyInput = true);
 List spwbDay_basic(List x, NumericVector meteovec, 
-                   double elevation, double slope, double aspect, 
-                   double runon=0.0, bool verbose=false);
+                   double elevation, double slope, double aspect,
+                   double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
+                   bool verbose = false);
 List spwbDay_advanced(List x, NumericVector meteovec, 
                       double latitude, double elevation, double slope, double aspect,
                       double solarConstant, double delta, 
-                      double runon=0.0, bool verbose = false);
+                      double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
+                      bool verbose = false);

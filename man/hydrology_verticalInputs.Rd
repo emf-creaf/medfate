@@ -21,7 +21,6 @@ hydrology_soilWaterInputs(
   Cm,
   LgroundPAR,
   LgroundSWR,
-  runon = 0,
   snowpack = TRUE,
   modifySoil = TRUE
 )
@@ -51,8 +50,6 @@ hydrology_soilWaterInputs(
 
 \item{LgroundPAR}{Percentage of photosynthetically-active radiation (PAR) reaching the ground.}
 
-\item{runon}{Surface water amount running on the target area from upslope (in mm).}
-
 \item{snowpack}{Boolean flag to indicate the simulation of snow accumulation and melting.}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
@@ -62,11 +59,8 @@ Function \code{hydrology_soilWaterInputs} returns a named vector with the follow
 \item{Rain}{Precipitation as rainfall.}
 \item{Snow}{Precipitation as snow.}
 \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
-\item{NetRain}{Rainfall reaching the ground (throughfall).}
 \item{Snowmelt}{Snow melted during the day, and added to the water infiltrated.}
-\item{Runon}{Surface water amount running on the target area from upslope.}
-\item{RainfallInput}{Rainfall input, including runon and net rain.}
-\item{TotalInput}{Total soil input, including runon, snowmelt and net rain.}
+\item{NetRain}{Rainfall reaching the ground.}
 }
 \description{
 High-level functions to define water inputs into the soil:

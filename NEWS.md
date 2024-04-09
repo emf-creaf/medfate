@@ -2,6 +2,11 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 4.1.0
+- Single-domain and dual-permeability soil water flows
+- Infiltration excess, saturation excess and capillarity rise reported
+- Lateral water flows and water table depth as inputs
+
 # Version 4.0.0
 - Options leafCavitationEffects and stemCavitationEffects for Sperry
 - New taxonomic treatment (Name/AcceptedName)
@@ -23,8 +28,6 @@
 - Saturation excess in soil flows
 - Evaluation of GPP, H and LE
 - Soil thermodynamics revised
-- Single-domain and dual-permeability soil water flows
-- Infiltration and saturation excess reported
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions

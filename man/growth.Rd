@@ -8,10 +8,11 @@ growth(
   x,
   meteo,
   latitude,
-  elevation = NA_real_,
+  elevation,
   slope = NA_real_,
   aspect = NA_real_,
-  CO2ByYear = numeric(0)
+  CO2ByYear = numeric(0),
+  waterTableDepth = NA_real_
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ growth(
 \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
 \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).}
+
+\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
 }
 \value{
 A list of class 'growth' with the following elements:

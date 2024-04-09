@@ -9,10 +9,11 @@ spwb(
   x,
   meteo,
   latitude,
-  elevation = NA_real_,
+  elevation,
   slope = NA_real_,
   aspect = NA_real_,
-  CO2ByYear = numeric(0)
+  CO2ByYear = numeric(0),
+  waterTableDepth = NA_real_
 )
 
 pwb(
@@ -20,7 +21,7 @@ pwb(
   meteo,
   W,
   latitude,
-  elevation = NA_real_,
+  elevation,
   slope = NA_real_,
   aspect = NA_real_,
   canopyEvaporation = numeric(0),
@@ -61,6 +62,8 @@ The following columns are optional:
 
 \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).}
 
+\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
+
 \item{W}{A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.}
 
 \item{canopyEvaporation}{A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.}
@@ -90,6 +93,7 @@ There are many elements in common in these lists, so they are listed here togeth
     \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
     \item{\code{"InfiltrationExcess"}: Excess infiltration in the topmost layer leading to an increase in runoff (in mm).}
     \item{\code{"SaturationExcess"}: Excess saturation in the topmost layer leading to an increase in runoff (in mm).}
+    \item{\code{"CapillarityRise"}: Water entering the soil via capillarity rise (mm) from the water table, if \code{waterTableDepth} is supplied.}
     \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
