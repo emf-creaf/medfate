@@ -22,7 +22,7 @@ Function hydrology_snowMelt estimates snow melt using a simple energy balance, a
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
       </span>
     </div>
 
@@ -78,7 +78,6 @@ Function hydrology_snowMelt estimates snow melt using a simple energy balance, a
 <span>  <span class="va">Cm</span>,</span>
 <span>  <span class="va">LgroundPAR</span>,</span>
 <span>  <span class="va">LgroundSWR</span>,</span>
-<span>  runon <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  snowpack <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  modifySoil <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -134,10 +133,6 @@ Function hydrology_snowMelt estimates snow melt using a simple energy balance, a
 <dd><p>Percentage of photosynthetically-active radiation (PAR) reaching the ground.</p></dd>
 
 
-<dt>runon</dt>
-<dd><p>Surface water amount running on the target area from upslope (in mm).</p></dd>
-
-
 <dt>snowpack</dt>
 <dd><p>Boolean flag to indicate the simulation of snow accumulation and melting.</p></dd>
 
@@ -160,20 +155,11 @@ Function hydrology_snowMelt estimates snow melt using a simple energy balance, a
 <dt>Interception</dt>
 <dd><p>Rainfall water intercepted by the canopy and evaporated.</p></dd>
 
-<dt>NetRain</dt>
-<dd><p>Rainfall reaching the ground (throughfall).</p></dd>
-
 <dt>Snowmelt</dt>
 <dd><p>Snow melted during the day, and added to the water infiltrated.</p></dd>
 
-<dt>Runon</dt>
-<dd><p>Surface water amount running on the target area from upslope.</p></dd>
-
-<dt>RainfallInput</dt>
-<dd><p>Rainfall input, including runon and net rain.</p></dd>
-
-<dt>TotalInput</dt>
-<dd><p>Total soil input, including runon, snowmelt and net rain.</p></dd>
+<dt>NetRain</dt>
+<dd><p>Rainfall reaching the ground.</p></dd>
 
 </dl></div>
     <div id="details">

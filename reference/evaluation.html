@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
       </span>
     </div>
 
@@ -219,20 +219,21 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.0583</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 345.326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 344.993</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.000290211</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.000290211</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 54.4511</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 54.4511</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.000289923</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.000289923</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 54.1183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 54.1183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 374 InfiltrationExcess (mm) 47 SaturationExcess (mm) 11 Runoff (mm) 58 Deep drainage (mm) 94</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 374 Infiltration excess (mm) 47 Saturation excess (mm) 10 Capillarity rise (mm) 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 15  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 187  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 57 Deep drainage (mm) 94</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -240,13 +241,13 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3.650000e+02 9.796617e-03 3.078094e+00 1.335920e-02 4.197457e+00 9.163490e-01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.650000e+02 8.068019e-03 2.534969e+00 1.203401e-02 3.781082e+00 9.262770e-01 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          NSE      NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7.620936e-01 5.526017e-01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.068152e-01 5.969823e-01 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#NSE only</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7620936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8068152</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -254,7 +255,7 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 823.8916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 832.0309</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2024-04-09</h4>
+            <h4 data-toc-skip class="date">2024-04-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -627,9 +627,10 @@ function <code><a href="../../reference/modifyParams.html">modifyCohortParams()<
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 1066 Rain (mm) 1066 Snow (mm) 0</span></span>
 <span><span class="co">##   Interception (mm) 141 Net rainfall (mm) 925</span></span>
-<span><span class="co">##   Infiltration (mm) 456 InfiltrationExcess (mm) 468 SaturationExcess (mm) 131 Runoff (mm) 599 Deep drainage (mm) 22</span></span>
+<span><span class="co">##   Infiltration (mm) 456 Infiltration excess (mm) 468 Saturation excess (mm) 131 Capillarity rise (mm) 0</span></span>
 <span><span class="co">##   Soil evaporation (mm) 11  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 295</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 289  Plant water balance (mm) -5 Hydraulic redistribution (mm) 45</span></span></code></pre>
+<span><span class="co">##   Plant extraction from soil (mm) 289  Plant water balance (mm) -5 Hydraulic redistribution (mm) 45</span></span>
+<span><span class="co">##   Runoff (mm) 599 Deep drainage (mm) 22</span></span></code></pre>
 <p>Console output provides the water balance totals for the period
 considered, which may span several years. The output of function
 <code><a href="../../reference/spwb.html">spwb()</a></code> is an object of class with the same name, actually a
@@ -663,20 +664,27 @@ components in form of a data frame with days in rows:</p>
 <span><span class="co">## 2014-01-04    0.7213133                  0                0      0  0.002863180</span></span>
 <span><span class="co">## 2014-01-05    0.0000000                  0                0      0  0.002716157</span></span>
 <span><span class="co">## 2014-01-06    0.0000000                  0                0      0  0.002710028</span></span>
-<span><span class="co">##            Evapotranspiration Interception SoilEvaporation HerbTranspiration</span></span>
-<span><span class="co">## 2014-01-01          0.2302861      0.00000      0.21454034                 0</span></span>
-<span><span class="co">## 2014-01-02          0.1959278      0.00000      0.19592778                 0</span></span>
-<span><span class="co">## 2014-01-03          0.1631674      0.00000      0.15263385                 0</span></span>
-<span><span class="co">## 2014-01-04          1.9830529      1.86936      0.11369262                 0</span></span>
-<span><span class="co">## 2014-01-05          0.5215926      0.00000      0.14361602                 0</span></span>
-<span><span class="co">## 2014-01-06          0.4636275      0.00000      0.09795493                 0</span></span>
-<span><span class="co">##            PlantExtraction Transpiration HydraulicRedistribution</span></span>
-<span><span class="co">## 2014-01-01    1.574572e-02    0.01574572             0.000000000</span></span>
-<span><span class="co">## 2014-01-02   -2.398797e-18    0.00000000             0.004951700</span></span>
-<span><span class="co">## 2014-01-03    1.053355e-02    0.01053355             0.007332546</span></span>
-<span><span class="co">## 2014-01-04   -1.707618e-18    0.00000000             0.008812242</span></span>
-<span><span class="co">## 2014-01-05    3.779766e-01    0.37797659             0.001843728</span></span>
-<span><span class="co">## 2014-01-06    3.656725e-01    0.36567254             0.007624496</span></span></code></pre>
+<span><span class="co">##            CapillarityRise Evapotranspiration Interception SoilEvaporation</span></span>
+<span><span class="co">## 2014-01-01               0          0.2302861      0.00000      0.21454034</span></span>
+<span><span class="co">## 2014-01-02               0          0.1959278      0.00000      0.19592778</span></span>
+<span><span class="co">## 2014-01-03               0          0.1631674      0.00000      0.15263385</span></span>
+<span><span class="co">## 2014-01-04               0          1.9830529      1.86936      0.11369262</span></span>
+<span><span class="co">## 2014-01-05               0          0.5215926      0.00000      0.14361602</span></span>
+<span><span class="co">## 2014-01-06               0          0.4636275      0.00000      0.09795493</span></span>
+<span><span class="co">##            HerbTranspiration PlantExtraction Transpiration</span></span>
+<span><span class="co">## 2014-01-01                 0    1.574572e-02    0.01574572</span></span>
+<span><span class="co">## 2014-01-02                 0   -2.398797e-18    0.00000000</span></span>
+<span><span class="co">## 2014-01-03                 0    1.053355e-02    0.01053355</span></span>
+<span><span class="co">## 2014-01-04                 0   -1.707618e-18    0.00000000</span></span>
+<span><span class="co">## 2014-01-05                 0    3.779766e-01    0.37797659</span></span>
+<span><span class="co">## 2014-01-06                 0    3.656725e-01    0.36567254</span></span>
+<span><span class="co">##            HydraulicRedistribution</span></span>
+<span><span class="co">## 2014-01-01             0.000000000</span></span>
+<span><span class="co">## 2014-01-02             0.004951700</span></span>
+<span><span class="co">## 2014-01-03             0.007332546</span></span>
+<span><span class="co">## 2014-01-04             0.008812242</span></span>
+<span><span class="co">## 2014-01-05             0.001843728</span></span>
+<span><span class="co">## 2014-01-06             0.007624496</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="comparing-results-with-observations">Comparing results with observations<a class="anchor" aria-label="anchor" href="#comparing-results-with-observations"></a>
@@ -1046,32 +1054,32 @@ months one can use:</p>
 <span><span class="co">## 2014-10-01   17.0226618         24.8840271         0.000000  24.8840271</span></span>
 <span><span class="co">## 2014-11-01   65.0814535        133.0160561         0.000000 133.0160561</span></span>
 <span><span class="co">## 2014-12-01   47.8263597         30.9270603         1.176828  32.1038884</span></span>
-<span><span class="co">##            DeepDrainage Evapotranspiration Interception SoilEvaporation</span></span>
-<span><span class="co">## 2014-01-01 -7.226646867           29.12527   22.4713498       2.2142660</span></span>
-<span><span class="co">## 2014-02-01  9.929045821           34.54794   25.8391081       1.3014642</span></span>
-<span><span class="co">## 2014-03-01 12.549308788           33.69664    4.7207713       2.3197769</span></span>
-<span><span class="co">## 2014-04-01  3.999319996           42.64650    7.7286411       0.5954402</span></span>
-<span><span class="co">## 2014-05-01  1.591988960           53.43232    5.2718367       0.3457058</span></span>
-<span><span class="co">## 2014-06-01  0.531277932           67.14305    7.7160510       0.2243593</span></span>
-<span><span class="co">## 2014-07-01  0.090217794           36.72107    0.4571054       0.1463319</span></span>
-<span><span class="co">## 2014-08-01  0.021666772           34.03101    7.5974432       0.1417143</span></span>
-<span><span class="co">## 2014-09-01  0.028526553           30.37726   11.7042748       0.1291978</span></span>
-<span><span class="co">## 2014-10-01  0.007879236           29.46779    8.6933111       0.2343879</span></span>
-<span><span class="co">## 2014-11-01  0.109207079           32.95069   24.5024904       1.5076865</span></span>
-<span><span class="co">## 2014-12-01  0.337549224           22.23505   14.2465799       1.7221384</span></span>
-<span><span class="co">##            HerbTranspiration PlantExtraction Transpiration</span></span>
-<span><span class="co">## 2014-01-01                 0        4.382388      4.439657</span></span>
-<span><span class="co">## 2014-02-01                 0        6.947697      7.407365</span></span>
-<span><span class="co">## 2014-03-01                 0       26.622466     26.656096</span></span>
-<span><span class="co">## 2014-04-01                 0       33.717907     34.322424</span></span>
-<span><span class="co">## 2014-05-01                 0       46.994123     47.814776</span></span>
-<span><span class="co">## 2014-06-01                 0       58.098163     59.202640</span></span>
-<span><span class="co">## 2014-07-01                 0       36.023415     36.117630</span></span>
-<span><span class="co">## 2014-08-01                 0       25.593820     26.291851</span></span>
-<span><span class="co">## 2014-09-01                 0       17.953646     18.543791</span></span>
-<span><span class="co">## 2014-10-01                 0       20.127494     20.540095</span></span>
-<span><span class="co">## 2014-11-01                 0        6.800743      6.940514</span></span>
-<span><span class="co">## 2014-12-01                 0        6.193685      6.266329</span></span>
+<span><span class="co">##            DeepDrainage CapillarityRise Evapotranspiration Interception</span></span>
+<span><span class="co">## 2014-01-01 -7.226646867               0           29.12527   22.4713498</span></span>
+<span><span class="co">## 2014-02-01  9.929045821               0           34.54794   25.8391081</span></span>
+<span><span class="co">## 2014-03-01 12.549308788               0           33.69664    4.7207713</span></span>
+<span><span class="co">## 2014-04-01  3.999319996               0           42.64650    7.7286411</span></span>
+<span><span class="co">## 2014-05-01  1.591988960               0           53.43232    5.2718367</span></span>
+<span><span class="co">## 2014-06-01  0.531277932               0           67.14305    7.7160510</span></span>
+<span><span class="co">## 2014-07-01  0.090217794               0           36.72107    0.4571054</span></span>
+<span><span class="co">## 2014-08-01  0.021666772               0           34.03101    7.5974432</span></span>
+<span><span class="co">## 2014-09-01  0.028526553               0           30.37726   11.7042748</span></span>
+<span><span class="co">## 2014-10-01  0.007879236               0           29.46779    8.6933111</span></span>
+<span><span class="co">## 2014-11-01  0.109207079               0           32.95069   24.5024904</span></span>
+<span><span class="co">## 2014-12-01  0.337549224               0           22.23505   14.2465799</span></span>
+<span><span class="co">##            SoilEvaporation HerbTranspiration PlantExtraction Transpiration</span></span>
+<span><span class="co">## 2014-01-01       2.2142660                 0        4.382388      4.439657</span></span>
+<span><span class="co">## 2014-02-01       1.3014642                 0        6.947697      7.407365</span></span>
+<span><span class="co">## 2014-03-01       2.3197769                 0       26.622466     26.656096</span></span>
+<span><span class="co">## 2014-04-01       0.5954402                 0       33.717907     34.322424</span></span>
+<span><span class="co">## 2014-05-01       0.3457058                 0       46.994123     47.814776</span></span>
+<span><span class="co">## 2014-06-01       0.2243593                 0       58.098163     59.202640</span></span>
+<span><span class="co">## 2014-07-01       0.1463319                 0       36.023415     36.117630</span></span>
+<span><span class="co">## 2014-08-01       0.1417143                 0       25.593820     26.291851</span></span>
+<span><span class="co">## 2014-09-01       0.1291978                 0       17.953646     18.543791</span></span>
+<span><span class="co">## 2014-10-01       0.2343879                 0       20.127494     20.540095</span></span>
+<span><span class="co">## 2014-11-01       1.5076865                 0        6.800743      6.940514</span></span>
+<span><span class="co">## 2014-12-01       1.7221384                 0        6.193685      6.266329</span></span>
 <span><span class="co">##            HydraulicRedistribution</span></span>
 <span><span class="co">## 2014-01-01               0.6925915</span></span>
 <span><span class="co">## 2014-02-01               1.3178693</span></span>

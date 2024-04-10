@@ -18,7 +18,7 @@ performs water and carbon balance for a single day."><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
       </span>
     </div>
 
@@ -64,9 +64,11 @@ performs water and carbon balance for a single day.</p>
 <span>  <span class="va">meteovec</span>,</span>
 <span>  <span class="va">latitude</span>,</span>
 <span>  <span class="va">elevation</span>,</span>
-<span>  <span class="va">slope</span>,</span>
-<span>  <span class="va">aspect</span>,</span>
+<span>  slope <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  aspect <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  runon <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  lateralFlows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  waterTableDepth <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  modifyInput <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -76,9 +78,11 @@ performs water and carbon balance for a single day.</p>
 <span>  <span class="va">meteovec</span>,</span>
 <span>  <span class="va">latitude</span>,</span>
 <span>  <span class="va">elevation</span>,</span>
-<span>  <span class="va">slope</span>,</span>
-<span>  <span class="va">aspect</span>,</span>
+<span>  slope <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  aspect <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  runon <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  lateralFlows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  waterTableDepth <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  modifyInput <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -107,6 +111,14 @@ performs water and carbon balance for a single day.</p>
 
 <dt>runon</dt>
 <dd><p>Surface water amount running on the target area from upslope (in mm).</p></dd>
+
+
+<dt>lateralFlows</dt>
+<dd><p>Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.</p></dd>
+
+
+<dt>waterTableDepth</dt>
+<dd><p>Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.</p></dd>
 
 
 <dt>modifyInput</dt>

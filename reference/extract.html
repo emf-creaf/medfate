@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
       </span>
     </div>
 
@@ -150,20 +150,21 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 5.2526</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 211.868</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 211.856</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.00102106</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 0.00102106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 27.0411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 27.0411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 27.0293</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 27.0293</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 39 Rain (mm) 34 Snow (mm) 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 9 Net rainfall (mm) 25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 30 InfiltrationExcess (mm) 0 SaturationExcess (mm) 0 Runoff (mm) 0 Deep drainage (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 30 Infiltration excess (mm) 0 Saturation excess (mm) 0 Capillarity rise (mm) 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 1  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 2  Plant water balance (mm) 0 Hydraulic redistribution (mm) 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 0 Deep drainage (mm) 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily forest-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"forest"</span><span class="op">)</span></span></span>
@@ -188,62 +189,73 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7     0.0000000                  0                0      0 -1.080622e-09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8     0.0000000                  0                0      0 -2.418545e-09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9     0.0000000                  0                0      0 -3.304103e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    9.0501360                  0                0      0  9.783856e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Evapotranspiration Interception SoilEvaporation HerbTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           2.0551277     1.444929      0.44789475       0.011023432</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           1.7946355     1.426545      0.06679272       0.020448162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           0.2954225     0.000000      0.05587694       0.016254795</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           1.6048387     1.434411      0.06571597       0.007106194</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           1.4653077     1.130499      0.02608214       0.020931049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           1.8836962     1.635773      0.02545435       0.015082163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           0.1175354     0.000000      0.00000000       0.007953597</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           0.1535263     0.000000      0.00000000       0.010389263</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           0.3658728     0.000000      0.00000000       0.024759469</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10          1.6080882     1.445031      0.01012068       0.010350084</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    PlantExtraction Transpiration HydraulicRedistribution      LAI   LAIherb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.15128020    0.15128020             0.000000000 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       0.28084991    0.28084991             0.000000000 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       0.22329079    0.22329079             0.000000000 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       0.09760519    0.09760519             0.000000000 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       0.28779575    0.28779575             0.002462785 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       0.20738652    0.20738652             0.001748480 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7       0.10958185    0.10958185             0.003282991 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8       0.14313708    0.14313708             0.004248779 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9       0.34111332    0.34111332             0.010001021 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      0.14258599    0.14258599             0.004053762 1.758585 0.1736369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     LAIlive LAIexpanded LAIdead       Cm LgroundPAR LgroundSWR      W.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.026961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.032404</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.027419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.070108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.071846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.189844</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.188227</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  1.584948    1.584948       0 1.390485   40.00754   50.73297 1.186117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1.584948    1.584948       0 1.390485   40.00754   50.73297 1.181094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         W.2     ML.1     ML.2    MLTot SaturatedDepth    SWE PlantExt.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.000000 68.17381 116.6530 184.8268       965.9416 0.0000 0.11328728</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.007830 70.01188 117.5664 187.5783       957.7798 0.0000 0.24532184</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1.010143 70.38293 117.8362 188.2191       961.7718 0.0000 0.19586573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1.010008 70.04308 117.8204 187.8635       911.3125 0.0000 0.08504188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1.020433 72.95332 119.0365 191.9898       906.6626 0.0000 0.26096146</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  1.022334 73.07184 119.2583 192.3302       767.4948 0.0000 0.18797466</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1.050975 81.11622 122.5993 203.7155       768.8222 5.3774 0.10666326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  1.050912 81.00597 122.5920 203.5980       770.5567 5.3774 0.13918999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  1.050829 80.86211 122.5824 203.4445       774.6919 5.3774 0.33128384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1.050628 80.51970 122.5589 203.0786       671.6071 0.0000 0.13804877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     PlantExt.2 HydraulicInput.1 HydraulicInput.2        psi.1       psi.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.037992928                0      0.000000000 -0.029036340 -0.03179780</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.035528070                0      0.000000000 -0.028293369 -0.03145097</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.027425058                0      0.000000000 -0.028973165 -0.03147122</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.012563310                0      0.000000000 -0.023605026 -0.02995184</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.026834289                0      0.002462785 -0.023406529 -0.02968240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.019411861                0      0.001748480 -0.012645731 -0.02588878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.002918585                0      0.003282991 -0.012764438 -0.02589655</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.003947098                0      0.004248779 -0.012920294 -0.02590685</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.009829478                0      0.010001021 -0.013295644 -0.02593187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.004537213                0      0.004053762 -0.006391431 -0.02437821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10    9.0501360                  0                0      0  1.095714e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    CapillarityRise Evapotranspiration Interception SoilEvaporation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                0          2.0551277     1.444929      0.44789475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                0          1.7946355     1.426545      0.06679272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                0          0.2954225     0.000000      0.05587694</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                0          1.6048387     1.434411      0.06571597</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                0          1.4653077     1.130499      0.02608214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                0          1.8836962     1.635773      0.02545435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                0          0.1175354     0.000000      0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                0          0.1535263     0.000000      0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                0          0.3658728     0.000000      0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10               0          1.6080882     1.445031      0.01012068</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HerbTranspiration PlantExtraction Transpiration HydraulicRedistribution</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.011023432      0.15128020    0.15128020             0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.020448162      0.28084991    0.28084991             0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.016254795      0.22329079    0.22329079             0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.007106194      0.09760519    0.09760519             0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0.020931049      0.28779575    0.28779575             0.002462785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0.015082163      0.20738652    0.20738652             0.001748480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        0.007953597      0.10958185    0.10958185             0.003282991</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        0.010389263      0.14313708    0.14313708             0.004248779</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        0.024759469      0.34111332    0.34111332             0.010001021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       0.010350084      0.14258599    0.14258599             0.004053762</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         LAI   LAIherb  LAIlive LAIexpanded LAIdead       Cm LgroundPAR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    LgroundSWR      W.1      W.2     ML.1     ML.2    MLTot SaturatedDepth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    50.73297 1.000000 1.000000 68.17381 116.6530 184.8268       965.9416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    50.73297 1.026961 1.007830 70.01188 117.5664 187.5783       957.7798</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    50.73297 1.032404 1.010143 70.38293 117.8362 188.2191       961.7718</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    50.73297 1.027419 1.010008 70.04308 117.8204 187.8635       911.3125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    50.73297 1.070108 1.020433 72.95332 119.0365 191.9898       906.6626</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    50.73297 1.071846 1.022334 73.07184 119.2583 192.3302       767.4948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    50.73297 1.189844 1.050975 81.11622 122.5993 203.7155       768.8222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    50.73297 1.188227 1.050912 81.00597 122.5920 203.5980       770.5567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    50.73297 1.186117 1.050829 80.86211 122.5824 203.4445       774.6919</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   50.73297 1.181094 1.050628 80.51970 122.5589 203.0786       666.1393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       SWE PlantExt.1  PlantExt.2 HydraulicInput.1 HydraulicInput.2       psi.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.0000 0.11328728 0.037992928                0      0.000000000 -0.02903634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.0000 0.24532184 0.035528070                0      0.000000000 -0.02829337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.0000 0.19586573 0.027425058                0      0.000000000 -0.02897317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.0000 0.08504188 0.012563310                0      0.000000000 -0.02360503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.0000 0.26096146 0.026834289                0      0.002462785 -0.02340653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.0000 0.18797466 0.019411861                0      0.001748480 -0.01264573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  5.3774 0.10666326 0.002918585                0      0.003282991 -0.01276444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  5.3774 0.13918999 0.003947098                0      0.004248779 -0.01292029</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  5.3774 0.33128384 0.009829478                0      0.010001021 -0.01329564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.0000 0.13804877 0.004537213                0      0.004053762 -0.00757564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          psi.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  -0.03179780</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  -0.03145097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -0.03147122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -0.02995184</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -0.02968240</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  -0.02588878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  -0.02589655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  -0.02590685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  -0.02593187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 -0.02300500</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily cohort-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"cohort"</span><span class="op">)</span></span></span>
