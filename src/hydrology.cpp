@@ -744,16 +744,15 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
     }
   }
   
-  LogicalVector saturated(nlayers, false);
+  NumericVector prop_saturated(nlayers, 0.0);
   double freeDrainage = true;
-  int num_saturated = 0;
   if(!NumericVector::is_na(waterTableDepth)) {
     freeDrainage = (waterTableDepth > sum(dVec));
     double sZ = 0.0;
     for(int i=0;i<nlayers;i++){
-      saturated[i] = waterTableDepth <= sZ;
-      if(saturated[i]) num_saturated = num_saturated + 1;
+      prop_saturated[i] = std::min(1.0, std::max(0.0,((sZ + dVec[i]) - waterTableDepth)/dVec[i]));
       sZ += dVec[i];
+      // Rcout << prop_saturated[i] << "\n";
     }
   }
   
@@ -919,7 +918,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
         //Correction for saturation
         for(int l=0;l<nlayers;l++) {
           saturated_matrix_correction_m3s[l] = 0.0;
-          if(saturated[l]) {
+          if(prop_saturated[l]>0.0) {
             double theta, quasi_sat_theta;
             if(soilDomains =="single") {
               theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
@@ -928,7 +927,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
               theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
               quasi_sat_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
             }
-            saturated_matrix_correction_m3s[l] = std::max(0.0, ((quasi_sat_theta - theta)*lambda[l]*dVec[l]*0.001)/tsubstep);
+            saturated_matrix_correction_m3s[l] = std::max(0.0, ((prop_saturated[l]*quasi_sat_theta - theta)*lambda[l]*dVec[l]*0.001)/tsubstep);
             saturated_matrix_correction_m3s[l] = std::min(Ksat_ms[l], saturated_matrix_correction_m3s[l]);
             // Rcout<< s << " "<< nsubsteps<< " " << l << " theta " << theta << " quasi_sat_theta " << quasi_sat_theta <<  " Ksat_ms "<< Ksat_ms[l]<< " sat micro corr: " << saturated_matrix_correction_m3s[l] <<"\n";
             capillarity_matrix_step_m3 += tsubstep*saturated_matrix_correction_m3s[l];
@@ -940,24 +939,31 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
         for(int l=0;l<nlayers;l++) {
 
           if(l==0) { //first layer
-            K_up = K_step_ms[l];
-            K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
+            K_up = 0.0;
+            K_down = K_step_ms[l];
+            // K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
             a[l] = 0.0;
             c[l] = -1.0*K_down/dZDown[l];
             b[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep) - c[l];
             d[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep)*Psi_step_m[l]  - K_down + source_sink_def_m3s[l] + matrixImbibition_m3s[l] + saturated_matrix_correction_m3s[l];
           } else if(l<(nlayers - 1)) {
-            K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
-            K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
+            K_up = K_step_ms[l-1];
+            K_down = K_step_ms[l];
+            // K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
+            // K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
             a[l] = -1.0*K_up/dZUp[l];
             c[l] = -1.0*K_down/dZDown[l];
             b[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep) - a[l] - c[l];
             d[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep)*Psi_step_m[l] + K_up - K_down + source_sink_def_m3s[l] + matrixImbibition_m3s[l] + saturated_matrix_correction_m3s[l];
           } else { // last layer
-            K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
+            K_up = K_step_ms[l-1];
+            // K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
             K_down = K_step_ms[l];
             a[l] = -1.0*K_up/dZUp[l];
             double drain_bc = 0.0;
+            if(!freeDrainage) {
+              drain_bc = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_bc);
+            }
             c[l] = 0.0;
             b[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep) - a[l];
             d[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep)*Psi_step_m[l] + K_up - K_down  + drain_bc + source_sink_def_m3s[l] + matrixImbibition_m3s[l] + saturated_matrix_correction_m3s[l];
@@ -983,24 +989,31 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
         //B. Corrector sub-step also Crank-Nicolson
         for(int l=0;l<nlayers;l++) {
           if(l==0) { //first layer
-            K_up = K_step_ms05[l];
-            K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
+            K_up = 0.0;
+            K_down = K_step_ms05[l];
+            // K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
             a[l] = 0.0;
             c[l] = -1.0*K_down/(2.0*dZDown[l]);
             b[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep) - c[l];
             d[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep)*Psi_step_m[l] - c[l]*(Psi_step_m[l] - Psi_step_m[l+1])  - K_down + source_sink_def_m3s[l] + matrixImbibition_m3s[l] + saturated_matrix_correction_m3s[l];
           } else if(l<(nlayers - 1)) {
-            K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
-            K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
+            K_up = K_step_ms05[l-1];
+            K_down = K_step_ms05[l];
+            // K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
+            // K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
             c[l] = -1.0*K_down/(2.0*dZDown[l]);
             b[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep) - a[l] - c[l];
             d[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep)*Psi_step_m[l] + a[l]*(Psi_step_m[l - 1] - Psi_step_m[l]) - c[l]*(Psi_step_m[l] - Psi_step_m[l+1]) + K_up - K_down + source_sink_def_m3s[l] + matrixImbibition_m3s[l] + saturated_matrix_correction_m3s[l];
           } else { // last layer
-            K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
+            K_up = K_step_ms05[l-1];
+            // K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
             K_down = K_step_ms05[l];
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
             double drain_bc = 0.0;
+            if(!freeDrainage) {
+              drain_bc = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_bc);
+            }
             c[l] = 0.0;
             b[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep) - a[l] - c[l];
             d[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep)*Psi_step_m[l] + a[l]*(Psi_step_m[l - 1] - Psi_step_m[l])  + K_up - K_down + drain_bc + source_sink_def_m3s[l] + matrixImbibition_m3s[l] + saturated_matrix_correction_m3s[l];
@@ -1009,19 +1022,14 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
         NumericVector Psi_step_m_t1 = tridiagonalSolving(a,b,c,d);
         NumericVector Psi_step_t1 = Psi_step_m_t1*mTOMPa; // m to MPa
         //calculate drainage (m3)
-        // if(freeDrainage) {
-        drainage_matrix_step_m3 += K_step_ms05[nlayers -1]*tsubstep;
-        // if(num_saturated < nlayers) {
-        //   drainage_matrix_step_m3 += K_step_ms05[nlayers - num_saturated -1]*tsubstep;
-        // }
-        // } else {
-          // //Calculate outward/inward flux between last layer and boundary condition
-          // K_down = 0.5*(K_step_ms05[nlayers-1] + Kbc_ms[nlayers-1]); //K_step_ms05[nlayers-1];
-          // double flow = K_down/dZDown[nlayers-1]*(Psi_step_m[nlayers-1] - Psi_bc) + K_down;
-          // // Rcout<< dZDown[nlayers-1]<<" "<< (Psi_step_m[nlayers-1] - Psi_bc)<<" "<<K_down<<" " << flow <<"\n";
-          // drainage_matrix_step_m3 += std::max(0.0, flow*tsubstep);
-          // capillarity_matrix_step_m3 += std::max(0.0, -1.0*flow*tsubstep);
-        // }
+        if(freeDrainage) {
+           drainage_matrix_step_m3 += K_step_ms05[nlayers -1]*tsubstep;
+        } else {
+          K_down = K_step_ms05[nlayers-1];
+          double flow = K_down/dZDown[nlayers-1]*(Psi_step_m[nlayers-1] - Psi_bc) + K_down;
+          drainage_matrix_step_m3 += std::max(0.0, flow*tsubstep);
+          capillarity_matrix_step_m3 += std::max(0.0, -1.0*flow*tsubstep);
+        }
         
         //Update Psi and theta
         double res_mm = 0.0;
