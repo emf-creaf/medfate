@@ -1121,9 +1121,13 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             }
           }
           // Rcout<<" step "<<s<<" layer " <<l<< " final "<< Psi_step[l]<<"\n";
-          
-          //If dual model, update theta and manage excess to macropores
-          if((soilDomains=="dual")) {
+        }
+        //Generate saturation excess if there was some residue in the top layer
+        saturation_excess_matrix_step_mm += res_mm;
+        
+        //If dual model, update theta and manage excess to macropores
+        if((soilDomains=="dual")) {
+          for(int l=0;l<nlayers;l++) {
             //Update theta_micro for the next substep
             theta_micro_step[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
             //If needed, add exceeding moisture to the macropores and correct Psi
@@ -1132,7 +1136,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
               //Maximum macropore capacity 
               double C_macro_step = (1.0 - S_macro_step[l])*(theta_sat[l] - theta_b[l]);
               excess_theta_step = std::min(theta_micro_step[l] - theta_b[l], C_macro_step);
-              // Rcout<< s<<" "<< l << " theta_micro "<< theta_micro_step[l] <<"  "<<theta_b[l]<< " "<< excess_theta_step << "\n";
+              Rcout<< s<<" "<< l << " theta_micro "<< theta_micro_step[l] <<"  "<<theta_b[l]<< " "<< excess_theta_step << "\n";
               theta_micro_step[l] -= excess_theta_step;
               Psi_step[l] = theta2psiVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], theta_micro_step[l]);
             } 
@@ -1145,8 +1149,6 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             }
           }
         }
-        //Generate saturation excess if there was some residue in the top layer
-        saturation_excess_matrix_step_mm += res_mm;
         
         //Update (micropore) capacitances and conductances for next substep 
         for(int l=0;l<nlayers;l++) {
@@ -1287,10 +1289,10 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
         // Correct possible mismatch between balance and volume change
         matrix_correction_step_mm = balance_micro_step_mm + Vini_step_micro_mm - Vfin_micro_mm;
         macropore_correction_step_mm = balance_macro_step_mm + Vini_step_macro_mm - Vfin_macro_mm;
-        // Rcout << s << " "<< nsubsteps<<" micro ini "<< Vini_step_micro_mm <<" fin " <<  Vfin_micro_mm << " dif "<< Vfin_micro_mm - Vini_step_micro_mm << "  bal "<< balance_micro_step_mm<< " corr "<< matrix_correction_step_mm<< "\n";
-        // Rcout << s << " "<< nsubsteps<<" macro ini "<< Vini_step_macro_mm <<" fin " <<  Vfin_macro_mm << " dif "<< Vfin_macro_mm - Vini_step_macro_mm <<
-        //   " inf " << infiltration_macropores_step_mm<< " sat exc " << saturation_excess_macropores_step_mm << " dra " << m3_2_mm*drainage_macropores_step_m3 <<" cap " << m3_2_mm*capillarity_macropores_step_m3 <<
-        //   " lat " << sum(lateral_flows_step_mm) << " bal "<< balance_macro_step_mm<<  " corr "<< macropore_correction_step_mm<< "\n";
+        Rcout << s << " "<< nsubsteps<<" micro ini "<< Vini_step_micro_mm <<" fin " <<  Vfin_micro_mm << " dif "<< Vfin_micro_mm - Vini_step_micro_mm << "  bal "<< balance_micro_step_mm<< " corr "<< matrix_correction_step_mm<< "\n";
+        Rcout << s << " "<< nsubsteps<<" macro ini "<< Vini_step_macro_mm <<" fin " <<  Vfin_macro_mm << " dif "<< Vfin_macro_mm - Vini_step_macro_mm <<
+          " inf " << infiltration_macropores_step_mm<< " sat exc " << saturation_excess_macropores_step_mm << " dra " << m3_2_mm*drainage_macropores_step_m3 <<" cap " << m3_2_mm*capillarity_macropores_step_m3 <<
+          " lat " << sum(lateral_flows_step_mm) << " bal "<< balance_macro_step_mm<<  " corr "<< macropore_correction_step_mm<< "\n";
         max_abs_correction_step_mm = std::max(std::abs(matrix_correction_step_mm), std::abs(macropore_correction_step_mm));
       }
       if((max_abs_correction_step_mm > 0.1) && (max_abs_correction_step_mm < prev_max_correction)) {
