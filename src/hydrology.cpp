@@ -745,12 +745,14 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
   }
   
   NumericVector prop_saturated(nlayers, 0.0);
+  int num_saturated = 0;
   double freeDrainage = true;
   if(!NumericVector::is_na(waterTableDepth)) {
     freeDrainage = (waterTableDepth > sum(dVec));
     double sZ = 0.0;
     for(int i=0;i<nlayers;i++){
       prop_saturated[i] = std::min(1.0, std::max(0.0,((sZ + dVec[i]) - waterTableDepth)/dVec[i]));
+      if(prop_saturated[i]==1.0) num_saturated++;
       sZ += dVec[i];
       // Rcout << prop_saturated[i] << "\n";
     }
@@ -941,6 +943,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
           if(l==0) { //first layer
             K_up = 0.0;
             K_down = K_step_ms[l];
+            if(prop_saturated[l]==1.0) K_down = 0.0;
             // K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
             a[l] = 0.0;
             c[l] = -1.0*K_down/dZDown[l];
@@ -951,6 +954,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             K_down = K_step_ms[l];
             // K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
             // K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
+            if(prop_saturated[l]==1.0) K_down = 0.0;
             a[l] = -1.0*K_up/dZUp[l];
             c[l] = -1.0*K_down/dZDown[l];
             b[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep) - a[l] - c[l];
@@ -959,6 +963,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             K_up = K_step_ms[l-1];
             // K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
             K_down = K_step_ms[l];
+            if(prop_saturated[l]==1.0) K_down = 0.0;
             a[l] = -1.0*K_up/dZUp[l];
             double drain_bc = 0.0;
             if(!freeDrainage) {
@@ -992,6 +997,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             K_up = 0.0;
             K_down = K_step_ms05[l];
             // K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
+            if(prop_saturated[l]==1.0) K_down = 0.0;
             a[l] = 0.0;
             c[l] = -1.0*K_down/(2.0*dZDown[l]);
             b[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep) - c[l];
@@ -999,6 +1005,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
           } else if(l<(nlayers - 1)) {
             K_up = K_step_ms05[l-1];
             K_down = K_step_ms05[l];
+            if(prop_saturated[l]==1.0) K_down = 0.0;
             // K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
             // K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
@@ -1009,6 +1016,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             K_up = K_step_ms05[l-1];
             // K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
             K_down = K_step_ms05[l];
+            if(prop_saturated[l]==1.0) K_down = 0.0;
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
             double drain_bc = 0.0;
             if(!freeDrainage) {
@@ -1026,9 +1034,9 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
            drainage_matrix_step_m3 += K_step_ms05[nlayers -1]*tsubstep;
         } else {
           K_down = K_step_ms05[nlayers-1];
+          if(prop_saturated[nlayers-1]==1.0) K_down = 0.0;
           double flow = K_down/dZDown[nlayers-1]*(Psi_step_m[nlayers-1] - Psi_bc) + K_down;
-          drainage_matrix_step_m3 += std::max(0.0, flow*tsubstep);
-          capillarity_matrix_step_m3 += std::max(0.0, -1.0*flow*tsubstep);
+          drainage_matrix_step_m3 += flow*tsubstep;
         }
         
         //Update Psi and theta
@@ -1295,12 +1303,14 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
   
   //Correct overestimation of capillarity by using saturation excess and deep drainage
   if(!freeDrainage) {
-    double dif_mm = std::min(capillarity_matrix_mm,  saturation_excess_matrix_mm);
-    capillarity_matrix_mm -= dif_mm;
-    saturation_excess_matrix_mm  -= dif_mm;
-    dif_mm = std::min(capillarity_matrix_mm,drainage_matrix_mm);
+    double dif_mm = std::min(capillarity_matrix_mm,drainage_matrix_mm);
+    // Rcout<< "C2 "<< capillarity_matrix_mm <<" " << drainage_matrix_mm << " "<< dif_mm << "\n";
     capillarity_matrix_mm -= dif_mm;
     drainage_matrix_mm  -= dif_mm;
+    dif_mm = std::min(capillarity_matrix_mm,  saturation_excess_matrix_mm);
+    // Rcout<< "C1 "<< capillarity_matrix_mm <<" " << saturation_excess_matrix_mm << " "<< dif_mm << "\n";
+    capillarity_matrix_mm -= dif_mm;
+    saturation_excess_matrix_mm  -= dif_mm;
   }
   
   //Output
