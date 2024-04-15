@@ -991,11 +991,9 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             K_up = 0.0;
             // K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
             K_down = K_step_ms[l];
-            if(prop_saturated[l]==1.0) K_down = 0.0;
             drain_below[l] = K_down;
-            if(prop_saturated[l+1] == 1.0) {
-              // K_down = K_step_ms[l]; 
-              // drain_below[l] = 0.0;
+            if(prop_saturated[l]==1.0) {
+              drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
             a[l] = 0.0;
@@ -1007,19 +1005,13 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             // K_down = 0.5*(K_step_ms[l] + K_step_ms[l+1]);
             K_up = K_step_ms[l-1];
             K_down = K_step_ms[l];
-            if(prop_saturated[l]==1.0) {
-              // K_up = K_step_ms[l-1];
-              K_down = 0.0; 
-              if(prop_saturated[l-1] == 1.0) K_up = 0.0;
-            }
             drain_above[l] = K_up;
             drain_below[l] = K_down;
-            if(prop_saturated[l+1] == 1.0) {
-              // K_down = K_step_ms[l]; 
-              // drain_below[l] = 0.0;
+            if(prop_saturated[l]==1.0) {
+              drain_above[l] = 0.0;
+              drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
-            if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
             a[l] = -1.0*K_up/dZUp[l];
             c[l] = -1.0*K_down/dZDown[l];
             b[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep) - a[l] - c[l];
@@ -1028,19 +1020,16 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             // K_up = 0.5*(K_step_ms[l-1] + K_step_ms[l]);
             K_up = K_step_ms[l-1];
             K_down = K_step_ms[l];
-            if(prop_saturated[l]==1.0) {
-              // K_up = K_step_ms[l-1];
-              K_down = 0.0; 
-              if(prop_saturated[l-1] == 1.0) K_up = 0.0;
-            }
-            capill_below[l] = 0.0;
             drain_below[l] = K_down;
             drain_above[l] = K_up;
+            if(prop_saturated[l]==1.0) {
+              drain_above[l] = 0.0;
+              drain_below[l] = 0.0;
+            }
+            capill_below[l] = 0.0;
             if(!freeDrainage) {
               capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_bc);
-              // drain_below[l] = 0.0;
             }
-            if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
             a[l] = -1.0*K_up/dZUp[l];
             c[l] = 0.0;
             b[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep) - a[l];
@@ -1068,12 +1057,9 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             K_up = 0.0;
             // K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
             K_down = K_step_ms05[l];
-            if(prop_saturated[l+1] == 1.0) K_down = K_step_ms05[l];
-            if(prop_saturated[l]==1.0) K_down = 0.0;
             drain_below[l] = K_down;
-            if(prop_saturated[l+1] == 1.0) {
-              // K_down = K_step_ms05[l]; 
-              // drain_below[l] = 0.0;
+            if(prop_saturated[l]==1.0) {
+              drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
             a[l] = 0.0;
@@ -1085,19 +1071,13 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             // K_down = 0.5*(K_step_ms05[l] + K_step_ms05[l+1]);
             K_up = K_step_ms05[l-1];
             K_down = K_step_ms05[l]; 
-            if(prop_saturated[l]==1.0) {
-              // K_up = K_step_ms05[l-1];
-              K_down = 0.0; 
-              if(prop_saturated[l-1] == 1.0) K_up = 0.0;
-            }
             drain_above[l] = K_up;
             drain_below[l] = K_down;
-            if(prop_saturated[l+1] == 1.0) {
-              // K_down = K_step_ms05[l]; 
-              // drain_below[l] = 0.0;
+            if(prop_saturated[l] == 1.0) {
+              drain_above[l] = 0.0;
+              drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
-            if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
             c[l] = -1.0*K_down/(2.0*dZDown[l]);
             b[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep) - a[l] - c[l];
@@ -1106,19 +1086,17 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             // K_up = 0.5*(K_step_ms05[l-1] + K_step_ms05[l]);
             K_up = K_step_ms05[l-1];
             K_down = K_step_ms05[l];
-            if(prop_saturated[l]==1.0) {
-              // K_up = K_step_ms05[l-1];
-              K_down = 0.0; 
-              if(prop_saturated[l-1] == 1.0) K_up = 0.0;
-            }
-            capill_below[l] = 0.0;
             drain_below[l] = K_down;
             drain_above[l] = K_up;
+            if(prop_saturated[l]==1.0) {
+              drain_above[l] = 0.0;
+              drain_below[l] = 0.0;
+            }
+            capill_below[l] = 0.0;
+            //Changes the boundary conditions allowing capillarity from layer below
             if(!freeDrainage) {
               capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_bc);
-              // drain_below[l] = 0.0;
             }
-            if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
             c[l] = 0.0;
             b[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep) - a[l];
@@ -1248,15 +1226,13 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             if(l==0) { //first layer
               K_up = 0.0;
             } else {
-              if(prop_saturated[l-1]==1.0) {
-                K_up = 0.0;
-              } else {
-                K_up = Kmacro_step_ms[l-1]; //Get last updated value
-              }
+              K_up = Kmacro_step_ms[l-1]; //Get last updated value
             }
             double ksat_i = Ksat_ms[l];
             double ksat_b_i = Ksat_b_ms[l];
+            //If layer is below the water table, gravitational fluxes are set to zero
             if(prop_saturated[l]==1.0) {
+              K_up = 0.0;
               ksat_i = 0.0;
               ksat_b_i = 0.0;
             }
