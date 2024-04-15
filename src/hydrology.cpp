@@ -995,7 +995,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             drain_below[l] = K_down;
             if(prop_saturated[l+1] == 1.0) {
               // K_down = K_step_ms[l]; 
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
             a[l] = 0.0;
@@ -1016,7 +1016,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             drain_below[l] = K_down;
             if(prop_saturated[l+1] == 1.0) {
               // K_down = K_step_ms[l]; 
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
             if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
@@ -1038,7 +1038,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             drain_above[l] = K_up;
             if(!freeDrainage) {
               capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_bc);
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
             a[l] = -1.0*K_up/dZUp[l];
@@ -1073,7 +1073,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             drain_below[l] = K_down;
             if(prop_saturated[l+1] == 1.0) {
               // K_down = K_step_ms05[l]; 
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
             a[l] = 0.0;
@@ -1094,7 +1094,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             drain_below[l] = K_down;
             if(prop_saturated[l+1] == 1.0) {
               // K_down = K_step_ms05[l]; 
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_step_m[l+1]);
             if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
@@ -1116,7 +1116,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
             drain_above[l] = K_up;
             if(!freeDrainage) {
               capill_below[l] = -1.0*K_down/dZDown[l]*(Psi_step_m[l] - Psi_bc);
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             if(prop_saturated[l]==1.0) drain_above[l] = 0.0;
             a[l] = -1.0*K_up/(2.0*dZUp[l]);
@@ -1132,6 +1132,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
            drainage_matrix_step_m3 += drain_below[nlayers -1]*tsubstep;
         } else {
           if(num_saturated < nlayers) {
+            drainage_matrix_step_m3 += drain_below[nlayers - num_saturated -1]*tsubstep;
             capillarity_matrix_step_m3 += capill_below[nlayers - num_saturated - 1]*tsubstep;
           }
         }
@@ -1276,9 +1277,8 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
           } else {
             if(num_saturated<nlayers) {
               double flow = Kmacro_step_ms[nlayers - num_saturated -1];
-              if(prop_saturated[nlayers - num_saturated -1] == 1.0) flow = 0.0;
               // Rcout<< " ss " << ss << " drainage flow " << flow << "\n";
-              capillarity_macropores_step_m3 += -1.0*flow*tsubstep;
+              drainage_macropores_step_m3 += flow*tsubstep;
             }
             
           }
@@ -1364,17 +1364,11 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
 
     
     //Add drainage correction
-    if(freeDrainage) {
-      drainage_matrix_step_m3 += matrix_correction_step_mm*mm_2_m3;
-    } else {
-      capillarity_matrix_step_m3 -= matrix_correction_step_mm*mm_2_m3;
-    }
+    drainage_matrix_step_m3 += std::max(0.0, matrix_correction_step_mm*mm_2_m3);
+    capillarity_matrix_step_m3 += std::max(0.0, -1.0*matrix_correction_step_mm*mm_2_m3);
     if(soilDomains=="dual") {
-      if(freeDrainage) {
-        drainage_macropores_step_m3 += macropore_correction_step_mm*mm_2_m3;
-      } else {
-        capillarity_macropores_step_m3 -= macropore_correction_step_mm*mm_2_m3;
-      }
+      drainage_macropores_step_m3 += std::max(0.0, macropore_correction_step_mm*mm_2_m3);
+      capillarity_macropores_step_m3 += std::max(0.0, -1.0*macropore_correction_step_mm*mm_2_m3);
     }
     
     //Add to totals
