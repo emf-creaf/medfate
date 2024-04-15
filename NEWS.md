@@ -6,6 +6,7 @@
 - Single-domain and dual-permeability soil water flows
 - Infiltration excess, saturation excess and capillarity rise reported
 - Lateral water flows and water table depth as inputs
+- Dual-permeability model for soil water balance set as default
 
 # Version 4.0.0
 - Options leafCavitationEffects and stemCavitationEffects for Sperry
