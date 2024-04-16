@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-04-10</h4>
+            <h4 data-toc-skip class="date">2024-04-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -506,27 +506,27 @@ flows of the day (precipitation, infiltration, transpiration, …)</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">WaterBalance</span></span></code></pre></div>
 <pre><code><span><span class="co">##                     PET                    Rain                    Snow </span></span>
-<span><span class="co">##             3.902334206             0.000000000             0.000000000 </span></span>
+<span><span class="co">##            3.902334e+00            0.000000e+00            0.000000e+00 </span></span>
 <span><span class="co">##                 NetRain                Snowmelt                   Runon </span></span>
-<span><span class="co">##             0.000000000             0.000000000             0.000000000 </span></span>
+<span><span class="co">##            0.000000e+00            0.000000e+00            0.000000e+00 </span></span>
 <span><span class="co">##            Infiltration      InfiltrationExcess        SaturationExcess </span></span>
-<span><span class="co">##             0.000000000             0.000000000             0.000000000 </span></span>
+<span><span class="co">##            0.000000e+00            0.000000e+00            0.000000e+00 </span></span>
 <span><span class="co">##                  Runoff            DeepDrainage         CapillarityRise </span></span>
-<span><span class="co">##             0.000000000             0.005217253             0.000000000 </span></span>
+<span><span class="co">##            0.000000e+00            5.243734e-03            1.938321e-05 </span></span>
 <span><span class="co">##         SoilEvaporation       HerbTranspiration         PlantExtraction </span></span>
-<span><span class="co">##             0.500000000             0.048725420             0.452535822 </span></span>
+<span><span class="co">##            5.000000e-01            4.872542e-02            4.525358e-01 </span></span>
 <span><span class="co">##           Transpiration HydraulicRedistribution </span></span>
-<span><span class="co">##             0.452535822             0.000000000</span></span></code></pre>
+<span><span class="co">##            4.525358e-01            0.000000e+00</span></span></code></pre>
 <p>And <code>Soil</code> contains water evaporated from each soil layer,
 water transpired from each soil layer and the final soil water
 potential:</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">Soil</span></span></code></pre></div>
 <pre><code><span><span class="co">##   HerbTranspiration HydraulicInput HydraulicOutput PlantExtraction         psi</span></span>
-<span><span class="co">## 1       0.008571001              0     0.295729299     0.295729299 -0.03507182</span></span>
-<span><span class="co">## 2       0.012000080              0     0.143773933     0.143773933 -0.03316954</span></span>
-<span><span class="co">## 3       0.013576976              0     0.011591691     0.011591691 -0.03299683</span></span>
-<span><span class="co">## 4       0.014577363              0     0.001440899     0.001440899 -0.03302853</span></span></code></pre>
+<span><span class="co">## 1       0.008571001              0     0.295729299     0.295729299 -0.03510522</span></span>
+<span><span class="co">## 2       0.012000080              0     0.143773933     0.143773933 -0.03317293</span></span>
+<span><span class="co">## 3       0.013576976              0     0.011591691     0.011591691 -0.03298502</span></span>
+<span><span class="co">## 4       0.014577363              0     0.001440899     0.001440899 -0.03297440</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="soil-and-canopy-energy-balance">Soil and canopy energy balance<a class="anchor" aria-label="anchor" href="#soil-and-canopy-energy-balance"></a>
@@ -666,7 +666,7 @@ modified the input objects. In particular, the soil moisture at the end
 of the simulation was:</p>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9871459 0.9989183 1.0000203 0.9998176</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.9869450 0.9988968 1.0000958 1.0001638</span></span></code></pre>
 <p>And the temperature of soil layers:</p>
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">Temp</span></span></code></pre></div>
@@ -754,22 +754,22 @@ affected by the end state of the previous simulation:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  [Year 2001]:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant water content (mm): 6.78145</span></span>
-<span><span class="co">## Final soil water content (mm): 335.295</span></span>
+<span><span class="co">## Final plant water content (mm): 6.78287</span></span>
+<span><span class="co">## Final soil water content (mm): 342.354</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): -0.00517175</span></span>
-<span><span class="co">## Plant water balance result (mm): -6.57908</span></span>
-<span><span class="co">## Change in soil water content (mm): 44.4202</span></span>
-<span><span class="co">## Soil water balance result (mm): 44.4202</span></span>
+<span><span class="co">## Change in plant water content (mm): -0.00375222</span></span>
+<span><span class="co">## Plant water balance result (mm): -6.59433</span></span>
+<span><span class="co">## Change in soil water content (mm): 51.4795</span></span>
+<span><span class="co">## Soil water balance result (mm): 51.4795</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): -7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 92 Net rainfall (mm) 370</span></span>
-<span><span class="co">##   Infiltration (mm) 377 Infiltration excess (mm) 44 Saturation excess (mm) 9 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 15  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 170</span></span>
+<span><span class="co">##   Infiltration (mm) 393 Infiltration excess (mm) 28 Saturation excess (mm) 0 Capillarity rise (mm) 3</span></span>
+<span><span class="co">##   Soil evaporation (mm) 11  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 171</span></span>
 <span><span class="co">##   Plant extraction from soil (mm) 164  Plant water balance (mm) -7 Hydraulic redistribution (mm) 1</span></span>
-<span><span class="co">##   Runoff (mm) 52 Deep drainage (mm) 132</span></span></code></pre>
+<span><span class="co">##   Runoff (mm) 28 Deep drainage (mm) 156</span></span></code></pre>
 <p>Function <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class
 <em>spwb</em>. If we inspect its elements, we realize that the output is
 arranged differently than in <code><a href="../../reference/spwb_day.html">spwb_day()</a></code>:</p>
@@ -802,33 +802,33 @@ rows:</p>
 <span><span class="co">## 2001-01-05 1.6760567      1.884401  1.884401    0  0.7539027        0</span></span>
 <span><span class="co">## 2001-01-06 1.2077028     13.359801 13.359801    0 11.7240275        0</span></span>
 <span><span class="co">##            Infiltration InfiltrationExcess SaturationExcess Runoff DeepDrainage</span></span>
-<span><span class="co">## 2001-01-01    3.4241795                  0                0      0  0.004978835</span></span>
-<span><span class="co">## 2001-01-02    1.0717469                  0                0      0  0.004990841</span></span>
-<span><span class="co">## 2001-01-03    0.0000000                  0                0      0  0.005057202</span></span>
-<span><span class="co">## 2001-01-04    4.3625616                  0                0      0  0.004738411</span></span>
-<span><span class="co">## 2001-01-05    0.7539027                  0                0      0  0.005010509</span></span>
-<span><span class="co">## 2001-01-06   11.7240275                  0                0      0  0.001858733</span></span>
+<span><span class="co">## 2001-01-01    3.4241795                  0                0      0  0.005025398</span></span>
+<span><span class="co">## 2001-01-02    1.0717469                  0                0      0  0.005054727</span></span>
+<span><span class="co">## 2001-01-03    0.0000000                  0                0      0  0.005113967</span></span>
+<span><span class="co">## 2001-01-04    4.3625616                  0                0      0  0.005115942</span></span>
+<span><span class="co">## 2001-01-05    0.7539027                  0                0      0  0.005149149</span></span>
+<span><span class="co">## 2001-01-06   11.7240275                  0                0      0  0.005182355</span></span>
 <span><span class="co">##            CapillarityRise Evapotranspiration Interception SoilEvaporation</span></span>
-<span><span class="co">## 2001-01-01               0          1.9081746     1.444929      0.44789475</span></span>
-<span><span class="co">## 2001-01-02               0          1.5387685     1.426545      0.06295795</span></span>
-<span><span class="co">## 2001-01-03               0          0.2663172     0.000000      0.04817952</span></span>
-<span><span class="co">## 2001-01-04               0          1.5011454     1.434411      0.05376906</span></span>
-<span><span class="co">## 2001-01-05               0          1.2382140     1.130499      0.02355781</span></span>
-<span><span class="co">## 2001-01-06               0          1.6753600     1.635773      0.02205147</span></span>
+<span><span class="co">## 2001-01-01    4.745735e-05          1.9081746     1.444929      0.44789475</span></span>
+<span><span class="co">## 2001-01-02    4.145186e-05          1.5393365     1.426545      0.06352600</span></span>
+<span><span class="co">## 2001-01-03    0.000000e+00          0.2671073     0.000000      0.04897017</span></span>
+<span><span class="co">## 2001-01-04    4.089020e-04          1.5026996     1.434411      0.05535087</span></span>
+<span><span class="co">## 2001-01-05    4.085636e-05          1.2386952     1.130499      0.02403944</span></span>
+<span><span class="co">## 2001-01-06    5.035626e-03          1.6760275     1.635773      0.02271906</span></span>
 <span><span class="co">##            HerbTranspiration PlantExtraction Transpiration</span></span>
 <span><span class="co">## 2001-01-01       0.011023432     0.004327076   0.004327076</span></span>
-<span><span class="co">## 2001-01-02       0.020448248     0.009692232   0.028817549</span></span>
-<span><span class="co">## 2001-01-03       0.016254993     0.201882721   0.201882721</span></span>
-<span><span class="co">## 2001-01-04       0.007106301     0.005858665   0.005858665</span></span>
-<span><span class="co">## 2001-01-05       0.020931304     0.023303695   0.063226143</span></span>
-<span><span class="co">## 2001-01-06       0.015082425     0.002452908   0.002452908</span></span>
+<span><span class="co">## 2001-01-02       0.020448234     0.009692228   0.028817522</span></span>
+<span><span class="co">## 2001-01-03       0.016254970     0.201882116   0.201882116</span></span>
+<span><span class="co">## 2001-01-04       0.007106285     0.005831135   0.005831135</span></span>
+<span><span class="co">## 2001-01-05       0.020931252     0.023303572   0.063225764</span></span>
+<span><span class="co">## 2001-01-06       0.015082370     0.002452908   0.002452908</span></span>
 <span><span class="co">##            HydraulicRedistribution</span></span>
 <span><span class="co">## 2001-01-01            0.000000e+00</span></span>
-<span><span class="co">## 2001-01-02            2.313485e-05</span></span>
-<span><span class="co">## 2001-01-03            2.430763e-05</span></span>
-<span><span class="co">## 2001-01-04            1.044945e-04</span></span>
-<span><span class="co">## 2001-01-05            2.619644e-03</span></span>
-<span><span class="co">## 2001-01-06            3.247850e-03</span></span></code></pre>
+<span><span class="co">## 2001-01-02            2.162440e-05</span></span>
+<span><span class="co">## 2001-01-03            2.077891e-05</span></span>
+<span><span class="co">## 2001-01-04            6.512726e-05</span></span>
+<span><span class="co">## 2001-01-05            2.512755e-03</span></span>
+<span><span class="co">## 2001-01-06            3.063577e-03</span></span></code></pre>
 <p>Elements <code>Plants</code> is itself a list with several elements
 that contain daily output results by plant cohorts, for example leaf
 minimum (midday) water potentials are:</p>
@@ -836,11 +836,11 @@ minimum (midday) water potentials are:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">LeafPsiMin</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                T1_148     T2_168     S1_165</span></span>
 <span><span class="co">## 2001-01-01 -0.4112408 -0.7886543 -0.3902716</span></span>
-<span><span class="co">## 2001-01-02 -0.4710592 -0.7468234 -0.3926371</span></span>
-<span><span class="co">## 2001-01-03 -0.5343332 -0.9090082 -0.4987561</span></span>
-<span><span class="co">## 2001-01-04 -0.3724600 -0.6995194 -0.3433134</span></span>
-<span><span class="co">## 2001-01-05 -0.4964306 -0.8256120 -0.4236651</span></span>
-<span><span class="co">## 2001-01-06 -0.4454442 -0.7248469 -0.3737395</span></span></code></pre>
+<span><span class="co">## 2001-01-02 -0.4710891 -0.7468420 -0.3926637</span></span>
+<span><span class="co">## 2001-01-03 -0.5344002 -0.9090484 -0.4988152</span></span>
+<span><span class="co">## 2001-01-04 -0.3725677 -0.6995837 -0.3434085</span></span>
+<span><span class="co">## 2001-01-05 -0.4965693 -0.8256897 -0.4237924</span></span>
+<span><span class="co">## 2001-01-06 -0.4456530 -0.7249563 -0.3739271</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="plotting-and-summarizing-results">Plotting and summarizing results<a class="anchor" aria-label="anchor" href="#plotting-and-summarizing-results"></a>
@@ -875,88 +875,88 @@ average soil moisture and water potentials by months one can use:</p>
 <div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                  W.1      W.2      W.3      W.4     ML.1     ML.2      ML.3</span></span>
-<span><span class="co">## 2001-01-01 1.2111066 1.136616 1.026297 1.004451 82.56575 132.5896  77.74062</span></span>
-<span><span class="co">## 2001-02-01 1.0698405 1.262020 1.182086 1.041938 72.93510 147.2184  89.54144</span></span>
-<span><span class="co">## 2001-03-01 1.1390166 1.246480 1.349745 1.317037 77.65111 145.4056 102.24139</span></span>
-<span><span class="co">## 2001-04-01 1.0210334 1.121564 1.272234 1.381522 69.60774 130.8338  96.37001</span></span>
-<span><span class="co">## 2001-05-01 1.0582415 1.120904 1.229513 1.359298 72.14436 130.7568  93.13398</span></span>
-<span><span class="co">## 2001-06-01 0.7835674 1.019174 1.190786 1.340095 53.41878 118.8897  90.20050</span></span>
-<span><span class="co">## 2001-07-01 1.0369711 1.033367 1.157232 1.314900 70.69427 120.5453  87.65882</span></span>
-<span><span class="co">## 2001-08-01 1.0859158 1.097399 1.157398 1.303475 74.03102 128.0148  87.67139</span></span>
-<span><span class="co">## 2001-09-01 1.0731299 1.152503 1.193713 1.316737 73.15936 134.4429  90.42219</span></span>
-<span><span class="co">## 2001-10-01 1.0736452 1.163243 1.226351 1.347218 73.19449 135.6958  92.89445</span></span>
-<span><span class="co">## 2001-11-01 1.1334002 1.216632 1.259850 1.367945 77.26822 141.9238  95.43195</span></span>
-<span><span class="co">## 2001-12-01 0.9763217 1.224038 1.309230 1.388804 66.55957 142.7876  99.17244</span></span>
+<span><span class="co">## 2001-01-01 1.1878032 1.137118 1.043172 1.012412 80.97707 132.6482  79.01888</span></span>
+<span><span class="co">## 2001-02-01 1.1261697 1.196878 1.200532 1.120964 76.77528 139.6193  90.93872</span></span>
+<span><span class="co">## 2001-03-01 1.1904179 1.258730 1.322533 1.354367 81.15533 146.8346 100.18016</span></span>
+<span><span class="co">## 2001-04-01 1.0474333 1.170981 1.282016 1.388142 71.40752 136.5984  97.11100</span></span>
+<span><span class="co">## 2001-05-01 1.0656435 1.159531 1.248185 1.369492 72.64898 135.2627  94.54837</span></span>
+<span><span class="co">## 2001-06-01 0.8052586 1.042451 1.193040 1.345024 54.89755 121.6050  90.37117</span></span>
+<span><span class="co">## 2001-07-01 1.0576171 1.086765 1.159710 1.313601 72.10179 126.7744  87.84652</span></span>
+<span><span class="co">## 2001-08-01 1.0795432 1.147316 1.207276 1.341697 73.59657 133.8379  91.44960</span></span>
+<span><span class="co">## 2001-09-01 1.0859284 1.163617 1.242915 1.370995 74.03188 135.7394  94.14914</span></span>
+<span><span class="co">## 2001-10-01 1.1099954 1.162690 1.236029 1.365037 75.67262 135.6312  93.62754</span></span>
+<span><span class="co">## 2001-11-01 1.1622470 1.220831 1.277275 1.377036 79.23481 142.4135  96.75193</span></span>
+<span><span class="co">## 2001-12-01 1.0821919 1.208661 1.293211 1.384088 73.77715 140.9939  97.95902</span></span>
 <span><span class="co">##                ML.4    MLTot SaturatedDepth        SWE PlantExt.1 PlantExt.2</span></span>
-<span><span class="co">## 2001-01-01 30.43433 323.3303      3484.2875 1.65619239 0.07384705 0.03089490</span></span>
-<span><span class="co">## 2001-02-01 31.57018 341.2651      2782.6707 0.27608905 0.17047733 0.10211539</span></span>
-<span><span class="co">## 2001-03-01 39.90553 365.2036       941.7454 0.01762496 0.17372576 0.09316539</span></span>
-<span><span class="co">## 2001-04-01 41.85938 338.6709      1182.0014 0.58072652 0.24026630 0.13073718</span></span>
-<span><span class="co">## 2001-05-01 41.18602 337.2212      1359.8487 0.00000000 0.36889144 0.19261825</span></span>
-<span><span class="co">## 2001-06-01 40.60418 303.1132      1780.7160 0.00000000 0.46973761 0.35170400</span></span>
-<span><span class="co">## 2001-07-01 39.84077 318.7392      1878.3171 0.00000000 0.44670865 0.23207731</span></span>
-<span><span class="co">## 2001-08-01 39.49461 329.2119      1838.7101 0.00000000 0.51093427 0.24733069</span></span>
-<span><span class="co">## 2001-09-01 39.89642 337.9208      1590.4479 0.00000000 0.32702611 0.16864518</span></span>
-<span><span class="co">## 2001-10-01 40.82001 342.6047      1339.1288 0.00000000 0.26471051 0.13929510</span></span>
-<span><span class="co">## 2001-11-01 41.44802 356.0720       995.9448 2.60802857 0.15363857 0.08433678</span></span>
-<span><span class="co">## 2001-12-01 42.08003 350.5997       889.9916 0.00000000 0.12923802 0.09256145</span></span>
+<span><span class="co">## 2001-01-01 30.67555 323.3197      3412.3362 1.65619239 0.07274422 0.03182156</span></span>
+<span><span class="co">## 2001-02-01 33.96463 341.2980      2412.2259 0.27608905 0.17958576 0.09394033</span></span>
+<span><span class="co">## 2001-03-01 41.03660 369.2067       774.4905 0.01762496 0.17533687 0.09128468</span></span>
+<span><span class="co">## 2001-04-01 42.05997 347.1768      1025.3574 0.58072652 0.24042132 0.13149380</span></span>
+<span><span class="co">## 2001-05-01 41.49490 343.9550      1190.1897 0.00000000 0.36707238 0.19483588</span></span>
+<span><span class="co">## 2001-06-01 40.75351 307.6273      1725.7818 0.00000000 0.48671847 0.34286476</span></span>
+<span><span class="co">## 2001-07-01 39.80141 326.5241      1775.6024 0.00000000 0.44713446 0.23431546</span></span>
+<span><span class="co">## 2001-08-01 40.65272 339.5368      1430.5119 0.00000000 0.50487865 0.25326115</span></span>
+<span><span class="co">## 2001-09-01 41.54044 345.4609      1175.5734 0.00000000 0.32752264 0.16819212</span></span>
+<span><span class="co">## 2001-10-01 41.35990 346.2913      1204.3111 0.00000000 0.26895826 0.13599375</span></span>
+<span><span class="co">## 2001-11-01 41.72345 360.1237       880.7175 2.60802857 0.15605882 0.08227887</span></span>
+<span><span class="co">## 2001-12-01 41.93715 354.6672       938.2599 0.00000000 0.14230673 0.08141877</span></span>
 <span><span class="co">##             PlantExt.3   PlantExt.4 HydraulicInput.1 HydraulicInput.2</span></span>
-<span><span class="co">## 2001-01-01 0.001607199 0.0004790188     0.000000e+00     1.166054e-03</span></span>
-<span><span class="co">## 2001-02-01 0.007707994 0.0010892151     1.494858e-03     0.000000e+00</span></span>
-<span><span class="co">## 2001-03-01 0.007782955 0.0017981725     1.120888e-03     0.000000e+00</span></span>
-<span><span class="co">## 2001-04-01 0.011612731 0.0015969433     8.625584e-04     0.000000e+00</span></span>
-<span><span class="co">## 2001-05-01 0.016523345 0.0022311396     3.464153e-04     1.054163e-05</span></span>
-<span><span class="co">## 2001-06-01 0.031021931 0.0041543727     1.407521e-02     0.000000e+00</span></span>
-<span><span class="co">## 2001-07-01 0.020373809 0.0028012155     4.538236e-03     1.146666e-04</span></span>
-<span><span class="co">## 2001-08-01 0.020697467 0.0028305744     7.507907e-06     0.000000e+00</span></span>
-<span><span class="co">## 2001-09-01 0.013968128 0.0019174041     5.092030e-04     0.000000e+00</span></span>
-<span><span class="co">## 2001-10-01 0.011765162 0.0016502234     4.396012e-04     0.000000e+00</span></span>
-<span><span class="co">## 2001-11-01 0.007092753 0.0018260485     7.490314e-04     9.354477e-06</span></span>
-<span><span class="co">## 2001-12-01 0.007892427 0.0013250438     3.114013e-03     0.000000e+00</span></span>
+<span><span class="co">## 2001-01-01 0.001828883 0.0003328499     0.000000e+00     8.748800e-04</span></span>
+<span><span class="co">## 2001-02-01 0.007589478 0.0009646686     4.183673e-05     0.000000e+00</span></span>
+<span><span class="co">## 2001-03-01 0.007459551 0.0026991194     2.864977e-04     5.840216e-05</span></span>
+<span><span class="co">## 2001-04-01 0.011299189 0.0016039369     8.403879e-04     0.000000e+00</span></span>
+<span><span class="co">## 2001-05-01 0.016470375 0.0022513480     4.222118e-04     0.000000e+00</span></span>
+<span><span class="co">## 2001-06-01 0.029848632 0.0039962718     1.019459e-02     0.000000e+00</span></span>
+<span><span class="co">## 2001-07-01 0.019828490 0.0027715571     3.561568e-03     1.796264e-05</span></span>
+<span><span class="co">## 2001-08-01 0.021043509 0.0028821835     7.014275e-05     0.000000e+00</span></span>
+<span><span class="co">## 2001-09-01 0.014202750 0.0019712019     2.822305e-04     0.000000e+00</span></span>
+<span><span class="co">## 2001-10-01 0.011571473 0.0016777922     1.172672e-04     5.043713e-06</span></span>
+<span><span class="co">## 2001-11-01 0.006960953 0.0018480398     2.056153e-04     6.161136e-05</span></span>
+<span><span class="co">## 2001-12-01 0.006987310 0.0011257329     1.201171e-04     0.000000e+00</span></span>
 <span><span class="co">##            HydraulicInput.3 HydraulicInput.4       psi.1       psi.2</span></span>
-<span><span class="co">## 2001-01-01     5.995598e-04     7.511854e-05 -0.01156953 -0.01744918</span></span>
-<span><span class="co">## 2001-02-01     3.648082e-05     2.388089e-05 -0.02684204 -0.00793755</span></span>
-<span><span class="co">## 2001-03-01     0.000000e+00     2.838917e-07 -0.01724315 -0.00918729</span></span>
-<span><span class="co">## 2001-04-01     0.000000e+00     0.000000e+00 -0.03066571 -0.01853630</span></span>
-<span><span class="co">## 2001-05-01     0.000000e+00     0.000000e+00 -0.02783852 -0.01850232</span></span>
-<span><span class="co">## 2001-06-01     0.000000e+00     0.000000e+00 -0.10595667 -0.03108310</span></span>
-<span><span class="co">## 2001-07-01     0.000000e+00     0.000000e+00 -0.03652063 -0.02824467</span></span>
-<span><span class="co">## 2001-08-01     0.000000e+00     0.000000e+00 -0.02288744 -0.02063168</span></span>
-<span><span class="co">## 2001-09-01     0.000000e+00     0.000000e+00 -0.02406465 -0.01551350</span></span>
-<span><span class="co">## 2001-10-01     0.000000e+00     0.000000e+00 -0.02416057 -0.01469847</span></span>
-<span><span class="co">## 2001-11-01     0.000000e+00     0.000000e+00 -0.01921705 -0.01089396</span></span>
-<span><span class="co">## 2001-12-01     0.000000e+00     0.000000e+00 -0.03941543 -0.01070603</span></span>
+<span><span class="co">## 2001-01-01     4.511995e-04     7.363076e-05 -0.01305674 -0.01737078</span></span>
+<span><span class="co">## 2001-02-01     2.372451e-06     1.298834e-05 -0.01870026 -0.01232861</span></span>
+<span><span class="co">## 2001-03-01     2.179680e-06     0.000000e+00 -0.01316292 -0.00809235</span></span>
+<span><span class="co">## 2001-04-01     0.000000e+00     0.000000e+00 -0.02691589 -0.01431356</span></span>
+<span><span class="co">## 2001-05-01     0.000000e+00     0.000000e+00 -0.02685265 -0.01523164</span></span>
+<span><span class="co">## 2001-06-01     0.000000e+00     0.000000e+00 -0.09330172 -0.02777884</span></span>
+<span><span class="co">## 2001-07-01     0.000000e+00     0.000000e+00 -0.03237115 -0.02213668</span></span>
+<span><span class="co">## 2001-08-01     0.000000e+00     0.000000e+00 -0.02367656 -0.01603404</span></span>
+<span><span class="co">## 2001-09-01     0.000000e+00     0.000000e+00 -0.02235840 -0.01473428</span></span>
+<span><span class="co">## 2001-10-01     0.000000e+00     0.000000e+00 -0.02016726 -0.01475783</span></span>
+<span><span class="co">## 2001-11-01     1.560947e-06     0.000000e+00 -0.01594455 -0.01070379</span></span>
+<span><span class="co">## 2001-12-01     0.000000e+00     0.000000e+00 -0.02294043 -0.01158654</span></span>
 <span><span class="co">##                   psi.3         psi.4</span></span>
-<span><span class="co">## 2001-01-01 -0.028932448 -0.0322554222</span></span>
-<span><span class="co">## 2001-02-01 -0.013110880 -0.0268027055</span></span>
-<span><span class="co">## 2001-03-01 -0.002955328 -0.0045451107</span></span>
-<span><span class="co">## 2001-04-01 -0.007479145 -0.0013221039</span></span>
-<span><span class="co">## 2001-05-01 -0.009973917 -0.0025708627</span></span>
-<span><span class="co">## 2001-06-01 -0.012720803 -0.0036183779</span></span>
-<span><span class="co">## 2001-07-01 -0.015196004 -0.0049487377</span></span>
-<span><span class="co">## 2001-08-01 -0.015114727 -0.0055403994</span></span>
-<span><span class="co">## 2001-09-01 -0.012279122 -0.0047690166</span></span>
-<span><span class="co">## 2001-10-01 -0.010066970 -0.0031434687</span></span>
-<span><span class="co">## 2001-11-01 -0.007894174 -0.0019818577</span></span>
-<span><span class="co">## 2001-12-01 -0.005409879 -0.0008358885</span></span></code></pre>
+<span><span class="co">## 2001-01-01 -0.026799332 -0.0309657171</span></span>
+<span><span class="co">## 2001-02-01 -0.011732308 -0.0183039792</span></span>
+<span><span class="co">## 2001-03-01 -0.004374725 -0.0023024420</span></span>
+<span><span class="co">## 2001-04-01 -0.006940588 -0.0008059514</span></span>
+<span><span class="co">## 2001-05-01 -0.008779147 -0.0019955323</span></span>
+<span><span class="co">## 2001-06-01 -0.012632697 -0.0033789854</span></span>
+<span><span class="co">## 2001-07-01 -0.014901647 -0.0049903423</span></span>
+<span><span class="co">## 2001-08-01 -0.011323421 -0.0034119389</span></span>
+<span><span class="co">## 2001-09-01 -0.009064340 -0.0018926725</span></span>
+<span><span class="co">## 2001-10-01 -0.009468937 -0.0022237858</span></span>
+<span><span class="co">## 2001-11-01 -0.006902060 -0.0014213876</span></span>
+<span><span class="co">## 2001-12-01 -0.006411571 -0.0010907396</span></span></code></pre>
 <p>Parameter <code>output</code> is used to indicate the element of the
 <code>spwb</code> object for which we desire summaries. Similarly, it is
 possible to calculate the average stress of plant cohorts by months:</p>
 <div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                T1_148     T2_168     S1_165</span></span>
-<span><span class="co">## 2001-01-01 0.01673734 0.01126086 0.00859278</span></span>
-<span><span class="co">## 2001-02-01 0.03242798 0.02300465 0.01668139</span></span>
-<span><span class="co">## 2001-03-01 0.03692084 0.02676811 0.01867858</span></span>
-<span><span class="co">## 2001-04-01 0.04530825 0.03341057 0.02430913</span></span>
-<span><span class="co">## 2001-05-01 0.06506788 0.04766968 0.03520992</span></span>
-<span><span class="co">## 2001-06-01 0.12089914 0.07833404 0.06657323</span></span>
-<span><span class="co">## 2001-07-01 0.09575368 0.06772680 0.05025242</span></span>
-<span><span class="co">## 2001-08-01 0.09330206 0.06907586 0.04976384</span></span>
-<span><span class="co">## 2001-09-01 0.06221618 0.04660160 0.03240439</span></span>
-<span><span class="co">## 2001-10-01 0.05064385 0.03696004 0.02520387</span></span>
-<span><span class="co">## 2001-11-01 0.02662661 0.02029761 0.01356984</span></span>
-<span><span class="co">## 2001-12-01 0.02763802 0.01935993 0.01520384</span></span></code></pre>
+<pre><code><span><span class="co">##                T1_148     T2_168      S1_165</span></span>
+<span><span class="co">## 2001-01-01 0.01681590 0.01131279 0.008694034</span></span>
+<span><span class="co">## 2001-02-01 0.03193405 0.02285562 0.016003470</span></span>
+<span><span class="co">## 2001-03-01 0.03650643 0.02652692 0.018229593</span></span>
+<span><span class="co">## 2001-04-01 0.04489949 0.03294030 0.023697445</span></span>
+<span><span class="co">## 2001-05-01 0.06482891 0.04748175 0.034931760</span></span>
+<span><span class="co">## 2001-06-01 0.11462159 0.07718295 0.064082996</span></span>
+<span><span class="co">## 2001-07-01 0.09344463 0.06689288 0.049204666</span></span>
+<span><span class="co">## 2001-08-01 0.09329027 0.06884827 0.049623986</span></span>
+<span><span class="co">## 2001-09-01 0.06202276 0.04645234 0.032186031</span></span>
+<span><span class="co">## 2001-10-01 0.05039116 0.03677347 0.024769483</span></span>
+<span><span class="co">## 2001-11-01 0.02638692 0.02010258 0.013279552</span></span>
+<span><span class="co">## 2001-12-01 0.02613260 0.01859706 0.013638821</span></span></code></pre>
 <p>The <code>summary</code> function can be also used to aggregate the
 output by species. In this case, the values of plant cohorts belonging
 to the same species will be averaged using LAI values as weights. For
@@ -967,28 +967,28 @@ modify the output):</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span></span>
 <span><span class="co">## 2001-01-01       0.01587626       0.009798356   0.01121120</span></span>
-<span><span class="co">## 2001-01-02       0.01779351       0.009424174   0.01179758</span></span>
-<span><span class="co">## 2001-01-03       0.02039329       0.013075622   0.01549191</span></span>
-<span><span class="co">## 2001-01-04       0.01443228       0.008618762   0.01211612</span></span>
-<span><span class="co">## 2001-01-05       0.01728255       0.009185789   0.01209468</span></span>
-<span><span class="co">## 2001-01-06       0.01394046       0.007566111   0.01037551</span></span></code></pre>
+<span><span class="co">## 2001-01-02       0.01779665       0.009427698   0.01179912</span></span>
+<span><span class="co">## 2001-01-03       0.02040035       0.013083981   0.01549564</span></span>
+<span><span class="co">## 2001-01-04       0.01444006       0.008631081   0.01212184</span></span>
+<span><span class="co">## 2001-01-05       0.01729515       0.009201020   0.01210149</span></span>
+<span><span class="co">## 2001-01-06       0.01395796       0.007587623   0.01038485</span></span></code></pre>
 <p>Or we can combine the aggregation by species with a temporal
 aggregation (here monthly averages):</p>
 <div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span></span>
-<span><span class="co">## 2001-01-01       0.01673734        0.00859278   0.01126086</span></span>
-<span><span class="co">## 2001-02-01       0.03242798        0.01668139   0.02300465</span></span>
-<span><span class="co">## 2001-03-01       0.03692084        0.01867858   0.02676811</span></span>
-<span><span class="co">## 2001-04-01       0.04530825        0.02430913   0.03341057</span></span>
-<span><span class="co">## 2001-05-01       0.06506788        0.03520992   0.04766968</span></span>
-<span><span class="co">## 2001-06-01       0.12089914        0.06657323   0.07833404</span></span>
-<span><span class="co">## 2001-07-01       0.09575368        0.05025242   0.06772680</span></span>
-<span><span class="co">## 2001-08-01       0.09330206        0.04976384   0.06907586</span></span>
-<span><span class="co">## 2001-09-01       0.06221618        0.03240439   0.04660160</span></span>
-<span><span class="co">## 2001-10-01       0.05064385        0.02520387   0.03696004</span></span>
-<span><span class="co">## 2001-11-01       0.02662661        0.01356984   0.02029761</span></span>
-<span><span class="co">## 2001-12-01       0.02763802        0.01520384   0.01935993</span></span></code></pre>
+<span><span class="co">## 2001-01-01       0.01681590       0.008694034   0.01131279</span></span>
+<span><span class="co">## 2001-02-01       0.03193405       0.016003470   0.02285562</span></span>
+<span><span class="co">## 2001-03-01       0.03650643       0.018229593   0.02652692</span></span>
+<span><span class="co">## 2001-04-01       0.04489949       0.023697445   0.03294030</span></span>
+<span><span class="co">## 2001-05-01       0.06482891       0.034931760   0.04748175</span></span>
+<span><span class="co">## 2001-06-01       0.11462159       0.064082996   0.07718295</span></span>
+<span><span class="co">## 2001-07-01       0.09344463       0.049204666   0.06689288</span></span>
+<span><span class="co">## 2001-08-01       0.09329027       0.049623986   0.06884827</span></span>
+<span><span class="co">## 2001-09-01       0.06202276       0.032186031   0.04645234</span></span>
+<span><span class="co">## 2001-10-01       0.05039116       0.024769483   0.03677347</span></span>
+<span><span class="co">## 2001-11-01       0.02638692       0.013279552   0.02010258</span></span>
+<span><span class="co">## 2001-12-01       0.02613260       0.013638821   0.01859706</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">

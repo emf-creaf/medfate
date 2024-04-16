@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-04-10</h4>
+            <h4 data-toc-skip class="date">2024-04-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -326,28 +326,28 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 6276.78</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 165.918</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 165.918</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 6276.44</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 165.577</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 165.577</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
 <span><span class="co">##   Structural balance (g/m2) 81 Labile balance (g/m2) 94</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 175 Mortality loss (g/m2) 10</span></span>
-<span><span class="co">## Final plant water content (mm): 7.08069</span></span>
-<span><span class="co">## Final soil water content (mm): 344.144</span></span>
+<span><span class="co">## Final plant water content (mm): 7.08174</span></span>
+<span><span class="co">## Final soil water content (mm): 351.806</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.0220918</span></span>
-<span><span class="co">## Plant water balance result (mm): 8.33263e-05</span></span>
-<span><span class="co">## Change in soil water content (mm): 53.2688</span></span>
-<span><span class="co">## Soil water balance result (mm): 53.2688</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0231438</span></span>
+<span><span class="co">## Plant water balance result (mm): 0.000984405</span></span>
+<span><span class="co">## Change in soil water content (mm): 60.931</span></span>
+<span><span class="co">## Soil water balance result (mm): 60.931</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): -7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 92 Net rainfall (mm) 370</span></span>
-<span><span class="co">##   Infiltration (mm) 373 Infiltration excess (mm) 48 Saturation excess (mm) 12 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 14  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 182</span></span>
+<span><span class="co">##   Infiltration (mm) 390 Infiltration excess (mm) 32 Saturation excess (mm) 0 Capillarity rise (mm) 2</span></span>
+<span><span class="co">##   Soil evaporation (mm) 8  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 182</span></span>
 <span><span class="co">##   Plant extraction from soil (mm) 182  Plant water balance (mm) 0 Hydraulic redistribution (mm) 2</span></span>
-<span><span class="co">##   Runoff (mm) 60 Deep drainage (mm) 98</span></span></code></pre>
+<span><span class="co">##   Runoff (mm) 32 Deep drainage (mm) 126</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -508,9 +508,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          n       Bias   Bias.rel        MAE    MAE.rel          r        NSE </span></span>
-<span><span class="co">## 12.0000000 -0.1263057 -9.6287101  0.1290430  9.8373871  0.9975280  0.9760775 </span></span>
+<span><span class="co">## 12.0000000 -0.1214959 -9.2620417  0.1242596  9.4727329  0.9973644  0.9771907 </span></span>
 <span><span class="co">##    NSE.abs </span></span>
-<span><span class="co">##  0.8682294</span></span></code></pre>
+<span><span class="co">##  0.8731139</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

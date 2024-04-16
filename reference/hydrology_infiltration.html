@@ -76,7 +76,8 @@ Function hydrology_infiltrationRepartition distributes infiltration among soil l
 <span>  <span class="va">rainfallIntensity</span>,</span>
 <span>  <span class="va">soil</span>,</span>
 <span>  <span class="va">soilFunctions</span>,</span>
-<span>  model <span class="op">=</span> <span class="st">"GreenAmpt1911"</span></span>
+<span>  model <span class="op">=</span> <span class="st">"GreenAmpt1911"</span>,</span>
+<span>  K_correction <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -144,6 +145,10 @@ Function hydrology_infiltrationRepartition distributes infiltration among soil l
 
 <dt>model</dt>
 <dd><p>Infiltration model, either "GreenAmpt1911" or "Boughton1989"</p></dd>
+
+
+<dt>K_correction</dt>
+<dd><p>Correction for saturated conductivity, to account for increased infiltration due to macropore presence</p></dd>
 
 </dl></div>
     <div id="value">
