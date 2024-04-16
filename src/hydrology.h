@@ -34,5 +34,5 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
 NumericVector soilWaterBalance(List soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-                               String infiltrationMode = "GreenAmpt1911", double K_infiltration_correction = 5.0, String soilDomains = "single", 
+                               String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "single", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true);

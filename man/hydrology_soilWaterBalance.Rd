@@ -15,7 +15,7 @@ hydrology_soilWaterBalance(
   lateralFlows = NULL,
   waterTableDepth = NA_real_,
   infiltrationMode = "GreenAmpt1911",
-  K_infiltration_correction = 5,
+  infiltrationCorrection = 5,
   soilDomains = "single",
   nsteps = 24L,
   max_nsubsteps = 3600L,
@@ -43,6 +43,8 @@ as mm/day.}
 \item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
 
 \item{infiltrationMode}{Infiltration model, either "GreenAmpt1911" or "Boughton1989"}
+
+\item{infiltrationCorrection}{Correction for saturated conductivity, to account for increased infiltration due to macropore presence}
 
 \item{soilDomains}{Either "single" (for single-domain) or "dual" (for dual-permeability).}
 

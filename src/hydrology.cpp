@@ -575,6 +575,7 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 //' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
 //' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //' @param infiltrationMode Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+//' @param infiltrationCorrection Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 //' @param soilDomains Either "single" (for single-domain) or "dual" (for dual-permeability).
 //' @param nsteps Number of time steps per day
 //' @param max_nsubsteps Maximum number of substeps per time step
@@ -648,7 +649,7 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 NumericVector soilWaterBalance(List soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-                               String infiltrationMode = "GreenAmpt1911", double K_infiltration_correction = 5.0, String soilDomains = "single", 
+                               String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "single", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
   
   if((soilDomains!="single") && (soilDomains!="dual")) stop("Unrecognized soilDomain value");
@@ -667,7 +668,7 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
   
   //Infiltration
   double K_correction = 1.0;
-  if(soilDomains=="single") K_correction = K_infiltration_correction;
+  if(soilDomains=="single") K_correction = infiltrationCorrection;
   double infiltration_matrix_mm = infiltrationAmount(rainfallInput, rainfallIntensity, soil, 
                                                      soilFunctions, infiltrationMode, K_correction);
   double infiltration_macropores_mm = 0.0;

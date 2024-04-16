@@ -1754,6 +1754,7 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
 #' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param infiltrationMode Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+#' @param infiltrationCorrection Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 #' @param soilDomains Either "single" (for single-domain) or "dual" (for dual-permeability).
 #' @param nsteps Number of time steps per day
 #' @param max_nsubsteps Maximum number of substeps per time step
@@ -1823,8 +1824,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'                            soilDomains = "dual", modifySoil = FALSE)
 #'   
 #' @name hydrology_soilWaterBalance
-hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", K_infiltration_correction = 5.0, soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, K_infiltration_correction, soilDomains, nsteps, max_nsubsteps, modifySoil)
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, infiltrationCorrection, soilDomains, nsteps, max_nsubsteps, modifySoil)
 }
 
 .gammln <- function(xx) {
