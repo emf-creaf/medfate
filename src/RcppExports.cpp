@@ -2458,8 +2458,8 @@ RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP
     return rcpp_result_gen;
 }
 // infiltrationAmount
-double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model);
-static SEXP _medfate_infiltrationAmount_try(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP) {
+double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model, double K_correction);
+static SEXP _medfate_infiltrationAmount_try(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP, SEXP K_correctionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type rainfallInput(rainfallInputSEXP);
@@ -2467,15 +2467,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationAmount(rainfallInput, rainfallIntensity, soil, soilFunctions, model));
+    Rcpp::traits::input_parameter< double >::type K_correction(K_correctionSEXP);
+    rcpp_result_gen = Rcpp::wrap(infiltrationAmount(rainfallInput, rainfallIntensity, soil, soilFunctions, model, K_correction));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_infiltrationAmount(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP) {
+RcppExport SEXP _medfate_infiltrationAmount(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP, SEXP K_correctionSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_infiltrationAmount_try(rainfallInputSEXP, rainfallIntensitySEXP, soilSEXP, soilFunctionsSEXP, modelSEXP));
+        rcpp_result_gen = PROTECT(_medfate_infiltrationAmount_try(rainfallInputSEXP, rainfallIntensitySEXP, soilSEXP, soilFunctionsSEXP, modelSEXP, K_correctionSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -2580,8 +2581,8 @@ RcppExport SEXP _medfate_soilWaterInputs(SEXP soilSEXP, SEXP soilFunctionsSEXP, 
     return rcpp_result_gen;
 }
 // soilWaterBalance
-NumericVector soilWaterBalance(List soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, String infiltrationMode, String soilDomains, int nsteps, int max_nsubsteps, bool modifySoil);
-static SEXP _medfate_soilWaterBalance_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP snowmeltSEXP, SEXP sourceSinkSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP infiltrationModeSEXP, SEXP soilDomainsSEXP, SEXP nstepsSEXP, SEXP max_nsubstepsSEXP, SEXP modifySoilSEXP) {
+NumericVector soilWaterBalance(List soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, String infiltrationMode, double K_infiltration_correction, String soilDomains, int nsteps, int max_nsubsteps, bool modifySoil);
+static SEXP _medfate_soilWaterBalance_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP snowmeltSEXP, SEXP sourceSinkSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP infiltrationModeSEXP, SEXP K_infiltration_correctionSEXP, SEXP soilDomainsSEXP, SEXP nstepsSEXP, SEXP max_nsubstepsSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
@@ -2594,19 +2595,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Nullable<NumericVector> >::type lateralFlows(lateralFlowsSEXP);
     Rcpp::traits::input_parameter< double >::type waterTableDepth(waterTableDepthSEXP);
     Rcpp::traits::input_parameter< String >::type infiltrationMode(infiltrationModeSEXP);
+    Rcpp::traits::input_parameter< double >::type K_infiltration_correction(K_infiltration_correctionSEXP);
     Rcpp::traits::input_parameter< String >::type soilDomains(soilDomainsSEXP);
     Rcpp::traits::input_parameter< int >::type nsteps(nstepsSEXP);
     Rcpp::traits::input_parameter< int >::type max_nsubsteps(max_nsubstepsSEXP);
     Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilWaterBalance(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, soilDomains, nsteps, max_nsubsteps, modifySoil));
+    rcpp_result_gen = Rcpp::wrap(soilWaterBalance(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, K_infiltration_correction, soilDomains, nsteps, max_nsubsteps, modifySoil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soilWaterBalance(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP snowmeltSEXP, SEXP sourceSinkSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP infiltrationModeSEXP, SEXP soilDomainsSEXP, SEXP nstepsSEXP, SEXP max_nsubstepsSEXP, SEXP modifySoilSEXP) {
+RcppExport SEXP _medfate_soilWaterBalance(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP snowmeltSEXP, SEXP sourceSinkSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP infiltrationModeSEXP, SEXP K_infiltration_correctionSEXP, SEXP soilDomainsSEXP, SEXP nstepsSEXP, SEXP max_nsubstepsSEXP, SEXP modifySoilSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soilWaterBalance_try(soilSEXP, soilFunctionsSEXP, rainfallInputSEXP, rainfallIntensitySEXP, snowmeltSEXP, sourceSinkSEXP, runonSEXP, lateralFlowsSEXP, waterTableDepthSEXP, infiltrationModeSEXP, soilDomainsSEXP, nstepsSEXP, max_nsubstepsSEXP, modifySoilSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soilWaterBalance_try(soilSEXP, soilFunctionsSEXP, rainfallInputSEXP, rainfallIntensitySEXP, snowmeltSEXP, sourceSinkSEXP, runonSEXP, lateralFlowsSEXP, waterTableDepthSEXP, infiltrationModeSEXP, K_infiltration_correctionSEXP, soilDomainsSEXP, nstepsSEXP, max_nsubstepsSEXP, modifySoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5535,10 +5537,10 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_infiltrationBoughton)(double,double)");
         signatures.insert("double(*hydrology_infiltrationGreenAmpt)(double,double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector,double,double)");
-        signatures.insert("double(*hydrology_infiltrationAmount)(double,double,List,String,String)");
+        signatures.insert("double(*hydrology_infiltrationAmount)(double,double,List,String,String,double)");
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,String,double,double,double,double,double,double,double,double,double,bool,bool)");
-        signatures.insert("NumericVector(*hydrology_soilWaterBalance)(List,String,double,double,double,NumericVector,double,Nullable<NumericVector>,double,String,String,int,int,bool)");
+        signatures.insert("NumericVector(*hydrology_soilWaterBalance)(List,String,double,double,double,NumericVector,double,Nullable<NumericVector>,double,String,double,String,int,int,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,double,bool)");
         signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
@@ -5789,10 +5791,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_infiltrationBoughton", (DL_FUNC) &_medfate_infiltrationBoughton, 2},
     {"_medfate_infitrationGreenAmpt", (DL_FUNC) &_medfate_infitrationGreenAmpt, 5},
     {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 5},
-    {"_medfate_infiltrationAmount", (DL_FUNC) &_medfate_infiltrationAmount, 5},
+    {"_medfate_infiltrationAmount", (DL_FUNC) &_medfate_infiltrationAmount, 6},
     {"_medfate_snowMelt", (DL_FUNC) &_medfate_snowMelt, 4},
     {"_medfate_soilWaterInputs", (DL_FUNC) &_medfate_soilWaterInputs, 14},
-    {"_medfate_soilWaterBalance", (DL_FUNC) &_medfate_soilWaterBalance, 14},
+    {"_medfate_soilWaterBalance", (DL_FUNC) &_medfate_soilWaterBalance, 15},
     {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
     {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},
     {"_medfate_incbeta", (DL_FUNC) &_medfate_incbeta, 3},

@@ -74,6 +74,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   bool snowpack = control["snowpack"];
   String soilFunctions = control["soilFunctions"];
   String infiltrationMode = control["infiltrationMode"];
+  double infiltrationCorrection = control["infiltrationCorrection"];
   String soilDomains = control["soilDomains"];
   int ndailysteps = control["ndailysteps"];
   int max_nsubsteps_soil = control["max_nsubsteps_soil"];
@@ -126,7 +127,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   NumericVector sf = soilWaterBalance(soil, soilFunctions,
                                       NetRain, rainfallIntensity, Snowmelt, sourceSinkVec, 
                                       runon, lateralFlows, waterTableDepth,
-                                      infiltrationMode, soilDomains, 
+                                      infiltrationMode, infiltrationCorrection, soilDomains, 
                                       ndailysteps, max_nsubsteps_soil, true);
   double Infiltration = sf["Infiltration"];
   double DeepDrainage = sf["DeepDrainage"];

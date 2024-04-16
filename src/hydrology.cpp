@@ -253,10 +253,11 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
 //' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 //' @param rainfallIntensity rainfall intensity rate (mm/h)
 //' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+//' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 //' 
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, 
-                          String soilFunctions, String model = "GreenAmpt1911") {
+                          String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
   double infiltration = 0.0;
   if(model=="GreenAmpt1911") {
     NumericVector clay = soil["clay"];
@@ -270,7 +271,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
     double b = cp["b"];
     double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
     double theta_sat = cp["theta_sat"];
-    double K_sat_0 = Ksat[0]/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
+    double K_sat_0 = K_correction*Ksat[0]/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
     infiltration = infitrationGreenAmpt(t, psi_w, K_sat_0, theta_sat, theta_dry[0]);
   } else if(model=="Boughton1989") {
     NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -647,7 +648,7 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 NumericVector soilWaterBalance(List soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-                               String infiltrationMode = "GreenAmpt1911", String soilDomains = "single", 
+                               String infiltrationMode = "GreenAmpt1911", double K_infiltration_correction = 5.0, String soilDomains = "single", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
   
   if((soilDomains!="single") && (soilDomains!="dual")) stop("Unrecognized soilDomain value");
@@ -665,8 +666,10 @@ NumericVector soilWaterBalance(List soil, String soilFunctions,
   double mm_day_2_m3_s = mm_2_m3*(1.0/86400.0);//From mm/day = l/m2/day = dm3/day to m3/m2/s
   
   //Infiltration
+  double K_correction = 1.0;
+  if(soilDomains=="single") K_correction = K_infiltration_correction;
   double infiltration_matrix_mm = infiltrationAmount(rainfallInput, rainfallIntensity, soil, 
-                                                     soilFunctions, infiltrationMode);
+                                                     soilFunctions, infiltrationMode, K_correction);
   double infiltration_macropores_mm = 0.0;
   double infiltration_excess_matrix_mm = rainfallInput - infiltration_matrix_mm;
   double infiltration_target_macropores_mm = infiltration_excess_matrix_mm;

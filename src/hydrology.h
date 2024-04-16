@@ -14,8 +14,8 @@ double soilEvaporation(List soil, String soilFunctions, double pet, double Lgrou
 
 double infiltrationBoughton(double input, double Ssoil);
 double infitrationGreenAmpt(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
-double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, 
-                          String model = "GreenAmpt1911");
+double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, 
+                          String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0);
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
                                       double a = -0.005, double b = 3.0);
 
@@ -34,5 +34,5 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
 NumericVector soilWaterBalance(List soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-                               String infiltrationMode = "GreenAmpt1911", String soilDomains = "single", 
+                               String infiltrationMode = "GreenAmpt1911", double K_infiltration_correction = 5.0, String soilDomains = "single", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true);

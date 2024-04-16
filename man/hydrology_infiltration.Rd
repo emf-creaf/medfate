@@ -19,7 +19,8 @@ hydrology_infiltrationAmount(
   rainfallIntensity,
   soil,
   soilFunctions,
-  model = "GreenAmpt1911"
+  model = "GreenAmpt1911",
+  K_correction = 1
 )
 }
 \arguments{
@@ -54,6 +55,8 @@ hydrology_infiltrationAmount(
 \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 
 \item{model}{Infiltration model, either "GreenAmpt1911" or "Boughton1989"}
+
+\item{K_correction}{Correction for saturated conductivity, to account for increased infiltration due to macropore presence}
 }
 \value{
 Functions \code{hydrology_infiltrationBoughton}, \code{hydrology_infiltrationGreenAmpt} and \code{hydrology_infiltrationAmount} 

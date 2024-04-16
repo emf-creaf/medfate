@@ -156,6 +156,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   String soilFunctions = control["soilFunctions"];
   String interceptionMode = control["interceptionMode"];
   String infiltrationMode = control["infiltrationMode"];
+  double infiltrationCorrection = control["infiltrationCorrection"];
   String soilDomains = control["soilDomains"];
   int ndailysteps = control["ndailysteps"];
   int max_nsubsteps_soil = control["max_nsubsteps_soil"];
@@ -308,7 +309,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     NumericVector sf = soilWaterBalance(soil, soilFunctions,
                                         RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
                                         runon, lateralFlows, waterTableDepth,
-                                        infiltrationMode, soilDomains, 
+                                        infiltrationMode, infiltrationCorrection, soilDomains, 
                                         ndailysteps, max_nsubsteps_soil, true);
     DeepDrainage = sf["DeepDrainage"];
     Infiltration = sf["Infiltration"];
@@ -343,7 +344,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
       NumericVector sf_c = soilWaterBalance(soil_c, soilFunctions,
                                             RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
                                             runon, lateralFlows, waterTableDepth,
-                                            infiltrationMode, soilDomains, 
+                                            infiltrationMode, infiltrationCorrection, soilDomains, 
                                             ndailysteps, max_nsubsteps_soil, true);
       double DeepDrainage_c = sf_c["DeepDrainage"];
       double Infiltration_c = sf_c["Infiltration"];
@@ -432,6 +433,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   String interceptionMode = control["interceptionMode"];
   String infiltrationMode = control["infiltrationMode"];
   String soilDomains = control["soilDomains"];
+  double infiltrationCorrection = control["infiltrationCorrection"];
   int ndailysteps = control["ndailysteps"];
   int max_nsubsteps_soil = control["max_nsubsteps_soil"];
   
@@ -584,7 +586,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     NumericVector sf = soilWaterBalance(soil, soilFunctions,
                                         RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
                                         runon, lateralFlows, waterTableDepth,
-                                        infiltrationMode, soilDomains, 
+                                        infiltrationMode, infiltrationCorrection, soilDomains, 
                                         ndailysteps, max_nsubsteps_soil, true);
     DeepDrainage = sf["DeepDrainage"];
     Infiltration = sf["Infiltration"];
@@ -618,7 +620,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       NumericVector sf_c = soilWaterBalance(soil_c, soilFunctions,
                                             RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
                                             runon, lateralFlows, waterTableDepth,
-                                            infiltrationMode, soilDomains, 
+                                            infiltrationMode, infiltrationCorrection, soilDomains, 
                                             ndailysteps, max_nsubsteps_soil, true);
       double DeepDrainage_c = sf_c["DeepDrainage"];
       double Infiltration_c = sf_c["Infiltration"];

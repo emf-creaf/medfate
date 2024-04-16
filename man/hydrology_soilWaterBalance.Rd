@@ -15,6 +15,7 @@ hydrology_soilWaterBalance(
   lateralFlows = NULL,
   waterTableDepth = NA_real_,
   infiltrationMode = "GreenAmpt1911",
+  K_infiltration_correction = 5,
   soilDomains = "single",
   nsteps = 24L,
   max_nsubsteps = 3600L,

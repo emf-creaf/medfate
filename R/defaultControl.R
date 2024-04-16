@@ -46,6 +46,7 @@
 #'       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
 #'       \item{\code{interceptionMode [= "Gash1995"]}: Infiltration model, either "Gash1995" or "Liu2001".}
 #'       \item{\code{infiltrationMode [= "GreenAmpt1911"]}: Infiltration model, either "GreenAmpt1911" or "Boughton1989".}
+#'       \item{\code{K_infiltration_correction [= 5.0]}: Factor to correct infiltration amount in the GreenAmpt1911 model in single-domain simulations.}
 #'       \item{\code{soilDomains [= "single"]}: Either 'single' (for single-domain) or 'dual' (for dual-permeability).}
 #'       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
 #'           \itemize{
@@ -207,6 +208,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     unlimitedSoilWater = FALSE,
     interceptionMode = "Gash1995",
     infiltrationMode = "GreenAmpt1911",
+    infiltrationCorrection = 5.0,
     soilDomains = "single",
     rhizosphereOverlap = "total",
     unfoldingDD = 300,

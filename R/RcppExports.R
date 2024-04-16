@@ -1672,9 +1672,10 @@ hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 #' @param rainfallIntensity rainfall intensity rate (mm/h)
 #' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+#' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 #' 
-hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "GreenAmpt1911") {
-    .Call(`_medfate_infiltrationAmount`, rainfallInput, rainfallIntensity, soil, soilFunctions, model)
+hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "GreenAmpt1911", K_correction = 1.0) {
+    .Call(`_medfate_infiltrationAmount`, rainfallInput, rainfallIntensity, soil, soilFunctions, model, K_correction)
 }
 
 #' @rdname hydrology_verticalInputs
@@ -1822,8 +1823,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #'                            soilDomains = "dual", modifySoil = FALSE)
 #'   
 #' @name hydrology_soilWaterBalance
-hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, soilDomains, nsteps, max_nsubsteps, modifySoil)
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", K_infiltration_correction = 5.0, soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, K_infiltration_correction, soilDomains, nsteps, max_nsubsteps, modifySoil)
 }
 
 .gammln <- function(xx) {
