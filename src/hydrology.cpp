@@ -262,8 +262,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
     NumericVector clay = soil["clay"];
     NumericVector sand = soil["sand"];
     NumericVector bd = soil["bd"];
-    double bdsoil = 2.73; //Density of soil particles
-    double bdref = 1.2; //Reference bulk density for Ksat
+    NumericVector Ksat = soil["Ksat"];
     String usda = USDAType(clay[0], sand[0]);
     NumericVector cp = campbellParamsClappHornberger(usda);
     NumericVector theta_dry = theta(soil, soilFunctions);
@@ -271,9 +270,8 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
     double b = cp["b"];
     double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
     double theta_sat = cp["theta_sat"];
-    double K_sat = cp["K_sat_cm_h"];
-    K_sat = K_sat*std::pow((bdsoil - bd[0])/(bdsoil - bdref),3.0);
-    infiltration = infitrationGreenAmpt(t, psi_w, K_sat, theta_sat, theta_dry[0]);
+    double K_sat_0 = Ksat[0]/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
+    infiltration = infitrationGreenAmpt(t, psi_w, K_sat_0, theta_sat, theta_dry[0]);
   } else if(model=="Boughton1989") {
     NumericVector Water_FC = waterFC(soil, soilFunctions);
     infiltration = infiltrationBoughton(rainfallInput, Water_FC[0]);
