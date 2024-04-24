@@ -117,16 +117,16 @@ DI_PH = S1$PlantStructure$DBH[,PH_cohName] - c(DBH_ini_PH, S1$PlantStructure$DBH
 DI_QI = S1$PlantStructure$DBH[,QI_cohName] - c(DBH_ini_QI, S1$PlantStructure$DBH[-nrow(examplemeteo),QI_cohName])
 dates <- row.names(S1$Soil)
 exampleobs = data.frame(dates = as.Date(dates),
-                        SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil)[1]), 
-             ETR  = S1$WaterBalance$Evapotranspiration, 
-             E_PH = S1$Plants$Transpiration[,PH_cohName]/x1$above[PH_cohName,"LAI_expanded"],
-             E_QI = S1$Plants$Transpiration[,QI_cohName]/x1$above[QI_cohName,"LAI_expanded"],
-             FMC_PH= fmc[,PH_cohName],
-             FMC_QI = fmc[,QI_cohName],
-             BAI_PH = S1$GrowthMortality$SAgrowth[,PH_cohName],
-             BAI_QI = S1$GrowthMortality$SAgrowth[,QI_cohName],
-             DI_PH = DI_PH,
-             DI_QI = DI_QI)
+                        SWC = S1$Soil$RWC.1*(soil_thetaFC(examplesoil)[1]), 
+                        ETR  = S1$WaterBalance$Evapotranspiration, 
+                        E_PH = S1$Plants$Transpiration[,PH_cohName]/x1$above[PH_cohName,"LAI_expanded"],
+                        E_QI = S1$Plants$Transpiration[,QI_cohName]/x1$above[QI_cohName,"LAI_expanded"],
+                        FMC_PH= fmc[,PH_cohName],
+                        FMC_QI = fmc[,QI_cohName],
+                        BAI_PH = S1$GrowthMortality$SAgrowth[,PH_cohName],
+                        BAI_QI = S1$GrowthMortality$SAgrowth[,QI_cohName],
+                        DI_PH = DI_PH,
+                        DI_QI = DI_QI)
 #Add normal error
 exampleobs$SWC = exampleobs$SWC + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$SWC)/4)
 exampleobs$ETR = exampleobs$ETR + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$ETR)/4)
@@ -139,9 +139,9 @@ exampleobs$BAI_QI = exampleobs$BAI_QI*exp(rnorm(nrow(exampleobs), mean = 0, sd =
 exampleobs$DI_PH = exampleobs$DI_PH*exp(rnorm(nrow(exampleobs), mean = 0, sd = 0.5))
 exampleobs$DI_QI = exampleobs$DI_QI*exp(rnorm(nrow(exampleobs), mean = 0, sd = 0.5))
 names(exampleobs)[4:11] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
-                           paste0("FMC_",PH_cohName),paste0("FMC_",QI_cohName),
-                           paste0("BAI_",PH_cohName),paste0("BAI_",QI_cohName),
-                           paste0("DI_",PH_cohName),paste0("DI_",QI_cohName))
+                            paste0("FMC_",PH_cohName),paste0("FMC_",QI_cohName),
+                            paste0("BAI_",PH_cohName),paste0("BAI_",QI_cohName),
+                            paste0("DI_",PH_cohName),paste0("DI_",QI_cohName))
 row.names(exampleobs) <- NULL
 usethis::use_data(exampleobs, overwrite = T)
 

@@ -57,7 +57,7 @@
               "Fraction of PAR" = "FPAR",
               "Absorbed SWR fraction" = "AbsorbedSWRFraction")
   }           
-
+  
   if(transpirationMode %in% c("Sperry","Sureau")) {
     TYPES <-c(TYPES,
               "Minimum leaf water potential" = "LeafPsiMin",

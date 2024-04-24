@@ -127,17 +127,17 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP"))
+    type = match.arg(type, c("SWC", "RWC","REW","E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP", 
+    type = match.arg(type, c("SWC", "RWC", "REW","E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP", 
                              "BAI", "DI","DBH", "Height"))
   }
   if(type=="SWC") {
     sm = out$Soil
     d = rownames(sm)
     fc = soil_thetaFC(modelInput$soil, model = modelInput$control$soilFunctions)
-    mod = sm$W.1*fc[1]
+    mod = sm$RWC.1*fc[1]
     df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = mod)
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
@@ -152,13 +152,31 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   else if(type=="REW") {
     sm = out$Soil
     d = rownames(sm)
+    fc = soil_thetaFC(modelInput$soil, model = modelInput$control$soilFunctions)
+    mod = REW.1*fc[1]
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = mod)
+    
+    if(!("REW" %in% names(measuredData))) stop(paste0("Column 'REW' not found in measured data frame."))
+    seld = rownames(measuredData) %in% d
+    df$Observed[d %in% rownames(measuredData)] = measuredData$REW[seld]
+    
+    if("REW_err" %in% names(measuredData))  {
+      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["REW_err"]][seld]
+      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["REW_err"]][seld]
+    }
+  } 
+  else if(type=="REW") {
+    sm = out$Soil
+    d = rownames(sm)
     df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1)
     
-    if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
+    if(!("REW" %in% names(measuredData))) stop(paste0("Column 'REW' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
-    q_obs = quantile(measuredData$SWC[seld], p=c(0.90), na.rm=T) # To avoid peaks over field capacity
-    df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]/q_obs[1]
-    
+    df$Observed[d %in% rownames(measuredData)] = measuredData$REW[seld]
+    if("REW_err" %in% names(measuredData))  {
+      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["REW_err"]][seld]
+      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["REW_err"]][seld]
+    }
   } 
   else if(type=="E") {
     pt = out$Plants$Transpiration
@@ -473,6 +491,15 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
                      err = ("SWC_err" %in% names(measuredData)))
     }
   } 
+  else if(type=="RWC") {
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = "Relative water content (RWC)")
+    } else {
+      g<-scatterplot(df, xlab  = "Modelled relative water content (RWC)",
+                     ylab = "Measured relative water content (RWC)")
+      
+    }
+  }
   else if(type=="REW") {
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = "Relative extractable soil water (REW)")
