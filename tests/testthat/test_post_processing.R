@@ -22,6 +22,7 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_s3_class(plot(S1, "SaturatedDepth"), "ggplot")
   expect_s3_class(plot(S1, "Evapotranspiration"), "ggplot")
   expect_s3_class(plot(S1, "SoilPsi"), "ggplot")
+  expect_s3_class(plot(S1, "SoilREW"), "ggplot")
   expect_s3_class(plot(S1, "SoilRWC"), "ggplot")
   expect_s3_class(plot(S1, "SoilTheta"), "ggplot")
   expect_s3_class(plot(S1, "SoilVol"), "ggplot")
@@ -410,4 +411,4 @@ test_that("Can produce all fordyn plots",{
   expect_s3_class(plot(fd, "QuadraticMeanTreeDiameter"), "ggplot")
   expect_s3_class(plot(fd, "HartBeckingIndex"), "ggplot")
 })
-  
+

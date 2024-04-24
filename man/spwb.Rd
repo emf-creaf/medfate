@@ -107,13 +107,20 @@ There are many elements in common in these lists, so they are listed here togeth
   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
-    \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
+    \item{\code{"RWC.1"}, \code{...}, \code{"RWC.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
+    \item{\code{"RWC.tot"}: Overall relative soil moisture content.}
+    \item{\code{"REW.1"}, \code{...}, \code{"REW.k"}: Relative extractable water (min. psi = -5 MPa) in each soil layer.}
+    \item{\code{"REW.tot"}: Overall relative extractable water (min. psi = -5 MPa).}
     \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
-    \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
-    \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
+    \item{\code{"ML.tot"}: Overall soil water volume (in L/m2).}
+    \item{\code{"Psi.1"}, \code{...}, \code{"Psi.k"}: Soil water potential in each soil layer (in MPa).}
+    \item{\code{"Psi.tot"}: Overall soil water potential (in MPa).}
     \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
+    \item{\code{"PlantExt.tot"}: Overall plant extraction (in mm).}
     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).}
-    \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
+    \item{\code{"HydraulicInput.tot"}: Overall hydraulic input (in mm).}
+    \item{\code{"SaturatedDepth"}: Depth (in mm) of the saturated layer.}
+    \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
   }
   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{

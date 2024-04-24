@@ -110,6 +110,12 @@ List transpirationBasic(List x, NumericVector meteovec,
     poolProportions = belowdf["poolProportions"];
   }
   
+  
+  
+  //Phenology parameters
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  CharacterVector phenoType = paramsPhenology["PhenologyType"];
+  
   //Parameters  
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
@@ -162,6 +168,8 @@ List transpirationBasic(List x, NumericVector meteovec,
   
   //Communication vectors
   //Comunication with outside
+  DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
+  NumericVector phi = Rcpp::as<Rcpp::NumericVector>(internalPhenology["phi"]);
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
   NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
@@ -363,8 +371,9 @@ List transpirationBasic(List x, NumericVector meteovec,
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     
     //Daily drought stress from plant WP
-    DDS[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c]); 
-    
+    DDS[c] = (1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
+    if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
+      
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
     double r = cavitationRecoveryMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
     if(stemCavitationRecovery=="rate") {

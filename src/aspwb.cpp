@@ -244,20 +244,23 @@ DataFrame defineAgricultureSoilWaterBalanceDailyOutput(CharacterVector dateStrin
   NumericVector W = soil["W"];
   int nlayers = W.length();
   
-  NumericMatrix Wdays(numDays, nlayers); //Soil moisture content in relation to field capacity
-  NumericMatrix psidays(numDays, nlayers);
+  NumericMatrix RWCdays(numDays, nlayers); //Soil moisture content in relation to field capacity
+  NumericVector RWCtot(numDays, 0.0);
+  NumericMatrix Psidays(numDays, nlayers);
+  NumericVector Psitot(numDays, 0.0);
   NumericMatrix MLdays(numDays, nlayers);
   NumericVector SaturatedDepth(numDays, NA_REAL);
-  NumericVector MLTot(numDays, 0.0);
+  NumericVector MLtot(numDays, 0.0);
   NumericVector SWE(numDays, 0.0);
+  NumericVector REWtot(numDays, 0.0);
+  NumericMatrix REWdays(numDays, nlayers); //Soil moisture content in relation to extractable water
   
-  NumericVector Wini = soil["W"];
-  Wdays(0,_) = clone(Wini);
-  
-  DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+  DataFrame SWB = DataFrame::create(_["RWC"]=RWCdays, _["RWC.tot"]=RWCtot,
+                                    _["REW"]=REWdays,_["REW.tot"]=REWtot, 
+                                    _["ML"]=MLdays,_["ML.tot"]=MLtot, 
+                                    _["Psi"]=Psidays,_["Psi.tot"] = Psitot,
                                     _["SaturatedDepth"] = SaturatedDepth,
-                                    _["SWE"] = SWE, 
-                                    _["psi"]=psidays); 
+                                    _["SWE"] = SWE); 
   SWB.attr("row.names") = dateStrings;
   return(SWB);  
 }
@@ -325,29 +328,43 @@ void fillAgricultureSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List s
   NumericVector W = soil["W"];
   int nlayers = W.length();
   NumericVector Water_FC = waterFC(soil, soilFunctions);
+  NumericVector Water_min = waterPsi(soil, -5.0, soilFunctions);
+  NumericVector Water_ext = waterExtractable(soil, soilFunctions, -5.0);
+  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
+  
   
   List sb = sDay["Soil"];
   NumericVector psi = sb["psi"];
 
-  NumericVector MLTot = as<Rcpp::NumericVector>(SWB["MLTot"]);
+  NumericVector RWCtot = as<Rcpp::NumericVector>(SWB["RWC.tot"]);
+  NumericVector Psitot = as<Rcpp::NumericVector>(SWB["Psi.tot"]);
+  NumericVector REWtot = as<Rcpp::NumericVector>(SWB["REW.tot"]);
+  NumericVector MLtot = as<Rcpp::NumericVector>(SWB["ML.tot"]);
   NumericVector SaturatedDepth = as<Rcpp::NumericVector>(SWB["SaturatedDepth"]);
   NumericVector SWE = as<Rcpp::NumericVector>(SWB["SWE"]);
   
   for(int l=0; l<nlayers; l++) {
-    String wS = "W.";
-    wS += (l+1);
+    String rwcS = "RWC.";
+    rwcS += (l+1);
+    String rewS = "REW.";
+    rewS += (l+1);
     String mlS = "ML.";
     mlS += (l+1);
-    String psiS = "psi.";
+    String psiS = "Psi.";
     psiS += (l+1);
-    NumericVector Wdays = as<Rcpp::NumericVector>(SWB[wS]);
+    NumericVector RWCdays = as<Rcpp::NumericVector>(SWB[rwcS]);
+    NumericVector REWdays = as<Rcpp::NumericVector>(SWB[rewS]);
     NumericVector MLdays = as<Rcpp::NumericVector>(SWB[mlS]);
-    NumericVector psidays = as<Rcpp::NumericVector>(SWB[psiS]);
-    psidays[iday] = psi[l];
-    if(iday<(numDays-1)) Wdays[iday+1] = W[l];
-    MLdays[iday] = Wdays[iday]*Water_FC[l]; 
-    MLTot[iday] = MLTot[iday] + MLdays[iday];
+    NumericVector Psidays = as<Rcpp::NumericVector>(SWB[psiS]);
+    Psidays[iday] = psi[l];
+    RWCdays[iday] = W[l];
+    MLdays[iday] = RWCdays[iday]*Water_FC[l]; 
+    REWdays[iday] = (MLdays[iday]-Water_min[l])/Water_ext[l];
+    MLtot[iday] = MLtot[iday] + MLdays[iday];
   }
+  RWCtot[iday] = MLtot[iday]/sum(Water_FC);
+  REWtot[iday] = (MLtot[iday] - sum(Water_min))/sum(Water_ext);
+  Psitot[iday] = sum(psi*Water_SAT)/sum(Water_SAT);
   SWE[iday] = soil["SWE"];
   SaturatedDepth[iday] = saturatedWaterDepth(soil, soilFunctions);
 }

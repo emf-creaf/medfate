@@ -33,11 +33,14 @@
   RhizoPsi = x$Plants$RhizoPsi
   
   nlayers = length(VG_nc)
-  psiSoil = x$Soil$psi.1
-  if(nlayers>1) psiSoil = cbind(psiSoil, x$Soil$psi.2)
-  if(nlayers>2) psiSoil = cbind(psiSoil, x$Soil$psi.3)
-  if(nlayers>3) psiSoil = cbind(psiSoil, x$Soil$psi.4)
-  if(nlayers>4) psiSoil = cbind(psiSoil, x$Soil$psi.5)
+  psiSoil = x$Soil$Psi.1
+  if(nlayers>1) psiSoil = cbind(psiSoil, x$Soil$Psi.2)
+  if(nlayers>2) psiSoil = cbind(psiSoil, x$Soil$Psi.3)
+  if(nlayers>3) psiSoil = cbind(psiSoil, x$Soil$Psi.4)
+  if(nlayers>4) psiSoil = cbind(psiSoil, x$Soil$Psi.5)
+  if(nlayers>5) psiSoil = cbind(psiSoil, x$Soil$Psi.6)
+  if(nlayers>6) psiSoil = cbind(psiSoil, x$Soil$Psi.7)
+  if(nlayers>7) psiSoil = cbind(psiSoil, x$Soil$Psi.8)
   
   nsteps = nrow(psiSoil)
   resmat = matrix(0, nrow=nsteps, ncol = 4)

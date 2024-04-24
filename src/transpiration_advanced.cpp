@@ -157,6 +157,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector Beta_q = Rcpp::as<Rcpp::NumericVector>(paramsInterception["Beta_q"]);
   NumericVector ClumpingIndex = Rcpp::as<Rcpp::NumericVector>(paramsInterception["ClumpingIndex"]);
   
+  //Phenology parameters
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  CharacterVector phenoType = paramsPhenology["PhenologyType"];
+  
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
@@ -185,6 +189,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
   //Comunication with outside
+  DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
+  NumericVector phi = Rcpp::as<Rcpp::NumericVector>(internalPhenology["phi"]);
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
@@ -1191,6 +1197,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     DDS[c] = (1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
+    if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
     
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
     double r = cavitationRecoveryMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);

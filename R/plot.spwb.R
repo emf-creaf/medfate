@@ -223,7 +223,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""  
   
-  if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "PlantExtraction", "HydraulicRedistribution")) {
+  if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW","PlantExtraction", "HydraulicRedistribution")) {
     return(.plot_soil(Soil = x$Soil, input_soil = input$soil, input_control = input$control,
                     type = type, dates = dates, 
                     xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
@@ -444,7 +444,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                       type=type, dates = dates, ylim = ylim, xlab = xlab, ylab = ylab,
                       summary.freq = summary.freq,...))
     }
-    else if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "PlantExtraction", "HydraulicRedistribution")) {
+    else if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW", "PlantExtraction", "HydraulicRedistribution")) {
       Soil = summary(x, freq = "days", output = "Soil")
       return(.plot_soil(Soil = Soil, input_soil = input_soil, input_control = input_control,
                         type=type, dates = dates, 
@@ -548,9 +548,9 @@ plot.fordyn<-function(x, type="StandBasalArea",
       if(type=="CarbonBalance") {
         OM = summary(x, freq = "days", output = "CarbonBalance")
         return(.plot_carbon(OM, type,  
-                             dates = dates, 
-                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
-                             summary.freq = summary.freq, ...))
+                            dates = dates, 
+                            xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                            summary.freq = summary.freq, ...))
       }
       if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                      "LabileCarbonBalance", 
@@ -579,13 +579,13 @@ plot.fordyn<-function(x, type="StandBasalArea",
                             summary.freq = summary.freq, ...))
     }
   }
-
-
+  
+  
   ## FORDYN PLOT
-
+  
   if(is.null(ylab)) ylab = .getYLab(type)
   if(is.null(xlab)) xlab = "Step"
-
+  
   if(type %in% c("NumTreeSpecies", "NumTreeCohorts", "NumShrubSpecies", "NumShrubCohorts"))  {
     out = x$StandSummary
     var = type

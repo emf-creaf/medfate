@@ -18,6 +18,7 @@
 \alias{soil_waterFC}
 \alias{soil_waterSAT}
 \alias{soil_waterWP}
+\alias{soil_waterPsi}
 \alias{soil_waterExtractable}
 \alias{soil_theta}
 \alias{soil_water}
@@ -70,6 +71,8 @@ soil_waterFC(soil, model = "SX")
 soil_waterSAT(soil, model = "SX")
 
 soil_waterWP(soil, model = "SX")
+
+soil_waterPsi(soil, psi, model = "SX")
 
 soil_waterExtractable(soil, model = "SX", minPsi = -5)
 

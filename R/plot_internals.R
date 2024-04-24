@@ -10,15 +10,19 @@
   TYPES = c(
     "Soil water potential" = "SoilPsi",
     "Soil relative water content" = "SoilRWC",
+    "Soil relative extractable water" = "SoilREW",
     "Soil moisture (m3/m3) content" = "SoilTheta")
   if(model!="pwb") {
     TYPES = c(TYPES, 
-              "Soil volume (mm) content" = "SoilVol",
-              "Saturated water depth" = "SaturatedDepth")
+              "Soil volume (mm) content" = "SoilVol")
   }
   TYPES = c(TYPES, 
             "Plant extraction from soil"= "PlantExtraction",
             "Hydraulic redistribution" = "HydraulicRedistribution")
+  if(model!="pwb") {
+    TYPES = c(TYPES, 
+              "Saturated water depth" = "SaturatedDepth")
+  }
   return(TYPES)
 }
 .getStandPlotTypes<-function(model = "pwb") {
@@ -600,12 +604,12 @@
   } 
   else if(type=="SoilVol") {
     if(is.null(ylab)) ylab = "Soil water content (mm)"
-    MLM = data.frame("Total" = Soil$MLTot, 
+    MLM = data.frame("Overall" = Soil$ML.tot, 
                      Soil[,paste("ML",1:nlayers,sep=".")])
     if(!is.null(dates)) MLM = MLM[row.names(MLM) %in% as.character(dates),]
     if(!is.null(summary.freq)) MLM = .temporalSummary(MLM, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(MLM), ylab = ylab, ylim = ylim,
-                              xlab=xlab, labels = c("Total", paste("Layer", 1:nlayers))))
+                              xlab=xlab, labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
 }
 .plot_soil<-function(Soil, input_soil, input_control, type,  
@@ -615,48 +619,64 @@
   Soil = as.data.frame(Soil)
   nlayers = length(input_soil$W)
   if(type=="SoilPsi") {
-    PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
+    PsiM = data.frame("Overall" = Soil$Psi.tot, 
+                    Soil[,paste("Psi",1:nlayers,sep=".")])
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
     if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) PsiM = .temporalSummary(PsiM, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
+                              labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
   else if(type=="SoilTheta") {
-    WM = Soil[,paste("W",1:nlayers,sep=".")]
-    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),,drop = FALSE]
+    RWCM = data.frame("Overall" = Soil$RWC.tot, 
+                     Soil[,paste("RWC",1:nlayers,sep=".")])
+    if(!is.null(dates)) RWCM = RWCM[row.names(RWCM) %in% as.character(dates),,drop = FALSE]
     theta_FC = soil_thetaFC(input_soil, model = input_control$soilFunctions)
-    WM = 100*sweep(WM, 2,theta_FC, "*")
-    if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
+    water_FC = soil_waterFC(input_soil, model = input_control$soilFunctions);
+    theta_all <- sum(theta_FC*water_FC)/sum(water_FC)
+    SMM = 100*sweep(RWCM, 2,c(theta_all, theta_FC), "*")
+    if(!is.null(summary.freq)) SMM = .temporalSummary(SMM, summary.freq, mean, na.rm=TRUE)
     if(is.null(ylab)) ylab = "Soil moisture (% volume)"
-    return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
+    return(.multiple_dynamics(as.matrix(SMM),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = c("Overall", paste("Layer", 1:nlayers))))
+  } 
+  else if(type=="SoilREW") {
+    REWM = 100*data.frame("Overall" = Soil$REW.tot, 
+                          Soil[,paste("REW",1:nlayers,sep=".")])
+    if(!is.null(dates)) REWM = REWM[row.names(REWM) %in% as.character(dates),,drop = FALSE]
+    if(!is.null(summary.freq)) REWM = .temporalSummary(REWM, summary.freq, mean, na.rm=TRUE)
+    if(is.null(ylab)) ylab = "Relative extractable water (%)"
+    return(.multiple_dynamics(as.matrix(REWM),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
   else if(type=="SoilRWC") {
-    WM = Soil[,paste("W",1:nlayers,sep=".")]
-    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),,drop = FALSE]
-    if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
-    return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
+    RWCM = 100*data.frame("Overall" = Soil$RWC.tot, 
+                    Soil[,paste("RWC",1:nlayers,sep=".")])
+    if(!is.null(dates)) RWCM = RWCM[row.names(RWCM) %in% as.character(dates),,drop = FALSE]
+    if(!is.null(summary.freq)) RWCM = .temporalSummary(RWCM, summary.freq, mean, na.rm=TRUE)
+    if(is.null(ylab)) ylab = "Relative water content (% field capacity)"
+    return(.multiple_dynamics(as.matrix(RWCM),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
   else if(type=="PlantExtraction") {
-    extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
+    extrBal = 100*data.frame("Overall" = Soil$PlantExt.tot, 
+                        Soil[,paste("PlantExt",1:nlayers,sep=".")])
     if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),,drop = FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     if(!is.null(summary.freq)) extrBal = .temporalSummary(extrBal, summary.freq, sum, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
-                          labels = paste("Layer", 1:nlayers))
+                          labels = c("Overall", paste("Layer", 1:nlayers)))
     g<-g+geom_abline(slope=0, intercept=0, col="gray")
     return(g)
   } 
   else if(type=="HydraulicRedistribution") {
-    hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
+    hydrIn = data.frame("Overall" = Soil$HydraulicInput.tot, 
+                        Soil[,paste("HydraulicInput",1:nlayers,sep=".")])
     if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),,drop = FALSE]
     if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
     if(!is.null(summary.freq)) hydrIn = .temporalSummary(hydrIn, summary.freq, sum, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(hydrIn),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
+                              labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
 }
 .plot_stand<-function(Stand, type,  

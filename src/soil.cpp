@@ -547,6 +547,18 @@ NumericVector waterWP(List soil, String model="SX") {
 }
 
 //' @rdname soil_texture
+ // [[Rcpp::export("soil_waterPsi")]]
+ NumericVector waterPsi(List soil, double psi, String model="SX") {
+   NumericVector dVec = soil["dVec"];
+   NumericVector theta_psi = psi2thetasoil(soil, psi, model);
+   NumericVector rfc = soil["rfc"];
+   int nlayers = dVec.size();
+   NumericVector Water_psi(nlayers);
+   for(int i=0;i<nlayers;i++) Water_psi[i] = dVec[i]*theta_psi[i]*(1.0-(rfc[i]/100.0));
+   return(Water_psi);
+ }
+
+//' @rdname soil_texture
 // [[Rcpp::export("soil_waterExtractable")]]
 NumericVector waterExtractable(List soil, String model="SX", double minPsi = -5.0) {
   NumericVector dVec = soil["dVec"];
