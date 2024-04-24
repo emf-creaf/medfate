@@ -14,7 +14,8 @@
 #'   \item{\code{widths (= c(300,700,1000,2000)}: Width of soil layers (in mm).}
 #'   \item{\code{clay (= 25)}: Clay percentage for each layer (in \%).}
 #'   \item{\code{sand (= 25)}: Sand percentage for each layer (in \%).}
-#'   \item{\code{om (= NA)}: Organic matter percentage for each layer (in \%).}
+#'   \item{\code{om (= NA)}: Organic matter percentage for each layer (in \%) (optional).}
+#'   \item{\code{nitrogen (= NA)}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg) (optional).}
 #'   \item{\code{bd (= 1.5)}: Bulk density for each layer (in g/cm3).}
 #'   \item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content (volume basis) for each layer.}
 #' }
@@ -33,6 +34,7 @@ defaultSoilParams<-function(n=4) {
     clay = rep(25,n),
     sand = rep(25,n),
     om = rep(NA,n),
+    nitrogen = rep(NA,n),
     bd = rep(1.5,n),
     rfc = c(25,45,75,95,98)[1:n]));
 }

@@ -800,6 +800,7 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 //'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
 //'   \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
+//'   \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
 //'   \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
 //'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
 //'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
@@ -865,14 +866,19 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   //Soil parameters related to physical structure
   NumericVector clay = clone(as<NumericVector>(SoilParams["clay"]));
   NumericVector sand = clone(as<NumericVector>(SoilParams["sand"]));
-  NumericVector om = clone(as<NumericVector>(SoilParams["om"]));
   NumericVector bd = clone(as<NumericVector>(SoilParams["bd"]));
   NumericVector rfc = clone(as<NumericVector>(SoilParams["rfc"]));
-
+  
   if(any(is_na(clay))) stop("Missing values in soil 'clay'");
   if(any(is_na(sand))) stop("Missing values in soil 'sand'");
   if(any(is_na(bd))) stop("Missing values in soil 'bd'");
   if(any(is_na(rfc))) stop("Missing values in soil 'rfc'");
+
+  //Optional
+  NumericVector om(nlayers, NA_REAL);
+  NumericVector nitrogen(nlayers, NA_REAL);
+  if(SoilParams.containsElementNamed("om")) om = clone(as<NumericVector>(SoilParams["om"]));
+  if(SoilParams.containsElementNamed("nitrogen")) nitrogen = clone(as<NumericVector>(SoilParams["nitrogen"]));
   
   //Parameters to be calculated and state variables
   NumericVector macro(nlayers, NA_REAL);
@@ -933,7 +939,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
                        _["Temp"] = temperature,
                        _["Gsoil"] = Gsoil,
                        _["dVec"] = dVec,
-                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
+                       _["sand"] = sand, _["clay"] = clay, _["om"] = om, _["nitrogen"] = nitrogen,
                        _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                        _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
                        _["Ksat"] = Ksat,

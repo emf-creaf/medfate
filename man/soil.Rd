@@ -35,6 +35,7 @@ Function \code{soil} returns a list of class \code{soil} with the following elem
   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
   \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
+  \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
   \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
