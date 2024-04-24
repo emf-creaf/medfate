@@ -137,8 +137,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     sm = out$Soil
     d = rownames(sm)
     fc = soil_thetaFC(modelInput$soil, model = modelInput$control$soilFunctions)
-    mod = sm$RWC.1*fc[1]
-    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = mod)
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$RWC.1*fc[1])
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
@@ -152,9 +151,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   else if(type=="REW") {
     sm = out$Soil
     d = rownames(sm)
-    fc = soil_thetaFC(modelInput$soil, model = modelInput$control$soilFunctions)
-    mod = REW.1*fc[1]
-    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = mod)
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$REW.1)
     
     if(!("REW" %in% names(measuredData))) stop(paste0("Column 'REW' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
@@ -165,17 +162,17 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
       df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["REW_err"]][seld]
     }
   } 
-  else if(type=="REW") {
+  else if(type=="RWC") {
     sm = out$Soil
     d = rownames(sm)
-    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1)
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$RWC.1)
     
-    if(!("REW" %in% names(measuredData))) stop(paste0("Column 'REW' not found in measured data frame."))
+    if(!("RWC" %in% names(measuredData))) stop(paste0("Column 'RWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
-    df$Observed[d %in% rownames(measuredData)] = measuredData$REW[seld]
-    if("REW_err" %in% names(measuredData))  {
-      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["REW_err"]][seld]
-      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["REW_err"]][seld]
+    df$Observed[d %in% rownames(measuredData)] = measuredData$RWC[seld]
+    if("RWC_err" %in% names(measuredData))  {
+      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["RWC_err"]][seld]
+      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["RWC_err"]][seld]
     }
   } 
   else if(type=="E") {
