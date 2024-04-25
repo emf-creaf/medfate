@@ -479,7 +479,7 @@ List growthDayInner(List x, NumericVector meteovec,
 
   //Values at the end of the day (after calling spwb)
   NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-  NumericVector PlantPsi, psiApoLeaf, psiApoStem, psiSympLeaf, psiSympStem;
+  NumericVector PlantPsi, psiApoLeaf, psiApoStem, psiSympLeaf, psiSympStem, psiRootCrown;
   NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   if(transpirationMode=="Granier") {
     PlantPsi  = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
@@ -493,6 +493,7 @@ List growthDayInner(List x, NumericVector meteovec,
       psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
       psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
     }
+    psiRootCrown = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
     psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
   }
   
@@ -739,8 +740,8 @@ List growthDayInner(List x, NumericVector meteovec,
         for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
-        rleafcell = std::min(rcellmax, relative_expansion_rate(psiSympLeaf[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_expansion_rate(psiSympStem[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        rleafcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
         for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< psiSympStem[j]<< " pi0:"<< " r:"<< rcambiumcell<<"\n";
       }

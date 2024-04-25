@@ -7,6 +7,7 @@
 - Infiltration excess, saturation excess and capillarity rise reported
 - Lateral water flows and water table depth as inputs
 - Soil output revision
+- Evaluation of moisture in multiple soil layers
 
 # Version 4.0.0
 - Options leafCavitationEffects and stemCavitationEffects for Sperry
