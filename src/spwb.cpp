@@ -396,11 +396,11 @@ List spwbDay_basic(List x, NumericVector meteovec,
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIherb"] = herbLAI, 
                                               _["LAIlive"] = LAIcelllive,  _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead,
                                               _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
-  DataFrame SB = DataFrame::create(_["HerbTranspiration"] = EherbVec,
+  DataFrame SB = DataFrame::create(_["Psi"] = psiVec,
+                                   _["HerbTranspiration"] = EherbVec,
                                    _["HydraulicInput"] = soilHydraulicInput, 
                                    _["HydraulicOutput"] = soilHydraulicOutput, 
-                                   _["PlantExtraction"] = ExtractionVec, 
-                                   _["psi"] = psiVec);
+                                   _["PlantExtraction"] = ExtractionVec);
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["topography"] = topo,
                         _["weather"] = clone(meteovec),
@@ -670,11 +670,11 @@ List spwbDay_advanced(List x, NumericVector meteovec,
                                               _["LAIlive"] = LAIcelllive, _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead,
                                               _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   
-  DataFrame SB = DataFrame::create(_["HerbTranspiration"] = EherbVec, 
+  DataFrame SB = DataFrame::create(_["Psi"] = psiVec,
+                                   _["HerbTranspiration"] = EherbVec, 
                                    _["HydraulicInput"] = soilHydraulicInput, 
                                    _["HydraulicOutput"] = soilHydraulicOutput, 
-                                   _["PlantExtraction"] = ExtractionVec, 
-                                   _["psi"] = psiVec);
+                                   _["PlantExtraction"] = ExtractionVec);
   
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["topography"] = topo,
@@ -723,6 +723,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //'   implements a modelling approach originally described in Sperry et al. (2017).}  
 //'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 //' }
+//' 
 //' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 //' 
 //' @return
@@ -735,11 +736,11 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //'   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
 //'   \item{\code{"Soil"}: A data frame with results for each soil layer:
 //'     \itemize{
+//'       \item{\code{"Psi"}: Soil water potential (in MPa) at the end of the day.}
 //'       \item{\code{"HerbTranspiration"}: Water extracted by herbaceous plants from each soil layer (in mm).}
-//'       \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
-//'       \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Sperry"}).}
+//'       \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant roots (in mm).}
+//'       \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm).}
 //'       \item{\code{"PlantExtraction"}: Water extracted by woody plants from each soil layer (in mm).}
-//'       \item{\code{"psi"}: Soil water potential (in MPa).}
 //'     }
 //'   }
 //'   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
@@ -1460,7 +1461,7 @@ void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay,
   NumericVector Water_ext = waterExtractable(soil, soilFunctions, -5.0);
   
   List sb = sDay["Soil"];
-  NumericVector psi = sb["psi"];
+  NumericVector psi = sb["Psi"];
   
   NumericVector SWCtot = as<Rcpp::NumericVector>(SWB["SWC.tot"]);
   NumericVector MLtot = as<Rcpp::NumericVector>(SWB["ML.tot"]);

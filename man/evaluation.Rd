@@ -49,9 +49,10 @@ evaluation_metric(
 
 \item{type}{A string with the kind of model output to be evaluated. Accepted values are:
 \itemize{
-  \item{\code{"SWC"}: Soil moisture content}
-  \item{\code{"REW"}: Relative extractable water}
-  \item{\code{"ETR"}: Total evapotranspiration}
+  \item{\code{"SWC"}: Soil water content (percent volume). See details for specific soil layers.}
+  \item{\code{"RWC"}: Relative water content (relative to field capacity). See details for specific soil layers.}
+  \item{\code{"REW"}: Relative extractable water. See details for specific soil layers.}
+  \item{\code{"ETR"}: Total evapotranspiration.}
   \item{\code{"SE+TR"}: Modelled soil evaporation + plant transpiration against observed total evapotranspiration}
   \item{\code{"E"}: Transpiration per leaf area}
   \item{\code{"LE"}: Latent heat (vaporisation) turbulent flux}
@@ -105,7 +106,7 @@ Functions to compare model predictions against observed values.
 \details{
 Users should provide the appropriate columns in \code{measuredData}, depending on the type of output to be evaluated:
 \itemize{
-  \item{\code{"SWC" or "REW"}: A column named \code{"SWC"} should be present, containing soil moisture content in percent volume. When \code{type="REW"}, observed values are divided by the 90\% quantile, which is assumed to be the moisture content at field capacity.}
+  \item{\code{"SWC", "RWC", "REW"}: A column with the same name should be present. By default, the first soil layer is compared. Evaluation can be done for specific soil layers, for example using "RWC.2" for the relative water content of the second layer.}
   \item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
   \item{\code{"LE"}: A column named \code{"LE"} should be present containing daily latent heat turbulent flux in MJ/m2.}
   \item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}

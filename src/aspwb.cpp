@@ -147,8 +147,8 @@ List aspwb_day_internal(List x, NumericVector meteovec,
                                            _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage, _["CapillarityRise"] = CapillarityRise,
                                            _["SoilEvaporation"] = Esoil, _["Transpiration"] = sum(ExtractionVec));
   
-  DataFrame SB = DataFrame::create(_["PlantExtraction"] = ExtractionVec, 
-                                   _["psi"] = psiVec);
+  DataFrame SB = DataFrame::create(_["Psi"] = psiVec,
+                                   _["PlantExtraction"] = ExtractionVec);
   List l = List::create(_["WaterBalance"] = DB, 
                         _["Soil"] = SB);
   l.attr("class") = CharacterVector::create("aspwb_day","list");

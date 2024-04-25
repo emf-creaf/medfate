@@ -6,9 +6,10 @@
 #' @param measuredData A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).
 #' @param type A string with the kind of model output to be evaluated. Accepted values are:
 #'     \itemize{
-#'       \item{\code{"SWC"}: Soil moisture content}
-#'       \item{\code{"REW"}: Relative extractable water}
-#'       \item{\code{"ETR"}: Total evapotranspiration}
+#'       \item{\code{"SWC"}: Soil water content (percent volume). See details for specific soil layers.}
+#'       \item{\code{"RWC"}: Relative water content (relative to field capacity). See details for specific soil layers.}
+#'       \item{\code{"REW"}: Relative extractable water. See details for specific soil layers.}
+#'       \item{\code{"ETR"}: Total evapotranspiration.}
 #'       \item{\code{"SE+TR"}: Modelled soil evaporation + plant transpiration against observed total evapotranspiration}
 #'       \item{\code{"E"}: Transpiration per leaf area}
 #'       \item{\code{"LE"}: Latent heat (vaporisation) turbulent flux}
@@ -36,7 +37,7 @@
 #'
 #' @details Users should provide the appropriate columns in \code{measuredData}, depending on the type of output to be evaluated:
 #' \itemize{
-#'   \item{\code{"SWC" or "REW"}: A column named \code{"SWC"} should be present, containing soil moisture content in percent volume. When \code{type="REW"}, observed values are divided by the 90\% quantile, which is assumed to be the moisture content at field capacity.}
+#'   \item{\code{"SWC", "RWC", "REW"}: A column with the same name should be present. By default, the first soil layer is compared. Evaluation can be done for specific soil layers, for example using "RWC.2" for the relative water content of the second layer.}
 #'   \item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
 #'   \item{\code{"LE"}: A column named \code{"LE"} should be present containing daily latent heat turbulent flux in MJ/m2.}
 #'   \item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}
@@ -125,54 +126,34 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   }
   # Check arguments
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
+  soil_layers_opts <- c("", ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9", ".10")
+  soil_opts <- c(paste0("SWC", soil_layers_opts),
+                 paste0("RWC", soil_layers_opts),
+                 paste0("REW", soil_layers_opts))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "RWC","REW","E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP"))
+    type = match.arg(type, c(soil_opts,"E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "RWC", "REW","E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP", 
+    type = match.arg(type, c(soil_opts,"E", "ETR", "SE+TR", "LE", "H", "WP", "LFMC", "GPP", 
                              "BAI", "DI","DBH", "Height"))
   }
-  if(type=="SWC") {
+  if(substr(type,1,3) %in% c("REW", "SWC", "RWC")) {
     sm = out$Soil
     d = rownames(sm)
-    fc = soil_thetaFC(modelInput$soil, model = modelInput$control$soilFunctions)
-    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$RWC.1*fc[1])
+    var_mod  <- type
+    if(type=="SWC")  var_mod <- "SWC.1"
+    else if(type=="REW")  var_mod <- "REW.1"
+    else if(type=="RWC")  var_mod <- "RWC.1"
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]])
     
-    if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
+    if(!(type %in% names(measuredData))) stop(paste0("Column '", type, "' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
-    df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]
-    
-    if("SWC_err" %in% names(measuredData))  {
-      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["SWC_err"]][seld]
-      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["SWC_err"]][seld]
-    }
-  } 
-  else if(type=="REW") {
-    sm = out$Soil
-    d = rownames(sm)
-    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$REW.1)
-    
-    if(!("REW" %in% names(measuredData))) stop(paste0("Column 'REW' not found in measured data frame."))
-    seld = rownames(measuredData) %in% d
-    df$Observed[d %in% rownames(measuredData)] = measuredData$REW[seld]
-    
-    if("REW_err" %in% names(measuredData))  {
-      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["REW_err"]][seld]
-      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["REW_err"]][seld]
-    }
-  } 
-  else if(type=="RWC") {
-    sm = out$Soil
-    d = rownames(sm)
-    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$RWC.1)
-    
-    if(!("RWC" %in% names(measuredData))) stop(paste0("Column 'RWC' not found in measured data frame."))
-    seld = rownames(measuredData) %in% d
-    df$Observed[d %in% rownames(measuredData)] = measuredData$RWC[seld]
-    if("RWC_err" %in% names(measuredData))  {
-      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["RWC_err"]][seld]
-      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["RWC_err"]][seld]
+    df$Observed[d %in% rownames(measuredData)] = measuredData[seld, type]
+    errcolumn = paste0(type, "_err")
+    if(errcolumn %in% names(measuredData))  {
+      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[[errcolumn]][seld]
+      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[[errcolumn]][seld]
     }
   } 
   else if(type=="E") {

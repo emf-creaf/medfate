@@ -62,11 +62,11 @@ following elements:
   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
   \item{\code{"Soil"}: A data frame with results for each soil layer:
     \itemize{
+      \item{\code{"Psi"}: Soil water potential (in MPa) at the end of the day.}
       \item{\code{"HerbTranspiration"}: Water extracted by herbaceous plants from each soil layer (in mm).}
-      \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
-      \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Sperry"}).}
+      \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant roots (in mm).}
+      \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm).}
       \item{\code{"PlantExtraction"}: Water extracted by woody plants from each soil layer (in mm).}
-      \item{\code{"psi"}: Soil water potential (in MPa).}
     }
   }
   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
@@ -96,6 +96,7 @@ The simulation functions allow using three different sub-models of transpiration
   implements a modelling approach originally described in Sperry et al. (2017).}  
   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 }
+
 Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 }
 \examples{
