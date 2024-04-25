@@ -628,16 +628,12 @@
                               labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
   else if(type=="SoilTheta") {
-    RWCM = data.frame("Overall" = Soil$RWC.tot, 
-                     Soil[,paste("RWC",1:nlayers,sep=".")])
-    if(!is.null(dates)) RWCM = RWCM[row.names(RWCM) %in% as.character(dates),,drop = FALSE]
-    theta_FC = soil_thetaFC(input_soil, model = input_control$soilFunctions)
-    water_FC = soil_waterFC(input_soil, model = input_control$soilFunctions);
-    theta_all <- sum(theta_FC*water_FC)/sum(water_FC)
-    SMM = 100*sweep(RWCM, 2,c(theta_all, theta_FC), "*")
-    if(!is.null(summary.freq)) SMM = .temporalSummary(SMM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = "Soil moisture (% volume)"
-    return(.multiple_dynamics(as.matrix(SMM),  xlab = xlab, ylab = ylab, ylim = ylim,
+    SWCM = data.frame("Overall" = Soil$SWC.tot, 
+                     Soil[,paste("SWC",1:nlayers,sep=".")])
+    if(!is.null(dates)) SWCM = SWCM[row.names(SWCM) %in% as.character(dates),,drop = FALSE]
+    if(!is.null(summary.freq)) SWCM = .temporalSummary(SWCM, summary.freq, mean, na.rm=TRUE)
+    if(is.null(ylab)) ylab = "Soil water content (% volume)"
+    return(.multiple_dynamics(as.matrix(SWCM),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = c("Overall", paste("Layer", 1:nlayers))))
   } 
   else if(type=="SoilREW") {

@@ -239,32 +239,6 @@ DataFrame defineAgricultureWaterBalanceDailyOutput(CharacterVector dateStrings) 
   return(DWB);
 }
 
-DataFrame defineAgricultureSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil) {
-  int numDays = dateStrings.length();
-  NumericVector W = soil["W"];
-  int nlayers = W.length();
-  
-  NumericMatrix RWCdays(numDays, nlayers); //Soil moisture content in relation to field capacity
-  NumericVector RWCtot(numDays, 0.0);
-  NumericMatrix Psidays(numDays, nlayers);
-  NumericVector Psitot(numDays, 0.0);
-  NumericMatrix MLdays(numDays, nlayers);
-  NumericVector SaturatedDepth(numDays, NA_REAL);
-  NumericVector MLtot(numDays, 0.0);
-  NumericVector SWE(numDays, 0.0);
-  NumericVector REWtot(numDays, 0.0);
-  NumericMatrix REWdays(numDays, nlayers); //Soil moisture content in relation to extractable water
-  
-  DataFrame SWB = DataFrame::create(_["RWC"]=RWCdays, _["RWC.tot"]=RWCtot,
-                                    _["REW"]=REWdays,_["REW.tot"]=REWtot, 
-                                    _["ML"]=MLdays,_["ML.tot"]=MLtot, 
-                                    _["Psi"]=Psidays,_["Psi.tot"] = Psitot,
-                                    _["SaturatedDepth"] = SaturatedDepth,
-                                    _["SWE"] = SWE); 
-  SWB.attr("row.names") = dateStrings;
-  return(SWB);  
-}
-
 // [[Rcpp::export(".defineASPWBDailyOutput")]]
 List defineASPWBDailyOutput(double latitude, double elevation, double slope, double aspect, 
                            CharacterVector dateStrings, List x) {
@@ -278,7 +252,7 @@ List defineASPWBDailyOutput(double latitude, double elevation, double slope, dou
 
   //Water balance output variables
   DataFrame DWB = defineAgricultureWaterBalanceDailyOutput(dateStrings);
-  DataFrame SWB = defineAgricultureSoilWaterBalanceDailyOutput(dateStrings, soil);
+  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, false);
   
   List l;
   l = List::create(Named("latitude") = latitude,
@@ -323,54 +297,10 @@ void fillAgricultureWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday) 
   SoilEvaporation[iday] = db["SoilEvaporation"];
   Evapotranspiration[iday] = Transpiration[iday]+SoilEvaporation[iday];
 }
-void fillAgricultureSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
-                                     int iday, int numDays, String soilFunctions) {
-  NumericVector W = soil["W"];
-  int nlayers = W.length();
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector Water_min = waterPsi(soil, -5.0, soilFunctions);
-  NumericVector Water_ext = waterExtractable(soil, soilFunctions, -5.0);
-  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
-  
-  
-  List sb = sDay["Soil"];
-  NumericVector psi = sb["psi"];
-
-  NumericVector RWCtot = as<Rcpp::NumericVector>(SWB["RWC.tot"]);
-  NumericVector Psitot = as<Rcpp::NumericVector>(SWB["Psi.tot"]);
-  NumericVector REWtot = as<Rcpp::NumericVector>(SWB["REW.tot"]);
-  NumericVector MLtot = as<Rcpp::NumericVector>(SWB["ML.tot"]);
-  NumericVector SaturatedDepth = as<Rcpp::NumericVector>(SWB["SaturatedDepth"]);
-  NumericVector SWE = as<Rcpp::NumericVector>(SWB["SWE"]);
-  
-  for(int l=0; l<nlayers; l++) {
-    String rwcS = "RWC.";
-    rwcS += (l+1);
-    String rewS = "REW.";
-    rewS += (l+1);
-    String mlS = "ML.";
-    mlS += (l+1);
-    String psiS = "Psi.";
-    psiS += (l+1);
-    NumericVector RWCdays = as<Rcpp::NumericVector>(SWB[rwcS]);
-    NumericVector REWdays = as<Rcpp::NumericVector>(SWB[rewS]);
-    NumericVector MLdays = as<Rcpp::NumericVector>(SWB[mlS]);
-    NumericVector Psidays = as<Rcpp::NumericVector>(SWB[psiS]);
-    Psidays[iday] = psi[l];
-    RWCdays[iday] = W[l];
-    MLdays[iday] = RWCdays[iday]*Water_FC[l]; 
-    REWdays[iday] = (MLdays[iday]-Water_min[l])/Water_ext[l];
-    MLtot[iday] = MLtot[iday] + MLdays[iday];
-  }
-  RWCtot[iday] = MLtot[iday]/sum(Water_FC);
-  REWtot[iday] = (MLtot[iday] - sum(Water_min))/sum(Water_ext);
-  Psitot[iday] = sum(psi*Water_SAT)/sum(Water_SAT);
-  SWE[iday] = soil["SWE"];
-  SaturatedDepth[iday] = saturatedWaterDepth(soil, soilFunctions);
-}
 
 // [[Rcpp::export(".fillASPWBDailyOutput")]]
 void fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
+  
   
   List x = l["aspwbInput"];
   List control = x["control"];
@@ -383,9 +313,9 @@ void fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
   if(control["soilResults"]) {
     String soilFunctions = control["soilFunctions"];
     DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(l["Soil"]);
-    fillAgricultureSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
-                                               iday, numDays,
-                                               soilFunctions);
+    fillSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
+                                   iday, numDays, soilFunctions,
+                                   false);
   }
 }
 

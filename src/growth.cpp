@@ -1746,7 +1746,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   String transpirationMode = control["transpirationMode"];
   
   DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
-  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, transpirationMode);
+  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, true);
   List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
@@ -1949,8 +1949,8 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
     String soilFunctions = control["soilFunctions"];
     DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(l["Soil"]);
     fillSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
-                                    iday, numDays, transpirationMode,
-                                    soilFunctions);
+                                    iday, numDays, soilFunctions,
+                                    true);
   }
   if(control["standResults"]) {
     DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);

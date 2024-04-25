@@ -107,6 +107,8 @@ There are many elements in common in these lists, so they are listed here togeth
   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
+    \item{\code{"SWC.1"}, \code{...}, \code{"SWC.k"}: Soil water content (percent of soil volume) in each soil layer.}
+    \item{\code{"SWC.tot"}: Overall relative soil water content.}
     \item{\code{"RWC.1"}, \code{...}, \code{"RWC.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
     \item{\code{"RWC.tot"}: Overall relative soil moisture content.}
     \item{\code{"REW.1"}, \code{...}, \code{"REW.k"}: Relative extractable water (min. psi = -5 MPa) in each soil layer.}
