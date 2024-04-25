@@ -134,6 +134,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
             leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
             leafDormancy[j] = leafSenescence[j];
           }
+          if(leafDormancy[j]) phi[j] = 0.0;
           budFormation[j] = !leafDormancy[j]; //Buds can be formed (i.e target leaf area) until dormancy occurs
         }
         // Rcout << doy<< " "<< photoperiod<<" "<< rsen <<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
@@ -186,7 +187,9 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
       budFormation[j] = true;
       leafDormancy[j] = false;
     }
+    // Rcout<< j << " phi "<< phi[j] <<" ";
   }
+  // Rcout<<"\n";
 }
 
 //' @param wind Average day wind speed (in m/s).

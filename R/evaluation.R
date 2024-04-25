@@ -459,31 +459,33 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
                         type = type, cohort = cohort, 
                         temporalResolution = temporalResolution)
   
-  if(type=="SWC") {
+  if(type %in% paste0("SWC", c("", paste0(".", 1:10)))) {
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))),
-                      err = ("SWC_err" %in% names(measuredData)))
+                      err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))),
                      ylab = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))), 
-                     err = ("SWC_err" %in% names(measuredData)))
+                     err = (paste0(type,"_err") %in% names(measuredData)))
     }
   } 
-  else if(type=="RWC") {
+  else if(type %in% paste0("RWC", c("", paste0(".", 1:10)))) {
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = "Relative water content (RWC)")
     } else {
       g<-scatterplot(df, xlab  = "Modelled relative water content (RWC)",
-                     ylab = "Measured relative water content (RWC)")
+                     ylab = "Measured relative water content (RWC)", 
+                     err = (paste0(type,"_err") %in% names(measuredData)))
       
     }
   }
-  else if(type=="REW") {
+  else if(type %in% paste0("REW", c("", paste0(".", 1:10)))) {
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = "Relative extractable soil water (REW)")
     } else {
       g<-scatterplot(df, xlab  = "Modelled relative extractable soil water (REW)",
-                     ylab = "Measured relative extractable soil water (REW)")
+                     ylab = "Measured relative extractable soil water (REW)", 
+                     err = (paste0(type,"_err") %in% names(measuredData)))
       
     }
   }

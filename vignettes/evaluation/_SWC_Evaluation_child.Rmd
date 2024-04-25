@@ -1,0 +1,42 @@
+### Soil water content (`r soil_layer_type`)
+```{r}
+df_eval <-NULL
+for(i in 1:nrow(df_site)) {
+    v<-medfate::evaluation_stats(df_site$Result[[i]], df_site$SiteData[[i]]$measuredData, type= soil_layer_type)
+    if(is.null(df_eval)) df_eval <- v
+    else df_eval <- cbind(df_eval, v)
+}
+df_all_SMC <- cbind(df_site[,c("Site", "Mode")], as.data.frame(t(df_eval)))
+row.names(df_all_SMC)<- NULL
+df_all_SMC |> 
+  kbl() |>
+  kable_styling()
+```
+
+
+```{r, fig.height=3, fig.width=8, fig.align="center"}
+pa<-medfate::evaluation_plot(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, type= soil_layer_type, plotType = "scatter")+labs(subtitle="Granier")+xlab("Modelled SWC (%)")+ylab("Observed SWC (%)")
+pb<-medfate::evaluation_plot(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= soil_layer_type, plotType = "scatter")+labs(subtitle="Sperry")+xlab("Modelled SWC (%)")+ylab("Observed SWC (%)")
+pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= soil_layer_type, plotType = "scatter")+labs(subtitle="Sureau")+xlab("Modelled SWC (%)")+ylab("Observed SWC (%)")
+cowplot::plot_grid(pa,pb,pc, ncol = 3)
+```
+
+```{r, fig.height=3, fig.width=9, fig.align="center"}
+eval_table_granier <- medfate::evaluation_table(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, type= soil_layer_type)
+eval_table_sperry <- medfate::evaluation_table(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= soil_layer_type)
+eval_table_sureau <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= soil_layer_type)
+eval_all <- eval_table_granier[,c(1,2)]
+eval_all$Granier <- eval_table_granier$Modelled
+eval_all$Sperry <- eval_table_sperry$Modelled
+eval_all$Sureau <- eval_table_sureau$Modelled
+eval_all_long <- eval_all |>
+  tidyr::pivot_longer(cols = 2:5, names_to = "Mode", values_to="SWC") |>
+  dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Granier", "Sperry", "Sureau")))
+ggplot(eval_all_long, mapping = aes(x=Dates, y=SWC))+
+  geom_line(mapping=aes(col = Mode, alpha = Mode))+
+  geom_point(aes(x= Dates, y=SWC), size = 0.5, data = eval_all_long[eval_all_long$Mode=="Observed",])+
+  scale_alpha_manual("", values=c(0.8,0.5,0.5,0.5))+
+  scale_color_manual("",values = c("black", "red", "green", "blue"))+
+  ylab("Soil water content (% vol.)")+xlab("")+
+  theme_bw()
+```

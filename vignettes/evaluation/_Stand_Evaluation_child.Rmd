@@ -115,13 +115,16 @@ eval_GPP <- "GPP" %in% names(df_site$SiteData[[1]]$measuredData)
  }
 ```
 
-<!-- Soil moisture content -->
+<!-- Soil water content -->
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
-eval_SWC <- "SWC" %in% names(df_site$SiteData[[1]]$measuredData)
- if(eval_SWC) {
-   res <- knitr::knit_child(file.path(this_path,'_SMC_Evaluation_child.Rmd'), quiet = TRUE)
-   cat(res, sep = '\n')
- }
+swc_opts <- paste0("SWC", c("", paste0(".", 1:10)))
+for(soil_layer_type in swc_opts) {
+   eval_SWC <- soil_layer_type %in% names(df_site$SiteData[[1]]$measuredData)
+   if(eval_SWC) {
+     res <- knitr::knit_child(file.path(this_path,'_SWC_Evaluation_child.Rmd'), quiet = TRUE)
+     cat(res, sep = '\n')
+   }
+}
 ```
 
 <!-- Plant transpiration -->
