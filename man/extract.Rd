@@ -47,7 +47,7 @@ example \code{output = "Plants"} will correspond to variables "LAI", "LAIlive", 
 Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). 
 When using \code{subdaily = TRUE}, parameter \code{output} is not taken into account, and options for parameter \code{vars} are the following:
 \itemize{
-  \item{Variables for \code{level = "forest"}: Not allowed. An error is raised.}
+  \item{Variables for \code{level = "forest"} or \code{level = "soillayer"}: Not allowed. An error is raised.}
   \item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
   \item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
 }
