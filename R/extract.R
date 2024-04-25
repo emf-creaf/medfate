@@ -120,7 +120,7 @@
 #' Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
 #' 
 #' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.
-#' @param level Level of simulation output, either "forest" (stand-level results), "cohort" (cohort-level results), 
+#' @param level Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results), 
 #' "sunlitleaf" or "shadeleaf" (leaf-level results)
 #' @param output Section of the model output to be explored. See details.
 #' @param vars Variables to be extracted (by default, all of them).
@@ -144,6 +144,7 @@
 #' Function \code{extract()} returns a data frame:
 #' \itemize{
 #'   \item{If \code{level = "forest"}, columns are "date" and variable names.}
+#'   \item{If \code{level = "soillayer"}, columns are "date", "soillayer" and variable names.} 
 #'   \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
 #'   \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
 #' }
@@ -175,6 +176,9 @@
 #' 
 #' #Extracts daily forest-level output as a data frame
 #' extract(S1, level = "forest")
+#'
+#' #Extracts daily soil layer-level output as a data frame
+#' extract(S1, level = "soillayer")
 #' 
 #' #Extracts daily cohort-level output as a data frame
 #' extract(S1, level = "cohort")
@@ -185,18 +189,19 @@
 #' @seealso \code{\link{summary.spwb}}
 #' @export
 extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE)  {
-  level <- match.arg(level, c("forest", "cohort", "sunlitleaf", "shadeleaf"))
+  level <- match.arg(level, c("forest", "soillayer","cohort", "sunlitleaf", "shadeleaf"))
   
   if(inherits(x, "spwb") || inherits(x, "pwb")) {
     cohorts <- x$spwbInput$cohorts
   } else if(inherits(x, "growth")) {
     cohorts <- x$growthInput$cohorts
   }
+  layers <- 1:length(x$spwbInput$soil$dVec)
   cohnames <- row.names(cohorts)
   spnames <- cohorts$Name
   
   if(subdaily) {
-    if(level=="forest") stop("Subdaily results are for levels 'cohort', 'sunlitleaf' and 'shadeleaf' only.")
+    if(level %in% c("forest", "soillayer")) stop("Subdaily results are for levels 'cohort', 'sunlitleaf' and 'shadeleaf' only.")
     if(level=="cohort") {
       cohort_types = c("E","Ag","An","dEdP","RootPsi",
                    "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
@@ -251,13 +256,33 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
     for(n in output) {
       if(n %in% names(x)) {
         M <- x[[n]]
-        M <- M[rownames(M) %in% dates, , drop = FALSE]
+        varnames <- names(M)
+        if(n == "Soil") {
+          varnames <- varnames[!(varnames %in% paste0("SWC.",layers))]
+          varnames <- varnames[!(varnames %in% paste0("RWC.",layers))]
+          varnames <- varnames[!(varnames %in% paste0("REW.",layers))]
+          varnames <- varnames[!(varnames %in% paste0("ML.",layers))]
+          varnames <- varnames[!(varnames %in% paste0("Psi.",layers))]
+          varnames <- varnames[!(varnames %in% paste0("PlantExt.",layers))]
+          varnames <- varnames[!(varnames %in% paste0("HydraulicInput.",layers))]
+        }
+        M <- M[rownames(M) %in% dates, varnames, drop = FALSE]
         if(!is.null(vars)) M <- M[,colnames(M) %in% vars, drop = FALSE]
         if(ncol(M)>0) {
           row.names(M) <- NULL
           out <- cbind(out, M)
         }
       }
+    }
+  } else if (level =="soillayer") {
+    out <- data.frame(date = rep(dates, length(layers)),
+                      soillayer = as.character(gl(length(layers), length(dates), labels = layers)))
+    P = x[["Soil"]]    
+    if(is.null(vars)) vars <- c("SWC","RWC", "REW", "ML","Psi", "PlantExt", "HydraulicInput")
+    for(v in vars) {
+      M <- P[,paste0(v, ".", layers), drop = FALSE]
+      M <- M[rownames(M) %in% dates, , drop = FALSE]
+      out[[v]] <- as.vector(as.matrix(M))
     }
   } else if (level =="cohort") {
     plant_level_names <-c("Plants", "LabileCarbonBalance","PlantBiomassBalance", 

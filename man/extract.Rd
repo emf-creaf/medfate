@@ -16,7 +16,7 @@ extract(
 \arguments{
 \item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
 
-\item{level}{Level of simulation output, either "forest" (stand-level results), "cohort" (cohort-level results), 
+\item{level}{Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results), 
 "sunlitleaf" or "shadeleaf" (leaf-level results)}
 
 \item{output}{Section of the model output to be explored. See details.}
@@ -31,6 +31,7 @@ extract(
 Function \code{extract()} returns a data frame:
 \itemize{
   \item{If \code{level = "forest"}, columns are "date" and variable names.}
+  \item{If \code{level = "soillayer"}, columns are "date", "soillayer" and variable names.} 
   \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
   \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
 }
@@ -75,6 +76,9 @@ S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
 
 #Extracts daily forest-level output as a data frame
 extract(S1, level = "forest")
+
+#Extracts daily soil layer-level output as a data frame
+extract(S1, level = "soillayer")
 
 #Extracts daily cohort-level output as a data frame
 extract(S1, level = "cohort")

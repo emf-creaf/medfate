@@ -53,6 +53,9 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_type(droughtStress(S1, index = "ADS", draw=FALSE), "double")
   expect_type(waterUseEfficiency(S1, type = "Plant Ag/E", draw=FALSE), "double")
   expect_type(waterUseEfficiency(S1, type = "Stand Ag/E", draw=FALSE), "double")
+  expect_s3_class(extract(S1, level = "forest"), "data.frame")
+  expect_s3_class(extract(S1, level = "soillayer"), "data.frame")
+  expect_s3_class(extract(S1, level = "cohort"), "data.frame")
 })
 
 test_that("Can produce all advanced spwb plots and summaries",{
@@ -128,6 +131,8 @@ test_that("Can produce all advanced spwb plots and summaries",{
     expect_type(waterUseEfficiency(S2, "Plant An/E", draw=FALSE), "double")
     expect_type(waterUseEfficiency(S2, "Stand An/E", draw=FALSE), "double")
     expect_type(resistances(S2, cohort = coh_1, draw=FALSE), "double")
+    expect_s3_class(extract(S2, level = "shadeleaf"), "data.frame")
+    expect_s3_class(extract(S2, level = "sunlitleaf"), "data.frame")
   }
 })
 
