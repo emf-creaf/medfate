@@ -1037,10 +1037,11 @@ void innerSureau(List x, List input, List output, int n, double tstep,
             ElayersVEC[l] += fluxSoilToStem_mmolm2s;
             fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*f_dry*dt);
           }
-          EinstVEC[c] += ((double) network["Einst"]);
-          ElimVEC[c] += ((double) network["Elim"]);
-          Emin_LVEC[c] += ((double) network["Emin_L"]);
-          Emin_SVEC[c] += ((double) network["Emin_S"]);
+          //MIQUEL (27/04/2024): Changed network to network_n
+          EinstVEC[c] += ((double) network_n["Einst"]);
+          ElimVEC[c] += ((double) network_n["Elim"]);
+          Emin_LVEC[c] += ((double) network_n["Emin_L"]);
+          Emin_SVEC[c] += ((double) network_n["Emin_S"]);
           
         } //# end loop small time step
         //Divide average fluxes by time steps
