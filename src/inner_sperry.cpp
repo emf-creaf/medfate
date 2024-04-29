@@ -639,7 +639,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
         
         //Average flow from sunlit and shade leaves
-        double Eaverage = (fittedE[iPMSunlit[c]]*LAI_SL(c,n) + fittedE[iPMShade[c]]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
+        double Eaverage = (E_SL(c,n)*LAI_SL(c,n) + E_SH(c,n)*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
         
         
         //Find iPM for  flow corresponding to the  average flow
@@ -661,12 +661,12 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         dEdPInst(c,n) = dEdP[iPM];
         
         //Store instantaneous flow and leaf water potential
-        EinstVEC[c] = fittedE[iPM];
+        EinstVEC[c] = fittedE[iPM]*f_dry;
         LeafPsiVEC[c] = LeafPsi[iPM];
         RootCrownPsiVEC[c] = psiRootCrown[iPM]; 
         
         //Scale from instantaneous flow to water volume in the time step
-        Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep*f_dry; 
+        Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep; 
         
         NumericVector Esoilcn(nlayerscon[c],0.0);
         NumericVector ElayersVEC(nlayerscon[c],0.0);
@@ -712,7 +712,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         
         //Scale soil water extracted from leaf to cohort level
         for(int lc=0;lc<nlayerscon[c];lc++) {
-          Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]*f_dry; //Scale from flow to water volume in the time step
+          Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]; //Scale from flow to water volume in the time step
         }
         
         //Balance between extraction and transpiration

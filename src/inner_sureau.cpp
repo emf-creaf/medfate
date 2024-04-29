@@ -947,14 +947,14 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           //# Leaf cuticular conductances and cuticular transpiration
           double gmin_SL = gmin(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
           double gmin_SH = gmin(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-          double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm);
-          double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm);
+          double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm)*f_dry; //Add f_dry to decrease transpiration in rainy days
+          double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm)*f_dry;
           double Emin_L = ((Emin_L_SL*LAI_SL(c,n)) + (Emin_L_SH*LAI_SH(c,n)))/LAI; 
           network_n["Emin_L"] = Emin_L;
           
           //Compute stem cuticular transpiration
           double Emin_S = fTRBToLeaf * Emin(gmin_S, gBL, gCR, VPD_air, Patm);
-          network_n["Emin_S"] =  Emin_S;
+          network_n["Emin_S"] =  Emin_S*f_dry; //Add f_dry to decrease transpiration in rainy days
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
           
           // Current stomatal regulation
@@ -1001,8 +1001,8 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           // Stomatal transpiration
           Gwdiff_SL = 1.0/(1.0/gCR + 1.0/gs_SL + 1.0/gBL); 
           Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
-          Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm;
-          Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm;
+          Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm*f_dry; //Add f_dry to decrease transpiration in rainy days
+          Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm*f_dry;
           
           network_n["Elim_SL"] = Elim_SL;
           network_n["Elim_SH"] = Elim_SH;
@@ -1035,7 +1035,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           for(int l=0;l < kSoil.size();l++) {
             double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoil[l] - Psi_SApo);
             ElayersVEC[l] += fluxSoilToStem_mmolm2s;
-            fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*f_dry*dt);
+            fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*dt);
           }
           //MIQUEL (27/04/2024): Changed network to network_n
           EinstVEC[c] += ((double) network_n["Einst"]);
@@ -1111,7 +1111,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
       
       //Scale from instantaneous flow to water volume in the time step
-      Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*f_dry*tstep;
+      Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
       
       
       //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
