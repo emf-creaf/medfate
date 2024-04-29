@@ -38,6 +38,7 @@ photo_photosynthesisBaldocchi(
   Vmax298,
   Jmax298,
   leafWidth,
+  Gcrown0,
   Gsw_AC_slope,
   Gsw_AC_intercept
 )
@@ -55,6 +56,7 @@ photo_leafPhotosynthesisFunction(
   Vmax298,
   Jmax298,
   leafWidth = 1,
+  Gcrown0 = 0.15,
   refLeafArea = 1,
   verbose = FALSE
 )
@@ -73,6 +75,7 @@ photo_leafPhotosynthesisFunction2(
   Vmax298,
   Jmax298,
   leafWidth = 1,
+  Gcrown0 = 0.15,
   refLeafArea = 1,
   verbose = FALSE
 )
@@ -149,6 +152,8 @@ photo_multilayerPhotosynthesisFunction(
 \item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
 
 \item{leafWidth}{Leaf width (in cm).}
+
+\item{Gcrown0}{Reference value for the canopy conductance (mol·s-1·m-2)}
 
 \item{Gsw_AC_slope}{Slope of the An/C vs Gsw relationship}
 

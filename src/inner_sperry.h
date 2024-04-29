@@ -14,7 +14,7 @@ List initSperryNetwork(int c,
 List profitMaximization2(List supplyFunction, int initialPos,
                          double Catm, double Patm, double Tair, double vpa, double u, 
                          double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                         double leafWidth, double refLeafArea,
+                         double leafWidth, double gCrown0, double refLeafArea,
                          double Gswmin, double Gswmax);
 
 void innerSperry(List x, List input, List output, int n, double tstep, 

@@ -14,6 +14,7 @@ NumericVector photosynthesisBaldocchi(double Q,
                                       double Vmax298, 
                                       double Jmax298, 
                                       double leafWidth,
+                                      double Gcrown0,
                                       double Gsw_AC_slope,
                                       double Gsw_AC_intercept);
 
@@ -22,15 +23,15 @@ double JmaxTemp(double Jmax298, double Tleaf);
 
 DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                      double absRad, double Q, double Vmax298, double Jmax298, 
-                                     double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
+                                     double leafWidth = 1.0, double Gcrown0 = 0.150, double refLeafArea = 1.0, bool verbose = false);
 
 NumericVector leafPhotosynthesisOneFunction2(double E, double psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                              double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                                             double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
+                                             double leafWidth = 1.0, double Gcrown0 = 0.150, double refLeafArea = 1.0, bool verbose = false);
 
 DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                      double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                                     double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
+                                     double leafWidth = 1.0, double Gcrown0 = 0.150, double refLeafArea = 1.0, bool verbose = false);
 
 DataFrame sunshadePhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, 
                                     double SLarea, double SHarea,

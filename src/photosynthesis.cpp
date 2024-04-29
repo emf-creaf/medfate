@@ -49,6 +49,7 @@ const double lightResponseCurvature = 0.9;
 //' @param SWRabs Absorbed short-wave radiation (in W·m-2).
 //' @param LWRnet Net long-wave radiation balance (in W·m-2).
 //' @param leafWidth Leaf width (in cm).
+//' @param Gcrown0 Reference value for the canopy conductance (mol·s-1·m-2)
 //' @param refLeafArea Leaf reference area.
 //' @param verbose Boolean flag to indicate console output.
 //' @param SLarea,SHarea Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).
@@ -304,6 +305,7 @@ double third_cubic_root(double p, double q, double r) {
 //' @rdname photo
 //' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
 //' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+//' @param Gcrown0 Reference value for the canopy conductance (mol·s-1·m-2)
 // [[Rcpp::export("photo_photosynthesisBaldocchi")]]
 NumericVector photosynthesisBaldocchi(double Q, 
                                       double Catm, 
@@ -312,16 +314,19 @@ NumericVector photosynthesisBaldocchi(double Q,
                                       double Vmax298, 
                                       double Jmax298, 
                                       double leafWidth,
+                                      double Gcrown0,
                                       double Gsw_AC_slope,
                                       double Gsw_AC_intercept) {
   double Vmax = VmaxTemp(Vmax298, Tleaf);
   double Jmax = JmaxTemp(Jmax298, Tleaf);
   //Dark respiration
   double Rd = 0.015*Vmax;
-  //Boundary layer conductance (UNITS in mol water per s-1 m-2!!!)
-  double Gbw = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol boundary layer conductance
-  double Gbc = Gbw/1.6;
-    
+  //Boundary layer and canopy conductance (UNITS in mol water per s-1 m-2!!!)
+  double Gbound = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol boundary layer conductance
+  double Gcrown = Gcrown0*pow(u,0.6); // mol canopy conductance
+  double Gbcw = 1.0/((1.0/Gbound) + (1.0/Gcrown));
+  double Gbcc = Gbcw/1.6;
+  
   //Translate stomatal model to carbon units
   double b_prime = Gsw_AC_intercept/1.6;
   double mrh = Gsw_AC_slope/1.6;
@@ -343,10 +348,10 @@ NumericVector photosynthesisBaldocchi(double Q,
   double e_j = 4.0;
 
   //Solving for An when Rubisco limits (c) and when electron transport limits (j)
-  double alpha = 1.0 + (b_prime/Gbc) - mrh;
-  double beta = Catm*(Gbc*mrh - 2.0*b_prime - Gbc);
-  double gamma = pow(Catm, 2.0)*b_prime*Gbc;
-  double theta = Gbc*mrh - b_prime;
+  double alpha = 1.0 + (b_prime/Gbcc) - mrh;
+  double beta = Catm*(Gbcc*mrh - 2.0*b_prime - Gbcc);
+  double gamma = pow(Catm, 2.0)*b_prime*Gbcc;
+  double theta = Gbcc*mrh - b_prime;
   double p_c = (e_c*beta + b_c*theta - a_c*alpha + e_c*alpha*Rd)/(e_c*alpha);
   double p_j = (e_j*beta + b_j*theta - a_j*alpha + e_j*alpha*Rd)/(e_j*alpha);
   double q_c = ((e_c*gamma) + (b_c*gamma/Catm) - (a_c*beta) + (a_c*d_c*theta) + (e_c*Rd*beta) + (Rd*b_c*theta))/(e_c*alpha);
@@ -358,7 +363,7 @@ NumericVector photosynthesisBaldocchi(double Q,
   //Take the minimum as An
   double An = std::min(An_c, An_j);
   //Stomatal CO2
-  double Cs = Catm - (An/Gbc);
+  double Cs = Catm - (An/Gbcc);
   //Stomatal conductance (for carbon)
   double Gsc = (mrh*An/Cs) + b_prime;
   //Stomatal conductance (for water)
@@ -376,21 +381,22 @@ NumericVector photosynthesisBaldocchi(double Q,
 // [[Rcpp::export("photo_leafPhotosynthesisFunction")]]
 DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                              double absRad, double Q, double Vmax298, double Jmax298, 
-                             double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false) {
+                             double leafWidth = 1.0, double Gcrown0 = 0.150, double refLeafArea = 1.0, bool verbose = false) {
   int nsteps = E.size();
   NumericVector leafTemp(nsteps);
   NumericVector leafVPD(nsteps);
   NumericVector Gsw(nsteps), Ci(nsteps);
   NumericVector Ag(nsteps), An(nsteps);
-  double Gwdiff, Gbw;
+  double Gwdiff, Gbw, Gcrown;
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, E[i], leafWidth);
     leafVPD[i] = std::max(0.0,leafVapourPressure(leafTemp[i], psiLeaf[i]) - vpa);
     // Separates diffusive conductance into stomatal and boundary layer conductance
     Gwdiff = Patm*(E[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
     Gbw = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol boundary layer conductance
-    Gwdiff = std::min(Gwdiff, Gbw); //Diffusive conductance cannot be lower than boundary layer conductance
-    Gsw[i]  = std::abs(1.0/((1.0/Gwdiff) - (1.0/Gbw))); //Determine stomatal conductance after accounting for leaf boundary conductance
+    Gcrown = Gcrown0*pow(u,0.6); // mol canopy conductance
+    Gwdiff = std::min(Gwdiff, 1.0/((1.0/Gbw) + (1.0/Gcrown))); //Diffusive resistance cannot be smaller than the sum of boundary layer and canopy resistances
+    Gsw[i]  = std::abs(1.0/((1.0/Gwdiff) - (1.0/Gbw) - (1.0/Gcrown))); //Determine stomatal conductance after accounting for leaf boundary conductance
     NumericVector LP = leafphotosynthesis(Q/refLeafArea, Catm, Gwdiff/1.6, std::max(0.0,leafTemp[i]), Vmax298/refLeafArea, Jmax298/refLeafArea);
     Ci[i] = LP[0];
     Ag[i] = LP[1];
@@ -407,17 +413,18 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, dou
 
 NumericVector leafPhotosynthesisOneFunction2(double E, double psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                              double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                                             double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false) {
+                                             double leafWidth = 1.0, double Gcrown0 = 0.150, double refLeafArea = 1.0, bool verbose = false) {
   double leafTemp, leafVPD, Gsw, Ci;
   double Ag, An;
-  double Gwdiff, Gbw;
+  double Gwdiff, Gbw, Gcrown;
   leafTemp = leafTemperature2(SWRabs/refLeafArea, LWRnet/refLeafArea, Tair, u, E, leafWidth);
   leafVPD = std::max(0.0,leafVapourPressure(leafTemp, psiLeaf) - vpa);
   // Separates diffusive conductance into stomatal and boundary layer conductance
   Gwdiff = Patm*(E/1000.0)/leafVPD; //Transform flow from mmol to mol
   Gbw = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol boundary layer conductance
-  Gwdiff = std::min(Gwdiff, Gbw); //Diffusive conductance cannot be lower than boundary layer conductance
-  Gsw  = std::abs(1.0/((1.0/Gwdiff) - (1.0/Gbw))); //Determine stomatal conductance after accounting for leaf boundary conductance
+  Gcrown = Gcrown0*pow(u,0.6); // mol canopy conductance
+  Gwdiff = std::min(Gwdiff, 1.0/((1.0/Gbw) + (1.0/Gcrown))); //Diffusive conductance cannot be smaller than the sum of boundary layer and canopy resistances
+  Gsw  = std::abs(1.0/((1.0/Gwdiff) - (1.0/Gbw) - (1.0/Gcrown))); //Determine stomatal conductance after accounting for leaf boundary conductance
   NumericVector LP = leafphotosynthesis(Q/refLeafArea, Catm, Gwdiff/1.6, std::max(0.0,leafTemp), Vmax298/refLeafArea, Jmax298/refLeafArea);
   Ci = LP[0];
   Ag = LP[1];
@@ -435,7 +442,7 @@ NumericVector leafPhotosynthesisOneFunction2(double E, double psiLeaf, double Ca
 // [[Rcpp::export("photo_leafPhotosynthesisFunction2")]]
 DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                      double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                                     double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false) {
+                                     double leafWidth = 1.0, double Gcrown0 = 0.150, double refLeafArea = 1.0, bool verbose = false) {
   int nsteps = E.size();
   NumericVector leafTemp(nsteps);
   NumericVector leafVPD(nsteps);
@@ -444,7 +451,7 @@ DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, do
   for(int i=0;i<nsteps;i++){
     NumericVector lpf = leafPhotosynthesisOneFunction2(E[i], psiLeaf[i], Catm, Patm, Tair, vpa, u,
                                                        SWRabs, LWRnet, Q, Vmax298, Jmax298,
-                                                       leafWidth, refLeafArea, verbose);
+                                                       leafWidth, Gcrown0, refLeafArea, verbose);
     leafTemp[i] = lpf["LeafTemperature"];
     leafVPD[i] = lpf["LeafVPD"];
     Gsw[i] = lpf["Gsw"];

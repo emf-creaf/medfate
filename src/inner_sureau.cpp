@@ -263,7 +263,9 @@ List initSureauNetwork(int c, NumericVector LAIphe,
     NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
     params.push_back(Gsw_AC_slope[c], "Gsw_AC_slope");
   }
-  params.push_back(((double)control["gCrown0"])*1000.0, "gCrown0"); //from mol to mmol
+  double gCrown0 = ((double)control["gCrown0"]);
+  if(control["multiLayerBalance"]) gCrown0 = 99999.9; //set to infinite canopy conductance when CO2 concentration is different in layers
+  params.push_back(gCrown0*1000.0, "gCrown0"); //from mol to mmol
   params.push_back(control["fTRBToLeaf"], "fTRBToLeaf"); //ratio of bark area to leaf area
   params.push_back(control["C_SApoInit"], "C_SApoInit"); //Maximum capacitance of the stem apoplasm
   params.push_back(control["C_LApoInit"], "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
@@ -850,6 +852,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
   NumericVector zWind = input["zWind"];
   double Patm = input["Patm"];
   double f_dry = input["f_dry"];
+  
   IntegerVector iLayerCohort = input["iLayerCohort"];
   IntegerVector iLayerSunlit = input["iLayerSunlit"];
   IntegerVector iLayerShade = input["iLayerShade"];
@@ -886,7 +889,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       NumericVector fluxSoilToStem_mm(kSoil.size(), 0.0); //Cummulative flow
       List network_n;
       
-      double Gwdiff_SL, Gwdiff_SH;
+      double Agsum, Ansum;
       while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
         network_n = clone(network); // # initial value of WBveg
         //   List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
@@ -897,6 +900,8 @@ void innerSureau(List x, List input, List output, int n, double tstep,
         double deltaPLCMax = 1.0e-100;
         
         //Reset output fluxes to zero
+        Agsum = 0.0;
+        Ansum = 0.0;
         EinstVEC[c] = 0.0;
         ElimVEC[c] = 0.0;
         Emin_LVEC[c] = 0.0;
@@ -977,9 +982,10 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                                           Vmax298_SL(c,n)/LAI_SL(c,n), 
                                                           Jmax298_SL(c,n)/LAI_SL(c,n), 
                                                           LeafWidth[c],
+                                                          gCrown0/1000.0,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
-            gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol
+            gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol 
             gs_SL = std::max(gsNight, gs_SL)*RF;
             NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
                                                           Cair[iLayerSunlit[c]], 
@@ -988,6 +994,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                                           Vmax298_SH(c,n)/LAI_SH(c,n), 
                                                           Jmax298_SH(c,n)/LAI_SH(c,n), 
                                                           LeafWidth[c],
+                                                          gCrown0/1000.0,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol
@@ -999,10 +1006,30 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           GSW_SL(c,n) = gs_SL/1000.0; // From mmol to mol
           GSW_SH(c,n) = gs_SH/1000.0; // From mmol to mol
           // Stomatal transpiration
-          Gwdiff_SL = 1.0/(1.0/gCR + 1.0/gs_SL + 1.0/gBL); 
-          Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
-          Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm*f_dry; //Add f_dry to decrease transpiration in rainy days
-          Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm*f_dry;
+          double Gwdiff_SL = 1.0/(1.0/gCR + 1.0/gs_SL + 1.0/gBL); 
+          double Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
+          Elim_SL = Gwdiff_SL * (VPD_SL(c,n)/Patm)*f_dry; //Add f_dry to decrease transpiration in rainy days
+          Elim_SH = Gwdiff_SH * (VPD_SH(c,n)/Patm)*f_dry;
+          
+          //Photosynthesis
+          NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
+                                                   Cair[iLayerSunlit[c]], Gwdiff_SL/(1000.0*1.6), //From mmol to mol 
+                                                   std::max(0.0,Temp_SL(c,n)), 
+                                                   Vmax298_SL(c,n)/LAI_SL(c,n), Jmax298_SL(c,n)/LAI_SL(c,n));
+          NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
+                                                   Cair[iLayerShade[c]], Gwdiff_SH/(1000.0*1.6), //From mmol to mol
+                                                   std::max(0.0,Temp_SH(c,n)), 
+                                                   Vmax298_SH(c,n)/LAI_SH(c,n), Jmax298_SH(c,n)/LAI_SH(c,n));
+          if(!sunlitShade) LP_SH = LP_SL;
+          Ci_SL(c,n) = LP_SL[0];
+          Ci_SH(c,n) = LP_SH[0];
+          Ag_SL(c,n) = LP_SL[1];
+          Ag_SH(c,n) = LP_SH[1];
+          An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298_SL(c,n)/LAI_SL(c,n), Temp_SL(c,n));
+          An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298_SH(c,n)/LAI_SH(c,n), Temp_SH(c,n));
+          
+          Agsum += Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n);
+          Ansum += An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n);
           
           network_n["Elim_SL"] = Elim_SL;
           network_n["Elim_SH"] = Elim_SH;
@@ -1050,6 +1077,8 @@ void innerSureau(List x, List input, List output, int n, double tstep,
         ElimVEC[c] = ElimVEC[c]/((double) nts);
         Emin_LVEC[c] = Emin_LVEC[c]/((double) nts);
         Emin_SVEC[c] = Emin_SVEC[c]/((double) nts);
+        Agsum = Agsum/((double) nts);
+        Ansum = Ansum/((double) nts);
         
         // # TESTS ON RESOLUTION
         network_n["Diag_deltaRegulMax"] = deltaRegulMax;
@@ -1072,26 +1101,8 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       Psi_SL(c,n) = network["Psi_LSym"];
       dEdPInst(c,n) = network["k_Plant"];
       
-      //Sunlit/shade photosynthesis
-      Gwdiff_SL = Patm*(((double) network_n["Einst_SL"])/1000.0)/VPD_SL(c,n); //From mmol to mol
-      Gwdiff_SH = Patm*(((double) network_n["Einst_SH"])/1000.0)/VPD_SH(c,n); //From mmol to mol
-      NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
-                                               Cair[iLayerSunlit[c]], Gwdiff_SL/1.6, 
-                                               std::max(0.0,Temp_SL(c,n)), 
-                                               Vmax298_SL(c,n)/LAI_SL(c,n), Jmax298_SL(c,n)/LAI_SL(c,n));
-      NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
-                                               Cair[iLayerShade[c]], Gwdiff_SH/1.6, 
-                                               std::max(0.0,Temp_SH(c,n)), 
-                                               Vmax298_SH(c,n)/LAI_SH(c,n), Jmax298_SH(c,n)/LAI_SH(c,n));
-      if(!sunlitShade) LP_SH = LP_SL;
-      
-      Ci_SL(c,n) = LP_SL[0];
-      Ci_SH(c,n) = LP_SH[0];
-      Ag_SL(c,n) = LP_SL[1];
-      Ag_SH(c,n) = LP_SH[1];
-      An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298_SL(c,n)/LAI_SL(c,n), Temp_SL(c,n));
-      An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298_SH(c,n)/LAI_SH(c,n), Temp_SH(c,n));
-      
+
+
       //Store state
       LeafPsiVEC[c] = network["Psi_LApo"];
       LeafSympPsiVEC[c] = network["Psi_LSym"];
@@ -1105,8 +1116,6 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       //Get leaf status
       
       //Scale photosynthesis
-      double Agsum = Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n);
-      double Ansum = An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n);
       Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
       Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
       

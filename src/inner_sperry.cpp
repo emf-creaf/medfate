@@ -82,7 +82,7 @@ List initSperryNetworks(List x) {
 List profitMaximization2(List supplyFunction, int initialPos,
                          double Catm, double Patm, double Tair, double vpa, double u, 
                          double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                         double leafWidth, double refLeafArea,
+                         double leafWidth, double gCrown0, double refLeafArea,
                          double Gswmin, double Gswmax) {
   
   NumericVector E = supplyFunction["E"];
@@ -106,7 +106,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
   //Evaluate photosynthesis and profit at Agmax
   NumericVector photoAgMax = leafPhotosynthesisOneFunction2(E[nsteps-1], leafPsi[nsteps - 1], Catm, Patm, Tair, vpa, u, 
                                                             SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                            leafWidth, refLeafArea, false);
+                                                            leafWidth, gCrown0, refLeafArea, false);
   double Agmax = photoAgMax["GrossPhotosynthesis"];
   double profitAgMax = (1.0 - ((maxdEdp - dEdP[nsteps-1])/(maxdEdp - mindEdp))); 
   
@@ -114,7 +114,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
   //Photosynthesis and profit maximization at current value of initialPos
   NumericVector photoInitial = leafPhotosynthesisOneFunction2(E[initialPos], leafPsi[initialPos], Catm, Patm, Tair, vpa, u, 
                                                               SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                              leafWidth, refLeafArea, false);
+                                                              leafWidth, gCrown0, refLeafArea, false);
   double AgInitial = photoInitial["GrossPhotosynthesis"];
   double profitInitial = (AgInitial/Agmax) - ((maxdEdp - dEdP[initialPos])/(maxdEdp - mindEdp)); 
   if(Agmax ==0.0) profitInitial = - ((maxdEdp - dEdP[initialPos])/(maxdEdp - mindEdp)); //To avoid 0/0 division
@@ -134,7 +134,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
     if((iPos>0) && (prevStep <= 0)) {
       photoPrev = leafPhotosynthesisOneFunction2(E[iPos-1], leafPsi[iPos-1], Catm, Patm, Tair, vpa, u, 
                                                  SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                 leafWidth, refLeafArea, false);
+                                                 leafWidth, gCrown0, refLeafArea, false);
       double AgPrev = photoPrev["GrossPhotosynthesis"];
       profitPrev = (AgPrev/Agmax) - ((maxdEdp - dEdP[iPos-1])/(maxdEdp - mindEdp)); 
       if(Agmax ==0.0) profitPrev = - ((maxdEdp - dEdP[iPos-1])/(maxdEdp - mindEdp)); 
@@ -145,7 +145,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
     if((iPos < (nsteps-1)) && (prevStep >= 0)) {
       photoNext = leafPhotosynthesisOneFunction2(E[iPos+1], leafPsi[iPos+1], Catm, Patm, Tair, vpa, u, 
                                                  SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                 leafWidth, refLeafArea, false);
+                                                 leafWidth, gCrown0, refLeafArea, false);
       double AgNext = photoNext["GrossPhotosynthesis"];
       profitNext = (AgNext/Agmax) - ((maxdEdp - dEdP[iPos+1])/(maxdEdp - mindEdp)); 
       if(Agmax ==0.0) profitNext = - ((maxdEdp - dEdP[iPos+1])/(maxdEdp - mindEdp)); 
@@ -357,7 +357,9 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool sunlitShade = control["sunlitShade"];
-
+  double gCrown0 = control["gCrown0"];
+  if(control["multiLayerBalance"]) gCrown0 = 99999.9; //set to infinite canopy conductance when CO2 concentration is different in layers
+  
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
 
@@ -572,7 +574,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                             Cair[iLayerSunlit[c]], Patm,
                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                             SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux(PAR_SL(c,n)), 
-                                            Vmax298_SL(c,n), Jmax298_SL(c,n), leafWidth[c], LAI_SL(c,n),
+                                            Vmax298_SL(c,n), Jmax298_SL(c,n), leafWidth[c], gCrown0, LAI_SL(c,n),
                                             gmin_SL, Gswmax[c]);
         NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
         iPMSunlit[c] = PMSunlit["iMaxProfit"];
@@ -580,7 +582,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                            Cair[iLayerShade[c]], Patm,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                            SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
-                                           Vmax298_SH(c,n), Jmax298_SH(c,n), leafWidth[c], LAI_SH(c,n),
+                                           Vmax298_SH(c,n), Jmax298_SH(c,n), leafWidth[c], gCrown0, LAI_SH(c,n),
                                            gmin_SH, Gswmax[c]);    
         if(!sunlitShade) PMShade = PMSunlit;
         NumericVector photoShade = PMShade["photosynthesisFunction"];
@@ -597,14 +599,14 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                                             SWR_SL(c,n), LWR_SL(c,n), 
                                                             irradianceToPhotonFlux(PAR_SL(c,n)), 
                                                             Vmax298_SL(c,n), Jmax298_SL(c,n), 
-                                                            leafWidth[c], LAI_SL(c,n));
+                                                            leafWidth[c], gCrown0, LAI_SL(c,n));
             outPhotoShade[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerShade[c]], Patm,
                                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
                                                            zWind[iLayerShade[c]], 
                                                            SWR_SH(c,n), LWR_SH(c,n), 
                                                            irradianceToPhotonFlux(PAR_SH(c,n)),
                                                            Vmax298_SH(c,n), Jmax298_SH(c,n), 
-                                                           leafWidth[c], LAI_SH(c,n));
+                                                           leafWidth[c], gCrown0, LAI_SH(c,n));
             outPMSunlit[c] = PMSunlit;
             outPMShade[c] = PMShade;
             if(!sunlitShade) {
