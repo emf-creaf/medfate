@@ -29,10 +29,7 @@ double RWC(double PiFT, double Esymp, double Pmin) {
   double A = std::max((-1.0 * (Pmin + PiFT - Esymp) - sqrt(pow(Pmin + PiFT - Esymp, 2.0) + 4.0 * (Pmin * Esymp))) / (2.0 * Esymp), 1.0 - PiFT / Pmin);
   return(A);
 }
-double gCrown(double gCrown0, double windSpeed){
-  windSpeed=  std::max(0.1, windSpeed); //# to avoid very high conductance values 
-  return(gCrown0*pow(windSpeed,0.6));
-}
+
 double Emin(double gmin, double gBL, double gCrown, 
             double VPD, double airPressure =101.3) {
   double gmintot = 1.0/(1.0/gmin+ 1.0/gBL + 1.0/gCrown);
@@ -263,9 +260,6 @@ List initSureauNetwork(int c, NumericVector LAIphe,
     NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
     params.push_back(Gsw_AC_slope[c], "Gsw_AC_slope");
   }
-  double gCrown0 = ((double)control["gCrown0"]);
-  if(control["multiLayerBalance"]) gCrown0 = 99999.9; //set to infinite canopy conductance when CO2 concentration is different in layers
-  params.push_back(gCrown0*1000.0, "gCrown0"); //from mol to mmol
   params.push_back(control["fTRBToLeaf"], "fTRBToLeaf"); //ratio of bark area to leaf area
   params.push_back(control["C_SApoInit"], "C_SApoInit"); //Maximum capacitance of the stem apoplasm
   params.push_back(control["C_LApoInit"], "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
@@ -871,7 +865,6 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       
       List params = network["params"];
       double gmin_S = params["gmin_S"];
-      double gCrown0 = params["gCrown0"];
       double gmin20 = params["gmin20"];
       double TPhase_gmin = params["TPhase_gmin"];
       double Q10_1_gmin = params["Q10_1_gmin"];
@@ -945,9 +938,10 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
           
           //gCR = g Crown
-          double gCR = gCrown(gCrown0, zWind[iLayerCohort[c]]);
+          double gCR = 1000.0*gCrown(zWind[iLayerCohort[c]]); 
+          //Assumes well coupled canopy (for compatibility with Sperry and leaf temperature balance)
           //gBL = g Boundary Layer
-          double gBL = 397.0*pow(zWind[iLayerCohort[c]]/(LeafWidth[c]*0.0072), 0.5); // mmol boundary layer conductance
+          double gBL = 1000.0*gLeafBoundary(zWind[iLayerCohort[c]], LeafWidth[c]); // mmol boundary layer conductance
           
           //# Leaf cuticular conductances and cuticular transpiration
           double gmin_SL = gmin(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
@@ -982,7 +976,6 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                                           Vmax298_SL(c,n)/LAI_SL(c,n), 
                                                           Jmax298_SL(c,n)/LAI_SL(c,n), 
                                                           LeafWidth[c],
-                                                          gCrown0/1000.0,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol 
@@ -994,7 +987,6 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                                           Vmax298_SH(c,n)/LAI_SH(c,n), 
                                                           Jmax298_SH(c,n)/LAI_SH(c,n), 
                                                           LeafWidth[c],
-                                                          gCrown0/1000.0,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol

@@ -86,7 +86,6 @@
 #'       \item{\code{rootRadialConductance [= 4]}: Radial conductance in roots (mmol·s-1·m-2·MPa-1).}
 #'       \item{\code{averageFracRhizosphereResistance [= 0.15]}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
 #'       \item{\code{boundaryLayerSize [= 2000]}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
-#'       \item{\code{gCrown0 [= 0.150]}: Reference canopy conductance (mol·s-1·m-2).}
 #'     }
 #'   
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"} only):
@@ -235,8 +234,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     boundaryLayerSize = 2000,
     cavitationRecoveryMaximumRate = 0.05,
     sunlitShade = TRUE,
-    gCrown0 = 0.150,
-    
+
     #spwb with sperry
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     leafCavitationEffects = FALSE,

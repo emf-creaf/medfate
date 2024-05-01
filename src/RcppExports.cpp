@@ -3417,8 +3417,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // photosynthesisBaldocchi
-NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double leafWidth, double Gcrown0, double Gsw_AC_slope, double Gsw_AC_intercept);
-RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP Gcrown0SEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP) {
+NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double leafWidth, double Gsw_AC_slope, double Gsw_AC_intercept);
+RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3429,16 +3429,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
-    Rcpp::traits::input_parameter< double >::type Gcrown0(Gcrown0SEXP);
     Rcpp::traits::input_parameter< double >::type Gsw_AC_slope(Gsw_AC_slopeSEXP);
     Rcpp::traits::input_parameter< double >::type Gsw_AC_intercept(Gsw_AC_interceptSEXP);
-    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gcrown0, Gsw_AC_slope, Gsw_AC_intercept));
+    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept));
     return rcpp_result_gen;
 END_RCPP
 }
 // leafPhotosynthesisFunction
-DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double leafWidth, double Gcrown0, double refLeafArea, bool verbose);
-RcppExport SEXP _medfate_leafPhotosynthesisFunction(SEXP ESEXP, SEXP psiLeafSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP Gcrown0SEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
+DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double leafWidth, double refLeafArea, bool verbose);
+RcppExport SEXP _medfate_leafPhotosynthesisFunction(SEXP ESEXP, SEXP psiLeafSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3454,16 +3453,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
-    Rcpp::traits::input_parameter< double >::type Gcrown0(Gcrown0SEXP);
     Rcpp::traits::input_parameter< double >::type refLeafArea(refLeafAreaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, Gcrown0, refLeafArea, verbose));
+    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // leafPhotosynthesisFunction2
-DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, double leafWidth, double Gcrown0, double refLeafArea, bool verbose);
-RcppExport SEXP _medfate_leafPhotosynthesisFunction2(SEXP ESEXP, SEXP psiLeafSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP SWRabsSEXP, SEXP LWRnetSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP Gcrown0SEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
+DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, double leafWidth, double refLeafArea, bool verbose);
+RcppExport SEXP _medfate_leafPhotosynthesisFunction2(SEXP ESEXP, SEXP psiLeafSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP SWRabsSEXP, SEXP LWRnetSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3480,10 +3478,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
-    Rcpp::traits::input_parameter< double >::type Gcrown0(Gcrown0SEXP);
     Rcpp::traits::input_parameter< double >::type refLeafArea(refLeafAreaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction2(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, Gcrown0, refLeafArea, verbose));
+    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction2(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5893,9 +5890,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
     {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
     {"_medfate_leafphotosynthesis", (DL_FUNC) &_medfate_leafphotosynthesis, 7},
-    {"_medfate_photosynthesisBaldocchi", (DL_FUNC) &_medfate_photosynthesisBaldocchi, 10},
-    {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 15},
-    {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 16},
+    {"_medfate_photosynthesisBaldocchi", (DL_FUNC) &_medfate_photosynthesisBaldocchi, 9},
+    {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
+    {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 15},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},

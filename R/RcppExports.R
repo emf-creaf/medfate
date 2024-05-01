@@ -2661,19 +2661,18 @@ photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose =
 #' @rdname photo
 #' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
 #' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
-#' @param Gcrown0 Reference value for the canopy conductance (mol·s-1·m-2)
-photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gcrown0, Gsw_AC_slope, Gsw_AC_intercept) {
-    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gcrown0, Gsw_AC_slope, Gsw_AC_intercept)
+photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept) {
+    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept)
 }
 
 #' @rdname photo
-photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, Gcrown0 = 0.150, refLeafArea = 1.0, verbose = FALSE) {
-    .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, Gcrown0, refLeafArea, verbose)
+photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
+    .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
 #' @rdname photo
-photo_leafPhotosynthesisFunction2 <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth = 1.0, Gcrown0 = 0.150, refLeafArea = 1.0, verbose = FALSE) {
-    .Call(`_medfate_leafPhotosynthesisFunction2`, E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, Gcrown0, refLeafArea, verbose)
+photo_leafPhotosynthesisFunction2 <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
+    .Call(`_medfate_leafPhotosynthesisFunction2`, E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
 #' @rdname photo

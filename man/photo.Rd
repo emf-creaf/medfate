@@ -38,7 +38,6 @@ photo_photosynthesisBaldocchi(
   Vmax298,
   Jmax298,
   leafWidth,
-  Gcrown0,
   Gsw_AC_slope,
   Gsw_AC_intercept
 )
@@ -56,7 +55,6 @@ photo_leafPhotosynthesisFunction(
   Vmax298,
   Jmax298,
   leafWidth = 1,
-  Gcrown0 = 0.15,
   refLeafArea = 1,
   verbose = FALSE
 )
@@ -75,7 +73,6 @@ photo_leafPhotosynthesisFunction2(
   Vmax298,
   Jmax298,
   leafWidth = 1,
-  Gcrown0 = 0.15,
   refLeafArea = 1,
   verbose = FALSE
 )
@@ -153,8 +150,6 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{leafWidth}{Leaf width (in cm).}
 
-\item{Gcrown0}{Reference value for the canopy conductance (mol·s-1·m-2)}
-
 \item{Gsw_AC_slope}{Slope of the An/C vs Gsw relationship}
 
 \item{Gsw_AC_intercept}{Intercept of the An/C vs Gsw relationship}
@@ -182,6 +177,8 @@ photo_multilayerPhotosynthesisFunction(
 \item{absRadSL, absRadSH}{Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
 
 \item{QSL, QSH}{Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
+
+\item{Gcrown0}{Reference value for the canopy conductance (mol·s-1·m-2)}
 }
 \value{
 Values returned for each function are:
