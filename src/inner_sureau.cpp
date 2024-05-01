@@ -1004,12 +1004,14 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           Elim_SH = Gwdiff_SH * (VPD_SH(c,n)/Patm)*f_dry;
           
           //Photosynthesis
+          double Gwdiff_all_SL = 1.0/(1.0/gCR + 1.0/(gs_SL + gmin_SL) + 1.0/gBL); 
+          double Gwdiff_all_SH = 1.0/(1.0/gCR + 1.0/(gs_SH + gmin_SH) + 1.0/gBL); 
           NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
-                                                   Cair[iLayerSunlit[c]], Gwdiff_SL/(1000.0*1.6), //From mmol to mol 
+                                                   Cair[iLayerSunlit[c]], Gwdiff_all_SL/(1000.0*1.6), //From mmol to mol 
                                                    std::max(0.0,Temp_SL(c,n)), 
                                                    Vmax298_SL(c,n)/LAI_SL(c,n), Jmax298_SL(c,n)/LAI_SL(c,n));
           NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
-                                                   Cair[iLayerShade[c]], Gwdiff_SH/(1000.0*1.6), //From mmol to mol
+                                                   Cair[iLayerShade[c]], Gwdiff_all_SH/(1000.0*1.6), //From mmol to mol
                                                    std::max(0.0,Temp_SH(c,n)), 
                                                    Vmax298_SH(c,n)/LAI_SH(c,n), Jmax298_SH(c,n)/LAI_SH(c,n));
           if(!sunlitShade) LP_SH = LP_SL;
