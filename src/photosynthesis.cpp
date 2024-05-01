@@ -49,7 +49,6 @@ const double lightResponseCurvature = 0.9;
 //' @param SWRabs Absorbed short-wave radiation (in W·m-2).
 //' @param LWRnet Net long-wave radiation balance (in W·m-2).
 //' @param leafWidth Leaf width (in cm).
-//' @param Gcrown0 Reference value for the canopy conductance (mol·s-1·m-2)
 //' @param refLeafArea Leaf reference area.
 //' @param verbose Boolean flag to indicate console output.
 //' @param SLarea,SHarea Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).

@@ -177,8 +177,6 @@ photo_multilayerPhotosynthesisFunction(
 \item{absRadSL, absRadSH}{Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
 
 \item{QSL, QSH}{Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
-
-\item{Gcrown0}{Reference value for the canopy conductance (mol·s-1·m-2)}
 }
 \value{
 Values returned for each function are:
