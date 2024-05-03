@@ -113,7 +113,6 @@ The following plots are currently available for \code{\link{spwb}} (most of them
   \item{\code{"SoilVol"}: Soil water volumetric content (in mm).}
   \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer.}
   \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
-  \item{\code{"SaturatedDepth"}: Saturated water depth.}
   \item{\code{"LAI"}: Expanded and dead leaf area index of the whole stand.}
   \item{\code{"PlantLAI"}: Plant cohort leaf area index (expanded leaves).}
   \item{\code{"PlantLAIlive"}: Plant cohort leaf area index ("live" leaves).}

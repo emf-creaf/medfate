@@ -252,7 +252,8 @@ List defineASPWBDailyOutput(double latitude, double elevation, double slope, dou
 
   //Water balance output variables
   DataFrame DWB = defineAgricultureWaterBalanceDailyOutput(dateStrings);
-  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, false);
+  List Soil = defineSoilDailyOutput(dateStrings, soil, false);
+  DataFrame Snow = defineSnowDailyOutput(dateStrings);
   
   List l;
   l = List::create(Named("latitude") = latitude,
@@ -261,7 +262,8 @@ List defineASPWBDailyOutput(double latitude, double elevation, double slope, dou
                    Named("aspwbInput") = aspwbInput,
                    Named("aspwbOutput") = x,
                    Named("WaterBalance")=DWB);
-  if(control["soilResults"]) l.push_back(SWB, "Soil");
+  if(control["soilResults"]) l.push_back(Soil, "Soil");
+  if(control["snowResults"]) l.push_back(Snow, "Snow");
   l.attr("class") = CharacterVector::create("aspwb","list");
   return(l);
 }
@@ -312,10 +314,14 @@ void fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
   
   if(control["soilResults"]) {
     String soilFunctions = control["soilFunctions"];
-    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(l["Soil"]);
-    fillSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
-                                   iday, numDays, soilFunctions,
-                                   false);
+    List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+    fillSoilDailyOutput(Soil, soil, sDay, 
+                        iday, numDays, soilFunctions,
+                        false);
+  }
+  if(control["snowResults"]) {
+    DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
+    fillSnowDailyOutput(Snow, soil, iday);
   }
 }
 

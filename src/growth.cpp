@@ -1747,7 +1747,8 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   String transpirationMode = control["transpirationMode"];
   
   DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
-  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, true);
+  List Soil = defineSoilDailyOutput(dateStrings, soil, true);
+  DataFrame Snow = defineSnowDailyOutput(dateStrings);
   List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
@@ -1878,7 +1879,8 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
                      Named("WaterBalance")= DWB, 
                      Named("CarbonBalance")=StandCarbonBalance, 
                      Named("BiomassBalance") = StandBiomassBalance);
-    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["soilResults"]) l.push_back(Soil, "Soil");
+    if(control["snowResults"]) l.push_back(Snow, "Snow");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]) {
       l.push_back(plantDWOL, "Plants");
@@ -1910,7 +1912,8 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
       l.push_back(DT, "Temperature");
       if(control["multiLayerBalance"]) l.push_back(DLT,"TemperatureLayers");
     }
-    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["soilResults"]) l.push_back(Soil, "Soil");
+    if(control["snowResults"]) l.push_back(Snow, "Snow");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]){
       l.push_back(plantDWOL, "Plants");
@@ -1948,10 +1951,14 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
   
   if(control["soilResults"]) {
     String soilFunctions = control["soilFunctions"];
-    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(l["Soil"]);
-    fillSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
-                                    iday, numDays, soilFunctions,
-                                    true);
+    List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+    fillSoilDailyOutput(Soil, soil, sDay, 
+                        iday, numDays, soilFunctions,
+                        true);
+  }
+  if(control["snowResults"]) {
+    DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
+    fillSnowDailyOutput(Snow, soil, iday);
   }
   if(control["standResults"]) {
     DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);

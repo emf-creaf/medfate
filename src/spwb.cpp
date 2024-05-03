@@ -1072,43 +1072,51 @@ DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String tran
   DWB.attr("row.names") = dateStrings;
   return(DWB);
 }
-DataFrame defineSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil, bool includePlants = true) {
+DataFrame defineSnowDailyOutput(CharacterVector dateStrings) {
+  int numDays = dateStrings.length();
+  NumericVector SWE(numDays, 0.0);
+  DataFrame Snow = DataFrame::create(_["SWE"] = SWE);
+  Snow.attr("row.names") = dateStrings;
+  return(Snow);
+}
+List defineSoilDailyOutput(CharacterVector dateStrings, List soil, bool includePlants = true) {
   int numDays = dateStrings.length();
   NumericVector W = soil["W"];
   int nlayers = W.length();
   
-  NumericVector SWCtot(numDays, 0.0);
-  NumericMatrix SWCdays(numDays, nlayers); //Soil moisture content in percent volume
-  NumericVector RWCtot(numDays, 0.0);
-  NumericMatrix RWCdays(numDays, nlayers); //Soil moisture content in relation to field capacity
-  NumericVector REWtot(numDays, 0.0);
-  NumericMatrix REWdays(numDays, nlayers); //Soil moisture content in relation to extractable water
-  NumericMatrix Psidays(numDays, nlayers);
-  NumericVector Psitot(numDays, 0.0);
-  NumericMatrix MLdays(numDays, nlayers);
-  NumericVector SaturatedDepth(numDays, NA_REAL);
-  NumericVector MLtot(numDays, 0.0);
-  NumericVector SWE(numDays, 0.0);
-  
-  DataFrame SWB = DataFrame::create(_["SWC"]=SWCdays,_["SWC.tot"]=SWCtot, 
-                                    _["RWC"]=RWCdays,_["RWC.tot"]=RWCtot, 
-                                    _["REW"]=REWdays,_["REW.tot"]=REWtot, 
-                                    _["ML"]=MLdays,_["ML.tot"]=MLtot,
-                                    _["Psi"]=Psidays,_["Psi.tot"] = Psitot);
-  if(includePlants) {
-    NumericMatrix Eplantdays(numDays, nlayers);
-    NumericMatrix HydrIndays(numDays, nlayers);
-    NumericVector HydrIntot(numDays, 0.0);
-    NumericVector Eplanttot(numDays, 0.0);
-    SWB.push_back(Eplantdays , "PlantExt");
-    SWB.push_back(Eplanttot , "PlantExt.tot");
-    SWB.push_back(HydrIndays , "HydraulicInput");
-    SWB.push_back(HydrIntot , "HydraulicInput.tot");
+  CharacterVector layerNames(nlayers + 1);
+  for(int l=0; l<nlayers; l++) {
+    String s = "";
+    s += (l+1);
+    layerNames[l] = s;
   }
-  SWB.push_back(SaturatedDepth , "SaturatedDepth");
-  SWB.push_back(SWE , "SWE");
-  SWB.attr("row.names") = dateStrings;
-  return(SWB);  
+  layerNames[nlayers] = "Overall";
+  
+  NumericMatrix SWCdays(numDays, nlayers+1); //Soil moisture content in percent volume
+  SWCdays.attr("dimnames") = List::create(dateStrings, layerNames);
+  NumericMatrix RWCdays(numDays, nlayers+1); //Soil moisture content in relation to field capacity
+  RWCdays.attr("dimnames") = List::create(dateStrings, layerNames);
+  NumericMatrix REWdays(numDays, nlayers+1); //Soil moisture content in relation to extractable water
+  REWdays.attr("dimnames") = List::create(dateStrings, layerNames);
+  NumericMatrix Psidays(numDays, nlayers+1);
+  Psidays.attr("dimnames") = List::create(dateStrings, layerNames);
+  NumericMatrix MLdays(numDays, nlayers+1);
+  MLdays.attr("dimnames") = List::create(dateStrings, layerNames);
+  
+  List Soil = List::create(_["SWC"]=SWCdays, 
+                           _["RWC"]=RWCdays, 
+                           _["REW"]=REWdays, 
+                           _["ML"]=MLdays,
+                           _["Psi"]=Psidays);
+  if(includePlants) {
+    NumericMatrix Eplantdays(numDays, nlayers+1);
+    Eplantdays.attr("dimnames") = List::create(dateStrings, layerNames);
+    NumericMatrix HydrIndays(numDays, nlayers+1);
+    HydrIndays.attr("dimnames") = List::create(dateStrings, layerNames);
+    Soil.push_back(Eplantdays , "PlantExt");
+    Soil.push_back(HydrIndays , "HydraulicInput");
+  }
+  return(Soil);  
 }
 
 DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings) {
@@ -1328,7 +1336,8 @@ List defineSPWBDailyOutput(double latitude, double elevation, double slope, doub
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   String transpirationMode = control["transpirationMode"];
   DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
-  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, true);
+  List Soil = defineSoilDailyOutput(dateStrings, soil, true);
+  DataFrame Snow = defineSnowDailyOutput(dateStrings);
   List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
@@ -1346,7 +1355,8 @@ List defineSPWBDailyOutput(double latitude, double elevation, double slope, doub
                      Named("spwbInput") = spwbInput,
                      Named("spwbOutput") = x,
                      Named("WaterBalance")= DWB);
-    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["soilResults"]) l.push_back(Soil, "Soil");
+    if(control["snowResults"]) l.push_back(Snow, "Snow");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
     if(control["fireHazardResults"]) {
@@ -1369,7 +1379,8 @@ List defineSPWBDailyOutput(double latitude, double elevation, double slope, doub
         l.push_back(DT, "Temperature");
         if(control["multiLayerBalance"]) l.push_back(DLT,"TemperatureLayers");
       }
-    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["soilResults"]) l.push_back(Soil, "Soil");
+    if(control["snowResults"]) l.push_back(Snow, "Snow");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
     if(control["leafResults"]) {
@@ -1399,6 +1410,8 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   NumericVector Rain = DWB["Rain"];
   NumericVector Snow = DWB["Snow"];
   NumericVector Snowmelt = DWB["Snowmelt"];
+
+  
   NumericVector NetRain = DWB["NetRain"];
   NumericVector PlantExtraction = DWB["PlantExtraction"];
   NumericVector Transpiration = DWB["Transpiration"];
@@ -1449,9 +1462,9 @@ void fillStandDailyOutput(DataFrame Stand, List sDay, int iday) {
   Cm[iday] = stand["Cm"];
 }
 
-void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
-                                     int iday, int numDays, String soilFunctions,
-                                     bool includePlants = true) {
+void fillSoilDailyOutput(List SWB, List soil, List sDay, 
+                         int iday, int numDays, String soilFunctions,
+                         bool includePlants = true) {
   NumericVector W = soil["W"];
   int nlayers = W.length();
   NumericVector Water_SAT = waterSAT(soil, soilFunctions);
@@ -1463,65 +1476,43 @@ void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay,
   List sb = sDay["Soil"];
   NumericVector psi = sb["Psi"];
   
-  NumericVector SWCtot = as<Rcpp::NumericVector>(SWB["SWC.tot"]);
-  NumericVector MLtot = as<Rcpp::NumericVector>(SWB["ML.tot"]);
-  NumericVector RWCtot = as<Rcpp::NumericVector>(SWB["RWC.tot"]);
-  NumericVector Psitot = as<Rcpp::NumericVector>(SWB["Psi.tot"]);
-  NumericVector REWtot = as<Rcpp::NumericVector>(SWB["REW.tot"]);
-  NumericVector SaturatedDepth = as<Rcpp::NumericVector>(SWB["SaturatedDepth"]);
-  NumericVector SWE = as<Rcpp::NumericVector>(SWB["SWE"]);
-  
+  NumericMatrix SWCdays = as<Rcpp::NumericMatrix>(SWB["SWC"]);
+  NumericMatrix MLdays = as<Rcpp::NumericMatrix>(SWB["ML"]);
+  NumericMatrix RWCdays = as<Rcpp::NumericMatrix>(SWB["RWC"]);
+  NumericMatrix Psidays = as<Rcpp::NumericMatrix>(SWB["Psi"]);
+  NumericMatrix REWdays = as<Rcpp::NumericMatrix>(SWB["REW"]);
+
   for(int l=0; l<nlayers; l++) {
-    String swcS = "SWC.";
-    swcS += (l+1);
-    String rwcS = "RWC.";
-    rwcS += (l+1);
-    String rewS = "REW.";
-    rewS += (l+1);
-    String mlS = "ML.";
-    mlS += (l+1);
-    String psiS = "Psi.";
-    psiS += (l+1);
-    NumericVector SWCdays = as<Rcpp::NumericVector>(SWB[swcS]);
-    NumericVector RWCdays = as<Rcpp::NumericVector>(SWB[rwcS]);
-    NumericVector REWdays = as<Rcpp::NumericVector>(SWB[rewS]);
-    NumericVector MLdays = as<Rcpp::NumericVector>(SWB[mlS]);
-    NumericVector Psidays = as<Rcpp::NumericVector>(SWB[psiS]);
-    Psidays[iday] = psi[l];
-    SWCdays[iday] = W[l]*Theta_FC[l];
-    RWCdays[iday] = W[l];
-    MLdays[iday] = RWCdays[iday]*Water_FC[l]; 
-    REWdays[iday] = (MLdays[iday]-Water_min[l])/Water_ext[l];
-    MLtot[iday] = MLtot[iday] + MLdays[iday];
+    Psidays(iday,l) = psi[l];
+    SWCdays(iday,l) = W[l]*Theta_FC[l];
+    RWCdays(iday,l) = W[l];
+    MLdays(iday,l) = RWCdays(iday,l)*Water_FC[l]; 
+    REWdays(iday,l) = (MLdays(iday,l)-Water_min[l])/Water_ext[l];
+    MLdays(iday,nlayers) = MLdays(iday,nlayers) + MLdays(iday,l);
   }
-  SWCtot[iday] = sum((W*Theta_FC)*Water_SAT)/sum(Water_SAT);
-  RWCtot[iday] = MLtot[iday]/sum(Water_FC);
-  REWtot[iday] = (MLtot[iday] - sum(Water_min))/sum(Water_ext);
-  Psitot[iday] = sum(psi*Water_SAT)/sum(Water_SAT);
-  SWE[iday] = soil["SWE"];
-  SaturatedDepth[iday] = saturatedWaterDepth(soil, soilFunctions);
-  
+  SWCdays(iday,nlayers) = sum((W*Theta_FC)*Water_SAT)/sum(Water_SAT);
+  RWCdays(iday,nlayers) = MLdays(iday,nlayers)/sum(Water_FC);
+  REWdays(iday,nlayers) = (MLdays(iday,nlayers) - sum(Water_min))/sum(Water_ext);
+  Psidays(iday,nlayers) = sum(psi*Water_SAT)/sum(Water_SAT);
+
   if(includePlants) {
-    NumericVector Eplantot = as<Rcpp::NumericVector>(SWB["PlantExt.tot"]);
-    NumericVector HydrIntot = as<Rcpp::NumericVector>(SWB["HydraulicInput.tot"]);
+    NumericMatrix Eplantdays = as<Rcpp::NumericMatrix>(SWB["PlantExt"]);
+    NumericMatrix HydrIndays = as<Rcpp::NumericMatrix>(SWB["HydraulicInput"]);
     NumericVector HydrInVec = sb["HydraulicInput"];
     List Plants = sDay["Plants"];
     NumericVector EplantVec = sb["PlantExtraction"];
     for(int l=0; l<nlayers; l++) {
-      String peS = "PlantExt.";
-      peS += (l+1);
-      String hiS = "HydraulicInput.";
-      hiS += (l+1);
-      NumericVector Eplantdays = as<Rcpp::NumericVector>(SWB[peS]);
-      NumericVector HydrIndays = as<Rcpp::NumericVector>(SWB[hiS]);
-      HydrIndays[iday] = HydrInVec[l];
-      Eplantdays[iday] = EplantVec[l];
+      HydrIndays(iday,l) = HydrInVec[l];
+      Eplantdays(iday,l) = EplantVec[l];
     }
-    Eplantot[iday] = sum(EplantVec);
-    HydrIntot[iday] = sum(HydrInVec);
+    Eplantdays(iday,nlayers) = sum(EplantVec);
+    HydrIndays(iday,nlayers) = sum(HydrInVec);
   }
 }
-
+void fillSnowDailyOutput(DataFrame Snow, List soil, int iday) {
+  NumericVector SWE = Snow["SWE"];
+  SWE[iday] = soil["SWE"];
+}
 void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday) {
   List EB = Rcpp::as<Rcpp::List>(sDay["EnergyBalance"]);
   DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
@@ -1761,11 +1752,16 @@ void fillSPWBDailyOutput(List l, List soil, List sDay, int iday) {
   
   if(control["soilResults"]) {
     String soilFunctions = control["soilFunctions"];
-    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(l["Soil"]);
-    fillSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
+    List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+    fillSoilDailyOutput(Soil, soil, sDay, 
                                     iday, numDays, soilFunctions,
                                     true);
   }
+  if(control["snowResults"]) {
+    DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
+    fillSnowDailyOutput(Snow, soil, iday);
+  }
+  
   if(control["standResults"]) {
     DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
     fillStandDailyOutput(Stand, sDay,iday); 
@@ -1944,8 +1940,8 @@ void printWaterBalanceResult(List outputList, List x,
 //'   \itemize{
 //'     \item{\code{"PET"}: Potential evapotranspiration (in mm).}
 //'     \item{\code{"Precipitation"}: Input precipitation (in mm).}
-//'     \item{\code{"Rain"}: Precipitation as rain (in mm).}
-//'     \item{\code{"Snow"}: Precipitation as snow (in mm).}
+//'     \item{\code{"Rain"}: Precipitation as rainfall (in mm).}
+//'     \item{\code{"Snow"}: Precipitation as snowfall (in mm).}
 //'     \item{\code{"NetRain"}: Net rain, after accounting for interception (in mm).}
 //'     \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
 //'     \item{\code{"InfiltrationExcess"}: Excess infiltration in the topmost layer leading to an increase in runoff (in mm).}
@@ -1962,23 +1958,18 @@ void printWaterBalanceResult(List outputList, List x,
 //'   }
 //'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
 //'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
-//'   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+//'   \item{\code{"Soil"}: A list with the following subelements:}
 //'   \itemize{
-//'     \item{\code{"SWC.1"}, \code{...}, \code{"SWC.k"}: Soil water content (percent of soil volume) in each soil layer.}
-//'     \item{\code{"SWC.tot"}: Overall relative soil water content.}
-//'     \item{\code{"RWC.1"}, \code{...}, \code{"RWC.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
-//'     \item{\code{"RWC.tot"}: Overall relative soil moisture content.}
-//'     \item{\code{"REW.1"}, \code{...}, \code{"REW.k"}: Relative extractable water (min. psi = -5 MPa) in each soil layer.}
-//'     \item{\code{"REW.tot"}: Overall relative extractable water (min. psi = -5 MPa).}
-//'     \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
-//'     \item{\code{"ML.tot"}: Overall soil water volume (in L/m2).}
-//'     \item{\code{"Psi.1"}, \code{...}, \code{"Psi.k"}: Soil water potential in each soil layer (in MPa).}
-//'     \item{\code{"Psi.tot"}: Overall soil water potential (in MPa).}
-//'     \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-//'     \item{\code{"PlantExt.tot"}: Overall plant extraction (in mm).}
-//'     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).}
-//'     \item{\code{"HydraulicInput.tot"}: Overall hydraulic input (in mm).}
-//'     \item{\code{"SaturatedDepth"}: Depth (in mm) of the saturated layer.}
+//'     \item{\code{"SWC"}: Soil water content (percent of soil volume) in each soil layer (and overall).}
+//'     \item{\code{"RWC"}: Relative soil moisture content (relative to field capacity) in each soil layer (and overall).}
+//'     \item{\code{"REW"}: Relative extractable water (min. psi = -5 MPa) in each soil layer (and overall).}
+//'     \item{\code{"ML"}: Soil water volume in each soil layer (in L/m2) (and overall).}
+//'     \item{\code{"Psi"}: Soil water potential in each soil layer (in MPa) (and overall).}
+//'     \item{\code{"PlantExt"}: Plant extraction from each soil layer (in mm) (and overall).}
+//'     \item{\code{"HydraulicInput"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (and overall).}
+//'   }
+//'   \item{\code{"Snow"}: A data frame where the following variable (in columns) is given for each simulated day (in rows):}
+//'   \itemize{
 //'     \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
 //'   }
 //'   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}

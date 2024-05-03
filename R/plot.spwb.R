@@ -32,7 +32,6 @@
 #'   \item{\code{"SoilVol"}: Soil water volumetric content (in mm).}
 #'   \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer.}
 #'   \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
-#'   \item{\code{"SaturatedDepth"}: Saturated water depth.}
 #'   \item{\code{"LAI"}: Expanded and dead leaf area index of the whole stand.}
 #'   \item{\code{"PlantLAI"}: Plant cohort leaf area index (expanded leaves).}
 #'   \item{\code{"PlantLAIlive"}: Plant cohort leaf area index ("live" leaves).}
@@ -174,9 +173,8 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
   
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""
-  if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration", "Snow",
-                 "SaturatedDepth", "Export", "SoilVol")) {
-    return(.plot_wb(WaterBalance = x$WaterBalance, Soil = x$Soil, input_soil = input$soil, 
+  if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration", "Snow", "Export")) {
+    return(.plot_wb(WaterBalance = x$WaterBalance, Soil = x$Soil, Snow = x$Snow, input_soil = input$soil, 
                     type = type, dates = dates, 
                     xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                     summary.freq = summary.freq, ...))
@@ -223,7 +221,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""  
   
-  if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW","PlantExtraction", "HydraulicRedistribution")) {
+  if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW", "SoilVol","PlantExtraction", "HydraulicRedistribution")) {
     return(.plot_soil(Soil = x$Soil, input_soil = input$soil, input_control = input$control,
                       type = type, dates = dates, 
                       xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
@@ -435,16 +433,15 @@ plot.fordyn<-function(x, type="StandBasalArea",
     spnames = as.character(x$GrowthResults[[1]]$growthInput$cohorts[cohorts,"Name"])
     input_soil = x$GrowthResults[[1]]$growthInput$soil
     
-    if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration" ,"Snow",
-                   "SaturatedDepth", "Export", "SoilVol")) {
+    if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration" ,"Snow", "Export")) {
       input_soil = x$GrowthResults[[1]]$growthInput$soil
       WaterBalance = summary(x, freq = "days", output = "WaterBalance")
-      Soil = summary(x, freq = "days", output = "Soil")
-      return(.plot_wb(WaterBalance = WaterBalance, Soil = Soil, input_soil = input_soil,
+      Snow = summary(x, freq = "days", output = "Snow")
+      return(.plot_wb(WaterBalance = WaterBalance, Snow = Snow, 
                       type=type, dates = dates, ylim = ylim, xlab = xlab, ylab = ylab,
                       summary.freq = summary.freq,...))
     }
-    else if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW", "PlantExtraction", "HydraulicRedistribution")) {
+    else if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW", "SoilVol", "PlantExtraction", "HydraulicRedistribution")) {
       Soil = summary(x, freq = "days", output = "Soil")
       return(.plot_soil(Soil = Soil, input_soil = input_soil, input_control = input_control,
                         type=type, dates = dates, 

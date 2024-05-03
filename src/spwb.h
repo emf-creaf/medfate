@@ -11,7 +11,8 @@ CharacterVector getWeatherDates(DataFrame meteo);
 
 DataFrame defineStandDailyOutput(CharacterVector dateStrings);
 DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String transpirationMode);
-DataFrame defineSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil, bool includePlants = true);
+List defineSoilDailyOutput(CharacterVector dateStrings, List soil, bool includePlants = true);
+DataFrame defineSnowDailyOutput(CharacterVector dateStrings);
 DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings);
 DataFrame defineTemperatureDailyOutput(CharacterVector dateStrings);
 DataFrame defineFireHazardOutput(CharacterVector dateStrings);
@@ -21,9 +22,10 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
 
 void fillStandDailyOutput(DataFrame Stand, List sDay, int iday);
 void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode);
-void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
-                                     int iday, int numDays, String soilFunctions,
-                                     bool includePlants = true);
+void fillSoilDailyOutput(List Soil, List soil, List sDay, 
+                         int iday, int numDays, String soilFunctions,
+                         bool includePlants = true);
+void fillSnowDailyOutput(DataFrame Snow, List soil, int iday);
 void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday);
 void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday);
 void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday);

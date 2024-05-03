@@ -41,7 +41,7 @@ test_that("spwb can be run in example and empty forests",{
 test_that("pwb can be run in example and empty forests",{
   x1 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   S1 <- spwb(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100)
-  expect_s3_class(pwb(x1, examplemeteo[1:10,], W = as.matrix(S1$Soil[,1:4]), 
+  expect_s3_class(pwb(x1, examplemeteo[1:10,], W = as.matrix(S1$Soil$SWC[,1:4]), 
                        latitude = 41.82592, elevation = 100), "pwb")
 })
 test_that("spwb can be run using dates as columns",{

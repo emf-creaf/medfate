@@ -43,7 +43,7 @@
     # Try to complete
     found = FALSE
     object_names_search = object_names
-    object_names_search = object_names_search[!(object_names_search %in% c("Soil", "Stand", "Temperature",
+    object_names_search = object_names_search[!(object_names_search %in% c("Snow", "Stand", "Temperature",
                                                                            "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance",
                                                                            "FireHazard"))]
     for(nm in object_names_search) {
@@ -63,7 +63,7 @@
     output_vec = rep(output_vec, 2)
   }
   
-  if(output_vec[1] %in% c("Soil", "Stand", "Temperature", 
+  if(output_vec[1] %in% c("Snow", "Stand", "Temperature", 
                           "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance",
                           "FireHazard")) {
     OM = object[[output_vec[1]]]

@@ -3398,8 +3398,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #'   \itemize{
 #'     \item{\code{"PET"}: Potential evapotranspiration (in mm).}
 #'     \item{\code{"Precipitation"}: Input precipitation (in mm).}
-#'     \item{\code{"Rain"}: Precipitation as rain (in mm).}
-#'     \item{\code{"Snow"}: Precipitation as snow (in mm).}
+#'     \item{\code{"Rain"}: Precipitation as rainfall (in mm).}
+#'     \item{\code{"Snow"}: Precipitation as snowfall (in mm).}
 #'     \item{\code{"NetRain"}: Net rain, after accounting for interception (in mm).}
 #'     \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
 #'     \item{\code{"InfiltrationExcess"}: Excess infiltration in the topmost layer leading to an increase in runoff (in mm).}
@@ -3416,23 +3416,18 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #'   }
 #'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
 #'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
-#'   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+#'   \item{\code{"Soil"}: A list with the following subelements:}
 #'   \itemize{
-#'     \item{\code{"SWC.1"}, \code{...}, \code{"SWC.k"}: Soil water content (percent of soil volume) in each soil layer.}
-#'     \item{\code{"SWC.tot"}: Overall relative soil water content.}
-#'     \item{\code{"RWC.1"}, \code{...}, \code{"RWC.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
-#'     \item{\code{"RWC.tot"}: Overall relative soil moisture content.}
-#'     \item{\code{"REW.1"}, \code{...}, \code{"REW.k"}: Relative extractable water (min. psi = -5 MPa) in each soil layer.}
-#'     \item{\code{"REW.tot"}: Overall relative extractable water (min. psi = -5 MPa).}
-#'     \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
-#'     \item{\code{"ML.tot"}: Overall soil water volume (in L/m2).}
-#'     \item{\code{"Psi.1"}, \code{...}, \code{"Psi.k"}: Soil water potential in each soil layer (in MPa).}
-#'     \item{\code{"Psi.tot"}: Overall soil water potential (in MPa).}
-#'     \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-#'     \item{\code{"PlantExt.tot"}: Overall plant extraction (in mm).}
-#'     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).}
-#'     \item{\code{"HydraulicInput.tot"}: Overall hydraulic input (in mm).}
-#'     \item{\code{"SaturatedDepth"}: Depth (in mm) of the saturated layer.}
+#'     \item{\code{"SWC"}: Soil water content (percent of soil volume) in each soil layer (and overall).}
+#'     \item{\code{"RWC"}: Relative soil moisture content (relative to field capacity) in each soil layer (and overall).}
+#'     \item{\code{"REW"}: Relative extractable water (min. psi = -5 MPa) in each soil layer (and overall).}
+#'     \item{\code{"ML"}: Soil water volume in each soil layer (in L/m2) (and overall).}
+#'     \item{\code{"Psi"}: Soil water potential in each soil layer (in MPa) (and overall).}
+#'     \item{\code{"PlantExt"}: Plant extraction from each soil layer (in mm) (and overall).}
+#'     \item{\code{"HydraulicInput"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (and overall).}
+#'   }
+#'   \item{\code{"Snow"}: A data frame where the following variable (in columns) is given for each simulated day (in rows):}
+#'   \itemize{
 #'     \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
 #'   }
 #'   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}

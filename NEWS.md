@@ -2,6 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 4.2.0
+- Reorganization of Soil output as a list
+- Snow output as independent data frame
+
 # Version 4.1.0
 - Single-domain and dual-permeability soil water flows
 - Infiltration excess, saturation excess and capillarity rise reported

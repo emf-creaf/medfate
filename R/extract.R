@@ -196,7 +196,6 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
   } else if(inherits(x, "growth")) {
     cohorts <- x$growthInput$cohorts
   }
-  layers <- 1:length(x$spwbInput$soil$dVec)
   cohnames <- row.names(cohorts)
   spnames <- cohorts$Name
   
@@ -245,7 +244,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
 
   
   if(level=="forest") {
-    stand_level_names <-c("WaterBalance", "Stand",  "Soil",
+    stand_level_names <-c("WaterBalance", "Stand", "Snow",
                           "EnergyBalance", "Temperature","CarbonBalance", "BiomassBalance", "FireHazard")
     if(is.null(output)) {
       output <- stand_level_names
@@ -257,15 +256,6 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       if(n %in% names(x)) {
         M <- x[[n]]
         varnames <- names(M)
-        if(n == "Soil") {
-          varnames <- varnames[!(varnames %in% paste0("SWC.",layers))]
-          varnames <- varnames[!(varnames %in% paste0("RWC.",layers))]
-          varnames <- varnames[!(varnames %in% paste0("REW.",layers))]
-          varnames <- varnames[!(varnames %in% paste0("ML.",layers))]
-          varnames <- varnames[!(varnames %in% paste0("Psi.",layers))]
-          varnames <- varnames[!(varnames %in% paste0("PlantExt.",layers))]
-          varnames <- varnames[!(varnames %in% paste0("HydraulicInput.",layers))]
-        }
         M <- M[rownames(M) %in% dates, varnames, drop = FALSE]
         if(!is.null(vars)) M <- M[,colnames(M) %in% vars, drop = FALSE]
         if(ncol(M)>0) {
@@ -275,14 +265,20 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       }
     }
   } else if (level =="soillayer") {
+    layers <- c(1:length(x$spwbInput$soil$dVec), "Overall")
+    output <- "Soil"
     out <- data.frame(date = rep(dates, length(layers)),
                       soillayer = as.character(gl(length(layers), length(dates), labels = layers)))
-    P = x[["Soil"]]    
-    if(is.null(vars)) vars <- c("SWC","RWC", "REW", "ML","Psi", "PlantExt", "HydraulicInput")
-    for(v in vars) {
-      M <- P[,paste0(v, ".", layers), drop = FALSE]
-      M <- M[rownames(M) %in% dates, , drop = FALSE]
-      out[[v]] <- as.vector(as.matrix(M))
+    for(n in output) {
+      if(n %in% names(x)) {
+        P = x[[n]]
+        if(is.null(vars)) vars <- names(P)
+        for(v in vars) {
+          M <- P[[v]]
+          M <- M[rownames(M) %in% dates, , drop = FALSE]
+          out[[v]] <- as.vector(M)
+        }
+      }
     }
   } else if (level =="cohort") {
     plant_level_names <-c("Plants", "LabileCarbonBalance","PlantBiomassBalance", 

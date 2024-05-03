@@ -23,35 +23,77 @@ By default, simulations in **medfate** assume that soil moisture under all plant
 The aim of this vignette is to illustrate the sensitivity of the advanced water balance model (De Cáceres et al. 2021) to the consideration of independent water pools. 
 
 ```{r, echo = FALSE}
-WB_FB_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/fb_advanced_total.rds"))
-WB_FB_advanced_partial = readRDS(paste0(base_pools,"Rdata/Output/fb_advanced_partial.rds"))
-WB_FB_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/fb_advanced_none.rds"))
-WB_PR_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/pr_advanced_total.rds"))
-WB_PR_advanced_partial = readRDS(paste0(base_pools,"Rdata/Output/pr_advanced_partial.rds"))
-WB_PR_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/pr_advanced_none.rds"))
-WB_PU_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/pu_advanced_total.rds"))
-WB_PU_advanced_partial = readRDS(paste0(base_pools,"Rdata/Output/pu_advanced_partial.rds"))
-WB_PU_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/pu_advanced_none.rds"))
-WB_CB_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/cb_advanced_total.rds"))
-WB_CB_advanced_partial = readRDS(paste0(base_pools,"Rdata/Output/cb_advanced_partial.rds"))
-WB_CB_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/cb_advanced_none.rds"))
-WB_ES_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/es_advanced_total.rds"))
-WB_ES_advanced_partial = readRDS(paste0(base_pools,"Rdata/Output/es_advanced_partial.rds"))
-WB_ES_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/es_advanced_none.rds"))
+WB_FB_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/fb_sperry_total.rds"))
+WB_FB_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/fb_sperry_partial.rds"))
+WB_FB_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/fb_sperry_none.rds"))
+WB_PR_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/pr_sperry_total.rds"))
+WB_PR_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/pr_sperry_partial.rds"))
+WB_PR_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/pr_sperry_none.rds"))
+WB_PU_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/pu_sperry_total.rds"))
+WB_PU_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/pu_sperry_partial.rds"))
+WB_PU_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/pu_sperry_none.rds"))
+# WB_CB_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/cb_sperry_total.rds"))
+# WB_CB_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/cb_sperry_partial.rds"))
+# WB_CB_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/cb_sperry_none.rds"))
+WB_ES_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/es_sperry_total.rds"))
+WB_ES_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/es_sperry_partial.rds"))
+WB_ES_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/es_sperry_none.rds"))
+# WB_RO_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/ro_sperry_total.rds"))
+# WB_RO_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/ro_sperry_partial.rds"))
+# WB_RO_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/ro_sperry_none.rds"))
+
+WB_FB_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/fb_sureau_total.rds"))
+WB_FB_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/fb_sureau_partial.rds"))
+WB_FB_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/fb_sureau_none.rds"))
+WB_PR_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/pr_sureau_total.rds"))
+WB_PR_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/pr_sureau_partial.rds"))
+WB_PR_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/pr_sureau_none.rds"))
+WB_PU_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/pu_sureau_total.rds"))
+WB_PU_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/pu_sureau_partial.rds"))
+WB_PU_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/pu_sureau_none.rds"))
+# WB_CB_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/cb_sureau_total.rds"))
+# WB_CB_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/cb_sureau_partial.rds"))
+# WB_CB_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/cb_sureau_none.rds"))
+WB_ES_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/es_sureau_total.rds"))
+WB_ES_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/es_sureau_partial.rds"))
+WB_ES_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/es_sureau_none.rds"))
+# WB_RO_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/ro_sureau_total.rds"))
+# WB_RO_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/ro_sureau_partial.rds"))
+# WB_RO_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/ro_sureau_none.rds"))
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE}
 plot_one<-function(plot_name, sim_total, sim_partial, sim_none, type, ylim = NULL) {
-g_total = plot(sim_total, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0("Total overlap (no pools)"))+ theme(axis.text.x = element_blank(), axis.ticks = element_blank())+ylab(plot_name)
-# g_partial = plot(sim_partial, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0("Partial overlap"))+ theme(axis.text.x = element_blank(), axis.ticks = element_blank())+ylab("")
-g_none = plot(sim_none, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0("No overlap (independent pools)"))+ theme(axis.text.x = element_blank(), axis.ticks = element_blank())+ylab("")
+g_total = plot(sim_total, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0("Total overlap (shared)"))+ theme(axis.text.x = element_blank(), axis.ticks = element_blank())+ylab(plot_name)
+g_partial = plot(sim_partial, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0("Partial overlap"))+ theme(axis.text.x = element_blank(), axis.ticks = element_blank())+ylab("")
+g_none = plot(sim_none, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0("No overlap (independent)"))+ theme(axis.text.x = element_blank(), axis.ticks = element_blank())+ylab("")
 
 l = get_legend(g_total)
 g_total <- g_total+theme(legend.position = "none")
-# g_partial<-g_partial +theme(legend.position = "none")
+g_partial<-g_partial +theme(legend.position = "none")
 g_none<-g_none +theme(legend.position = "none")
-plot_grid(g_total, g_none, l, nrow=1, rel_widths = c(1,1, 0.45))
+plot_grid(g_total,g_partial, g_none, l, nrow=1, rel_widths = c(1,1, 1, 0.5))
 }
+```
+
+```{r, echo = FALSE, warning = FALSE}
+plot_several<-function(type, ylim = NULL) {
+fb_sperry_plot = plot_one("FONTBL. - SPERRY", WB_FB_sperry_total, WB_FB_sperry_partial, WB_FB_sperry_none, type, ylim)
+fb_sureau_plot = plot_one("FONTBL. - SUREAU", WB_FB_sureau_total, WB_FB_sureau_partial, WB_FB_sureau_none, type, ylim)
+pr_sperry_plot = plot_one("PRADES - SPERRY", WB_PR_sperry_total, WB_PR_sperry_partial, WB_PR_sperry_none, type, ylim)
+pr_sureau_plot = plot_one("PRADES - SUREAU", WB_PR_sureau_total, WB_PR_sureau_partial, WB_PR_sureau_none, type, ylim)
+pu_sperry_plot = plot_one("PUECHABON - SPERRY", WB_PU_sperry_total, WB_PU_sperry_partial, WB_PU_sperry_none, type, ylim)
+pu_sureau_plot = plot_one("PUECHABON - SUREAU", WB_PU_sureau_total, WB_PU_sureau_partial, WB_PU_sureau_none, type, ylim)
+es_sperry_plot = plot_one("ARMALLON. - SPERRY", WB_ES_sperry_total, WB_ES_sperry_partial, WB_ES_sperry_none, type, ylim)
+es_sureau_plot = plot_one("ARMALLON. - SUREAU", WB_ES_sureau_total, WB_ES_sureau_partial, WB_ES_sureau_none, type, ylim)
+# ro_plot = plot_one("RONDA (2014)", WB_RO_sperry_total, WB_RO_sperry_partial, WB_RO_sperry_none, type, ylim)
+cowplot::plot_grid(fb_sperry_plot, fb_sureau_plot, 
+                   pr_sperry_plot, pr_sureau_plot,
+                   pu_sperry_plot, pu_sureau_plot,
+                   es_sperry_plot, es_sureau_plot,
+                   nrow = 8)
+}
+
 ```
 
 ## Simulations
@@ -63,77 +105,41 @@ For each of these plots we performed two simulations with the advanced water bal
 ## Results
 ### Transpiration per leaf area unit (l·m-2)
 
-Differences in transpiration per leaf area unit can be observed in simulations assuming total overlap (left panels) vs. simulations assuming independent water pools (right panels). Transpiration is similar during wet periods, but differences are notorious during dry periods, where transpiration decrease curves become more distinct across species.
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13, warning = FALSE}
-type = "TranspirationPerLeaf"
-fb_plot = plot_one("FONTBLANCHE (2014)", WB_FB_advanced_total, WB_FB_advanced_partial, WB_FB_advanced_none, type, c(0,2))
-pr_plot = plot_one("PRADES (2011)", WB_PR_advanced_total, WB_PR_advanced_partial, WB_PR_advanced_none, type, c(0,2))
-pu_plot = plot_one("PUECHABON (2004)", WB_PU_advanced_total, WB_PU_advanced_partial, WB_PU_advanced_none, type, c(0,2))
-cb_plot = plot_one("CAN BALASC (2011)", WB_CB_advanced_total, WB_CB_advanced_partial, WB_CB_advanced_none, type,  c(0,2))
-es_plot = plot_one("ALTO TAJO (2011)", WB_ES_advanced_total, WB_ES_advanced_partial, WB_ES_advanced_none, type, c(0,2.5))
-cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, warning = FALSE, message = FALSE}
+plot_several(type = "TranspirationPerLeaf", ylim = c(0,3.5))
 ```
 
 
 ### Soil water potential (MPa)
 
-Soil moisture dynamics do not differ between the two assumptions, if we examine the topmost soil layers (layers 1 and 2). However, soil moisture dynamics of deeper layers (mostly layer 4 but sometimes also layer 3) is different depending on whether water pools are considered or not. Presumably, this is the effect of some species drawing more or less water from deeper layers of their water pool depending on their root distribution, whereas in simulations without water pools the species with deeper root systems drives the dynamics of soil moisture in the stand.
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
-type = "SoilPsi"
-fb_plot = plot_one("FONTBLANCHE (2014)", WB_FB_advanced_total, WB_FB_advanced_partial, WB_FB_advanced_none, type, c(-5,0))
-pr_plot = plot_one("PRADES (2011)", WB_PR_advanced_total, WB_PR_advanced_partial, WB_PR_advanced_none, type, c(-8,0))
-pu_plot = plot_one("PUECHABON (2004)", WB_PU_advanced_total, WB_PU_advanced_partial, WB_PU_advanced_none, type, c(-6,0))
-cb_plot = plot_one("CAN BALASC (2011)", WB_CB_advanced_total, WB_CB_advanced_partial, WB_CB_advanced_none, type,  c(-6,0))
-es_plot = plot_one("ALTO TAJO (2011)", WB_ES_advanced_total, WB_ES_advanced_partial, WB_ES_advanced_none, type,  c(-6,0))
-cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot, es_plot, nrow = 5)
+
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, message = FALSE, warning = FALSE}
+plot_several(type = "SoilPsi", ylim = c(-8,0))
+```
+
+
+### Root-crown water potential (MPa)
+
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, message = FALSE, warning = FALSE}
+plot_several(type = "RootPsi", ylim = c(-8,0))
 ```
 
 
 ### Range of leaf water potential (MPa)
 
-Leaf water potential of species seems to be strongly affected by the decision of considering  independent water pools. If those are not considered (total rhizosphere overlap), pre-dawn water potentials are similar across species (which drives drought stress and cavitation of the most sensitive species), whereas in simulations with independent water pools pre-dawn water potentials of different species equilibrate at different values, reflecting the different soil moisture levels in their water pools. This is for the benefit of species known to close their stomata early during drought or for species with more vulnerable hydraulic systems. For example, a species like *Arbutus unedo* in Can Balasc is forced to attain very negative (-5 MPa) water potentials in simulations with complete rhizosphere overlap, whereas it stays around safer levels (< -2.5 MPa) with independent water pools.
 
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
-type = "LeafPsiRange"
-fb_plot = plot_one("FONTBLANCHE (2014)", WB_FB_advanced_total, WB_FB_advanced_partial, WB_FB_advanced_none, type)
-pr_plot = plot_one("PRADES (2011)", WB_PR_advanced_total, WB_PR_advanced_partial, WB_PR_advanced_none, type)
-pu_plot = plot_one("PUECHABON (2004)", WB_PU_advanced_total, WB_PU_advanced_partial, WB_PU_advanced_none, type)
-cb_plot = plot_one("CAN BALASC (2011)", WB_CB_advanced_total, WB_CB_advanced_partial, WB_CB_advanced_none, type)
-es_plot = plot_one("ALTO TAJO (2011)", WB_ES_advanced_total, WB_ES_advanced_partial, WB_ES_advanced_none, type)
-cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, warning = FALSE, message = FALSE}
+plot_several(type = "LeafPsiRange", ylim = c(-10,0))
 ```
 
-### Percent loss conductance (%)
+### Stem percent loss conductance (%)
 
-Percent loss conductance (PLC) values are rather similar for oaks in the two simulated scenarios. In contrast, PLC values are much lower for more sensitive species like pines or *Arbutus*, when considering independent water pools. This is in agreement with less negative water potentials in this simulation. PLC of most resistant species like *Buxus sempervirens* are low and little affected by the decision.
 
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
-type = "StemPLC"
-fb_plot = plot_one("FONTBLANCHE (2014)", WB_FB_advanced_total, WB_FB_advanced_partial, WB_FB_advanced_none, type, c(0,100))
-pr_plot = plot_one("PRADES (2011)", WB_PR_advanced_total, WB_PR_advanced_partial, WB_PR_advanced_none, type, c(0,100))
-pu_plot = plot_one("PUECHABON (2004)", WB_PU_advanced_total, WB_PU_advanced_partial, WB_PU_advanced_none, type, c(0,100))
-cb_plot = plot_one("CAN BALASC (2011)", WB_CB_advanced_total, WB_CB_advanced_partial, WB_CB_advanced_none, type, c(0,100))
-es_plot = plot_one("ALTO TAJO (2011)", WB_ES_advanced_total, WB_ES_advanced_partial, WB_ES_advanced_none, type, c(0,100))
-cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot, es_plot, nrow = 5)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, warning = FALSE, message = FALSE}
+plot_several(type = "StemPLC", ylim = c(0,100))
 ```
 
-### Live fuel moisture content (%)
 
-Dynamics of live fuel moisture content (LFMC) of species generally follow the same patterns of pre-dawn water potentials. I.e. simulations assuming total horizontal overlap of rhizosphere distribution leading to lower LFMC values for some species such as pines.
-
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
-type = "LFMC"
-fb_plot = plot_one("FONTBLANCHE (2014)", WB_FB_advanced_total, WB_FB_advanced_partial, WB_FB_advanced_none, type, c(0,130))
-pr_plot = plot_one("PRADES (2011)", WB_PR_advanced_total, WB_PR_advanced_partial, WB_PR_advanced_none, type, c(0,160))
-pu_plot = plot_one("PUECHABON (2004)", WB_PU_advanced_total, WB_PU_advanced_partial, WB_PU_advanced_none, type, c(0,130))
-cb_plot = plot_one("CAN BALASC (2011)", WB_CB_advanced_total, WB_CB_advanced_partial, WB_CB_advanced_none, type, c(0,145))
-es_plot = plot_one("ALTO TAJO (2011)", WB_ES_advanced_total, WB_ES_advanced_partial, WB_ES_advanced_none, type, c(0,240))
-cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot, es_plot, nrow = 5)
-```
-
-## Discussion
-
-In this vignette we illustrated the impact of considering or not spatial overlap of rhizosphere distribution among species in mixed forest stands. We evaluated the two extreme situations, namely total overlap and completely independent water pools. The second assumption seems to lead to more realistic results in terms of leaf water potentials and PLC values, which raises the question of which option should be the default in **medfate**. Reality probably lies between the two extreme situations, with a partial overlap of water pools. This option is also available in **medfate**, but a new problem arises as to how to decide the degree of overlap, and current implementation leads to results similar to those of assuming shared water pools (here redistribution plays an homogenization role). Moreover, it is possible that the (functional) degree of overlap be dynamic, i.e., the drier the soils the more unconnected and independent rhizospheres.
 
 ## Bibliography
 

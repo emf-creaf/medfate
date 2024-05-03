@@ -139,12 +139,14 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
                              "BAI", "DI","DBH", "Height"))
   }
   if(substr(type,1,3) %in% c("REW", "SWC", "RWC")) {
-    sm = out$Soil
+    sm = as.data.frame(out$Soil[[substr(type,1,3)]])
     d = rownames(sm)
-    var_mod  <- type
-    if(type=="SWC")  var_mod <- "SWC.1"
-    else if(type=="REW")  var_mod <- "REW.1"
-    else if(type=="RWC")  var_mod <- "RWC.1"
+    if(type=="SWC")  var_mod <- "1"
+    else if(type=="REW")  var_mod <- "1"
+    else if(type=="RWC")  var_mod <- "1"
+    else {
+      var_mod  <- substr(type,5, nchar(type))
+    }
     df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]])
     
     if(!(type %in% names(measuredData))) stop(paste0("Column '", type, "' not found in measured data frame."))
