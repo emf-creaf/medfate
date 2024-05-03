@@ -93,14 +93,17 @@ x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #Call simulation function
 S1<-spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
-#Monthly summary (averages) of soil status
-summary(S1, freq="months",FUN=mean, output="Soil")
+#Queries the tables in 'Soil'
+names(S1$Soil)
+
+#Monthly summary (averages) of soil relative water content
+summary(S1, freq="months",FUN=mean, output="RWC")
 
 #Queries the tables in 'Plants'
 names(S1$Plants)
 
 #Monthly summary (averages) of plant stress
-summary(S1, freq="months",FUN=mean, output="Plants$PlantStress", 
+summary(S1, freq="months",FUN=mean, output="PlantStress", 
         bySpecies = TRUE)
 
 
