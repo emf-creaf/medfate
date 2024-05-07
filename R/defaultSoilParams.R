@@ -22,7 +22,7 @@
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso  \code{\link{soil}},  \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
+#' @seealso  \code{\link{soil}}, \code{\link{soil_redefineLayers}},  \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
 #' 
 #' @examples 
 #' defaultSoilParams(4)

@@ -5,6 +5,7 @@
 # Version 4.2.0
 - Reorganization of Soil output as a list
 - Snow output as independent data frame
+- New function soil_redefineLayers
 
 # Version 4.1.0
 - Single-domain and dual-permeability soil water flows

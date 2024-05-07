@@ -36,7 +36,7 @@ defaultSoilParams(4)
 
 }
 \seealso{
-\code{\link{soil}},  \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
+\code{\link{soil}}, \code{\link{soil_redefineLayers}},  \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
