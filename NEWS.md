@@ -6,6 +6,7 @@
 - Reorganization of Soil output as a list
 - Snow output as independent data frame
 - New function soil_redefineLayers
+- Bug correction in forest_mergeShrubs
 
 # Version 4.1.0
 - Single-domain and dual-permeability soil water flows

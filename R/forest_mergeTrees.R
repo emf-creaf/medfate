@@ -160,7 +160,7 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
     nosel <- !(sel0a | sel0b | sel1a | sel1b | sel2a| sel2b | sel3a | sel3b | 
                  sel4a | sel4b | sel5a | sel5b | sel6a | sel6b | sel7a | sel7b | 
                  sel8a | sel8b | sel9a | sel9b | sel10)
-    y = x[nosel,, drop = FALSE]
+    y = x[nosel,c("Species", "Height", "Cover", "Z50", "Z95"), drop = FALSE]
     if(sum(sel0a)>0) y <- rbind(y, mergeShrubsSize(x[sel0a,, drop = FALSE]))
     if(sum(sel0b)>0) y <- rbind(y, mergeShrubsSize(x[sel0b,, drop = FALSE]))
     if(sum(sel1a)>0) y <- rbind(y, mergeShrubsSize(x[sel1a,, drop = FALSE]))
