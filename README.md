@@ -56,14 +56,16 @@ During the development of **medfate** some functions have been
 originally placed there and then moved to more specialized packages
 which evolve together with **medfate**:
 
-- Package [**meteoland**](https://github.com/emf-creaf/meteoland) allows
-  generating daily weather input for simulation models in **medfate**.
-- Package [**medfateland**](https://github.com/emf-creaf/medfateland)
+- Package [**medfateland**](https://emf-creaf.github.io/medfateland)
   extends **medfate** by allowing simulations to be performed in a
   spatially explicit context.
-- Package [**medfateutils**](https://github.com/emf-creaf/medfateutils)
+- Package [**meteoland**](https://emf-creaf.github.io/meteoland) allows
+  generating daily weather input for simulation models in **medfate**
+  and **medfateland**.
+- Package [**medfateutils**](https://emf-creaf.github.io/medfateutils)
   provides functions to help initializing vegetation, soil and species
-  parameter inputs for **medfate** simulation functions.
+  parameter inputs for **medfate** and **medfateland** simulation
+  functions.
 
 ## Authorship
 
