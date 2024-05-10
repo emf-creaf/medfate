@@ -7,6 +7,8 @@
 \alias{stand_LAI}
 \alias{stand_values}
 \alias{stand_dominantTreeDiameter}
+\alias{stand_treeDensity}
+\alias{stand_meanTreeHeight}
 \alias{stand_dominantTreeHeight}
 \alias{stand_hartBeckingIndex}
 \alias{stand_quadraticMeanTreeDiameter}
@@ -22,6 +24,10 @@ stand_fuelLoading(x, SpParams, gdd = NA_real_, includeDead = TRUE)
 stand_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 
 stand_dominantTreeDiameter(x, minDBH = 7.5)
+
+stand_treeDensity(x, minDBH = 7.5)
+
+stand_meanTreeHeight(x, minDBH = 7.5)
 
 stand_dominantTreeHeight(x, minDBH = 7.5)
 
@@ -47,8 +53,10 @@ stand_dominantTreeSpecies(x, SpParams)
 \value{
 \itemize{
 \item{\code{stand_basalArea}: Stand basal area (m2/ha).}
+\item{\code{stand_treeDensity}: Stand tree density (in ind/ha).}
 \item{\code{stand_dominantTreeDiameter}: Dominant tree diameter, i.e the average diameter of the 100 widest trees (in cm).}
 \item{\code{stand_quadraticMeanTreeDiameter}: Quadratic mean tree diameter, i.e. the diameter value corresponding to the current basal area and density.}
+\item{\code{stand_meanTreeHeight}: Mean tree height (in cm).}
 \item{\code{stand_dominantTreeHeight}: Dominant tree height, i.e the average height of the 100 tallest trees (in cm).}
 \item{\code{stand_hartBeckingIndex}: Hart-Becking index.}
 \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}

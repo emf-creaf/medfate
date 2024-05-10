@@ -61,8 +61,10 @@
 #' @return 
 #' \itemize{
 #' \item{\code{stand_basalArea}: Stand basal area (m2/ha).}
+#' \item{\code{stand_treeDensity}: Stand tree density (in ind/ha).}
 #' \item{\code{stand_dominantTreeDiameter}: Dominant tree diameter, i.e the average diameter of the 100 widest trees (in cm).}
 #' \item{\code{stand_quadraticMeanTreeDiameter}: Quadratic mean tree diameter, i.e. the diameter value corresponding to the current basal area and density.}
+#' \item{\code{stand_meanTreeHeight}: Mean tree height (in cm).}
 #' \item{\code{stand_dominantTreeHeight}: Dominant tree height, i.e the average height of the 100 tallest trees (in cm).}
 #' \item{\code{stand_hartBeckingIndex}: Hart-Becking index.}
 #' \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
@@ -88,6 +90,26 @@
 #' @name stand_values
 stand_dominantTreeDiameter<-function(x, minDBH = 7.5) {
   return(.dominantTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = minDBH))
+}
+
+#' @rdname stand_values
+stand_treeDensity<-function(x, minDBH = 7.5) {
+  N <- NA
+  if(nrow(x$treeData)>0) N <- sum(x$treeData$N[x$treeData$DBH>minDBH])
+  return(N)
+}
+
+#' @rdname stand_values
+stand_meanTreeHeight<-function(x, minDBH = 7.5) {
+  MTH <- NA
+  if(nrow(x$treeData)>0) {
+    h = x$treeData$Height[x$treeData$DBH>minDBH]
+    n = x$treeData$N[x$treeData$DBH>minDBH]
+    if(length(h)>0) {
+      MTH <- sum(h*n)/sum(n)
+    }
+  }
+  return(MTH)
 }
 
 #' @rdname stand_values
