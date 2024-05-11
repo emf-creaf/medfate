@@ -30,7 +30,26 @@ test_that("Test stand metrics",{
   expect_type(stand_LAI(exampleforest, SpParamsMED), "double")
   expect_type(stand_dominantTreeDiameter(exampleforest), "double")
   expect_type(stand_dominantTreeSpecies(exampleforest, SpParamsMED), "character")
+  expect_type(stand_treeDensity(exampleforest), "double")
+  expect_type(stand_meanTreeHeight(exampleforest), "double")
   expect_type(stand_dominantTreeHeight(exampleforest), "double")
   expect_type(stand_hartBeckingIndex(exampleforest), "double")
   expect_type(stand_quadraticMeanTreeDiameter(exampleforest), "double")
+})
+
+test_that("Test stand metrics with missing tree data",{
+  f <-exampleforest
+  f$treeData<- f$treeData[-c(1:nrow(exampleforest$treeData)), ,drop = FALSE]
+  expect_type(stand_basalArea(f), "double")
+  expect_type(stand_foliarBiomass(f, SpParamsMED), "double")
+  expect_type(stand_fuelLoading(f, SpParamsMED), "double")
+  expect_type(stand_foliarBiomass(f, SpParamsMED), "double")
+  expect_type(stand_LAI(f, SpParamsMED), "double")
+  expect_type(stand_dominantTreeDiameter(f), "double")
+  expect_type(stand_dominantTreeSpecies(f, SpParamsMED), "character")
+  expect_type(stand_treeDensity(f), "double")
+  expect_type(stand_meanTreeHeight(f), "double")
+  expect_type(stand_dominantTreeHeight(f), "double")
+  expect_type(stand_hartBeckingIndex(f), "double")
+  expect_type(stand_quadraticMeanTreeDiameter(f), "double")
 })

@@ -89,19 +89,22 @@
 #'     
 #' @name stand_values
 stand_dominantTreeDiameter<-function(x, minDBH = 7.5) {
-  return(.dominantTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = minDBH))
+  if(nrow(x$treeData)>0) {
+    return(.dominantTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = minDBH))
+  }
+  return(as.numeric(NA))
 }
 
 #' @rdname stand_values
 stand_treeDensity<-function(x, minDBH = 7.5) {
-  N <- NA
+  N <- as.numeric(NA)
   if(nrow(x$treeData)>0) N <- sum(x$treeData$N[x$treeData$DBH>minDBH])
   return(N)
 }
 
 #' @rdname stand_values
 stand_meanTreeHeight<-function(x, minDBH = 7.5) {
-  MTH <- NA
+  MTH <- as.numeric(NA)
   if(nrow(x$treeData)>0) {
     h = x$treeData$Height[x$treeData$DBH>minDBH]
     n = x$treeData$N[x$treeData$DBH>minDBH]
@@ -114,17 +117,26 @@ stand_meanTreeHeight<-function(x, minDBH = 7.5) {
 
 #' @rdname stand_values
 stand_dominantTreeHeight<-function(x, minDBH = 7.5) {
-  return(.dominantTreeHeight(n = x$treeData$N, h = x$treeData$Height, dbh = x$treeData$DBH, minDBH = minDBH))
+  if(nrow(x$treeData)>0) {
+    return(.dominantTreeHeight(n = x$treeData$N, h = x$treeData$Height, dbh = x$treeData$DBH, minDBH = minDBH))
+  }
+  return( as.numeric(NA))
 }
 
 #' @rdname stand_values
 stand_hartBeckingIndex<-function(x, minDBH = 7.5) {
-  return(.hartBeckingIndex(n = x$treeData$N, h = x$treeData$Height, dbh = x$treeData$DBH, minDBH = minDBH))
+  if(nrow(x$treeData)>0) {
+    return(.hartBeckingIndex(n = x$treeData$N, h = x$treeData$Height, dbh = x$treeData$DBH, minDBH = minDBH))
+  }
+  return( as.numeric(NA))
 }
 
 #' @rdname stand_values
 stand_quadraticMeanTreeDiameter<-function(x, minDBH = 7.5) {
-  return(.quadraticMeanTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = 7.5))
+  if(nrow(x$treeData)>0) {
+    return(.quadraticMeanTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = 7.5))
+  }
+  return( as.numeric(NA))
 }
 
 #' @rdname stand_values
@@ -135,5 +147,5 @@ stand_dominantTreeSpecies <-function(x, SpParams) {
   if(length(s)>0) {
     return(names(s)[which.max(s)])
   }
-  return(NA)
+  return(as.character(NA))
 }
