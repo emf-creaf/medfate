@@ -1359,6 +1359,15 @@ double standFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL, bool i
   return(tf);
 }
 
+//' @rdname stand_values
+ // [[Rcpp::export("stand_shrubVolume")]]
+ double standShrubVolume(List x, DataFrame SpParams) {
+   NumericVector ph = cohortPhytovolume(x, SpParams);
+   double sv= 0.0;
+   for(int i=0;i<ph.size();i++){if(!NumericVector::is_na(ph[i])) sv+=ph[i];}
+   return(sv);
+ }
+
 
 
 //' @rdname stand_values

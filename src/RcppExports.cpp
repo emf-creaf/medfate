@@ -1015,6 +1015,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// standShrubVolume
+double standShrubVolume(List x, DataFrame SpParams);
+RcppExport SEXP _medfate_standShrubVolume(SEXP xSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(standShrubVolume(x, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
 // standLAI
 double standLAI(List x, DataFrame SpParams, double gdd, bool bounded);
 RcppExport SEXP _medfate_standLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP boundedSEXP) {
@@ -5755,6 +5767,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 2},
     {"_medfate_standFoliarBiomass", (DL_FUNC) &_medfate_standFoliarBiomass, 3},
     {"_medfate_standFuelLoading", (DL_FUNC) &_medfate_standFuelLoading, 4},
+    {"_medfate_standShrubVolume", (DL_FUNC) &_medfate_standShrubVolume, 2},
     {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 4},
     {"_medfate_LAIdistributionVectors", (DL_FUNC) &_medfate_LAIdistributionVectors, 4},
     {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 5},

@@ -4,6 +4,7 @@
 \alias{stand_basalArea}
 \alias{stand_foliarBiomass}
 \alias{stand_fuelLoading}
+\alias{stand_shrubVolume}
 \alias{stand_LAI}
 \alias{stand_values}
 \alias{stand_dominantTreeDiameter}
@@ -20,6 +21,8 @@ stand_basalArea(x, minDBH = 7.5)
 stand_foliarBiomass(x, SpParams, gdd = NA_real_)
 
 stand_fuelLoading(x, SpParams, gdd = NA_real_, includeDead = TRUE)
+
+stand_shrubVolume(x, SpParams)
 
 stand_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 
@@ -62,7 +65,7 @@ stand_dominantTreeSpecies(x, SpParams)
 \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
 \item{\code{stand_fuel}: Stand fine fuel load (in kg/m2).}
 \item{\code{stand_LAI}: Stand leaf area index (m2/m2).}
-\item{\code{stand_phytovolume}: Stand shrub phytovolume (m3/m2).}
+\item{\code{stand_shrubVolume}: Stand shrub phytovolume (m3/m2).}
 }
 }
 \description{

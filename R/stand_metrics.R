@@ -70,7 +70,7 @@
 #' \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
 #' \item{\code{stand_fuel}: Stand fine fuel load (in kg/m2).}
 #' \item{\code{stand_LAI}: Stand leaf area index (m2/m2).}
-#' \item{\code{stand_phytovolume}: Stand shrub phytovolume (m3/m2).}
+#' \item{\code{stand_shrubVolume}: Stand shrub phytovolume (m3/m2).}
 #' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

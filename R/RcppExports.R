@@ -752,6 +752,11 @@ stand_fuelLoading <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
 }
 
 #' @rdname stand_values
+stand_shrubVolume <- function(x, SpParams) {
+    .Call(`_medfate_standShrubVolume`, x, SpParams)
+}
+
+#' @rdname stand_values
 stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
     .Call(`_medfate_standLAI`, x, SpParams, gdd, bounded)
 }
