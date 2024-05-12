@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(cowplot)
 library(medfate)
+library(medfateutils)
 ```
 
 ## Introduction
@@ -251,20 +252,15 @@ We can compare observed vs modelled soil moisture content in a similar way as we
 evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="dynamics")
 ```
 
-Clearly, the absolute values of the modeled and measured SMC do not match, which can indicate that either the soil moisture sensors are not calibrated or that we are using an inappropriate soil texture in the model. To avoid this issue, we can use relative extractable water, where in the case of observed data the function divides the observed values by the 95% quantile:
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4, warning=FALSE, message=FALSE}
-evaluation_plot(fb_SWB, fb_observed, type = "REW", plotType="dynamics")
-```
-
 As before, we can generate a scatter plot:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4, warning=FALSE, message=FALSE}
-evaluation_plot(fb_SWB, fb_observed, type = "REW", plotType="scatter")
+evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="scatter")
 ```
 
 or examine evaluation statistics:
 
 ```{r}
-evaluation_stats(fb_SWB, fb_observed, type = "REW")
+evaluation_stats(fb_SWB, fb_observed, type = "SWC")
 ```
 
 ### Plant transpiration

@@ -2091,9 +2091,6 @@ void printWaterBalanceResult(List outputList, List x,
 //' #Switch to 'Sureau' transpiration mode
 //' control <- defaultControl("Sureau")
 //' 
-//' # Makes leaf/root xylem vulnerability equal to stem xylem vulnerability
-//' control$segmentedXylemVulnerability = FALSE 
-//' 
 //' #Initialize input
 //' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 

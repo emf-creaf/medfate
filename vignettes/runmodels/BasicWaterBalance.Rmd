@@ -198,10 +198,10 @@ head(df)
 
 ### Temporal summaries
 
-While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
+While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the water balance by months one can use:
 
 ```{r}
-summary(S, freq="months",FUN=mean, output="Soil")
+summary(S, freq="months",FUN=mean, output="WaterBalance")
 ```
 
 Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:

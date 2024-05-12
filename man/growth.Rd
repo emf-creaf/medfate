@@ -137,9 +137,6 @@ G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #Switch to 'Sureau' transpiration mode
 control <- defaultControl("Sureau")
 
-#Makes leaf xylem vulnerability equal to stem xylem vulnerability
-control$segmentedXylemVulnerability = FALSE 
-
 #Initialize vegetation input
 x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 

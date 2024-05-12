@@ -109,8 +109,8 @@ Package `medfate` provides functions to estimate fuel properties and potential f
 
 During the development of **medfate** some functions have been originally placed there and then moved to more specialized packages which evolve together with **medfate**:
 
-  + Package [**meteoland**](https://github.com/emf-creaf/meteoland) allows generating daily weather input for simulation models in **medfate**.
-  + Package [**medfateland**](https://github.com/emf-creaf/medfateland) extends **medfate** by allowing simulations to be performed in a spatially explicit context.
-  + Package [**medfateutils**](https://github.com/emf-creaf/medfateutils) provides functions to help initializing vegetation, soil and species parameter inputs for **medfate** simulation functions.
+  + Package [**meteoland**](https://emf-creaf.github.io/meteoland) allows generating daily weather input for simulation models in **medfate**.
+  + Package [**medfateland**](https://emf-creaf.github.io/medfateland) extends **medfate** by allowing simulations to be performed in a spatially explicit context.
+  + Package [**medfateutils**](https://emf-creaf.github.io/medfateutils) provides functions to help initializing vegetation, soil and species parameter inputs for **medfate** simulation functions.
 
 The set of R packages are developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).

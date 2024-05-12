@@ -1089,9 +1089,6 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' #Switch to 'Sureau' transpiration mode
 #' control <- defaultControl("Sureau")
 #' 
-#' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
-#' control$segmentedXylemVulnerability = FALSE 
-#' 
 #' #Initialize vegetation input
 #' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
@@ -3553,9 +3550,6 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' 
 #' #Switch to 'Sureau' transpiration mode
 #' control <- defaultControl("Sureau")
-#' 
-#' # Makes leaf/root xylem vulnerability equal to stem xylem vulnerability
-#' control$segmentedXylemVulnerability = FALSE 
 #' 
 #' #Initialize input
 #' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)

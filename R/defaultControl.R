@@ -58,7 +58,7 @@
 #'       }
 #'       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
 #'       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
-#'       \item{\code{segmentedXylemVulnerability [= TRUE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem.}
+#'       \item{\code{segmentedXylemVulnerability [= TRUE/FALSE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem. By default, \code{segmentedXylemVulnerability = TRUE} for \code{transpirationMode = "Sperry"} and \code{segmentedXylemVulnerability = FALSE} for \code{transpirationMode = "Sureau"}.}
 #'       \item{\code{leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]}: A flag indicating whether cavitation effects on conductance of leaves and stem are applied. Only relevant for \code{transpirationMode = "Sperry"}.}
 #'       \item{\code{leafCavitationRecovery, stemCavitationRecovery [= "rate"]}: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions \code{\link{spwb}} and \code{\link{spwb_day}}):
 #'           \itemize{
@@ -311,5 +311,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     recrTreeZ95 = 1000,
     recrShrubZ95 = 500
   )
+  if(transpirationMode=="Sureau") l$segmentedXylemVulnerability = FALSE
   return(l)
 }

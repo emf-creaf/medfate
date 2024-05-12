@@ -2214,9 +2214,6 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' #Switch to 'Sureau' transpiration mode
 //' control <- defaultControl("Sureau")
 //' 
-//' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
-//' control$segmentedXylemVulnerability = FALSE 
-//' 
 //' #Initialize vegetation input
 //' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
