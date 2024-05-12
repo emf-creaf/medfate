@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sensitivity analysis and calibration • medfate</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
 <script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-04-16</h4>
+            <h4 data-toc-skip class="date">2024-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -105,7 +105,7 @@ to illustrate simulation functions in <strong>medfate</strong>. We begin
 by loading the package and the example forest data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'medfate' [ver. 4.1.0]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'medfate' [ver. 4.2.0]</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span>
 <span><span class="va">exampleforest</span></span></code></pre></div>
@@ -359,19 +359,19 @@ as reference:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        dates       SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span></span>
-<span><span class="co">## 1 2001-01-01 0.3069977 1.9590280 0.07897391 0.05401519   125.8873   93.07011</span></span>
-<span><span class="co">## 2 2001-01-02 0.3224390 1.8063483 0.25711073 0.14870784   125.9162   93.07620</span></span>
-<span><span class="co">## 3 2001-01-03 0.3083034 0.2818827 0.20327929 0.08146374   125.9254   93.07423</span></span>
-<span><span class="co">## 4 2001-01-04 0.3235625 1.5629178 0.09251115 0.06161691   125.8833   93.08324</span></span>
-<span><span class="co">## 5 2001-01-05 0.3146014 1.2766893 0.15464108 0.13231872   125.9490   93.09398</span></span>
-<span><span class="co">## 6 2001-01-06 0.3409924 1.7082599 0.14587030 0.07959577   125.9485   93.08401</span></span>
+<span><span class="co">## 1 2001-01-01 0.3226725 2.0878000 0.06767226 0.13037215   125.8863   93.07454</span></span>
+<span><span class="co">## 2 2001-01-02 0.3075006 1.8600163 0.18000610 0.16555452   125.8842   93.07371</span></span>
+<span><span class="co">## 3 2001-01-03 0.3084646 0.3046051 0.17749022 0.06893953   125.9102   93.08329</span></span>
+<span><span class="co">## 4 2001-01-04 0.3296031 1.5591229 0.10159948 0.01531790   125.9053   93.08481</span></span>
+<span><span class="co">## 5 2001-01-05 0.3242696 1.2159743 0.15278858 0.18279733   125.9459   93.09727</span></span>
+<span><span class="co">## 6 2001-01-06 0.3564156 2.1784826 0.16661375 0.10051714   125.9148   93.08308</span></span>
 <span><span class="co">##     BAI_T1_148 BAI_T2_168    DI_T1_148 DI_T2_168</span></span>
-<span><span class="co">## 1 2.318246e-05          0 2.614144e-07         0</span></span>
-<span><span class="co">## 2 2.266946e-09          0 3.828287e-11         0</span></span>
-<span><span class="co">## 3 1.815648e-13          0 0.000000e+00         0</span></span>
-<span><span class="co">## 4 2.421352e-11          0 1.005387e-12         0</span></span>
-<span><span class="co">## 5 2.924564e-03          0 9.304292e-05         0</span></span>
-<span><span class="co">## 6 2.833330e-03          0 5.142938e-05         0</span></span></code></pre>
+<span><span class="co">## 1 2.014482e-05          0 2.118615e-07         0</span></span>
+<span><span class="co">## 2 1.198392e-09          0 3.763209e-11         0</span></span>
+<span><span class="co">## 3 2.630563e-13          0 0.000000e+00         0</span></span>
+<span><span class="co">## 4 2.697499e-11          0 7.446822e-13         0</span></span>
+<span><span class="co">## 5 4.698752e-03          0 1.081387e-04         0</span></span>
+<span><span class="co">## 6 1.995606e-03          0 3.292066e-05         0</span></span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The
 model fit to observed data can be measured using the Nash-Sutcliffe
 coefficient, which we calculate for the initial run using function
@@ -379,7 +379,7 @@ coefficient, which we calculate for the initial run using function
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, </span>
 <span>                  metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.6101416</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.9327474</span></span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient
 given a model simulation result, but is not a model output function as
 we defined above. Analogously to the measures of total transpiration and
@@ -398,10 +398,10 @@ simulation results, so that we only need to provide values for the input
 factors:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -0.521332</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.3692993</span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -5.919113</span></span></code></pre>
+<pre><code><span><span class="co">## [1] -11.22321</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>
@@ -832,7 +832,7 @@ Analysis. The Primer. Wiley.</li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

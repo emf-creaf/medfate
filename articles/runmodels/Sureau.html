@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Example_SurEau • medfate</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
 <script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-04-16</h4>
+            <h4 data-toc-skip class="date">2024-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/Sureau.Rmd" class="external-link"><code>vignettes/runmodels/Sureau.Rmd</code></a></small>
       <div class="hidden name"><code>Sureau.Rmd</code></div>
@@ -88,7 +88,7 @@ Caceres</h4>
 <p>Initialisation for <code><a href="../../reference/spwb.html">spwb()</a></code> function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'medfate' [ver. 4.1.0]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'medfate' [ver. 4.2.0]</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Soil</span></span>
 <span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
@@ -117,12 +117,11 @@ using:</p>
 <code class="sourceCode R"><span><span class="va">network</span> <span class="op">&lt;-</span> <span class="va">cn</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">network</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## List of 40</span></span>
-<span><span class="co">##  $ params                     :List of 27</span></span>
+<span><span class="co">##  $ params                     :List of 26</span></span>
 <span><span class="co">##   ..$ TPhase_gmin      : num 37.5</span></span>
 <span><span class="co">##   ..$ Q10_1_gmin       : num 1.2</span></span>
 <span><span class="co">##   ..$ Q10_2_gmin       : num 4.8</span></span>
 <span><span class="co">##   ..$ Gsw_AC_slope     : num 6.24</span></span>
-<span><span class="co">##   ..$ gCrown0          : num 150</span></span>
 <span><span class="co">##   ..$ fTRBToLeaf       : num 0.8</span></span>
 <span><span class="co">##   ..$ C_SApoInit       : num 2e-05</span></span>
 <span><span class="co">##   ..$ C_LApoInit       : num 1e-05</span></span>
@@ -135,12 +134,12 @@ using:</p>
 <span><span class="co">##   ..$ gsMax            : num 285</span></span>
 <span><span class="co">##   ..$ gmin_S           : num 3.09</span></span>
 <span><span class="co">##   ..$ gsNight          : num 14.2</span></span>
-<span><span class="co">##   ..$ VCleaf_P50       : num -1.2</span></span>
-<span><span class="co">##   ..$ VCleaf_slope     : num 115</span></span>
+<span><span class="co">##   ..$ VCleaf_P50       : num -4.46</span></span>
+<span><span class="co">##   ..$ VCleaf_slope     : num 45.9</span></span>
 <span><span class="co">##   ..$ VCstem_P50       : num -4.46</span></span>
 <span><span class="co">##   ..$ VCstem_slope     : num 45.9</span></span>
-<span><span class="co">##   ..$ VCroot_P50       : num -0.88</span></span>
-<span><span class="co">##   ..$ VCroot_slope     : num 103</span></span>
+<span><span class="co">##   ..$ VCroot_P50       : num -4.46</span></span>
+<span><span class="co">##   ..$ VCroot_slope     : num 45.9</span></span>
 <span><span class="co">##   ..$ PiFullTurgor_Leaf: num -1.59</span></span>
 <span><span class="co">##   ..$ epsilonSym_Leaf  : num 8.92</span></span>
 <span><span class="co">##   ..$ PiFullTurgor_Stem: num -2.01</span></span>
@@ -165,8 +164,8 @@ using:</p>
 <span><span class="co">##  $ k_SSym                     : num 0.26</span></span>
 <span><span class="co">##  $ k_LSym                     : num 8</span></span>
 <span><span class="co">##  $ k_RSApo                    : num [1:4] 0.8575 0.35519 0.04126 0.00738</span></span>
-<span><span class="co">##  $ k_SoilToStem               : num [1:4] 0.85629 0.3537 0.0411 0.00736</span></span>
-<span><span class="co">##  $ k_Soil                     : num [1:4] 607.38 84.32 10.67 3.49</span></span>
+<span><span class="co">##  $ k_SoilToStem               : num [1:4] 0.85749 0.35519 0.04126 0.00738</span></span>
+<span><span class="co">##  $ k_Soil                     : num [1:4] 362138 50273 6359 2081</span></span>
 <span><span class="co">##  $ k_Plant                    : num 0.747</span></span>
 <span><span class="co">##  $ Q_SApo_sat_mmol_perLeafArea: num 316823</span></span>
 <span><span class="co">##  $ Q_LApo_sat_mmol_perLeafArea: num 10298</span></span>
@@ -256,7 +255,7 @@ potentials are now:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
