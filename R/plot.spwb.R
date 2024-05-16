@@ -442,7 +442,30 @@ plot.fordyn<-function(x, type="StandBasalArea",
                       summary.freq = summary.freq,...))
     }
     else if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "SoilREW", "SoilVol", "PlantExtraction", "HydraulicRedistribution")) {
-      Soil = summary(x, freq = "days", output = "Soil")
+      if(type=="SoilTheta") {
+        output = "Soil$SWC"
+        var = "SWC"
+      } else if(type=="SoilPsi") {
+        output = "Soil$Psi"
+        var = "Psi"
+      } else if(type=="SoilRWC") {
+        output = "Soil$RWC"
+        var = "RWC"
+      } else if(type=="SoilREW") {
+        output = "Soil$REW"
+        var = "REW"
+      } else if(type=="SoilVol") {
+        output = "Soil$ML"
+        var = "ML"
+      } else if(type=="PlantExtraction") {
+        output = "Soil$PlantExt"
+        var = "PlantExt"
+      } else if(type=="HydraulicRedistribution") {
+        output = "Soil$HydraulicInput"
+        var = "HydraulicInput"
+      }
+      Soil <- list(var = summary(x, freq = "days", output = output))
+      names(Soil)<- var
       return(.plot_soil(Soil = Soil, input_soil = input_soil, input_control = input_control,
                         type=type, dates = dates, 
                         xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab,
