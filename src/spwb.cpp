@@ -149,12 +149,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
 
   //Control parameters
   List control = x["control"];
-  bool snowpack = control["snowpack"];
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
-  String interceptionMode = control["interceptionMode"];
   String infiltrationMode = control["infiltrationMode"];
   double infiltrationCorrection = control["infiltrationCorrection"];
   String soilDomains = control["soilDomains"];
@@ -237,23 +235,24 @@ List spwbDay_basic(List x, NumericVector meteovec,
   double LgroundPAR = 100.0*exp((-1.0)*s);
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
-  //STEP 2 - Hidrological inputs (modifies SWE)
-  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, interceptionMode, 
-                                              prec, rainfallIntensity, 
-                                              pet, tday, rad, elevation,
-                                              Cm, LgroundPAR, LgroundSWR, 
-                                              snowpack, true);
+  //STEP 2 - Hidrological inputs (modifies snowpack)
+  NumericVector hydroInputs = waterInputs(x, 
+                                          prec, rainfallIntensity, 
+                                          pet, tday, rad, elevation,
+                                          Cm, LgroundPAR, LgroundSWR, 
+                                          true);
   double RainfallInput = hydroInputs["NetRain"];
   double Snowmelt = hydroInputs["Snowmelt"];
   
   //STEP 3 - Evaporation from bare soil and herbaceous transpiration
+  double snowpack = x["snowpack"];
   NumericVector EherbVec(nlayers,0.0);
   double Esoil = 0.0;
   NumericVector EsoilPools(numCohorts, 0.0);
   NumericMatrix EherbPools(numCohorts, nlayers);
   if(!plantWaterPools) {
     //Evaporation from bare soil if there is no snow (do not yet modify soil)
-    if(bareSoilEvaporation) Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
+    if(bareSoilEvaporation) Esoil = soilEvaporation(soil, snowpack, soilFunctions, pet, LgroundSWR, false);
     //Herbaceous transpiration (do not yet modify soil)
     EherbVec = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, false);
   } else {
@@ -263,7 +262,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
       List soil_c =  soilPools[c];
       //Evaporation from bare soil_c (if there is no snow), do not modify soil
       if(bareSoilEvaporation) {
-        EsoilPools[c] = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, false);
+        EsoilPools[c] = soilEvaporation(soil_c, snowpack, soilFunctions, pet, LgroundSWR, false);
         Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
       }
       //Herbaceous transpiration, do not modify soil
@@ -426,11 +425,9 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   List control = x["control"];
   int ntimesteps = control["ndailysteps"];
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
-  bool snowpack = control["snowpack"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
-  String interceptionMode = control["interceptionMode"];
   String infiltrationMode = control["infiltrationMode"];
   String soilDomains = control["soilDomains"];
   double infiltrationCorrection = control["infiltrationCorrection"];
@@ -506,23 +503,25 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   double LgroundPAR = 100.0*exp((-1.0)*s);
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
-  //STEP 2 - Interception, snow pack dynamics and soil water input (modifies SWE)
-  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, interceptionMode,
-                                              prec, rainfallIntensity, 
-                                              pet, tday, rad, elevation,
-                                              Cm, LgroundPAR, LgroundSWR, 
-                                              snowpack, true);
+  //STEP 2 - Interception, snow pack dynamics and soil water input (modifies snowpack)
+  NumericVector hydroInputs = waterInputs(x,
+                                          prec, rainfallIntensity, 
+                                          pet, tday, rad, elevation,
+                                          Cm, LgroundPAR, LgroundSWR, 
+                                          true);
   double RainfallInput = hydroInputs["NetRain"];
   double Snowmelt = hydroInputs["Snowmelt"];
   
   //STEP 3 - Evaporation from bare soil and herbaceous transpiration
+  double snowpack = x["snowpack"];
   NumericVector EherbVec(nlayers,0.0);
   double Esoil = 0.0;
   NumericVector EsoilPools(numCohorts, 0.0);
   NumericMatrix EherbPools(numCohorts, nlayers);
   if(!plantWaterPools) {
     //Evaporation from bare soil if there is no snow (do not yet modify soil)
-    if(bareSoilEvaporation) Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
+    if(bareSoilEvaporation) Esoil = soilEvaporation(soil, snowpack, 
+                                                    soilFunctions, pet, LgroundSWR, false);
     //Herbaceous transpiration (do not yet modify soil)
     EherbVec = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, false);
   } else {
@@ -532,7 +531,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       List soil_c =  soilPools[c];
       //Evaporation from bare soil_c (if there is no snow), do not modify soil
       if(bareSoilEvaporation) {
-        EsoilPools[c] = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, false);
+        EsoilPools[c] = soilEvaporation(soil_c, snowpack, soilFunctions, pet, LgroundSWR, false);
         Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
       }
       //Herbaceous transpiration, do not modify soil
@@ -1509,9 +1508,9 @@ void fillSoilDailyOutput(List SWB, List soil, List sDay,
     HydrIndays(iday,nlayers) = sum(HydrInVec);
   }
 }
-void fillSnowDailyOutput(DataFrame Snow, List soil, int iday) {
+void fillSnowDailyOutput(DataFrame Snow, List x, int iday) {
   NumericVector SWE = Snow["SWE"];
-  SWE[iday] = soil["SWE"];
+  SWE[iday] = x["snowpack"];
 }
 void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday) {
   List EB = Rcpp::as<Rcpp::List>(sDay["EnergyBalance"]);
@@ -1740,9 +1739,8 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
 }
 
 // [[Rcpp::export(".fillSPWBDailyOutput")]]
-void fillSPWBDailyOutput(List l, List soil, List sDay, int iday) {
+void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   
-  List x = l["spwbInput"];
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   
@@ -1753,13 +1751,14 @@ void fillSPWBDailyOutput(List l, List soil, List sDay, int iday) {
   if(control["soilResults"]) {
     String soilFunctions = control["soilFunctions"];
     List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+    List soil = x["soil"];
     fillSoilDailyOutput(Soil, soil, sDay, 
                                     iday, numDays, soilFunctions,
                                     true);
   }
   if(control["snowResults"]) {
     DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
-    fillSnowDailyOutput(Snow, soil, iday);
+    fillSnowDailyOutput(Snow, x, iday);
   }
   
   if(control["standResults"]) {
@@ -1814,7 +1813,7 @@ void printWaterBalanceResult(List outputList, List x,
   
   NumericVector finalPlantContent = plantWaterContent(x);
   NumericVector finalSoilContent = water(soil, soilFunctions);
-  double finalSnowContent = soil["SWE"];
+  double finalSnowContent = x["snowpack"];
   if(plantResults) Rcout<<"Final plant water content (mm): "<< sum(finalPlantContent)<<"\n";
   Rcout<<"Final soil water content (mm): "<< sum(finalSoilContent)<<"\n";
   Rcout<<"Final snowpack content (mm): "<< finalSnowContent<<"\n";
@@ -2226,7 +2225,7 @@ List spwb(List x, DataFrame meteo,
   //Initial soil status
   NumericVector initialSoilContent = water(soil, soilFunctions);
   NumericVector initialPlantContent = plantWaterContent(x);
-  double initialSnowContent = soil["SWE"];
+  double initialSnowContent = x["snowpack"];
   if(verbose) {
     Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
     Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
@@ -2403,7 +2402,7 @@ List spwb(List x, DataFrame meteo,
       }
 
       //Fill output list      
-      fillSPWBDailyOutput(outputList, soil, s,i);
+      fillSPWBDailyOutput(outputList, x, s,i);
   }
   if(verbose) Rcout << "\n\n";
   

@@ -82,7 +82,7 @@ Boughton (1989). A review of the USDA SCS curve number method. - Australian Jour
 Green, W.H. and Ampt, G.A. (1911) Studies on Soil Physics, 1: The Flow of Air and Water through Soils. The Journal of Agricultural Science, 4, 1-24.
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}
+\code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

@@ -69,6 +69,7 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
 //' }
 //' 
 //' @param soil An object of class \code{\link{soil}}.
+//' @param snowpack The amount of snow (in water equivalents, mm) in the snow pack.
 //' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 //' @param pet Potential evapotranspiration for a given day (mm)
 //' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
@@ -85,22 +86,22 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 //' 
 //' 
 //' @name hydrology_soilEvaporation
 // [[Rcpp::export("hydrology_soilEvaporation")]]
-double soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
+double soilEvaporation(List soil, double snowpack, 
+                       String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true) {
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector psiSoil = psi(soil, soilFunctions);
   double Esoil = 0.0;
-  double swe = soil["SWE"]; //snow pack
-  if(swe == 0.0) {
+  if(snowpack == 0.0) {
     double PETsoil = pet*(LgroundSWR/100.0);
-    double Gsoil = soil["Gsoil"];
+    double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
     // Allow evaporation only if water potential is higher than -2 MPa
     if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
     if(modifySoil){
@@ -115,7 +116,7 @@ double soilEvaporation(List soil, String soilFunctions, double pet, double Lgrou
 //' @param herbLAI Leaf area index of the herbaceous layer.
 // [[Rcpp::export("hydrology_herbaceousTranspiration")]]
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
-                               List soil, String soilFunctions, bool modifySoil = true){
+                                      List soil, String soilFunctions, bool modifySoil = true){
   if(NumericVector::is_na(herbLAI)) return(0.0);
   double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
   NumericVector dVec = soil["W"];
@@ -166,7 +167,7 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}
+//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
 //' 
 //' @name hydrology_infiltration
 // [[Rcpp::export("hydrology_infiltrationBoughton")]]
@@ -302,17 +303,16 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 
 
 
-//' Soil vertical inputs
+//' Water vertical inputs
 //' 
-//' High-level functions to define water inputs into the soil:
+//' High-level functions to define water inputs into the soil of a stand:
 //'  
 //' \itemize{
-//'   \item{Function \code{hydrology_soilWaterInputs} performs canopy water interception and snow accumulation/melt.}
+//'   \item{Function \code{hydrology_waterInputs} performs canopy water interception and snow accumulation/melt.}
 //'   \item{Function \code{hydrology_snowMelt} estimates snow melt using a simple energy balance, according to Kergoat (1998).}
 //' }
 //' 
-//' @param soil A list containing the description of the soil (see \code{\link{soil}}).
-//' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+//' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 //' @param prec Precipitation for the given day (mm)
 //' @param pet Potential evapotranspiration for the given day (mm)
 //' @param rainfallIntensity Rainfall intensity rate (mm/h).
@@ -322,16 +322,15 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 //' @param Cm Canopy water storage capacity.
 //' @param LgroundPAR Percentage of photosynthetically-active radiation (PAR) reaching the ground.
 //' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
-//' @param snowpack Boolean flag to indicate the simulation of snow accumulation and melting.
-//' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
+//' @param modifyInput Boolean flag to indicate that the input \code{x} object should be modified during the simulation.
 //' 
 //' @details 
 //' The function simulates different vertical hydrological processes, which are described separately in other functions. 
-//' If \code{modifySoil = TRUE} the function will modify the \code{soil} object (including both soil moisture and 
+//' If \code{modifyInput = TRUE} the function will modify the \code{x} object (including both soil moisture and 
 //' the snowpack on its surface) as a result of simulating hydrological processes.
 //' 
 //' @return 
-//' Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:
+//' Function \code{hydrology_waterInputs} returns a named vector with the following elements, all in mm:
 //' \item{Rain}{Precipitation as rainfall.}
 //' \item{Snow}{Precipitation as snow.}
 //' \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
@@ -346,38 +345,36 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 //' 
 //' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
 //' 
-//' @param interceptionMode Infiltration model, either "Gash1995" or "Liu2001".
 //' 
 //' @name hydrology_verticalInputs
-// [[Rcpp::export("hydrology_soilWaterInputs")]]
-NumericVector soilWaterInputs(List soil, String soilFunctions, String interceptionMode,
-                              double prec, double rainfallIntensity,
-                              double pet, double tday, double rad, double elevation,
-                              double Cm, double LgroundPAR, double LgroundSWR, 
-                              bool snowpack = true, bool modifySoil = true) {
+// [[Rcpp::export("hydrology_waterInputs")]]
+NumericVector waterInputs(List x,
+                          double prec, double rainfallIntensity,
+                          double pet, double tday, double rad, double elevation,
+                          double Cm, double LgroundPAR, double LgroundSWR, 
+                          bool modifyInput = true) {
   //Soil input
-  double swe = soil["SWE"]; //snow pack
+  List control = x["control"];
+  String soilFunctions = control["soilFunctions"];
+  String interceptionMode = control["interceptionMode"];
+  double swe = x["snowpack"]; //snow pack
   double er = pet/(24.0*rainfallIntensity);
   
   //Snow pack dynamics
   double snow = 0.0, rain=0.0;
   double melt = 0.0;
-  if(snowpack) {
-    //Turn rain into snow and add it into the snow pack
-    if(tday < 0.0) { 
-      snow = prec; 
-      swe = swe + snow;
-    } else {
-      rain = prec;
-    }
-    //Apply snow melting
-    if(swe > 0.0) {
-      melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
-      // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-      swe = swe-melt;
-    }
+  //Turn rain into snow and add it into the snow pack
+  if(tday < 0.0) { 
+    snow = prec; 
+    swe = swe + snow;
   } else {
     rain = prec;
+  }
+  //Apply snow melting
+  if(swe > 0.0) {
+    melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
+    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
+    swe = swe-melt;
   }
   
   //Hydrologic input
@@ -392,8 +389,8 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, String intercepti
     }
     NetRain = rain - Interception; 
   }
-  if(modifySoil) {
-    soil["SWE"] = swe;
+  if(modifyInput) {
+    x["snowpack"] = swe;
   }
   NumericVector WI = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
                                            _["Interception"] = Interception,
@@ -581,7 +578,7 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 //' @param max_nsubsteps Maximum number of substeps per time step
 //' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 //' 
-//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 //' 
 //' @details
 //' The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 

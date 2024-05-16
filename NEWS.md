@@ -2,6 +2,11 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 4.3.0
+- SWE as snowpack in spwbInput
+- soil objects are dataframes
+- print.soil to summary.soil
+
 # Version 4.2.0
 - Reorganization of Soil output as a list
 - Snow output as independent data frame

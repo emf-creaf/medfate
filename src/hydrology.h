@@ -8,7 +8,8 @@ using namespace Rcpp;
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil);
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                       List soil, String soilFunctions, bool modifySoil = true);
-double soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
+double soilEvaporation(List soil, double snowpack, 
+                       String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true);
 
 
@@ -26,11 +27,11 @@ double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05);
 
 double snowMelt(double tday, double rad, double LgroundSWR, double elevation);
 
-NumericVector soilWaterInputs(List soil, String soilFunctions, String interceptionMode,
-                              double prec, double rainfallIntensity,
-                              double pet, double tday, double rad, double elevation,
-                              double Cm, double LgroundPAR, double LgroundSWR, 
-                              bool snowpack = true, bool modifySoil = true);
+NumericVector waterInputs(List x, 
+                          double prec, double rainfallIntensity,
+                          double pet, double tday, double rad, double elevation,
+                          double Cm, double LgroundPAR, double LgroundSWR, 
+                          bool modifyInput = true);
 NumericVector soilWaterBalance(List soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,

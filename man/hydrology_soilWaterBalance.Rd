@@ -115,7 +115,7 @@ Jarvis, N.J., Jansson, P‐E., Dik, P.E. & Messing, I. (1991). Modelling water a
 Larsbo, M., Roulier, S., Stenemo, F., Kasteel, R. & Jarvis, N. (2005). An Improved Dual‐Permeability Model of Water Flow and Solute Transport in the Vadose Zone. Vadose Zone Journal, 4, 398–406.
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+\code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

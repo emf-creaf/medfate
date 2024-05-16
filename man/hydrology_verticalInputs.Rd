@@ -3,15 +3,13 @@
 \name{hydrology_snowMelt}
 \alias{hydrology_snowMelt}
 \alias{hydrology_verticalInputs}
-\alias{hydrology_soilWaterInputs}
-\title{Soil vertical inputs}
+\alias{hydrology_waterInputs}
+\title{Water vertical inputs}
 \usage{
 hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 
-hydrology_soilWaterInputs(
-  soil,
-  soilFunctions,
-  interceptionMode,
+hydrology_waterInputs(
+  x,
   prec,
   rainfallIntensity,
   pet,
@@ -21,8 +19,7 @@ hydrology_soilWaterInputs(
   Cm,
   LgroundPAR,
   LgroundSWR,
-  snowpack = TRUE,
-  modifySoil = TRUE
+  modifyInput = TRUE
 )
 }
 \arguments{
@@ -34,11 +31,7 @@ hydrology_soilWaterInputs(
 
 \item{elevation}{Altitude above sea level (m).}
 
-\item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-
-\item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
-
-\item{interceptionMode}{Infiltration model, either "Gash1995" or "Liu2001".}
+\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
 
 \item{prec}{Precipitation for the given day (mm)}
 
@@ -50,12 +43,10 @@ hydrology_soilWaterInputs(
 
 \item{LgroundPAR}{Percentage of photosynthetically-active radiation (PAR) reaching the ground.}
 
-\item{snowpack}{Boolean flag to indicate the simulation of snow accumulation and melting.}
-
-\item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
+\item{modifyInput}{Boolean flag to indicate that the input \code{x} object should be modified during the simulation.}
 }
 \value{
-Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:
+Function \code{hydrology_waterInputs} returns a named vector with the following elements, all in mm:
 \item{Rain}{Precipitation as rainfall.}
 \item{Snow}{Precipitation as snow.}
 \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
@@ -63,16 +54,16 @@ Function \code{hydrology_soilWaterInputs} returns a named vector with the follow
 \item{NetRain}{Rainfall reaching the ground.}
 }
 \description{
-High-level functions to define water inputs into the soil:
+High-level functions to define water inputs into the soil of a stand:
  
 \itemize{
-  \item{Function \code{hydrology_soilWaterInputs} performs canopy water interception and snow accumulation/melt.}
+  \item{Function \code{hydrology_waterInputs} performs canopy water interception and snow accumulation/melt.}
   \item{Function \code{hydrology_snowMelt} estimates snow melt using a simple energy balance, according to Kergoat (1998).}
 }
 }
 \details{
 The function simulates different vertical hydrological processes, which are described separately in other functions. 
-If \code{modifySoil = TRUE} the function will modify the \code{soil} object (including both soil moisture and 
+If \code{modifyInput = TRUE} the function will modify the \code{x} object (including both soil moisture and 
 the snowpack on its surface) as a result of simulating hydrological processes.
 }
 \references{

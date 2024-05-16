@@ -2,12 +2,12 @@
 % Please edit documentation in R/RcppExports.R, R/print.soil.R
 \name{soil}
 \alias{soil}
-\alias{print.soil}
+\alias{summary.soil}
 \title{Soil initialization}
 \usage{
-soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
+soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)))
 
-\method{print}{soil}(x, model = "SX", ...)
+\method{summary}{soil}(object, model = "SX", ...)
 }
 \arguments{
 \item{SoilParams}{A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).}
@@ -16,9 +16,7 @@ soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
 
 \item{W}{A numerical vector with the initial relative water content of each soil layer.}
 
-\item{SWE}{Initial snow water equivalent of the snow pack on the soil surface (mm).}
-
-\item{x}{An object of class \code{soil}.}
+\item{object}{An object of class \code{soil}.}
 
 \item{model}{Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.}
 
@@ -28,9 +26,7 @@ soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
 Function \code{soil} returns a list of class \code{soil} with the following elements:
 \itemize{
   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
-  \item{\code{SWE}: Initial snow water equivalent of the snow pack on the soil surface (mm).}
   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-  \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
   \item{\code{dVec}: Width of soil layers (in mm).}
   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
@@ -46,7 +42,7 @@ Function \code{soil} returns a list of class \code{soil} with the following elem
 Initializes soil parameters and state variables for its use in simulations.
 }
 \details{
-Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
+Function \code{summary} prompts a description of soil characteristics and state variables (water content and temperature) 
 according to a water retention curve (either Saxton's or Van Genuchten's). 
 Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
 Parameter \code{Temp} is initialized as missing for all soil layers. 
@@ -62,10 +58,10 @@ df_soil <- defaultSoilParams()
 s = soil(df_soil)
 
 # Prints soil characteristics according to Saxton's water retention curve
-print(s, model="SX")
+summary(s, model="SX")
 
 # Prints soil characteristics according to Van Genuchten's water retention curve
-print(s, model="VG")
+summary(s, model="VG")
 
 # Add columns 'VG_theta_sat' and 'VG_theta_res' with custom values
 df_soil$VG_theta_sat <- 0.400 

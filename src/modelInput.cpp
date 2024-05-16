@@ -1140,6 +1140,9 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   
   DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams, fillWithGenus);
 
+  //Initialize snowpack
+  double SWE = 0.0;
+  
   DataFrame paramsCanopydf;
   List ctl = clone(control);
   if(transpirationMode=="Granier") {
@@ -1154,6 +1157,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   }
   List input = List::create(_["control"] = ctl,
                             _["soil"] = clone(soil),
+                            _["snowpack"] = SWE,
                             _["canopy"] = paramsCanopydf,
                             _["herbLAI"] = NA_REAL, //To be filled outside
                             _["herbLAImax"] = NA_REAL, //To be filled outside
@@ -1265,6 +1269,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   
   DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams, fillWithGenus);
   
+  //Initialize snowpack
+  double SWE = 0.0;
   
   DataFrame paramsCanopydf;
   List ctl = clone(control);
@@ -1280,6 +1286,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   } 
   List input = List::create(_["control"] = ctl,
                        _["soil"] = clone(soil),
+                       _["snowpack"] = SWE,
                        _["canopy"] = paramsCanopydf,
                        _["herbLAI"] = NA_REAL, //To be filled outside
                        _["herbLAImax"] = NA_REAL, //To be filled outside
@@ -1296,11 +1303,11 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                        _["paramsMortalityRegeneration"] =paramsMortalityRegenerationdf,
                        _["paramsAllometries"] = paramsAllometriesdf,
                        _["internalPhenology"] = internalPhenologyDataFrame(above),
-                       _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                       _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
-                                                       paramsAnatomydf, 
-                                                       paramsWaterStoragedf,
-                                                       paramsGrowthdf, control));
+                       _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
+  input.push_back(internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
+                                          paramsAnatomydf, 
+                                          paramsWaterStoragedf,
+                                          paramsGrowthdf, control), "internalCarbon");
   input.push_back(internalAllocationDataFrame(plantsdf, belowdf,
                                               paramsAnatomydf,
                                               paramsTranspirationdf, control), "internalAllocation");

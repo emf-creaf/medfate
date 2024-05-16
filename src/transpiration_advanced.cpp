@@ -112,7 +112,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector Ws = soil["W"]; //Access to soil state variable
-  double SWE = soil["SWE"];
+  double snowpack = x["snowpack"];
 
   //Canopy params
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
@@ -993,7 +993,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     
     //Soil latent heat (soil evaporation)
     //Latent heat (snow fusion) as J/m2/s
-    if(SWE>0.0) {
+    if(snowpack>0.0) {
       abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present
       net_LWR_soil[n] = 0.0; //Set net LWR to zero
     } 
@@ -1011,7 +1011,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       //Soil-canopy turbulent heat exchange
       double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
       double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
-      if(SWE==0.0) {
+      if(snowpack==0.0) {
         Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
       } else {
         Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
@@ -1029,7 +1029,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       
       //Soil energy balance including exchange with canopy
-      if(SWE==0.0) {
+      if(snowpack==0.0) {
         Ebalsoil[n] = abs_SWR_soil[n] + net_LWR_soil[n] + Hcansoil[n] - LEVsoil[n]; //Here we use all energy escaping to atmosphere
       } else {
         //Heat conduction between soil and snow
@@ -1150,7 +1150,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         //Soil energy balance including exchange with canopy
         double Ebalsoils = 0.0;
         //Soil energy balance including exchange with canopy
-        if(SWE==0.0) {
+        if(snowpack==0.0) {
           Ebalsoils = abs_SWR_soil[n] + net_LWR_soil[n]  - LEVsoil[n] + Hcansoils; //Here we use all energy escaping to atmosphere
         } else {
           //Heat conduction between soil and snow

@@ -10,6 +10,7 @@ hydrology_soilEvaporationAmount(DEF, PETs, Gsoil)
 
 hydrology_soilEvaporation(
   soil,
+  snowpack,
   soilFunctions,
   pet,
   LgroundSWR,
@@ -33,6 +34,8 @@ hydrology_herbaceousTranspiration(
 \item{Gsoil}{Gamma parameter (maximum daily evaporation).}
 
 \item{soil}{An object of class \code{\link{soil}}.}
+
+\item{snowpack}{The amount of snow (in water equivalents, mm) in the snow pack.}
 
 \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 
@@ -63,7 +66,7 @@ Functions:
 Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+\code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

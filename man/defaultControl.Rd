@@ -41,7 +41,6 @@ A list, with the following options (default values in brackets):
       \item{\code{defaultCO2 [= 386]}: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input. }
       \item{\code{defaultRainfallIntensityPerMonth [= c(1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5.6, 5.6, 5.6, 5.6, 5.6, 1.5)]}: A vector of twelve values indicating the rainfall intensity (mm/h) per month. 
       By default synoptic storms (1.5 mm/h) are assumed between December and June, and convective storms (5.6 mm/h) are assumed between July and November.}
-      \item{\code{snowpack [= TRUE]}: Boolean flag to indicate the simulation of snow accumulation and melting.}
       \item{\code{leafPhenology [= TRUE]}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}

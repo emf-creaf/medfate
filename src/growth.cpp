@@ -1939,10 +1939,10 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 
 
 // [[Rcpp::export(".fillGrowthDailyOutput")]]
-void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
+void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
-  List x = l["growthInput"];
   List control = x["control"];
+  List soil = x["soil"];
   String transpirationMode = control["transpirationMode"];
   
   DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
@@ -1958,7 +1958,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
   }
   if(control["snowResults"]) {
     DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
-    fillSnowDailyOutput(Snow, soil, iday);
+    fillSnowDailyOutput(Snow, x, iday);
   }
   if(control["standResults"]) {
     DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
@@ -2355,7 +2355,7 @@ List growth(List x, DataFrame meteo, double latitude,
 
   NumericVector initialSoilContent = water(soil, soilFunctions);
   NumericVector initialPlantContent = plantWaterContent(x);
-  double initialSnowContent = soil["SWE"];
+  double initialSnowContent = x["snowpack"];
   DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
   double cohortBiomassBalanceSum = 0.0;
   double initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
@@ -2521,7 +2521,7 @@ List growth(List x, DataFrame meteo, double latitude,
     }    
     
     //Fills output 
-    fillGrowthDailyOutput(outputList, soil, s, i);
+    fillGrowthDailyOutput(outputList, x, s, i);
     //Add cohort biomass sum
     List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
     NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);

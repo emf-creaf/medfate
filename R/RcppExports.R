@@ -15,8 +15,8 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, 
     .Call(`_medfate_defineASPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
 
-.fillASPWBDailyOutput <- function(l, soil, sDay, iday) {
-    invisible(.Call(`_medfate_fillASPWBDailyOutput`, l, soil, sDay, iday))
+.fillASPWBDailyOutput <- function(l, x, sDay, iday) {
+    invisible(.Call(`_medfate_fillASPWBDailyOutput`, l, x, sDay, iday))
 }
 
 #' Simulation in agricultural areas
@@ -958,8 +958,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
     .Call(`_medfate_defineGrowthDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
 
-.fillGrowthDailyOutput <- function(l, soil, sDay, iday) {
-    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, soil, sDay, iday))
+.fillGrowthDailyOutput <- function(l, x, sDay, iday) {
+    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, x, sDay, iday))
 }
 
 #' Forest growth
@@ -1575,6 +1575,7 @@ hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
 #' }
 #' 
 #' @param soil An object of class \code{\link{soil}}.
+#' @param snowpack The amount of snow (in water equivalents, mm) in the snow pack.
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 #' @param pet Potential evapotranspiration for a given day (mm)
 #' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
@@ -1591,12 +1592,12 @@ hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 #' 
 #' 
 #' @name hydrology_soilEvaporation
-hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
-    .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR, modifySoil)
+hydrology_soilEvaporation <- function(soil, snowpack, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
+    .Call(`_medfate_soilEvaporation`, soil, snowpack, soilFunctions, pet, LgroundSWR, modifySoil)
 }
 
 #' @rdname hydrology_soilEvaporation
@@ -1637,7 +1638,7 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}
+#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
 #' 
 #' @name hydrology_infiltration
 hydrology_infiltrationBoughton <- function(input, Ssoil) {
@@ -1690,17 +1691,16 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
     .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
 }
 
-#' Soil vertical inputs
+#' Water vertical inputs
 #' 
-#' High-level functions to define water inputs into the soil:
+#' High-level functions to define water inputs into the soil of a stand:
 #'  
 #' \itemize{
-#'   \item{Function \code{hydrology_soilWaterInputs} performs canopy water interception and snow accumulation/melt.}
+#'   \item{Function \code{hydrology_waterInputs} performs canopy water interception and snow accumulation/melt.}
 #'   \item{Function \code{hydrology_snowMelt} estimates snow melt using a simple energy balance, according to Kergoat (1998).}
 #' }
 #' 
-#' @param soil A list containing the description of the soil (see \code{\link{soil}}).
-#' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 #' @param prec Precipitation for the given day (mm)
 #' @param pet Potential evapotranspiration for the given day (mm)
 #' @param rainfallIntensity Rainfall intensity rate (mm/h).
@@ -1710,16 +1710,15 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' @param Cm Canopy water storage capacity.
 #' @param LgroundPAR Percentage of photosynthetically-active radiation (PAR) reaching the ground.
 #' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
-#' @param snowpack Boolean flag to indicate the simulation of snow accumulation and melting.
-#' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
+#' @param modifyInput Boolean flag to indicate that the input \code{x} object should be modified during the simulation.
 #' 
 #' @details 
 #' The function simulates different vertical hydrological processes, which are described separately in other functions. 
-#' If \code{modifySoil = TRUE} the function will modify the \code{soil} object (including both soil moisture and 
+#' If \code{modifyInput = TRUE} the function will modify the \code{x} object (including both soil moisture and 
 #' the snowpack on its surface) as a result of simulating hydrological processes.
 #' 
 #' @return 
-#' Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:
+#' Function \code{hydrology_waterInputs} returns a named vector with the following elements, all in mm:
 #' \item{Rain}{Precipitation as rainfall.}
 #' \item{Snow}{Precipitation as snow.}
 #' \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
@@ -1734,11 +1733,10 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' 
 #' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
 #' 
-#' @param interceptionMode Infiltration model, either "Gash1995" or "Liu2001".
 #' 
 #' @name hydrology_verticalInputs
-hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, snowpack = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, snowpack, modifySoil)
+hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, modifyInput = TRUE) {
+    .Call(`_medfate_waterInputs`, x, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, modifyInput)
 }
 
 #' Soil water balance
@@ -1762,7 +1760,7 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' @param max_nsubsteps Maximum number of substeps per time step
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
-#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 #' 
 #' @details
 #' The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
@@ -3064,15 +3062,12 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' @param SoilParams A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).
 #' @param VG_PTF Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel and Parrish 1988) or \code{"Toth"} (Toth et al. 2015).
 #' @param W A numerical vector with the initial relative water content of each soil layer.
-#' @param SWE Initial snow water equivalent of the snow pack on the soil surface (mm).
 #' 
 #' @return
 #' Function \code{soil} returns a list of class \code{soil} with the following elements:
 #' \itemize{
 #'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
-#'   \item{\code{SWE}: Initial snow water equivalent of the snow pack on the soil surface (mm).}
 #'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-#'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 #'   \item{\code{dVec}: Width of soil layers (in mm).}
 #'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 #'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
@@ -3087,7 +3082,7 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @details 
-#' Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
+#' Function \code{summary} prompts a description of soil characteristics and state variables (water content and temperature) 
 #' according to a water retention curve (either Saxton's or Van Genuchten's). 
 #' Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
 #' Parameter \code{Temp} is initialized as missing for all soil layers. 
@@ -3112,10 +3107,10 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' s = soil(df_soil)
 #' 
 #' # Prints soil characteristics according to Saxton's water retention curve
-#' print(s, model="SX")
+#' summary(s, model="SX")
 #' 
 #' # Prints soil characteristics according to Van Genuchten's water retention curve
-#' print(s, model="VG")
+#' summary(s, model="VG")
 #' 
 #' # Add columns 'VG_theta_sat' and 'VG_theta_res' with custom values
 #' df_soil$VG_theta_sat <- 0.400 
@@ -3125,8 +3120,8 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' s2 = soil(df_soil)
 #' print(s2, model="VG")
 #' @name soil
-soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0)), SWE = 0.0) {
-    .Call(`_medfate_soil`, SoilParams, VG_PTF, W, SWE)
+soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0))) {
+    .Call(`_medfate_soil`, SoilParams, VG_PTF, W)
 }
 
 .modifySoilLayerParam <- function(soil, paramName, layer, newValue, VG_PTF = "Toth") {
@@ -3336,8 +3331,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
     .Call(`_medfate_defineSPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
 
-.fillSPWBDailyOutput <- function(l, soil, sDay, iday) {
-    invisible(.Call(`_medfate_fillSPWBDailyOutput`, l, soil, sDay, iday))
+.fillSPWBDailyOutput <- function(l, x, sDay, iday) {
+    invisible(.Call(`_medfate_fillSPWBDailyOutput`, l, x, sDay, iday))
 }
 
 #' Soil-plant water balance

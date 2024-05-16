@@ -9,32 +9,29 @@
 using namespace Rcpp;
 using namespace meteoland;
 
-NumericVector agricultureSoilWaterInputs(List soil, 
-                                         double prec, double tday, double rad, double elevation,
-                                         double LgroundSWR, 
-                                         bool snowpack = true, bool modifySoil = true) {
-  //Soil input
-  double swe = soil["SWE"]; //snow pack
+NumericVector agricultureWaterInputs(List x, 
+                                     double prec, double tday, double rad, double elevation,
+                                     double LgroundSWR, 
+                                     bool modifyInput = true) {
+
+  List soil = x["soil"];
+  double swe = x["snowpack"];
   
   //Snow pack dynamics
   double snow = 0.0, rain=0.0;
   double melt = 0.0;
-  if(snowpack) {
-    //Turn rain into snow and add it into the snow pack
-    if(tday < 0.0) { 
-      snow = prec; 
-      swe = swe + snow;
-    } else {
-      rain = prec;
-    }
-    //Apply snow melting
-    if(swe > 0.0) {
-      melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
-      // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-      swe = swe-melt;
-    }
+  //Turn rain into snow and add it into the snow pack
+  if(tday < 0.0) { 
+    snow = prec; 
+    swe = swe + snow;
   } else {
     rain = prec;
+  }
+  //Apply snow melting
+  if(swe > 0.0) {
+    melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
+    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
+    swe = swe-melt;
   }
   
   //Hydrologic input
@@ -42,8 +39,8 @@ NumericVector agricultureSoilWaterInputs(List soil,
   if(rain>0.0)  {
     NetRain = rain - Interception; 
   }
-  if(modifySoil) {
-    soil["SWE"] = swe;
+  if(modifyInput) {
+    x["snowpack"] = swe;
   }
   NumericVector WI = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
                                            _["Interception"] = Interception,
@@ -56,8 +53,9 @@ NumericVector agricultureSoilWaterInputs(List soil,
 //' @rdname aspwb
 // [[Rcpp::export("aspwbInput")]]
 List aspwbInput(double crop_factor, List control, List soil) {
-  List input = List::create(_["crop_factor"] = crop_factor, 
-                            _["control"] = clone(control),
+  List input = List::create(_["control"] = clone(control),
+                            _["crop_factor"] = crop_factor, 
+                            _["snowpack"] = 0.0,
                             _["soil"] = clone(soil));
   input.attr("class") = CharacterVector::create("aspwbInput","list");
   return(input);
@@ -71,7 +69,6 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   double crop_factor = x["crop_factor"];
   List control = x["control"];
   List soil = x["soil"];
-  bool snowpack = control["snowpack"];
   String soilFunctions = control["soilFunctions"];
   String infiltrationMode = control["infiltrationMode"];
   double infiltrationCorrection = control["infiltrationCorrection"];
@@ -91,20 +88,21 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   // Assume SWR is reduced with crop factor
   double LgroundSWR = 100.0 * (1.0 - crop_factor);
   
-  //Snow pack dynamics and hydrology input (update SWE)
-  NumericVector hydroInputs = agricultureSoilWaterInputs(soil, prec,
-                                                         tday, rad, elevation,
-                                                         LgroundSWR,
-                                                         snowpack, true);
+  //Snow pack dynamics and hydrology input (update snowpack)
+  NumericVector hydroInputs = agricultureWaterInputs(x,
+                                                     prec, tday, rad, elevation,
+                                                     LgroundSWR,
+                                                     true);
   double NetRain = hydroInputs["NetRain"];
   double Snowmelt = hydroInputs["Snowmelt"];  
   
 
   NumericVector dVec = soil["dVec"];
   NumericVector psiVec = psi(soil, soilFunctions); 
-
+  double snowpack = x["snowpack"];
   //Evaporation from bare soil (if there is no snow), do not update soil yet
-  double Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
+  double Esoil = soilEvaporation(soil, snowpack, 
+                                 soilFunctions, pet, LgroundSWR, false);
   
   //Define plant net extraction 
   NumericVector ExtractionVec(nlayers, 0.0);
@@ -301,10 +299,9 @@ void fillAgricultureWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday) 
 }
 
 // [[Rcpp::export(".fillASPWBDailyOutput")]]
-void fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
+void fillASPWBDailyOutput(List l, List x, List sDay, int iday) {
   
-  
-  List x = l["aspwbInput"];
+  List soil = x["soil"];
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   
@@ -321,16 +318,19 @@ void fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
   }
   if(control["snowResults"]) {
     DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
-    fillSnowDailyOutput(Snow, soil, iday);
+    fillSnowDailyOutput(Snow, x, iday);
   }
 }
 
 void printAgricultureWaterBalanceResult(DataFrame DWB,
-                             List soil, String soilFunctions,
-                             NumericVector initialContent, double initialSnowContent) {
+                                        List x,
+                                        NumericVector initialContent, double initialSnowContent) {
   
+  List control = x["control"];
+  List soil = x["soil"];
+  String soilFunctions = control["soilFunctions"];
   NumericVector finalContent = water(soil, soilFunctions);
-  double finalSnowContent = soil["SWE"];
+  double finalSnowContent = x["snowpack"];
   Rcout<<"Final soil water content (mm): "<< sum(finalContent)<<"\n";
   Rcout<<"Final snowpack content (mm): "<< finalSnowContent<<"\n";
   
@@ -519,7 +519,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
   outputList["weather"] = clone(meteo);
   
   NumericVector initialContent = water(soil, soilFunctions);
-  double initialSnowContent = soil["SWE"];
+  double initialSnowContent = x["snowpack"];
   if(verbose) {
     Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
@@ -595,7 +595,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
     }
     
     //Fill output list      
-    fillASPWBDailyOutput(outputList, soil, s,i);
+    fillASPWBDailyOutput(outputList, x, s,i);
 
     if(control["subdailyResults"]) {
       subdailyRes[i] = clone(s);
@@ -605,7 +605,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
   
   if(verbose) {
     List DWB = outputList["WaterBalance"];
-    printAgricultureWaterBalanceResult(DWB, soil, soilFunctions,
+    printAgricultureWaterBalanceResult(DWB, x,
                                        initialContent, initialSnowContent);
     if(error_occurence) {
       Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";

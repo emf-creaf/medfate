@@ -799,15 +799,12 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' @param SoilParams A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).
 //' @param VG_PTF Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel and Parrish 1988) or \code{"Toth"} (Toth et al. 2015).
 //' @param W A numerical vector with the initial relative water content of each soil layer.
-//' @param SWE Initial snow water equivalent of the snow pack on the soil surface (mm).
 //' 
 //' @return
 //' Function \code{soil} returns a list of class \code{soil} with the following elements:
 //' \itemize{
 //'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
-//'   \item{\code{SWE}: Initial snow water equivalent of the snow pack on the soil surface (mm).}
 //'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-//'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 //'   \item{\code{dVec}: Width of soil layers (in mm).}
 //'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 //'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
@@ -822,7 +819,7 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
 //' @details 
-//' Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
+//' Function \code{summary} prompts a description of soil characteristics and state variables (water content and temperature) 
 //' according to a water retention curve (either Saxton's or Van Genuchten's). 
 //' Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
 //' Parameter \code{Temp} is initialized as missing for all soil layers. 
@@ -847,10 +844,10 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' s = soil(df_soil)
 //' 
 //' # Prints soil characteristics according to Saxton's water retention curve
-//' print(s, model="SX")
+//' summary(s, model="SX")
 //' 
 //' # Prints soil characteristics according to Van Genuchten's water retention curve
-//' print(s, model="VG")
+//' summary(s, model="VG")
 //' 
 //' # Add columns 'VG_theta_sat' and 'VG_theta_res' with custom values
 //' df_soil$VG_theta_sat <- 0.400 
@@ -862,8 +859,7 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' @name soil
 // [[Rcpp::export("soil")]]
 List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
-          NumericVector W = NumericVector::create(1.0), 
-          double SWE = 0.0) {
+          NumericVector W = NumericVector::create(1.0)) {
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
 
@@ -945,19 +941,16 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     if(NumericVector::is_na(VG_theta_res[l])) VG_theta_res[l] = vgl[2];
     if(NumericVector::is_na(VG_theta_sat[l])) VG_theta_sat[l] = vgl[3];
   }
-  double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["W"] = W, 
-                       _["SWE"] = SWE,
-                       _["Temp"] = temperature,
-                       _["Gsoil"] = Gsoil,
-                       _["dVec"] = dVec,
-                       _["sand"] = sand, _["clay"] = clay, _["om"] = om, _["nitrogen"] = nitrogen,
-                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
-                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
-                       _["Ksat"] = Ksat,
-                       _["macro"] = macro,
-                       _["bd"] = bd,
-                       _["rfc"] = rfc);
+                        _["Temp"] = temperature,
+                        _["dVec"] = dVec,
+                        _["sand"] = sand, _["clay"] = clay, _["om"] = om, _["nitrogen"] = nitrogen,
+                        _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
+                        _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
+                        _["Ksat"] = Ksat,
+                        _["macro"] = macro,
+                        _["bd"] = bd,
+                        _["rfc"] = rfc);
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }
