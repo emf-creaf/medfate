@@ -91,7 +91,7 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
 //' 
 //' @name hydrology_soilEvaporation
 // [[Rcpp::export("hydrology_soilEvaporation")]]
-double soilEvaporation(List soil, double snowpack, 
+double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true) {
   NumericVector W = soil["W"]; //Access to soil state variable
@@ -116,7 +116,7 @@ double soilEvaporation(List soil, double snowpack,
 //' @param herbLAI Leaf area index of the herbaceous layer.
 // [[Rcpp::export("hydrology_herbaceousTranspiration")]]
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
-                                      List soil, String soilFunctions, bool modifySoil = true){
+                                      DataFrame soil, String soilFunctions, bool modifySoil = true){
   if(NumericVector::is_na(herbLAI)) return(0.0);
   double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
   NumericVector widths = soil["widths"];
@@ -257,7 +257,7 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
 //' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 //' 
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
-double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, 
+double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, 
                           String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
   double infiltration = 0.0;
   if(model=="GreenAmpt1911") {
@@ -399,7 +399,7 @@ NumericVector waterInputs(List x,
   return(WI);
 }
 
-// NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
+// NumericVector soilInfiltrationPercolation(DataFrame soil, String soilFunctions, 
 //                                           double waterInput,
 //                                           bool modifySoil = true) {
 //   //Soil input
@@ -643,7 +643,7 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 //'   
 //' @name hydrology_soilWaterBalance
 // [[Rcpp::export("hydrology_soilWaterBalance")]]
-NumericVector soilWaterBalance(List soil, String soilFunctions, 
+NumericVector soilWaterBalance(DataFrame soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "single", 

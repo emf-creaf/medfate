@@ -14,7 +14,6 @@ NumericVector agricultureWaterInputs(List x,
                                      double LgroundSWR, 
                                      bool modifyInput = true) {
 
-  List soil = x["soil"];
   double swe = x["snowpack"];
   
   //Snow pack dynamics
@@ -52,7 +51,7 @@ NumericVector agricultureWaterInputs(List x,
 
 //' @rdname aspwb
 // [[Rcpp::export("aspwbInput")]]
-List aspwbInput(double crop_factor, List control, List soil) {
+List aspwbInput(double crop_factor, List control, DataFrame soil) {
   List input = List::create(_["control"] = clone(control),
                             _["crop_factor"] = crop_factor, 
                             _["snowpack"] = 0.0,
@@ -68,7 +67,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   
   double crop_factor = x["crop_factor"];
   List control = x["control"];
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   String soilFunctions = control["soilFunctions"];
   String infiltrationMode = control["infiltrationMode"];
   double infiltrationCorrection = control["infiltrationCorrection"];
@@ -246,8 +245,8 @@ List defineASPWBDailyOutput(double latitude, double elevation, double slope, dou
   
   List aspwbInput = clone(x);
   List control = x["control"];
-  List soil = x["soil"];
-
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  
   //Water balance output variables
   DataFrame DWB = defineAgricultureWaterBalanceDailyOutput(dateStrings);
   List Soil = defineSoilDailyOutput(dateStrings, soil, false);
@@ -301,7 +300,7 @@ void fillAgricultureWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday) 
 // [[Rcpp::export(".fillASPWBDailyOutput")]]
 void fillASPWBDailyOutput(List l, List x, List sDay, int iday) {
   
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   
@@ -327,7 +326,7 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
                                         NumericVector initialContent, double initialSnowContent) {
   
   List control = x["control"];
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   String soilFunctions = control["soilFunctions"];
   NumericVector finalContent = water(soil, soilFunctions);
   double finalSnowContent = x["snowpack"];
@@ -433,7 +432,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
   //Clone input
   x = clone(x);
   
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   
 
   //Meteorological input    

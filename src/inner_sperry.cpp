@@ -61,7 +61,7 @@ List initSperryNetworks(List x) {
   DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector psiSoil = psi(soil, "VG");
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
@@ -365,7 +365,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector Ws = soil["W"]; //Access to soil state variable
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   // NumericVector Theta_FC = thetaFC(soil, soilFunctions);

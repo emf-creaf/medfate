@@ -66,7 +66,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   double hydraulicRedistributionFraction = control["hydraulicRedistributionFraction"];
 
   //Soil water at field capacity
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   
   //Meteo input

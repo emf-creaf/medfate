@@ -1558,7 +1558,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
 
 //' @rdname modelInput
 // [[Rcpp::export("forest2belowground")]]
-NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams) {
+NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector widths = soil["widths"];

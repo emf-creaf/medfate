@@ -3059,24 +3059,23 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #'
 #' Initializes soil parameters and state variables for its use in simulations.
 #' 
-#' @param SoilParams A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).
+#' @param x A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).
 #' @param VG_PTF Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel and Parrish 1988) or \code{"Toth"} (Toth et al. 2015).
-#' @param W A numerical vector with the initial relative water content of each soil layer.
 #' 
 #' @return
-#' Function \code{soil} returns a list of class \code{soil} with the following elements:
+#' Function \code{soil} returns a data frame of class \code{soil} with the following columns:
 #' \itemize{
-#'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
-#'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
 #'   \item{\code{widths}: Width of soil layers (in mm).}
 #'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 #'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
 #'   \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
 #'   \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
-#'   \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
-#'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
-#'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
 #'   \item{\code{rfc}: Percentage of rock fragment content for each layer.}
+#'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
+#'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
+#'   \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
+#'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
+#'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
 #' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -3105,6 +3104,7 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' 
 #' # Initializes soil
 #' s = soil(df_soil)
+#' s
 #' 
 #' # Prints soil characteristics according to Saxton's water retention curve
 #' summary(s, model="SX")
@@ -3118,10 +3118,11 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' 
 #' # Reinitialize soil (should override estimations)
 #' s2 = soil(df_soil)
+#' s2
 #' summary(s2, model="VG")
 #' @name soil
-soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0))) {
-    .Call(`_medfate_soil`, SoilParams, VG_PTF, W)
+soil <- function(x, VG_PTF = "Toth") {
+    .Call(`_medfate_soil`, x, VG_PTF)
 }
 
 .modifySoilLayerParam <- function(soil, paramName, layer, newValue, VG_PTF = "Toth") {

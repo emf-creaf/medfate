@@ -120,7 +120,7 @@ NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay,
 //' 
 //' @name soil_thermodynamics
 // [[Rcpp::export("soil_thermalCapacity")]]
-NumericVector thermalCapacity(List soil, String model = "SX") {
+NumericVector thermalCapacity(DataFrame soil, String model = "SX") {
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector W = soil["W"];
@@ -134,7 +134,7 @@ NumericVector thermalCapacity(List soil, String model = "SX") {
 
 //' @rdname soil_thermodynamics
 // [[Rcpp::export("soil_thermalConductivity")]]
-NumericVector thermalConductivity(List soil, String model = "SX") {
+NumericVector thermalConductivity(DataFrame soil, String model = "SX") {
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector W = soil["W"];

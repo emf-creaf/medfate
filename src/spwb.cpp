@@ -160,7 +160,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   int max_nsubsteps_soil = control["max_nsubsteps_soil"];
   
   //Soil parameters
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
   NumericVector Wsoil = soil["W"];
@@ -435,7 +435,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   int max_nsubsteps_soil = control["max_nsubsteps_soil"];
   
   //Soil parameters
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
 
@@ -881,7 +881,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   }
   
   //Soul parameters
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   
   std::string c = as<std::string>(date[0]);
   int month = std::atoi(c.substr(5,2).c_str());
@@ -979,7 +979,7 @@ IntegerVector order_vector(NumericVector x) {
 
 void checkspwbInput(List x,  String transpirationMode, String soilFunctions) {
   
-  List soil  = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   if(!x.containsElementNamed("above")) stop("above missing in spwbInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in spwbInput$above");
@@ -1078,7 +1078,7 @@ DataFrame defineSnowDailyOutput(CharacterVector dateStrings) {
   Snow.attr("row.names") = dateStrings;
   return(Snow);
 }
-List defineSoilDailyOutput(CharacterVector dateStrings, List soil, bool includePlants = true) {
+List defineSoilDailyOutput(CharacterVector dateStrings, DataFrame soil, bool includePlants = true) {
   int numDays = dateStrings.length();
   NumericVector W = soil["W"];
   int nlayers = W.length();
@@ -1188,7 +1188,7 @@ List defineSunlitShadeLeavesDailyOutput(CharacterVector dateStrings, DataFrame a
   return(shade);
 }
 
-List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, List soil, List control) {
+List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, DataFrame soil, List control) {
   
   String transpirationMode = control["transpirationMode"];
   int numDays = dateStrings.length();
@@ -1331,7 +1331,7 @@ List defineSPWBDailyOutput(double latitude, double elevation, double slope, doub
   
   List spwbInput = clone(x);
   List control = x["control"];
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   String transpirationMode = control["transpirationMode"];
   DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
@@ -1461,7 +1461,7 @@ void fillStandDailyOutput(DataFrame Stand, List sDay, int iday) {
   Cm[iday] = stand["Cm"];
 }
 
-void fillSoilDailyOutput(List SWB, List soil, List sDay, 
+void fillSoilDailyOutput(List SWB, DataFrame soil, List sDay, 
                          int iday, int numDays, String soilFunctions,
                          bool includePlants = true) {
   NumericVector W = soil["W"];
@@ -1751,7 +1751,7 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   if(control["soilResults"]) {
     String soilFunctions = control["soilFunctions"];
     List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
-    List soil = x["soil"];
+    DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
     fillSoilDailyOutput(Soil, soil, sDay, 
                                     iday, numDays, soilFunctions,
                                     true);
@@ -1802,7 +1802,7 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
 void printWaterBalanceResult(List outputList, List x,
                              NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode) {
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
   bool plantResults = control["plantResults"];
@@ -2215,7 +2215,7 @@ List spwb(List x, DataFrame meteo,
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Soil
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   
   //Define output list
   List outputList = defineSPWBDailyOutput(latitude, elevation, slope, aspect,
@@ -2455,7 +2455,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   x = clone(x); //Ensure a copy will be modified
   
   
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (M_PI/180.0);

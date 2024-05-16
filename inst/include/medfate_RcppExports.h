@@ -24,11 +24,11 @@ namespace medfate {
         }
     }
 
-    inline List aspwbInput(double crop_factor, List control, List soil) {
+    inline List aspwbInput(double crop_factor, List control, DataFrame soil) {
         typedef SEXP(*Ptr_aspwbInput)(SEXP,SEXP,SEXP);
         static Ptr_aspwbInput p_aspwbInput = NULL;
         if (p_aspwbInput == NULL) {
-            validateSignature("List(*aspwbInput)(double,List,List)");
+            validateSignature("List(*aspwbInput)(double,List,DataFrame)");
             p_aspwbInput = (Ptr_aspwbInput)R_GetCCallable("medfate", "_medfate_aspwbInput");
         }
         RObject rcpp_result_gen;
@@ -316,11 +316,11 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline double hydrology_soilEvaporation(List soil, double snowpack, String soilFunctions, double pet, double LgroundSWR, bool modifySoil = true) {
+    inline double hydrology_soilEvaporation(DataFrame soil, double snowpack, String soilFunctions, double pet, double LgroundSWR, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilEvaporation)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilEvaporation p_hydrology_soilEvaporation = NULL;
         if (p_hydrology_soilEvaporation == NULL) {
-            validateSignature("double(*hydrology_soilEvaporation)(List,double,String,double,double,bool)");
+            validateSignature("double(*hydrology_soilEvaporation)(DataFrame,double,String,double,double,bool)");
             p_hydrology_soilEvaporation = (Ptr_hydrology_soilEvaporation)R_GetCCallable("medfate", "_medfate_hydrology_soilEvaporation");
         }
         RObject rcpp_result_gen;
@@ -337,11 +337,11 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, List soil, String soilFunctions, bool modifySoil = true) {
+    inline NumericVector hydrology_herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, DataFrame soil, String soilFunctions, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_herbaceousTranspiration)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_herbaceousTranspiration p_hydrology_herbaceousTranspiration = NULL;
         if (p_hydrology_herbaceousTranspiration == NULL) {
-            validateSignature("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,List,String,bool)");
+            validateSignature("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,DataFrame,String,bool)");
             p_hydrology_herbaceousTranspiration = (Ptr_hydrology_herbaceousTranspiration)R_GetCCallable("medfate", "_medfate_hydrology_herbaceousTranspiration");
         }
         RObject rcpp_result_gen;
@@ -421,11 +421,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double hydrology_infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
+    inline double hydrology_infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
         typedef SEXP(*Ptr_hydrology_infiltrationAmount)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_infiltrationAmount p_hydrology_infiltrationAmount = NULL;
         if (p_hydrology_infiltrationAmount == NULL) {
-            validateSignature("double(*hydrology_infiltrationAmount)(double,double,List,String,String,double)");
+            validateSignature("double(*hydrology_infiltrationAmount)(double,double,DataFrame,String,String,double)");
             p_hydrology_infiltrationAmount = (Ptr_hydrology_infiltrationAmount)R_GetCCallable("medfate", "_medfate_hydrology_infiltrationAmount");
         }
         RObject rcpp_result_gen;
@@ -484,11 +484,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilWaterBalance(List soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "single", int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
+    inline NumericVector hydrology_soilWaterBalance(DataFrame soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "single", int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilWaterBalance)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilWaterBalance p_hydrology_soilWaterBalance = NULL;
         if (p_hydrology_soilWaterBalance == NULL) {
-            validateSignature("NumericVector(*hydrology_soilWaterBalance)(List,String,double,double,double,NumericVector,double,Nullable<NumericVector>,double,String,double,String,int,int,bool)");
+            validateSignature("NumericVector(*hydrology_soilWaterBalance)(DataFrame,String,double,double,double,NumericVector,double,Nullable<NumericVector>,double,String,double,String,int,int,bool)");
             p_hydrology_soilWaterBalance = (Ptr_hydrology_soilWaterBalance)R_GetCCallable("medfate", "_medfate_hydrology_soilWaterBalance");
         }
         RObject rcpp_result_gen;
@@ -715,11 +715,11 @@ namespace medfate {
         return Rcpp::as<String >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_thetaFC(List soil, String model = "SX") {
+    inline NumericVector soil_thetaFC(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thetaFC)(SEXP,SEXP);
         static Ptr_soil_thetaFC p_soil_thetaFC = NULL;
         if (p_soil_thetaFC == NULL) {
-            validateSignature("NumericVector(*soil_thetaFC)(List,String)");
+            validateSignature("NumericVector(*soil_thetaFC)(DataFrame,String)");
             p_soil_thetaFC = (Ptr_soil_thetaFC)R_GetCCallable("medfate", "_medfate_soil_thetaFC");
         }
         RObject rcpp_result_gen;
@@ -736,11 +736,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_thetaWP(List soil, String model = "SX") {
+    inline NumericVector soil_thetaWP(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thetaWP)(SEXP,SEXP);
         static Ptr_soil_thetaWP p_soil_thetaWP = NULL;
         if (p_soil_thetaWP == NULL) {
-            validateSignature("NumericVector(*soil_thetaWP)(List,String)");
+            validateSignature("NumericVector(*soil_thetaWP)(DataFrame,String)");
             p_soil_thetaWP = (Ptr_soil_thetaWP)R_GetCCallable("medfate", "_medfate_soil_thetaWP");
         }
         RObject rcpp_result_gen;
@@ -757,11 +757,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_thetaSAT(List soil, String model = "SX") {
+    inline NumericVector soil_thetaSAT(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thetaSAT)(SEXP,SEXP);
         static Ptr_soil_thetaSAT p_soil_thetaSAT = NULL;
         if (p_soil_thetaSAT == NULL) {
-            validateSignature("NumericVector(*soil_thetaSAT)(List,String)");
+            validateSignature("NumericVector(*soil_thetaSAT)(DataFrame,String)");
             p_soil_thetaSAT = (Ptr_soil_thetaSAT)R_GetCCallable("medfate", "_medfate_soil_thetaSAT");
         }
         RObject rcpp_result_gen;
@@ -778,11 +778,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_waterFC(List soil, String model = "SX") {
+    inline NumericVector soil_waterFC(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_waterFC)(SEXP,SEXP);
         static Ptr_soil_waterFC p_soil_waterFC = NULL;
         if (p_soil_waterFC == NULL) {
-            validateSignature("NumericVector(*soil_waterFC)(List,String)");
+            validateSignature("NumericVector(*soil_waterFC)(DataFrame,String)");
             p_soil_waterFC = (Ptr_soil_waterFC)R_GetCCallable("medfate", "_medfate_soil_waterFC");
         }
         RObject rcpp_result_gen;
@@ -799,11 +799,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_waterSAT(List soil, String model = "SX") {
+    inline NumericVector soil_waterSAT(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_waterSAT)(SEXP,SEXP);
         static Ptr_soil_waterSAT p_soil_waterSAT = NULL;
         if (p_soil_waterSAT == NULL) {
-            validateSignature("NumericVector(*soil_waterSAT)(List,String)");
+            validateSignature("NumericVector(*soil_waterSAT)(DataFrame,String)");
             p_soil_waterSAT = (Ptr_soil_waterSAT)R_GetCCallable("medfate", "_medfate_soil_waterSAT");
         }
         RObject rcpp_result_gen;
@@ -820,11 +820,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_waterWP(List soil, String model = "SX") {
+    inline NumericVector soil_waterWP(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_waterWP)(SEXP,SEXP);
         static Ptr_soil_waterWP p_soil_waterWP = NULL;
         if (p_soil_waterWP == NULL) {
-            validateSignature("NumericVector(*soil_waterWP)(List,String)");
+            validateSignature("NumericVector(*soil_waterWP)(DataFrame,String)");
             p_soil_waterWP = (Ptr_soil_waterWP)R_GetCCallable("medfate", "_medfate_soil_waterWP");
         }
         RObject rcpp_result_gen;
@@ -841,11 +841,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_waterPsi(List soil, double psi, String model = "SX") {
+    inline NumericVector soil_waterPsi(DataFrame soil, double psi, String model = "SX") {
         typedef SEXP(*Ptr_soil_waterPsi)(SEXP,SEXP,SEXP);
         static Ptr_soil_waterPsi p_soil_waterPsi = NULL;
         if (p_soil_waterPsi == NULL) {
-            validateSignature("NumericVector(*soil_waterPsi)(List,double,String)");
+            validateSignature("NumericVector(*soil_waterPsi)(DataFrame,double,String)");
             p_soil_waterPsi = (Ptr_soil_waterPsi)R_GetCCallable("medfate", "_medfate_soil_waterPsi");
         }
         RObject rcpp_result_gen;
@@ -862,11 +862,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_waterExtractable(List soil, String model = "SX", double minPsi = -5.0) {
+    inline NumericVector soil_waterExtractable(DataFrame soil, String model = "SX", double minPsi = -5.0) {
         typedef SEXP(*Ptr_soil_waterExtractable)(SEXP,SEXP,SEXP);
         static Ptr_soil_waterExtractable p_soil_waterExtractable = NULL;
         if (p_soil_waterExtractable == NULL) {
-            validateSignature("NumericVector(*soil_waterExtractable)(List,String,double)");
+            validateSignature("NumericVector(*soil_waterExtractable)(DataFrame,String,double)");
             p_soil_waterExtractable = (Ptr_soil_waterExtractable)R_GetCCallable("medfate", "_medfate_soil_waterExtractable");
         }
         RObject rcpp_result_gen;
@@ -883,11 +883,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_theta(List soil, String model = "SX") {
+    inline NumericVector soil_theta(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_theta)(SEXP,SEXP);
         static Ptr_soil_theta p_soil_theta = NULL;
         if (p_soil_theta == NULL) {
-            validateSignature("NumericVector(*soil_theta)(List,String)");
+            validateSignature("NumericVector(*soil_theta)(DataFrame,String)");
             p_soil_theta = (Ptr_soil_theta)R_GetCCallable("medfate", "_medfate_soil_theta");
         }
         RObject rcpp_result_gen;
@@ -904,11 +904,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_water(List soil, String model = "SX") {
+    inline NumericVector soil_water(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_water)(SEXP,SEXP);
         static Ptr_soil_water p_soil_water = NULL;
         if (p_soil_water == NULL) {
-            validateSignature("NumericVector(*soil_water)(List,String)");
+            validateSignature("NumericVector(*soil_water)(DataFrame,String)");
             p_soil_water = (Ptr_soil_water)R_GetCCallable("medfate", "_medfate_soil_water");
         }
         RObject rcpp_result_gen;
@@ -946,11 +946,11 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_psi(List soil, String model = "SX") {
+    inline NumericVector soil_psi(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_psi)(SEXP,SEXP);
         static Ptr_soil_psi p_soil_psi = NULL;
         if (p_soil_psi == NULL) {
-            validateSignature("NumericVector(*soil_psi)(List,String)");
+            validateSignature("NumericVector(*soil_psi)(DataFrame,String)");
             p_soil_psi = (Ptr_soil_psi)R_GetCCallable("medfate", "_medfate_soil_psi");
         }
         RObject rcpp_result_gen;
@@ -967,11 +967,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_conductivity(List soil, String model = "SX") {
+    inline NumericVector soil_conductivity(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_conductivity)(SEXP,SEXP);
         static Ptr_soil_conductivity p_soil_conductivity = NULL;
         if (p_soil_conductivity == NULL) {
-            validateSignature("NumericVector(*soil_conductivity)(List,String)");
+            validateSignature("NumericVector(*soil_conductivity)(DataFrame,String)");
             p_soil_conductivity = (Ptr_soil_conductivity)R_GetCCallable("medfate", "_medfate_soil_conductivity");
         }
         RObject rcpp_result_gen;
@@ -988,11 +988,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_capacitance(List soil, String model = "SX") {
+    inline NumericVector soil_capacitance(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_capacitance)(SEXP,SEXP);
         static Ptr_soil_capacitance p_soil_capacitance = NULL;
         if (p_soil_capacitance == NULL) {
-            validateSignature("NumericVector(*soil_capacitance)(List,String)");
+            validateSignature("NumericVector(*soil_capacitance)(DataFrame,String)");
             p_soil_capacitance = (Ptr_soil_capacitance)R_GetCCallable("medfate", "_medfate_soil_capacitance");
         }
         RObject rcpp_result_gen;
@@ -1009,11 +1009,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double soil_saturatedWaterDepth(List soil, String model = "SX") {
+    inline double soil_saturatedWaterDepth(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_saturatedWaterDepth)(SEXP,SEXP);
         static Ptr_soil_saturatedWaterDepth p_soil_saturatedWaterDepth = NULL;
         if (p_soil_saturatedWaterDepth == NULL) {
-            validateSignature("double(*soil_saturatedWaterDepth)(List,String)");
+            validateSignature("double(*soil_saturatedWaterDepth)(DataFrame,String)");
             p_soil_saturatedWaterDepth = (Ptr_soil_saturatedWaterDepth)R_GetCCallable("medfate", "_medfate_soil_saturatedWaterDepth");
         }
         RObject rcpp_result_gen;
@@ -1093,17 +1093,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0)) {
-        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP);
+    inline DataFrame soil(DataFrame x, String VG_PTF = "Toth") {
+        typedef SEXP(*Ptr_soil)(SEXP,SEXP);
         static Ptr_soil p_soil = NULL;
         if (p_soil == NULL) {
-            validateSignature("List(*soil)(DataFrame,String,NumericVector)");
+            validateSignature("DataFrame(*soil)(DataFrame,String)");
             p_soil = (Ptr_soil)R_GetCCallable("medfate", "_medfate_soil");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)));
+            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(VG_PTF)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -1111,14 +1111,14 @@ namespace medfate {
             throw Rcpp::LongjumpException(rcpp_result_gen);
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
+        return Rcpp::as<DataFrame >(rcpp_result_gen);
     }
 
-    inline void _modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF = "Toth") {
+    inline void _modifySoilLayerParam(DataFrame soil, String paramName, int layer, double newValue, String VG_PTF = "Toth") {
         typedef SEXP(*Ptr__modifySoilLayerParam)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr__modifySoilLayerParam p__modifySoilLayerParam = NULL;
         if (p__modifySoilLayerParam == NULL) {
-            validateSignature("void(*_modifySoilLayerParam)(List,String,int,double,String)");
+            validateSignature("void(*_modifySoilLayerParam)(DataFrame,String,int,double,String)");
             p__modifySoilLayerParam = (Ptr__modifySoilLayerParam)R_GetCCallable("medfate", "_medfate__modifySoilLayerParam");
         }
         RObject rcpp_result_gen;
@@ -1134,11 +1134,11 @@ namespace medfate {
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
     }
 
-    inline NumericVector soil_thermalCapacity(List soil, String model = "SX") {
+    inline NumericVector soil_thermalCapacity(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thermalCapacity)(SEXP,SEXP);
         static Ptr_soil_thermalCapacity p_soil_thermalCapacity = NULL;
         if (p_soil_thermalCapacity == NULL) {
-            validateSignature("NumericVector(*soil_thermalCapacity)(List,String)");
+            validateSignature("NumericVector(*soil_thermalCapacity)(DataFrame,String)");
             p_soil_thermalCapacity = (Ptr_soil_thermalCapacity)R_GetCCallable("medfate", "_medfate_soil_thermalCapacity");
         }
         RObject rcpp_result_gen;
@@ -1155,11 +1155,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_thermalConductivity(List soil, String model = "SX") {
+    inline NumericVector soil_thermalConductivity(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thermalConductivity)(SEXP,SEXP);
         static Ptr_soil_thermalConductivity p_soil_thermalConductivity = NULL;
         if (p_soil_thermalConductivity == NULL) {
-            validateSignature("NumericVector(*soil_thermalConductivity)(List,String)");
+            validateSignature("NumericVector(*soil_thermalConductivity)(DataFrame,String)");
             p_soil_thermalConductivity = (Ptr_soil_thermalConductivity)R_GetCCallable("medfate", "_medfate_soil_thermalConductivity");
         }
         RObject rcpp_result_gen;

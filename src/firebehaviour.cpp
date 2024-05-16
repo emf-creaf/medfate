@@ -713,7 +713,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
  *  deadFuelMoistureExtinction: a value of dead fuel moisture of extinction (percent)
  *  control: A list with default parameter values
  */
-// List fb(List x, List soil, double latitude, double slope, double aspect, DataFrame meteo, DataFrame SpParams, 
+// List fb(List x, DataFrame soil, double latitude, double slope, double aspect, DataFrame meteo, DataFrame SpParams, 
 //         DataFrame FuelModelParams, List control) {
 //   bool verbose = control["verbose"];
 //   String liveFMCmode = control["liveFMCmode"];

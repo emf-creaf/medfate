@@ -22,23 +22,23 @@ double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res,
                          double psi);
 double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
 
-NumericVector waterExtractable(List soil, String model="SX", double minPsi = -5.0);
-NumericVector waterSAT(List soil, String model = "SX");
-NumericVector thetaSAT(List soil, String model = "SX");
-NumericVector waterFC(List soil, String model = "SX");
-NumericVector thetaFC(List soil, String model = "SX");
-NumericVector waterWP(List soil, String model = "SX");
-NumericVector thetaWP(List soil, String model = "SX");
-NumericVector water(List soil, String model="SX");
-NumericVector waterPsi(List soil, double psi, String model="SX");
-NumericVector theta(List soil, String model="SX");
-NumericVector psi(List soil, String model="SX");
-NumericVector conductivity(List soil, String model="SX");
-NumericVector capacitance(List soil, String model="SX");
+NumericVector waterExtractable(DataFrame soil, String model="SX", double minPsi = -5.0);
+NumericVector waterSAT(DataFrame soil, String model = "SX");
+NumericVector thetaSAT(DataFrame soil, String model = "SX");
+NumericVector waterFC(DataFrame soil, String model = "SX");
+NumericVector thetaFC(DataFrame soil, String model = "SX");
+NumericVector waterWP(DataFrame soil, String model = "SX");
+NumericVector thetaWP(DataFrame soil, String model = "SX");
+NumericVector water(DataFrame soil, String model="SX");
+NumericVector waterPsi(DataFrame soil, double psi, String model="SX");
+NumericVector theta(DataFrame soil, String model="SX");
+NumericVector psi(DataFrame soil, String model="SX");
+NumericVector conductivity(DataFrame soil, String model="SX");
+NumericVector capacitance(DataFrame soil, String model="SX");
 
-NumericVector psi2thetasoil(List soil, NumericVector psi, String model="SX");
+NumericVector psi2thetasoil(DataFrame soil, NumericVector psi, String model="SX");
   
-double saturatedWaterDepth(List soil, String model = "SX");
+double saturatedWaterDepth(DataFrame soil, String model = "SX");
 
 
 String USDAType(double clay, double sand);
@@ -47,5 +47,5 @@ NumericVector vanGenuchtenParamsCarsel(String soilType);
 NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
 NumericVector campbellParamsClappHornberger(String soilType);
 
-List soil(List SoilParams, String VG_PTF = "Carsel", 
-          NumericVector W = NumericVector::create(1.0,1.0,1.0));
+DataFrame soil(DataFrame x, String VG_PTF = "Carsel", 
+               NumericVector W = NumericVector::create(1.0,1.0,1.0));

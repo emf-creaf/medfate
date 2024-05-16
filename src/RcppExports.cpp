@@ -14,13 +14,13 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // aspwbInput
-List aspwbInput(double crop_factor, List control, List soil);
+List aspwbInput(double crop_factor, List control, DataFrame soil);
 static SEXP _medfate_aspwbInput_try(SEXP crop_factorSEXP, SEXP controlSEXP, SEXP soilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type crop_factor(crop_factorSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     rcpp_result_gen = Rcpp::wrap(aspwbInput(crop_factor, control, soil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
@@ -1114,13 +1114,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2belowground
-NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
+NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams);
 RcppExport SEXP _medfate_forest2belowground(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     rcpp_result_gen = Rcpp::wrap(forest2belowground(x, soil, SpParams));
     return rcpp_result_gen;
@@ -2282,11 +2282,11 @@ RcppExport SEXP _medfate_soilEvaporationAmount(SEXP DEFSEXP, SEXP PETsSEXP, SEXP
     return rcpp_result_gen;
 }
 // soilEvaporation
-double soilEvaporation(List soil, double snowpack, String soilFunctions, double pet, double LgroundSWR, bool modifySoil);
+double soilEvaporation(DataFrame soil, double snowpack, String soilFunctions, double pet, double LgroundSWR, bool modifySoil);
 static SEXP _medfate_soilEvaporation_try(SEXP soilSEXP, SEXP snowpackSEXP, SEXP soilFunctionsSEXP, SEXP petSEXP, SEXP LgroundSWRSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< double >::type snowpack(snowpackSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< double >::type pet(petSEXP);
@@ -2321,14 +2321,14 @@ RcppExport SEXP _medfate_soilEvaporation(SEXP soilSEXP, SEXP snowpackSEXP, SEXP 
     return rcpp_result_gen;
 }
 // herbaceousTranspiration
-NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, List soil, String soilFunctions, bool modifySoil);
+NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, DataFrame soil, String soilFunctions, bool modifySoil);
 static SEXP _medfate_herbaceousTranspiration_try(SEXP petSEXP, SEXP LherbSWRSEXP, SEXP herbLAISEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type pet(petSEXP);
     Rcpp::traits::input_parameter< double >::type LherbSWR(LherbSWRSEXP);
     Rcpp::traits::input_parameter< double >::type herbLAI(herbLAISEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
     rcpp_result_gen = Rcpp::wrap(herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil));
@@ -2471,13 +2471,13 @@ RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP widthsSEXP, SE
     return rcpp_result_gen;
 }
 // infiltrationAmount
-double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model, double K_correction);
+double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, String soilFunctions, String model, double K_correction);
 static SEXP _medfate_infiltrationAmount_try(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP, SEXP K_correctionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type rainfallInput(rainfallInputSEXP);
     Rcpp::traits::input_parameter< double >::type rainfallIntensity(rainfallIntensitySEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     Rcpp::traits::input_parameter< double >::type K_correction(K_correctionSEXP);
@@ -2591,11 +2591,11 @@ RcppExport SEXP _medfate_waterInputs(SEXP xSEXP, SEXP precSEXP, SEXP rainfallInt
     return rcpp_result_gen;
 }
 // soilWaterBalance
-NumericVector soilWaterBalance(List soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, String infiltrationMode, double infiltrationCorrection, String soilDomains, int nsteps, int max_nsubsteps, bool modifySoil);
+NumericVector soilWaterBalance(DataFrame soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, String infiltrationMode, double infiltrationCorrection, String soilDomains, int nsteps, int max_nsubsteps, bool modifySoil);
 static SEXP _medfate_soilWaterBalance_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP snowmeltSEXP, SEXP sourceSinkSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP infiltrationModeSEXP, SEXP infiltrationCorrectionSEXP, SEXP soilDomainsSEXP, SEXP nstepsSEXP, SEXP max_nsubstepsSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< double >::type rainfallInput(rainfallInputSEXP);
     Rcpp::traits::input_parameter< double >::type rainfallIntensity(rainfallIntensitySEXP);
@@ -3038,7 +3038,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // paramsBelow
-List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control);
+List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control);
 RcppExport SEXP _medfate_paramsBelow(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP paramsAnatomydfSEXP, SEXP paramsTranspirationdfSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -3046,7 +3046,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsAnatomydf(paramsAnatomydfSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsTranspirationdf(paramsTranspirationdfSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
@@ -3055,7 +3055,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbInput
-List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops, DataFrame SpParams, List control);
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -3063,7 +3063,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
@@ -3072,7 +3072,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // growthInput
-List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops, DataFrame SpParams, List control);
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -3080,7 +3080,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
@@ -3100,13 +3100,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2spwbInput
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control);
+List forest2spwbInput(List x, DataFrame soil, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_forest2spwbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
     rcpp_result_gen = Rcpp::wrap(forest2spwbInput(x, soil, SpParams, control));
@@ -3114,13 +3114,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2growthInput
-List forest2growthInput(List x, List soil, DataFrame SpParams, List control);
+List forest2growthInput(List x, DataFrame soil, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_forest2growthInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
     rcpp_result_gen = Rcpp::wrap(forest2growthInput(x, soil, SpParams, control));
@@ -4147,11 +4147,11 @@ RcppExport SEXP _medfate_USDAType(SEXP claySEXP, SEXP sandSEXP) {
     return rcpp_result_gen;
 }
 // thetaFC
-NumericVector thetaFC(List soil, String model);
+NumericVector thetaFC(DataFrame soil, String model);
 static SEXP _medfate_thetaFC_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(thetaFC(soil, model));
     return rcpp_result_gen;
@@ -4182,11 +4182,11 @@ RcppExport SEXP _medfate_thetaFC(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // thetaWP
-NumericVector thetaWP(List soil, String model);
+NumericVector thetaWP(DataFrame soil, String model);
 static SEXP _medfate_thetaWP_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(thetaWP(soil, model));
     return rcpp_result_gen;
@@ -4217,11 +4217,11 @@ RcppExport SEXP _medfate_thetaWP(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // thetaSAT
-NumericVector thetaSAT(List soil, String model);
+NumericVector thetaSAT(DataFrame soil, String model);
 static SEXP _medfate_thetaSAT_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(thetaSAT(soil, model));
     return rcpp_result_gen;
@@ -4252,11 +4252,11 @@ RcppExport SEXP _medfate_thetaSAT(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // waterFC
-NumericVector waterFC(List soil, String model);
+NumericVector waterFC(DataFrame soil, String model);
 static SEXP _medfate_waterFC_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(waterFC(soil, model));
     return rcpp_result_gen;
@@ -4287,11 +4287,11 @@ RcppExport SEXP _medfate_waterFC(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // waterSAT
-NumericVector waterSAT(List soil, String model);
+NumericVector waterSAT(DataFrame soil, String model);
 static SEXP _medfate_waterSAT_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(waterSAT(soil, model));
     return rcpp_result_gen;
@@ -4322,11 +4322,11 @@ RcppExport SEXP _medfate_waterSAT(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // waterWP
-NumericVector waterWP(List soil, String model);
+NumericVector waterWP(DataFrame soil, String model);
 static SEXP _medfate_waterWP_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(waterWP(soil, model));
     return rcpp_result_gen;
@@ -4357,11 +4357,11 @@ RcppExport SEXP _medfate_waterWP(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // waterPsi
-NumericVector waterPsi(List soil, double psi, String model);
+NumericVector waterPsi(DataFrame soil, double psi, String model);
 static SEXP _medfate_waterPsi_try(SEXP soilSEXP, SEXP psiSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(waterPsi(soil, psi, model));
@@ -4393,11 +4393,11 @@ RcppExport SEXP _medfate_waterPsi(SEXP soilSEXP, SEXP psiSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // waterExtractable
-NumericVector waterExtractable(List soil, String model, double minPsi);
+NumericVector waterExtractable(DataFrame soil, String model, double minPsi);
 static SEXP _medfate_waterExtractable_try(SEXP soilSEXP, SEXP modelSEXP, SEXP minPsiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     Rcpp::traits::input_parameter< double >::type minPsi(minPsiSEXP);
     rcpp_result_gen = Rcpp::wrap(waterExtractable(soil, model, minPsi));
@@ -4429,11 +4429,11 @@ RcppExport SEXP _medfate_waterExtractable(SEXP soilSEXP, SEXP modelSEXP, SEXP mi
     return rcpp_result_gen;
 }
 // theta
-NumericVector theta(List soil, String model);
+NumericVector theta(DataFrame soil, String model);
 static SEXP _medfate_theta_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(theta(soil, model));
     return rcpp_result_gen;
@@ -4464,11 +4464,11 @@ RcppExport SEXP _medfate_theta(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // water
-NumericVector water(List soil, String model);
+NumericVector water(DataFrame soil, String model);
 static SEXP _medfate_water_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(water(soil, model));
     return rcpp_result_gen;
@@ -4535,11 +4535,11 @@ RcppExport SEXP _medfate_rockWeight2Volume(SEXP pWeightSEXP, SEXP bulkDensitySEX
     return rcpp_result_gen;
 }
 // psi
-NumericVector psi(List soil, String model);
+NumericVector psi(DataFrame soil, String model);
 static SEXP _medfate_psi_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(psi(soil, model));
     return rcpp_result_gen;
@@ -4570,11 +4570,11 @@ RcppExport SEXP _medfate_psi(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // conductivity
-NumericVector conductivity(List soil, String model);
+NumericVector conductivity(DataFrame soil, String model);
 static SEXP _medfate_conductivity_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(conductivity(soil, model));
     return rcpp_result_gen;
@@ -4605,11 +4605,11 @@ RcppExport SEXP _medfate_conductivity(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // capacitance
-NumericVector capacitance(List soil, String model);
+NumericVector capacitance(DataFrame soil, String model);
 static SEXP _medfate_capacitance_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(capacitance(soil, model));
     return rcpp_result_gen;
@@ -4640,11 +4640,11 @@ RcppExport SEXP _medfate_capacitance(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // saturatedWaterDepth
-double saturatedWaterDepth(List soil, String model);
+double saturatedWaterDepth(DataFrame soil, String model);
 static SEXP _medfate_saturatedWaterDepth_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(saturatedWaterDepth(soil, model));
     return rcpp_result_gen;
@@ -4781,22 +4781,21 @@ RcppExport SEXP _medfate_vanGenuchtenParamsToth(SEXP claySEXP, SEXP sandSEXP, SE
     return rcpp_result_gen;
 }
 // soil
-List soil(DataFrame SoilParams, String VG_PTF, NumericVector W);
-static SEXP _medfate_soil_try(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP) {
+DataFrame soil(DataFrame x, String VG_PTF);
+static SEXP _medfate_soil_try(SEXP xSEXP, SEXP VG_PTFSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type SoilParams(SoilParamsSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
     Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
-    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W));
+    rcpp_result_gen = Rcpp::wrap(soil(x, VG_PTF));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP) {
+RcppExport SEXP _medfate_soil(SEXP xSEXP, SEXP VG_PTFSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soil_try(SoilParamsSEXP, VG_PTFSEXP, WSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soil_try(xSEXP, VG_PTFSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4817,10 +4816,10 @@ RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP) 
     return rcpp_result_gen;
 }
 // modifySoilLayerParam
-void modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF);
+void modifySoilLayerParam(DataFrame soil, String paramName, int layer, double newValue, String VG_PTF);
 static SEXP _medfate_modifySoilLayerParam_try(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
 BEGIN_RCPP
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
     Rcpp::traits::input_parameter< int >::type layer(layerSEXP);
     Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
@@ -4854,11 +4853,11 @@ RcppExport SEXP _medfate_modifySoilLayerParam(SEXP soilSEXP, SEXP paramNameSEXP,
     return rcpp_result_gen;
 }
 // thermalCapacity
-NumericVector thermalCapacity(List soil, String model);
+NumericVector thermalCapacity(DataFrame soil, String model);
 static SEXP _medfate_thermalCapacity_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(thermalCapacity(soil, model));
     return rcpp_result_gen;
@@ -4889,11 +4888,11 @@ RcppExport SEXP _medfate_thermalCapacity(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // thermalConductivity
-NumericVector thermalConductivity(List soil, String model);
+NumericVector thermalConductivity(DataFrame soil, String model);
 static SEXP _medfate_thermalConductivity_try(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(thermalConductivity(soil, model));
     return rcpp_result_gen;
@@ -5563,7 +5562,7 @@ END_RCPP
 static int _medfate_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
-        signatures.insert("List(*aspwbInput)(double,List,List)");
+        signatures.insert("List(*aspwbInput)(double,List,DataFrame)");
         signatures.insert("List(*aspwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*.defineASPWBDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillASPWBDailyOutput)(List,List,List,int)");
@@ -5577,15 +5576,15 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*.hydrology_interceptionLiuDay)(double,double,double,double)");
         signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
-        signatures.insert("double(*hydrology_soilEvaporation)(List,double,String,double,double,bool)");
-        signatures.insert("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,List,String,bool)");
+        signatures.insert("double(*hydrology_soilEvaporation)(DataFrame,double,String,double,double,bool)");
+        signatures.insert("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,DataFrame,String,bool)");
         signatures.insert("double(*hydrology_infiltrationBoughton)(double,double)");
         signatures.insert("double(*hydrology_infiltrationGreenAmpt)(double,double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector,double,double)");
-        signatures.insert("double(*hydrology_infiltrationAmount)(double,double,List,String,String,double)");
+        signatures.insert("double(*hydrology_infiltrationAmount)(double,double,DataFrame,String,String,double)");
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_waterInputs)(List,double,double,double,double,double,double,double,double,double,bool)");
-        signatures.insert("NumericVector(*hydrology_soilWaterBalance)(List,String,double,double,double,NumericVector,double,Nullable<NumericVector>,double,String,double,String,int,int,bool)");
+        signatures.insert("NumericVector(*hydrology_soilWaterBalance)(DataFrame,String,double,double,double,NumericVector,double,Nullable<NumericVector>,double,String,double,String,int,int,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,double,bool)");
         signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
@@ -5596,28 +5595,28 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*soil_psi2thetaVG)(double,double,double,double,double)");
         signatures.insert("double(*soil_theta2psiVG)(double,double,double,double,double)");
         signatures.insert("String(*soil_USDAType)(double,double)");
-        signatures.insert("NumericVector(*soil_thetaFC)(List,String)");
-        signatures.insert("NumericVector(*soil_thetaWP)(List,String)");
-        signatures.insert("NumericVector(*soil_thetaSAT)(List,String)");
-        signatures.insert("NumericVector(*soil_waterFC)(List,String)");
-        signatures.insert("NumericVector(*soil_waterSAT)(List,String)");
-        signatures.insert("NumericVector(*soil_waterWP)(List,String)");
-        signatures.insert("NumericVector(*soil_waterPsi)(List,double,String)");
-        signatures.insert("NumericVector(*soil_waterExtractable)(List,String,double)");
-        signatures.insert("NumericVector(*soil_theta)(List,String)");
-        signatures.insert("NumericVector(*soil_water)(List,String)");
+        signatures.insert("NumericVector(*soil_thetaFC)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_thetaWP)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_thetaSAT)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_waterFC)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_waterSAT)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_waterWP)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_waterPsi)(DataFrame,double,String)");
+        signatures.insert("NumericVector(*soil_waterExtractable)(DataFrame,String,double)");
+        signatures.insert("NumericVector(*soil_theta)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_water)(DataFrame,String)");
         signatures.insert("double(*soil_rockWeight2Volume)(double,double,double)");
-        signatures.insert("NumericVector(*soil_psi)(List,String)");
-        signatures.insert("NumericVector(*soil_conductivity)(List,String)");
-        signatures.insert("NumericVector(*soil_capacitance)(List,String)");
-        signatures.insert("double(*soil_saturatedWaterDepth)(List,String)");
+        signatures.insert("NumericVector(*soil_psi)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_conductivity)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_capacitance)(DataFrame,String)");
+        signatures.insert("double(*soil_saturatedWaterDepth)(DataFrame,String)");
         signatures.insert("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
         signatures.insert("NumericVector(*soil_campbellParamsClappHornberger)(String)");
         signatures.insert("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
-        signatures.insert("List(*soil)(DataFrame,String,NumericVector)");
-        signatures.insert("void(*.modifySoilLayerParam)(List,String,int,double,String)");
-        signatures.insert("NumericVector(*soil_thermalCapacity)(List,String)");
-        signatures.insert("NumericVector(*soil_thermalConductivity)(List,String)");
+        signatures.insert("DataFrame(*soil)(DataFrame,String)");
+        signatures.insert("void(*.modifySoilLayerParam)(DataFrame,String,int,double,String)");
+        signatures.insert("NumericVector(*soil_thermalCapacity)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_thermalConductivity)(DataFrame,String)");
         signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
         signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double,double)");
         signatures.insert("List(*spwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
@@ -5949,7 +5948,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
     {"_medfate_campbellParamsClappHornberger", (DL_FUNC) &_medfate_campbellParamsClappHornberger, 1},
     {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
-    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 3},
+    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
     {"_medfate_modifySoilLayerParam", (DL_FUNC) &_medfate_modifySoilLayerParam, 5},
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},

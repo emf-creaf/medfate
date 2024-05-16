@@ -433,7 +433,7 @@ List growthDayInner(List x, NumericVector meteovec,
   int numCohorts = SP.size();
   
   //Soil
-  List soil  = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector psiSoil = psi(soil,"soilFunctions");
   NumericVector widths = soil["widths"];
   NumericVector rfc = soil["rfc"];
@@ -1649,7 +1649,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
 
 void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
   
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   if(!x.containsElementNamed("above")) stop("above missing in growthInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in growthInput$above");
@@ -1743,7 +1743,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   int numCohorts = above.nrow();
   int numDays = dateStrings.size();
   List control = x["control"];
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   String transpirationMode = control["transpirationMode"];
   
   DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
@@ -1942,7 +1942,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
   List control = x["control"];
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   String transpirationMode = control["transpirationMode"];
   
   DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
@@ -2340,7 +2340,7 @@ List growth(List x, DataFrame meteo, double latitude,
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Soil params 
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   
   //Output list
   List outputList = defineGrowthDailyOutput(latitude, elevation, slope, aspect,

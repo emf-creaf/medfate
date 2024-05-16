@@ -5,7 +5,7 @@
 #endif
 using namespace Rcpp;
 
-List aspwbInput(double crop_factor, List control, List soil);
+List aspwbInput(double crop_factor, List control, DataFrame soil);
 
 List aspwb_day_internal(List x, NumericVector meteovec, 
                         double elevation, double slope, double aspect, 

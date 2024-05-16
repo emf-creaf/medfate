@@ -100,7 +100,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   int numCohorts = LAIlive.size();
   
   //Soil input
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector widths = soil["widths"];
   int nlayers = widths.length();
   NumericVector Water_FC = waterFC(soil, soilFunctions);

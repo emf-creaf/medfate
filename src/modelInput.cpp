@@ -254,7 +254,7 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, List 
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
-DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soil, DataFrame SpParams, 
+DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFrame soil, DataFrame SpParams, 
                                     DataFrame paramsAnatomydf, List control) {
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
@@ -361,7 +361,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
-DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, List soil, DataFrame SpParams, 
+DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFrame soil, DataFrame SpParams, 
                                     DataFrame paramsAnatomydf, List control) {
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
@@ -512,7 +512,7 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, List soi
   return(paramsTranspirationdf);
 }
 // [[Rcpp::export(".paramsBelow")]]
-List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, 
+List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, 
                  DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control) {
 
   NumericVector widths = soil["widths"];
@@ -1077,7 +1077,7 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 }
 
 // [[Rcpp::export(".spwbInput")]]
-List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops, 
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, 
                DataFrame SpParams, List control) {
   
   
@@ -1181,7 +1181,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
 
 
 // [[Rcpp::export(".growthInput")]]
-List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops,
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops,
                  DataFrame SpParams, List control) {
 
   IntegerVector SP = above["SP"];
@@ -1639,7 +1639,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' @name modelInput
 //' @aliases spwbInput growthInput
 // [[Rcpp::export("forest2spwbInput")]]
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
+List forest2spwbInput(List x, DataFrame soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
   bool fireHazardResults = control["fireHazardResults"];
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
@@ -1656,7 +1656,7 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
 
 //' @rdname modelInput
 // [[Rcpp::export("forest2growthInput")]]
-List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
+List forest2growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
   // Loading and FCCS properties are needed if fire hazard results are true or fires are simulated 
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, true);
@@ -1684,7 +1684,7 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
 // [[Rcpp::export("resetInputs")]]
 void resetInputs(List x) {
   List control = x["control"];
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   String transpirationMode = control["transpirationMode"];
   //Reset of canopy layer state variables 
   if(transpirationMode != "Granier") {
@@ -1763,7 +1763,7 @@ void updatePlantKmax(List x) {
   }
 }
 void updateBelowgroundConductances(List x) {
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector widths = soil["widths"];
   // NumericVector rfc = soil["rfc"];
   List belowLayers = x["belowLayers"];
@@ -1789,7 +1789,7 @@ void updateBelowgroundConductances(List x) {
   }
 }
 void updateFineRootDistribution(List x) {
-  List soil = x["soil"];
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   NumericVector widths = soil["widths"];
   DataFrame belowdf =  Rcpp::as<Rcpp::DataFrame>(x["below"]);
   NumericVector Z50 = belowdf["Z50"];
@@ -1807,8 +1807,8 @@ void updateFineRootDistribution(List x) {
 // [[Rcpp::export(".updateBelow")]]
 void updateBelow(List x) {
   List control = x["control"];
-  List soil = x["soil"];
-
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   
