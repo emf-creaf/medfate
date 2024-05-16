@@ -22,13 +22,10 @@ Any process-based model of forest functioning and dynamics needs information on 
 
 ## Species parameter tables
 
-Simulation models in `medfate` require a data frame with species (taxon) parameter values. The package includes default data sets to be readily used. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
+Simulation models in `medfate` require a data frame with species (taxon) parameter values. The package includes a default data sets to be readily used. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
 
 ```{r}
 data("SpParamsMED") # For the Spanish forest inventory (including taxon groups)
-data("SpParamsES") # For the Spanish forest inventory (full taxon list)
-data("SpParamsFR") # For the French forest inventory 
-data("SpParamsUS") # For the US forest inventory (FIA) 
 ```
 
  A large number of parameters (columns) can be found in species parameter tables. Not all parameters are needed for all models. You can find parameter definitions in table `SpParamsDefinition`, which we reproduce below:
@@ -134,26 +131,26 @@ spar = defaultSoilParams(2)
 print(spar)
 ```
 
-where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function `soilgridsParams()` in package [medfateutils](https://github.com/emf-creaf/medfateutils)).
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties are available via SoilGrids.org.
 
 ### Soil input object
 
-The soil input for simulations is an object of class `soil` (a list) that is created using a function with the same name:
+The soil input for simulations is an object of class `soil` (also a data frame) that is created using a function with the same name:
 
 ```{r}
 examplesoil = soil(spar)
-class(soil)
+class(examplesoil)
 ```
 
 In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations:
 ```{r}
-names(examplesoil)
+examplesoil
 ```
-For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of evaporation from the bare soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
+For example, `macro` specifies the macroporosity of each layer. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
 
-At any time, one can show the characteristics and status of the soil object using its `print` function:
+At any time, one can show the characteristics and status of the soil object using its `summary` function:
 ```{r}
-print(examplesoil, model = "SX")
+summary(examplesoil, model = "SX")
 ```
 
 Importantly, the soil object is used to store the degree of moisture of each soil layer. In particular, element `W` contains the state variable that represents moisture content - the proportion of moisture **relative to field capacity** - which is normally initialized to 1 for each layer:
@@ -171,7 +168,7 @@ Soil layer temperatures are initialized to missing values, so that at the first 
 
 The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton (`model = "SX"`) equations are used to model the water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give slightly different values for the same texture:
 ```{r}
-print(examplesoil, model="VG")
+summary(examplesoil, model="VG")
 ```
 While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `soil_retentionCurvePlot()` to illustrate the difference between the two water retention models in this soil:
 

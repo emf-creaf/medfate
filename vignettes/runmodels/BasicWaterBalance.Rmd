@@ -26,11 +26,13 @@ Soil information needs to be entered as a `data frame` with soil layers in rows 
 
 ```{r}
 spar <- defaultSoilParams(4)
+spar
 ```
 
-The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
+The soil input for water balance simulation is actually a data frame of class `soil` that is created using a function with the same name:
 ```{r}
 examplesoil <- soil(spar)
+examplesoil
 ```
 
 As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:

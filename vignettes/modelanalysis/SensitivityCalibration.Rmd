@@ -419,7 +419,7 @@ and compare the prior prediction uncertainty with the posterior prediction uncer
 ```{r, fig.height=4, fig.width=5}
 plot(density(unlist(lapply(MS_prior, sf_transp))), main = "Transpiration", 
      xlab = "Total transpiration (mm)",
-     xlim = c(340,360), ylim = c(0,5))
+     xlim = c(100,200), ylim = c(0,6))
 lines(density(unlist(lapply(MS, sf_transp))), col = "red")
 legend("topleft", legend = c("Prior", "Posterior"), 
        col = c("black", "red"), lty=1, bty="n")
