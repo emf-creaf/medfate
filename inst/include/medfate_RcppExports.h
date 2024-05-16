@@ -400,7 +400,7 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, double a = -0.005, double b = 3.0) {
+    inline NumericVector hydrology_infiltrationRepartition(double I, NumericVector widths, NumericVector macro, double a = -0.005, double b = 3.0) {
         typedef SEXP(*Ptr_hydrology_infiltrationRepartition)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_infiltrationRepartition p_hydrology_infiltrationRepartition = NULL;
         if (p_hydrology_infiltrationRepartition == NULL) {
@@ -410,7 +410,7 @@ namespace medfate {
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_infiltrationRepartition(Shield<SEXP>(Rcpp::wrap(I)), Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(macro)), Shield<SEXP>(Rcpp::wrap(a)), Shield<SEXP>(Rcpp::wrap(b)));
+            rcpp_result_gen = p_hydrology_infiltrationRepartition(Shield<SEXP>(Rcpp::wrap(I)), Shield<SEXP>(Rcpp::wrap(widths)), Shield<SEXP>(Rcpp::wrap(macro)), Shield<SEXP>(Rcpp::wrap(a)), Shield<SEXP>(Rcpp::wrap(b)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -1176,7 +1176,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_temperatureGradient(NumericVector dVec, NumericVector Temp) {
+    inline NumericVector soil_temperatureGradient(NumericVector widths, NumericVector Temp) {
         typedef SEXP(*Ptr_soil_temperatureGradient)(SEXP,SEXP);
         static Ptr_soil_temperatureGradient p_soil_temperatureGradient = NULL;
         if (p_soil_temperatureGradient == NULL) {
@@ -1186,7 +1186,7 @@ namespace medfate {
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_temperatureGradient(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)));
+            rcpp_result_gen = p_soil_temperatureGradient(Shield<SEXP>(Rcpp::wrap(widths)), Shield<SEXP>(Rcpp::wrap(Temp)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -1197,7 +1197,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC, double Gdown, double tstep) {
+    inline NumericVector soil_temperatureChange(NumericVector widths, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC, double Gdown, double tstep) {
         typedef SEXP(*Ptr_soil_temperatureChange)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil_temperatureChange p_soil_temperatureChange = NULL;
         if (p_soil_temperatureChange == NULL) {
@@ -1207,7 +1207,7 @@ namespace medfate {
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_temperatureChange(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(Theta_SAT)), Shield<SEXP>(Rcpp::wrap(Theta_FC)), Shield<SEXP>(Rcpp::wrap(Gdown)), Shield<SEXP>(Rcpp::wrap(tstep)));
+            rcpp_result_gen = p_soil_temperatureChange(Shield<SEXP>(Rcpp::wrap(widths)), Shield<SEXP>(Rcpp::wrap(Temp)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(Theta_SAT)), Shield<SEXP>(Rcpp::wrap(Theta_FC)), Shield<SEXP>(Rcpp::wrap(Gdown)), Shield<SEXP>(Rcpp::wrap(tstep)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

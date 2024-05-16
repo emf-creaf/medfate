@@ -252,7 +252,7 @@ modifyInputParams<-function(x, customParams, verbose = TRUE) {
       val <- customSoilParams[[i]]
       param <- paramLayer[[1]]
       layer <- as.numeric(paramLayer[[2]])
-      if(!(layer %in% 1:length(x$soil$dVec))) stop(paste0("Soil layer '", layer,"' not found in 'x'"))
+      if(!(layer %in% 1:length(x$soil$widths))) stop(paste0("Soil layer '", layer,"' not found in 'x'"))
       .modifySoilLayerParam(x$soil, param, layer-1, val)
     }
     .updateBelow(x)

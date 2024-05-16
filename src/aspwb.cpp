@@ -76,7 +76,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   int ndailysteps = control["ndailysteps"];
   int max_nsubsteps_soil = control["max_nsubsteps_soil"];
   
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
   
   //Weather input
   double tday = meteovec["tday"];
@@ -97,7 +97,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   double Snowmelt = hydroInputs["Snowmelt"];  
   
 
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector psiVec = psi(soil, soilFunctions); 
   double snowpack = x["snowpack"];
   //Evaporation from bare soil (if there is no snow), do not update soil yet
@@ -109,7 +109,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   // Transpiration is the product of PET and CROP FACTOR. HOWEVER, it is reduced with 
   double transp_max = pet*crop_factor; 
   //Calculate current soil water potential for transpiration
-  NumericVector V = ldrRS_one(50, 500, dVec);
+  NumericVector V = ldrRS_one(50, 500, widths);
   for(int l=0;l<nlayers;l++) {
     ExtractionVec[l] = V[l]*transp_max * exp(-0.6931472*pow(std::abs(psiVec[l]/(-2.0)),3.0)); //Reduce transpiration when soil is dry 
   }

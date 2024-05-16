@@ -101,8 +101,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   
   //Soil input
   List soil = x["soil"];
-  NumericVector dVec = soil["dVec"];
-  int nlayers = dVec.length();
+  NumericVector widths = soil["widths"];
+  int nlayers = widths.length();
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Theta_FC = thetaFC(soil, soilFunctions);
   NumericVector Theta_SAT = thetaSAT(soil, soilFunctions);
@@ -1039,7 +1039,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       
       //Soil temperature changes
-      NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
+      NumericVector soilTchange = temperatureChange(widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
       for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
       
@@ -1160,7 +1160,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         Ebalsoil[n] +=Ebalsoils;
         Hcansoil[n] +=Hcansoils;
         //Soil temperature changes
-        NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoils, tsubstep);
+        NumericVector soilTchange = temperatureChange(widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoils, tsubstep);
         for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       }
       Hcansoil[n] = Hcansoil[n]/((double) nsubsteps);

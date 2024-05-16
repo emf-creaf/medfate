@@ -708,9 +708,9 @@ void innerSureau(List x, List input, List output, int n, double tstep,
   
   List soil = x["soil"];
   NumericVector Ws = soil["W"];
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  int nlayers = dVec.length();
+  int nlayers = widths.length();
   
   // Extract parameters
   // Rcout<<"params\n";

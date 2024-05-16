@@ -2433,24 +2433,24 @@ RcppExport SEXP _medfate_infitrationGreenAmpt(SEXP tSEXP, SEXP psi_wSEXP, SEXP K
     return rcpp_result_gen;
 }
 // infiltrationRepartition
-NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, double a, double b);
-static SEXP _medfate_infiltrationRepartition_try(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP, SEXP aSEXP, SEXP bSEXP) {
+NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVector macro, double a, double b);
+static SEXP _medfate_infiltrationRepartition_try(SEXP ISEXP, SEXP widthsSEXP, SEXP macroSEXP, SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type I(ISEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type widths(widthsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type macro(macroSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< double >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, dVec, macro, a, b));
+    rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, widths, macro, a, b));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP, SEXP aSEXP, SEXP bSEXP) {
+RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP widthsSEXP, SEXP macroSEXP, SEXP aSEXP, SEXP bSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_infiltrationRepartition_try(ISEXP, dVecSEXP, macroSEXP, aSEXP, bSEXP));
+        rcpp_result_gen = PROTECT(_medfate_infiltrationRepartition_try(ISEXP, widthsSEXP, macroSEXP, aSEXP, bSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4924,21 +4924,21 @@ RcppExport SEXP _medfate_thermalConductivity(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // temperatureGradient
-NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp);
-static SEXP _medfate_temperatureGradient_try(SEXP dVecSEXP, SEXP TempSEXP) {
+NumericVector temperatureGradient(NumericVector widths, NumericVector Temp);
+static SEXP _medfate_temperatureGradient_try(SEXP widthsSEXP, SEXP TempSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type widths(widthsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureGradient(dVec, Temp));
+    rcpp_result_gen = Rcpp::wrap(temperatureGradient(widths, Temp));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_temperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
+RcppExport SEXP _medfate_temperatureGradient(SEXP widthsSEXP, SEXP TempSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_temperatureGradient_try(dVecSEXP, TempSEXP));
+        rcpp_result_gen = PROTECT(_medfate_temperatureGradient_try(widthsSEXP, TempSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4959,11 +4959,11 @@ RcppExport SEXP _medfate_temperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
     return rcpp_result_gen;
 }
 // temperatureChange
-NumericVector temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC, double Gdown, double tstep);
-static SEXP _medfate_temperatureChange_try(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_SATSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP, SEXP tstepSEXP) {
+NumericVector temperatureChange(NumericVector widths, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC, double Gdown, double tstep);
+static SEXP _medfate_temperatureChange_try(SEXP widthsSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_SATSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type widths(widthsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type clay(claySEXP);
@@ -4972,15 +4972,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type Theta_FC(Theta_FCSEXP);
     Rcpp::traits::input_parameter< double >::type Gdown(GdownSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureChange(dVec, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep));
+    rcpp_result_gen = Rcpp::wrap(temperatureChange(widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_temperatureChange(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_SATSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP, SEXP tstepSEXP) {
+RcppExport SEXP _medfate_temperatureChange(SEXP widthsSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_SATSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP, SEXP tstepSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_temperatureChange_try(dVecSEXP, TempSEXP, sandSEXP, claySEXP, WSEXP, Theta_SATSEXP, Theta_FCSEXP, GdownSEXP, tstepSEXP));
+        rcpp_result_gen = PROTECT(_medfate_temperatureChange_try(widthsSEXP, TempSEXP, sandSEXP, claySEXP, WSEXP, Theta_SATSEXP, Theta_FCSEXP, GdownSEXP, tstepSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {

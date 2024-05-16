@@ -12,7 +12,7 @@ hydrology_infiltrationBoughton(input, Ssoil)
 
 hydrology_infiltrationGreenAmpt(t, psi_w, Ksat, theta_sat, theta_dry)
 
-hydrology_infiltrationRepartition(I, dVec, macro, a = -0.005, b = 3)
+hydrology_infiltrationRepartition(I, widths, macro, a = -0.005, b = 3)
 
 hydrology_infiltrationAmount(
   rainfallInput,
@@ -40,7 +40,7 @@ hydrology_infiltrationAmount(
 
 \item{I}{Soil infiltration (in mm of water).}
 
-\item{dVec}{Width of soil layers (in mm).}
+\item{widths}{Width of soil layers (in mm).}
 
 \item{macro}{Macroporosity of soil layers (in \%).}
 

@@ -367,7 +367,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   
   List soil = x["soil"];
   NumericVector Ws = soil["W"]; //Access to soil state variable
-  NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   // NumericVector Theta_FC = thetaFC(soil, soilFunctions);
   // NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);

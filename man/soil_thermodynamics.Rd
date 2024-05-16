@@ -12,10 +12,10 @@ soil_thermalCapacity(soil, model = "SX")
 
 soil_thermalConductivity(soil, model = "SX")
 
-soil_temperatureGradient(dVec, Temp)
+soil_temperatureGradient(widths, Temp)
 
 soil_temperatureChange(
-  dVec,
+  widths,
   Temp,
   sand,
   clay,
@@ -31,7 +31,7 @@ soil_temperatureChange(
 
 \item{model}{Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.}
 
-\item{dVec}{Width of soil layers (in mm).}
+\item{widths}{Width of soil layers (in mm).}
 
 \item{Temp}{Temperature (in ºC) for each soil layer.}
 

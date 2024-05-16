@@ -1660,12 +1660,12 @@ hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry
 #' @rdname hydrology_infiltration
 #' 
 #' @param I Soil infiltration (in mm of water).
-#' @param dVec Width of soil layers (in mm).
+#' @param widths Width of soil layers (in mm).
 #' @param macro Macroporosity of soil layers (in \%).
 #' @param a,b Parameters of the extinction function used for water infiltration.
 #' 
-hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.0) {
-    .Call(`_medfate_infiltrationRepartition`, I, dVec, macro, a, b)
+hydrology_infiltrationRepartition <- function(I, widths, macro, a = -0.005, b = 3.0) {
+    .Call(`_medfate_infiltrationRepartition`, I, widths, macro, a, b)
 }
 
 #' @rdname hydrology_infiltration
@@ -2749,15 +2749,15 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' ntree = nrow(exampleforest$treeData)
 #' 
 #' #Initialize soil with default soil params
-#' S = soil(defaultSoilParams())
+#' s = soil(defaultSoilParams())
 #' 
 #' #Calculate conic root system for trees
-#' V1 = root_conicDistribution(Z=rep(2000,ntree), S$dVec)            
+#' V1 = root_conicDistribution(Z=rep(2000,ntree), s$widths)            
 #' print(V1)
 #'      
 #' #Calculate LDR root system for trees (Schenck & Jackson 2002)
 #' V2 = root_ldrDistribution(Z50 = rep(200,ntree), 
-#'                           Z95 = rep(1000,ntree), S$dVec)
+#'                           Z95 = rep(1000,ntree), s$widths)
 #' print(V2)     
 #' 
 #' @name root
@@ -3068,7 +3068,7 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' \itemize{
 #'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 #'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-#'   \item{\code{dVec}: Width of soil layers (in mm).}
+#'   \item{\code{widths}: Width of soil layers (in mm).}
 #'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 #'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
 #'   \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
@@ -3118,7 +3118,7 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' 
 #' # Reinitialize soil (should override estimations)
 #' s2 = soil(df_soil)
-#' print(s2, model="VG")
+#' summary(s2, model="VG")
 #' @name soil
 soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0))) {
     .Call(`_medfate_soil`, SoilParams, VG_PTF, W)
@@ -3137,7 +3137,7 @@ soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0))) {
 #' 
 #' @param soil Soil object (returned by function \code{\link{soil}}).
 #' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.
-#' @param dVec Width of soil layers (in mm).
+#' @param widths Width of soil layers (in mm).
 #' @param Temp Temperature (in ºC) for each soil layer.
 #' @param clay Percentage of clay (in percent weight) for each layer.
 #' @param sand Percentage of sand (in percent weight) for each layer.
@@ -3186,13 +3186,13 @@ soil_thermalConductivity <- function(soil, model = "SX") {
 }
 
 #' @name soil_thermodynamics
-soil_temperatureGradient <- function(dVec, Temp) {
-    .Call(`_medfate_temperatureGradient`, dVec, Temp)
+soil_temperatureGradient <- function(widths, Temp) {
+    .Call(`_medfate_temperatureGradient`, widths, Temp)
 }
 
 #' @name soil_thermodynamics
-soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep) {
-    .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
+soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep) {
+    .Call(`_medfate_temperatureChange`, widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
 }
 
 #' Single-day simulation

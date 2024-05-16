@@ -17,13 +17,13 @@ const double capacityClay = 1.23*1e6; //kg·m-3
 /**
  * Calculates midpoints of soil layers
  */
-NumericVector midpoints(NumericVector dVec) {
-  int nlayers = dVec.length();
+NumericVector midpoints(NumericVector widths) {
+  int nlayers = widths.length();
   double sumz = 0.0;
   NumericVector midZ(nlayers);
   for(int l = 0;l<nlayers; l++) {
-    midZ[l] = sumz + dVec[l]/2.0;
-    sumz = sumz + dVec[l];
+    midZ[l] = sumz + widths[l]/2.0;
+    sumz = sumz + widths[l];
   }
   return(midZ);
 }
@@ -80,7 +80,7 @@ NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay,
 //' 
 //' @param soil Soil object (returned by function \code{\link{soil}}).
 //' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.
-//' @param dVec Width of soil layers (in mm).
+//' @param widths Width of soil layers (in mm).
 //' @param Temp Temperature (in ºC) for each soil layer.
 //' @param clay Percentage of clay (in percent weight) for each layer.
 //' @param sand Percentage of sand (in percent weight) for each layer.
@@ -152,8 +152,8 @@ NumericVector thermalConductivity(List soil, String model = "SX") {
  */
 //' @name soil_thermodynamics
 // [[Rcpp::export("soil_temperatureGradient")]]
-NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp) {
-  NumericVector midZ = midpoints(dVec);
+NumericVector temperatureGradient(NumericVector widths, NumericVector Temp) {
+  NumericVector midZ = midpoints(widths);
   int nlayers = Temp.length();
   NumericVector gradTemp(nlayers,0.0);
   if(nlayers>1) {
@@ -167,7 +167,7 @@ NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp) {
 
 //' @name soil_thermodynamics
 // [[Rcpp::export("soil_temperatureChange")]]
-NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
+NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
                                 NumericVector sand, NumericVector clay,
                                 NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
                                 double Gdown, double tstep) {
@@ -179,7 +179,7 @@ NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
                                           Temp);
   int nlayers = Temp.length();
 
-  NumericVector dZ_m = dVec*0.001; //mm to m
+  NumericVector dZ_m = widths*0.001; //mm to m
 
   //Estimate layer interfaces
   NumericVector dZUp(nlayers), dZDown(nlayers), Zcent(nlayers), Zup(nlayers), Zdown(nlayers);
@@ -227,21 +227,21 @@ NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
   NumericVector tempch = tridiagonalSolving(a,b,c,d);
   return(tempch);
 }
-// NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
+// NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
 //                                 NumericVector sand, NumericVector clay,
 //                                 NumericVector W, NumericVector Theta_FC,
 //                                 double Gdown, double tstep) {
 //   NumericVector lambda = layerThermalConductivity(sand, clay, W, Theta_FC);
 //   NumericVector Ca = layerThermalCapacity(sand, clay, W, Theta_FC);
 //   int nlayers = Temp.length();
-//   NumericVector gradTemp = temperatureGradient(dVec, Temp);
-//   NumericVector midZ = midpoints(dVec);
+//   NumericVector gradTemp = temperatureGradient(widths, Temp);
+//   NumericVector midZ = midpoints(widths);
 //   double Gup = -Gdown; //Gdown > 0 when net flux is in the direction of soil
 //   double Gi;
 //   NumericVector tempch(nlayers);
 //   for(int l = 0;l<nlayers; l++) {
 //     Gi = lambda[l]*gradTemp[l]; //Gi < 0 when net flux is downward
-//     tempch[l] = (Gi-Gup)/(Ca[l]*0.001*dVec[l])*tstep;
+//     tempch[l] = (Gi-Gup)/(Ca[l]*0.001*widths[l])*tstep;
 //     Gup = Gi;
 //   }
 //   return(tempch);

@@ -162,7 +162,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Soil parameters
   List soil = x["soil"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
   NumericVector Wsoil = soil["W"];
   NumericVector Tsoil = soil["Temp"];
   
@@ -437,7 +437,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   //Soil parameters
   List soil = x["soil"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
 
   List belowLayers = x["belowLayers"];
   NumericMatrix Wpool = belowLayers["Wpool"];
@@ -1022,7 +1022,7 @@ void checkspwbInput(List x,  String transpirationMode, String soilFunctions) {
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
   }
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
-  if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
+  if(!soil.containsElementNamed("widths")) stop("widths missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
   if(soilFunctions=="SX") {
     if(!soil.containsElementNamed("clay")) stop("clay missing in soil");

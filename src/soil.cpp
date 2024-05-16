@@ -414,7 +414,7 @@ String USDAType(double clay, double sand) {
 }
 
 NumericVector psi2thetasoil(List soil, NumericVector psi, String model="SX") {
-  NumericVector SD = soil["dVec"];
+  NumericVector SD = soil["widths"];
   int nlayers = SD.size();
   NumericVector theta(nlayers);
   if(model=="SX") {
@@ -437,7 +437,7 @@ NumericVector psi2thetasoil(List soil, NumericVector psi, String model="SX") {
 }
 
 NumericVector psi2thetasoil(List soil, double psi, String model="SX") {
-  NumericVector SD = soil["dVec"];
+  NumericVector SD = soil["widths"];
   int nlayers = SD.size();
   NumericVector theta(nlayers);
   if(model=="SX") {
@@ -485,7 +485,7 @@ NumericVector thetaWP(List soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_thetaSAT")]]
 NumericVector thetaSAT(List soil, String model="SX") {
-  NumericVector SD = soil["dVec"];
+  NumericVector SD = soil["widths"];
   int nlayers = SD.size();
   NumericVector Theta_Sat(nlayers);
   if(model=="SX") {
@@ -510,12 +510,12 @@ NumericVector thetaSAT(List soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterFC")]]
 NumericVector waterFC(List soil, String model="SX") {
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector rfc = soil["rfc"];
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
   NumericVector Water_FC(nlayers);
-  for(int i=0;i<nlayers;i++) Water_FC[i] = dVec[i]*Theta_FC[i]*(1.0-(rfc[i]/100.0));
+  for(int i=0;i<nlayers;i++) Water_FC[i] = widths[i]*Theta_FC[i]*(1.0-(rfc[i]/100.0));
   return(Water_FC);
 }
 
@@ -525,49 +525,49 @@ NumericVector waterFC(List soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterSAT")]]
 NumericVector waterSAT(List soil, String model="SX") {
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector Theta_SAT = thetaSAT(soil, model);
   NumericVector rfc = soil["rfc"];
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
   NumericVector Water_SAT(nlayers);
-  for(int i=0;i<nlayers;i++) Water_SAT[i] = dVec[i]*Theta_SAT[i]*(1.0-(rfc[i]/100.0));
+  for(int i=0;i<nlayers;i++) Water_SAT[i] = widths[i]*Theta_SAT[i]*(1.0-(rfc[i]/100.0));
   return(Water_SAT);
 }
 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterWP")]]
 NumericVector waterWP(List soil, String model="SX") {
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector theta_WP = thetaWP(soil, model);
   NumericVector rfc = soil["rfc"];
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
   NumericVector Water_WP(nlayers);
-  for(int i=0;i<nlayers;i++) Water_WP[i] = dVec[i]*theta_WP[i]*(1.0-(rfc[i]/100.0));
+  for(int i=0;i<nlayers;i++) Water_WP[i] = widths[i]*theta_WP[i]*(1.0-(rfc[i]/100.0));
   return(Water_WP);
 }
 
 //' @rdname soil_texture
  // [[Rcpp::export("soil_waterPsi")]]
  NumericVector waterPsi(List soil, double psi, String model="SX") {
-   NumericVector dVec = soil["dVec"];
+   NumericVector widths = soil["widths"];
    NumericVector theta_psi = psi2thetasoil(soil, psi, model);
    NumericVector rfc = soil["rfc"];
-   int nlayers = dVec.size();
+   int nlayers = widths.size();
    NumericVector Water_psi(nlayers);
-   for(int i=0;i<nlayers;i++) Water_psi[i] = dVec[i]*theta_psi[i]*(1.0-(rfc[i]/100.0));
+   for(int i=0;i<nlayers;i++) Water_psi[i] = widths[i]*theta_psi[i]*(1.0-(rfc[i]/100.0));
    return(Water_psi);
  }
 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterExtractable")]]
 NumericVector waterExtractable(List soil, String model="SX", double minPsi = -5.0) {
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector theta_FC = thetaFC(soil, model);
   NumericVector theta_Min = psi2thetasoil(soil, minPsi, model);
   NumericVector rfc = soil["rfc"];
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
   NumericVector Water_Extr(nlayers);
-  for(int i=0;i<nlayers;i++) Water_Extr[i] = dVec[i]*((theta_FC[i]- theta_Min[i])*(1.0-(rfc[i]/100.0)));
+  for(int i=0;i<nlayers;i++) Water_Extr[i] = widths[i]*((theta_FC[i]- theta_Min[i])*(1.0-(rfc[i]/100.0)));
   return(Water_Extr);
 }
 
@@ -586,12 +586,12 @@ NumericVector theta(List soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_water")]]
 NumericVector water(List soil, String model="SX") {
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector Theta = theta(soil, model);
   NumericVector rfc = soil["rfc"];
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
   NumericVector Water(nlayers);
-  for(int i=0;i<nlayers;i++) Water[i] = dVec[i]*Theta[i]*(1.0-(rfc[i]/100.0));
+  for(int i=0;i<nlayers;i++) Water[i] = widths[i]*Theta[i]*(1.0-(rfc[i]/100.0));
   return(Water);
 }
 
@@ -684,7 +684,7 @@ NumericVector conductivity(List soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_saturatedWaterDepth")]]
 double saturatedWaterDepth(List soil, String model = "SX") {
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector W = soil["W"];
   NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector Theta_SAT = thetaSAT(soil, model);
@@ -693,9 +693,9 @@ double saturatedWaterDepth(List soil, String model = "SX") {
   int nunsaturated = 0;
   for(int l=0;l<nlayers;l++) {
     if(W[l]>1.0) {
-      z = z + dVec[l]*(Theta_SAT[l]-Theta_FC[l]*W[l])/(Theta_SAT[l]-Theta_FC[l]);
+      z = z + widths[l]*(Theta_SAT[l]-Theta_FC[l]*W[l])/(Theta_SAT[l]-Theta_FC[l]);
     } else {
-      z = z + dVec[l];
+      z = z + widths[l];
       nunsaturated++;
     }
   }
@@ -805,7 +805,7 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' \itemize{
 //'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 //'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-//'   \item{\code{dVec}: Width of soil layers (in mm).}
+//'   \item{\code{widths}: Width of soil layers (in mm).}
 //'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 //'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
 //'   \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
@@ -855,13 +855,13 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' 
 //' # Reinitialize soil (should override estimations)
 //' s2 = soil(df_soil)
-//' print(s2, model="VG")
+//' summary(s2, model="VG")
 //' @name soil
 // [[Rcpp::export("soil")]]
 List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
           NumericVector W = NumericVector::create(1.0)) {
-  NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
-  int nlayers = dVec.size();
+  NumericVector widths = clone(as<NumericVector>(SoilParams["widths"]));
+  int nlayers = widths.size();
 
   if(W.size()==1) {
     double w0 = W[0];
@@ -943,7 +943,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   }
   List l = List::create(_["W"] = W, 
                         _["Temp"] = temperature,
-                        _["dVec"] = dVec,
+                        _["widths"] = widths,
                         _["sand"] = sand, _["clay"] = clay, _["om"] = om, _["nitrogen"] = nitrogen,
                         _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                         _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
@@ -970,7 +970,7 @@ void modifySoilLayerParam(List soil, String paramName, int layer, double newValu
   NumericVector om = as<NumericVector>(soil["om"]);
   NumericVector bd = as<NumericVector>(soil["bd"]);
   NumericVector rfc =as<NumericVector>(soil["rfc"]);
-  NumericVector dVec = as<NumericVector>(soil["dVec"]);
+  NumericVector widths = as<NumericVector>(soil["widths"]);
   NumericVector macro = as<NumericVector>(soil["macro"]);
   NumericVector VG_alpha = as<NumericVector>(soil["VG_alpha"]);
   NumericVector VG_n = as<NumericVector>(soil["VG_n"]);
@@ -978,7 +978,7 @@ void modifySoilLayerParam(List soil, String paramName, int layer, double newValu
   NumericVector VG_theta_sat = as<NumericVector>(soil["VG_theta_sat"]);
   NumericVector Ksat = as<NumericVector>(soil["Ksat"]);
   
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
 
   //Parameters to be re-calculated
   CharacterVector usda_Type(nlayers);

@@ -265,7 +265,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       }
     }
   } else if (level =="soillayer") {
-    layers <- c(1:length(x$spwbInput$soil$dVec), "Overall")
+    layers <- c(1:length(x$spwbInput$soil$widths), "Overall")
     output <- "Soil"
     out <- data.frame(date = rep(dates, length(layers)),
                       soillayer = as.character(gl(length(layers), length(dates), labels = layers)))

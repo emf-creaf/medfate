@@ -267,7 +267,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
   double rootRadialConductance = control["rootRadialConductance"];
   double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
   
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   
   NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams, fillWithGenus);
   NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams, fillWithGenus);
@@ -376,7 +376,7 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, List soi
   double k_SSym = control["k_SSym"];
   double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
   
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   
   NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams, fillWithGenus);
   NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams, fillWithGenus);
@@ -515,12 +515,12 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, List soi
 List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, 
                  DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control) {
 
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   // NumericVector bd = soil["bd"];
   NumericVector rfc = soil["rfc"];
   NumericVector VG_alpha = soil["VG_alpha"];
   NumericVector VG_n = soil["VG_n"];
-  int nlayers = dVec.size();
+  int nlayers = widths.size();
 
   NumericVector LAI_live = above["LAI_live"];
   int numCohorts = LAI_live.size();
@@ -533,7 +533,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   
 
-  NumericMatrix V = ldrDistribution(Z50, Z95, dVec);
+  NumericMatrix V = ldrDistribution(Z50, Z95, widths);
   V.attr("dimnames") = List::create(above.attr("row.names"), layerNames(nlayers));
   // CharacterVector slnames(V.ncol());
   // for(int i=0;i<V.ncol();i++) slnames[i] = i+1;
@@ -563,8 +563,8 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     NumericVector CRSV(numCohorts);
     NumericVector FRB(numCohorts, NA_REAL);
     for(int c=0;c<numCohorts;c++){
-      L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
-      CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
+      L(c,_) = coarseRootLengths(V(c,_), widths, 0.5); //Arbitrary ratio (to revise some day)
+      CRSV[c] = coarseRootSoilVolume(V(c,_), widths, 0.5);
       //Assume fine root biomass is half leaf structural biomass
       double LA = leafArea(LAI_live[c], N[c]); //m2 leaf area per individual
       double fineRootArea = Ar2Al[c]*LA;//fine root area in m2
@@ -579,7 +579,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
       List RHOP;
       if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
       else RHOP = equaloverlapHorizontalProportions(poolProportions, V);
-      // else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+      // else RHOP = horizontalProportions(poolProportions, CRSV, N, V, widths, rfc);
       belowLayers = List::create(_["V"] = V,
                                  _["L"] = L,
                                  _["Wpool"] = Wpool,
@@ -622,7 +622,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     for(int c=0;c<numCohorts;c++)  {
       //We use Kmax_stemxylem instead of Kmax_rootxylem because of reliability
       CRSV[c] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
-                                                    V(c,_), dVec, rfc);
+                                                    V(c,_), widths, rfc);
     }
     
     
@@ -633,7 +633,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     NumericVector Vc;
     for(int c=0;c<numCohorts;c++){
       Vc = V(c,_);
-      L(c,_) = coarseRootLengthsFromVolume(CRSV[c], V(c,_), dVec, rfc); 
+      L(c,_) = coarseRootLengthsFromVolume(CRSV[c], V(c,_), widths, rfc); 
       NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
       for(int l=0;l<nlayers;l++) {
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
@@ -661,7 +661,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
       List RHOP;
       if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
       else RHOP = equaloverlapHorizontalProportions(poolProportions, V);
-      // else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+      // else RHOP = horizontalProportions(poolProportions, CRSV, N, V, widths, rfc);
       belowLayers["RHOP"] = RHOP;
     } else {
       belowdf = DataFrame::create(_["Z50"]=Z50,
@@ -1764,8 +1764,8 @@ void updatePlantKmax(List x) {
 }
 void updateBelowgroundConductances(List x) {
   List soil = x["soil"];
-  NumericVector dVec = soil["dVec"];
-  NumericVector rfc = soil["dVec"];
+  NumericVector widths = soil["widths"];
+  // NumericVector rfc = soil["rfc"];
   List belowLayers = x["belowLayers"];
   NumericMatrix V = belowLayers["V"];
   NumericMatrix L = belowLayers["L"];
@@ -1790,7 +1790,7 @@ void updateBelowgroundConductances(List x) {
 }
 void updateFineRootDistribution(List x) {
   List soil = x["soil"];
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   DataFrame belowdf =  Rcpp::as<Rcpp::DataFrame>(x["below"]);
   NumericVector Z50 = belowdf["Z50"];
   NumericVector Z95 = belowdf["Z95"];
@@ -1799,7 +1799,7 @@ void updateFineRootDistribution(List x) {
   int numCohorts = V.nrow();
   int nlayers = V.ncol();
   for(int c=0;c<numCohorts;c++) {
-    NumericVector PC = ldrRS_one(Z50[c], Z95[c], dVec);
+    NumericVector PC = ldrRS_one(Z50[c], Z95[c], widths);
     for(int l=0;l<nlayers;l++) V(c,l) = PC[l]; 
   }
   updateBelowgroundConductances(x);

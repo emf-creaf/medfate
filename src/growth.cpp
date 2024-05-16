@@ -435,7 +435,7 @@ List growthDayInner(List x, NumericVector meteovec,
   //Soil
   List soil  = x["soil"];
   NumericVector psiSoil = psi(soil,"soilFunctions");
-  NumericVector dVec = soil["dVec"];
+  NumericVector widths = soil["widths"];
   NumericVector rfc = soil["rfc"];
   NumericVector Ksat = soil["Ksat"];
   NumericVector VG_n = soil["VG_n"];
@@ -1124,8 +1124,8 @@ List growthDayInner(List x, NumericVector meteovec,
         //   Al2As[j] = (LAlive)/(SA[j]/10000.0);
         // }
         for(int c=0;c<numCohorts;c++){
-          L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
-          CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
+          L(c,_) = coarseRootLengths(V(c,_), widths, 0.5); //Arbitrary ratio (to revise some day)
+          CRSV[c] = coarseRootSoilVolume(V(c,_), widths, 0.5);
         }
       } else { //SPERRY/Sureau
         if(LAlive>0.0) {
@@ -1151,9 +1151,9 @@ List growthDayInner(List x, NumericVector meteovec,
           VCroot_kmaxVEC[j] = 1.0/newrootR;
           //Update coarse root soil volume
           CRSV[j] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
-                                                        V(j,_), dVec, rfc);
+                                                        V(j,_), widths, rfc);
           //Update coarse root length and root maximum conductance
-          L(j,_) = coarseRootLengthsFromVolume(CRSV[j], V(j,_), dVec, rfc);
+          L(j,_) = coarseRootLengthsFromVolume(CRSV[j], V(j,_), widths, rfc);
           NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
           VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
           //Update Plant_kmax
@@ -1419,7 +1419,7 @@ List growthDayInner(List x, NumericVector meteovec,
     //Update RHOP
     List newRHOP;
     if(rhizosphereOverlap=="none") newRHOP = nonoverlapHorizontalProportions(V);
-    else newRHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+    else newRHOP = horizontalProportions(poolProportions, CRSV, N, V, widths, rfc);
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
@@ -1717,7 +1717,7 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
     if(!paramsTranspiration.containsElementNamed("Jmax298")) stop("Jmax298 missing in growthInput$paramsTransp");
   }
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
-  if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
+  if(!soil.containsElementNamed("widths")) stop("widths missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
   if(soilFunctions=="SX") {
     if(!soil.containsElementNamed("clay")) stop("clay missing in soil");

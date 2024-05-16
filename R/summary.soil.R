@@ -2,13 +2,13 @@
 #' 
 #' @param object An object of class \code{soil}.
 #' @param model Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.
-#' @param ... Additional parameters to \code{print}.
+#' @param ... Additional parameters to \code{summary}.
 #' 
 summary.soil<-function(object, model="SX",...) {
   #Depth
-  cat(paste("Soil depth (mm):", round(sum(object$dVec), digits=0),"\n"))
+  cat(paste("Soil depth (mm):", round(sum(object$widths), digits=0),"\n"))
   #Soil parameters related to texture
-  nlayers = length(object$dVec)
+  nlayers = length(object$widths)
   dini = 0;
   dfin = 0;
   ##Water content at field capacity
@@ -21,7 +21,7 @@ summary.soil<-function(object, model="SX",...) {
   Water_EXTR = soil_waterExtractable(object,model)
   
   for(l in 1:nlayers) {
-    dfin = dfin+object$dVec[l]
+    dfin = dfin+object$widths[l]
     silt = 100-object$sand[l]-object$clay[l]
     if(!is.na(object$om[l])) silt = silt - object$om[l]
     usda_Type = soil_USDAType(object$clay[l],object$sand[l]);
@@ -33,7 +33,7 @@ summary.soil<-function(object, model="SX",...) {
               "\n    Vol. WP (mm):", round(Water_WP[l]),"Vol. FC (mm):", round(Water_FC[l]),"Vol. SAT (mm):", round(Water_SAT[l]), "Vol. current (mm):", round(object$W[l]*Water_FC[l]), 
               "\n    Temperature (Celsius):", round(object$Temp[l],1),
               "\n"))
-    dini = dini+object$dVec[l]
+    dini = dini+object$widths[l]
   }
   cat(paste("\nTotal soil saturated capacity (mm):", round(sum(Water_SAT), digits=0),"\n"))  
   cat(paste("Total soil water holding capacity (mm):", round(sum(Water_FC), digits=0),"\n"))  
