@@ -80,7 +80,7 @@
 #' data(SpParamsMED)
 #' 
 #' #Initialize soil with default soil params (2 layers)
-#' examplesoil <- soil(defaultSoilParams(2), W=c(0.5,0.5))
+#' examplesoil <- soil(defaultSoilParams(2))
 #' 
 #' #Switch to 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
