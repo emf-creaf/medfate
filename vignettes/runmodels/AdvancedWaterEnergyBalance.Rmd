@@ -26,13 +26,7 @@ Model inputs are explained in greater detail in vignettes [*Understanding model 
 Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar <- defaultSoilParams(4)
-spar
-```
-
-The soil input for water balance simulation is actually a data frame of class `soil` that is created using a function with the same name:
-```{r}
-examplesoil <- soil(spar)
+examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
 
@@ -76,6 +70,13 @@ The `spwbInput` object for advanced water and energy balance is similar to that 
 ```{r}
 x$cohorts
 ```
+Element `soil` contains soil layer parameters and state variables (moisture and temperature):
+
+```{r}
+x$soil
+```
+
+As an aside, the columns in `x$soil` that were not present in the input data frame `examplesoil` are created by an internal call to a soil initialization function called `soil()`. 
 
 Element `canopy` contains state variables within the canopy:
 ```{r}
