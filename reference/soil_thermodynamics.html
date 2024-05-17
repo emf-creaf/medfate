@@ -20,7 +20,7 @@ given soil layer texture and water content (and possibly including heat flux fro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -66,10 +66,10 @@ given soil layer texture and water content (and possibly including heat flux fro
 <span></span>
 <span><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">dVec</span>, <span class="va">Temp</span><span class="op">)</span></span>
+<span><span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">widths</span>, <span class="va">Temp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_temperatureChange</span><span class="op">(</span></span>
-<span>  <span class="va">dVec</span>,</span>
+<span>  <span class="va">widths</span>,</span>
 <span>  <span class="va">Temp</span>,</span>
 <span>  <span class="va">sand</span>,</span>
 <span>  <span class="va">clay</span>,</span>
@@ -91,7 +91,7 @@ given soil layer texture and water content (and possibly including heat flux fro
 <dd><p>Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.</p></dd>
 
 
-<dt>dVec</dt>
+<dt>widths</dt>
 <dd><p>Width of soil layers (in mm).</p></dd>
 
 
@@ -158,7 +158,9 @@ given soil layer texture and water content (and possibly including heat flux fro
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Define soil and complete parameters</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.2 2.2 2.2 2.2</span>
 <span class="r-in"><span><span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></span>

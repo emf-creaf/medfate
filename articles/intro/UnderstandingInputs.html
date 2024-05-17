@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-05-12</h4>
+            <h4 data-toc-skip class="date">2024-05-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -101,20 +101,12 @@ create model inputs and some common problems encountered.</p>
 <h2 id="species-parameter-tables">Species parameter tables<a class="anchor" aria-label="anchor" href="#species-parameter-tables"></a>
 </h2>
 <p>Simulation models in <code>medfate</code> require a data frame with
-species (taxon) parameter values. The package includes default data sets
-to be readily used. The values of the parameter table were obtained from
-global trait data bases, bibliographic searches, fit to empirical data
-or expert-based guesses:</p>
+species (taxon) parameter values. The package includes a default data
+sets to be readily used. The values of the parameter table were obtained
+from global trait data bases, bibliographic searches, fit to empirical
+data or expert-based guesses:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span> <span class="co"># For the Spanish forest inventory (including taxon groups)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsES"</span><span class="op">)</span> <span class="co"># For the Spanish forest inventory (full taxon list)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in data("SpParamsES"): data set 'SpParamsES' not found</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsFR"</span><span class="op">)</span> <span class="co"># For the French forest inventory </span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in data("SpParamsFR"): data set 'SpParamsFR' not found</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsUS"</span><span class="op">)</span> <span class="co"># For the US forest inventory (FIA) </span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in data("SpParamsUS"): data set 'SpParamsUS' not found</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span> <span class="co"># For the Spanish forest inventory (including taxon groups)</span></span></code></pre></div>
 <p>A large number of parameters (columns) can be found in species
 parameter tables. Not all parameters are needed for all models. You can
 find parameter definitions in table <code>SpParamsDefinition</code>,
@@ -1160,7 +1152,7 @@ can be mapped onto it.</p>
 <code>forest</code>, a list that contains several elements. Among them,
 the most important items are two data frames, <code>treeData</code> (for
 trees) and <code>shrubData</code> (for shrubs):</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span>
 <span><span class="va">exampleforest</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
@@ -1198,7 +1190,7 @@ cohorts).</p>
 <code>forest</code> object, users may use an alternative description,
 based on leaf area index and crown ratio of woody cohorts and the herb
 layer:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest2</span><span class="op">)</span></span>
 <span><span class="va">exampleforest2</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
@@ -1239,11 +1231,11 @@ defining single-cohort forests from attributes. For example a holm oak
 (<em>Quercus ilex</em>) forest of 4-m height and having a leaf area
 index of <span class="math inline">\(2\, m^2\cdot m^{-2}\)</span> can be
 defined using:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oak_forest</span> <span class="op">&lt;-</span><span class="fu"><a href="../../reference/tree2forest.html">tree2forest</a></span><span class="op">(</span><span class="st">"Quercus ilex"</span>, Height<span class="op">=</span> <span class="fl">400</span>, LAI <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p>The function will return a <code>forest</code> object where most
 attributes are empty:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oak_forest</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
 <span><span class="co">##        Species DBH Height  N Z50 Z95 LAI</span></span>
@@ -1278,7 +1270,7 @@ below-ground information is represented in <code>medfate</code>.</p>
 <p>For example, we can use function <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> on
 the object <code>exampleforest</code> to show how medfate completes
 above-ground information:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span></span>
@@ -1298,7 +1290,7 @@ not for soil water balance, which only requires columns <code>SP</code>,
 <code>LAI_live</code>, <code>LAI_expanded</code> and
 <code>LAI_dead</code>. Therefore, one could use alternative forest
 description as starting point, i.e.:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">above2</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforest2</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above2</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead</span></span>
@@ -1310,10 +1302,10 @@ other values are directly copied from <code>forest</code>.</p>
 <p>Aboveground leaf area distribution (with or without distinguishing
 among cohorts) can be examined by calling function
 <code><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity()</a></code>:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span>, byCohorts <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-10-1.png" width="384" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span>, byCohorts <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -1323,14 +1315,14 @@ among cohorts) can be examined by calling function
 <p>Regarding <strong>belowground</strong> information, we need vectors
 with depths corresponding to 50% and 95% of fine roots, which we simply
 concatenate from our forest data:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Z50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z50</span>, <span class="va">exampleforest</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z50</span><span class="op">)</span></span>
 <span><span class="va">Z95</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z95</span>, <span class="va">exampleforest</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z95</span><span class="op">)</span></span></code></pre></div>
 <p>These parameters specify a continuous distribution of fine roots.
 Users can visually inspect the distribution of fine roots of
 <code>forest</code> objects by calling function
 <code><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_rootDistribution()</a></code>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_rootDistribution</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -1346,12 +1338,14 @@ physical attributes of soil, namely soil depth, texture, bulk density
 and rock fragment content. Soil physical attributes can be initialized
 to default values, for a given number of layers, using function
 <code><a href="../../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   widths clay sand om nitrogen  bd rfc</span></span>
 <span><span class="co">## 1    300   25   25 NA       NA 1.5  25</span></span>
-<span><span class="co">## 2    700   25   25 NA       NA 1.5  45</span></span></code></pre>
+<span><span class="co">## 2    700   25   25 NA       NA 1.5  45</span></span>
+<span><span class="co">## 3   1000   25   25 NA       NA 1.5  75</span></span>
+<span><span class="co">## 4   2000   25   25 NA       NA 1.5  95</span></span></code></pre>
 <p>where <code>widths</code> are soil layer widths in mm;
 <code>clay</code> and <code>sand</code> are the percentage of clay and
 sand, in percent of dry weight, <code>om</code> stands for organic
@@ -1359,38 +1353,40 @@ matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot 
 percentage of rock fragments. Because soil properties vary strongly at
 fine spatial scales, ideally soil physical attributes should be measured
 on samples taken at the forest stand to be simulated. For those users
-lacking such data, soil properties modelled at larger scales are
-available via SoilGrids.org (see function <code>soilgridsParams()</code>
-in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a>).</p>
+lacking such data, soil properties are available via SoilGrids.org.</p>
 </div>
 <div class="section level3">
 <h3 id="soil-input-object">Soil input object<a class="anchor" aria-label="anchor" href="#soil-input-object"></a>
 </h3>
 <p>The soil input for simulations is an object of class
-<code>soil</code> (a list) that is created using a function with the
-same name:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code>soil</code> (also a data frame) that is created using a function
+with the same name:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">soil</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "function"</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "soil"       "data.frame"</span></span></code></pre>
 <p>In addition to the physical soil description, this object contains
 soil parameters needed for soil water balance simulations:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "W"            "SWE"          "Temp"         "Gsoil"        "dVec"        </span></span>
-<span><span class="co">##  [6] "sand"         "clay"         "om"           "nitrogen"     "VG_alpha"    </span></span>
-<span><span class="co">## [11] "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"         "macro"       </span></span>
-<span><span class="co">## [16] "bd"           "rfc"</span></span></code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">examplesoil</span></span></code></pre></div>
+<pre><code><span><span class="co">##   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span></span>
+<span><span class="co">## 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span></span>
+<span><span class="co">## 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span></span>
+<span><span class="co">## 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span></span>
+<span><span class="co">## 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span></span>
+<span><span class="co">##   VG_theta_res VG_theta_sat W Temp</span></span>
+<span><span class="co">## 1        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 2        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 3        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 4        0.041     0.423715 1   NA</span></span></code></pre>
 <p>For example, <code>macro</code> specifies the macroporosity of each
-layer; <code>Gsoil</code> and <code>Ksoil</code> are parameters needed
-to model the process of evaporation from the bare soil. The meaning of
-all elements in the soil object can be found in the help page for
-function <code><a href="../../reference/soil.html">soil()</a></code>.</p>
+layer. The meaning of all elements in the soil object can be found in
+the help page for function <code><a href="../../reference/soil.html">soil()</a></code>.</p>
 <p>At any time, one can show the characteristics and status of the soil
-object using its <code>print</code> function:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">examplesoil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Soil depth (mm): 1000 </span></span>
+object using its <code>summary</code> function:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">examplesoil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Soil depth (mm): 4000 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Layer  1  [ 0  to  300 mm ] </span></span>
 <span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
@@ -1406,27 +1402,39 @@ object using its <code>print</code> function:</p>
 <span><span class="co">##     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span></span>
 <span><span class="co">##     Temperature (Celsius): NA </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Total soil saturated capacity (mm): 300 </span></span>
-<span><span class="co">## Total soil water holding capacity (mm): 185 </span></span>
-<span><span class="co">## Total soil extractable water (mm): 116 </span></span>
-<span><span class="co">## Total soil current Volume (mm): 185 </span></span>
+<span><span class="co">## Layer  3  [ 1000  to  2000 mm ] </span></span>
+<span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
+<span><span class="co">##     Rock fragment content (%): 75 Macroporosity (%): 5 </span></span>
+<span><span class="co">##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span></span>
+<span><span class="co">##     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 </span></span>
+<span><span class="co">##     Temperature (Celsius): NA </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Snow pack water equivalent (mm): 0 </span></span>
+<span><span class="co">## Layer  4  [ 2000  to  4000 mm ] </span></span>
+<span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
+<span><span class="co">##     Rock fragment content (%): 95 Macroporosity (%): 5 </span></span>
+<span><span class="co">##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span></span>
+<span><span class="co">##     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 </span></span>
+<span><span class="co">##     Temperature (Celsius): NA </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Total soil saturated capacity (mm): 473 </span></span>
+<span><span class="co">## Total soil water holding capacity (mm): 291 </span></span>
+<span><span class="co">## Total soil extractable water (mm): 183 </span></span>
+<span><span class="co">## Total soil current Volume (mm): 291 </span></span>
 <span><span class="co">## Saturated water depth (mm): NA</span></span></code></pre>
 <p>Importantly, the soil object is used to store the degree of moisture
 of each soil layer. In particular, element <code>W</code> contains the
 state variable that represents moisture content - the proportion of
 moisture <strong>relative to field capacity</strong> - which is normally
 initialized to 1 for each layer:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span><span class="op">$</span><span class="va">W</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 1 1</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 1 1 1 1</span></span></code></pre>
 <p>Advanced soil plant energy and water balance modelling requires
 considering the temperature of soil. Hence, <code>Temp</code> contains
 the temperature (in degrees) of soil layers:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span><span class="op">$</span><span class="va">Temp</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] NA NA</span></span></code></pre>
+<pre><code><span><span class="co">## [1] NA NA NA NA</span></span></code></pre>
 <p>Soil layer temperatures are initialized to missing values, so that at
 the first time step they will be set to atmospheric temperature. While
 simple water balance modeling can be run using either Saxton’s or Van
@@ -1444,9 +1452,9 @@ relationship between soil volumetric water content (<span class="math inline">\(
 retention curve, but the user may choose to follow Van Genuchten -
 Mualem equations, which will give slightly different values for the same
 texture:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Soil depth (mm): 1000 </span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Soil depth (mm): 4000 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Layer  1  [ 0  to  300 mm ] </span></span>
 <span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
@@ -1462,12 +1470,24 @@ texture:</p>
 <span><span class="co">##     Vol. WP (mm): 49 Vol. FC (mm): 117 Vol. SAT (mm): 163 Vol. current (mm): 117 </span></span>
 <span><span class="co">##     Temperature (Celsius): NA </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Total soil saturated capacity (mm): 258 </span></span>
-<span><span class="co">## Total soil water holding capacity (mm): 185 </span></span>
-<span><span class="co">## Total soil extractable water (mm): 123 </span></span>
-<span><span class="co">## Total soil current Volume (mm): 185 </span></span>
+<span><span class="co">## Layer  3  [ 1000  to  2000 mm ] </span></span>
+<span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
+<span><span class="co">##     Rock fragment content (%): 75 Macroporosity (%): 5 </span></span>
+<span><span class="co">##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 </span></span>
+<span><span class="co">##     Vol. WP (mm): 32 Vol. FC (mm): 76 Vol. SAT (mm): 106 Vol. current (mm): 76 </span></span>
+<span><span class="co">##     Temperature (Celsius): NA </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Snow pack water equivalent (mm): 0 </span></span>
+<span><span class="co">## Layer  4  [ 2000  to  4000 mm ] </span></span>
+<span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
+<span><span class="co">##     Rock fragment content (%): 95 Macroporosity (%): 5 </span></span>
+<span><span class="co">##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 </span></span>
+<span><span class="co">##     Vol. WP (mm): 13 Vol. FC (mm): 30 Vol. SAT (mm): 42 Vol. current (mm): 30 </span></span>
+<span><span class="co">##     Temperature (Celsius): NA </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Total soil saturated capacity (mm): 407 </span></span>
+<span><span class="co">## Total soil water holding capacity (mm): 291 </span></span>
+<span><span class="co">## Total soil extractable water (mm): 194 </span></span>
+<span><span class="co">## Total soil current Volume (mm): 291 </span></span>
 <span><span class="co">## Saturated water depth (mm): NA</span></span></code></pre>
 <p>While Saxton equations use texture and organic matter as inputs, the
 Van Genuchten-Mualem equations need other parameters, which are
@@ -1476,7 +1496,7 @@ estimated using pedotransfer functions and their names start with
 <code>soil</code> to estimate Van Genuchten parameters). The following
 code calls function <code><a href="../../reference/soil_texture.html">soil_retentionCurvePlot()</a></code> to illustrate
 the difference between the two water retention models in this soil:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/soil_texture.html">soil_retentionCurvePlot</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-21-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Low-level functions, such as <code><a href="../../reference/soil_texture.html">soil_psi2thetaSX()</a></code> and
@@ -1496,7 +1516,7 @@ minimum weather variables that are required are minimum/maximum
 temperature, minimum/maximum relative humidity, precipitation and
 radiation. Other variables like wind speed are recommended but not
 required. Here we show an example of meteorological forcing data.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        dates MinTemperature MaxTemperature Precipitation MinRelativeHumidity</span></span>
@@ -1525,7 +1545,7 @@ weather input for medfate simulations.</p>
 controlled using a set of global parameters. The default
 parameterization is obtained using function
 <code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   [1] "fillMissingRootParams"            "fillMissingSpParams"             </span></span>
@@ -1536,9 +1556,9 @@ parameterization is obtained using function
 <span><span class="co">##  [11] "temperatureResults"               "fireHazardResults"               </span></span>
 <span><span class="co">##  [13] "fireHazardStandardWind"           "fireHazardStandardDFMC"          </span></span>
 <span><span class="co">##  [15] "transpirationMode"                "soilFunctions"                   </span></span>
-<span><span class="co">##  [17] "ndailysteps"                      "max_nsubsteps_soil"              </span></span>
-<span><span class="co">##  [19] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
-<span><span class="co">##  [21] "defaultRainfallIntensityPerMonth" "snowpack"                        </span></span>
+<span><span class="co">##  [17] "VG_PTF"                           "ndailysteps"                     </span></span>
+<span><span class="co">##  [19] "max_nsubsteps_soil"               "defaultWindSpeed"                </span></span>
+<span><span class="co">##  [21] "defaultCO2"                       "defaultRainfallIntensityPerMonth"</span></span>
 <span><span class="co">##  [23] "leafPhenology"                    "bareSoilEvaporation"             </span></span>
 <span><span class="co">##  [25] "unlimitedSoilWater"               "interceptionMode"                </span></span>
 <span><span class="co">##  [27] "infiltrationMode"                 "infiltrationCorrection"          </span></span>

@@ -22,7 +22,7 @@ Function hydrology_herbaceousTranspiration calculates the amount of transpiratio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -67,6 +67,7 @@ Function hydrology_herbaceousTranspiration calculates the amount of transpiratio
 <span></span>
 <span><span class="fu">hydrology_soilEvaporation</span><span class="op">(</span></span>
 <span>  <span class="va">soil</span>,</span>
+<span>  <span class="va">snowpack</span>,</span>
 <span>  <span class="va">soilFunctions</span>,</span>
 <span>  <span class="va">pet</span>,</span>
 <span>  <span class="va">LgroundSWR</span>,</span>
@@ -99,6 +100,10 @@ Function hydrology_herbaceousTranspiration calculates the amount of transpiratio
 
 <dt>soil</dt>
 <dd><p>An object of class <code><a href="soil.html">soil</a></code>.</p></dd>
+
+
+<dt>snowpack</dt>
+<dd><p>The amount of snow (in water equivalents, mm) in the snow pack.</p></dd>
 
 
 <dt>soilFunctions</dt>
@@ -140,7 +145,7 @@ Function hydrology_herbaceousTranspiration calculates the amount of transpiratio
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="hydrology_verticalInputs.html">hydrology_soilWaterInputs</a></code>, <code><a href="hydrology_infiltration.html">hydrology_infiltration</a></code></p></div>
+    <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="hydrology_verticalInputs.html">hydrology_waterInputs</a></code>, <code><a href="hydrology_infiltration.html">hydrology_infiltration</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

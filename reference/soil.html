@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Soil initialization</h1>
-    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a>, <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/print.soil.R" class="external-link"><code>R/print.soil.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a>, <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/summary.soil.R" class="external-link"><code>R/summary.soil.R</code></a></small>
     <div class="hidden name"><code>soil.Rd</code></div>
     </div>
 
@@ -56,15 +56,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil</span><span class="op">(</span><span class="va">SoilParams</span>, VG_PTF <span class="op">=</span> <span class="st">"Toth"</span>, W <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>, SWE <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil</span><span class="op">(</span><span class="va">x</span>, VG_PTF <span class="op">=</span> <span class="st">"Toth"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for soil</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, model <span class="op">=</span> <span class="st">"SX"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, model <span class="op">=</span> <span class="st">"SX"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>SoilParams</dt>
+    <dl><dt>x</dt>
 <dd><p>A data frame of soil parameters (see an example in <code><a href="defaultSoilParams.html">defaultSoilParams</a></code>).</p></dd>
 
 
@@ -72,15 +72,7 @@
 <dd><p>Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either <code>"Carsel"</code> (Carsel and Parrish 1988) or <code>"Toth"</code> (Toth et al. 2015).</p></dd>
 
 
-<dt>W</dt>
-<dd><p>A numerical vector with the initial relative water content of each soil layer.</p></dd>
-
-
-<dt>SWE</dt>
-<dd><p>Initial snow water equivalent of the snow pack on the soil surface (mm).</p></dd>
-
-
-<dt>x</dt>
+<dt>object</dt>
 <dd><p>An object of class <code>soil</code>.</p></dd>
 
 
@@ -89,30 +81,28 @@
 
 
 <dt>...</dt>
-<dd><p>Additional parameters to <code>print</code>.</p></dd>
+<dd><p>Additional parameters to <code>summary</code>.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>Function <code>soil</code> returns a list of class <code>soil</code> with the following elements:</p><ul><li><p><code>W</code>: State variable with relative water content of each layer (in as proportion relative to FC).</p></li>
-<li><p><code>SWE</code>: Initial snow water equivalent of the snow pack on the soil surface (mm).</p></li>
-<li><p><code>Temp</code>: State variable with temperature (in ºC) of each layer.</p></li>
-<li><p><code>Gsoil</code>: Gamma parameter for bare soil evaporation (see <code><a href="hydrology_soilEvaporation.html">hydrology_soilEvaporationAmount</a></code>).</p></li>
-<li><p><code>dVec</code>: Width of soil layers (in mm).</p></li>
+<p>Function <code>soil</code> returns a data frame of class <code>soil</code> with the following columns:</p><ul><li><p><code>widths</code>: Width of soil layers (in mm).</p></li>
 <li><p><code>sand</code>: Sand percentage for each layer (in percent volume).</p></li>
 <li><p><code>clay</code>: Clay percentage for each layer (in percent volume).</p></li>
 <li><p><code>om</code>: Organic matter percentage for each layer (in percent volume).</p></li>
 <li><p><code>nitrogen</code>: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).</p></li>
-<li><p><code>VG_alpha</code>, <code>VG_n</code>, <code>VG_theta_res</code>, <code>VG_theta_sat</code>: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.</p></li>
-<li><p><code>Ksat</code>: Saturated soil conductivity for each layer (estimated using function <code><a href="soil_texture.html">soil_saturatedConductivitySX</a></code>.</p></li>
-<li><p><code>macro</code>: Macroporosity for each layer (estimated using Stolf et al. 2011).</p></li>
 <li><p><code>rfc</code>: Percentage of rock fragment content for each layer.</p></li>
+<li><p><code>macro</code>: Macroporosity for each layer (estimated using Stolf et al. 2011).</p></li>
+<li><p><code>Ksat</code>: Saturated soil conductivity for each layer (estimated using function <code><a href="soil_texture.html">soil_saturatedConductivitySX</a></code>.</p></li>
+<li><p><code>VG_alpha</code>, <code>VG_n</code>, <code>VG_theta_res</code>, <code>VG_theta_sat</code>: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.</p></li>
+<li><p><code>W</code>: State variable with relative water content of each layer (in as proportion relative to FC).</p></li>
+<li><p><code>Temp</code>: State variable with temperature (in ºC) of each layer.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p>Function <code>print</code> prompts a description of soil characteristics and state variables (water content and temperature) 
+    <p>Function <code>summary</code> prompts a description of soil characteristics and state variables (water content and temperature) 
 according to a water retention curve (either Saxton's or Van Genuchten's). 
 Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
 Parameter <code>Temp</code> is initialized as missing for all soil layers.</p>
@@ -141,9 +131,20 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Initializes soil</span></span></span>
 <span class="r-in"><span><span class="va">s</span> <span class="op">=</span> <span class="fu">soil</span><span class="op">(</span><span class="va">df_soil</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   VG_theta_res VG_theta_sat W Temp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.041     0.423715 1   NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Prints soil characteristics according to Saxton's water retention curve</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
@@ -178,13 +179,11 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 183 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Prints soil characteristics according to Van Genuchten's water retention curve</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
@@ -219,8 +218,6 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 194 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -230,7 +227,18 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Reinitialize soil (should override estimations)</span></span></span>
 <span class="r-in"><span><span class="va">s2</span> <span class="op">=</span> <span class="fu">soil</span><span class="op">(</span><span class="va">df_soil</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">s2</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s2</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   VG_theta_res VG_theta_sat W Temp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         0.04          0.4 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         0.04          0.4 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         0.04          0.4 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         0.04          0.4 1   NA</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">s2</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
@@ -265,8 +273,6 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 275 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 182 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 275 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>

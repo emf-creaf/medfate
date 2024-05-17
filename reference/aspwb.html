@@ -18,7 +18,7 @@ Function aspwb performs water balance for multiple days in an agriculture locati
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
 
 
 <dt>soil</dt>
-<dd><p>An object of class <code><a href="soil.html">soil</a></code>.</p></dd>
+<dd><p>An object of class <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code> or <code><a href="soil.html">soil</a></code>.</p></dd>
 
 
 <dt>x</dt>
@@ -152,7 +152,8 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">aspwbInput</span><span class="op">(</span><span class="fl">0.75</span>, <span class="va">control</span>, <span class="va">examplesoil</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Day to be simulated</span></span></span>

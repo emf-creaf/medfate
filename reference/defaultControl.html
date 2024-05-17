@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -87,13 +87,13 @@
 <li><p><code>soilFunctions [= "VG"]</code>: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
                  If <code>transpirationMode</code> is 'Sperry' or 'Sureau' then soilFunctions is forced to <code>'VG'</code>.
                  Only simulations with 'Granier' are allowed to use Saxton functions.</p></li>
+<li><p><code>VG_PTF</code>: String indicating the pedotransfer functions for van Genuchten parameters (either 'Toth' or 'Carsel').</p></li>
 <li><p><code>ndailysteps [= 24]</code>: Number of steps into which each day is divided for determination of soil water balance, stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).</p></li>
 <li><p><code>max_nsubsteps_soil [= 300]</code>: Maximum number of substeps for soil water balance solving.</p></li>
 <li><p><code>defaultWindSpeed [= 2.5]</code>: Default wind speed value (in m/s) to be used when missing from data.</p></li>
 <li><p><code>defaultCO2 [= 386]</code>: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input.</p></li>
 <li><p><code>defaultRainfallIntensityPerMonth [= c(1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5.6, 5.6, 5.6, 5.6, 5.6, 1.5)]</code>: A vector of twelve values indicating the rainfall intensity (mm/h) per month. 
       By default synoptic storms (1.5 mm/h) are assumed between December and June, and convective storms (5.6 mm/h) are assumed between July and November.</p></li>
-<li><p><code>snowpack [= TRUE]</code>: Boolean flag to indicate the simulation of snow accumulation and melting.</p></li>
 <li><p><code>leafPhenology [= TRUE]</code>: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.</p></li>
 <li><p><code>bareSoilEvaporation [= TRUE]</code>: Boolean flag to indicate the simulation of evaporation from bare soil.</p></li>
 <li><p><code>unlimitedSoilWater [= FALSE]</code>: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.</p></li>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2024-05-12</h4>
+            <h4 data-toc-skip class="date">2024-05-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -168,43 +168,16 @@ provides a lot of information on soil physical properties and water
 capacity:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fb_soil</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Soil depth (mm): 4500 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Layer  1  [ 0  to  300 mm ] </span></span>
-<span><span class="co">##     clay (%): 39 silt (%): 29 sand (%): 26 organic matter (%): 6 [ Clay loam ]</span></span>
-<span><span class="co">##     Rock fragment content (%): 50 Macroporosity (%): 7 </span></span>
-<span><span class="co">##     Theta WP (%): 25 Theta FC (%): 39 Theta SAT (%): 54 Theta current (%) 39 </span></span>
-<span><span class="co">##     Vol. WP (mm): 37 Vol. FC (mm): 58 Vol. SAT (mm): 81 Vol. current (mm): 58 </span></span>
-<span><span class="co">##     Temperature (Celsius): NA </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Layer  2  [ 300  to  1000 mm ] </span></span>
-<span><span class="co">##     clay (%): 39 silt (%): 32 sand (%): 26 organic matter (%): 3 [ Clay loam ]</span></span>
-<span><span class="co">##     Rock fragment content (%): 65 Macroporosity (%): 7 </span></span>
-<span><span class="co">##     Theta WP (%): 24 Theta FC (%): 38 Theta SAT (%): 49 Theta current (%) 38 </span></span>
-<span><span class="co">##     Vol. WP (mm): 59 Vol. FC (mm): 93 Vol. SAT (mm): 121 Vol. current (mm): 93 </span></span>
-<span><span class="co">##     Temperature (Celsius): NA </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Layer  3  [ 1000  to  2000 mm ] </span></span>
-<span><span class="co">##     clay (%): 39 silt (%): 34 sand (%): 26 organic matter (%): 1 [ Clay loam ]</span></span>
-<span><span class="co">##     Rock fragment content (%): 90 Macroporosity (%): 7 </span></span>
-<span><span class="co">##     Theta WP (%): 24 Theta FC (%): 37 Theta SAT (%): 47 Theta current (%) 37 </span></span>
-<span><span class="co">##     Vol. WP (mm): 24 Vol. FC (mm): 37 Vol. SAT (mm): 47 Vol. current (mm): 37 </span></span>
-<span><span class="co">##     Temperature (Celsius): NA </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Layer  4  [ 2000  to  4500 mm ] </span></span>
-<span><span class="co">##     clay (%): 39 silt (%): 34 sand (%): 26 organic matter (%): 1 [ Clay loam ]</span></span>
-<span><span class="co">##     Rock fragment content (%): 95 Macroporosity (%): 7 </span></span>
-<span><span class="co">##     Theta WP (%): 24 Theta FC (%): 37 Theta SAT (%): 47 Theta current (%) 37 </span></span>
-<span><span class="co">##     Vol. WP (mm): 29 Vol. FC (mm): 47 Vol. SAT (mm): 58 Vol. current (mm): 47 </span></span>
-<span><span class="co">##     Temperature (Celsius): NA </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Total soil saturated capacity (mm): 306 </span></span>
-<span><span class="co">## Total soil water holding capacity (mm): 235 </span></span>
-<span><span class="co">## Total soil extractable water (mm): 106 </span></span>
-<span><span class="co">## Total soil current Volume (mm): 235 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Snow pack water equivalent (mm): 0 </span></span>
-<span><span class="co">## Saturated water depth (mm): NA</span></span></code></pre>
+<pre><code><span><span class="co">##   widths sand clay om nitrogen   bd rfc   macro     Ksat VG_alpha     VG_n</span></span>
+<span><span class="co">## 1    300   26   39  6       NA 1.45  50 0.07387 7232.425 44.14586 1.254346</span></span>
+<span><span class="co">## 2    700   26   39  3       NA 1.45  65 0.07387 3481.917 61.34088 1.273896</span></span>
+<span><span class="co">## 3   1000   26   39  1       NA 1.45  90 0.07387 1879.187 76.38182 1.287757</span></span>
+<span><span class="co">## 4   2500   26   39  1       NA 1.45  95 0.07387 1879.187 76.38182 1.287757</span></span>
+<span><span class="co">##   VG_theta_res VG_theta_sat W Temp</span></span>
+<span><span class="co">## 1        0.041    0.4388377 1   NA</span></span>
+<span><span class="co">## 2        0.041    0.4388377 1   NA</span></span>
+<span><span class="co">## 3        0.041    0.4388377 1   NA</span></span>
+<span><span class="co">## 4        0.041    0.4388377 1   NA</span></span></code></pre>
 <p>The soil object is also used to store the moisture degree of each
 soil layer. In particular, <code>W</code> contains the state variable
 that represents moisture content - the proportion of moisture

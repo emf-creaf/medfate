@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -132,8 +132,8 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Initialize soil with default soil params (2 layers)</span></span></span>
-<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Define soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
@@ -143,20 +143,20 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function (ten days)</span></span></span>
 <span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 5.25158</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 184.827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.05859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 290.875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 5.25259</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 211.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05974</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 318.401</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.00101086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 0.00101086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 27.0186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 27.0186</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.00114939</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 0.00114939</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 27.5261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 27.5261</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
@@ -165,7 +165,7 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 30 Infiltration excess (mm) 0 Saturation excess (mm) 0 Capillarity rise (mm) 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 1  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 2  Plant water balance (mm) 0 Hydraulic redistribution (mm) 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 0 Deep drainage (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 0 Deep drainage (mm) 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily forest-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"forest"</span><span class="op">)</span></span></span>
@@ -181,38 +181,38 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09 1.9823797      0.000000  0.000000 0.0000  0.0000000   0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10 0.8286873      5.117768  5.117768 0.0000  3.6727363   5.3774</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Infiltration InfiltrationExcess SaturationExcess Runoff DeepDrainage</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     3.4241795                  0                0      0   0.06256005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.0717469                  0                0      0   0.06297757</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.0000000                  0                0      0   0.06055364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.3625616                  0                0      0   0.06644857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0.7539027                  0                0      0   0.07965453</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    11.7240275                  0                0      0   0.09507779</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     0.0000000                  0                0      0   0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     0.0000000                  0                0      0   0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     0.0000000                  0                0      0   0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    9.0501360                  0                0      0   0.11839674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     3.4241795                  0                0      0  0.005456802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.0717469                  0                0      0  0.005228854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.0000000                  0                0      0  0.005039513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.3625616                  0                0      0  0.005229715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0.7539027                  0                0      0  0.005915121</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    11.7240275                  0                0      0  0.005944043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7     0.0000000                  0                0      0  0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     0.0000000                  0                0      0  0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     0.0000000                  0                0      0  0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10    9.0501360                  0                0      0  0.005527667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    CapillarityRise Evapotranspiration Interception SoilEvaporation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     3.853644e-05          2.0551277     1.444929      0.44789475</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.470379e-05          1.7952157     1.426545      0.06737431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.000000e+00          0.2963997     0.000000      0.05685673</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     2.833231e-04          1.6069407     1.434411      0.06781981</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0.000000e+00          1.4658205     1.130499      0.02660100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     3.944204e-03          1.8844537     1.635773      0.02621851</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     1.082725e-09          0.1175328     0.000000      0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     2.423207e-09          0.1535228     0.000000      0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     3.308844e-08          0.3658643     0.000000      0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    5.447378e-03          1.6083129     1.445031      0.01034913</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     4.253918e-05          2.0551277     1.444929      0.44789475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.719450e-05          1.7952884     1.426545      0.06745555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.000000e+00          0.2965751     0.000000      0.05704075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     3.085695e-04          1.6073455     1.434411      0.06822810</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0.000000e+00          1.4658734     1.130499      0.02667534</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     4.253627e-03          1.8845405     1.635773      0.02632159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7     1.172680e-09          0.1175162     0.000000      0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     2.623665e-09          0.1535012     0.000000      0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     3.583398e-08          0.3658126     0.000000      0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10    6.010913e-03          1.6083235     1.445031      0.01038145</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    HerbTranspiration PlantExtraction Transpiration HydraulicRedistribution</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.011023432      0.15128020    0.15128020             0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.020448150      0.28084852    0.28084852             0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.016254774      0.22328825    0.22328825             0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.007106179      0.09760341    0.09760341             0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0.020931001      0.28778975    0.28778975             0.002232281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0.015082110      0.20737996    0.20737996             0.001492807</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        0.007953578      0.10957922    0.10957922             0.003143374</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        0.010389239      0.14313361    0.14313361             0.004064917</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        0.024759409      0.34110490    0.34110490             0.009558168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10       0.010350058      0.14258232    0.14258232             0.003863895</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.020448148      0.28083997    0.28083997             0.017671365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.016254769      0.22327958    0.22327958             0.014378650</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.007106176      0.09759986    0.09759986             0.006500081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0.020930994      0.28776825    0.28776825             0.019358622</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0.015082103      0.20736367    0.20736367             0.014250294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        0.007953577      0.10956266    0.10956266             0.008234682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        0.010389236      0.14311195    0.14311195             0.010758359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        0.024759403      0.34105319    0.34105319             0.025645425</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       0.010350054      0.14256061    0.14256061             0.010727564</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         LAI   LAIherb  LAIlive LAIexpanded LAIdead       Cm LgroundPAR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754</span>
@@ -239,67 +239,107 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-in"><span><span class="co">#Extracts daily soil layer-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"soillayer"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          date soillayer       SWC      RWC      REW        ML          Psi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01         1 0.3110908 1.026720 1.040073  69.99543 -0.029069690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02         1 0.3126395 1.031832 1.047739  70.34389 -0.028370693</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03         1 0.3110357 1.026538 1.039800  69.98302 -0.029094881</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04         1 0.3238204 1.068733 1.103080  72.85958 -0.023763052</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05         1 0.3241259 1.069741 1.104592  72.92833 -0.023647074</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06         1 0.3592924 1.185804 1.278655  80.84080 -0.012943476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07         1 0.3588046 1.184194 1.276240  80.73104 -0.013063234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08         1 0.3581681 1.182093 1.273090  80.58782 -0.013220471</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09         1 0.3566531 1.177093 1.265591  80.24695 -0.013599163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10         1 0.3813104 1.258472 1.387636  85.79484 -0.008109121</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 2001-01-01         2 0.3054099 1.007971 1.011954 117.58281 -0.031776601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02         2 0.3061674 1.010471 1.015704 117.87446 -0.031402091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03         2 0.3061776 1.010505 1.015754 117.87838 -0.031397090</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04         2 0.3094174 1.021197 1.031790 119.12569 -0.029843240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05         2 0.3101191 1.023513 1.035263 119.39587 -0.029516499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06         2 0.3191367 1.053275 1.079897 122.86761 -0.025604290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07         2 0.3191165 1.053208 1.079797 122.85984 -0.025612497</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08         2 0.3190897 1.053120 1.079665 122.84954 -0.025623370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09         2 0.3190248 1.052905 1.079343 122.82455 -0.025649768</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10         2 0.3274041 1.080560 1.120818 126.05056 -0.022432870</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2001-01-01   Overall 0.3075053 1.014887 1.022326 187.57824 -0.030778150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02   Overall 0.3085547 1.018350 1.027520 188.21836 -0.030283953</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03   Overall 0.3079695 1.016419 1.024624 187.86140 -0.030547915</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04   Overall 0.3147300 1.038731 1.058085 191.98527 -0.027600548</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05   Overall 0.3152856 1.040565 1.060836 192.32420 -0.027351547</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06   Overall 0.3339482 1.102158 1.153209 203.70841 -0.020934318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07   Overall 0.3337555 1.101523 1.152256 203.59088 -0.020983670</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08   Overall 0.3335039 1.100692 1.151010 203.43735 -0.021048530</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09   Overall 0.3329041 1.098712 1.148041 203.07149 -0.021204873</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10   Overall 0.3472875 1.146183 1.219235 211.84540 -0.017149520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       PlantExt HydraulicInput</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.113287276    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.245187130    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.195617517    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.084872013    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.260301379    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.187244435    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.106186672    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.138564000    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.329781269    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.137409912    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 0.037992928    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.035661389    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.027670729    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.012731392    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.027488368    0.002232281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.020135526    0.001492807</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.003392552    0.003143374</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.004569610    0.004064917</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.011323634    0.009558168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.005172412    0.003863895</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 0.151280204    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.280848519    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.223288247    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.097603405    0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.287789747    0.002232281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.207379962    0.001492807</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.109579224    0.003143374</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.143133610    0.004064917</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.341104903    0.009558168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.142582324    0.003863895</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01         1 0.3110807 1.026687 1.040023  69.99316 -0.029074307</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02         1 0.3126076 1.031726 1.047580  70.33671 -0.028384945</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03         1 0.3109857 1.026373 1.039553  69.97179 -0.029117701</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04         1 0.3237620 1.068540 1.102791  72.84645 -0.023785264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05         1 0.3240427 1.069466 1.104180  72.90961 -0.023678611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06         1 0.3591947 1.185482 1.278171  80.81880 -0.012967421</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07         1 0.3586941 1.183829 1.275693  80.70616 -0.013090468</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08         1 0.3580408 1.181673 1.272459  80.55917 -0.013252052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09         1 0.3564859 1.176542 1.264763  80.20933 -0.013641341</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10         1 0.3811508 1.257945 1.386846  85.75893 -0.008140758</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 2001-01-01         2 0.3053086 1.007637 1.011453 117.54381 -0.031827005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02         2 0.3059970 1.009909 1.014860 117.80885 -0.031485975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03         2 0.3059817 1.009858 1.014785 117.80297 -0.031493494</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04         2 0.3090575 1.020009 1.030009 118.98714 -0.030012127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05         2 0.3097009 1.022133 1.033193 119.23483 -0.029710839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06         2 0.3182848 1.050463 1.075681 122.53963 -0.025952457</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07         2 0.3182511 1.050352 1.075514 122.52666 -0.025966310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08         2 0.3182067 1.050205 1.075294 122.50958 -0.025984572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09         2 0.3180997 1.049852 1.074765 122.46840 -0.026028633</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10         2 0.3261421 1.076395 1.114572 125.56470 -0.022893863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2001-01-01         3 0.3033022 1.001015 1.001522  75.82556 -0.032841694</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02         3 0.3035297 1.001766 1.002648  75.88243 -0.032725071</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03         3 0.3036912 1.002299 1.003447  75.92280 -0.032642542</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04         3 0.3040926 1.003623 1.005434  76.02314 -0.032438274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05         3 0.3043593 1.004504 1.006754  76.08982 -0.032303216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06         3 0.3052597 1.007475 1.011211  76.31493 -0.031851352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07         3 0.3052741 1.007523 1.011282  76.31851 -0.031844215</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08         3 0.3052928 1.007584 1.011375  76.32319 -0.031834892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09         3 0.3053374 1.007732 1.011595  76.33435 -0.031812678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10         3 0.3061821 1.010520 1.015776  76.54552 -0.031394891</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 2001-01-01         4 0.3032097 1.000710 1.001064  30.32097 -0.032889241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 2001-01-02         4 0.3035331 1.001777 1.002665  30.35331 -0.032723329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 2001-01-03         4 0.3038213 1.002728 1.004091  30.38213 -0.032576205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 2001-01-04         4 0.3040766 1.003571 1.005355  30.40766 -0.032446344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 2001-01-05         4 0.3044275 1.004729 1.007092  30.44275 -0.032268793</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 2001-01-06         4 0.3047720 1.005866 1.008797  30.47720 -0.032095324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 2001-01-07         4 0.3048172 1.006015 1.009020  30.48172 -0.032072671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 2001-01-08         4 0.3048761 1.006209 1.009312  30.48761 -0.032043101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 2001-01-09         4 0.3050167 1.006673 1.010008  30.50167 -0.031972722</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 2001-01-10         4 0.3053192 1.007672 1.011506  30.53192 -0.031821711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41 2001-01-01   Overall 0.3059203 1.009656 1.014481 293.68351 -0.031556733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42 2001-01-02   Overall 0.3066472 1.012055 1.018078 294.38130 -0.031210743</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43 2001-01-03   Overall 0.3063330 1.011018 1.016523 294.07968 -0.031348681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44 2001-01-04   Overall 0.3106921 1.025404 1.038099 298.26439 -0.029438080</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45 2001-01-05   Overall 0.3111219 1.026823 1.040227 298.67700 -0.029238587</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46 2001-01-06   Overall 0.3230735 1.066268 1.099383 310.15057 -0.025085142</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47 2001-01-07   Overall 0.3229511 1.065864 1.098777 310.03306 -0.025115318</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 2001-01-08   Overall 0.3227912 1.065336 1.097986 309.87956 -0.025155005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49 2001-01-09   Overall 0.3224101 1.064078 1.096100 309.51374 -0.025250799</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50 2001-01-10   Overall 0.3316678 1.094632 1.141922 318.40107 -0.022579898</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         PlantExt HydraulicInput</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.1101121597    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0.2400775706    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   0.1916858833    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   0.0831129934    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   0.2561773551    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   0.1843121996    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   0.1053947928    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   0.1375229367    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   0.3272792149    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  0.1363426306    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  0.0364746151    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  0.0584337646    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  0.0459723458    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  0.0209869455    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  0.0509495218    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  0.0373017695    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  0.0124025529    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  0.0163473715    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  0.0394193963    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  0.0169455402    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  0.0037576026    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 -0.0063764669    0.006376467</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 -0.0054591858    0.005459186</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 -0.0025806284    0.002580628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 -0.0078389453    0.007838945</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 -0.0058596122    0.005859612</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 -0.0036799092    0.003679909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 -0.0048078547    0.004807855</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 -0.0114615412    0.011461541</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 -0.0047955776    0.004795578</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31  0.0009358264    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 -0.0112948983    0.011294898</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 -0.0089194642    0.008919464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 -0.0039194527    0.003919453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 -0.0115196770    0.011519677</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 -0.0083906820    0.008390682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 -0.0045547728    0.004554773</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 -0.0059505046    0.005950505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 -0.0141838840    0.014183884</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 -0.0059319861    0.005931986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41  0.1512802038    0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42  0.2808399700    0.017671365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43  0.2232795791    0.014378650</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44  0.0975998578    0.006500081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45  0.2877682547    0.019358622</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46  0.2073636749    0.014250294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47  0.1095626637    0.008234682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48  0.1431119488    0.010758359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49  0.3410531860    0.025645425</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50  0.1425606071    0.010727564</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily cohort-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"cohort"</span><span class="op">)</span></span></span>
@@ -336,131 +376,131 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10 S1_165 Quercus coccifera 0.03062604 0.03062604 44.32407</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    AbsorbedSWRFraction Transpiration GrossPhotosynthesis    PlantPsi</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1            35.076344   0.092472560          0.89344066 -0.03300000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2            35.076344   0.171676983          1.56121948 -0.02940577</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3            35.076344   0.136490828          1.30900282 -0.02874804</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4            35.076344   0.059661906          0.59731290 -0.02937995</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5            35.076344   0.175917582          1.62021259 -0.02454057</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6            35.076344   0.126763646          1.31225315 -0.02439665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7            35.076344   0.066971837          0.74875623 -0.01473718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8            35.076344   0.087479449          0.89467751 -0.01483748</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9            35.076344   0.208474492          1.59044046 -0.01496936</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10           35.076344   0.087142878          0.85673376 -0.01528776</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            35.076344   0.171673556          1.56118832 -0.02948689</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3            35.076344   0.136487346          1.30896941 -0.02885283</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4            35.076344   0.059660467          0.59729849 -0.02947804</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5            35.076344   0.175909215          1.62013553 -0.02475076</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6            35.076344   0.126757312          1.31218759 -0.02461802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7            35.076344   0.066965916          0.74869004 -0.01523094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8            35.076344   0.087471695          0.89459821 -0.01533101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9            35.076344   0.208455948          1.59029898 -0.01546263</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10           35.076344   0.087135057          0.85665686 -0.01578063</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11           30.444383   0.052754988          0.62572744 -0.03300000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12           30.444383   0.097940635          1.14625755 -0.03035324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13           30.444383   0.077869154          0.92206797 -0.02980838</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14           30.444383   0.034038471          0.40703328 -0.03018633</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15           30.444383   0.100371338          1.17793732 -0.02665214</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16           30.444383   0.072329090          0.87173907 -0.02643577</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17           30.444383   0.038233669          0.46958695 -0.01900188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18           30.444383   0.049941099          0.60018366 -0.01906745</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19           30.444383   0.119015294          1.34348755 -0.01915362</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20           30.444383   0.049748113          0.59240337 -0.01936141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12           30.444383   0.097935723          1.14620005 -0.03049966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13           30.444383   0.077864175          0.92200901 -0.02999522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14           30.444383   0.034036445          0.40700905 -0.03036014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15           30.444383   0.100358724          1.17778929 -0.02702198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16           30.444383   0.072319518          0.87162370 -0.02682544</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17           30.444383   0.038223420          0.46946107 -0.01980777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18           30.444383   0.049927702          0.60002265 -0.01987372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19           30.444383   0.118983337          1.34312681 -0.01996041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20           30.444383   0.049734725          0.59224394 -0.02016944</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21            2.366131   0.006052657          0.05005525 -0.03300000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22            2.366131   0.011230901          0.08988036 -0.02985412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23            2.366131   0.008928264          0.07353714 -0.02925032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24            2.366131   0.003903028          0.03292026 -0.02976111</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25            2.366131   0.011500826          0.09266869 -0.02555150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26            2.366131   0.008287226          0.07122543 -0.02537240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27            2.366131   0.004373719          0.03929395 -0.01685503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28            2.366131   0.005713062          0.04876651 -0.01693666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29            2.366131   0.013615117          0.09953244 -0.01704401</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30            2.366131   0.005691332          0.04752129 -0.01730331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22            2.366131   0.011230691          0.08987868 -0.03001177</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23            2.366131   0.008928058          0.07353544 -0.02944654</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24            2.366131   0.003902947          0.03291957 -0.02993754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25            2.366131   0.011500315          0.09266457 -0.02594427</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26            2.366131   0.008286845          0.07122215 -0.02578034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27            2.366131   0.004373328          0.03929044 -0.01774524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28            2.366131   0.005712551          0.04876215 -0.01782514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29            2.366131   0.013613902          0.09952356 -0.01793026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30            2.366131   0.005690825          0.04751706 -0.01818431</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         LeafPLC StemPLC PlantWaterBalance   LeafRWC   StemRWC      LFMC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.0030695571       0      0.000000e+00 0.9979679 0.9998350 125.89003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.0024947451       0      1.700247e-04 0.9981891 0.9998529 125.90534</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.0023928338       0      3.111521e-05 0.9982296 0.9998562 125.90814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.0024907250       0     -2.989378e-05 0.9981907 0.9998531 125.90545</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.0018427410       0      2.289495e-04 0.9984886 0.9998773 125.92606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.0017456159       0      6.808942e-06 0.9984975 0.9998780 125.92668</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.0010933266       0      4.570683e-04 0.9990923 0.9999263 125.96783</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.0005086923       0     -4.746961e-06 0.9990861 0.9999258 125.96740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.0005237992       0     -6.241029e-06 0.9990780 0.9999251 125.96684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.0005605195       0     -1.506729e-05 0.9990584 0.9999235 125.96548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.0025073864       0      1.925211e-04 0.9981841 0.9998525 125.90500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.0024090008       0      3.474855e-05 0.9982232 0.9998557 125.90770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.0025060071       0     -3.426373e-05 0.9981847 0.9998526 125.90503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.0018581155       0      2.590835e-04 0.9984757 0.9998762 125.92517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.0017773706       0      7.275083e-06 0.9984839 0.9998769 125.92573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.0011252981       0      5.145541e-04 0.9990619 0.9999238 125.96572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.0005655351       0     -5.486169e-06 0.9990557 0.9999233 125.96530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.0005808366       0     -7.215671e-06 0.9990476 0.9999227 125.96474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.0006180483       0     -1.743292e-05 0.9990280 0.9999211 125.96338</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11 0.0000000000       0      0.000000e+00 0.9986794 0.9997489  93.07448</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.0000000000       0      2.975737e-05 0.9987854 0.9997692  93.08079</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.0000000000       0      6.123291e-06 0.9988072 0.9997733  93.08209</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.0000000000       0     -4.247426e-06 0.9987921 0.9997705  93.08119</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.0000000000       0      3.970107e-05 0.9989335 0.9997975  93.08961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.0000000000       0      2.429374e-06 0.9989422 0.9997991  93.09012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.0000000000       0      8.339870e-05 0.9992397 0.9998558  93.10783</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.0000000000       0     -7.350673e-07 0.9992370 0.9998553  93.10767</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.0000000000       0     -9.660197e-07 0.9992336 0.9998546  93.10746</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.0000000000       0     -2.329420e-06 0.9992253 0.9998531  93.10697</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 0.0000000000       0      3.469447e-18 0.9987207 0.9983684  96.39176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.0000000000       0      3.948775e-06 0.9988426 0.9985238  96.40535</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.0000000000       0      7.579335e-07 0.9988660 0.9985537  96.40796</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.0000000000       0     -6.411908e-07 0.9988462 0.9985284  96.40576</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.0000000000       0      5.284589e-06 0.9990094 0.9987365  96.42395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.0000000000       0      2.248591e-07 0.9990163 0.9987453  96.42472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.0000000000       0      1.069453e-05 0.9993465 0.9991663  96.46154</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.0000000000       0     -1.025037e-07 0.9993433 0.9991623  96.46118</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.0000000000       0     -1.348117e-07 0.9993392 0.9991570  96.46072</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.0000000000       0     -3.256222e-07 0.9993291 0.9991442  96.45960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.0000000000       0      3.362677e-05 0.9987795 0.9997681  93.08044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.0000000000       0      6.780878e-06 0.9987997 0.9997719  93.08164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.0000000000       0     -4.905284e-06 0.9987851 0.9997691  93.08078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.0000000000       0      4.485175e-05 0.9989187 0.9997946  93.08873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.0000000000       0      2.639356e-06 0.9989266 0.9997961  93.08920</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.0000000000       0      9.415034e-05 0.9992074 0.9998497  93.10591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.0000000000       0     -8.841289e-07 0.9992048 0.9998492  93.10575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.0000000000       0     -1.161973e-06 0.9992013 0.9998485  93.10554</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.0000000000       0     -2.802174e-06 0.9991929 0.9998469  93.10505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 0.0000000000       0      0.000000e+00 0.9987207 0.9983684  96.39176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.0000000000       0      6.717764e-06 0.9988365 0.9985160  96.40467</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.0000000000       0      1.270775e-06 0.9988584 0.9985440  96.40712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.0000000000       0     -1.103875e-06 0.9988394 0.9985197  96.40499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.0000000000       0      8.978323e-06 0.9989942 0.9987171  96.42225</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.0000000000       0      3.686031e-07 0.9990005 0.9987252  96.42296</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.0000000000       0      1.806986e-05 0.9993120 0.9991223  96.45769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.0000000000       0     -1.797218e-07 0.9993089 0.9991184  96.45734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.0000000000       0     -2.364348e-07 0.9993048 0.9991132  96.45689</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.0000000000       0     -5.713839e-07 0.9992950 0.9991006  96.45579</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    PlantStress</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.005808769</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.004904910</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.004744804</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.004898593</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.003761551</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.003729216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.001778697</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.001796514</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.001820024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.001877183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.004924773</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.004770200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.004922606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.003808935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.003778990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.001866942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.001884992</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.001908817</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.001966769</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11 0.010612890</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.009712945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.009528201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.009656333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.008461823</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.008388971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.005908693</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.005930352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.005958822</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.006027503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.009762620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.009591531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.009715284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.008586431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.008520201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.006175187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.006197026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.006225735</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.006294996</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21 0.003088161</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.002711560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.002640579</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.002700599</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.002215456</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.002195311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.001290540</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.001298665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.001309369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.001335307</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.002730165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.002663598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.002721401</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.002259779</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.002241255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.001379780</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.001387857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.001398499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.001424294</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Select the output tables/variables to be extracted</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span><span class="st">"cohort"</span>, output<span class="op">=</span><span class="st">"Plants"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PlantStress"</span>, <span class="st">"StemPLC"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          date cohort           species PlantStress StemPLC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01 T1_148  Pinus halepensis 0.005808769       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02 T1_148  Pinus halepensis 0.004904910       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03 T1_148  Pinus halepensis 0.004744804       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04 T1_148  Pinus halepensis 0.004898593       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05 T1_148  Pinus halepensis 0.003761551       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06 T1_148  Pinus halepensis 0.003729216       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07 T1_148  Pinus halepensis 0.001778697       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08 T1_148  Pinus halepensis 0.001796514       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09 T1_148  Pinus halepensis 0.001820024       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10 T1_148  Pinus halepensis 0.001877183       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02 T1_148  Pinus halepensis 0.004924773       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03 T1_148  Pinus halepensis 0.004770200       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04 T1_148  Pinus halepensis 0.004922606       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05 T1_148  Pinus halepensis 0.003808935       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06 T1_148  Pinus halepensis 0.003778990       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07 T1_148  Pinus halepensis 0.001866942       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08 T1_148  Pinus halepensis 0.001884992       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09 T1_148  Pinus halepensis 0.001908817       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10 T1_148  Pinus halepensis 0.001966769       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11 2001-01-01 T2_168      Quercus ilex 0.010612890       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02 T2_168      Quercus ilex 0.009712945       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03 T2_168      Quercus ilex 0.009528201       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04 T2_168      Quercus ilex 0.009656333       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05 T2_168      Quercus ilex 0.008461823       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06 T2_168      Quercus ilex 0.008388971       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07 T2_168      Quercus ilex 0.005908693       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08 T2_168      Quercus ilex 0.005930352       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09 T2_168      Quercus ilex 0.005958822       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10 T2_168      Quercus ilex 0.006027503       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02 T2_168      Quercus ilex 0.009762620       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03 T2_168      Quercus ilex 0.009591531       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04 T2_168      Quercus ilex 0.009715284       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05 T2_168      Quercus ilex 0.008586431       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06 T2_168      Quercus ilex 0.008520201       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07 T2_168      Quercus ilex 0.006175187       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08 T2_168      Quercus ilex 0.006197026       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09 T2_168      Quercus ilex 0.006225735       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10 T2_168      Quercus ilex 0.006294996       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21 2001-01-01 S1_165 Quercus coccifera 0.003088161       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02 S1_165 Quercus coccifera 0.002711560       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03 S1_165 Quercus coccifera 0.002640579       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04 S1_165 Quercus coccifera 0.002700599       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05 S1_165 Quercus coccifera 0.002215456       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06 S1_165 Quercus coccifera 0.002195311       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07 S1_165 Quercus coccifera 0.001290540       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08 S1_165 Quercus coccifera 0.001298665       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09 S1_165 Quercus coccifera 0.001309369       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10 S1_165 Quercus coccifera 0.001335307       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02 S1_165 Quercus coccifera 0.002730165       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03 S1_165 Quercus coccifera 0.002663598       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04 S1_165 Quercus coccifera 0.002721401       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05 S1_165 Quercus coccifera 0.002259779       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06 S1_165 Quercus coccifera 0.002241255       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07 S1_165 Quercus coccifera 0.001379780       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08 S1_165 Quercus coccifera 0.001387857       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09 S1_165 Quercus coccifera 0.001398499       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10 S1_165 Quercus coccifera 0.001424294       0</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

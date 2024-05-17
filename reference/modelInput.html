@@ -20,7 +20,7 @@ Function forest2belowground calculates belowground variables such as fine root d
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@ Function <code>forest2belowground</code> calculates belowground variables such a
 
 
 <dt>soil</dt>
-<dd><p>An object of class <code><a href="soil.html">soil</a></code>.</p></dd>
+<dd><p>An object of class <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code> or <code><a href="soil.html">soil</a></code>, containing soil parameters per soil layer.</p></dd>
 
 
 <dt>control</dt>
@@ -113,6 +113,8 @@ Function <code>forest2belowground</code> calculates belowground variables such a
 </ul><p>Function <code>forest2spwbInput()</code> returns a list of class <code>spwbInput</code> with the following elements (rows of data frames are identified as specified by function <code><a href="plant_values.html">plant_ID</a></code>):</p>
 <p></p>
 <ul><li><p><code>control</code>: List with control parameters (see <code><a href="defaultControl.html">defaultControl</a></code>).</p></li>
+<li><p><code>soil</code>: A data frame with initialized soil parameters (see <code><a href="soil.html">soil</a></code>).</p></li>
+<li><p><code>snowpack</code>: The amount of snow (in mm) in the snow pack over the soil.</p></li>
 <li><p><code>canopy</code>: A list of stand-level state variables.</p></li>
 <li><p><code>cohorts</code>: A data frame with cohort information, with columns <code>SP</code> and <code>Name</code>.</p></li>
 <li><p><code>above</code>: A data frame with columns  <code>H</code>, <code>CR</code> and <code>LAI</code> (see function <code>forest2aboveground</code>).</p></li>
@@ -301,8 +303,8 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Initialize soil with default soil params</span></span></span>
-<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Define soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Bewowground parameters (distribution of fine roots)</span></span></span>
 <span class="r-in"><span><span class="fu">forest2belowground</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
@@ -365,6 +367,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$VG_PTF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Toth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$ndailysteps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -379,9 +384,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$defaultRainfallIntensityPerMonth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1.5 1.5 1.5 1.5 1.5 1.5 5.6 5.6 5.6 5.6 5.6 1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowpack</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$leafPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -689,44 +691,19 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $soil</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   VG_theta_res VG_theta_sat W Temp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.041     0.423715 1   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  2  [ 300  to  1000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  3  [ 1000  to  2000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 75 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  4  [ 2000  to  4000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 95 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil saturated capacity (mm): 473 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 183 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $snowpack</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
@@ -891,6 +868,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$VG_PTF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Toth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$ndailysteps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -905,9 +885,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$defaultRainfallIntensityPerMonth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1.5 1.5 1.5 1.5 1.5 1.5 5.6 5.6 5.6 5.6 5.6 1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowpack</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$leafPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -1215,44 +1192,19 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $soil</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   VG_theta_res VG_theta_sat W Temp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.041     0.423715 1   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  2  [ 300  to  1000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  3  [ 1000  to  2000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 75 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  4  [ 2000  to  4000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 95 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil saturated capacity (mm): 473 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 183 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $snowpack</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup Tair Cair VPair</span>
@@ -1479,6 +1431,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$VG_PTF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Toth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$ndailysteps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1493,9 +1448,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$defaultRainfallIntensityPerMonth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1.5 1.5 1.5 1.5 1.5 1.5 5.6 5.6 5.6 5.6 5.6 1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowpack</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$leafPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -1803,44 +1755,19 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $soil</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   VG_theta_res VG_theta_sat W Temp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.041     0.423715 1   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  2  [ 300  to  1000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  3  [ 1000  to  2000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 75 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  4  [ 2000  to  4000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 95 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil saturated capacity (mm): 473 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 183 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $snowpack</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup Tair Cair VPair</span>
@@ -2076,6 +2003,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$VG_PTF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Toth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$ndailysteps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2090,9 +2020,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$defaultRainfallIntensityPerMonth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1.5 1.5 1.5 1.5 1.5 1.5 5.6 5.6 5.6 5.6 5.6 1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowpack</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$leafPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -2400,44 +2327,19 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $soil</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   VG_theta_res VG_theta_sat W Temp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.041     0.423715 1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.041     0.423715 1   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  2  [ 300  to  1000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  3  [ 1000  to  2000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 75 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  4  [ 2000  to  4000 mm ] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 95 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil saturated capacity (mm): 473 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 183 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Saturated water depth (mm): NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $snowpack</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>

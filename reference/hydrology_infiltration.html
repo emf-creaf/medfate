@@ -23,7 +23,7 @@ Function hydrology_infiltrationRepartition distributes infiltration among soil l
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -69,7 +69,7 @@ Function hydrology_infiltrationRepartition distributes infiltration among soil l
 <span></span>
 <span><span class="fu">hydrology_infiltrationGreenAmpt</span><span class="op">(</span><span class="va">t</span>, <span class="va">psi_w</span>, <span class="va">Ksat</span>, <span class="va">theta_sat</span>, <span class="va">theta_dry</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydrology_infiltrationRepartition</span><span class="op">(</span><span class="va">I</span>, <span class="va">dVec</span>, <span class="va">macro</span>, a <span class="op">=</span> <span class="op">-</span><span class="fl">0.005</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu">hydrology_infiltrationRepartition</span><span class="op">(</span><span class="va">I</span>, <span class="va">widths</span>, <span class="va">macro</span>, a <span class="op">=</span> <span class="op">-</span><span class="fl">0.005</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span></span>
 <span>  <span class="va">rainfallInput</span>,</span>
@@ -115,7 +115,7 @@ Function hydrology_infiltrationRepartition distributes infiltration among soil l
 <dd><p>Soil infiltration (in mm of water).</p></dd>
 
 
-<dt>dVec</dt>
+<dt>widths</dt>
 <dd><p>Width of soil layers (in mm).</p></dd>
 
 
@@ -174,7 +174,7 @@ Function hydrology_infiltrationRepartition distributes infiltration among soil l
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="hydrology_verticalInputs.html">hydrology_soilWaterInputs</a></code></p></div>
+    <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="hydrology_verticalInputs.html">hydrology_waterInputs</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

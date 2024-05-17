@@ -22,7 +22,7 @@ and photosynthesis processes are conducted with different level of detail depend
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
       </span>
     </div>
 
@@ -286,8 +286,8 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Initialize soil with default soil params (4 layers)</span></span></span>
-<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Define soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
@@ -304,22 +304,22 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.0593</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 350.868</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 350.456</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.000700883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 0.000700883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 59.9933</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 59.9933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.000654694</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 0.000654694</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 59.5809</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 59.5809</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 390 Infiltration excess (mm) 31 Saturation excess (mm) 0 Capillarity rise (mm) 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 10  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 391 Infiltration excess (mm) 30 Saturation excess (mm) 0 Capillarity rise (mm) 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 11  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 187  Plant water balance (mm) 0 Hydraulic redistribution (mm) 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 31 Deep drainage (mm) 122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 30 Deep drainage (mm) 122</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Sperry' transpiration mode</span></span></span>
@@ -337,22 +337,22 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 6.78286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 342.241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 6.7828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 341.785</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0037555</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -6.01667e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 51.366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 51.366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0038197</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -8.53673e-17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 50.9105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 50.9105</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 393 Infiltration excess (mm) 28 Saturation excess (mm) 0 Capillarity rise (mm) 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 11  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 171  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 28 Deep drainage (mm) 149</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 394 Infiltration excess (mm) 27 Saturation excess (mm) 0 Capillarity rise (mm) 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 11  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 170  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 27 Deep drainage (mm) 151</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Sureau' transpiration mode</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sureau"</span><span class="op">)</span></span></span>
@@ -369,22 +369,22 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 6.75999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 340.356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 6.75995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 339.843</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0266291</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -1.29555</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 49.4812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 49.4812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0266727</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -1.29687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 48.9683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 48.9683</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 394 Infiltration excess (mm) 27 Saturation excess (mm) 0 Capillarity rise (mm) 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 11  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 395 Infiltration excess (mm) 26 Saturation excess (mm) 0 Capillarity rise (mm) 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 12  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 192</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 191  Plant water balance (mm) -1 Hydraulic redistribution (mm) 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 27 Deep drainage (mm) 132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 26 Deep drainage (mm) 133</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span>                </span></span>
 </code></pre></div>
