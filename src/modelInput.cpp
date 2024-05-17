@@ -1080,6 +1080,13 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, 
                DataFrame SpParams, List control) {
   
+  String VG_PTF = control["VG_PTF"]; 
+  DataFrame soil_out;
+  if(soil.inherits("soil")) {
+    soil_out = clone(soil);
+  } else {
+    soil_out = soilInit(soil, VG_PTF);
+  }
   
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -1123,12 +1130,12 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame 
   if(transpirationMode=="Granier") {
     paramsTranspirationdf = paramsTranspirationGranier(above, SpParams, control);
   } else if(transpirationMode=="Sperry") {
-    paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil, SpParams, paramsAnatomydf, control);
+    paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil_out, SpParams, paramsAnatomydf, control);
   } else if(transpirationMode=="Sureau") {
-    paramsTranspirationdf = paramsTranspirationSureau(above, Z95, soil, SpParams, paramsAnatomydf, control);
+    paramsTranspirationdf = paramsTranspirationSureau(above, Z95, soil_out, SpParams, paramsAnatomydf, control);
   }
 
-  List below = paramsBelow(above, Z50, Z95, soil, 
+  List below = paramsBelow(above, Z50, Z95, soil_out, 
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
   DataFrame belowdfComplete = Rcpp::as<Rcpp::DataFrame>(below["below"]);
@@ -1155,8 +1162,9 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame 
       Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
     }
   }
+  
   List input = List::create(_["control"] = ctl,
-                            _["soil"] = clone(soil),
+                            _["soil"] = soil_out,
                             _["snowpack"] = SWE,
                             _["canopy"] = paramsCanopydf,
                             _["herbLAI"] = NA_REAL, //To be filled outside
@@ -1184,6 +1192,14 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame 
 List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops,
                  DataFrame SpParams, List control) {
 
+  String VG_PTF = control["VG_PTF"]; 
+  DataFrame soil_out;
+  if(soil.inherits("soil")) {
+    soil_out = clone(soil);
+  } else {
+    soil_out = soilInit(soil, VG_PTF);
+  }
+  
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -1220,9 +1236,9 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFram
   if(transpirationMode=="Granier") {
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, control);
   } else if(transpirationMode=="Sperry") {
-    paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil, SpParams, paramsAnatomydf, control);
+    paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil_out, SpParams, paramsAnatomydf, control);
   } else if(transpirationMode=="Sureau") {
-    paramsTranspirationdf = paramsTranspirationSureau(above, Z95, soil, SpParams, paramsAnatomydf, control);
+    paramsTranspirationdf = paramsTranspirationSureau(above, Z95, soil_out, SpParams, paramsAnatomydf, control);
   }
 
 
@@ -1262,7 +1278,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFram
   // for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
   // ringList.attr("names") = above.attr("row.names");
   
-  List below = paramsBelow(above, Z50, Z95, soil, 
+  List below = paramsBelow(above, Z50, Z95, soil_out, 
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
@@ -1284,8 +1300,9 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFram
       Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
     }
   } 
+  
   List input = List::create(_["control"] = ctl,
-                       _["soil"] = clone(soil),
+                       _["soil"] = soil_out,
                        _["snowpack"] = SWE,
                        _["canopy"] = paramsCanopydf,
                        _["herbLAI"] = NA_REAL, //To be filled outside
@@ -1387,7 +1404,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
 //' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
 //' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
-//' @param soil An object of class \code{\link{soil}}.
+//' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}, containing soil parameters per soil layer.
 //' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 //' 
 //' @details
@@ -1414,6 +1431,8 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 //'   \itemize{
 //'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
+//'     \item{\code{soil}: A data frame with initialized soil parameters (see \code{\link{soil}}).}
+//'     \item{\code{snowpack}: The amount of snow (in mm) in the snow pack over the soil.}
 //'     \item{\code{canopy}: A list of stand-level state variables.}
 //'     \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
 //'     \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
@@ -1611,8 +1630,8 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' data(exampleforest2)
 //' forest2aboveground(exampleforest2, SpParamsMED)
 //' 
-//' # Initialize soil with default soil params
-//' examplesoil <- soil(defaultSoilParams())
+//' # Define soil with default soil params (4 layers)
+//' examplesoil <- defaultSoilParams(4)
 //' 
 //' # Bewowground parameters (distribution of fine roots)
 //' forest2belowground(exampleforest, examplesoil, SpParamsMED)

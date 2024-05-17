@@ -47,5 +47,4 @@ NumericVector vanGenuchtenParamsCarsel(String soilType);
 NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
 NumericVector campbellParamsClappHornberger(String soilType);
 
-DataFrame soil(DataFrame x, String VG_PTF = "Carsel", 
-               NumericVector W = NumericVector::create(1.0,1.0,1.0));
+DataFrame soilInit(DataFrame x, String VG_PTF = "Carsel");

@@ -27,7 +27,7 @@ forest2growthInput(x, soil, SpParams, control)
 
 \item{loading}{A logical flag to indicate that fuel loading should be included (for fire hazard calculations).}
 
-\item{soil}{An object of class \code{\link{soil}}.}
+\item{soil}{An object of class \code{\link{data.frame}} or \code{\link{soil}}, containing soil parameters per soil layer.}
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
 }
@@ -48,6 +48,8 @@ Function \code{forest2aboveground()} returns a data frame with the following col
 Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
   \itemize{
     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
+    \item{\code{soil}: A data frame with initialized soil parameters (see \code{\link{soil}}).}
+    \item{\code{snowpack}: The amount of snow (in mm) in the snow pack over the soil.}
     \item{\code{canopy}: A list of stand-level state variables.}
     \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
     \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
@@ -253,8 +255,8 @@ forest2aboveground(exampleforest, SpParamsMED)
 data(exampleforest2)
 forest2aboveground(exampleforest2, SpParamsMED)
 
-# Initialize soil with default soil params
-examplesoil <- soil(defaultSoilParams())
+# Define soil with default soil params (4 layers)
+examplesoil <- defaultSoilParams(4)
 
 # Bewowground parameters (distribution of fine roots)
 forest2belowground(exampleforest, examplesoil, SpParamsMED)

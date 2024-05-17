@@ -155,17 +155,17 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //' #Default species parameterization
 //' data(SpParamsMED)
 //' 
-//' ntree = nrow(exampleforest$treeData)
+//' ntree <- nrow(exampleforest$treeData)
 //' 
 //' #Initialize soil with default soil params
-//' s = soil(defaultSoilParams())
+//' s <- defaultSoilParams(4)
 //' 
 //' #Calculate conic root system for trees
-//' V1 = root_conicDistribution(Z=rep(2000,ntree), s$widths)            
+//' V1 <- root_conicDistribution(Z=rep(2000,ntree), s$widths)            
 //' print(V1)
 //'      
 //' #Calculate LDR root system for trees (Schenck & Jackson 2002)
-//' V2 = root_ldrDistribution(Z50 = rep(200,ntree), 
+//' V2 <- root_ldrDistribution(Z50 = rep(200,ntree), 
 //'                           Z95 = rep(1000,ntree), s$widths)
 //' print(V2)     
 //' 

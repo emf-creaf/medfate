@@ -5,7 +5,7 @@
 #' during a period specified in the input climatic data.
 #' 
 #' @param forest An object of class \code{\link{forest}}. Alternatively, the output of a previous run, if continuing a previous simulation.
-#' @param soil An object of class \code{\link{soil}}.
+#' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
 #' @param meteo A data frame with daily weather data series (see \code{\link{spwb}}).
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
@@ -91,8 +91,8 @@
 #' #Initialize control parameters
 #' control <- defaultControl("Granier")
 #' 
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil <- soil(defaultSoilParams(4))
+#' #Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' #Call simulation function
 #' fd<-fordyn(exampleforest, examplesoil, 

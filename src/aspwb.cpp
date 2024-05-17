@@ -52,10 +52,19 @@ NumericVector agricultureWaterInputs(List x,
 //' @rdname aspwb
 // [[Rcpp::export("aspwbInput")]]
 List aspwbInput(double crop_factor, List control, DataFrame soil) {
+  
+  String VG_PTF = control["VG_PTF"]; 
+  DataFrame soil_out;
+  if(soil.inherits("soil")) {
+    soil_out = clone(soil);
+  } else {
+    soil_out = soilInit(soil, VG_PTF);
+  }
+  
   List input = List::create(_["control"] = clone(control),
                             _["crop_factor"] = crop_factor, 
                             _["snowpack"] = 0.0,
-                            _["soil"] = clone(soil));
+                            _["soil"] = soil_out);
   input.attr("class") = CharacterVector::create("aspwbInput","list");
   return(input);
 }
@@ -380,7 +389,7 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
 //' Function \code{aspwb} performs water balance for multiple days in an agriculture location.
 //' 
 //' @param crop_factor Agriculture crop factor.
-//' @param soil An object of class \code{\link{soil}}.
+//' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}.
 //' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 //' @param x An object of class \code{\link{aspwbInput}}.
 //' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}). 
@@ -403,7 +412,8 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
 //' @examples
 //' 
 //' control <- defaultControl()
-//' examplesoil <- soil(defaultSoilParams())
+//' examplesoil <- defaultSoilParams(4)
+//' 
 //' x <- aspwbInput(0.75, control, examplesoil)
 //' 
 //' # Day to be simulated

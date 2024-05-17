@@ -25,7 +25,7 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, 
 #' Function \code{aspwb} performs water balance for multiple days in an agriculture location.
 #' 
 #' @param crop_factor Agriculture crop factor.
-#' @param soil An object of class \code{\link{soil}}.
+#' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' @param x An object of class \code{\link{aspwbInput}}.
 #' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}). 
@@ -48,7 +48,8 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, 
 #' @examples
 #' 
 #' control <- defaultControl()
-#' examplesoil <- soil(defaultSoilParams())
+#' examplesoil <- defaultSoilParams(4)
+#' 
 #' x <- aspwbInput(0.75, control, examplesoil)
 #' 
 #' # Day to be simulated
@@ -1068,7 +1069,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' control <- defaultControl("Granier")
 #'   
 #' #Initialize soil with default soil params (4 layers)
-#' examplesoil <- soil(defaultSoilParams(4))
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' #Initialize vegetation input
 #' x1 <- forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
@@ -1160,17 +1161,17 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize soil with default soil params (2 layers)
-#' examplesoil = soil(defaultSoilParams(2)) 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' #Initialize control parameters
-#' control = defaultControl("Granier")
+#' control <- defaultControl("Granier")
 #' 
 #' #Switch to 'Sperry' transpiration mode
-#' control = defaultControl("Sperry")
+#' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Leaf vulnerability curves
 #' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
@@ -1812,8 +1813,11 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #' Larsbo, M., Roulier, S., Stenemo, F., Kasteel, R. & Jarvis, N. (2005). An Improved Dual‐Permeability Model of Water Flow and Solute Transport in the Vadose Zone. Vadose Zone Journal, 4, 398–406. 
 #' 
 #' @examples
-#' # Initialize soil example
-#' examplesoil <- soil(defaultSoilParams(4))
+#' # Define soil parameters
+#' spar <- defaultSoilParams(4)
+#' 
+#' # Initializes soil hydraulic parameters
+#' examplesoil <- soil(spar)
 #' 
 #' # Water balance in a single-domain simulation (Richards equation)
 #' hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
@@ -1896,14 +1900,14 @@ hydraulics_initSperryNetworks <- function(x) {
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil = soil(defaultSoilParams(4))
+#' #Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' #Initialize control parameters
-#' control = defaultControl(transpirationMode="Sperry")
+#' control <- defaultControl(transpirationMode="Sperry")
 #' 
 #' #Initialize input
-#' x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Stomatal VPD curve and chosen value for the 12th time step at day 100
 #' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
@@ -2155,7 +2159,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
 #' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
 #' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
-#' @param soil An object of class \code{\link{soil}}.
+#' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}, containing soil parameters per soil layer.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' 
 #' @details
@@ -2182,6 +2186,8 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 #'   \itemize{
 #'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
+#'     \item{\code{soil}: A data frame with initialized soil parameters (see \code{\link{soil}}).}
+#'     \item{\code{snowpack}: The amount of snow (in mm) in the snow pack over the soil.}
 #'     \item{\code{canopy}: A list of stand-level state variables.}
 #'     \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
 #'     \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
@@ -2379,8 +2385,8 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' data(exampleforest2)
 #' forest2aboveground(exampleforest2, SpParamsMED)
 #' 
-#' # Initialize soil with default soil params
-#' examplesoil <- soil(defaultSoilParams())
+#' # Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' # Bewowground parameters (distribution of fine roots)
 #' forest2belowground(exampleforest, examplesoil, SpParamsMED)
@@ -2746,17 +2752,17 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' ntree = nrow(exampleforest$treeData)
+#' ntree <- nrow(exampleforest$treeData)
 #' 
 #' #Initialize soil with default soil params
-#' s = soil(defaultSoilParams())
+#' s <- defaultSoilParams(4)
 #' 
 #' #Calculate conic root system for trees
-#' V1 = root_conicDistribution(Z=rep(2000,ntree), s$widths)            
+#' V1 <- root_conicDistribution(Z=rep(2000,ntree), s$widths)            
 #' print(V1)
 #'      
 #' #Calculate LDR root system for trees (Schenck & Jackson 2002)
-#' V2 = root_ldrDistribution(Z50 = rep(200,ntree), 
+#' V2 <- root_ldrDistribution(Z50 = rep(200,ntree), 
 #'                           Z95 = rep(1000,ntree), s$widths)
 #' print(V2)     
 #' 
@@ -2853,7 +2859,7 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
 #' @param bd Bulk density (in g/cm3).
 #' @param topsoil A boolean flag to indicate topsoil layer.
 #' @param soilType A string indicating the soil type.
-#' @param soil Soil object (returned by function \code{\link{soil}}).
+#' @param soil Initialized soil object (returned by function \code{\link{soil}}).
 #' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.
 #' @param minPsi Minimum water potential (in MPa) to calculate the amount of extractable water.
 #' @param pWeight Percentage of corresponding to rocks, in weight.
@@ -2908,8 +2914,12 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
 #' vg = soil_vanGenuchtenParamsToth(40,10,1,1.3,TRUE)
 #' vg
 #' 
-#' # Initialize soil object with default params
-#' s = soil(defaultSoilParams())
+#' # Define soil with default params
+#' soil_df <- defaultSoilParams(4)
+#' soil_df
+#' 
+#' # Initialize soil parameters and state variables
+#' s = soil(soil_df)
 #' 
 #' # Plot Saxton's and Van Genuchten's water retention curves
 #' soil_retentionCurvePlot(s, model="both")
@@ -3122,7 +3132,7 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' summary(s2, model="VG")
 #' @name soil
 soil <- function(x, VG_PTF = "Toth") {
-    .Call(`_medfate_soil`, x, VG_PTF)
+    .Call(`_medfate_soilInit`, x, VG_PTF)
 }
 
 .modifySoilLayerParam <- function(soil, paramName, layer, newValue, VG_PTF = "Toth") {
@@ -3167,7 +3177,9 @@ soil <- function(x, VG_PTF = "Toth") {
 #' @seealso \code{\link{soil}}
 #' 
 #' @examples
-#' examplesoil = soil(defaultSoilParams())
+#' #Define soil and complete parameters
+#' examplesoil = soil(defaultSoilParams(4))
+#' 
 #' soil_thermalConductivity(examplesoil)
 #' soil_thermalCapacity(examplesoil)
 #' 
@@ -3287,8 +3299,8 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize control parameters
-#' control <- defaultControl("Granier")
+#' #Define soil parameters
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' # Day to be simulated
 #' d <- 100
@@ -3296,7 +3308,7 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
 #' date <- as.character(examplemeteo$dates[d])
 #' 
 #' #Simulate water balance one day only (Granier mode)
-#' examplesoil <- soil(defaultSoilParams(4))
+#' control <- defaultControl("Granier")
 #' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' sd1 <- spwb_day(x1, date, meteovec,  
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
@@ -3522,8 +3534,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil <- soil(defaultSoilParams(4))
+#' #Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' #Initialize control parameters
 #' control <- defaultControl("Granier")
@@ -3827,8 +3839,8 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil <- soil(defaultSoilParams(4))
+#' #Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' #Initialize control parameters
 #' control <- defaultControl("Granier")

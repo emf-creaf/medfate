@@ -89,8 +89,8 @@
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil = soil(defaultSoilParams(4))
+#' #Define soil with default soil params (4 layers)
+#' examplesoil = defaultSoilParams(4)
 #' 
 #' #Initialize control parameters
 #' control = defaultControl("Granier")

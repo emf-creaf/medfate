@@ -37,7 +37,7 @@ aspwb(
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
 
-\item{soil}{An object of class \code{\link{soil}}.}
+\item{soil}{An object of class \code{\link{data.frame}} or \code{\link{soil}}.}
 
 \item{x}{An object of class \code{\link{aspwbInput}}.}
 
@@ -66,7 +66,8 @@ Function \code{aspwb} performs water balance for multiple days in an agriculture
 \examples{
 
 control <- defaultControl()
-examplesoil <- soil(defaultSoilParams())
+examplesoil <- defaultSoilParams(4)
+
 x <- aspwbInput(0.75, control, examplesoil)
 
 # Day to be simulated

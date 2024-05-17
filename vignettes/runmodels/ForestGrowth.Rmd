@@ -27,13 +27,7 @@ Model inputs are explained in greater detail in vignettes [*Understanding model 
 Soil physical characteristics needs to be specified using a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(4)
-spar
-```
-
-The soil input for water balance simulation is actually a data frame of class `soil` that is created using a function with the same name:
-```{r}
-examplesoil = soil(spar)
+examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
 

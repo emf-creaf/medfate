@@ -106,7 +106,7 @@ PH_cohName = paste0("T1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensi
 QI_cohName = paste0("T2_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"])
 QC_cohName = paste0("S1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"])
 data(SpParamsMED)
-examplesoil = soil(defaultSoilParams(4))
+examplesoil = defaultSoilParams(4)
 control = defaultControl("Granier")
 x1 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 DBH_ini_PH = x1$above[PH_cohName, "DBH"]

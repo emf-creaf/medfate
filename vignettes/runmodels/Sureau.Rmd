@@ -19,7 +19,7 @@ Initialisation for `spwb()` function:
 library(medfate)
 
 # Soil
-examplesoil <- soil(defaultSoilParams(n = 4))
+examplesoil <- defaultSoilParams(n = 4)
 
 # Load example plot plant data
 data(exampleforest)

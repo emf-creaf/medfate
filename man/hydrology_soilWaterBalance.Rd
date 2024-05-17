@@ -95,8 +95,11 @@ Bonan et al. (2019).
 The dual-permeability model is an implementation of the model MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005).
 }
 \examples{
-# Initialize soil example
-examplesoil <- soil(defaultSoilParams(4))
+# Define soil parameters
+spar <- defaultSoilParams(4)
+
+# Initializes soil hydraulic parameters
+examplesoil <- soil(spar)
 
 # Water balance in a single-domain simulation (Richards equation)
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 

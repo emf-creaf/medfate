@@ -65,7 +65,9 @@ are used to calculate soil temperature gradients (in ºC/m) and temporal tempera
 given soil layer texture and water content (and possibly including heat flux from above).
 }
 \examples{
-examplesoil = soil(defaultSoilParams())
+#Define soil and complete parameters
+examplesoil = soil(defaultSoilParams(4))
+
 soil_thermalConductivity(examplesoil)
 soil_thermalCapacity(examplesoil)
 

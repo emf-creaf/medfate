@@ -44,8 +44,8 @@
 #' # Load default species parameters
 #' data(SpParamsMED)
 #'
-#' # Initialize soil with default soil params
-#' examplesoil <- soil(defaultSoilParams(4))
+#' # Define soil with default soil params
+#' examplesoil <- defaultSoilParams(4)
 #' 
 #' # Initialize control parameters for 'Sperry' transpiration mode
 #' control <- defaultControl(transpirationMode="Sperry")

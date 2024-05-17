@@ -3,7 +3,7 @@ library(medfate)
 data(examplemeteo)
 data(exampleforest)
 data(SpParamsMED)
-examplesoil = soil(defaultSoilParams(4))
+examplesoil = defaultSoilParams(4)
 control = defaultControl("Granier")
 control$verbose = FALSE
 data(exampleobs)

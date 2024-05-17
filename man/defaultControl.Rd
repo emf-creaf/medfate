@@ -35,6 +35,7 @@ A list, with the following options (default values in brackets):
       \item{\code{soilFunctions [= "VG"]}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
                  If \code{transpirationMode} is 'Sperry' or 'Sureau' then soilFunctions is forced to \code{'VG'}.
                  Only simulations with 'Granier' are allowed to use Saxton functions.}
+      \item{\code{VG_PTF}: String indicating the pedotransfer functions for van Genuchten parameters (either 'Toth' or 'Carsel').}
       \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of soil water balance, stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
       \item{\code{max_nsubsteps_soil [= 300]}: Maximum number of substeps for soil water balance solving.}
       \item{\code{defaultWindSpeed [= 2.5]}: Default wind speed value (in m/s) to be used when missing from data. }

@@ -127,7 +127,7 @@ vprofile_rootDistribution(exampleforest, SpParamsMED)
 Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(2)
+spar <- defaultSoilParams(4)
 print(spar)
 ```
 

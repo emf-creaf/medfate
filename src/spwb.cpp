@@ -789,8 +789,8 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' #Default species parameterization
 //' data(SpParamsMED)
 //' 
-//' #Initialize control parameters
-//' control <- defaultControl("Granier")
+//' #Define soil parameters
+//' examplesoil <- defaultSoilParams(4)
 //' 
 //' # Day to be simulated
 //' d <- 100
@@ -798,7 +798,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' date <- as.character(examplemeteo$dates[d])
 //' 
 //' #Simulate water balance one day only (Granier mode)
-//' examplesoil <- soil(defaultSoilParams(4))
+//' control <- defaultControl("Granier")
 //' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' sd1 <- spwb_day(x1, date, meteovec,  
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
@@ -2065,8 +2065,8 @@ void printWaterBalanceResult(List outputList, List x,
 //' #Default species parameterization
 //' data(SpParamsMED)
 //' 
-//' #Initialize soil with default soil params (4 layers)
-//' examplesoil <- soil(defaultSoilParams(4))
+//' #Define soil with default soil params (4 layers)
+//' examplesoil <- defaultSoilParams(4)
 //' 
 //' #Initialize control parameters
 //' control <- defaultControl("Granier")

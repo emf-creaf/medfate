@@ -15,7 +15,7 @@ control_sureau <- defaultControl("Sureau")
 control_sureau$verbose <- FALSE
 
 #Initialize soil with default soil params (4 layers)
-examplesoil <- soil(defaultSoilParams(4))
+examplesoil <- defaultSoilParams(4)
 
 test_that("growth can be run in example and empty forests",{
   expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_granier), 

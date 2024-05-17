@@ -22,7 +22,7 @@ fordyn(
 \arguments{
 \item{forest}{An object of class \code{\link{forest}}. Alternatively, the output of a previous run, if continuing a previous simulation.}
 
-\item{soil}{An object of class \code{\link{soil}}.}
+\item{soil}{An object of class \code{\link{data.frame}} or \code{\link{soil}}.}
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).}
 
@@ -113,8 +113,8 @@ data(SpParamsMED)
 #Initialize control parameters
 control <- defaultControl("Granier")
 
-#Initialize soil with default soil params (4 layers)
-examplesoil <- soil(defaultSoilParams(4))
+#Define soil with default soil params (4 layers)
+examplesoil <- defaultSoilParams(4)
 
 #Call simulation function
 fd<-fordyn(exampleforest, examplesoil, 

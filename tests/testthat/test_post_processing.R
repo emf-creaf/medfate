@@ -4,7 +4,7 @@ data(examplemeteo)
 data(exampleforest)
 data(SpParamsMED)
 d = 100:105
-examplesoil = soil(defaultSoilParams(4))
+examplesoil = defaultSoilParams(4)
 
 
 test_that("Can produce all basic spwb plots and summaries",{
@@ -253,7 +253,7 @@ test_that("Can produce all advanced spwb_day plots",{
 })
 
 test_that("Can produce all basic growth plots and summaries",{
-  examplesoil = soil(defaultSoilParams(2))
+  examplesoil = defaultSoilParams(4)
   control = defaultControl("Granier")
   control$verbose = FALSE
   x1 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)

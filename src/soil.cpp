@@ -46,7 +46,7 @@ CharacterVector layerNames(int nlayers) {
 //' @param bd Bulk density (in g/cm3).
 //' @param topsoil A boolean flag to indicate topsoil layer.
 //' @param soilType A string indicating the soil type.
-//' @param soil Soil object (returned by function \code{\link{soil}}).
+//' @param soil Initialized soil object (returned by function \code{\link{soil}}).
 //' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.
 //' @param minPsi Minimum water potential (in MPa) to calculate the amount of extractable water.
 //' @param pWeight Percentage of corresponding to rocks, in weight.
@@ -101,8 +101,12 @@ CharacterVector layerNames(int nlayers) {
 //' vg = soil_vanGenuchtenParamsToth(40,10,1,1.3,TRUE)
 //' vg
 //' 
-//' # Initialize soil object with default params
-//' s = soil(defaultSoilParams())
+//' # Define soil with default params
+//' soil_df <- defaultSoilParams(4)
+//' soil_df
+//' 
+//' # Initialize soil parameters and state variables
+//' s = soil(soil_df)
 //' 
 //' # Plot Saxton's and Van Genuchten's water retention curves
 //' soil_retentionCurvePlot(s, model="both")
@@ -466,6 +470,10 @@ NumericVector psi2thetasoil(DataFrame soil, double psi, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_thetaFC")]]
 NumericVector thetaFC(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   return(psi2thetasoil(soil, -0.033, model));
 }
 
@@ -476,6 +484,10 @@ NumericVector thetaFC(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_thetaWP")]]
 NumericVector thetaWP(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   return(psi2thetasoil(soil, -1.5, model));
 }
 
@@ -485,6 +497,10 @@ NumericVector thetaWP(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_thetaSAT")]]
 NumericVector thetaSAT(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector SD = soil["widths"];
   int nlayers = SD.size();
   NumericVector Theta_Sat(nlayers);
@@ -510,6 +526,10 @@ NumericVector thetaSAT(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterFC")]]
 NumericVector waterFC(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector widths = soil["widths"];
   NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector rfc = soil["rfc"];
@@ -525,6 +545,10 @@ NumericVector waterFC(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterSAT")]]
 NumericVector waterSAT(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector widths = soil["widths"];
   NumericVector Theta_SAT = thetaSAT(soil, model);
   NumericVector rfc = soil["rfc"];
@@ -537,6 +561,10 @@ NumericVector waterSAT(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterWP")]]
 NumericVector waterWP(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector widths = soil["widths"];
   NumericVector theta_WP = thetaWP(soil, model);
   NumericVector rfc = soil["rfc"];
@@ -549,6 +577,10 @@ NumericVector waterWP(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
  // [[Rcpp::export("soil_waterPsi")]]
  NumericVector waterPsi(DataFrame soil, double psi, String model="SX") {
+   if(!soil.inherits("soil")) {
+     if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+     else stop("Wrong class for `soil`.");
+   }
    NumericVector widths = soil["widths"];
    NumericVector theta_psi = psi2thetasoil(soil, psi, model);
    NumericVector rfc = soil["rfc"];
@@ -561,6 +593,10 @@ NumericVector waterWP(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterExtractable")]]
 NumericVector waterExtractable(DataFrame soil, String model="SX", double minPsi = -5.0) {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector widths = soil["widths"];
   NumericVector theta_FC = thetaFC(soil, model);
   NumericVector theta_Min = psi2thetasoil(soil, minPsi, model);
@@ -577,6 +613,10 @@ NumericVector waterExtractable(DataFrame soil, String model="SX", double minPsi 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_theta")]]
 NumericVector theta(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector W = soil["W"];
   NumericVector Theta = Theta_FC * W;
@@ -586,6 +626,10 @@ NumericVector theta(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 // [[Rcpp::export("soil_water")]]
 NumericVector water(DataFrame soil, String model="SX") {
+  if(!soil.inherits("soil")) {
+    if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
+    else stop("Wrong class for `soil`.");
+  }
   NumericVector widths = soil["widths"];
   NumericVector Theta = theta(soil, model);
   NumericVector rfc = soil["rfc"];
@@ -859,9 +903,9 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' summary(s2, model="VG")
 //' @name soil
 // [[Rcpp::export("soil")]]
-DataFrame soil(DataFrame x, String VG_PTF = "Toth") {
+DataFrame soilInit(DataFrame x, String VG_PTF = "Toth") {
   int nlayers = x.nrow();
-
+  if((VG_PTF!="Toth") && (VG_PTF!="Carsel")) stop("Wrong VG_PTF (should be either 'Toth' or 'Carsel')");
   //Soil parameters related to physical structure
   NumericVector widths = clone(as<NumericVector>(x["widths"]));
   NumericVector clay = clone(as<NumericVector>(x["clay"]));

@@ -4780,22 +4780,22 @@ RcppExport SEXP _medfate_vanGenuchtenParamsToth(SEXP claySEXP, SEXP sandSEXP, SE
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// soil
-DataFrame soil(DataFrame x, String VG_PTF);
-static SEXP _medfate_soil_try(SEXP xSEXP, SEXP VG_PTFSEXP) {
+// soilInit
+DataFrame soilInit(DataFrame x, String VG_PTF);
+static SEXP _medfate_soilInit_try(SEXP xSEXP, SEXP VG_PTFSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
     Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
-    rcpp_result_gen = Rcpp::wrap(soil(x, VG_PTF));
+    rcpp_result_gen = Rcpp::wrap(soilInit(x, VG_PTF));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soil(SEXP xSEXP, SEXP VG_PTFSEXP) {
+RcppExport SEXP _medfate_soilInit(SEXP xSEXP, SEXP VG_PTFSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soil_try(xSEXP, VG_PTFSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soilInit_try(xSEXP, VG_PTFSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5681,7 +5681,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsCarsel", (DL_FUNC)_medfate_vanGenuchtenParamsCarsel_try);
     R_RegisterCCallable("medfate", "_medfate_soil_campbellParamsClappHornberger", (DL_FUNC)_medfate_campbellParamsClappHornberger_try);
     R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth", (DL_FUNC)_medfate_vanGenuchtenParamsToth_try);
-    R_RegisterCCallable("medfate", "_medfate_soil", (DL_FUNC)_medfate_soil_try);
+    R_RegisterCCallable("medfate", "_medfate_soil", (DL_FUNC)_medfate_soilInit_try);
     R_RegisterCCallable("medfate", "_medfate_.modifySoilLayerParam", (DL_FUNC)_medfate_modifySoilLayerParam_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalCapacity", (DL_FUNC)_medfate_thermalCapacity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalConductivity", (DL_FUNC)_medfate_thermalConductivity_try);
@@ -5948,7 +5948,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
     {"_medfate_campbellParamsClappHornberger", (DL_FUNC) &_medfate_campbellParamsClappHornberger, 1},
     {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
-    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
+    {"_medfate_soilInit", (DL_FUNC) &_medfate_soilInit, 2},
     {"_medfate_modifySoilLayerParam", (DL_FUNC) &_medfate_modifySoilLayerParam, 5},
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},

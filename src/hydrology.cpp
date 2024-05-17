@@ -630,8 +630,11 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 //' Larsbo, M., Roulier, S., Stenemo, F., Kasteel, R. & Jarvis, N. (2005). An Improved Dual‐Permeability Model of Water Flow and Solute Transport in the Vadose Zone. Vadose Zone Journal, 4, 398–406. 
 //' 
 //' @examples
-//' # Initialize soil example
-//' examplesoil <- soil(defaultSoilParams(4))
+//' # Define soil parameters
+//' spar <- defaultSoilParams(4)
+//' 
+//' # Initializes soil hydraulic parameters
+//' examplesoil <- soil(spar)
 //' 
 //' # Water balance in a single-domain simulation (Richards equation)
 //' hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 

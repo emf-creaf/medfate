@@ -109,7 +109,9 @@ NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay,
 //' @seealso \code{\link{soil}}
 //' 
 //' @examples
-//' examplesoil = soil(defaultSoilParams())
+//' #Define soil and complete parameters
+//' examplesoil = soil(defaultSoilParams(4))
+//' 
 //' soil_thermalConductivity(examplesoil)
 //' soil_thermalCapacity(examplesoil)
 //' 

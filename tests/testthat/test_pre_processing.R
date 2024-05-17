@@ -10,8 +10,8 @@ control_sperry$verbose <- FALSE
 control_sureau <- defaultControl("Sureau")
 control_sureau$verbose <- FALSE
 
-#Initialize soil with default soil params (4 layers)
-examplesoil <- soil(defaultSoilParams(4))
+#Define soil with default soil params (4 layers)
+examplesoil <- defaultSoilParams(4)
 
 test_that("pressure-volume curves can be shown",{
   x1 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)

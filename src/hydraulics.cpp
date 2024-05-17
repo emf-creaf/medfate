@@ -72,17 +72,17 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //' #Default species parameterization
 //' data(SpParamsMED)
 //' 
-//' #Initialize soil with default soil params (2 layers)
-//' examplesoil = soil(defaultSoilParams(2)) 
+//' #Initialize soil with default soil params (4 layers)
+//' examplesoil <- defaultSoilParams(4)
 //' 
 //' #Initialize control parameters
-//' control = defaultControl("Granier")
+//' control <- defaultControl("Granier")
 //' 
 //' #Switch to 'Sperry' transpiration mode
-//' control = defaultControl("Sperry")
+//' control <- defaultControl("Sperry")
 //' 
 //' #Initialize input
-//' x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+//' x <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Leaf vulnerability curves
 //' hydraulics_vulnerabilityCurvePlot(x, type="leaf")

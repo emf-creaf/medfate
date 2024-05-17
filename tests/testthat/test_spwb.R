@@ -15,7 +15,7 @@ control_sureau <- defaultControl("Sureau")
 control_sureau$verbose <- FALSE
 
 #Initialize soil with default soil params (4 layers)
-examplesoil <- soil(defaultSoilParams(4))
+examplesoil <- defaultSoilParams(4)
 
 test_that("spwb can be run in example and empty forests",{
   expect_s3_class(spwb(forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 

@@ -127,8 +127,8 @@ data(exampleforest)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize soil with default soil params (2 layers)
-examplesoil <- soil(defaultSoilParams(2))
+#Define soil with default soil params (2 layers)
+examplesoil <- defaultSoilParams(4)
 
 #Switch to 'Sperry' transpiration mode
 control <- defaultControl("Sperry")

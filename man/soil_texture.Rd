@@ -124,7 +124,7 @@ soil_retentionCurvePlot(
 
 \item{n, alpha, theta_res, theta_sat}{Parameters of the Van Genuchten-Mualem model (m = 1 - 1/n).}
 
-\item{soil}{Soil object (returned by function \code{\link{soil}}).}
+\item{soil}{Initialized soil object (returned by function \code{\link{soil}}).}
 
 \item{model}{Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.}
 
@@ -183,8 +183,12 @@ type
 vg = soil_vanGenuchtenParamsToth(40,10,1,1.3,TRUE)
 vg
 
-# Initialize soil object with default params
-s = soil(defaultSoilParams())
+# Define soil with default params
+soil_df <- defaultSoilParams(4)
+soil_df
+
+# Initialize soil parameters and state variables
+s = soil(soil_df)
 
 # Plot Saxton's and Van Genuchten's water retention curves
 soil_retentionCurvePlot(s, model="both")

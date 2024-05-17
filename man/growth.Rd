@@ -116,7 +116,7 @@ data(SpParamsMED)
 control <- defaultControl("Granier")
   
 #Initialize soil with default soil params (4 layers)
-examplesoil <- soil(defaultSoilParams(4))
+examplesoil <- defaultSoilParams(4)
 
 #Initialize vegetation input
 x1 <- forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
