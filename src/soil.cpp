@@ -932,7 +932,7 @@ DataFrame soilInit(DataFrame x, String VG_PTF = "Toth") {
   //Parameters to be calculated and state variables
   NumericVector macro(nlayers, NA_REAL);
   NumericVector temperature(nlayers, NA_REAL);
-  CharacterVector usda_Type(nlayers);
+  CharacterVector usda_Type(nlayers, NA_STRING);
   NumericVector VG_alpha(nlayers, NA_REAL);
   NumericVector VG_n(nlayers, NA_REAL);
   NumericVector VG_theta_res(nlayers, NA_REAL);
@@ -940,38 +940,30 @@ DataFrame soilInit(DataFrame x, String VG_PTF = "Toth") {
   NumericVector Ksat(nlayers, NA_REAL);
   
   //Get parameters from input if specified
-  if(x.containsElementNamed("VG_alpha")) {
-    VG_alpha = clone(as<NumericVector>(x["VG_alpha"]));
-  }
-  if(x.containsElementNamed("VG_n")) {
-    VG_n = clone(as<NumericVector>(x["VG_n"]));
-  }
-  if(x.containsElementNamed("VG_theta_res")) {
-    VG_theta_res = clone(as<NumericVector>(x["VG_theta_res"]));
-  }
-  if(x.containsElementNamed("VG_theta_sat")) {
-    VG_theta_sat = clone(as<NumericVector>(x["VG_theta_sat"]));
-  }
-  if(x.containsElementNamed("Ksat")) {
-    Ksat = clone(as<NumericVector>(x["Ksat"]));
-  }
+  if(x.containsElementNamed("VG_alpha")) VG_alpha = clone(as<NumericVector>(x["VG_alpha"]));
+  if(x.containsElementNamed("VG_n")) VG_n = clone(as<NumericVector>(x["VG_n"]));
+  if(x.containsElementNamed("VG_theta_res")) VG_theta_res = clone(as<NumericVector>(x["VG_theta_res"]));
+  if(x.containsElementNamed("VG_theta_sat")) VG_theta_sat = clone(as<NumericVector>(x["VG_theta_sat"]));
+  if(x.containsElementNamed("Ksat")) Ksat = clone(as<NumericVector>(x["Ksat"]));
+  if(x.containsElementNamed("macro")) macro = clone(as<NumericVector>(x["macro"]));
+  if(x.containsElementNamed("usda")) usda_Type = clone(as<CharacterVector>(x["usda"]));
+  
   for(int l=0;l<nlayers;l++) {
-    usda_Type[l] = USDAType(clay[l],sand[l]);
+    if(CharacterVector::is_na(usda_Type[l]))  usda_Type[l] = USDAType(clay[l],sand[l]);
+    // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
+    if(NumericVector::is_na(macro[l])) macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
+    
     NumericVector vgl;
     if(VG_PTF=="Carsel") {
+      vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
       if(NumericVector::is_na(Ksat[l])) {
-        vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
         Ksat[l] = vgl[4]; //Use Carsel estimate for Ksat
       }
     } else if(VG_PTF=="Toth") {
+      // if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
+      //Use non-top soil equation for all layers
+      vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], false);
       if(NumericVector::is_na(Ksat[l])) {
-        if(!x.containsElementNamed("bd")) stop("bd missing in 'x'");
-        NumericVector bd = as<NumericVector>(x["bd"]);
-        // if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
-        //Use non-top soil equation for all layers
-        vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
-        // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
-        macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
         Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]); 
       }
     } else {
@@ -985,6 +977,7 @@ DataFrame soilInit(DataFrame x, String VG_PTF = "Toth") {
   DataFrame l = DataFrame::create(_["widths"] = widths,
                         _["sand"] = sand, 
                         _["clay"] = clay, 
+                        _["usda"] = usda_Type,
                         _["om"] = om, 
                         _["nitrogen"] = nitrogen,
                         _["bd"] = bd,
