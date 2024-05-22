@@ -130,6 +130,9 @@
     <loc>/reference/forest.html</loc>
   </url>
   <url>
+    <loc>/reference/forest_mapWoodyTables.html</loc>
+  </url>
+  <url>
     <loc>/reference/forest_mergeTrees.html</loc>
   </url>
   <url>
@@ -212,6 +215,9 @@
   </url>
   <url>
     <loc>/reference/plot.spwb_day.html</loc>
+  </url>
+  <url>
+    <loc>/reference/poblet_trees.html</loc>
   </url>
   <url>
     <loc>/reference/regeneration.html</loc>

@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-05-17</h4>
+            <h4 data-toc-skip class="date">2024-05-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -208,16 +208,16 @@ and species name:</p>
 variables (moisture and temperature):</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">soil</span></span></code></pre></div>
-<pre><code><span><span class="co">##   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span></span>
-<span><span class="co">## 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">## 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">## 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">## 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">##   VG_theta_res VG_theta_sat W Temp</span></span>
-<span><span class="co">## 1        0.041     0.423715 1   NA</span></span>
-<span><span class="co">## 2        0.041     0.423715 1   NA</span></span>
-<span><span class="co">## 3        0.041     0.423715 1   NA</span></span>
-<span><span class="co">## 4        0.041     0.423715 1   NA</span></span></code></pre>
+<pre><code><span><span class="co">##   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha</span></span>
+<span><span class="co">## 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">## 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">## 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">## 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">##       VG_n VG_theta_res VG_theta_sat W Temp</span></span>
+<span><span class="co">## 1 1.303861        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 2 1.303861        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 3 1.303861        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 4 1.303861        0.041     0.423715 1   NA</span></span></code></pre>
 <p>As an aside, the columns in <code>x$soil</code> that were not present
 in the input data frame <code>examplesoil</code> are created by an
 internal call to a soil initialization function called

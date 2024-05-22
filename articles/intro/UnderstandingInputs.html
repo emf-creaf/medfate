@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-05-17</h4>
+            <h4 data-toc-skip class="date">2024-05-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1181,8 +1181,8 @@ diameter (DBH; cm) and height (cm), whereas shrubs are described in
 terms of species, percent cover (%) and mean height (cm). Root
 distribution has to be specified for both growth forms, in terms of the
 depths (mm) corresponding to 50% and 95% of cumulative fine root
-distribution. Functions are provided in package <a href="https://emf-creaf.github.io/medfateutils/" class="external-link">medfateutils</a> to map
-variables in user data frames into tables <code>treeData</code> and
+distribution. Functions are provided in the package to map variables in
+user data frames into tables <code>treeData</code> and
 <code>shrubData</code>. Information about the herb layer may be either
 absent or included in an aggregated way (i.e. without distinguishing
 cohorts).</p>
@@ -1356,29 +1356,30 @@ on samples taken at the forest stand to be simulated. For those users
 lacking such data, soil properties are available via SoilGrids.org.</p>
 </div>
 <div class="section level3">
-<h3 id="soil-input-object">Soil input object<a class="anchor" aria-label="anchor" href="#soil-input-object"></a>
+<h3 id="initialized-soil-object">Initialized soil object<a class="anchor" aria-label="anchor" href="#initialized-soil-object"></a>
 </h3>
-<p>The soil input for simulations is an object of class
-<code>soil</code> (also a data frame) that is created using a function
-with the same name:</p>
+<p>Simulations need additional soil parameters and state variables. The
+soil input for simulations is an object of class <code>soil</code> (also
+a data frame) that is created using a function with the same name:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "soil"       "data.frame"</span></span></code></pre>
 <p>In addition to the physical soil description, this object contains
-soil parameters needed for soil water balance simulations:</p>
+soil parameters and state variables needed for soil water balance
+simulations:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span></span></code></pre></div>
-<pre><code><span><span class="co">##   widths sand clay om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n</span></span>
-<span><span class="co">## 1    300   25   25 NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">## 2    700   25   25 NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">## 3   1000   25   25 NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">## 4   2000   25   25 NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861</span></span>
-<span><span class="co">##   VG_theta_res VG_theta_sat W Temp</span></span>
-<span><span class="co">## 1        0.041     0.423715 1   NA</span></span>
-<span><span class="co">## 2        0.041     0.423715 1   NA</span></span>
-<span><span class="co">## 3        0.041     0.423715 1   NA</span></span>
-<span><span class="co">## 4        0.041     0.423715 1   NA</span></span></code></pre>
+<pre><code><span><span class="co">##   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha</span></span>
+<span><span class="co">## 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">## 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">## 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">## 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112</span></span>
+<span><span class="co">##       VG_n VG_theta_res VG_theta_sat W Temp</span></span>
+<span><span class="co">## 1 1.303861        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 2 1.303861        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 3 1.303861        0.041     0.423715 1   NA</span></span>
+<span><span class="co">## 4 1.303861        0.041     0.423715 1   NA</span></span></code></pre>
 <p>For example, <code>macro</code> specifies the macroporosity of each
 layer. The meaning of all elements in the soil object can be found in
 the help page for function <code><a href="../../reference/soil.html">soil()</a></code>.</p>
@@ -1440,6 +1441,8 @@ the first time step they will be set to atmospheric temperature. While
 simple water balance modeling can be run using either Saxton’s or Van
 Genuchten’s equations as water retention curves, Van Genuchten’s model
 is forced for advanced modelling.</p>
+<p>Users can skip the call function <code><a href="../../reference/soil.html">soil()</a></code> when creating
+input objects for simulations (see below).</p>
 </div>
 <div class="section level3">
 <h3 id="water-retention-curves">Water retention curves<a class="anchor" aria-label="anchor" href="#water-retention-curves"></a>
