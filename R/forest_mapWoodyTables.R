@@ -33,7 +33,7 @@
 #'
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 #'
-#' @seealso \code{\link{forest}}, \code{\link{forest_mergeTrees}}, \code{\link{tree2forest}}
+#' @seealso \code{\link{forest}}, \code{\link{poblet_trees}}, \code{\link{forest_mergeTrees}}, \code{\link{tree2forest}}
 #'
 #' @name forest_mapWoodyTables
 #'

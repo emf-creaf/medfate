@@ -50,7 +50,7 @@ data(exampleforest)
 exampleforest
 ```
 
-Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://emf-creaf.github.io/medfateutils/) to map variables in user data frames into tables `treeData` and `shrubData`. Information about the herb layer may be either absent or included in an aggregated way (i.e. without distinguishing cohorts).
+Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in the package to map variables in user data frames into tables `treeData` and `shrubData`. Information about the herb layer may be either absent or included in an aggregated way (i.e. without distinguishing cohorts).
 
 While the former example illustrates the standard structure of a `forest` object, users may use an alternative description, based on leaf area index and crown ratio of woody cohorts and the herb layer:
 
@@ -133,16 +133,16 @@ print(spar)
 
 where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties are available via SoilGrids.org.
 
-### Soil input object
+### Initialized soil object
 
-The soil input for simulations is an object of class `soil` (also a data frame) that is created using a function with the same name:
+Simulations need additional soil parameters and state variables. The soil input for simulations is an object of class `soil` (also a data frame) that is created using a function with the same name:
 
 ```{r}
 examplesoil = soil(spar)
 class(examplesoil)
 ```
 
-In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations:
+In addition to the physical soil description, this object contains soil parameters and state variables needed for soil water balance simulations:
 ```{r}
 examplesoil
 ```
@@ -163,6 +163,8 @@ Advanced soil plant energy and water balance modelling requires considering the 
 examplesoil$Temp
 ```
 Soil layer temperatures are initialized to missing values, so that at the first time step they will be set to atmospheric temperature. While simple water balance modeling can be run using either Saxton's or Van Genuchten's equations as water retention curves, Van Genuchten's model is forced for advanced modelling.
+
+Users can skip the call function `soil()` when creating input objects for simulations (see below).
 
 ### Water retention curves
 

@@ -2,7 +2,29 @@ library(medfate)
 
 data(exampleforest)
 data(SpParamsMED)
+data(poblet_trees)
 
+test_that("Empty forests can be created",{
+  expect_s3_class(emptyforest(), "forest")
+})
+
+test_that("Forest object can be build from data frames",{
+  f <- emptyforest()
+  x <- subset(poblet_trees, Plot.Code=="POBL_CTL")
+  sampled_area <- pi*15^2
+  mapping_x <- c("Species.name" = "Species", "DBH" = "Diameter.cm")
+  species <- c("Erica arborea","Cistus albidus", "Erica arborea", "Cistus albidus", "Cistus albidus")
+  H <- c(200,50,100,40,30)
+  D1 <- c(140,40,100, 35,30)
+  D2 <- D1
+  y <- data.frame(species, H, D1, D2)
+  mapping_y <- c("Species.name"= "species", "Height" ="H", "D1", "D2")
+  
+  expect_s3_class(forest_mapWoodyTables(x, y,
+                             mapping_x = mapping_x, mapping_y = mapping_y,
+                             SpParams = SpParamsMED,
+                             plot_size_x = sampled_area, plot_size_y = 4),"forest")
+})
 
 test_that("Can produce all vertical profiles",{
   expect_s3_class(vprofile_rootDistribution(exampleforest, SpParamsMED), "ggplot")

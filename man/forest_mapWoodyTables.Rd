@@ -115,7 +115,7 @@ f <- forest_mapWoodyTables(x, y,
 summary(f, SpParamsMED)
 }
 \seealso{
-\code{\link{forest}}, \code{\link{forest_mergeTrees}}, \code{\link{tree2forest}}
+\code{\link{forest}}, \code{\link{poblet_trees}}, \code{\link{forest_mergeTrees}}, \code{\link{tree2forest}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF

@@ -14,7 +14,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(cowplot)
 library(medfate)
-library(medfateutils)
 ```
 
 ## Introduction
