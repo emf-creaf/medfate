@@ -112,9 +112,9 @@ table containing forest inventory data.</p>
 <div class="section level3">
 <h3 id="poblet-tree-data-set">Poblet tree data set<a class="anchor" aria-label="anchor" href="#poblet-tree-data-set"></a>
 </h3>
-<p>Package <strong>medfateutils</strong> includes a small dataset of
-tree data, corresponding to a dense holm oak forest in Poblet
-(Catalonia, Spain). As a result of the abandonment of previous coppicing
+<p>Package <strong>medfate</strong> includes a small dataset of tree
+data, corresponding to a dense holm oak forest in Poblet (Catalonia,
+Spain). As a result of the abandonment of previous coppicing
 exploitation, there is a high density of stems per individual.</p>
 <p>We begin by loading the tree data from Poblet:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -181,8 +181,7 @@ variable names in <code>poblet_trees</code>:</p>
 <code class="sourceCode R"><span><span class="va">mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></span></code></pre></div>
 <p>We can now replace the empty <code>treeData</code> in
 <code>pobl_ctl</code> using functions <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> and
-<code><a href="../../reference/forest_mapWoodyTables.html">forest_mapTreeTable()</a></code>, the latter from
-<strong>medfateutils</strong>:</p>
+<code><a href="../../reference/forest_mapWoodyTables.html">forest_mapTreeTable()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>, </span>
 <span>                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span></code></pre></div>
