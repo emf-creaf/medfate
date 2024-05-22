@@ -6,6 +6,7 @@
 - IMPORTANT: soil objects are now data frames
 - SWE now stored as 'snowpack' in spwbInput
 - print.soil renamed to summary.soil
+- forest_mapWoodyTables moved from medfateutils into medfate
 
 # Version 4.2.0
 - Reorganization of Soil output as a list

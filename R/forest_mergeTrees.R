@@ -13,7 +13,7 @@
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso \code{\link{spwb}}, \code{\link{forest}},  \code{\link{fordyn}}, \code{\link{summary.forest}}
+#' @seealso \code{\link{spwb}}, \code{\link{forest}},  \code{\link{forest_mapWoodyTables}}, \code{\link{fordyn}}, \code{\link{summary.forest}}
 #' 
 #' @name forest_mergeTrees
 forest_mergeTrees<-function(x, byDBHclass = TRUE) {

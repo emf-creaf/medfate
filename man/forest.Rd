@@ -95,7 +95,7 @@ summary(exampleforest, SpParamsMED)
 
 }
 \seealso{
-\code{\link{exampleforest}}, \code{\link{forest_mergeTrees}},  
+\code{\link{exampleforest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},  
 \code{\link{plot.forest}}, \code{\link{tree2forest}}
 }
 \author{

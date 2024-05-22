@@ -28,7 +28,7 @@ Tree DBH and shrub height classes are defined up to a specific size (i.e. larger
 corresponding to 52.5 cm and 90 cm, respectively.
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{forest}},  \code{\link{fordyn}}, \code{\link{summary.forest}}
+\code{\link{spwb}}, \code{\link{forest}},  \code{\link{forest_mapWoodyTables}}, \code{\link{fordyn}}, \code{\link{summary.forest}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

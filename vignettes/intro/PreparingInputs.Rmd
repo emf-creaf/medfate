@@ -18,11 +18,10 @@ knitr::opts_chunk$set(
 
 A companion article [*Understanding model inputs*](https://emf-creaf.github.io/medfate/articles/intro/UnderstandingInputs.html) explained the vegetation, soil and weather structures needed to run the simulation models included in **medfate**. Preparing inputs for simulations with **medfate** is not straightforward, because it requires obtaining and reshaping data for vegetation, soil and weather. Therefore, this article illustrates some common issues that arise in the process of preparing inputs, so that the user is aware of them when processing his/her own data.
 
-We begin by loading packages **medfate**, **medfateutils** and **meteoland**:
+We begin by loading packages **medfate** and **meteoland**:
 
 ```{r}
 library(medfate)
-library(medfateutils)
 library(meteoland)
 ```
 
@@ -218,28 +217,21 @@ In general, it is advisable to reduce the number of woody cohorts before running
 
 Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org.
 
-Retrieval of soil properties from SoilGrids can be done using function `soilgridsParams()` from package **medfateutils**. Assuming we know the plot coordinates, we first create an object `sf` (see package **sf**):
+Retrieval of soil properties from SoilGrids can be done using function `add_soilgrids()` from package **medfateland**. Assuming we know the plot coordinates, we first create an object `sf` (see package **sf**):
 ```{r}
 sf_pt <- sf::st_sfc(sf::st_point(c(1.0219, 41.3443)), crs = 4326)
 ```
 
-This object can be used to query SoilGrids using `soilgridsParams()`:
-
-```{r, eval = FALSE}
-pobl_soil_props <- medfateutils::soilgridsParams(sf_pt, widths = c(300, 700, 1000))
-```
+With this function we will obtain, for each location, a data frame of soil properties:
 
 ```{r, include = FALSE}
 pobl_soil_props <- readRDS("pobl_soil_props.rds")
 ```
 
-
-This function returns a data frame of soil properties:
-
 ```{r}
 pobl_soil_props
 ```
-This data frame is a physical description of the soil. Remember that the soil data structure for **medfate** simulations is built using function `soil()`:
+This data frame is a physical description of the soil. Initialization of additional parameters and state variables is done using function `soil()`:
 
 ```{r}
 pobl_soil <- soil(pobl_soil_props)

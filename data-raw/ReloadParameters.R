@@ -3,6 +3,10 @@ MEGANParams<-read.csv("data-raw/MEGANParams.csv",skip=0)
 usethis::use_data(MEGANParams, overwrite = T)
 rm(MEGANParams)
 
+# Poblet tree data
+poblet_trees = openxlsx::read.xlsx("data-raw/PobletData.xlsx", sheet="TreeData")
+usethis::use_data(poblet_trees, overwrite = T)
+
 
 # SpParamsDefinition ----------------------------------------------------------------
 SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsDefinition.xlsx",
