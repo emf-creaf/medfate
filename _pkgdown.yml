@@ -41,6 +41,7 @@ reference:
   - emptyforest
   - tree2forest
   - starts_with("forest_")
+  - poblet_trees
 
 - title: Species parameters
   desc:  Species parameter data and utility functions.

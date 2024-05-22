@@ -31,7 +31,7 @@ In this section we show how to build and manipulate objects of class `forest`, f
 
 ### Poblet tree data set
 
-Package **medfateutils** includes a small dataset of tree data, corresponding to a dense holm oak forest in Poblet (Catalonia, Spain). As a result of the abandonment of previous coppicing exploitation, there is a high density of stems per individual.
+Package **medfate** includes a small dataset of tree data, corresponding to a dense holm oak forest in Poblet (Catalonia, Spain). As a result of the abandonment of previous coppicing exploitation, there is a high density of stems per individual.
 
 We begin by loading the tree data from Poblet:
 
@@ -68,7 +68,7 @@ Now we will fill in data for element `treeData` in the `forest` object. For that
 mapping <- c("Species.name" = "Species", "DBH" = "Diameter.cm")
 ```
 
-We can now replace the empty `treeData` in `pobl_ctl` using functions `subset()` and `forest_mapTreeTable()`, the latter from **medfateutils**:
+We can now replace the empty `treeData` in `pobl_ctl` using functions `subset()` and `forest_mapTreeTable()`:
 
 ```{r}
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"), 
