@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-05-22</h4>
+            <h4 data-toc-skip class="date">2024-05-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -341,12 +341,12 @@ a woody cohort. We can check the number of tree cohorts in each
 <span><span class="co">#&gt; [1] 189</span></span></code></pre></div>
 <p>This large amount of cohorts can slow done simulations considerably.
 Hence, it is advisable to lump them into coarser woody cohorts. One way
-of doing this is via function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> from
+of doing this is via function <code><a href="../../reference/forest_simplification.html">forest_mergeTrees()</a></code> from
 package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">)</span></span>
-<span><span class="va">pobl_thi_bef</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">)</span></span>
-<span><span class="va">pobl_thi_aft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_simplification.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">)</span></span>
+<span><span class="va">pobl_thi_bef</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_simplification.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">)</span></span>
+<span><span class="va">pobl_thi_aft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_simplification.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">)</span></span></code></pre></div>
 <p>By default, the function will pool tree cohorts of the same species
 and diameter class (defined every 5 cm). We can check the new number of
 tree cohorts using again:</p>
@@ -369,7 +369,7 @@ tree cohorts using again:</p>
 <span><span class="co">#&gt; LAI (m2/m2) total: 4.0969956  adult trees: 4.0969956  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.0724731  adult trees: 1.0724731  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
-<p>Function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> will preserve the stand
+<p>Function <code><a href="../../reference/forest_simplification.html">forest_mergeTrees()</a></code> will preserve the stand
 density and basal area that the stand description had before merging
 cohorts. Other properties like leaf area index may be slightly
 modified.</p>
