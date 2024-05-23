@@ -1,7 +1,7 @@
 #' Forest complexity reduction
 #' 
 #' Functions \code{forest_mergeTrees} and \code{forest_mergeShrubs} merge cohorts of a \code{\link{forest}} object. 
-#' Function \code{forest_reduceToDominant} performs a strongest simplification to the plant cohort of highest LAI, among those of the species with highest LAI.
+#' Function \code{forest_reduceToDominant} performs a strongest simplification of plant cohorts (see details).
 #' 
 #' @param x An object of class \code{\link{forest}}.
 #' @param byDBHclass Logical flag to indicate that 5-cm tree DBH classes should be kept separated.
@@ -9,6 +9,9 @@
 #' @details Tree DBH classes are defined in 5-cm intervals, whereas shrub height classes are defined in 10-cm intervals.
 #' Tree DBH and shrub height classes are defined up to a specific size (i.e. larger plants are not merged) 
 #' corresponding to 52.5 cm and 90 cm, respectively.
+#' 
+#' Function \code{forest_reduceToDominant} simplifies the input forest to the tree cohort of highest LAI, among those of the tree species with highest LAI.
+#' The leaf area index of the whole tree layer will be attributed to the chosen cohort. The same is performed for the shrub layer.
 #' 
 #' @return Another \code{\link{forest}} object with simplified structure/composition, depending on the function.
 #' 
@@ -19,10 +22,15 @@
 #' @name forest_simplification
 #' 
 #' @examples
+#' # Example forest data
 #' data("exampleforest")
-#' forest_reduceToDominant(exampleforest, SpParamsMED)
+#'
+#' # Reduce to dominant tree and dominant shrub
+#' reduced <- forest_reduceToDominant(exampleforest, SpParamsMED)
 #' 
-#' 
+#' # Check that overall LAI does not change
+#' stand_LAI(exampleforest, SpParamsMED)
+#' stand_LAI(reduced, SpParamsMED)
 forest_mergeTrees<-function(x, byDBHclass = TRUE) {
   mergeTreesSize<-function(x) {
     ntree <- nrow(x)
@@ -216,20 +224,27 @@ forest_reduceToDominant <- function(x, SpParams) {
     stand_lai <- medfate::stand_LAI(x, SpParams)
     plant_lai <- medfate::plant_LAI(x, SpParams)
     plant_species <- medfate::plant_speciesName(x, SpParams)
-    species_lai <- medfate::species_LAI(x, SpParams)
-    max_species_lai <- names(species_lai)[which.max(species_lai)]
-    sel_cohort <- (plant_species == max_species_lai)
-    max_plant_lai <- max(plant_lai[sel_cohort])
-    sel_cohort[sel_cohort] <- plant_lai[sel_cohort]==max_plant_lai
-    chosen_cohort <- which(sel_cohort)[1]
-    if(chosen_cohort<=ntree) {
-      x$treeData <- x$treeData[chosen_cohort, , drop=FALSE]
-      x$treeData$LAI <- stand_lai
-      x$shrubData <- x$shrubData[numeric(0),, drop=FALSE]
-    } else {
-      x$treeData <- x$treeData[numeric(0),, drop=FALSE]
-      x$shrubData <- x$shrubData[chosen_cohort - ntree, , drop=FALSE]
-      x$shrubData$LAI <- stand_lai
+    is_tree <- rep(FALSE, length(plant_lai))
+    if(ntree>0) is_tree[1:ntree] <- TRUE
+    tree_lai <- sum(plant_lai[is_tree])
+    shrub_lai <- sum(plant_lai[!is_tree])
+    if(ntree>0) {
+      tree_species_lai <- tapply(plant_lai[is_tree], plant_species[is_tree], FUN = sum)
+      max_tree_species_lai <- names(tree_species_lai)[which.max(tree_species_lai)]
+      sel_tree_cohort <- (plant_species[is_tree] == max_tree_species_lai)
+      sel_tree_cohort[sel_tree_cohort] <- plant_lai[is_tree][sel_tree_cohort]==max(plant_lai[is_tree][sel_tree_cohort])
+      tree_cohort <- which(sel_tree_cohort)
+      x$treeData <- x$treeData[tree_cohort, , drop=FALSE]
+      x$treeData$LAI <- tree_lai
+    }
+    if(nshrub>0) {
+      shrub_species_lai <- tapply(plant_lai[!is_tree], plant_species[!is_tree], FUN = sum)
+      max_shrub_species_lai <- names(shrub_species_lai)[which.max(shrub_species_lai)]
+      sel_shrub_cohort <- (plant_species[!is_tree] == max_shrub_species_lai)
+      sel_shrub_cohort[sel_shrub_cohort] <- plant_lai[!is_tree][sel_shrub_cohort]==max(plant_lai[!is_tree][sel_shrub_cohort])
+      shrub_cohort <- which(sel_shrub_cohort)
+      x$shrubData <- x$shrubData[shrub_cohort, , drop=FALSE]
+      x$shrubData$LAI <- shrub_lai
     }
   }
   return(x)

@@ -27,18 +27,26 @@ Another \code{\link{forest}} object with simplified structure/composition, depen
 }
 \description{
 Functions \code{forest_mergeTrees} and \code{forest_mergeShrubs} merge cohorts of a \code{\link{forest}} object. 
-Function \code{forest_reduceToDominant} performs a strongest simplification to the plant cohort of highest LAI, among those of the species with highest LAI.
+Function \code{forest_reduceToDominant} performs a strongest simplification of plant cohorts (see details).
 }
 \details{
 Tree DBH classes are defined in 5-cm intervals, whereas shrub height classes are defined in 10-cm intervals.
 Tree DBH and shrub height classes are defined up to a specific size (i.e. larger plants are not merged) 
 corresponding to 52.5 cm and 90 cm, respectively.
+
+Function \code{forest_reduceToDominant} simplifies the input forest to the tree cohort of highest LAI, among those of the tree species with highest LAI.
+The leaf area index of the whole tree layer will be attributed to the chosen cohort. The same is performed for the shrub layer.
 }
 \examples{
+# Example forest data
 data("exampleforest")
-forest_reduceToDominant(exampleforest, SpParamsMED)
 
+# Reduce to dominant tree and dominant shrub
+reduced <- forest_reduceToDominant(exampleforest, SpParamsMED)
 
+# Check that overall LAI does not change
+stand_LAI(exampleforest, SpParamsMED)
+stand_LAI(reduced, SpParamsMED)
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{forest}},  \code{\link{forest_mapWoodyTables}}, \code{\link{fordyn}}, \code{\link{summary.forest}}

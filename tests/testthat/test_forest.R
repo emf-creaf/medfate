@@ -41,8 +41,11 @@ test_that("Test forest summary",{
 
 test_that("Test forest simplification",{
   expect_s3_class(forest_reduceToDominant(exampleforest, SpParamsMED), "forest")
+  expect_s3_class(forest_reduceToDominant(emptyforest(), SpParamsMED), "forest")
   expect_s3_class(forest_mergeTrees(exampleforest), "forest")
+  expect_s3_class(forest_mergeTrees(emptyforest()), "forest")
   expect_s3_class(forest_mergeShrubs(exampleforest), "forest")
+  expect_s3_class(forest_mergeTrees(emptyforest()), "forest")
 })
 
 test_that("Test stand metrics",{
