@@ -39,7 +39,8 @@ test_that("Test forest summary",{
   expect_s3_class(summary(exampleforest, SpParamsMED), "summary.forest")
 })
 
-test_that("Test forest merging",{
+test_that("Test forest simplification",{
+  expect_s3_class(forest_reduceToDominant(exampleforest, SpParamsMED), "forest")
   expect_s3_class(forest_mergeTrees(exampleforest), "forest")
   expect_s3_class(forest_mergeShrubs(exampleforest), "forest")
 })

@@ -7,6 +7,7 @@
 - SWE now stored as 'snowpack' in spwbInput
 - print.soil renamed to summary.soil
 - forest_mapWoodyTables moved from medfateutils into medfate
+- New function forest_reduceToDominant
 
 # Version 4.2.0
 - Reorganization of Soil output as a list
