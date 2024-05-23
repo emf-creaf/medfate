@@ -79,7 +79,7 @@ forest2belowground(exampleforest, examplesoil, SpParamsMED)
 
 }
 \seealso{
-\code{\link{spwnInput}}, \code{\link{soil}},  
+\code{\link{spwbInput}}, \code{\link{soil}},  
 \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 }
 \author{
