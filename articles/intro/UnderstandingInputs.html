@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
       </span>
     </div>
 
@@ -1267,17 +1267,17 @@ functionally distinct plants are neglected.</p>
 </h3>
 <p>We can use some functions to inspect how above-ground and
 below-ground information is represented in <code>medfate</code>.</p>
-<p>For example, we can use function <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> on
+<p>For example, we can use function <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code> on
 the object <code>exampleforest</code> to show how medfate completes
 above-ground information:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest2aboveground.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span></span>
 <span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0</span></span>
 <span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0</span></span>
 <span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03062604   0.03062604        0</span></span></code></pre>
-<p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included the
+<p>Note that the call to <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code> included the
 species parameter table, because species-specific allometric
 coefficients are needed to calculate leaf area from tree size or shrub
 percent cover and height. Moreover, note that the plant cohorts were
@@ -1291,7 +1291,7 @@ not for soil water balance, which only requires columns <code>SP</code>,
 <code>LAI_dead</code>. Therefore, one could use alternative forest
 description as starting point, i.e.:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">above2</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforest2</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">above2</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest2aboveground.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforest2</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above2</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead</span></span>
 <span><span class="co">## T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0</span></span>
@@ -1618,21 +1618,22 @@ species-parameter and simulation control inputs into a single input
 object (of class <code>spwbInput</code> or <code>growthInput</code>)
 that is then used as input to the corresponding simulation function
 along with weather data. The combination of vegetation, soil and control
-inputs is done via functions <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code> and
-<code><a href="../../reference/modelInput.html">forest2growthInput()</a></code>. While it complicates the code, having
-this additional step is handy because cohort-level parameters and state
-variables initialized can then be modified by the user (or an automated
-calibration algorithm) before calling the actual simulation functions.
-The input objects for functions <code><a href="../../reference/spwb.html">spwb()</a></code> and
-<code><a href="../../reference/growth.html">growth()</a></code> are presented in more detail in articles <a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
+inputs is done via functions <code><a href="../../reference/modelInput.html">spwbInput()</a></code> and
+<code><a href="../../reference/modelInput.html">growthInput()</a></code>. While it requires one additional line of
+code, having this additional step is handy because cohort-level
+parameters and state variables initialized can then be modified by the
+user (or an automated calibration algorithm) before calling the actual
+simulation functions. The input objects for functions
+<code><a href="../../reference/spwb.html">spwb()</a></code> and <code><a href="../../reference/growth.html">growth()</a></code> are presented in more
+detail in articles <a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
 water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html" class="external-link"><em>Forest
 growth</em></a>, respectively.</p>
 <p>Function <code><a href="../../reference/fordyn.html">fordyn()</a></code> is different from the other two
 simulation functions, in the sense that the user enters forest, soil,
 species-parameter and simulation control inputs directly into the
 simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn()</a></code> internally calls
-<code><a href="../../reference/modelInput.html">forest2growthInput()</a></code> to initialize the input object to
-function <code><a href="../../reference/growth.html">growth()</a></code>).</p>
+<code><a href="../../reference/modelInput.html">growthInput()</a></code> to initialize the input object to function
+<code><a href="../../reference/growth.html">growth()</a></code>).</p>
 </div>
   </div>
 

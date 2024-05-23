@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
       </span>
     </div>
 
@@ -197,12 +197,10 @@ different if we set <code>transpirationMode = "Sperry"</code> or
 <p>A last object is needed before calling simulation functions, called
 <code>spwbInput</code>. It consists in the compilation of aboveground
 and belowground parameters and the specification of additional parameter
-values for each plant cohort. This is done by calling function
-<code><a href="../../reference/modelInput.html">spwbInput()</a></code>, but if one has a <code>forest</code> object,
-the object can be generated more directly using function
-<code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
+values for each plant cohort. The object can be generated using function
+<code><a href="../../reference/modelInput.html">spwbInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <p>Different parameter variables will be drawn depending on the value of
 <code>transpirationMode</code>. For the basic water balance model
 (<code>transpirationMode = "Granier"</code>), relatively few parameters

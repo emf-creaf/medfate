@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
       </span>
     </div>
 
@@ -190,9 +190,9 @@ either <code>"Sperry"</code> or <code>"Sureau"</code>.</p>
 <code>spwbInput</code>. It consists in the compilation of aboveground,
 belowground parameters and the specification of additional parameter
 values for each plant cohort. This is done by calling function
-<code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
+<code><a href="../../reference/modelInput.html">spwbInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>spwbInput</code> object for advanced water and energy
 balance is similar to that of simple water balance simulations, but
 contains more elements. Information about the cohort species is found in

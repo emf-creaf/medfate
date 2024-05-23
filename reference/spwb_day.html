@@ -18,7 +18,7 @@ performs water and carbon balance for a single day."><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
       </span>
     </div>
 
@@ -203,13 +203,13 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Simulate water balance one day only (Granier mode)</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd1</span> <span class="op">&lt;-</span> <span class="fu">spwb_day</span><span class="op">(</span><span class="va">x1</span>, <span class="va">date</span>, <span class="va">meteovec</span>,  </span></span>
 <span class="r-in"><span>                latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span> </span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Simulate water balance for one day only (Sperry mode)</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd2</span> <span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x2</span>, <span class="va">date</span>, <span class="va">meteovec</span>,</span></span>
 <span class="r-in"><span>              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -219,14 +219,14 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Simulate water balance for one day only (Sureau mode)</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sureau"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd3</span> <span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x3</span>, <span class="va">date</span>, <span class="va">meteovec</span>,</span></span>
 <span class="r-in"><span>              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Simulate water and carbon balance for one day only (Granier mode)</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x4</span>  <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x4</span>  <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd4</span> <span class="op">&lt;-</span> <span class="fu">growth_day</span><span class="op">(</span><span class="va">x4</span>, <span class="va">date</span>, <span class="va">meteovec</span>,</span></span>
 <span class="r-in"><span>                latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>

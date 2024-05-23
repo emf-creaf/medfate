@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
       </span>
     </div>
 
@@ -421,10 +421,10 @@ aboveground data frame does not distinguish between trees and shrubs. It
 includes, for each plant cohort to be considered in rows, its
 <em>species identity</em>, <em>height</em>, <em>leaf area index</em>
 (LAI) and <em>crown ratio</em>. While users can build their input data
-themselves, we use function <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> on the
+themselves, we use function <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code> on the
 object <code>fb_forest</code> to show how should the data look like:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fb_above</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">SpParamsFB</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">fb_above</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest2aboveground.html">forest2aboveground</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">SpParamsFB</span><span class="op">)</span></span>
 <span><span class="va">fb_above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP    N       DBH Cover         H        CR  LAI_live LAI_expanded</span></span>
 <span><span class="co">## T1_142 142 1248  2.587859    NA  323.0000 0.5510653 0.2581029    0.2581029</span></span>
@@ -434,7 +434,7 @@ object <code>fb_forest</code> to show how should the data look like:</p>
 <span><span class="co">## T1_142        0</span></span>
 <span><span class="co">## T2_148        0</span></span>
 <span><span class="co">## T3_168        0</span></span></code></pre>
-<p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included
+<p>Note that the call to <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code> included
 species parameters, because species-specific parameter values are needed
 to calculate leaf area from tree diameters or shrub cover using
 allometric relationships. Columns <code>N</code>, <code>DBH</code> and
@@ -460,10 +460,10 @@ can be easily inspected using function
 <p>Regarding <strong>belowground</strong> information, the usuer should
 supply a matrix describing for each plant cohort, the proportion of fine
 roots in each soil layer. As before, we use function
-<code><a href="../../reference/modelInput.html">forest2belowground()</a></code> on the object <code>fb_forest</code>
+<code><a href="../../reference/forest2aboveground.html">forest2belowground()</a></code> on the object <code>fb_forest</code>
 to show how should the data look like:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fb_below</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2belowground</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">fb_soil</span>, <span class="va">SpParamsFB</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">fb_below</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest2aboveground.html">forest2belowground</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">fb_soil</span>, <span class="va">SpParamsFB</span><span class="op">)</span></span>
 <span><span class="va">fb_below</span></span></code></pre></div>
 <pre><code><span><span class="co">##                1         2          3          4</span></span>
 <span><span class="co">## T1_142 0.3602157 0.5332967 0.08477533 0.02171222</span></span>
@@ -555,7 +555,7 @@ response to drought. If one has a <code>forest</code> object, the
 avoiding the need to explicitly build <code>fb_above</code> and
 <code>fb_below</code> data frames:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fb_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">fb_soil</span>, <span class="va">SpParamsFB</span>, <span class="va">fb_control</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fb_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">spwbInput</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">fb_soil</span>, <span class="va">SpParamsFB</span>, <span class="va">fb_control</span><span class="op">)</span></span></code></pre></div>
 <p>Different species parameter variables will be drawn from
 <code>SpParamsMED</code> depending on the value of
 <code>transpirationMode</code>. For the simple water balance model,
@@ -589,12 +589,12 @@ function <code><a href="../../reference/modifyParams.html">modifyCohortParams()<
 <span><span class="co">##  [Year 2014]:....................................</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Final plant water content (mm): 31.9412</span></span>
-<span><span class="co">## Final soil water content (mm): 260.525</span></span>
+<span><span class="co">## Final soil water content (mm): 260.534</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.0547988</span></span>
-<span><span class="co">## Plant water balance result (mm): 6.65356e-16</span></span>
-<span><span class="co">## Change in soil water content (mm): 46.639</span></span>
-<span><span class="co">## Soil water balance result (mm): 46.639</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0547996</span></span>
+<span><span class="co">## Plant water balance result (mm): -2.84339e-16</span></span>
+<span><span class="co">## Change in soil water content (mm): 46.6486</span></span>
+<span><span class="co">## Soil water balance result (mm): 46.6486</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
@@ -602,7 +602,7 @@ function <code><a href="../../reference/modifyParams.html">modifyCohortParams()<
 <span><span class="co">##   Interception (mm) 141 Net rainfall (mm) 925</span></span>
 <span><span class="co">##   Infiltration (mm) 816 Infiltration excess (mm) 109 Saturation excess (mm) 215 Capillarity rise (mm) 36</span></span>
 <span><span class="co">##   Soil evaporation (mm) 12  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 329</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 329  Plant water balance (mm) 0 Hydraulic redistribution (mm) 35</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 329  Plant water balance (mm) -0 Hydraulic redistribution (mm) 35</span></span>
 <span><span class="co">##   Runoff (mm) 324 Deep drainage (mm) 249</span></span></code></pre>
 <p>Console output provides the water balance totals for the period
 considered, which may span several years. The output of function
@@ -731,9 +731,9 @@ to generate evaluation statistics:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SE+TR"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">## 365.0000000  -0.3973041 -29.8191667   0.6461358  48.4949243   0.4673200 </span></span>
+<span><span class="co">## 365.0000000  -0.3973045 -29.8192018   0.6461362  48.4949587   0.4673203 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##  -0.6034968  -0.2976765</span></span></code></pre>
+<span><span class="co">##  -0.6034986  -0.2976774</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
@@ -750,10 +750,10 @@ similar way as we did for total evapotranspiration:</p>
 <p>or examine evaluation statistics:</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SWC"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">## 364.0000000  -0.0984886 -22.9609558   0.1005277  23.4363353   0.9279660 </span></span>
-<span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.2662530   0.2124082</span></span></code></pre>
+<pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
+<span><span class="co">## 364.00000000  -0.09848552 -22.96023691   0.10052462  23.43561801   0.92796848 </span></span>
+<span><span class="co">##          NSE      NSE.abs </span></span>
+<span><span class="co">##   0.26630390   0.21243231</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
@@ -779,15 +779,15 @@ inspect the evaluation statistics for both species using:</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T2_148"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
-<span><span class="co">## 300.00000000   0.09903232  48.15069367   0.14513135  70.56458743   0.49543709 </span></span>
+<span><span class="co">## 300.00000000   0.09903234  48.15070328   0.14513136  70.56459514   0.49543699 </span></span>
 <span><span class="co">##          NSE      NSE.abs </span></span>
-<span><span class="co">##  -2.38895575  -0.46662697</span></span></code></pre>
+<span><span class="co">##  -2.38895671  -0.46662713</span></span></code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T3_168"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
-<span><span class="co">## 309.00000000   0.13576975  46.90471887   0.16055679  55.46796052   0.88086260 </span></span>
+<span><span class="co">## 309.00000000   0.13576978  46.90472730   0.16055682  55.46796880   0.88086257 </span></span>
 <span><span class="co">##          NSE      NSE.abs </span></span>
-<span><span class="co">##  -0.36607861  -0.09383967</span></span></code></pre>
+<span><span class="co">##  -0.36607901  -0.09383983</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="leaf-water-potentials">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials"></a>
@@ -1013,50 +1013,50 @@ months one can use:</p>
 <span><span class="co">## 2014-05-01   16.3281633           0.000000         0.000000  0.000000</span></span>
 <span><span class="co">## 2014-06-01   25.8839490           0.000000         0.000000  0.000000</span></span>
 <span><span class="co">## 2014-07-01    0.1428946           0.000000         0.000000  0.000000</span></span>
-<span><span class="co">## 2014-08-01   43.5681687           9.234388         0.000000  9.234388</span></span>
-<span><span class="co">## 2014-09-01   97.7582298          28.137494         5.287215 33.424710</span></span>
-<span><span class="co">## 2014-10-01   31.2507544          10.655935         3.933097 14.589032</span></span>
-<span><span class="co">## 2014-11-01  137.1146297          60.982880        32.783335 93.766215</span></span>
-<span><span class="co">## 2014-12-01   78.7534201           0.000000        24.826599 24.826599</span></span>
+<span><span class="co">## 2014-08-01   43.5681682           9.234389         0.000000  9.234389</span></span>
+<span><span class="co">## 2014-09-01   97.7582280          28.137496         5.287216 33.424712</span></span>
+<span><span class="co">## 2014-10-01   31.2507544          10.655935         3.933096 14.589031</span></span>
+<span><span class="co">## 2014-11-01  137.1146434          60.982866        32.782911 93.765777</span></span>
+<span><span class="co">## 2014-12-01   78.7534201           0.000000        24.825407 24.825407</span></span>
 <span><span class="co">##            DeepDrainage CapillarityRise Evapotranspiration Interception</span></span>
 <span><span class="co">## 2014-01-01   54.9273154    2.040801e+00           28.49387   22.4713498</span></span>
 <span><span class="co">## 2014-02-01   81.8835307    7.442680e+00           34.09993   25.8391081</span></span>
-<span><span class="co">## 2014-03-01   26.4966141    1.135528e+01           33.15743    4.7207713</span></span>
-<span><span class="co">## 2014-04-01    7.8270149    6.585930e+00           43.55214    7.7286411</span></span>
-<span><span class="co">## 2014-05-01    2.5780520    1.735586e-03           54.24988    5.2718367</span></span>
-<span><span class="co">## 2014-06-01    0.7343968    4.336602e-03           69.96204    7.7160510</span></span>
-<span><span class="co">## 2014-07-01    0.1520428    4.630853e-05           42.26963    0.4571054</span></span>
-<span><span class="co">## 2014-08-01    0.4904833    1.269750e-01           45.52185    7.5974432</span></span>
-<span><span class="co">## 2014-09-01    3.4714497    4.818748e-01           40.55469   11.7042748</span></span>
-<span><span class="co">## 2014-10-01    0.8332290    1.689225e+00           34.85797    8.6933111</span></span>
-<span><span class="co">## 2014-11-01   30.3228194    4.449630e+00           33.11921   24.5024904</span></span>
-<span><span class="co">## 2014-12-01   39.0005930    1.955792e+00           22.41237   14.2465799</span></span>
+<span><span class="co">## 2014-03-01   26.4968112    1.135548e+01           33.15742    4.7207713</span></span>
+<span><span class="co">## 2014-04-01    7.8268953    6.585858e+00           43.55215    7.7286411</span></span>
+<span><span class="co">## 2014-05-01    2.5780570    1.735594e-03           54.24988    5.2718367</span></span>
+<span><span class="co">## 2014-06-01    0.7343978    4.336608e-03           69.96204    7.7160510</span></span>
+<span><span class="co">## 2014-07-01    0.1520431    4.630852e-05           42.26964    0.4571054</span></span>
+<span><span class="co">## 2014-08-01    0.4904832    1.269750e-01           45.52186    7.5974432</span></span>
+<span><span class="co">## 2014-09-01    3.4714500    4.818737e-01           40.55469   11.7042748</span></span>
+<span><span class="co">## 2014-10-01    0.8332287    1.689224e+00           34.85797    8.6933111</span></span>
+<span><span class="co">## 2014-11-01   30.3226940    4.449074e+00           33.11922   24.5024904</span></span>
+<span><span class="co">## 2014-12-01   39.0113534    1.974733e+00           22.41217   14.2465799</span></span>
 <span><span class="co">##            SoilEvaporation HerbTranspiration PlantExtraction Transpiration</span></span>
 <span><span class="co">## 2014-01-01       1.5566407                 0        4.465875      4.465875</span></span>
 <span><span class="co">## 2014-02-01       0.7697273                 0        7.491096      7.491096</span></span>
-<span><span class="co">## 2014-03-01       1.6116748                 0       26.824980     26.824980</span></span>
-<span><span class="co">## 2014-04-01       1.2797428                 0       34.543753     34.543753</span></span>
-<span><span class="co">## 2014-05-01       0.4102629                 0       48.567781     48.567781</span></span>
-<span><span class="co">## 2014-06-01       0.2621019                 0       61.983883     61.983883</span></span>
-<span><span class="co">## 2014-07-01       0.1553698                 0       41.657157     41.657157</span></span>
-<span><span class="co">## 2014-08-01       0.5378052                 0       37.386603     37.386603</span></span>
-<span><span class="co">## 2014-09-01       0.6450957                 0       28.205315     28.205315</span></span>
-<span><span class="co">## 2014-10-01       2.2824901                 0       23.882171     23.882171</span></span>
-<span><span class="co">## 2014-11-01       0.7349979                 0        7.881723      7.881723</span></span>
-<span><span class="co">## 2014-12-01       1.7639065                 0        6.401881      6.401881</span></span>
+<span><span class="co">## 2014-03-01       1.6116668                 0       26.824980     26.824980</span></span>
+<span><span class="co">## 2014-04-01       1.2797543                 0       34.543753     34.543753</span></span>
+<span><span class="co">## 2014-05-01       0.4102632                 0       48.567781     48.567781</span></span>
+<span><span class="co">## 2014-06-01       0.2621020                 0       61.983885     61.983885</span></span>
+<span><span class="co">## 2014-07-01       0.1553698                 0       41.657169     41.657169</span></span>
+<span><span class="co">## 2014-08-01       0.5378060                 0       37.386607     37.386607</span></span>
+<span><span class="co">## 2014-09-01       0.6450956                 0       28.205317     28.205317</span></span>
+<span><span class="co">## 2014-10-01       2.2824903                 0       23.882171     23.882171</span></span>
+<span><span class="co">## 2014-11-01       0.7350037                 0        7.881723      7.881723</span></span>
+<span><span class="co">## 2014-12-01       1.7637038                 0        6.401883      6.401883</span></span>
 <span><span class="co">##            HydraulicRedistribution</span></span>
 <span><span class="co">## 2014-01-01               0.3852315</span></span>
 <span><span class="co">## 2014-02-01               0.3219837</span></span>
-<span><span class="co">## 2014-03-01               0.5803383</span></span>
-<span><span class="co">## 2014-04-01               1.8934659</span></span>
-<span><span class="co">## 2014-05-01               2.0730518</span></span>
-<span><span class="co">## 2014-06-01               3.2993182</span></span>
-<span><span class="co">## 2014-07-01               3.6515250</span></span>
-<span><span class="co">## 2014-08-01               8.6666861</span></span>
-<span><span class="co">## 2014-09-01               8.1481877</span></span>
-<span><span class="co">## 2014-10-01               4.6293651</span></span>
-<span><span class="co">## 2014-11-01               0.9664259</span></span>
-<span><span class="co">## 2014-12-01               0.7969596</span></span></code></pre>
+<span><span class="co">## 2014-03-01               0.5803363</span></span>
+<span><span class="co">## 2014-04-01               1.8934614</span></span>
+<span><span class="co">## 2014-05-01               2.0730501</span></span>
+<span><span class="co">## 2014-06-01               3.2993164</span></span>
+<span><span class="co">## 2014-07-01               3.6515255</span></span>
+<span><span class="co">## 2014-08-01               8.6666852</span></span>
+<span><span class="co">## 2014-09-01               8.1481867</span></span>
+<span><span class="co">## 2014-10-01               4.6293624</span></span>
+<span><span class="co">## 2014-11-01               0.9664302</span></span>
+<span><span class="co">## 2014-12-01               0.7968314</span></span></code></pre>
 <p>Parameter <code>output</code> is used to indicate the element of the
 <code>spwb</code> object for which we desire summaries. Similarly, it is
 possible to calculate the average stress of the three tree species by
@@ -1066,16 +1066,16 @@ months:</p>
 <pre><code><span><span class="co">##            Phillyrea latifolia Pinus halepensis Quercus ilex</span></span>
 <span><span class="co">## 2014-01-01         0.001113246      0.009331896  0.003497006</span></span>
 <span><span class="co">## 2014-02-01         0.002647067      0.017999614  0.005720714</span></span>
-<span><span class="co">## 2014-03-01         0.008928563      0.048571881  0.016963310</span></span>
-<span><span class="co">## 2014-04-01         0.015841176      0.074397287  0.028613913</span></span>
-<span><span class="co">## 2014-05-01         0.026460103      0.109225856  0.046249895</span></span>
-<span><span class="co">## 2014-06-01         0.053235235      0.179361447  0.084941610</span></span>
-<span><span class="co">## 2014-07-01         0.275207680      0.510233429  0.248643296</span></span>
-<span><span class="co">## 2014-08-01         0.306458742      0.486515400  0.272769749</span></span>
-<span><span class="co">## 2014-09-01         0.167420026      0.342584159  0.155952292</span></span>
-<span><span class="co">## 2014-10-01         0.014138576      0.050033396  0.019845764</span></span>
-<span><span class="co">## 2014-11-01         0.003455159      0.015066588  0.005162272</span></span>
-<span><span class="co">## 2014-12-01         0.001218684      0.011750770  0.003202147</span></span></code></pre>
+<span><span class="co">## 2014-03-01         0.008928562      0.048571877  0.016963308</span></span>
+<span><span class="co">## 2014-04-01         0.015841173      0.074397274  0.028613905</span></span>
+<span><span class="co">## 2014-05-01         0.026460096      0.109225837  0.046249883</span></span>
+<span><span class="co">## 2014-06-01         0.053235197      0.179361360  0.084941563</span></span>
+<span><span class="co">## 2014-07-01         0.275207327      0.510233002  0.248643051</span></span>
+<span><span class="co">## 2014-08-01         0.306458613      0.486515287  0.272769638</span></span>
+<span><span class="co">## 2014-09-01         0.167419953      0.342584070  0.155952243</span></span>
+<span><span class="co">## 2014-10-01         0.014138567      0.050033394  0.019845761</span></span>
+<span><span class="co">## 2014-11-01         0.003455152      0.015066590  0.005162272</span></span>
+<span><span class="co">## 2014-12-01         0.001218652      0.011750377  0.003201739</span></span></code></pre>
 <p>In this case, the <code>summary</code> function aggregates the output
 by species using LAI values as weights.</p>
 </div>

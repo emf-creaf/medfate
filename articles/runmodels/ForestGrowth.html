@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
       </span>
     </div>
 
@@ -198,11 +198,9 @@ of the soil water balance calculations can be changed by using
 before calling the simulation function. This is analogous to
 <code>spwbInput</code> and consists in the compilation of soil and
 cohort-level parameters needed for simulations. The object can be
-obtained by calling function <code><a href="../../reference/modelInput.html">growthInput()</a></code>, but if one has
-a <code>forest</code> object, it can be generated more directly using
-function <code><a href="../../reference/modelInput.html">forest2growthInput()</a></code>:</p>
+obtained by using function <code><a href="../../reference/modelInput.html">growthInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <p>All the input information for forest data and species parameter
 values can be inspected by printing different elements of the input
 object, whose names are:</p>
