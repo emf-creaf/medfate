@@ -1529,7 +1529,7 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @seealso \code{\link{spwnInput}}, \code{\link{soil}},  
+//' @seealso \code{\link{spwbInput}}, \code{\link{soil}},  
 //' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 //' 
 //' @examples
