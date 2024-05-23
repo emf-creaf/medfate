@@ -815,7 +815,7 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso \code{\link{spwnInputs}}, \code{\link{soil}},  
+#' @seealso \code{\link{spwnInput}}, \code{\link{soil}},  
 #' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 #' 
 #' @examples
