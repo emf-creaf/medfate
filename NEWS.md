@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 4.3.1
+- Functions forest2spwbInput/forest2growthInput deprecated. Preferred function names are spwbInput/growthInput.
+
 # Version 4.3.0
 - IMPORTANT: soil objects are now data frames
 - SWE now stored as 'snowpack' in spwbInput

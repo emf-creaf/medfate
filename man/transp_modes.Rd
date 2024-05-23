@@ -196,7 +196,7 @@ examplesoil <- defaultSoilParams(4)
 control <- defaultControl("Granier")
 
 #Initialize input
-x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
@@ -208,7 +208,7 @@ t1 <- transp_transpirationGranier(x1, examplemeteo, 1,
 control <- defaultControl("Sperry")
 
 #Initialize input
-x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Sperry's model
 t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
@@ -219,7 +219,7 @@ t2 <- transp_transpirationSperry(x2, examplemeteo, 1,
 control <- defaultControl("Sureau")
 
 #Initialize input
-x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x3 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Sureau model
 t3 <- transp_transpirationSureau(x3, examplemeteo, 1, 

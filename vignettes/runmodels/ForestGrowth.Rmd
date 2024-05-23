@@ -64,10 +64,10 @@ Here we will run growth simulations using the basic water balance model (i.e. `t
 
 ### Growth input object
 
-A last object, called `growthInput`, needs to be created before calling the simulation function. This is analogous to `spwbInput` and consists in the compilation of soil and cohort-level parameters needed for simulations. The object can be obtained by calling function `growthInput()`, but if one has a `forest` object, it can be generated more directly using function `forest2growthInput()`:
+A last object, called `growthInput`, needs to be created before calling the simulation function. This is analogous to `spwbInput` and consists in the compilation of soil and cohort-level parameters needed for simulations. The object can be obtained by using function `growthInput()`:
 
 ```{r}
-x = forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
+x <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
 All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, whose names are: 

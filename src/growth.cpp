@@ -2195,8 +2195,8 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' #Initialize soil with default soil params (4 layers)
 //' examplesoil <- defaultSoilParams(4)
 //' 
-//' #Initialize vegetation input
-//' x1 <- forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
+//' #Initialize model input
+//' x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -2205,8 +2205,8 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' #Switch to 'Sperry' transpiration mode
 //' control <- defaultControl("Sperry")
 //' 
-//' #Initialize vegetation input
-//' x2 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+//' #Initialize model input
+//' x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -2214,8 +2214,8 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' #Switch to 'Sureau' transpiration mode
 //' control <- defaultControl("Sureau")
 //' 
-//' #Initialize vegetation input
-//' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+//' #Initialize model input
+//' x3 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)

@@ -45,11 +45,11 @@ QC_coh = paste0("S1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"
 The data set consists of a forest with two tree species (*Pinus halepensis*/`r PH_coh` and *Quercus ilex*/`r QI_coh`) and one shrub species (*Quercus coccifera*/`r QC_coh` or Kermes oak). 
 
 
-We first initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
+We first define a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
 
 ```{r}
 examplesoil <- defaultSoilParams(4)
-x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control = defaultControl())
+x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control = defaultControl())
 ```
 
 Although it is not necessary, we make an initial call to the model (`spwb()`) with the default parameter settings:

@@ -112,7 +112,7 @@ QC_cohName = paste0("S1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccife
 data(SpParamsMED)
 examplesoil = defaultSoilParams(4)
 control = defaultControl("Granier")
-x1 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 = growthInput(exampleforest,examplesoil, SpParamsMED, control)
 DBH_ini_PH = x1$above[PH_cohName, "DBH"]
 DBH_ini_QI = x1$above[QI_cohName, "DBH"]
 S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)

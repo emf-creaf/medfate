@@ -3054,9 +3054,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// spwbInput
-List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+// spwbInputInner
+List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_spwbInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3067,13 +3067,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbInput(above, Z50, Z95, soil, FCCSprops, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(spwbInputInner(above, Z50, Z95, soil, FCCSprops, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
-// growthInput
-List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+// growthInputInner
+List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3084,7 +3084,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInput(above, Z50, Z95, soil, FCCSprops, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, soil, FCCSprops, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3096,6 +3096,34 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type input(inputSEXP);
     rcpp_result_gen = Rcpp::wrap(cloneInput(input));
+    return rcpp_result_gen;
+END_RCPP
+}
+// spwbInput
+List spwbInput(List x, DataFrame soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_spwbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(spwbInput(x, soil, SpParams, control));
+    return rcpp_result_gen;
+END_RCPP
+}
+// growthInput
+List growthInput(List x, DataFrame soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(growthInput(x, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5871,9 +5899,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
     {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 7},
-    {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 7},
-    {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 7},
+    {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 7},
+    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 7},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
+    {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 4},
+    {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 4},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 1},

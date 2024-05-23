@@ -82,7 +82,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //' control <- defaultControl("Sperry")
 //' 
 //' #Initialize input
-//' x <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+//' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Leaf vulnerability curves
 //' hydraulics_vulnerabilityCurvePlot(x, type="leaf")

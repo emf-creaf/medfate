@@ -72,7 +72,7 @@
 #' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Cohort name for Pinus halepensis
 #' PH_coh <- paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])

@@ -63,10 +63,10 @@ Some parameters deserve explanation here:
  
 ### Water balance input object
 
-A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function `spwbInput()`, but if one has a `forest` object, the object can be generated more directly using function `forest2spwbInput()`:
+A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort. The object can be generated using function `spwbInput()`:
 
 ```{r}
-x <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+x <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
 Different parameter variables will be drawn depending on the value of `transpirationMode`. For the basic water balance model (`transpirationMode = "Granier"`), relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by accessing the different elements of this object, whose names are.

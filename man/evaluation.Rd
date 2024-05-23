@@ -135,16 +135,16 @@ data(exampleforest)
 data(SpParamsMED)
 
 #Define soil with default soil params (4 layers)
-examplesoil = defaultSoilParams(4)
+examplesoil <- defaultSoilParams(4)
 
 #Initialize control parameters
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 
 #Initialize input
-x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Load observed data (in this case the same simulation results with some added error)  
 data(exampleobs)

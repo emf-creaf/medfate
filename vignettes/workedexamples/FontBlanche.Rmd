@@ -169,7 +169,7 @@ Where the following changes are set to control parameters:
 A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build `fb_above` and `fb_below` data frames:
 
 ```{r}
-fb_x <- forest2spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
+fb_x <- spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
 ```
 
 Different species parameter variables will be drawn from `SpParamsMED` depending on the value of `transpirationMode`. For the simple water balance model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object. 

@@ -778,12 +778,74 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
     .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, bounded)
 }
 
-#' @rdname modelInput
+#' Input for simulation models (deprecated)
+#'
+#' Functions \code{forest2spwbInput()} and \code{forest2growthInput()} take an object of class \code{\link{forest}} 
+#' and a soil data input to create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively. 
+#' Function \code{forest2aboveground()} calculates aboveground variables such as leaf area index. 
+#' Function \code{forest2belowground()} calculates belowground variables such as fine root distribution.
+#' 
+#' @param x An object of class \code{\link{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
+#' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
+#' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
+#' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}, containing soil parameters per soil layer.
+#' @param control A list with default control parameters (see \code{\link{defaultControl}}).
+#' 
+#' @details
+#' Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x}, 
+#' and calculate leaf area index and crown ratio. 
+#' 
+#' \emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now deprecated, but 
+#' they can still be used for back-compatibility. They correspond to functions \code{\link{spwbInput}} and \code{\link{growthInput}} 
+#' 
+#' @return 
+#' Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
+#' \itemize{
+#'   \item{\code{SP}: Species identity (an integer) (first species is 0).}
+#'   \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
+#'   \item{\code{DBH}: Tree diameter at breast height (cm).}
+#'   \item{\code{H}: Plant total height (cm).}
+#'   \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
+#'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
+#'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
+#'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+#'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwnInputs}}, \code{\link{soil}},  
+#' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
+#' 
+#' @examples
+#' #Load example plot plant data
+#' data(exampleforest)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' # Aboveground parameters
+#' forest2aboveground(exampleforest, SpParamsMED)
+#' 
+#' # Example of aboveground parameters taken from a forest
+#' # described using LAI and crown ratio
+#' data(exampleforest2)
+#' forest2aboveground(exampleforest2, SpParamsMED)
+#' 
+#' # Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
+#'
+#' # Bewowground parameters (distribution of fine roots)
+#' forest2belowground(exampleforest, examplesoil, SpParamsMED)
+#' 
+#' 
+#' @name forest2aboveground
 forest2aboveground <- function(x, SpParams, gdd = NA_real_, loading = FALSE) {
     .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, loading)
 }
 
-#' @rdname modelInput
+#' @rdname forest2aboveground
 forest2belowground <- function(x, soil, SpParams) {
     .Call(`_medfate_forest2belowground`, x, soil, SpParams)
 }
@@ -1071,8 +1133,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' #Initialize soil with default soil params (4 layers)
 #' examplesoil <- defaultSoilParams(4)
 #' 
-#' #Initialize vegetation input
-#' x1 <- forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
+#' #Initialize model input
+#' x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -1081,8 +1143,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' #Switch to 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
 #' 
-#' #Initialize vegetation input
-#' x2 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' #Initialize model input
+#' x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -1090,8 +1152,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' #Switch to 'Sureau' transpiration mode
 #' control <- defaultControl("Sureau")
 #' 
-#' #Initialize vegetation input
-#' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' #Initialize model input
+#' x3 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -1171,7 +1233,7 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Leaf vulnerability curves
 #' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
@@ -1907,7 +1969,7 @@ hydraulics_initSperryNetworks <- function(x) {
 #' control <- defaultControl(transpirationMode="Sperry")
 #' 
 #' #Initialize input
-#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Stomatal VPD curve and chosen value for the 12th time step at day 100
 #' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
@@ -2137,11 +2199,11 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 }
 
 .spwbInput <- function(above, Z50, Z95, soil, FCCSprops, SpParams, control) {
-    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
+    .Call(`_medfate_spwbInputInner`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
 }
 
 .growthInput <- function(above, Z50, Z95, soil, FCCSprops, SpParams, control) {
-    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
+    .Call(`_medfate_growthInputInner`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
 }
 
 .cloneInput <- function(input) {
@@ -2150,40 +2212,22 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 
 #' Input for simulation models
 #'
-#' Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} 
-#' and create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively. 
-#' Function \code{forest2aboveground} calculates aboveground variables such as leaf area index. 
-#' Function \code{forest2belowground} calculates belowground variables such as fine root distribution.
+#' Functions \code{spwbInput()} and \code{growthInput()} take an object of class \code{\link{forest}} 
+#' and a soil data input to create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively. 
 #' 
 #' @param x An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
-#' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
-#' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
 #' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}, containing soil parameters per soil layer.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' 
 #' @details
-#' Function \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
-#' and calculate leaf area index and crown ratio. Functions \code{forest2spwbInput} and \code{forest2growthInput} also calculate the distribution of fine roots 
-#' across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. 
-#' If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"},
-#' the \code{forest2spwbInput} and \code{forest2growthInput} also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
+#' Functions \code{spwbInput()} and \code{growthInput()} initialize inputs differently depending on control parameters.
+#' 
+#' \emph{IMPORTANT NOTE}: Older function names \code{\link{forest2spwbInput}} and \code{\link{forest2growthInput}} are now deprecated, but 
+#' they can still be used for back-compatibility.
 #' 
 #' @return 
-#' Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
-#' \itemize{
-#'   \item{\code{SP}: Species identity (an integer) (first species is 0).}
-#'   \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
-#'   \item{\code{DBH}: Tree diameter at breast height (cm).}
-#'   \item{\code{H}: Plant total height (cm).}
-#'   \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
-#'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
-#'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
-#'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
-#'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
-#' }
-#' 
-#' Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
+#' Function \code{spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 #'   \itemize{
 #'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
 #'     \item{\code{soil}: A data frame with initialized soil parameters (see \code{\link{soil}}).}
@@ -2303,7 +2347,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'     \item{\code{internalFCCS}: A data frame with fuel characteristics, according to \code{\link{fuel_FCCS}} (only if \code{fireHazardResults = TRUE}, in the control list).}
 #'   }
 #'   
-#' Function \code{forest2growthInput} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
+#' Function \code{growthInput()} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 #' \itemize{
 #' \item{Element \code{above} includes the following additional columns:
 #'     \itemize{
@@ -2374,49 +2418,52 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' #Load example plot plant data
 #' data(exampleforest)
 #' 
-#' #Default species parameterization
-#' data(SpParamsMED)
-#' 
-#' # Aboveground parameters
-#' forest2aboveground(exampleforest, SpParamsMED)
-#' 
 #' # Example of aboveground parameters taken from a forest
 #' # described using LAI and crown ratio
 #' data(exampleforest2)
-#' forest2aboveground(exampleforest2, SpParamsMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
 #' 
 #' # Define soil with default soil params (4 layers)
 #' examplesoil <- defaultSoilParams(4)
-#' 
-#' # Bewowground parameters (distribution of fine roots)
-#' forest2belowground(exampleforest, examplesoil, SpParamsMED)
 #' 
 #' # Initialize control parameters using 'Granier' transpiration mode
 #' control <- defaultControl("Granier")
 #' 
 #' # Prepare spwb input
-#' forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+#' spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #'                 
 #' # Prepare input for 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
-#' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
+#' spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #' 
 #' # Prepare input for 'Sureau' transpiration mode
 #' control <- defaultControl("Sureau")
-#' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
+#' spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #' 
 #' # Example of initialization from a forest 
 #' # described using LAI and crown ratio
 #' control <- defaultControl("Granier")
-#' forest2spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
+#' spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #' 
 #' @name modelInput
-#' @aliases spwbInput growthInput
+spwbInput <- function(x, soil, SpParams, control) {
+    .Call(`_medfate_spwbInput`, x, soil, SpParams, control)
+}
+
+#' @rdname modelInput
+growthInput <- function(x, soil, SpParams, control) {
+    .Call(`_medfate_growthInput`, x, soil, SpParams, control)
+}
+
+#' @rdname forest2aboveground
 forest2spwbInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control)
 }
 
-#' @rdname modelInput
+#' @rdname forest2aboveground
 forest2growthInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2growthInput`, x, soil, SpParams, control)
 }
@@ -2743,7 +2790,7 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @seealso
-#'  \code{\link{spwb}},  \code{\link{forest2spwbInput}}, \code{\link{soil}}
+#'  \code{\link{spwb}},  \code{\link{spwbInput}}, \code{\link{soil}}
 #'
 #' @examples
 #' #Load example plot plant data
@@ -3309,13 +3356,13 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
 #' 
 #' #Simulate water balance one day only (Granier mode)
 #' control <- defaultControl("Granier")
-#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' sd1 <- spwb_day(x1, date, meteovec,  
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 #' 
 #' #Simulate water balance for one day only (Sperry mode)
 #' control <- defaultControl("Sperry")
-#' x2 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+#' x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #' sd2 <-spwb_day(x2, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
@@ -3324,14 +3371,14 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
 #' 
 #' #Simulate water balance for one day only (Sureau mode)
 #' control <- defaultControl("Sureau")
-#' x3 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+#' x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #' sd3 <-spwb_day(x3, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' 
 #' #Simulate water and carbon balance for one day only (Granier mode)
 #' control <- defaultControl("Granier")
-#' x4  <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x4  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' sd4 <- growth_day(x4, date, meteovec,
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
@@ -3541,7 +3588,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -3551,7 +3598,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -3560,7 +3607,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' control <- defaultControl("Sureau")
 #' 
 #' #Initialize input
-#' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x3 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -3846,7 +3893,7 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Granier's model, plant water potential 
 #' # and plant stress for a given day
@@ -3858,7 +3905,7 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Sperry's model
 #' t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
@@ -3869,7 +3916,7 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #' control <- defaultControl("Sureau")
 #' 
 #' #Initialize input
-#' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x3 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Sureau model
 #' t3 <- transp_transpirationSureau(x3, examplemeteo, 1, 

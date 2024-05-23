@@ -80,7 +80,7 @@ examplesoil <- defaultSoilParams(4)
 control <- defaultControl(transpirationMode="Sperry")
 
 #Initialize input
-x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,

@@ -109,7 +109,7 @@
 #' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)

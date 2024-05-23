@@ -86,7 +86,7 @@
 #' control <- defaultControl("Sperry")
 #' 
 #' #Simulate one day only
-#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' d <- 100
 #' date <- examplemeteo$dates[d]
 #' meteovec <- unlist(examplemeteo[d,])

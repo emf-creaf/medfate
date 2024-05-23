@@ -167,7 +167,7 @@ fordyn<-function(forest, soil, SpParams,
       forest$shrubData$Z50[is.na(forest$shrubData$Z50)] <- shrubSPZ50[is.na(forest$shrubData$Z50)]
       forest$shrubData$Z95[is.na(forest$shrubData$Z95)] <- shrubSPZ95[is.na(forest$shrubData$Z95)]
     }
-    xi <- forest2growthInput(forest, soil, SpParams, control)
+    xi <- growthInput(forest, soil, SpParams, control)
   }
   forestStructures[[1]] <- forest
 

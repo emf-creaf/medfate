@@ -10,7 +10,7 @@ examplesoil = defaultSoilParams(4)
 test_that("Can produce all basic spwb plots and summaries",{
   control = defaultControl("Granier")
   control$verbose = FALSE
-  x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+  x1 = spwbInput(exampleforest,examplesoil, SpParamsMED, control)
   expect_s3_class(x1, "spwbInput")
   S1<-spwb(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(S1, "spwb")
@@ -61,7 +61,7 @@ test_that("Can produce all advanced spwb plots and summaries",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
-    x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+    x2 = spwbInput(exampleforest,examplesoil, SpParamsMED, control)
     coh_1 = row.names(x2$cohorts)[1]
     expect_s3_class(x2, "spwbInput")
     S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -140,7 +140,7 @@ test_that("Can produce all advanced subdaily spwb plots",{
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
     control$subdailyResults = TRUE
-    x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+    x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "spwbInput")
     S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
     expect_s3_class(S2, "spwb")
@@ -209,7 +209,7 @@ test_that("Can produce all advanced spwb_day plots",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
-    x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+    x2 = spwbInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "spwbInput")
     d1 = d[1]
     sd2<-spwb_day(x2, examplemeteo$dates[d1],
@@ -256,7 +256,7 @@ test_that("Can produce all basic growth plots and summaries",{
   examplesoil = defaultSoilParams(4)
   control = defaultControl("Granier")
   control$verbose = FALSE
-  x1 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+  x1 = growthInput(exampleforest,examplesoil, SpParamsMED, control)
   expect_s3_class(x1, "growthInput")
   G1<-growth(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(G1, "growth")
@@ -312,7 +312,7 @@ test_that("Can produce all advanced growth plots and summaries",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
-    x2 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+    x2 = growthInput(exampleforest,examplesoil, SpParamsMED, control)
     coh_1 = row.names(x2$cohorts)[1]
     expect_s3_class(x2, "growthInput")
     G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -336,7 +336,7 @@ test_that("Can produce all advanced subdaily growth plots",{
     control$verbose = FALSE
     control$subdailyResults = TRUE
     control$subdailyCarbonBalance = TRUE
-    x2 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+    x2 = growthInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "growthInput")
     G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
     expect_s3_class(G2, "growth")
@@ -371,7 +371,7 @@ test_that("Can produce all advanced growth_day plots",{
     control = defaultControl(transpirationMode)
     control$verbose <- FALSE
     control$subdailyCarbonBalance <- TRUE
-    x2 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+    x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "growthInput")
     d1 <- d[1]
     sd2<-growth_day(x2, examplemeteo$dates[d1],

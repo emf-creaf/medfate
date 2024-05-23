@@ -150,7 +150,7 @@
     # Only replace if merging caused a reduction in woody cohorts
     if((nrow(merged_forest$treeData) < nrow(forest$treeData)) || (nrow(merged_forest$shrubData) < nrow(forest$shrubData))) {
       forest <- merged_forest
-      xi <- forest2growthInput(forest, xo$soil, SpParams, control)
+      xi <- growthInput(forest, xo$soil, SpParams, control)
     }
   }
   return(list(forest = forest, xi = xi))

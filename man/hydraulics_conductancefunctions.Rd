@@ -139,7 +139,7 @@ control <- defaultControl("Granier")
 control <- defaultControl("Sperry")
 
 #Initialize input
-x <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Leaf vulnerability curves
 hydraulics_vulnerabilityCurvePlot(x, type="leaf")

@@ -18,7 +18,7 @@ data(exampleforest2)
 \source{
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Dirección}{Direccion} General de \enc{Conservación}{Conservacion} de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 }
-\seealso{ \code{\link{forest}}, \code{\link{spwb}}, \code{\link{forest2spwbInput}}}
+\seealso{ \code{\link{forest}}, \code{\link{spwb}}, \code{\link{spwbInput}}}
 \examples{
 data(exampleforest)
 data(exampleforest2)

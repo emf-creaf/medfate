@@ -1492,7 +1492,69 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
 
 
 
-//' @rdname modelInput
+//' Input for simulation models (deprecated)
+//'
+//' Functions \code{forest2spwbInput()} and \code{forest2growthInput()} take an object of class \code{\link{forest}} 
+//' and a soil data input to create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively. 
+//' Function \code{forest2aboveground()} calculates aboveground variables such as leaf area index. 
+//' Function \code{forest2belowground()} calculates belowground variables such as fine root distribution.
+//' 
+//' @param x An object of class \code{\link{forest}}.
+//' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
+//' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
+//' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
+//' @param soil An object of class \code{\link{data.frame}} or \code{\link{soil}}, containing soil parameters per soil layer.
+//' @param control A list with default control parameters (see \code{\link{defaultControl}}).
+//' 
+//' @details
+//' Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x}, 
+//' and calculate leaf area index and crown ratio. 
+//' 
+//' \emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now deprecated, but 
+//' they can still be used for back-compatibility. They correspond to functions \code{\link{spwbInput}} and \code{\link{growthInput}} 
+//' 
+//' @return 
+//' Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
+//' \itemize{
+//'   \item{\code{SP}: Species identity (an integer) (first species is 0).}
+//'   \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
+//'   \item{\code{DBH}: Tree diameter at breast height (cm).}
+//'   \item{\code{H}: Plant total height (cm).}
+//'   \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
+//'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
+//'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
+//'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+//'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
+//' }
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso \code{\link{spwnInputs}}, \code{\link{soil}},  
+//' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
+//' 
+//' @examples
+//' #Load example plot plant data
+//' data(exampleforest)
+//' 
+//' #Default species parameterization
+//' data(SpParamsMED)
+//' 
+//' # Aboveground parameters
+//' forest2aboveground(exampleforest, SpParamsMED)
+//' 
+//' # Example of aboveground parameters taken from a forest
+//' # described using LAI and crown ratio
+//' data(exampleforest2)
+//' forest2aboveground(exampleforest2, SpParamsMED)
+//' 
+//' # Define soil with default soil params (4 layers)
+//' examplesoil <- defaultSoilParams(4)
+//'
+//' # Bewowground parameters (distribution of fine roots)
+//' forest2belowground(exampleforest, examplesoil, SpParamsMED)
+//' 
+//' 
+//' @name forest2aboveground
 // [[Rcpp::export("forest2aboveground")]]
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, bool loading = false) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -1558,7 +1620,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
 }
 
 
-//' @rdname modelInput
+//' @rdname forest2aboveground
 // [[Rcpp::export("forest2belowground")]]
 NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);

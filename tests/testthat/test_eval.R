@@ -7,8 +7,8 @@ examplesoil = defaultSoilParams(4)
 control = defaultControl("Granier")
 control$verbose = FALSE
 data(exampleobs)
-x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 test_that("evaluation can be performed",{
   expect_type(evaluation_stats(S1, exampleobs), "double")

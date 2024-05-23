@@ -28,7 +28,7 @@ data(exampleforest)
 control <- defaultControl("Sureau")
 
 # Create input for spwb
-x <- forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
+x <- spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
 ```
 
