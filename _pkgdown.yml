@@ -15,7 +15,6 @@ articles:
     - starts_with("runmodels/Advanced")
     - starts_with("runmodels/ForestGrowth")
     - starts_with("runmodels/ForestDynamics")
-    - starts_with("runmodels/Sureau")
 - title: Model analysis and parametrization
   contents:
     - starts_with("modelanalysis/Sensitivity")

@@ -35,7 +35,7 @@ data("SpParamsDefinition")
 knitr::kable(SpParamsDefinition[,-2])
 ```
 
-In order to understand the role of parameters in the model, you should read the details of model design and formulation included in the [**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html). Details regarding how the species parameter tables are build can be found in article [*Species parameterization*](https://emf-creaf.github.io/medfate/articles/parametrization/SpeciesParameterization.html). 
+In order to understand the role of parameters in the model, you should read the details of model design and formulation included in the [**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html). Details regarding how the species parameter tables are build can be found in  [**medfatetraits**](https://emf-creaf.github.io/medfatetraits/index.html). 
 
 ## Vegetation
 
