@@ -111,6 +111,6 @@ During the development of **medfate** some functions have been originally placed
 
   + Package [**meteoland**](https://emf-creaf.github.io/meteoland) allows generating daily weather input for simulation models in **medfate**.
   + Package [**medfateland**](https://emf-creaf.github.io/medfateland) extends **medfate** by allowing simulations to be performed in a spatially explicit context.
-  + Package [**medfateutils**](https://emf-creaf.github.io/medfateutils) provides functions to help initializing species parameter inputs for **medfate** simulation functions.
+  + Package [**medfatetraits**](https://emf-creaf.github.io/medfatetraits) provides functions to help creating species parameter inputs for **medfate** and **medfateland** simulation functions  [*under development*].
 
 The set of R packages are developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).

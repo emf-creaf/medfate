@@ -18,7 +18,6 @@ articles:
     - starts_with("runmodels/Sureau")
 - title: Model analysis and parametrization
   contents:
-    - starts_with("parametrization/SpeciesParameter")
     - starts_with("modelanalysis/Sensitivity")
     - starts_with("parametrization/Metamodelling")
     - starts_with("parametrization/GrowthCalibration")

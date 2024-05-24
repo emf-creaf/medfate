@@ -42,7 +42,7 @@ NULL
 #' }
 #' @details
 #' \code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional 
-#' species parameter tables for different countries are distributed via package \code{medfateutils}, available from GitHub (https://emf-creaf.github.io/medfateutils/).
+#' species parameter tables for different countries are distributed via package \code{medfatetraits}, available from GitHub (https://emf-creaf.github.io/medfatetraits/).
 #' 
 #' @examples
 #' data(SpParamsDefinition)

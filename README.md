@@ -64,11 +64,10 @@ which evolve together with **medfate**:
   and **medfateland**.
 - Package [**medfatetraits**](https://emf-creaf.github.io/medfatetraits)
   provides functions to help creating species parameter inputs for
-  **medfate** and **medfateland** simulation functions \[under
-  development\].
-- Package [**medfateutils**](https://emf-creaf.github.io/medfateutils)
-  provides miscellaneous functions for **medfate** and **medfateland**
-  simulation functions \[under development\].
+  **medfate** and **medfateland** simulation functions \[*under
+  development*\].
+
+<img src="man/figures/packages.png" width="60%" style="display: block; margin: auto;" />
 
 ## Authorship
 

@@ -54,7 +54,7 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, resproutingParamsSpecies, sub
 # Add bark thickness parameters
 bt_models <- openxlsx::read.xlsx(paste0(MFWdir,"MedfateSpeciesParametrization/AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), 
                                  sheet= "Tree_BT_models", rowNames = TRUE)
-SpParamsMED <- medfateutils::populateTreeAllometries(SpParamsMED, bt_models, "barkthickness")
+SpParamsMED <- medfatetraits::populate_tree_allometries(SpParamsMED, bt_models, "barkthickness")
 
 # Manual tuning
 tree_all_cols = 30:42
