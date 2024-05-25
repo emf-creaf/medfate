@@ -882,7 +882,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       NumericVector fluxSoilToStem_mm(kSoil.size(), 0.0); //Cummulative flow
       List network_n;
       
-      double Agsum, Ansum;
+      double Agsum = 0.0, Ansum = 0.0;
       while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
         network_n = clone(network); // # initial value of WBveg
         //   List WBsoil_n = clone(WBsoil); // # initial value of WBsoil

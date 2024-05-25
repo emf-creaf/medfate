@@ -80,8 +80,8 @@
 #'       \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
 #'       \item{\code{sapFluidityVariation [= TRUE]}: Flag to indicate that temperature affects sap fluidity (and indirectly plant conductance).}
 #'       \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
-#'       \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
-#'       \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}
+#'       \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T less than or equal to TPhase.}
+#'       \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T greater than TPhase.}
 #'       \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 #'       \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
 #'       \item{\code{rootRadialConductance [= 4]}: Radial conductance in roots (mmol·s-1·m-2·MPa-1).}
