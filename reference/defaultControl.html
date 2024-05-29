@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.2</span>
       </span>
     </div>
 
@@ -111,7 +111,7 @@
 <li><p><code>windMeasurementHeight [= 200]</code>: Height (in cm) over the canopy corresponding to wind measurements.</p></li>
 <li><p><code>segmentedXylemVulnerability [= TRUE/FALSE]</code>: If <code>FALSE</code> leaf and root vulnerability curves will be equal to those of stem. By default, <code>segmentedXylemVulnerability = TRUE</code> for <code>transpirationMode = "Sperry"</code> and <code>segmentedXylemVulnerability = FALSE</code> for <code>transpirationMode = "Sureau"</code>.</p></li>
 <li><p><code>leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]</code>: A flag indicating whether cavitation effects on conductance of leaves and stem are applied. Only relevant for <code>transpirationMode = "Sperry"</code>.</p></li>
-<li><p><code>leafCavitationRecovery, stemCavitationRecovery [= "rate"]</code>: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb_day.html">spwb_day</a></code>):
+<li><p><code>leafCavitationRecovery, stemCavitationRecovery [= "annual"]</code>: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb_day.html">spwb_day</a></code>):
           </p><ul><li><p>"none" - no recovery.</p></li>
 <li><p>"annual" - every first day of the year.</p></li>
 <li><p>"rate" - following a rate of new leaf or sapwood formation.</p></li>
