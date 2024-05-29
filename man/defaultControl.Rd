@@ -61,7 +61,7 @@ A list, with the following options (default values in brackets):
       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
       \item{\code{segmentedXylemVulnerability [= TRUE/FALSE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem. By default, \code{segmentedXylemVulnerability = TRUE} for \code{transpirationMode = "Sperry"} and \code{segmentedXylemVulnerability = FALSE} for \code{transpirationMode = "Sureau"}.}
       \item{\code{leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]}: A flag indicating whether cavitation effects on conductance of leaves and stem are applied. Only relevant for \code{transpirationMode = "Sperry"}.}
-      \item{\code{leafCavitationRecovery, stemCavitationRecovery [= "rate"]}: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions \code{\link{spwb}} and \code{\link{spwb_day}}):
+      \item{\code{leafCavitationRecovery, stemCavitationRecovery [= "annual"]}: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions \code{\link{spwb}} and \code{\link{spwb_day}}):
           \itemize{
             \item{"none" - no recovery.}
             \item{"annual" - every first day of the year.}

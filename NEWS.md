@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 4.3.2
+- Default control parameters 
+
 # Version 4.3.1
 - Functions forest2spwbInput/forest2growthInput deprecated. Preferred function names are spwbInput/growthInput.
 
