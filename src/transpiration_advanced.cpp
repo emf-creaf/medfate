@@ -1040,7 +1040,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       //Soil temperature changes
       NumericVector soilTchange = temperatureChange(widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
-      for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
+      for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + std::max(-3.0, std::min(3.0, soilTchange[l]));
       if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
       
     } else { //Multilayer canopy balance
