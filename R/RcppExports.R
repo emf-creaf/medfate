@@ -210,36 +210,43 @@ biophysics_waterDynamicViscosity <- function(temp) {
 #' @seealso \code{\link{growth}}
 #' 
 #' @name carbon
+#' @keywords internal
 carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, eqSugarConc)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_osmoticWaterPotential <- function(sugarConc, temp, nonSugarConc) {
     .Call(`_medfate_osmoticWaterPotential`, sugarConc, temp, nonSugarConc)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc) {
     .Call(`_medfate_sugarConcentration`, osmoticWP, temp, nonSugarConc)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_relativeSapViscosity <- function(sugarConc, temp) {
     .Call(`_medfate_relativeSapViscosity`, sugarConc, temp)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_leafStructuralBiomass <- function(LAI, N, SLA) {
     .Call(`_medfate_leafStructuralBiomass`, LAI, N, SLA)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
 }
@@ -250,11 +257,13 @@ carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_sapwoodStructuralLivingBiomass <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
     .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, L, V, woodDensity, conduit2sapwood)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
     .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, conduit2sapwood)
 }
@@ -262,6 +271,7 @@ carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwo
 #' @rdname carbon
 #' @param x An object of class \code{\link{growthInput}}.
 #' @param biomassUnits A string for output biomass units, either "g_ind" (g per individual) or "g_m2" (g per square meter).
+#' @keywords internal
 carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
@@ -912,7 +922,6 @@ forest2belowground <- function(x, soil, SpParams) {
 #' Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. 
 #' Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object 
 #' following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). 
-#' Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). 
 #' 
 #' @param object An object of class \code{\link{forest}}
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -956,10 +965,7 @@ forest2belowground <- function(x, soil, SpParams) {
 #'     \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
 #'   }
 #'   
-#' Function \code{fuel_cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). 
-#' Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
 #' 
-#' Function \code{fuel_windAdjustmentFactor} returns a value between 0 and 1.
 #' 
 #' @references
 #' Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
@@ -986,7 +992,6 @@ forest2belowground <- function(x, soil, SpParams) {
 #' fccs = fuel_FCCS(exampleforest, SpParamsMED)
 #' fccs
 #' 
-#' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
 #' 
 #' @name fuel_properties
 fuel_stratification <- function(object, SpParams, gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000.0, bulkDensityThreshold = 0.05) {
@@ -1256,16 +1261,19 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #' hydraulics_vulnerabilityCurvePlot(x, type="stem")
 #'              
 #' @name hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_psi2K <- function(psi, psi_extract, exp_extract = 3.0) {
     .Call(`_medfate_Psi2K`, psi, psi_extract, exp_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_K2Psi <- function(K, psi_extract, exp_extract = 3.0) {
     .Call(`_medfate_K2Psi`, K, psi_extract, exp_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_averagePsi <- function(psi, v, exp_extract, psi_extract) {
     .Call(`_medfate_averagePsi`, psi, v, exp_extract, psi_extract)
 }
@@ -1276,16 +1284,19 @@ hydraulics_xylemConductance <- function(psi, kxylemmax, c, d) {
 }
 
 #' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
     .Call(`_medfate_xylemPsi`, kxylem, kxylemmax, c, d)
 }
 
 #' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
     .Call(`_medfate_psiCrit`, c, d, pCrit)
 }
 
 #' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
     .Call(`_medfate_vanGenuchtenConductance`, psi, krhizomax, n, alpha)
 }
@@ -1296,6 +1307,7 @@ hydraulics_correctConductanceForViscosity <- function(kxylem, temp) {
 }
 
 #' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
     .Call(`_medfate_psi2Weibull`, psi50, psi88, psi12)
 }
@@ -1393,6 +1405,7 @@ hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
 #'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 #' 
 #' @name hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_EXylem <- function(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE, psiCav = 0.0) {
     .Call(`_medfate_EXylem`, psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav)
 }
@@ -1403,6 +1416,7 @@ hydraulics_E2psiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_E2psiXylemUp <- function(E, psiDownstream, kxylemmax, c, d, psiCav = 0.0) {
     .Call(`_medfate_E2psiXylemUp`, E, psiDownstream, kxylemmax, c, d, psiCav)
 }
@@ -1413,51 +1427,61 @@ hydraulics_EVanGenuchten <- function(psiRhizo, psiSoil, krhizomax, n, alpha, l =
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_ECrit <- function(psiUpstream, kxylemmax, c, d, pCrit = 0.001) {
     .Call(`_medfate_ECrit`, psiUpstream, kxylemmax, c, d, pCrit)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_E2psiVanGenuchten <- function(E, psiSoil, krhizomax, n, alpha, psiStep = -0.0001, psiMax = -10.0) {
     .Call(`_medfate_E2psiVanGenuchten`, E, psiSoil, krhizomax, n, alpha, psiStep, psiMax)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_E2psiTwoElements <- function(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav = 0.0, psiStep = -0.0001, psiMax = -10.0) {
     .Call(`_medfate_E2psiTwoElements`, E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_E2psiBelowground <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0))) {
     .Call(`_medfate_E2psiBelowground`, E, hydraulicNetwork, psiIni)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_E2psiAboveground <- function(E, psiRootCrown, hydraulicNetwork) {
     .Call(`_medfate_E2psiAboveground`, E, psiRootCrown, hydraulicNetwork)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_E2psiNetwork <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0))) {
     .Call(`_medfate_E2psiNetwork`, E, hydraulicNetwork, psiIni)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_supplyFunctionOneXylem <- function(psiSoil, v, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 200L, dE = 0.01) {
     .Call(`_medfate_supplyFunctionOneXylem`, psiSoil, v, kstemmax, stemc, stemd, psiCav, maxNsteps, dE)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_supplyFunctionTwoElements <- function(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav = 0.0, dE = 0.1, psiMax = -10.0) {
     .Call(`_medfate_supplyFunctionTwoElements`, Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, dE, psiMax)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_supplyFunctionThreeElements <- function(Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav = 0.0, dE = 0.1, psiMax = -10.0) {
     .Call(`_medfate_supplyFunctionThreeElements`, Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav, dE, psiMax)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_supplyFunctionBelowground <- function(hydraulicNetwork, minFlow = 0.0, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionBelowground`, hydraulicNetwork, minFlow, pCrit)
 }
@@ -1468,16 +1492,19 @@ hydraulics_supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, hydra
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_supplyFunctionNetwork <- function(hydraulicNetwork, minFlow = 0.0, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionNetwork`, hydraulicNetwork, minFlow, pCrit)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_regulatedPsiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01) {
     .Call(`_medfate_regulatedPsiXylem`, E, psiUpstream, kxylemmax, c, d, psiStep)
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE = 0.1, psiMax = -10.0) {
     .Call(`_medfate_regulatedPsiTwoElements`, Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE, psiMax)
 }
@@ -1534,46 +1561,55 @@ hydraulics_regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemm
 #' \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
 #' 
 #' @name hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_maximumSoilPlantConductance <- function(krhizomax, krootmax, kstemmax, kleafmax) {
     .Call(`_medfate_maximumSoilPlantConductance`, krhizomax, krootmax, kstemmax, kleafmax)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_soilPlantResistances <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
     .Call(`_medfate_soilPlantResistances`, psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
     .Call(`_medfate_averageRhizosphereResistancePercent`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue = 0.0) {
     .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_taperFactorSavage <- function(height) {
     .Call(`_medfate_taperFactorSavage`, height)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_terminalConduitRadius <- function(height) {
     .Call(`_medfate_terminalConduitRadius`, height)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_referenceConductivityHeightFactor <- function(refheight, height) {
     .Call(`_medfate_referenceConductivityHeightFactor`, refheight, height)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper = FALSE) {
     .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, taper)
 }
 
 #' @rdname hydraulics_scalingconductance
+#' @keywords internal
 hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
@@ -1606,11 +1642,13 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
 #' \code{\link{hydraulics_conductancefunctions}}
 #' 
 #' @name hydraulics_defoliation
+#' @keywords internal
 hydraulics_proportionDefoliationSigmoid <- function(psiLeaf, P50, slope, PLC_crit = 0.88, P50_cv = 10.0) {
     .Call(`_medfate_proportionDefoliationSigmoid`, psiLeaf, P50, slope, PLC_crit, P50_cv)
 }
 
 #' @name hydraulics_defoliation
+#' @keywords internal
 hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, PLC_crit = 0.88, P50_cv = 10.0) {
     .Call(`_medfate_proportionDefoliationWeibull`, psiLeaf, c, d, PLC_crit, P50_cv)
 }
@@ -1620,6 +1658,7 @@ hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, PLC_crit = 0.
 #' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.
 #' 
 #' @rdname hydrology_interception
+#' @keywords internal
 hydrology_rainfallIntensity <- function(month, prec, rainfallIntensityPerMonth) {
     .Call(`_medfate_rainfallIntensity`, month, prec, rainfallIntensityPerMonth)
 }
@@ -1638,6 +1677,7 @@ hydrology_rainfallIntensity <- function(month, prec, rainfallIntensityPerMonth) 
 #' @param PETs Potential evapotranspiration at the soil surface.
 #' @param Gsoil Gamma parameter (maximum daily evaporation).
 #' 
+#' @keywords internal
 hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
     .Call(`_medfate_soilEvaporationAmount`, DEF, PETs, Gsoil)
 }
@@ -1673,6 +1713,7 @@ hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
 #' 
 #' 
 #' @name hydrology_soilEvaporation
+#' @keywords internal
 hydrology_soilEvaporation <- function(soil, snowpack, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
     .Call(`_medfate_soilEvaporation`, soil, snowpack, soilFunctions, pet, LgroundSWR, modifySoil)
 }
@@ -1680,6 +1721,7 @@ hydrology_soilEvaporation <- function(soil, snowpack, soilFunctions, pet, Lgroun
 #' @rdname hydrology_soilEvaporation
 #' @param LherbSWR Percentage of short-wave radiation (SWR) reaching the herbaceous layer.
 #' @param herbLAI Leaf area index of the herbaceous layer.
+#' @keywords internal
 hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil = TRUE) {
     .Call(`_medfate_herbaceousTranspiration`, pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil)
 }
@@ -1718,6 +1760,7 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
 #' 
 #' @name hydrology_infiltration
+#' @keywords internal
 hydrology_infiltrationBoughton <- function(input, Ssoil) {
     .Call(`_medfate_infiltrationBoughton`, input, Ssoil)
 }
@@ -1730,6 +1773,7 @@ hydrology_infiltrationBoughton <- function(input, Ssoil) {
 #' @param theta_sat volumetric content at saturation
 #' @param theta_dry volumetric content at the dry side of the wetting front
 #' 
+#' @keywords internal
 hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry) {
     .Call(`_medfate_infitrationGreenAmpt`, t, psi_w, Ksat, theta_sat, theta_dry)
 }
@@ -1741,6 +1785,7 @@ hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry
 #' @param macro Macroporosity of soil layers (in \%).
 #' @param a,b Parameters of the extinction function used for water infiltration.
 #' 
+#' @keywords internal
 hydrology_infiltrationRepartition <- function(I, widths, macro, a = -0.005, b = 3.0) {
     .Call(`_medfate_infiltrationRepartition`, I, widths, macro, a, b)
 }
@@ -1754,6 +1799,7 @@ hydrology_infiltrationRepartition <- function(I, widths, macro, a = -0.005, b = 
 #' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 #' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 #' 
+#' @keywords internal
 hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "GreenAmpt1911", K_correction = 1.0) {
     .Call(`_medfate_infiltrationAmount`, rainfallInput, rainfallIntensity, soil, soilFunctions, model, K_correction)
 }
@@ -1764,6 +1810,7 @@ hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil,
 #' @param rad Solar radiation (in MJ/m2/day).
 #' @param elevation Altitude above sea level (m).
 #' 
+#' @keywords internal
 hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
     .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
 }
@@ -1812,6 +1859,7 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' 
 #' 
 #' @name hydrology_verticalInputs
+#' @keywords internal
 hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, modifyInput = TRUE) {
     .Call(`_medfate_waterInputs`, x, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, modifyInput)
 }
@@ -1904,6 +1952,7 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #'                            soilDomains = "dual", modifySoil = FALSE)
 #'   
 #' @name hydrology_soilWaterBalance
+#' @keywords internal
 hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
     .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, infiltrationCorrection, soilDomains, nsteps, max_nsubsteps, modifySoil)
 }
@@ -1933,6 +1982,7 @@ hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainf
 }
 
 #' @rdname hydraulics_supplyfunctions
+#' @keywords internal
 hydraulics_initSperryNetworks <- function(x) {
     .Call(`_medfate_initSperryNetworks`, x)
 }
@@ -2019,6 +2069,7 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' @seealso  \code{\link{spwb}}
 #' 
 #' @name sureau_ecos
+#' @keywords internal
 initSureauNetworks <- function(x) {
     .Call(`_medfate_initSureauNetworks`, x)
 }
@@ -2113,46 +2164,55 @@ semi_implicit_integration <- function(network, dt, opt, stemCavitationRecovery =
 #' kd_PAR <- 0.5
 #' kd_SWR <- kd_PAR/1.35
 #' @name light_advanced
+#' @keywords internal
 light_leafAngleCDF <- function(leafAngle, p, q) {
     .Call(`_medfate_leafAngleCDF`, leafAngle, p, q)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_leafAngleBetaParameters <- function(leafAngle, leafAngleSD) {
     .Call(`_medfate_leafAngleBetaParameters`, leafAngle, leafAngleSD)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
     .Call(`_medfate_directionalExtinctionCoefficient`, p, q, solarElevation)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_layerDirectIrradianceFraction <- function(LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_layerDirectIrradianceFraction`, LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_layerDiffuseIrradianceFraction`, LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_layerSunlitFraction <- function(LAIme, LAImd, kb, ClumpingIndex) {
     .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb, ClumpingIndex)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
+#' @keywords internal
 light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
 }
@@ -2174,6 +2234,7 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' @seealso  \code{\link{spwb}}, \code{\link{light_advanced}}
 #' 
 #' @name light_basic
+#' @keywords internal
 light_PARcohort <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_PARcohort`, x, SpParams, gdd)
 }
@@ -2183,6 +2244,7 @@ light_PARcohort <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname light_basic
+#' @keywords internal
 light_PARground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_PARground`, x, SpParams, gdd)
 }
@@ -2192,6 +2254,7 @@ light_PARground <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname light_basic
+#' @keywords internal
 light_SWRground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_SWRground`, x, SpParams, gdd)
 }
@@ -2205,6 +2268,7 @@ light_SWRground <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname light_basic
+#' @keywords internal
 light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortAbsorbedSWRFraction`, z, x, SpParams, gdd)
 }
@@ -2842,11 +2906,13 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' print(V2)     
 #' 
 #' @name root
+#' @keywords internal
 root_conicDistribution <- function(Zcone, d) {
     .Call(`_medfate_conicDistribution`, Zcone, d)
 }
 
 #' @rdname root
+#' @keywords internal
 root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_ldrDistribution`, Z50, Z95, d)
 }
@@ -2856,66 +2922,79 @@ root_ldrDistribution <- function(Z50, Z95, d) {
 }
 
 #' @rdname root
+#' @keywords internal
 root_individualRootedGroundArea <- function(VolInd, V, d, rfc) {
     .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, rfc)
 }
 
 #' @rdname root
+#' @keywords internal
 root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_fineRootRadius`, specificRootLength, rootTissueDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_fineRootHalfDistance <- function(rootLengthDensity) {
     .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootAreaIndex`, Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootBiomassPerIndividual`, Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_rhizosphereMaximumConductance <- function(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_rhizosphereMaximumConductance`, Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 
 #' @rdname root
+#' @keywords internal
 root_coarseRootSoilVolumeFromConductance <- function(Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc) {
     .Call(`_medfate_coarseRootSoilVolumeFromConductance`, Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc)
 }
 
 #' @rdname root
+#' @keywords internal
 root_coarseRootLengthsFromVolume <- function(VolInd, v, d, rfc) {
     .Call(`_medfate_coarseRootLengthsFromVolume`, VolInd, v, d, rfc)
 }
 
 #' @rdname root
+#' @keywords internal
 root_coarseRootLengths <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_coarseRootLengths`, v, d, depthWidthRatio)
 }
 
 #' @rdname root
+#' @keywords internal
 root_coarseRootSoilVolume <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_coarseRootSoilVolume`, v, d, depthWidthRatio)
 }
 
 #' @rdname root
+#' @keywords internal
 root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
     .Call(`_medfate_horizontalProportions`, poolProportions, VolInd, N, V, d, rfc)
 }
@@ -4072,11 +4151,13 @@ transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slop
 #' wind_canopyTurbulenceModel(zm, Cx,h,d0,z0)
 #' 
 #' @name wind
+#' @keywords internal
 wind_canopyTurbulenceModel <- function(zm, Cx, hm, d0, z0, model = "k-epsilon") {
     .Call(`_medfate_windCanopyTurbulenceModel`, zm, Cx, hm, d0, z0, model)
 }
 
 #' @rdname wind
+#' @keywords internal
 wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u, windMeasurementHeight = 200, model = "k-epsilon") {
     .Call(`_medfate_windCanopyTurbulence`, zmid, LAD, canopyHeight, u, windMeasurementHeight, model)
 }
@@ -4093,7 +4174,7 @@ wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u, windMeasurementHei
     .Call(`_medfate_shelteredMidflameWindSpeed`, wind20H, crownFillProportion, topCanopyHeight)
 }
 
-#' @rdname fuel_properties
+#' @noRd
 #' 
 #' @param topShrubHeight Shrub stratum top height (in m).
 #' @param bottomCanopyHeight Canopy base height (in m).

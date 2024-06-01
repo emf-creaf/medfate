@@ -34,3 +34,4 @@ Radiation extinction functions used in basic transpiration sub-model
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

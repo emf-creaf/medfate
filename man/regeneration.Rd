@@ -105,3 +105,4 @@ regeneration_recruitment(exampleforest, SpParamsMED, control, 3, 0.25)
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

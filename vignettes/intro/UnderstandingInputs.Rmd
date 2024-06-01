@@ -84,14 +84,14 @@ We can use some functions to inspect how above-ground and below-ground informati
 
 For example, we can use function `forest2aboveground()` on the object `exampleforest` to show how medfate completes above-ground information:
 ```{r}
-above = forest2aboveground(exampleforest, SpParamsMED)
+above <- forest2aboveground(exampleforest, SpParamsMED)
 above
 ```
 Note that the call to `forest2aboveground()` included the species parameter table, because species-specific allometric coefficients are needed to calculate leaf area from tree size or shrub percent cover and height. Moreover, note that the plant cohorts were given unique codes that tell us whether they correspond to trees ('T') or shrubs ('S'). 
 
 Columns `N`, `DBH` and `Cover` describe forest structure and are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Therefore, one could use alternative forest description as starting point, i.e.:
 ```{r}
-above2 = forest2aboveground(exampleforest2, SpParamsMED)
+above2 <- forest2aboveground(exampleforest2, SpParamsMED)
 above2
 ```
 
@@ -110,8 +110,8 @@ vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = T)
 
 Regarding **belowground** information, we need vectors with depths corresponding to 50% and 95% of fine roots, which we simply concatenate from our forest data:
 ```{r}
-Z50 = c(exampleforest$treeData$Z50, exampleforest$shrubData$Z50)
-Z95 = c(exampleforest$treeData$Z95, exampleforest$shrubData$Z95)
+Z50 <- c(exampleforest$treeData$Z50, exampleforest$shrubData$Z50)
+Z95 <- c(exampleforest$treeData$Z95, exampleforest$shrubData$Z95)
 ```
 These parameters specify a continuous distribution of fine roots. Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
 
@@ -138,7 +138,7 @@ where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage
 Simulations need additional soil parameters and state variables. The soil input for simulations is an object of class `soil` (also a data frame) that is created using a function with the same name:
 
 ```{r}
-examplesoil = soil(spar)
+examplesoil <- soil(spar)
 class(examplesoil)
 ```
 
@@ -196,7 +196,7 @@ Simulation models in **medfate** have been designed to work along with data gene
 Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
-control = defaultControl()
+control <- defaultControl()
 names(control)
 ```
 

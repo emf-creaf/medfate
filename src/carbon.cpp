@@ -83,12 +83,14 @@ double sugarStarchDynamics(double sugarConc, double starchConc,
 //' @seealso \code{\link{growth}}
 //' 
 //' @name carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_sugarStarchDynamicsLeaf")]]
 double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc) {
   return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.3, 1, eqSugarConc));
 }
 
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_sugarStarchDynamicsStem")]]
 double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc) {
   return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.15, 0.4, eqSugarConc));
@@ -104,12 +106,14 @@ double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSug
  *  wp - MPa
  */
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_osmoticWaterPotential")]]
 double osmoticWaterPotential(double sugarConc, double temp, double nonSugarConc) {
   sugarConc = std::max(0.0, sugarConc); // To avoid positive osmotic water potential
   return(- (sugarConc + nonSugarConc)*Rn*(temp + 273.15));
 }
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_sugarConcentration")]]
 double sugarConcentration(double osmoticWP, double temp, double nonSugarConc) {
   return(- osmoticWP/(Rn*(temp + 273.15)) - nonSugarConc);
@@ -122,6 +126,7 @@ double sugarConcentration(double osmoticWP, double temp, double nonSugarConc) {
 *  temp - temperature (degrees C)
 */
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_relativeSapViscosity")]]
 double relativeSapViscosity(double sugarConc, double temp) {
   double x = sugarConc*glucoseMolarMass/1e3; //from mol/l to g*cm-3
@@ -163,6 +168,7 @@ double leafStorageVolume(double LAI, double N, double SLA, double leafDensity) {
  * Leaf structural biomass in g dw · ind-1
  */
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_leafStructuralBiomass")]]
 double leafStructuralBiomass(double LAI, double N, double SLA) {
   return(1000.0*leafArea(LAI,N)/SLA);  
@@ -173,6 +179,7 @@ double leafStructuralBiomass(double LAI, double N, double SLA) {
  * Up to 10% of leaf cell volume
  */
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_leafStarchCapacity")]]
 double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity) {
   return(0.1*1000.0*leafStorageVolume(LAI,N,SLA,leafDensity)*starchDensity/starchMolarMass);
@@ -225,6 +232,7 @@ double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVec
 }
 
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_sapwoodStructuralLivingBiomass")]]
 double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, 
                                       double woodDensity, double conduit2sapwood) {
@@ -241,6 +249,7 @@ double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, Nume
  *  woodDensity - g/cm3
  */
 //' @rdname carbon
+//' @keywords internal
 // [[Rcpp::export("carbon_sapwoodStarchCapacity")]]
 double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, 
                              double woodDensity, double conduit2sapwood) {
@@ -250,6 +259,7 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 //' @rdname carbon
 //' @param x An object of class \code{\link{growthInput}}.
 //' @param biomassUnits A string for output biomass units, either "g_ind" (g per individual) or "g_m2" (g per square meter).
+//' @keywords internal
 // [[Rcpp::export("carbon_carbonCompartments")]]
 DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   

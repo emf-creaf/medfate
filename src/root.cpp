@@ -170,6 +170,7 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //' print(V2)     
 //' 
 //' @name root
+//' @keywords internal
 // [[Rcpp::export("root_conicDistribution")]]
 NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
   int numCohorts = Zcone.size();
@@ -187,6 +188,7 @@ NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
  * Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_ldrDistribution")]]
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d) {
   int numCohorts = Z50.size();
@@ -260,6 +262,7 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  * an individual with a given total fine root volume (in m3) and fine root proportions
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_individualRootedGroundArea")]]
 NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, 
                                          NumericVector rfc) {
@@ -286,6 +289,7 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
  *    . root tissue density (RTD; g/cm3) e.g. 0.165 g/cm3
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_specificRootSurfaceArea")]]
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
   return(2.0*sqrt(M_PI*specificRootLength/rootTissueDensity));
@@ -295,12 +299,14 @@ double specificRootSurfaceArea(double specificRootLength, double rootTissueDensi
  * Fine root radius in cm
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_fineRootRadius")]]
 double fineRootRadius(double specificRootLength, double rootTissueDensity) {
   return(sqrt(1.0/(M_PI*specificRootLength*rootTissueDensity)));
 }
 
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_fineRootHalfDistance")]]
 double fineRootHalfDistance(double rootLengthDensity) {
   return(1.0/sqrt(M_PI*rootLengthDensity));
@@ -329,6 +335,7 @@ double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, do
 }
 
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_fineRootAreaIndex")]]
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                                     double specificRootLength, double rootTissueDensity,  
@@ -347,6 +354,7 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
  * Fine root biomass in g dry · ind-1
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_fineRootBiomass")]]
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
@@ -363,6 +371,7 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
 }
 
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_rhizosphereMaximumConductance")]]
 NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
@@ -385,6 +394,7 @@ NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector f
  *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_fineRootSoilVolume")]]
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity) {
   return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
@@ -407,6 +417,7 @@ double frv(double vol, double B, NumericVector v, NumericVector ax, NumericVecto
  *    . rooting depth (cm)
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_coarseRootSoilVolumeFromConductance")]]
 double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
                                    NumericVector v, NumericVector d, NumericVector rfc) {
@@ -458,6 +469,7 @@ double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_
  * 
  */
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_coarseRootLengthsFromVolume")]]
 NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, NumericVector d, NumericVector rfc) {
   int nlayers = v.size();
@@ -511,6 +523,7 @@ List coarseRootRadialAxialLengths(NumericVector v, NumericVector d, double depth
 }
 
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_coarseRootLengths")]]
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
@@ -525,6 +538,7 @@ NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWi
 }
 
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_coarseRootSoilVolume")]]
 double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
@@ -595,6 +609,7 @@ List equaloverlapHorizontalProportions(NumericVector poolProportions, NumericMat
   return(l);
 }
 //' @rdname root
+//' @keywords internal
 // [[Rcpp::export("root_horizontalProportions")]]
 List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
                            NumericVector d, NumericVector rfc) {

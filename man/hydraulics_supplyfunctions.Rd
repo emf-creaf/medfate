@@ -278,3 +278,4 @@ Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about res
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

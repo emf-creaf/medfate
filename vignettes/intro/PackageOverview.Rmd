@@ -63,14 +63,13 @@ The package includes a number of functions to examine properties of the plants c
 
 ### Sub-model functions
 
-Many of the functions included in `medfate` are internally called by simulation functions. Some of them are made available to the user to facilitate a deeper understanding the different sub-models and a more creative use of the package, but most users can ignore them. 
+Many of the functions included in **medfate** are internally called by simulation functions. Some of them are made available to the user to facilitate a deeper understanding the different sub-models and a more creative use of the package, but most users can ignore them. For this reason, since **v.4.3.2** sub-model functions are labelled as *internal*, meaning that they are accessible and documented, but they are not visible in reference list, so that the sheer number of functions does not overwhelm users.
 
 Sub-model functions are grouped by *subject*, which is included in the name of the function. The different sub-model functions are (by subject):
 
 -   `biophysics_*`: Physical and biophysical utility functions.
 -   `carbon_*`: Carbon balance.
--   `fire_*`: Fire behavior and severity.
--   `fuel_*`: Fuel properties.
+-   `fire_*`: Fire severity.
 -   `hydraulics_*`: Plant hydraulics.
 -   `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
 -   `light_*`: Radiation extinction and absorption.

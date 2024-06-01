@@ -75,3 +75,4 @@ Kergoat L. (1998). A model for hydrological equilibrium of leaf area index on a 
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

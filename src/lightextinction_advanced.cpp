@@ -82,6 +82,7 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 //' kd_PAR <- 0.5
 //' kd_SWR <- kd_PAR/1.35
 //' @name light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_leafAngleCDF")]]
 double leafAngleCDF(double leafAngle, double p, double q) {
   double theta = leafAngle*(2.0/M_PI);
@@ -89,6 +90,7 @@ double leafAngleCDF(double leafAngle, double p, double q) {
 }
 
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_leafAngleBetaParameters")]]
 NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD) {
   double pow_sum = pow(leafAngleSD,2.0) + pow(leafAngle,2.0);
@@ -113,6 +115,7 @@ double G_function1(double leafAngle, double solarElevation) {
 }
 
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_directionalExtinctionCoefficient")]]
 double directionalExtinctionCoefficient(double p, double q, double solarElevation) {
   double mu = sin(solarElevation);
@@ -128,6 +131,7 @@ double directionalExtinctionCoefficient(double p, double q, double solarElevatio
 
 
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_layerDirectIrradianceFraction")]]
 NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
                                             NumericVector kb, NumericVector ClumpingIndex, 
@@ -175,6 +179,7 @@ double groundDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,N
 
 
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_layerDiffuseIrradianceFraction")]]
 NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
                                              NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF,
@@ -294,6 +299,7 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf,
  * I_{SH,ij}
  */
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_cohortSunlitShadeAbsorbedRadiation")]]
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
                                         NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx,
@@ -342,6 +348,7 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
  *  f_{SL, ij}
  */
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_layerSunlitFraction")]]
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
                                   NumericVector kb, NumericVector ClumpingIndex) {
@@ -364,6 +371,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd,
  * Calculates the amount of radiation absorbed by each cohort
  */
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_instantaneousLightExtinctionAbsortion")]]
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                                            NumericVector p, NumericVector q, NumericVector ClumpingIndex, 
@@ -519,6 +527,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
  *  Flerchinger GN, Xiao W, Sauer TJ, Yu Q (2009) Simulation of within-canopy radiation exchange. NJAS - Wageningen J Life Sci 57:5–15. https://doi.org/10.1016/j.njas.2009.07.004
  */
 //' @rdname light_advanced
+//' @keywords internal
 // [[Rcpp::export("light_longwaveRadiationSHAW")]]
 List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                            double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {

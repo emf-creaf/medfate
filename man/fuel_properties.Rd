@@ -4,7 +4,6 @@
 \alias{fuel_properties}
 \alias{fuel_stratification}
 \alias{fuel_FCCS}
-\alias{fuel_windAdjustmentFactor}
 \title{Fuel stratification and fuel characteristics}
 \usage{
 fuel_stratification(
@@ -25,13 +24,6 @@ fuel_FCCS(
   maxHeightProfile = 5000,
   bulkDensityThreshold = 0.05,
   depthMode = "crownaverage"
-)
-
-fuel_windAdjustmentFactor(
-  topShrubHeight,
-  bottomCanopyHeight,
-  topCanopyHeight,
-  canopyCover
 )
 }
 \arguments{
@@ -55,14 +47,6 @@ fuel_windAdjustmentFactor(
   \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
   \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
 }}
-
-\item{topShrubHeight}{Shrub stratum top height (in m).}
-
-\item{bottomCanopyHeight}{Canopy base height (in m).}
-
-\item{topCanopyHeight}{Canopy top height (in m).}
-
-\item{canopyCover}{Canopy percent cover.}
 }
 \value{
 Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  fuel layers: 
@@ -98,17 +82,11 @@ Function \code{fuel_stratification} returns a list with the following items:
     \item{\code{canopyTopHeight}: Top height of tree crowns in the canopy (in cm).}
     \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
   }
-  
-Function \code{fuel_cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). 
-Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
-
-Function \code{fuel_windAdjustmentFactor} returns a value between 0 and 1.
 }
 \description{
 Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. 
 Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object 
-following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). 
-Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012).
+following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013).
 }
 \examples{
 #Load example plot plant data
@@ -124,7 +102,6 @@ fuel_stratification(exampleforest, SpParamsMED)
 fccs = fuel_FCCS(exampleforest, SpParamsMED)
 fccs
 
-fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
 
 }
 \references{

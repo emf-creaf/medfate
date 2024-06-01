@@ -91,6 +91,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //' hydraulics_vulnerabilityCurvePlot(x, type="stem")
 //'              
 //' @name hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_psi2K")]]
 double Psi2K(double psi, double psi_extract, double exp_extract = 3.0) {
   return(exp(-0.6931472*pow(std::abs(psi/psi_extract),exp_extract)));
@@ -109,6 +110,7 @@ NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract = 
  * potential perceived by each plant cohort.
  */
 //' @rdname hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_K2Psi")]]
 double K2Psi(double K, double psi_extract, double exp_extract = 3.0) {
   double psi = psi_extract*pow(log(K)/(-0.6931472),1.0/exp_extract);
@@ -138,6 +140,7 @@ double gmin(double leafTemperature, double gmin_20,
 
 
 //' @rdname hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_averagePsi")]]
 double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract) {
   int nlayers = psi.size();
@@ -165,6 +168,7 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
 }
 
 //' @rdname hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_xylemPsi")]]
 double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
   double psi = d*pow(-log(kxylem/kxylemmax),1.0/c);
@@ -173,6 +177,7 @@ double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
 }
 
 //' @rdname hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_psiCrit")]]
 double psiCrit(double c, double d, double pCrit = 0.001) {
   return(d * pow(-log(pCrit), 1.0/c));
@@ -182,6 +187,7 @@ double psiCrit(double c, double d, double pCrit = 0.001) {
  * Van genuchten-mualem conductance equation (m = 1 - 1/n; l = 0.5)
  */
 //' @rdname hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_vanGenuchtenConductance")]]
 double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha) {
   double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
@@ -195,6 +201,7 @@ double correctConductanceForViscosity(double kxylem, double temp) {
 }
 
 //' @rdname hydraulics_conductancefunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_psi2Weibull")]]
 NumericVector psi2Weibull(double psi50, double psi88 = NA_REAL, double psi12 = NA_REAL) {
   if(NumericVector::is_na(psi88) && NumericVector::is_na(psi12)) stop("Either 'psi88' or 'psi12' has to be non-missing");
@@ -343,6 +350,7 @@ double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav 
 //'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 //' 
 //' @name hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_EXylem")]]
 double EXylem(double psiPlant, double psiUpstream, 
               double kxylemmax, double c, double d, 
@@ -361,6 +369,7 @@ double E2psiXylem(double E, double psiUpstream,
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_E2psiXylemUp")]]
 double E2psiXylemUp(double E, double psiDownstream, 
                   double kxylemmax, double c, double d, double psiCav = 0.0) {
@@ -429,6 +438,7 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax,
 // }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_ECrit")]]
 double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
   return(EXylem(psiCrit(c,d, pCrit), psiUpstream, kxylemmax, c, d));
@@ -464,6 +474,7 @@ double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pC
 
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_E2psiVanGenuchten")]]
 double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, double alpha, 
                          double psiStep = -0.0001, double psiMax = -10.0) {
@@ -486,6 +497,7 @@ double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, d
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_E2psiTwoElements")]]
 double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
                         double psiStep = -0.0001, double psiMax = -10.0) {
@@ -563,6 +575,7 @@ void lubksb(NumericMatrix a, int n, IntegerVector indx, NumericVector b) {
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_E2psiBelowground")]]
 List E2psiBelowground(double E, List hydraulicNetwork, 
                   NumericVector psiIni = NumericVector::create(0)) {
@@ -694,6 +707,7 @@ List E2psiBelowground(double E, List hydraulicNetwork,
 
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_E2psiAboveground")]]
 List E2psiAboveground(double E, double psiRootCrown, 
                       List hydraulicNetwork) {
@@ -741,6 +755,7 @@ List E2psiAbovegroundSymp(double E, double psiRootCrown,
 
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_E2psiNetwork")]]
 List E2psiNetwork(double E, List hydraulicNetwork,
                   NumericVector psiIni = NumericVector::create(0)) {
@@ -768,6 +783,7 @@ List E2psiNetwork(double E, List hydraulicNetwork,
 
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_supplyFunctionOneXylem")]]
 List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
                             double kstemmax, double stemc, double stemd, double psiCav = 0.0,
@@ -847,6 +863,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_supplyFunctionTwoElements")]]
 List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, 
                                double psiCav = 0.0, 
@@ -933,6 +950,7 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_supplyFunctionThreeElements")]]
 List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double kleafmax, 
                                  double n, double alpha, 
@@ -1057,6 +1075,7 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_supplyFunctionBelowground")]]
 List supplyFunctionBelowground(List hydraulicNetwork, 
                            double minFlow = 0.0, double pCrit = 0.001) {
@@ -1200,6 +1219,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
 
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_supplyFunctionNetwork")]]
 List supplyFunctionNetwork(List hydraulicNetwork, 
                            double minFlow = 0.0, double pCrit = 0.001) {
@@ -1299,6 +1319,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_regulatedPsiXylem")]]
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
   //If Ein > Ecrit then set Ein to Ecrit
@@ -1328,6 +1349,7 @@ NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, 
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_regulatedPsiTwoElements")]]
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0) {
   List s = supplyFunctionTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 0.0, dE,psiMax);
@@ -1419,6 +1441,7 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 //' \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
 //' 
 //' @name hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_maximumSoilPlantConductance")]]
 double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootmax, 
                                    double kstemmax, double kleafmax) {
@@ -1437,6 +1460,7 @@ double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootm
 }
 
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_soilPlantResistances")]]
 NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, 
                                    NumericVector psiStem, NumericVector PLCstem,
@@ -1483,6 +1507,7 @@ double rhizosphereResistancePercent(double psiSoil,
 }
 
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_averageRhizosphereResistancePercent")]]
 double averageRhizosphereResistancePercent(double krhizomax, double n, double alpha,
                                            double krootmax, double rootc, double rootd,
@@ -1505,6 +1530,7 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
 
 
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_findRhizosphereMaximumConductance")]]
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
@@ -1549,6 +1575,7 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
  * height - Tree height in cm
  */
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_taperFactorSavage")]]
 double taperFactorSavage(double height) {
   double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants (p = 1/3)
@@ -1566,6 +1593,7 @@ double taperFactorSavage(double height) {
  *  height - plant height in cm
  */
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_terminalConduitRadius")]]
 double terminalConduitRadius(double height) {
   double dh  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
@@ -1574,6 +1602,7 @@ double terminalConduitRadius(double height) {
 
 
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_referenceConductivityHeightFactor")]]
 double referenceConductivityHeightFactor(double refheight, double height) {
   double rhref  = terminalConduitRadius(refheight);
@@ -1594,6 +1623,7 @@ double referenceConductivityHeightFactor(double refheight, double height) {
  * taper - boolean to apply taper
  */
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_maximumStemHydraulicConductance")]]
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, 
                                        bool taper = false) {
@@ -1624,6 +1654,7 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
  * 
  */
 //' @rdname hydraulics_scalingconductance
+//' @keywords internal
 // [[Rcpp::export("hydraulics_rootxylemConductanceProportions")]]
 NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V) {
   int nlayers = L.size();
@@ -1668,6 +1699,7 @@ NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V) 
 //' \code{\link{hydraulics_conductancefunctions}}
 //' 
 //' @name hydraulics_defoliation
+//' @keywords internal
 // [[Rcpp::export("hydraulics_proportionDefoliationSigmoid")]]
 double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope, 
                                  double PLC_crit = 0.88, double P50_cv = 10.0) {
@@ -1678,6 +1710,7 @@ double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope,
   return(PDEF);
 }
 //' @name hydraulics_defoliation
+//' @keywords internal
 // [[Rcpp::export("hydraulics_proportionDefoliationWeibull")]]
 double proportionDefoliationWeibull(double psiLeaf, double c, double d, 
                                  double PLC_crit = 0.88, double P50_cv = 10.0) {

@@ -50,7 +50,7 @@ double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, do
  * Midflame windspeed (for surface fire) adjustment factor
  * Andrews, P.L., 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA For. Serv. - Gen. Tech. Rep. RMRS-GTR 1–39.
  */
-//' @rdname fuel_properties
+//' @noRd
 //' 
 //' @param topShrubHeight Shrub stratum top height (in m).
 //' @param bottomCanopyHeight Canopy base height (in m).

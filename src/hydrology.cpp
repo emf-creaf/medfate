@@ -19,6 +19,7 @@ using namespace Rcpp;
 //' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.
 //' 
 //' @rdname hydrology_interception
+//' @keywords internal
 // [[Rcpp::export("hydrology_rainfallIntensity")]]
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth){
   double Ri_month = rainfallIntensityPerMonth[month - 1];
@@ -51,6 +52,7 @@ double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05){
 //' @param PETs Potential evapotranspiration at the soil surface.
 //' @param Gsoil Gamma parameter (maximum daily evaporation).
 //' 
+//' @keywords internal
 // [[Rcpp::export("hydrology_soilEvaporationAmount")]]
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
@@ -90,6 +92,7 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
 //' 
 //' 
 //' @name hydrology_soilEvaporation
+//' @keywords internal
 // [[Rcpp::export("hydrology_soilEvaporation")]]
 double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
@@ -114,6 +117,7 @@ double soilEvaporation(DataFrame soil, double snowpack,
 //' @rdname hydrology_soilEvaporation
 //' @param LherbSWR Percentage of short-wave radiation (SWR) reaching the herbaceous layer.
 //' @param herbLAI Leaf area index of the herbaceous layer.
+//' @keywords internal
 // [[Rcpp::export("hydrology_herbaceousTranspiration")]]
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                       DataFrame soil, String soilFunctions, bool modifySoil = true){
@@ -170,6 +174,7 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
 //' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
 //' 
 //' @name hydrology_infiltration
+//' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationBoughton")]]
 double infiltrationBoughton(double input, double Ssoil) {
   double I = 0;
@@ -198,6 +203,7 @@ double fGreenAmptDer(double x, double t, double psi_w, double Ksat, double delta
 //' @param theta_sat volumetric content at saturation
 //' @param theta_dry volumetric content at the dry side of the wetting front
 //' 
+//' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationGreenAmpt")]]
 double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sat, double theta_dry) {
   double delta_theta = theta_sat - theta_dry;
@@ -224,6 +230,7 @@ double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sa
 //' @param macro Macroporosity of soil layers (in \%).
 //' @param a,b Parameters of the extinction function used for water infiltration.
 //' 
+//' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationRepartition")]]
 NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVector macro, 
                                       double a = -0.005, double b = 3.0) {
@@ -256,6 +263,7 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
 //' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 //' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 //' 
+//' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, 
                           String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
@@ -290,6 +298,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFr
 //' @param rad Solar radiation (in MJ/m2/day).
 //' @param elevation Altitude above sea level (m).
 //' 
+//' @keywords internal
 // [[Rcpp::export("hydrology_snowMelt")]]
 double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
   if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
@@ -347,6 +356,7 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 //' 
 //' 
 //' @name hydrology_verticalInputs
+//' @keywords internal
 // [[Rcpp::export("hydrology_waterInputs")]]
 NumericVector waterInputs(List x,
                           double prec, double rainfallIntensity,
@@ -645,6 +655,7 @@ double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksa
 //'                            soilDomains = "dual", modifySoil = FALSE)
 //'   
 //' @name hydrology_soilWaterBalance
+//' @keywords internal
 // [[Rcpp::export("hydrology_soilWaterBalance")]]
 NumericVector soilWaterBalance(DataFrame soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 

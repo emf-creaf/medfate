@@ -164,7 +164,6 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
 //' Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. 
 //' Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object 
 //' following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). 
-//' Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). 
 //' 
 //' @param object An object of class \code{\link{forest}}
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -208,10 +207,7 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
 //'     \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
 //'   }
 //'   
-//' Function \code{fuel_cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). 
-//' Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
 //' 
-//' Function \code{fuel_windAdjustmentFactor} returns a value between 0 and 1.
 //' 
 //' @references
 //' Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
@@ -238,7 +234,6 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
 //' fccs = fuel_FCCS(exampleforest, SpParamsMED)
 //' fccs
 //' 
-//' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
 //' 
 //' @name fuel_properties
 // [[Rcpp::export("fuel_stratification")]]

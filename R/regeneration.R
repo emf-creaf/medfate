@@ -56,6 +56,7 @@
 #' regeneration_recruitment(exampleforest, SpParamsMED, control, 3, 0.25)
 #' 
 #' @name regeneration
+#' @keywords internal
 regeneration_seedproduction<-function(forest, SpParams, control) {
   treeSpp <- forest$treeData$Species
   if(length(treeSpp)>0) {
@@ -79,6 +80,7 @@ regeneration_seedproduction<-function(forest, SpParams, control) {
 }
 
 #' @rdname regeneration
+#' @keywords internal
 regeneration_seedrefill <-function(seedBank, refillSpecies, refillPercent = NULL) {
   # Initialize seed bank if not present
   if(is.null(seedBank)) {
@@ -105,6 +107,7 @@ regeneration_seedrefill <-function(seedBank, refillSpecies, refillPercent = NULL
 }
 
 #' @rdname regeneration
+#' @keywords internal
 regeneration_seedmortality <- function(seedBank, SpParams, minPercent = 1) {
   if(is.null(seedBank)) {
     seedBank <- data.frame(Species = character(0), Percent = numeric(0))
@@ -118,6 +121,7 @@ regeneration_seedmortality <- function(seedBank, SpParams, minPercent = 1) {
 }
 
 #' @rdname regeneration
+#' @keywords internal
 regeneration_recruitment<-function(forest, SpParams, control,
                       minMonthTemp, moistureIndex, verbose = FALSE) {
   if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
@@ -222,6 +226,7 @@ regeneration_recruitment<-function(forest, SpParams, control,
 #' 
 #' @param internalMortality A data frame with mortality occurred in the last year of simulation. 
 #' @param management_results The result of calling a management function (see \code{\link{defaultManagementFunction}}).
+#' @keywords internal
 regeneration_resprouting <- function(forest, internalMortality, SpParams, control, 
                         management_results = NULL) {
   n_trees <- nrow(forest$treeData)

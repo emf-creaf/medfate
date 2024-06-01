@@ -394,6 +394,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
 //' @seealso  \code{\link{spwb}}
 //' 
 //' @name sureau_ecos
+//' @keywords internal
 // [[Rcpp::export("initSureauNetworks")]]
 List initSureauNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);

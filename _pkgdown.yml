@@ -59,16 +59,10 @@ reference:
   - starts_with("plot.forest")
   - starts_with("shinyplot.forest")
 
-- title: Roots
-  desc:  Belowground structure
-  contents:
-  - starts_with("root_")
-
-- title: Meteorology and physics
-  desc:  Forest meteorology and environmental physics
+- title: Meteorology
+  desc:  Meteorological forcing
   contents:
   - examplemeteo
-  - starts_with("wind")
 
 - title: Soil
   desc:  Soil initialization
@@ -87,7 +81,7 @@ reference:
   - starts_with("defaultManagement")
   - starts_with("resetInputs")
 
-- title: Simulation
+- title: Simulation functions
   desc:  Simulation model functions
   contents:
   - aspwb
@@ -97,7 +91,6 @@ reference:
   - growth
   - growth_day
   - fordyn
-  - sureau_ecos
 
 - title: Plots and summaries
   desc:  Summaries, extraction and plots of simulation results
@@ -121,52 +114,14 @@ reference:
   - exampleobs
   - starts_with("evaluation_")
   - starts_with("optimization_")
-  
-- title: Phenology
-  desc:  Leaf phenology processes
-  contents:
-  - starts_with("pheno_")
 
-
-- title: Hydraulics
-  desc:  Plant hydraulic processes
-  contents:
-  - starts_with("hydraulics_")
-
-- title: Hydrology
-  desc:  Forest hydrology processes
-  contents:
-  - starts_with("hydrology_")
-
-- title: Light and photosynthesis
-  desc:  Light extinction and photosynthesis processes
-  contents:
-  - starts_with("light_")
-  - starts_with("photo_")
-
-- title: Plant transpiration
-  desc:  Plant transpiration processes
+- title: Plant transpiration sub-models
+  desc:  Plant transpiration sub-models
   contents:
   - starts_with("transp_")
 
-- title: Carbon balance
-  desc: Carbon balance processes
-  contents:
-  - starts_with("carbon_")
-  
-
-- title: Regeneration
-  desc: Seed production, recruitment and resprouting processes
-  contents:
-  - regeneration
-
-- title: Water content
-  desc:  Plant/tissue water contents
-  contents:
-  - starts_with("moisture_")
-  
 - title: Wildfire
-  desc:  Fuel characteristics, fire behaviour and fire severity
+  desc:  Fuel characteristics and fire behaviour
   contents:
   - starts_with("fire_")
   - starts_with("fuel_")

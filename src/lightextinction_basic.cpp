@@ -50,6 +50,7 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //' @seealso  \code{\link{spwb}}, \code{\link{light_advanced}}
 //' 
 //' @name light_basic
+//' @keywords internal
 // [[Rcpp::export("light_PARcohort")]]
 NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
@@ -94,6 +95,7 @@ NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 }
 
 //' @rdname light_basic
+//' @keywords internal
 // [[Rcpp::export("light_PARground")]]
 double PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
@@ -126,6 +128,7 @@ NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 }
 
 //' @rdname light_basic
+//' @keywords internal
 // [[Rcpp::export("light_SWRground")]]
 double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
@@ -255,6 +258,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expan
 }
 
 //' @rdname light_basic
+//' @keywords internal
 // [[Rcpp::export("light_cohortAbsorbedSWRFraction")]]
 NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
    NumericMatrix LAIme =  LAIdistribution(z, x, SpParams, gdd);

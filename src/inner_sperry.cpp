@@ -48,6 +48,7 @@ List initSperryNetwork(int c,
 }
 
 //' @rdname hydraulics_supplyfunctions
+//' @keywords internal
 // [[Rcpp::export("hydraulics_initSperryNetworks")]]
 List initSperryNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);

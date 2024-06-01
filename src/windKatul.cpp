@@ -184,6 +184,7 @@ IntegerVector which(LogicalVector l) {
 //' wind_canopyTurbulenceModel(zm, Cx,h,d0,z0)
 //' 
 //' @name wind
+//' @keywords internal
 // [[Rcpp::export("wind_canopyTurbulenceModel")]]
 DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
                                      String model = "k-epsilon") {
@@ -385,6 +386,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
  *   windMeasurementHeight - Height of wind measurement over canopy
  */
 //' @rdname wind
+//' @keywords internal
 // [[Rcpp::export("wind_canopyTurbulence")]]
 DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
                                 double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
