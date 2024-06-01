@@ -5,6 +5,7 @@
 # Version 4.3.2
 - Default control parameters 
 - Subdaily soil temperature change limited for stability with thin first layer
+- Column 'Strict' added to SpParamsDefinition
 
 # Version 4.3.1
 - Functions forest2spwbInput/forest2growthInput deprecated. Preferred function names are spwbInput/growthInput.
