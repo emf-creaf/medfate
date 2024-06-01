@@ -70,6 +70,7 @@ Sub-model functions are grouped by *subject*, which is included in the name of t
 -   `biophysics_*`: Physical and biophysical utility functions.
 -   `carbon_*`: Carbon balance.
 -   `fire_*`: Fire severity.
+-   `fuel_*`: Fuel properties.
 -   `hydraulics_*`: Plant hydraulics.
 -   `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
 -   `light_*`: Radiation extinction and absorption.

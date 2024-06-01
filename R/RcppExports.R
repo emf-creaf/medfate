@@ -948,8 +948,6 @@ forest2belowground <- function(x, soil, SpParams) {
 #' 
 #' 
 #' @references
-#' Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
-#' 
 #' Prichard, S. J., D. V Sandberg, R. D. Ottmar, E. Eberhardt, A. Andreu, P. Eagle, and K. Swedin. 2013. Classification System Version 3.0: Technical Documentation.
 #' 
 #' Reinhardt, E., D. Lutes, and J. Scott. 2006. FuelCalc: A method for estimating fuel characteristics. Pages 273–282.
@@ -4154,14 +4152,37 @@ wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u, windMeasurementHei
     .Call(`_medfate_shelteredMidflameWindSpeed`, wind20H, crownFillProportion, topCanopyHeight)
 }
 
-#' @noRd
+#' Wind adjustment factor for Rothermel's model
+#' 
+#' Function fuel_windAdjustmentFactor determines the adjustment factor of wind for surface fires, according to Andrews (2012).
+#' 
+#' @name fuel_windAdjustmentFactor
 #' 
 #' @param topShrubHeight Shrub stratum top height (in m).
 #' @param bottomCanopyHeight Canopy base height (in m).
 #' @param topCanopyHeight Canopy top height (in m).
 #' @param canopyCover Canopy percent cover.
 #' 
+#' @returns A scalar value between 0 and 1
+#' 
+#' @references
+#' Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
+#' 
 #' @keywords internal
+#' 
+#' @examples
+#' #Load example plot plant data
+#'  data(exampleforest)
+#'   
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Calculate fuel properties according to FCCS
+#' fccs <- fuel_FCCS(exampleforest, SpParamsMED)
+#' 
+#' # Estimate wind adjustment factor
+#' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
+#' 
 fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover) {
     .Call(`_medfate_windAdjustmentFactor`, topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover)
 }

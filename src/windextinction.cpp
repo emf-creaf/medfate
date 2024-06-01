@@ -50,14 +50,37 @@ double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, do
  * Midflame windspeed (for surface fire) adjustment factor
  * Andrews, P.L., 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA For. Serv. - Gen. Tech. Rep. RMRS-GTR 1–39.
  */
-//' @noRd
+//' Wind adjustment factor for Rothermel's model
+//' 
+//' Function fuel_windAdjustmentFactor determines the adjustment factor of wind for surface fires, according to Andrews (2012).
+//' 
+//' @name fuel_windAdjustmentFactor
 //' 
 //' @param topShrubHeight Shrub stratum top height (in m).
 //' @param bottomCanopyHeight Canopy base height (in m).
 //' @param topCanopyHeight Canopy top height (in m).
 //' @param canopyCover Canopy percent cover.
 //' 
+//' @returns A scalar value between 0 and 1
+//' 
+//' @references
+//' Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
+//' 
 //' @keywords internal
+//' 
+//' @examples
+//' #Load example plot plant data
+//'  data(exampleforest)
+//'   
+//' #Default species parameterization
+//' data(SpParamsMED)
+//' 
+//' #Calculate fuel properties according to FCCS
+//' fccs <- fuel_FCCS(exampleforest, SpParamsMED)
+//' 
+//' # Estimate wind adjustment factor
+//' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
+//' 
 // [[Rcpp::export("fuel_windAdjustmentFactor")]]
 double windAdjustmentFactor(double topShrubHeight, double bottomCanopyHeight, double topCanopyHeight, double canopyCover){
   double crownFillProportion = ((topCanopyHeight-bottomCanopyHeight)/topCanopyHeight)*(canopyCover/300.0);
