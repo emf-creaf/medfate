@@ -133,32 +133,12 @@ double criticalFirelineIntensity(double CBH, double M) {
 //' data(SpParamsMED)
 //' 
 //' #Calculate fuel properties according to FCCS
-//' fccs = fuel_FCCS(exampleforest, SpParamsMED)
+//' fccs <- fuel_FCCS(exampleforest, SpParamsMED)
+//' fccs
 //'   
 //' #Calculate fire behavior according to FCCS
 //' fire_FCCS(fccs)
 //'   
-//' #Load fuel model parameter data
-//' data(SFM_metric)
-//'       
-//' #Fuel stratification (returns heights in cm)
-//' fs = fuel_stratification(exampleforest, SpParamsMED)
-//' 
-//' #Correct windspeed (transform heights to m)
-//' u = 11 #m/s
-//' umf = u*fuel_windAdjustmentFactor(fs$surfaceLayerTopHeight/100, 
-//'                                   fs$canopyBaseHeight/100, 
-//'                                   fs$canopyTopHeight/100, 60)
-//'       
-//' #Call Rothermel function using fuel model 'A6'
-//' fire_Rothermel(modeltype="D", wSI = as.numeric(SFM_metric["A6",2:6]), 
-//'                sSI = as.numeric(SFM_metric["A6",7:11]), 
-//'                delta = as.numeric(SFM_metric["A6",12]),
-//'                mx_dead = as.numeric(SFM_metric["A6",13]),
-//'                hSI = as.numeric(SFM_metric["A6",14:18]),
-//'                mSI = c(10,10,10,30,60),
-//'                u=umf, windDir=0, slope=0, aspect=0)
-//'             
 //'  
 //' @name fire_behaviour
 // [[Rcpp::export("fire_FCCS")]]
