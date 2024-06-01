@@ -25,3 +25,4 @@ to the value of a stress variable.
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

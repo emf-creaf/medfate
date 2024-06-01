@@ -38,7 +38,7 @@ NumericVector date2photoperiod(CharacterVector dateStrings, double latitude) {
 
 //' Physical and biophysical utility functions
 //' 
-//' Utility functions for the calculation of biophysical variables. 
+//' Internal utility functions for the calculation of biophysical variables. 
 //'
 //' @param t Time of the day (in seconds).
 //' @param daylength Day length (in seconds).
@@ -76,6 +76,7 @@ NumericVector date2photoperiod(CharacterVector dateStrings, double latitude) {
 //' @seealso \code{\link{spwb}}
 //' 
 //' @name biophysics
+//' @keywords internal
 // [[Rcpp::export("biophysics_radiationDiurnalPattern")]]
 double radiationDiurnalPattern(double t, double daylength) {
   double ws = (daylength/3600.0)*(M_PI/24.0); //sunrise
@@ -95,6 +96,7 @@ double radiationDiurnalPattern(double t, double daylength) {
 //' @rdname biophysics
 //' @param tmin,tmax Minimum and maximum daily temperature (ºC).
 //' @param tminPrev,tmaxPrev,tminNext Maximum and minimum daily temperatures of the previous and following day (ºC).
+//' @keywords internal
 // [[Rcpp::export("biophysics_temperatureDiurnalPattern")]]
 double temperatureDiurnalPattern(double t, double tmin, double tmax, 
                                  double tminPrev, double tmaxPrev, double tminNext, double daylength) {
@@ -129,6 +131,7 @@ double temperatureDiurnalPattern(double t, double tmin, double tmax,
 //' @param E Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.
 //' @param leafWidth Leaf width (in cm).
 //' 
+//' @keywords internal
 // [[Rcpp::export("biophysics_leafTemperature")]]
 double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 1.0) {
   double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
@@ -142,6 +145,7 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
 //' @rdname biophysics
 //' @param SWRabs Absorbed short-wave radiation (in W·m-2).
 //' @param LWRnet Net long-wave radiation balance (in W·m-2).
+//' @keywords internal
 // [[Rcpp::export("biophysics_leafTemperature2")]]
 double leafTemperature2(double SWRabs, double LWRnet, double airTemperature, double u, double E,  double leafWidth = 1.0) {
   if(NumericVector::is_na(SWRabs)) SWRabs = 0.0;
@@ -160,6 +164,7 @@ double leafTemperature2(double SWRabs, double LWRnet, double airTemperature, dou
 //' @rdname biophysics
 //' @param leafTemp Leaf temperature (ºC).
 //' @param leafPsi Leaf water potential (MPa).
+//' @keywords internal
 // [[Rcpp::export("biophysics_leafVapourPressure")]]
 double leafVapourPressure(double leafTemp,  double leafPsi) {
   double vpsl = meteoland::utils_saturationVP(std::max(0.0,leafTemp));
@@ -174,6 +179,7 @@ double leafVapourPressure(double leafTemp,  double leafPsi) {
 //' @rdname biophysics
 //' @param I Irradiance (in W*m-2).
 //' @param lambda Wavelength (in nm).
+//' @keywords internal
 // [[Rcpp::export("biophysics_irradianceToPhotonFlux")]]
 double irradianceToPhotonFlux(double I, double lambda = 546.6507) {
   return(I*lambda*0.836*1e-2);
@@ -189,6 +195,7 @@ double irradianceToPhotonFlux(double I, double lambda = 546.6507) {
  */
 //' @rdname biophysics
 //' @param temp Temperature (ºC).
+//' @keywords internal
 // [[Rcpp::export("biophysics_waterDynamicViscosity")]]
 double waterDynamicViscosity(double temp) {
   return(exp(-3.7188+(578.919/(-137.546+ temp + 273.15))));

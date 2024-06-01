@@ -121,6 +121,7 @@ NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay,
 //' soil_thermalCapacity(examplesoil)
 //' 
 //' @name soil_thermodynamics
+//' @keywords internal
 // [[Rcpp::export("soil_thermalCapacity")]]
 NumericVector thermalCapacity(DataFrame soil, String model = "SX") {
   NumericVector sand = soil["sand"];
@@ -135,6 +136,7 @@ NumericVector thermalCapacity(DataFrame soil, String model = "SX") {
 }
 
 //' @rdname soil_thermodynamics
+//' @keywords internal
 // [[Rcpp::export("soil_thermalConductivity")]]
 NumericVector thermalConductivity(DataFrame soil, String model = "SX") {
   NumericVector sand = soil["sand"];
@@ -153,6 +155,7 @@ NumericVector thermalConductivity(DataFrame soil, String model = "SX") {
  * Soil temperature gradient (in ºC/m)
  */
 //' @name soil_thermodynamics
+//' @keywords internal
 // [[Rcpp::export("soil_temperatureGradient")]]
 NumericVector temperatureGradient(NumericVector widths, NumericVector Temp) {
   NumericVector midZ = midpoints(widths);
@@ -168,6 +171,7 @@ NumericVector temperatureGradient(NumericVector widths, NumericVector Temp) {
 }
 
 //' @name soil_thermodynamics
+//' @keywords internal
 // [[Rcpp::export("soil_temperatureChange")]]
 NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
                                 NumericVector sand, NumericVector clay,

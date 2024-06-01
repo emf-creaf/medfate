@@ -62,3 +62,4 @@ Delpierre N, Dufrêne E, Soudani K et al (2009) Modelling interannual and spatia
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

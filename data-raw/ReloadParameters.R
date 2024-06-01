@@ -13,6 +13,7 @@ SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsDefinitio
                                               sheet="Definition", na = "NA"), stringsAsFactors=FALSE)
 SpParamsDefinition$Definition = stringi::stri_enc_toascii(SpParamsDefinition$Definition)
 SpParamsDefinition$Units = stringi::stri_enc_toascii(SpParamsDefinition$Units)
+SpParamsDefinition$Strict = as.logical(SpParamsDefinition$Strict)
 usethis::use_data(SpParamsDefinition, overwrite = T)
 
 

@@ -3,7 +3,9 @@
 -------------------------------
 
 # Version 4.3.2
-- Default control parameters 
+- IMPORTANT: Many functions have been internalized (biophysics_, fire_,...). 
+  They are documented and exported, but not listed in reference list.
+- Default control parameters changed
 - Subdaily soil temperature change limited for stability with thin first layer
 - Column 'Strict' added to SpParamsDefinition
 

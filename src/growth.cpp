@@ -35,6 +35,7 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{growth}}, \code{\link{regeneration}}
 //' 
+//' @keywords internal
 // [[Rcpp::export("mortality_dailyProbability")]]
 double dailyMortalityProbability(double stressValue, double stressThreshold) {
   double exponent = 40.0;

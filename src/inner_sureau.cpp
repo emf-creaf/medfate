@@ -492,6 +492,7 @@ void calculateRhizoPsi(int c,
 //'             \item{"rate" - following a rate of new sapwood formation.}
 //'             \item{"total" - instantaneous complete refilling.}
 //'           }
+//' @keywords internal
 // [[Rcpp::export("semi_implicit_integration")]]
 void semi_implicit_integration(List network, double dt, NumericVector opt, 
                                String stemCavitationRecovery = "annual", String leafCavitationRecovery = "total") {

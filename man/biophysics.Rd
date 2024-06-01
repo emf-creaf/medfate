@@ -84,7 +84,7 @@ Values returned for each function are:
 }
 }
 \description{
-Utility functions for the calculation of biophysical variables.
+Internal utility functions for the calculation of biophysical variables.
 }
 \details{
 Functions \code{biophysics_leafTemperature} and \code{biophysics_leafTemperature2} calculate leaf temperature according to energy balance equation given in Campbell and Norman (1988). 
@@ -110,3 +110,4 @@ H. Vogel, "Das Temperaturabhangigkeitsgesetz der Viskositat von Flussigkeiten", 
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

@@ -188,6 +188,7 @@ double JmaxTemp(double Jmax298, double Tleaf) {
  * return units: micromol*s-1*m-2
  */
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_electronLimitedPhotosynthesis")]]
 double electronLimitedPhotosynthesis(double Q, double Ci, double GT, double Jmax) {
   double J = ((quantumYield*Q+Jmax)-sqrt(pow(quantumYield*Q+Jmax, 2.0) - 4.0*lightResponseCurvature*quantumYield*Q*Jmax))/(2.0*lightResponseCurvature);
@@ -209,6 +210,7 @@ double electronLimitedPhotosynthesisDerivative(double Q, double Ci, double GT, d
  * return units: micromol*s-1*m-2
  */
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_rubiscoLimitedPhotosynthesis")]]
 double rubiscoLimitedPhotosynthesis(double Ci, double GT, double Km, double Vmax) {
   return(Vmax *(Ci-GT)/(Ci+Km));
@@ -261,6 +263,7 @@ double fder(double x, double Q, double Ca, double Gc, double GT, double Km, doub
  * return units: micromol*s-1*m-2
  */
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_photosynthesis")]]
 NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose=false) {
   //Corrections per leaf temperature
@@ -316,6 +319,7 @@ double gLeafBoundary(double u, double leafWidth, double gBound0 = 0.397){
 //' @rdname photo
 //' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
 //' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+//' @keywords internal
 // [[Rcpp::export("photo_photosynthesisBaldocchi")]]
 NumericVector photosynthesisBaldocchi(double Q, 
                                       double Catm, 
@@ -385,6 +389,7 @@ NumericVector photosynthesisBaldocchi(double Q,
 }
 
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_leafPhotosynthesisFunction")]]
 DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                              double absRad, double Q, double Vmax298, double Jmax298, 
@@ -444,6 +449,7 @@ NumericVector leafPhotosynthesisOneFunction2(double E, double psiLeaf, double Ca
 
 
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_leafPhotosynthesisFunction2")]]
 DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                      double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
@@ -495,6 +501,7 @@ DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, do
  * return units: micromol*s-1*m-2
  */
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_sunshadePhotosynthesisFunction")]]
 DataFrame sunshadePhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, 
                                   double SLarea, double SHarea,
@@ -570,6 +577,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, NumericVector psiLeaf,
 }
 
 //' @rdname photo
+//' @keywords internal
 // [[Rcpp::export("photo_multilayerPhotosynthesisFunction")]]
 DataFrame multilayerPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, 
                                            double Catm, double Patm, double Tair, double vpa, 

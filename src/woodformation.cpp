@@ -57,6 +57,7 @@ double Tref = 15.0; // Reference temperature in degC
 //' @seealso \code{\link{growth}}
 //' 
 //' @name woodformation
+//' @keywords internal
 // [[Rcpp::export("woodformation_initRing")]]
 List initialize_ring(){
   
@@ -93,6 +94,7 @@ double _metR(double Tc, double DHa, double DSd, double DHd){
 }
 
 //' @rdname woodformation
+//' @keywords internal
 // [[Rcpp::export("woodformation_temperatureEffect")]]
 double temperature_function(double Tc, double Y_T=5.0, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
   double out = _metR(Tc, DHa, DSd, DHd);
@@ -116,6 +118,7 @@ double _n2pi(double n, double V, double Tc){
 
 ////// Cell expansion model
 //' @rdname woodformation
+//' @keywords internal
 // [[Rcpp::export("woodformation_relativeExpansionRate")]]
 double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
   double out = phi*(psi-pi-Y_P);
@@ -186,6 +189,7 @@ void _expand_ring(List ring, double psi, double Tc,
 }
 
 //' @rdname woodformation
+//' @keywords internal
 // [[Rcpp::export("woodformation_growRing")]]
 void grow_ring(List ring, double psi, double Tc,
                 double Nc=8.85, double phi0=0.13, double pi0=-0.8, double CRD0=8.3,

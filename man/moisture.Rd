@@ -114,3 +114,4 @@ Martin-StPaul, N., Delzon, S., Cochard, H. 2017. Plant resistance to drought dep
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

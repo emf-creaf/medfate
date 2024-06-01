@@ -87,3 +87,4 @@ Michaletz, S.T., and Johnson, E.A. 2006. A heat transfer model of crown scorch i
 
   Michaletz ST, Johnson EA. 2008. A biophysical process model of tree mortality in surface fires. Canadian Journal of Forest Research 38: 2013–2029.
 }
+\keyword{internal}

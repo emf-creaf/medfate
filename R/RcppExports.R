@@ -71,7 +71,7 @@ aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_r
 
 #' Physical and biophysical utility functions
 #' 
-#' Utility functions for the calculation of biophysical variables. 
+#' Internal utility functions for the calculation of biophysical variables. 
 #'
 #' @param t Time of the day (in seconds).
 #' @param daylength Day length (in seconds).
@@ -109,6 +109,7 @@ aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_r
 #' @seealso \code{\link{spwb}}
 #' 
 #' @name biophysics
+#' @keywords internal
 biophysics_radiationDiurnalPattern <- function(t, daylength) {
     .Call(`_medfate_radiationDiurnalPattern`, t, daylength)
 }
@@ -116,6 +117,7 @@ biophysics_radiationDiurnalPattern <- function(t, daylength) {
 #' @rdname biophysics
 #' @param tmin,tmax Minimum and maximum daily temperature (ºC).
 #' @param tminPrev,tmaxPrev,tminNext Maximum and minimum daily temperatures of the previous and following day (ºC).
+#' @keywords internal
 biophysics_temperatureDiurnalPattern <- function(t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength) {
     .Call(`_medfate_temperatureDiurnalPattern`, t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength)
 }
@@ -128,6 +130,7 @@ biophysics_temperatureDiurnalPattern <- function(t, tmin, tmax, tminPrev, tmaxPr
 #' @param E Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.
 #' @param leafWidth Leaf width (in cm).
 #' 
+#' @keywords internal
 biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth = 1.0) {
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
@@ -135,6 +138,7 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
 #' @rdname biophysics
 #' @param SWRabs Absorbed short-wave radiation (in W·m-2).
 #' @param LWRnet Net long-wave radiation balance (in W·m-2).
+#' @keywords internal
 biophysics_leafTemperature2 <- function(SWRabs, LWRnet, airTemperature, u, E, leafWidth = 1.0) {
     .Call(`_medfate_leafTemperature2`, SWRabs, LWRnet, airTemperature, u, E, leafWidth)
 }
@@ -142,6 +146,7 @@ biophysics_leafTemperature2 <- function(SWRabs, LWRnet, airTemperature, u, E, le
 #' @rdname biophysics
 #' @param leafTemp Leaf temperature (ºC).
 #' @param leafPsi Leaf water potential (MPa).
+#' @keywords internal
 biophysics_leafVapourPressure <- function(leafTemp, leafPsi) {
     .Call(`_medfate_leafVapourPressure`, leafTemp, leafPsi)
 }
@@ -149,12 +154,14 @@ biophysics_leafVapourPressure <- function(leafTemp, leafPsi) {
 #' @rdname biophysics
 #' @param I Irradiance (in W*m-2).
 #' @param lambda Wavelength (in nm).
+#' @keywords internal
 biophysics_irradianceToPhotonFlux <- function(I, lambda = 546.6507) {
     .Call(`_medfate_irradianceToPhotonFlux`, I, lambda)
 }
 
 #' @rdname biophysics
 #' @param temp Temperature (ºC).
+#' @keywords internal
 biophysics_waterDynamicViscosity <- function(temp) {
     .Call(`_medfate_waterDynamicViscosity`, temp)
 }
@@ -425,31 +432,37 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #'   Michaletz ST, Johnson EA. 2008. A biophysical process model of tree mortality in surface fires. Canadian Journal of Forest Research 38: 2013–2029.
 #'   
 #' @name fire_severity
+#' @keywords internal
 fire_plumeTemperature <- function(Ib_surf, z, T_air = 25.0, rho_air = 1.169) {
     .Call(`_medfate_plumeTemperature`, Ib_surf, z, T_air, rho_air)
 }
 
 #' @rdname fire_severity
+#' @keywords internal
 fire_barkThermalDiffusivity <- function(fmc_bark, rho_bark = 500.0, T_air = 25.0) {
     .Call(`_medfate_barkThermalDiffusivity`, fmc_bark, rho_bark, T_air)
 }
 
 #' @rdname fire_severity
+#' @keywords internal
 fire_radialBoleNecrosis <- function(Ib_surf, t_res, bark_diffusivity, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
     .Call(`_medfate_radialBoleNecrosis`, Ib_surf, t_res, bark_diffusivity, T_air, rho_air, T_necrosis)
 }
 
 #' @rdname fire_severity
+#' @keywords internal
 fire_leafThermalFactor <- function(SLA, h = 130.0, c = 2500.0) {
     .Call(`_medfate_leafThermalFactor`, SLA, h, c)
 }
 
 #' @rdname fire_severity
+#' @keywords internal
 fire_necrosisCriticalTemperature <- function(t_res, thermal_factor, T_air = 25.0, T_necrosis = 60.0) {
     .Call(`_medfate_necrosisCriticalTemperature`, t_res, thermal_factor, T_air, T_necrosis)
 }
 
 #' @rdname fire_severity
+#' @keywords internal
 fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
     .Call(`_medfate_necrosisHeight`, Ib_surf, t_res, thermal_factor, T_air, rho_air, T_necrosis)
 }
@@ -1008,6 +1021,7 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_r
 #' 
 #' @seealso \code{\link{growth}}, \code{\link{regeneration}}
 #' 
+#' @keywords internal
 mortality_dailyProbability <- function(stressValue, stressThreshold) {
     .Call(`_medfate_dailyMortalityProbability`, stressValue, stressThreshold)
 }
@@ -2020,6 +2034,7 @@ initSureauNetworks <- function(x) {
 #'             \item{"rate" - following a rate of new sapwood formation.}
 #'             \item{"total" - instantaneous complete refilling.}
 #'           }
+#' @keywords internal
 semi_implicit_integration <- function(network, dt, opt, stemCavitationRecovery = "annual", leafCavitationRecovery = "total") {
     invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt, stemCavitationRecovery, leafCavitationRecovery))
 }
@@ -2558,6 +2573,7 @@ plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE, fillWithGe
 #' @seealso \code{\link{spwb}}, \code{\link{spwbInput}}
 #' 
 #' @name pheno_updateLeaves
+#' @keywords internal
 pheno_leafDevelopmentStatus <- function(Sgdd, gdd, unfoldingDD = 300.0) {
     .Call(`_medfate_leafDevelopmentStatus`, Sgdd, gdd, unfoldingDD)
 }
@@ -2565,6 +2581,7 @@ pheno_leafDevelopmentStatus <- function(Sgdd, gdd, unfoldingDD = 300.0) {
 #' @param Ssen Threshold to start leaf senescence.
 #' @param sen Cumulative senescence variable.
 #' @rdname pheno_updateLeaves
+#' @keywords internal
 pheno_leafSenescenceStatus <- function(Ssen, sen) {
     .Call(`_medfate_leafSenescenceStatus`, Ssen, sen)
 }
@@ -2574,6 +2591,7 @@ pheno_leafSenescenceStatus <- function(Ssen, sen) {
 #' @param photoperiod Day length (in hours).
 #' @param tmean Average day temperature (in Celsius).
 #' @rdname pheno_updateLeaves
+#' @keywords internal
 pheno_updatePhenology <- function(x, doy, photoperiod, tmean) {
     invisible(.Call(`_medfate_updatePhenology`, x, doy, photoperiod, tmean))
 }
@@ -2581,6 +2599,8 @@ pheno_updatePhenology <- function(x, doy, photoperiod, tmean) {
 #' @param wind Average day wind speed (in m/s).
 #' @param fromGrowthModel Boolean flag to indicate that routine is called from \code{\link{growth}} simulation function.
 #' @rdname pheno_updateLeaves
+#' 
+#' @keywords internal
 pheno_updateLeaves <- function(x, wind, fromGrowthModel) {
     invisible(.Call(`_medfate_updateLeaves`, x, wind, fromGrowthModel))
 }
@@ -2696,16 +2716,19 @@ photo_JmaxTemp <- function(Jmax298, Tleaf) {
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_electronLimitedPhotosynthesis <- function(Q, Ci, GT, Jmax) {
     .Call(`_medfate_electronLimitedPhotosynthesis`, Q, Ci, GT, Jmax)
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_rubiscoLimitedPhotosynthesis <- function(Ci, GT, Km, Vmax) {
     .Call(`_medfate_rubiscoLimitedPhotosynthesis`, Ci, GT, Km, Vmax)
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE) {
     .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
 }
@@ -2713,26 +2736,31 @@ photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose =
 #' @rdname photo
 #' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
 #' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+#' @keywords internal
 photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept) {
     .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept)
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
     .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_leafPhotosynthesisFunction2 <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
     .Call(`_medfate_leafPhotosynthesisFunction2`, E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_sunshadePhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth = 1.0, verbose = FALSE) {
     .Call(`_medfate_sunshadePhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose)
 }
 
 #' @rdname photo
+#' @keywords internal
 photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth = 1.0, verbose = FALSE) {
     .Call(`_medfate_multilayerPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
 }
@@ -2972,62 +3000,74 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
 #' soil_retentionCurvePlot(s, model="both")
 #' 
 #' @name soil_texture
+#' @keywords internal
 soil_saturatedConductivitySX <- function(clay, sand, bd, om = NA_real_, mmol = TRUE) {
     .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, bd, om, mmol)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_unsaturatedConductivitySX <- function(theta, clay, sand, bd, om = NA_real_, mmol = TRUE) {
     .Call(`_medfate_unsaturatedConductivitySaxton`, theta, clay, sand, bd, om, mmol)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
     .Call(`_medfate_thetaSATSaxton`, clay, sand, om)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_theta2psiSX <- function(clay, sand, theta, om = NA_real_) {
     .Call(`_medfate_theta2psiSaxton`, clay, sand, theta, om)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_psi2thetaSX <- function(clay, sand, psi, om = NA_real_) {
     .Call(`_medfate_psi2thetaSaxton`, clay, sand, psi, om)
 }
 
 #' @rdname soil_texture
 #' @param ksat saturated hydraulic conductance
+#' @keywords internal
 soil_psi2kVG <- function(ksat, n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2kVanGenuchten`, ksat, n, alpha, theta_res, theta_sat, psi)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_psi2cVG <- function(n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2cVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_psi2thetaVG <- function(n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2thetaVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_theta2psiVG <- function(n, alpha, theta_res, theta_sat, theta) {
     .Call(`_medfate_theta2psiVanGenuchten`, n, alpha, theta_res, theta_sat, theta)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_USDAType <- function(clay, sand) {
     .Call(`_medfate_USDAType`, clay, sand)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_thetaFC <- function(soil, model = "SX") {
     .Call(`_medfate_thetaFC`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_thetaWP <- function(soil, model = "SX") {
     .Call(`_medfate_thetaWP`, soil, model)
 }
@@ -3043,71 +3083,85 @@ soil_waterFC <- function(soil, model = "SX") {
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_waterSAT <- function(soil, model = "SX") {
     .Call(`_medfate_waterSAT`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_waterWP <- function(soil, model = "SX") {
     .Call(`_medfate_waterWP`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_waterPsi <- function(soil, psi, model = "SX") {
     .Call(`_medfate_waterPsi`, soil, psi, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_waterExtractable <- function(soil, model = "SX", minPsi = -5.0) {
     .Call(`_medfate_waterExtractable`, soil, model, minPsi)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_theta <- function(soil, model = "SX") {
     .Call(`_medfate_theta`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_water <- function(soil, model = "SX") {
     .Call(`_medfate_water`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_rockWeight2Volume <- function(pWeight, bulkDensity, rockDensity = 2.3) {
     .Call(`_medfate_rockWeight2Volume`, pWeight, bulkDensity, rockDensity)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_psi <- function(soil, model = "SX") {
     .Call(`_medfate_psi`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_conductivity <- function(soil, model = "SX") {
     .Call(`_medfate_conductivity`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_capacitance <- function(soil, model = "SX") {
     .Call(`_medfate_capacitance`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_saturatedWaterDepth <- function(soil, model = "SX") {
     .Call(`_medfate_saturatedWaterDepth`, soil, model)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_vanGenuchtenParamsCarsel <- function(soilType) {
     .Call(`_medfate_vanGenuchtenParamsCarsel`, soilType)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_campbellParamsClappHornberger <- function(soilType) {
     .Call(`_medfate_campbellParamsClappHornberger`, soilType)
 }
 
 #' @rdname soil_texture
+#' @keywords internal
 soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
     .Call(`_medfate_vanGenuchtenParamsToth`, clay, sand, om, bd, topsoil)
 }
@@ -3236,21 +3290,25 @@ soil <- function(x, VG_PTF = "Toth") {
 #' soil_thermalCapacity(examplesoil)
 #' 
 #' @name soil_thermodynamics
+#' @keywords internal
 soil_thermalCapacity <- function(soil, model = "SX") {
     .Call(`_medfate_thermalCapacity`, soil, model)
 }
 
 #' @rdname soil_thermodynamics
+#' @keywords internal
 soil_thermalConductivity <- function(soil, model = "SX") {
     .Call(`_medfate_thermalConductivity`, soil, model)
 }
 
 #' @name soil_thermodynamics
+#' @keywords internal
 soil_temperatureGradient <- function(widths, Temp) {
     .Call(`_medfate_temperatureGradient`, widths, Temp)
 }
 
 #' @name soil_thermodynamics
+#' @keywords internal
 soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep) {
     .Call(`_medfate_temperatureChange`, widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
 }
@@ -3679,46 +3737,55 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
 #' plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC")
 #' 
 #' @name moisture
+#' @keywords internal
 moisture_sapwoodWaterCapacity <- function(Al2As, height, V, L, wd) {
     .Call(`_medfate_sapwoodWaterCapacity`, Al2As, height, V, L, wd)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_leafWaterCapacity <- function(SLA, ld) {
     .Call(`_medfate_leafWaterCapacity`, SLA, ld)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_turgorLossPoint <- function(pi0, epsilon) {
     .Call(`_medfate_turgorLossPoint`, pi0, epsilon)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {
     .Call(`_medfate_symplasticRelativeWaterContent`, psiSym, pi0, epsilon)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_symplasticPsi <- function(RWC, pi0, epsilon) {
     .Call(`_medfate_symplasticWaterPotential`, RWC, pi0, epsilon)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_apoplasticRWC <- function(psiApo, c, d) {
     .Call(`_medfate_apoplasticRelativeWaterContent`, psiApo, c, d)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_apoplasticPsi <- function(RWC, c, d) {
     .Call(`_medfate_apoplasticWaterPotential`, RWC, c, d)
 }
 
 #' @rdname moisture
+#' @keywords internal
 moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
     .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af)
 }
 
 #' @rdname moisture
+#' @keywords internal
 plant_water <- function(x) {
     .Call(`_medfate_plantWaterContent`, x)
 }
@@ -4095,21 +4162,25 @@ fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCan
 #' @seealso \code{\link{growth}}
 #' 
 #' @name woodformation
+#' @keywords internal
 woodformation_initRing <- function() {
     .Call(`_medfate_initialize_ring`)
 }
 
 #' @rdname woodformation
+#' @keywords internal
 woodformation_temperatureEffect <- function(Tc, Y_T = 5.0, DHa = 87.5e3, DSd = 1.09e3, DHd = 333e3) {
     .Call(`_medfate_temperature_function`, Tc, Y_T, DHa, DSd, DHd)
 }
 
 #' @rdname woodformation
+#' @keywords internal
 woodformation_relativeExpansionRate <- function(psi, Tc, pi, phi, Y_P, Y_T) {
     .Call(`_medfate_relative_expansion_rate`, psi, Tc, pi, phi, Y_P, Y_T)
 }
 
 #' @rdname woodformation
+#' @keywords internal
 woodformation_growRing <- function(ring, psi, Tc, Nc = 8.85, phi0 = 0.13, pi0 = -0.8, CRD0 = 8.3, Y_P = 0.05, Y_T = 5.0, h = 0.043*1.8, s = 1.8) {
     invisible(.Call(`_medfate_grow_ring`, ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s))
 }

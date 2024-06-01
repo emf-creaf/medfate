@@ -68,11 +68,10 @@ reference:
   desc:  Forest meteorology and environmental physics
   contents:
   - examplemeteo
-  - starts_with("biophysics")
   - starts_with("wind")
 
 - title: Soil
-  desc:  Soil-related functions
+  desc:  Soil initialization
   contents:
   - starts_with("defaultSoil")
   - soil
@@ -155,11 +154,6 @@ reference:
   contents:
   - starts_with("carbon_")
   
-- title: Secondary growth, mortality and regeneration
-  desc: Wood formation, mortality, recruitment and resprouting processes
-  contents:
-  - starts_with("woodformation_")
-  - starts_with("mortality_")
 
 - title: Regeneration
   desc: Seed production, recruitment and resprouting processes

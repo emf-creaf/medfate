@@ -52,6 +52,7 @@ double erfInv(double x){
 //'   Michaletz ST, Johnson EA. 2008. A biophysical process model of tree mortality in surface fires. Canadian Journal of Forest Research 38: 2013–2029.
 //'   
 //' @name fire_severity
+//' @keywords internal
 // [[Rcpp::export("fire_plumeTemperature")]]
 double plumeTemperature(double Ib_surf, double z, double T_air = 25.0, double rho_air = 1.169) {
   double C = 2.6; //(Yuan and Cox 1996)
@@ -60,6 +61,7 @@ double plumeTemperature(double Ib_surf, double z, double T_air = 25.0, double rh
 }
  
 //' @rdname fire_severity
+//' @keywords internal
 // [[Rcpp::export("fire_barkThermalDiffusivity")]]
 double barkThermalDiffusivity(double fmc_bark, double rho_bark = 500.0, double T_air = 25.0) {
   double W = fmc_bark/100.0; // From percent to fraction
@@ -74,6 +76,7 @@ double barkThermalDiffusivity(double fmc_bark, double rho_bark = 500.0, double T
 }
 
 //' @rdname fire_severity
+//' @keywords internal
 // [[Rcpp::export("fire_radialBoleNecrosis")]]
 double radialBoleNecrosis(double Ib_surf, double t_res, double bark_diffusivity,
                           double T_air = 25.0, double rho_air = 1.169, double T_necrosis = 60.0) {
@@ -84,12 +87,14 @@ double radialBoleNecrosis(double Ib_surf, double t_res, double bark_diffusivity,
 }
 
 //' @rdname fire_severity
+//' @keywords internal
 // [[Rcpp::export("fire_leafThermalFactor")]]
 double leafThermalFactor(double SLA, double h = 130.0, double c = 2500.0) {
    return(SLA*(h/c));
 }
 
 //' @rdname fire_severity
+//' @keywords internal
 // [[Rcpp::export("fire_necrosisCriticalTemperature")]]
 double necrosisCriticalTemperature(double t_res, double thermal_factor, double T_air = 25.0, double T_necrosis = 60.0) {
    double theta = exp(-1.0*thermal_factor*t_res);
@@ -98,6 +103,7 @@ double necrosisCriticalTemperature(double t_res, double thermal_factor, double T
 }
 
 //' @rdname fire_severity
+//' @keywords internal
 // [[Rcpp::export("fire_necrosisHeight")]]
 double necrosisHeight(double Ib_surf, double t_res, double thermal_factor, 
                       double T_air = 25.0, double rho_air = 1.169, double T_necrosis = 60.0) {

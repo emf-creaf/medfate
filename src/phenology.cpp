@@ -57,6 +57,7 @@ bool leafSenescenceStatus(double Ssen, double sen) {
 //' @seealso \code{\link{spwb}}, \code{\link{spwbInput}}
 //' 
 //' @name pheno_updateLeaves
+//' @keywords internal
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
 NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD = 300.0) {
   NumericVector phe(Sgdd.size());
@@ -67,6 +68,7 @@ NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, doubl
 //' @param Ssen Threshold to start leaf senescence.
 //' @param sen Cumulative senescence variable.
 //' @rdname pheno_updateLeaves
+//' @keywords internal
 // [[Rcpp::export("pheno_leafSenescenceStatus")]]
 LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
   LogicalVector phe(Ssen.size());
@@ -79,6 +81,7 @@ LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
 //' @param photoperiod Day length (in hours).
 //' @param tmean Average day temperature (in Celsius).
 //' @rdname pheno_updateLeaves
+//' @keywords internal
 // [[Rcpp::export("pheno_updatePhenology")]]
 void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   List control = x["control"];
@@ -195,6 +198,8 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
 //' @param wind Average day wind speed (in m/s).
 //' @param fromGrowthModel Boolean flag to indicate that routine is called from \code{\link{growth}} simulation function.
 //' @rdname pheno_updateLeaves
+//' 
+//' @keywords internal
 // [[Rcpp::export("pheno_updateLeaves")]]
 void updateLeaves(List x, double wind, bool fromGrowthModel) {
   List control = x["control"];

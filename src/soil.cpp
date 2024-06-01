@@ -112,6 +112,7 @@ CharacterVector layerNames(int nlayers) {
 //' soil_retentionCurvePlot(s, model="both")
 //' 
 //' @name soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_saturatedConductivitySX")]]
 double saturatedConductivitySaxton(double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {
   double Ksat = NA_REAL;
@@ -149,6 +150,7 @@ double saturatedConductivitySaxton(double clay, double sand, double bd, double o
 }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_unsaturatedConductivitySX")]]
 double unsaturatedConductivitySaxton(double theta, double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {
   double Kunsat = NA_REAL;
@@ -189,6 +191,7 @@ double unsaturatedConductivitySaxton(double theta, double clay, double sand, dou
  *  Returns water content (% volume) at saturation according to Saxton's pedotransfer model
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_thetaSATSX")]]
 double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
   double theta_sat = NA_REAL;
@@ -214,6 +217,7 @@ double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
  * theta - soil water content (in % volume)
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_theta2psiSX")]]
 double theta2psiSaxton(double clay, double sand, double theta, double om = NA_REAL) {
   double A = NA_REAL;
@@ -270,6 +274,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
  *  psi - Soil water potential (in MPa)
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_psi2thetaSX")]]
 double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL) {
   double A = NA_REAL;
@@ -324,6 +329,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
  */
 //' @rdname soil_texture
 //' @param ksat saturated hydraulic conductance
+//' @keywords internal
 // [[Rcpp::export("soil_psi2kVG")]]
 double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi){
   double m = 1.0 - (1.0/n);
@@ -358,6 +364,7 @@ double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res,
 
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_psi2cVG")]]
 double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi){
   double m = 1.0 - (1.0/n);
@@ -372,6 +379,7 @@ double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_
  *  psi - Soil water potential (in MPa)
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_psi2thetaVG")]]
 double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi) {
   double m = 1.0 - (1.0/n);
@@ -384,6 +392,7 @@ double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double th
  *  theta - soil water content (in % volume)
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_theta2psiVG")]]
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta) {
   //if theta > theta_sat then psi = 0
@@ -399,6 +408,7 @@ double theta2psiVanGenuchten(double n, double alpha, double theta_res, double th
 
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_USDAType")]]
 String USDAType(double clay, double sand) {
   double silt = 100 - clay - sand;
@@ -468,6 +478,7 @@ NumericVector psi2thetasoil(DataFrame soil, double psi, String model="SX") {
  * Returns water content in volume per soil volume at field capacity, according to the given pedotransfer model
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_thetaFC")]]
 NumericVector thetaFC(DataFrame soil, String model="SX") {
   if(!soil.inherits("soil")) {
@@ -482,6 +493,7 @@ NumericVector thetaFC(DataFrame soil, String model="SX") {
  * Returns water content in volume per soil volume at field capacity, according to the given pedotransfer model
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_thetaWP")]]
 NumericVector thetaWP(DataFrame soil, String model="SX") {
   if(!soil.inherits("soil")) {
@@ -543,6 +555,7 @@ NumericVector waterFC(DataFrame soil, String model="SX") {
  * Returns water content in mm at saturation, according to the given pedotransfer model
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_waterSAT")]]
 NumericVector waterSAT(DataFrame soil, String model="SX") {
   if(!soil.inherits("soil")) {
@@ -559,6 +572,7 @@ NumericVector waterSAT(DataFrame soil, String model="SX") {
 }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_waterWP")]]
 NumericVector waterWP(DataFrame soil, String model="SX") {
   if(!soil.inherits("soil")) {
@@ -575,7 +589,8 @@ NumericVector waterWP(DataFrame soil, String model="SX") {
 }
 
 //' @rdname soil_texture
- // [[Rcpp::export("soil_waterPsi")]]
+//' @keywords internal
+// [[Rcpp::export("soil_waterPsi")]]
  NumericVector waterPsi(DataFrame soil, double psi, String model="SX") {
    if(!soil.inherits("soil")) {
      if(soil.inherits("data.frame")) stop("Please, initialize soil parameters using function `soil()`");
@@ -591,6 +606,7 @@ NumericVector waterWP(DataFrame soil, String model="SX") {
  }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_waterExtractable")]]
 NumericVector waterExtractable(DataFrame soil, String model="SX", double minPsi = -5.0) {
   if(!soil.inherits("soil")) {
@@ -611,6 +627,7 @@ NumericVector waterExtractable(DataFrame soil, String model="SX", double minPsi 
  * Returns current water content (in prop. volume), according to the given pedotransfer model
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_theta")]]
 NumericVector theta(DataFrame soil, String model="SX") {
   if(!soil.inherits("soil")) {
@@ -624,6 +641,7 @@ NumericVector theta(DataFrame soil, String model="SX") {
 }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_water")]]
 NumericVector water(DataFrame soil, String model="SX") {
   if(!soil.inherits("soil")) {
@@ -640,6 +658,7 @@ NumericVector water(DataFrame soil, String model="SX") {
 }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_rockWeight2Volume")]]
 double rockWeight2Volume(double pWeight, double bulkDensity, double rockDensity = 2.3) {
   double rVolume = pWeight/rockDensity;
@@ -650,6 +669,7 @@ double rockWeight2Volume(double pWeight, double bulkDensity, double rockDensity 
  * Returns current water potential, according to the given pedotransfer model
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_psi")]]
 NumericVector psi(DataFrame soil, String model="SX") {
   NumericVector Theta = theta(soil, model);
@@ -675,6 +695,7 @@ NumericVector psi(DataFrame soil, String model="SX") {
 }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_conductivity")]]
 NumericVector conductivity(DataFrame soil, String model="SX") {
   NumericVector W = soil["W"];
@@ -704,7 +725,8 @@ NumericVector conductivity(DataFrame soil, String model="SX") {
 }
 
 //' @rdname soil_texture
- // [[Rcpp::export("soil_capacitance")]]
+//' @keywords internal
+// [[Rcpp::export("soil_capacitance")]]
  NumericVector capacitance(DataFrame soil, String model="SX") {
    NumericVector W = soil["W"];
    int nlayers = W.size();
@@ -726,6 +748,7 @@ NumericVector conductivity(DataFrame soil, String model="SX") {
  }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_saturatedWaterDepth")]]
 double saturatedWaterDepth(DataFrame soil, String model = "SX") {
   NumericVector widths = soil["widths"];
@@ -763,6 +786,7 @@ double saturatedWaterDepth(DataFrame soil, String model = "SX") {
  *  4 - saturated soil conductivity (mmol·m-2·s-1·MPa-1)
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_vanGenuchtenParamsCarsel")]]
 NumericVector vanGenuchtenParamsCarsel(String soilType) {
   NumericVector vg(5,NA_REAL);
@@ -784,6 +808,7 @@ NumericVector vanGenuchtenParamsCarsel(String soilType) {
 }
 
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_campbellParamsClappHornberger")]]
 NumericVector campbellParamsClappHornberger(String soilType) {
    NumericVector cp(4,NA_REAL);
@@ -815,6 +840,7 @@ NumericVector campbellParamsClappHornberger(String soilType) {
  *  3 - saturated water content 
  */
 //' @rdname soil_texture
+//' @keywords internal
 // [[Rcpp::export("soil_vanGenuchtenParamsToth")]]
 NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil) {
   double silt = 100.0 - clay - sand;

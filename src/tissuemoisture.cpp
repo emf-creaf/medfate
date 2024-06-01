@@ -64,6 +64,7 @@ using namespace Rcpp;
 //' plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC")
 //' 
 //' @name moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_sapwoodWaterCapacity")]]
 double sapwoodWaterCapacity(double Al2As, double height, NumericVector V, NumericVector L, double wd) {
   int nlayers = V.size();
@@ -85,6 +86,7 @@ double sapwoodWaterCapacity(double Al2As, double height, NumericVector V, Numeri
  * ld - leaf density (in g/cm3 = 1000 kg/m3)
  */
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_leafWaterCapacity")]]
 double leafWaterCapacity(double SLA, double ld) {
   return(1000.0/(1000.0*ld*SLA))*(1.0- (ld/1.54));
@@ -92,6 +94,7 @@ double leafWaterCapacity(double SLA, double ld) {
 
 
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_turgorLossPoint")]]
 double turgorLossPoint(double pi0, double epsilon) {
   return((pi0*epsilon)/(pi0+epsilon));
@@ -110,6 +113,7 @@ double turgorLossPoint(double pi0, double epsilon) {
 *  Returns symplastic RWC as proportion of maximum hydration 
 */
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_symplasticRWC")]]
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon) {
   double psi_tl = turgorLossPoint(pi0,epsilon);
@@ -126,6 +130,7 @@ double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon)
 }
 
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_symplasticPsi")]]
 double symplasticWaterPotential(double RWC, double pi0, double epsilon) {
   double pt = std::max(0.0,-pi0 +(-1.0)*epsilon*(1.0 - RWC));
@@ -141,6 +146,7 @@ double symplasticWaterPotential(double RWC, double pi0, double epsilon) {
  *  Returns Apoplastic RWC as proportion of maximum hydration 
  */
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_apoplasticRWC")]]
 double apoplasticRelativeWaterContent(double psiApo, double c, double d) {
   if(psiApo>=0.0) return(1.0);
@@ -148,6 +154,7 @@ double apoplasticRelativeWaterContent(double psiApo, double c, double d) {
 }
 
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_apoplasticPsi")]]
 double apoplasticWaterPotential(double RWC, double c, double d) {
   double psi = d*pow(-1.0*log(RWC),1.0/c);
@@ -170,6 +177,7 @@ double apoplasticWaterPotential(double RWC, double c, double d) {
  *  Returns tissue RWC as proportion of maximum hydration (= g H2O / g H2O sat = m3 H2O / m3 H2O sat)
  */
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("moisture_tissueRWC")]]
 double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, 
                                   double psiApo, double c, double d, 
@@ -180,6 +188,7 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
 }
 
 //' @rdname moisture
+//' @keywords internal
 // [[Rcpp::export("plant_water")]]
 NumericVector plantWaterContent(List x) {
   List control = x["control"];
