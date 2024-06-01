@@ -138,16 +138,12 @@
         </td>
         <td><p>Example daily meteorology data</p></td>
       </tr><tr><td>
-          <p><code><a href="biophysics.html">biophysics_radiationDiurnalPattern()</a></code> <code><a href="biophysics.html">biophysics_temperatureDiurnalPattern()</a></code> <code><a href="biophysics.html">biophysics_leafTemperature()</a></code> <code><a href="biophysics.html">biophysics_leafTemperature2()</a></code> <code><a href="biophysics.html">biophysics_leafVapourPressure()</a></code> <code><a href="biophysics.html">biophysics_irradianceToPhotonFlux()</a></code> <code><a href="biophysics.html">biophysics_waterDynamicViscosity()</a></code> </p>
-        </td>
-        <td><p>Physical and biophysical utility functions</p></td>
-      </tr><tr><td>
           <p><code><a href="wind.html">wind_canopyTurbulenceModel()</a></code> <code><a href="wind.html">wind_canopyTurbulence()</a></code> </p>
         </td>
         <td><p>Models for canopy turbulence</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="soil">Soil <a href="#soil" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Soil-related functions</p>
+          <p class="section-desc"></p><p>Soil initialization</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="defaultSoilParams.html">defaultSoilParams()</a></code> </p>
@@ -161,14 +157,6 @@
           <p><code><a href="soil_redefineLayers.html">soil_redefineLayers()</a></code> </p>
         </td>
         <td><p>Redefine soil layer widths</p></td>
-      </tr><tr><td>
-          <p><code><a href="soil_texture.html">soil_saturatedConductivitySX()</a></code> <code><a href="soil_texture.html">soil_unsaturatedConductivitySX()</a></code> <code><a href="soil_texture.html">soil_thetaSATSX()</a></code> <code><a href="soil_texture.html">soil_theta2psiSX()</a></code> <code><a href="soil_texture.html">soil_psi2thetaSX()</a></code> <code><a href="soil_texture.html">soil_psi2kVG()</a></code> <code><a href="soil_texture.html">soil_psi2cVG()</a></code> <code><a href="soil_texture.html">soil_psi2thetaVG()</a></code> <code><a href="soil_texture.html">soil_theta2psiVG()</a></code> <code><a href="soil_texture.html">soil_USDAType()</a></code> <code><a href="soil_texture.html">soil_thetaFC()</a></code> <code><a href="soil_texture.html">soil_thetaWP()</a></code> <code><a href="soil_texture.html">soil_thetaSAT()</a></code> <code><a href="soil_texture.html">soil_waterFC()</a></code> <code><a href="soil_texture.html">soil_waterSAT()</a></code> <code><a href="soil_texture.html">soil_waterWP()</a></code> <code><a href="soil_texture.html">soil_waterPsi()</a></code> <code><a href="soil_texture.html">soil_waterExtractable()</a></code> <code><a href="soil_texture.html">soil_theta()</a></code> <code><a href="soil_texture.html">soil_water()</a></code> <code><a href="soil_texture.html">soil_rockWeight2Volume()</a></code> <code><a href="soil_texture.html">soil_psi()</a></code> <code><a href="soil_texture.html">soil_conductivity()</a></code> <code><a href="soil_texture.html">soil_capacitance()</a></code> <code><a href="soil_texture.html">soil_saturatedWaterDepth()</a></code> <code><a href="soil_texture.html">soil_vanGenuchtenParamsCarsel()</a></code> <code><a href="soil_texture.html">soil_campbellParamsClappHornberger()</a></code> <code><a href="soil_texture.html">soil_vanGenuchtenParamsToth()</a></code> <code><a href="soil_texture.html">soil_retentionCurvePlot()</a></code> </p>
-        </td>
-        <td><p>Soil texture and hydraulics</p></td>
-      </tr><tr><td>
-          <p><code><a href="soil_thermodynamics.html">soil_thermalCapacity()</a></code> <code><a href="soil_thermodynamics.html">soil_thermalConductivity()</a></code> <code><a href="soil_thermodynamics.html">soil_temperatureGradient()</a></code> <code><a href="soil_thermodynamics.html">soil_temperatureChange()</a></code> </p>
-        </td>
-        <td><p>Soil thermodynamic functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="simulation-inputs">Simulation inputs <a href="#simulation-inputs" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Simulation control and input objects</p>
@@ -289,11 +277,7 @@
           <h2 id="phenology">Phenology <a href="#phenology" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Leaf phenology processes</p>
         </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="pheno_updateLeaves.html">pheno_leafDevelopmentStatus()</a></code> <code><a href="pheno_updateLeaves.html">pheno_leafSenescenceStatus()</a></code> <code><a href="pheno_updateLeaves.html">pheno_updatePhenology()</a></code> <code><a href="pheno_updateLeaves.html">pheno_updateLeaves()</a></code> </p>
-        </td>
-        <td><p>Leaf phenology</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
+      </tr></tbody><tbody></tbody><tbody><tr><th colspan="2">
           <h2 id="hydraulics">Hydraulics <a href="#hydraulics" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Plant hydraulic processes</p>
         </th>
@@ -349,10 +333,6 @@
           <p><code><a href="light_basic.html">light_PARcohort()</a></code> <code><a href="light_basic.html">light_PARground()</a></code> <code><a href="light_basic.html">light_SWRground()</a></code> <code><a href="light_basic.html">light_cohortAbsorbedSWRFraction()</a></code> </p>
         </td>
         <td><p>Radiation extinction functions used in basic transpiration sub-model</p></td>
-      </tr><tr><td>
-          <p><code><a href="photo.html">photo_GammaTemp()</a></code> <code><a href="photo.html">photo_KmTemp()</a></code> <code><a href="photo.html">photo_VmaxTemp()</a></code> <code><a href="photo.html">photo_JmaxTemp()</a></code> <code><a href="photo.html">photo_electronLimitedPhotosynthesis()</a></code> <code><a href="photo.html">photo_rubiscoLimitedPhotosynthesis()</a></code> <code><a href="photo.html">photo_photosynthesis()</a></code> <code><a href="photo.html">photo_photosynthesisBaldocchi()</a></code> <code><a href="photo.html">photo_leafPhotosynthesisFunction()</a></code> <code><a href="photo.html">photo_leafPhotosynthesisFunction2()</a></code> <code><a href="photo.html">photo_sunshadePhotosynthesisFunction()</a></code> <code><a href="photo.html">photo_multilayerPhotosynthesisFunction()</a></code> </p>
-        </td>
-        <td><p>Photosynthesis submodel functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="plant-transpiration">Plant transpiration <a href="#plant-transpiration" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Plant transpiration processes</p>
@@ -378,18 +358,6 @@
         </td>
         <td><p>Carbon-related functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="secondary-growth-mortality-and-regeneration">Secondary growth, mortality and regeneration <a href="#secondary-growth-mortality-and-regeneration" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Wood formation, mortality, recruitment and resprouting processes</p>
-        </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="woodformation.html">woodformation_initRing()</a></code> <code><a href="woodformation.html">woodformation_temperatureEffect()</a></code> <code><a href="woodformation.html">woodformation_relativeExpansionRate()</a></code> <code><a href="woodformation.html">woodformation_growRing()</a></code> <code><a href="woodformation.html">woodformation_relativeGrowthRate()</a></code> </p>
-        </td>
-        <td><p>Wood formation</p></td>
-      </tr><tr><td>
-          <p><code><a href="mortality_dailyProbability.html">mortality_dailyProbability()</a></code> </p>
-        </td>
-        <td><p>Mortality</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="regeneration">Regeneration <a href="#regeneration" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Seed production, recruitment and resprouting processes</p>
         </th>
@@ -401,11 +369,7 @@
           <h2 id="water-content">Water content <a href="#water-content" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Plant/tissue water contents</p>
         </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="moisture.html">moisture_sapwoodWaterCapacity()</a></code> <code><a href="moisture.html">moisture_leafWaterCapacity()</a></code> <code><a href="moisture.html">moisture_turgorLossPoint()</a></code> <code><a href="moisture.html">moisture_symplasticRWC()</a></code> <code><a href="moisture.html">moisture_symplasticPsi()</a></code> <code><a href="moisture.html">moisture_apoplasticRWC()</a></code> <code><a href="moisture.html">moisture_apoplasticPsi()</a></code> <code><a href="moisture.html">moisture_tissueRWC()</a></code> <code><a href="moisture.html">plant_water()</a></code> <code><a href="moisture.html">moisture_pressureVolumeCurvePlot()</a></code> </p>
-        </td>
-        <td><p>Tissue moisture functions</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
+      </tr></tbody><tbody></tbody><tbody><tr><th colspan="2">
           <h2 id="wildfire">Wildfire <a href="#wildfire" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Fuel characteristics, fire behaviour and fire severity</p>
         </th>
@@ -413,10 +377,6 @@
           <p><code><a href="fire_behaviour.html">fire_FCCS()</a></code> <code><a href="fire_behaviour.html">fire_Rothermel()</a></code> </p>
         </td>
         <td><p>Fire behaviour functions</p></td>
-      </tr><tr><td>
-          <p><code><a href="fire_severity.html">fire_plumeTemperature()</a></code> <code><a href="fire_severity.html">fire_barkThermalDiffusivity()</a></code> <code><a href="fire_severity.html">fire_radialBoleNecrosis()</a></code> <code><a href="fire_severity.html">fire_leafThermalFactor()</a></code> <code><a href="fire_severity.html">fire_necrosisCriticalTemperature()</a></code> <code><a href="fire_severity.html">fire_necrosisHeight()</a></code> </p>
-        </td>
-        <td><p>Fire severity functions</p></td>
       </tr><tr><td>
           <p><code><a href="fuel_properties.html">fuel_stratification()</a></code> <code><a href="fuel_properties.html">fuel_FCCS()</a></code> <code><a href="fuel_properties.html">fuel_windAdjustmentFactor()</a></code> </p>
         </td>
