@@ -94,10 +94,10 @@
     <loc>/reference/droughtStress.html</loc>
   </url>
   <url>
-    <loc>/reference/evaluation.html</loc>
+    <loc>/reference/emptyforest.html</loc>
   </url>
   <url>
-    <loc>/reference/exampleforest.html</loc>
+    <loc>/reference/evaluation.html</loc>
   </url>
   <url>
     <loc>/reference/examplemeteo.html</loc>
@@ -257,6 +257,9 @@
   </url>
   <url>
     <loc>/reference/stand_values.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.forest.html</loc>
   </url>
   <url>
     <loc>/reference/summary.spwb.html</loc>

@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-06-01</h4>
+            <h4 data-toc-skip class="date">2024-06-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PackageOverview.Rmd" class="external-link"><code>vignettes/intro/PackageOverview.Rmd</code></a></small>
       <div class="hidden name"><code>PackageOverview.Rmd</code></div>
@@ -192,8 +192,79 @@ dynamics</em></a>.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="other-package-functions">Other package functions<a class="anchor" aria-label="anchor" href="#other-package-functions"></a>
+<h2 id="plots-summaries-and-post-processing">Plots, summaries and post-processing<a class="anchor" aria-label="anchor" href="#plots-summaries-and-post-processing"></a>
 </h2>
+<p>Simulation models produce multiple outputs and it is important to
+learn how to visualize them and extract information for further
+analysis. Each simulation function returns an output object whose S3
+class has the same name as the simulation function
+(e.g. <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class
+<code>spwb</code>).</p>
+<ul>
+<li>Implementations of <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
+are available for simulation output objects, which facilitates
+displaying and summarizing information.</li>
+<li>A generic function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> (as well as its
+implementation for different output objects) allows an interactive
+exploration of simulation results.</li>
+<li>Model outputs can be extracted to simple <code>data.frame</code>
+objects through function <code><a href="../../reference/extract.html">extract()</a></code>.</li>
+</ul>
+<p>Additional package function are meant to be used on simulation
+results and produce time series of additional (derived) properties:</p>
+<ul>
+<li>
+<code><a href="../../reference/droughtStress.html">droughtStress()</a></code> : Plant/stand drought stress
+indices</li>
+<li>
+<code><a href="../../reference/waterUseEfficiency.html">waterUseEfficiency()</a></code> : Water use efficiency
+metrics</li>
+<li>
+<code><a href="../../reference/resistances.html">resistances()</a></code> : Hydraulic resistances to water
+transport</li>
+<li>
+<code><a href="../../reference/fireHazard.html">fireHazard()</a></code> : Potential fire behaviour (see
+below)</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="fuel-properties-and-fire-hazard">Fuel properties and fire hazard<a class="anchor" aria-label="anchor" href="#fuel-properties-and-fire-hazard"></a>
+</h2>
+<p>Vegetation functioning and dynamics have strong, but complex, effects
+on fire hazard. On one hand, growth and death of organs and individuals
+changes the amount of standing live and dead fuels, as well as downed
+dead fuels. On the other, day-to-day changes in soil and plant water
+content changes the physical properties of fuel, notably fuel moisture
+content.</p>
+<p>Package <code>medfate</code> provides functions to estimate fuel
+properties and potential fire behaviour in forest inventory plots.
+Specifically, function <code><a href="../../reference/fuel_properties.html">fuel_stratification()</a></code> estimates the
+division of live fuels in the stand between understory and canopy
+strata; and <code><a href="../../reference/fuel_properties.html">fuel_FCCS()</a></code> calculates fuel characteristics
+from a <code>forest</code> object following an adaptation of the
+protocols described for the Fuel Characteristics Classification System
+(Prichard et al. 2013). In FCCS, fuelbed is divided into six strata,
+including canopy, shrub, herbaceous vegetation, dead woody materials,
+leaf litter and ground fuels. All except ground fuels are considered
+here. The intensity of burning depends on several factors, including
+topography, wind conditions, fuel structure and its moisture content,
+which is determined from antecedent and current meteorological
+conditions. A modification of the Rothermel’s (1972) model is used in
+function <code><a href="../../reference/fire_behaviour.html">fire_FCCS()</a></code> to calculate the intensity of surface
+fire reaction and the rate of fire spread of surface fires assuming a
+steady-state fire. Both quantities are dependent on fuel
+characteristics, windspeed and direction, and topographic slope and
+aspect.</p>
+</div>
+<div class="section level2">
+<h2 id="internal-package-functions">Internal package functions<a class="anchor" aria-label="anchor" href="#internal-package-functions"></a>
+</h2>
+<p>Package <strong>medfate</strong> contains many more functions than
+those visible in reference lists. Since <strong>v.4.3.2</strong>
+multiple functions are labelled as <em>internal</em>, meaning that they
+are accessible and documented, but they are not visible in reference
+list, so that the sheer number of functions does not overwhelm
+users.</p>
 <div class="section level3">
 <h3 id="plant-species-and-stand-attributes">Plant, species and stand attributes<a class="anchor" aria-label="anchor" href="#plant-species-and-stand-attributes"></a>
 </h3>
@@ -222,10 +293,7 @@ density, leaf area density).</li>
 internally called by simulation functions. Some of them are made
 available to the user to facilitate a deeper understanding the different
 sub-models and a more creative use of the package, but most users can
-ignore them. For this reason, since <strong>v.4.3.2</strong> sub-model
-functions are labelled as <em>internal</em>, meaning that they are
-accessible and documented, but they are not visible in reference list,
-so that the sheer number of functions does not overwhelm users.</p>
+ignore them.</p>
 <p>Sub-model functions are grouped by <em>subject</em>, which is
 included in the name of the function. The different sub-model functions
 are (by subject):</p>
@@ -263,71 +331,6 @@ transpiration/photosynthesis.</li>
 <li>
 <code>wind_*</code>: Canopy turbulence.</li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="plots-summaries-and-post-processing">Plots, summaries and post-processing<a class="anchor" aria-label="anchor" href="#plots-summaries-and-post-processing"></a>
-</h3>
-<p>Simulation models produce multiple outputs and it is important to
-learn how to visualize them and extract information for further
-analysis. Each simulation function returns an output object whose S3
-class has the same name as the simulation function
-(e.g. <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class
-<code>spwb</code>).</p>
-<ul>
-<li>Implementations of <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
-are available for simulation output objects, which facilitates
-displaying and summarizing information.</li>
-<li>A generic function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> (as well as its
-implementation for different output objects) allows an interactive
-exploration of simulation results.</li>
-<li>Model outputs can be extracted to simple <code>data.frame</code>
-objects through function <code><a href="../../reference/extract.html">extract()</a></code>.</li>
-</ul>
-<p>Additional package function are meant to be used on simulation
-results and produce time series of additional (derived) properties:</p>
-<ul>
-<li>
-<code><a href="../../reference/droughtStress.html">droughtStress()</a></code> : Plant/stand drought stress
-indices</li>
-<li>
-<code><a href="../../reference/waterUseEfficiency.html">waterUseEfficiency()</a></code> : Water use efficiency
-metrics</li>
-<li>
-<code><a href="../../reference/resistances.html">resistances()</a></code> : Hydraulic resistances to water
-transport</li>
-<li>
-<code><a href="../../reference/fireHazard.html">fireHazard()</a></code> : Potential fire behaviour (see
-below)</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="fuel-properties-and-fire-hazard">Fuel properties and fire hazard<a class="anchor" aria-label="anchor" href="#fuel-properties-and-fire-hazard"></a>
-</h3>
-<p>Vegetation functioning and dynamics have strong, but complex, effects
-on fire hazard. On one hand, growth and death of organs and individuals
-changes the amount of standing live and dead fuels, as well as downed
-dead fuels. On the other, day-to-day changes in soil and plant water
-content changes the physical properties of fuel, notably fuel moisture
-content.</p>
-<p>Package <code>medfate</code> provides functions to estimate fuel
-properties and potential fire behaviour in forest inventory plots.
-Specifically, function <code><a href="../../reference/fuel_properties.html">fuel_stratification()</a></code> estimates the
-division of live fuels in the stand between understory and canopy
-strata; and <code><a href="../../reference/fuel_properties.html">fuel_FCCS()</a></code> calculates fuel characteristics
-from a <code>forest</code> object following an adaptation of the
-protocols described for the Fuel Characteristics Classification System
-(Prichard et al. 2013). In FCCS, fuelbed is divided into six strata,
-including canopy, shrub, herbaceous vegetation, dead woody materials,
-leaf litter and ground fuels. All except ground fuels are considered
-here. The intensity of burning depends on several factors, including
-topography, wind conditions, fuel structure and its moisture content,
-which is determined from antecedent and current meteorological
-conditions. A modification of the Rothermel’s (1972) model is used in
-function <code><a href="../../reference/fire_behaviour.html">fire_FCCS()</a></code> to calculate the intensity of surface
-fire reaction and the rate of fire spread of surface fires assuming a
-steady-state fire. Both quantities are dependent on fuel
-characteristics, windspeed and direction, and topographic slope and
-aspect.</p>
 </div>
 </div>
 <div class="section level2">

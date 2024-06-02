@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-06-01</h4>
+            <h4 data-toc-skip class="date">2024-06-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -146,9 +146,9 @@ number of stems.</p>
 <h3 id="mapping-trees-from-the-control-forest">Mapping trees from the control forest<a class="anchor" aria-label="anchor" href="#mapping-trees-from-the-control-forest"></a>
 </h3>
 <p>We initialize an empty forest object using function
-<code><a href="../../reference/forest.html">emptyforest()</a></code> from package <strong>medfate</strong>:</p>
+<code><a href="../../reference/emptyforest.html">emptyforest()</a></code> from package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/emptyforest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pobl_ctl</span></span>
 <span><span class="co">#&gt; $treeData</span></span>
 <span><span class="co">#&gt; [1] Species DBH     Height  N       Z50     Z95    </span></span>
@@ -280,7 +280,7 @@ expected for a dense forest.</p>
 two codes corresponding to before and after the thinning intervention.
 Let us first address the pre-thinning state:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_thi_bef</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pobl_thi_bef</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/emptyforest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span><span class="op">)</span>,</span>
 <span>                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
 <span>                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
@@ -309,7 +309,7 @@ accepted name (<em>Quercus pubescens</em>), which we can do:</p>
 We can repeat the same operations with the forest plot after the
 thinning intervention:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pobl_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/emptyforest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span>,</span>
 <span>                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
 <span>                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
