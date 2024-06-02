@@ -33,6 +33,7 @@
 #' 
 #' @seealso \code{\link{spwb}}, \code{\link{transp_transpirationGranier}}, \code{\link{transp_transpirationSperry}}, \code{\link{SpParamsMED}}
 #' 
+#' @keywords internal
 #' @examples 
 #' \donttest{
 #' #Load example daily meteorological data

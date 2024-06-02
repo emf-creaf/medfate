@@ -8,6 +8,7 @@
 #' @param speciesNames A flag to indicate the use of species names instead of cohort names in plots.
 #' @param ylim Graphical parameter to override function defaults.
 #' 
+#' @keywords internal
 hydraulics_supplyFunctionPlot<-function(x, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
   
   TYPES = c("E","dEdP","StemPsi","RootPsi","ERhizo")

@@ -34,7 +34,6 @@ reference:
 - title: Forest definition
   desc:  Forest definition and manipulation functions
   contents:
-  - exampleforest
   - forest
   - emptyforest
   - tree2forest
@@ -49,13 +48,9 @@ reference:
   - trait_family_means
 
 - title: Forest structure
-  desc:  Plant, species and forest attributes
+  desc: Summarizing and displaying forest attributes
   contents:
-  - starts_with("stand_")
-  - plant_LAI
-  - starts_with("herb_")
-  - starts_with("species_")
-  - starts_with("vprofile_")
+  - starts_with("summary.forest")
   - starts_with("plot.forest")
   - starts_with("shinyplot.forest")
 
@@ -84,7 +79,6 @@ reference:
 - title: Simulation functions
   desc:  Simulation model functions
   contents:
-  - aspwb
   - spwb
   - spwb_day
   - pwb
@@ -114,11 +108,6 @@ reference:
   - exampleobs
   - starts_with("evaluation_")
   - starts_with("optimization_")
-
-- title: Plant transpiration sub-models
-  desc:  Plant transpiration sub-models
-  contents:
-  - starts_with("transp_")
 
 - title: Wildfire
   desc:  Fuel characteristics and fire behaviour

@@ -89,3 +89,4 @@ S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

@@ -45,7 +45,7 @@ plot(exampleforest, SpParamsMED)
 
 }
 \seealso{
-\code{\link{vprofile_leafAreaDensity}}
+\code{\link{forest}}, \code{\link{summary.forest}}, \code{\link{vprofile_leafAreaDensity}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

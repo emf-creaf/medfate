@@ -660,6 +660,7 @@ List transpirationBasic(List x, NumericVector meteovec,
 //'                                   modifyInput = FALSE)
 //'                                 
 //' @name transp_modes
+//' @keywords internal
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,
                           double latitude, double elevation, double slope, double aspect, 

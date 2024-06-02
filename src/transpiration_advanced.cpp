@@ -1279,7 +1279,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
 //' @param herbTranspiration Transpiration of herbaceous plants for \code{day} (mm).
 //' @param stepFunctions An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.
 //' 
-//' 
+//' @keywords internal
 // [[Rcpp::export("transp_transpirationSperry")]]
 List transpirationSperry(List x, DataFrame meteo, int day,
                         double latitude, double elevation, double slope, double aspect,
@@ -1363,6 +1363,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
 } 
 
 //' @rdname transp_modes
+//' @keywords internal
 // [[Rcpp::export("transp_transpirationSureau")]]
 List transpirationSureau(List x, DataFrame meteo, int day,
                          double latitude, double elevation, double slope, double aspect,

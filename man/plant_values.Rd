@@ -150,3 +150,4 @@ plant_ID(exampleforest, SpParamsMED)
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

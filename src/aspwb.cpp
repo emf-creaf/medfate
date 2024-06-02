@@ -50,6 +50,7 @@ NumericVector agricultureWaterInputs(List x,
 
 
 //' @rdname aspwb
+//' @keywords internal
 // [[Rcpp::export("aspwbInput")]]
 List aspwbInput(double crop_factor, List control, DataFrame soil) {
   
@@ -162,6 +163,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
 }
 
 //' @rdname aspwb
+//' @keywords internal
 // [[Rcpp::export("aspwb_day")]]
 List aspwb_day(List x, CharacterVector date, NumericVector meteovec, 
                double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
@@ -429,6 +431,7 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
 //' S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
 //' @name aspwb
+//' @keywords internal
 // [[Rcpp::export("aspwb")]]
 List aspwb(List x, DataFrame meteo, double latitude, 
            double elevation, double slope = NA_REAL, double aspect = NA_REAL, 

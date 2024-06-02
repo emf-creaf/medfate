@@ -7,6 +7,7 @@
 #' @param psiVec Vector of water potential values to evaluate for the pressure-volume curve.
 #' @param speciesNames A flag to indicate the use of species names instead of cohort names in plots.
 #' 
+#' @keywords internal
 moisture_pressureVolumeCurvePlot<-function(x, segment="stem", 
                                            fraction = "all",
                                            psiVec =  seq(-0.1, -8.0, by =-0.01),

@@ -1,107 +1,27 @@
-#' Forest description
+#' Summary of forest structure
 #' 
-#' Description of a forest stand
+#' Displays a summary of forest structure
 #' 
-#' @param object An object of class \code{forest} has the following structure (see details):
-#' \itemize{
-#'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
-#'       \itemize{
-#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
-#'         \item{\code{Height}: Total tree height (in cm).}
-#'         \item{\code{DBH}: Tree diameter at breast height (in cm).}
-#'         \item{\code{N}: Density (number of individuals/hectare) that the measured tree represents.}
-#'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
-#'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
-#'      }
-#'   }
-#'   \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
-#'       \itemize{
-#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
-#'         \item{\code{Height}: Average total height of plants (in cm).}
-#'         \item{\code{Cover}: Percent cover.}
-#'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
-#'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
-#'       }
-#'   }
-#'   \item{\code{herbCover}: Percent cover of the herb layer (optional).}
-#'   \item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}
-#'   \item{\code{seedBank}: A data frame containing seed bank information with the following columns:
-#'       \itemize{
-#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
-#'         \item{\code{Percent}: Amount of seeds in relation to full seed bank (in \%).}
-#'      }
-#'   }
-#' }
-#' 
+#' @param object An object of class \code{\link{forest}}
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param x The object returned by \code{summary.forest}.
 #' @param digits Minimal number of significant digits.
 #' @param ... Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.
-#' @param ntree,nshrub Number of tree and shrub cohorts, respectively.
-#' @param nseed Number of species in the seed bank.
 #' 
 #' @details Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. 
-#' Function \code{emptyforest} creates an empty \code{forest} object.
-#' 
-#' The structure presented above for \code{forest} objects corresponds to the required data elements. 
-#' A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
-#' and \code{shrubData} can contain additional columns:
-#' \itemize{
-#'   \item{\code{LAI}: Leaf area index (m2/m2)}
-#'   \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
-#'   \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
-#'   \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
-#' }
-#' Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
-#' All these values are used to override allometry-based estimates of those variables when initializing
-#' inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}. Note that leaf area index, foliar biomass and
-#' fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
-#' one or the other, and not all of them at the same time.
-#' 
 #' 
 #' @return Function \code{summary.forest} returns a list with several structural attributes, such as the basal area and LAI of the forest. 
-#' Function \code{emptyforest} returns an empty \code{forest} object.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso \code{\link{exampleforest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},  
+#' @seealso \code{\link{forest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},  
 #' \code{\link{plot.forest}}, \code{\link{tree2forest}}
 #' 
 #' @examples 
-#' data(exampleforest)
-#' data(SpParamsMED)
-#' 
-#' # Prints forest as a list of data items
-#' exampleforest
-#' 
 #' # Summary of example forest
 #' summary(exampleforest, SpParamsMED)
 #' 
-#' @name forest
-
-#' @rdname forest
-emptyforest <- function(ntree = 0, nshrub = 0, nseed = 0) {
-  l <- list()
-  l$treeData <- data.frame(Species=as.character(rep(NA, ntree)),
-                           DBH=as.numeric(rep(NA, ntree)), 
-                           Height=as.numeric(rep(NA, ntree)), 
-                           N=as.numeric(rep(NA, ntree)),
-                           Z50 = as.numeric(rep(NA, ntree)), 
-                           Z95=as.numeric(rep(NA, ntree)))
-  l$shrubData <- data.frame(Species=as.character(rep(NA, nshrub)), 
-                            Height=as.numeric(rep(NA, nshrub)), 
-                            Cover = as.numeric(rep(NA, nshrub)), 
-                            Z50 = as.numeric(rep(NA, nshrub)), 
-                            Z95=as.numeric(rep(NA, nshrub)))
-  l$herbCover <- NA;
-  l$herbHeight <- NA;
-  l$seedBank <- data.frame(Species = as.character(rep(NA, nseed)),
-                           Percent = as.numeric(rep(NA, nseed)))
-  class(l)<-c("forest","list")
-  return(l)
-}
-
-#' @rdname forest
+#' @name summary.forest
 summary.forest<-function(object, SpParams, ...) {
 
   # Checks
@@ -167,7 +87,7 @@ summary.forest<-function(object, SpParams, ...) {
   return(s)
 }
 
-#' @rdname forest
+#' @rdname summary.forest
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
   cat(paste("Tree BA (m2/ha):", round(x[["Tree_BA"]],digits)," adult trees:", round(x[["Adult_BA"]], digits), 
             " saplings:", round(x[["Sapling_BA"]], digits),"\n"))

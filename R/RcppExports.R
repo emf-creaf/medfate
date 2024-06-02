@@ -2,11 +2,13 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @rdname aspwb
+#' @keywords internal
 aspwbInput <- function(crop_factor, control, soil) {
     .Call(`_medfate_aspwbInput`, crop_factor, control, soil)
 }
 
 #' @rdname aspwb
+#' @keywords internal
 aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_aspwb_day`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
@@ -65,6 +67,7 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, 
 #' S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
 #' @name aspwb
+#' @keywords internal
 aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, waterTableDepth = NA_real_) {
     .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect, waterTableDepth)
 }
@@ -542,91 +545,109 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 #' plant_ID(exampleforest, SpParamsMED)
 #'       
 #' @name plant_values
+#' @keywords internal
 plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L) {
     .Call(`_medfate_cohortIDs`, x, SpParams, treeOffset, shrubOffset)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_basalArea <- function(x, SpParams) {
     .Call(`_medfate_cohortBasalArea`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_largerTreeBasalArea <- function(x, SpParams, self_proportion = 0.5) {
     .Call(`_medfate_cohortLargerTreeBasalArea`, x, SpParams, self_proportion)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_cover <- function(x, SpParams) {
     .Call(`_medfate_cohortCover`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_species <- function(x, SpParams) {
     .Call(`_medfate_cohortSpecies`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_speciesName <- function(x, SpParams) {
     .Call(`_medfate_cohortSpeciesName`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_density <- function(x, SpParams) {
     .Call(`_medfate_cohortDensity`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_height <- function(x, SpParams) {
     .Call(`_medfate_cohortHeight`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_individualArea <- function(x, SpParams) {
     .Call(`_medfate_cohortIndividualArea`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_crownRatio <- function(x, SpParams) {
     .Call(`_medfate_cohortCrownRatio`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_crownBaseHeight <- function(x, SpParams) {
     .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_crownLength <- function(x, SpParams) {
     .Call(`_medfate_cohortCrownLength`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_fuelLoading <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
     .Call(`_medfate_cohortFuelLoading`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
     .Call(`_medfate_cohortEquilibriumLeafLitter`, x, SpParams, AET)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81) {
     .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_cohortPhytovolume`, x, SpParams)
 }
 
 #' @rdname plant_values
+#' @keywords internal
 plant_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
     .Call(`_medfate_cohortLAI`, x, SpParams, gdd, bounded)
 }
@@ -651,16 +672,19 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
 #' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
 #' 
 #' @name herb_values
+#' @keywords internal
 herb_foliarBiomass <- function(x, SpParams) {
     .Call(`_medfate_herbFoliarBiomass`, x, SpParams)
 }
 
 #' @rdname herb_values
+#' @keywords internal
 herb_fuelLoading <- function(x, SpParams) {
     .Call(`_medfate_herbFuelLoading`, x, SpParams)
 }
 
 #' @rdname herb_values
+#' @keywords internal
 herb_LAI <- function(x, SpParams) {
     .Call(`_medfate_herbLAI`, x, SpParams)
 }
@@ -711,21 +735,25 @@ herb_LAI <- function(x, SpParams) {
 #' species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
 #'     
 #' @name species_values
+#' @keywords internal
 species_basalArea <- function(x, SpParams) {
     .Call(`_medfate_speciesBasalArea`, x, SpParams)
 }
 
 #' @rdname species_values
+#' @keywords internal
 species_cover <- function(x, SpParams) {
     .Call(`_medfate_speciesCover`, x, SpParams)
 }
 
 #' @rdname species_values
+#' @keywords internal
 species_density <- function(x, SpParams) {
     .Call(`_medfate_speciesDensity`, x, SpParams)
 }
 
 #' @rdname species_values
+#' @keywords internal
 species_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd)
 }
@@ -751,16 +779,19 @@ stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname stand_values
+#' @keywords internal
 stand_fuelLoading <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
     .Call(`_medfate_standFuelLoading`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname stand_values
+#' @keywords internal
 stand_shrubVolume <- function(x, SpParams) {
     .Call(`_medfate_standShrubVolume`, x, SpParams)
 }
 
 #' @rdname stand_values
+#' @keywords internal
 stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
     .Call(`_medfate_standLAI`, x, SpParams, gdd, bounded)
 }
@@ -3855,12 +3886,13 @@ plant_water <- function(x) {
 #' @param herbTranspiration Transpiration of herbaceous plants for \code{day} (mm).
 #' @param stepFunctions An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.
 #' 
-#' 
+#' @keywords internal
 transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, herbTranspiration = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
     .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, stepFunctions, modifyInput)
 }
 
 #' @rdname transp_modes
+#' @keywords internal
 transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, herbTranspiration = 0.0, modifyInput = TRUE) {
     .Call(`_medfate_transpirationSureau`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, modifyInput)
 }
@@ -4048,6 +4080,7 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #'                                   modifyInput = FALSE)
 #'                                 
 #' @name transp_modes
+#' @keywords internal
 transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slope, aspect, modifyInput = TRUE) {
     .Call(`_medfate_transpirationGranier`, x, meteo, day, latitude, elevation, slope, aspect, modifyInput)
 }

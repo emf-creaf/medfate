@@ -8,6 +8,7 @@
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 #' @param type A string with plot type, either \code{"E"} (transpiration flow), \code{"Ag"} (gross photosynthesis), \code{"An"} (net photosynthesis), \code{"Gsw"} (stomatal conductance to water vapour), \code{"T"} (temperature) or \code{"VPD"} (leaf vapour pressure deficit).
 #' 
+#' @keywords internal
 transp_stomatalRegulationPlot<-function(x, meteo, day, timestep, latitude, elevation, slope = NA, aspect = NA,
                                         type = "E") {
   type = match.arg(type, c("E", "Ag","An" , "Gsw", "T", "VPD"))

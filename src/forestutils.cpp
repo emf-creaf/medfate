@@ -512,6 +512,7 @@ NumericVector shrubLAIAllometric(IntegerVector SP, NumericVector Cover, NumericV
 //' plant_ID(exampleforest, SpParamsMED)
 //'       
 //' @name plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_ID")]]
 CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int shrubOffset = 0) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -551,6 +552,7 @@ CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int sh
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_basalArea")]]
 NumericVector cohortBasalArea(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -565,6 +567,7 @@ NumericVector cohortBasalArea(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_largerTreeBasalArea")]]
 NumericVector cohortLargerTreeBasalArea(List x, DataFrame SpParams, double self_proportion = 0.5) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -579,6 +582,7 @@ NumericVector cohortLargerTreeBasalArea(List x, DataFrame SpParams, double self_
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_cover")]]
 NumericVector cohortCover(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -606,6 +610,7 @@ NumericVector cohortCover(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_species")]]
 IntegerVector cohortSpecies(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -638,6 +643,7 @@ IntegerVector cohortSpecies(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_speciesName")]]
 CharacterVector cohortSpeciesName(List x, DataFrame SpParams) {
   CharacterVector sn = cohortCharacterParameter(x, SpParams, "Name");
@@ -646,6 +652,7 @@ CharacterVector cohortSpeciesName(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_density")]]
 NumericVector cohortDensity(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -677,6 +684,7 @@ NumericVector cohortDensity(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_height")]]
 NumericVector cohortHeight(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -698,6 +706,7 @@ NumericVector cohortHeight(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_individualArea")]]
 NumericVector cohortIndividualArea(List x, DataFrame SpParams){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -725,6 +734,7 @@ NumericVector cohortIndividualArea(List x, DataFrame SpParams){
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_crownRatio")]]
 NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -775,6 +785,7 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_crownBaseHeight")]]
 NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams) {
   NumericVector CR = cohortCrownRatio(x, SpParams);
@@ -789,6 +800,7 @@ NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_crownLength")]]
 NumericVector cohortCrownLength(List x, DataFrame SpParams) {
   NumericVector CR = cohortCrownRatio(x, SpParams);
@@ -803,6 +815,7 @@ NumericVector cohortCrownLength(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_foliarBiomass")]]
 NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -910,6 +923,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_fuelLoading")]]
 NumericVector cohortFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -1008,6 +1022,7 @@ NumericVector cohortFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_equilibriumLeafLitter")]]
 NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800) {
   NumericVector fb = cohortFoliarBiomass(x, SpParams, NA_REAL);
@@ -1026,6 +1041,7 @@ NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_equilibriumSmallBranchLitter")]]
 NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate = 0.81) {
   NumericVector fu = cohortFuelLoading(x, SpParams,NA_REAL,true);
@@ -1041,6 +1057,7 @@ NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, dou
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_phytovolume")]]
 NumericVector cohortPhytovolume(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -1063,6 +1080,7 @@ NumericVector cohortPhytovolume(List x, DataFrame SpParams) {
 }
 
 //' @rdname plant_values
+//' @keywords internal
 // [[Rcpp::export("plant_LAI")]]
 NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, 
                         bool bounded = true){
@@ -1193,6 +1211,7 @@ double herbLAIAllometric(double herbCover, double herbHeight, double woodyLAI, d
 //' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
 //' 
 //' @name herb_values
+//' @keywords internal
 // [[Rcpp::export("herb_foliarBiomass")]]
 double herbFoliarBiomass(List x, DataFrame SpParams){
    double herbFB = NA_REAL;
@@ -1214,12 +1233,14 @@ double herbFoliarBiomass(List x, DataFrame SpParams){
  }
 
 //' @rdname herb_values
+//' @keywords internal
 // [[Rcpp::export("herb_fuelLoading")]]
 double herbFuelLoading(List x, DataFrame SpParams){
    return(herbFoliarBiomass(x, SpParams));
 }
 
 //' @rdname herb_values
+//' @keywords internal
 // [[Rcpp::export("herb_LAI")]]
 double herbLAI(List x, DataFrame SpParams){
   double herbLAI = NA_REAL;
@@ -1281,6 +1302,7 @@ double herbLAI(List x, DataFrame SpParams){
 //' species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
 //'     
 //' @name species_values
+//' @keywords internal
 // [[Rcpp::export("species_basalArea")]]
 NumericVector speciesBasalArea(List x, DataFrame SpParams) {
   NumericVector cBA = cohortBasalArea(x, SpParams);
@@ -1288,6 +1310,7 @@ NumericVector speciesBasalArea(List x, DataFrame SpParams) {
 }
 
 //' @rdname species_values
+//' @keywords internal
 // [[Rcpp::export("species_cover")]]
 NumericVector speciesCover(List x, DataFrame SpParams) {
   NumericVector cc = cohortCover(x, SpParams);
@@ -1297,6 +1320,7 @@ NumericVector speciesCover(List x, DataFrame SpParams) {
 }
 
 //' @rdname species_values
+//' @keywords internal
 // [[Rcpp::export("species_density")]]
 NumericVector speciesDensity(List x, DataFrame SpParams) {
   NumericVector d = cohortDensity(x, SpParams);
@@ -1304,6 +1328,7 @@ NumericVector speciesDensity(List x, DataFrame SpParams) {
 }
 
 //' @rdname species_values
+//' @keywords internal
 // [[Rcpp::export("species_foliarBiomass")]]
 NumericVector speciesFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector fb = cohortFoliarBiomass(x, SpParams, gdd);
@@ -1351,6 +1376,7 @@ double standFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL) {
 
 
 //' @rdname stand_values
+//' @keywords internal
 // [[Rcpp::export("stand_fuelLoading")]]
 double standFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true) {
   NumericVector cf = cohortFuelLoading(x, SpParams, gdd, includeDead);
@@ -1362,7 +1388,8 @@ double standFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL, bool i
 }
 
 //' @rdname stand_values
- // [[Rcpp::export("stand_shrubVolume")]]
+//' @keywords internal
+// [[Rcpp::export("stand_shrubVolume")]]
  double standShrubVolume(List x, DataFrame SpParams) {
    NumericVector ph = cohortPhytovolume(x, SpParams);
    double sv= 0.0;
@@ -1373,6 +1400,7 @@ double standFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL, bool i
 
 
 //' @rdname stand_values
+//' @keywords internal
 // [[Rcpp::export("stand_LAI")]]
 double standLAI(List x, DataFrame SpParams, double gdd = NA_REAL, 
                 bool bounded = true) {

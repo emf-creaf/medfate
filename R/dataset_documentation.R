@@ -1,3 +1,67 @@
+#' Description of the plant cohorts of a forest stand.
+#' 
+#' \code{exampleforest} is an example of forest stand description, whereas \code{exampleforest2} is an alternative forest description where leaf area index and crown ratio are supplied instead of structural (density, DBH and cover) parameters. 
+#' 
+#' @name forest
+#' @aliases exampleforest exampleforest2
+#' @docType data
+#' 
+#' @source DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Dirección}{Direccion} General de \enc{Conservación}{Conservacion} de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
+#' @seealso \code{\link{forest}}, \code{\link{spwb}}, \code{\link{spwbInput}}
+#' @format  An object of class \code{forest} contains the description of the woody (tree or shrub) cohorts and herb layer of a forest patch.
+#' It has the following structure (see details):
+#' \itemize{
+#'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Height}: Total tree height (in cm).}
+#'         \item{\code{DBH}: Tree diameter at breast height (in cm).}
+#'         \item{\code{N}: Density (number of individuals/hectare) that the measured tree represents.}
+#'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+#'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+#'      }
+#'   }
+#'   \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Height}: Average total height of plants (in cm).}
+#'         \item{\code{Cover}: Percent cover.}
+#'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+#'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+#'       }
+#'   }
+#'   \item{\code{herbCover}: Percent cover of the herb layer (optional).}
+#'   \item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}
+#'   \item{\code{seedBank}: A data frame containing seed bank information with the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Percent}: Amount of seeds in relation to full seed bank (in \%).}
+#'      }
+#'   }
+#' }
+#' @details
+#' The structure presented above for \code{forest} objects corresponds to the required data elements. 
+#' A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
+#' and \code{shrubData} can contain additional columns:
+#' \itemize{
+#'   \item{\code{LAI}: Leaf area index (m2/m2)}
+#'   \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
+#'   \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
+#'   \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+#' }
+#' Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
+#' All these values are used to override allometry-based estimates of those variables when initializing
+#' inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}. Note that leaf area index, foliar biomass and
+#' fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
+#' one or the other, and not all of them at the same time.
+#' 
+#' @seealso \code{\link{summary.forest}}, \code{\link{emptyforest}}, \code{\link{plot.forest}}
+#' @examples
+#' data(exampleforest)
+#' data(exampleforest2)
+#' @keywords data
+NULL
+
 #' Example daily meteorology data
 #' 
 #' Example data set of meteorological input.

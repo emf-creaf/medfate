@@ -19,7 +19,7 @@
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso \code{\link{vprofile_leafAreaDensity}}
+#' @seealso \code{\link{forest}}, \code{\link{summary.forest}}, \code{\link{vprofile_leafAreaDensity}}
 #' 
 #' @examples 
 #' data(exampleforest)

@@ -47,6 +47,7 @@
 #' 
 #' vprofile_windExtinction(exampleforest, SpParamsMED)
 #' 
+#' @keywords internal
 #' @name vprofile_leafAreaDensity
 vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, 
                                    byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE,
@@ -117,6 +118,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
 }
 
 #' @rdname vprofile_leafAreaDensity
+#' @keywords internal
 vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, 
                                     draw = TRUE, xlim = NULL) {
   if(is.null(d)){
@@ -145,6 +147,7 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE,
 }
 
 #' @rdname vprofile_leafAreaDensity
+#' @keywords internal
 vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
                                    draw = TRUE, xlim = NULL) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=1)
@@ -163,6 +166,7 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
 }
 
 #' @rdname vprofile_leafAreaDensity
+#' @keywords internal
 vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs = FALSE, 
                                  draw = TRUE, xlim = c(0,100)) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams), na.rm = TRUE)/100)*100 +10, by=1)
@@ -181,6 +185,7 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs =
 }
 
 #' @rdname vprofile_leafAreaDensity
+#' @keywords internal
 vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs = FALSE, 
                                  draw = TRUE, xlim = c(0,100)) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=1)
@@ -199,6 +204,7 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs =
 }
 
 #' @rdname vprofile_leafAreaDensity
+#' @keywords internal
 vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 200,
                                   boundaryLayerSize = 2000, target = "windspeed",
                                   z = NULL, gdd = NA, includeHerbs = FALSE,

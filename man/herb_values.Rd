@@ -35,3 +35,4 @@ Functions to calculate attributes of the herbaceous component of a \code{\link{f
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}
