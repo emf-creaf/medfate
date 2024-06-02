@@ -62,10 +62,11 @@ Creates a \code{\link{forest}} object with a single plant cohort
 \examples{
 
 oak_forest <-tree2forest("Quercus ilex", Height= 200, LAI = 2)
+oak_forest
 
 }
 \seealso{
-\code{\link{forest}}, \code{\link{forest_mergeTrees}},  \code{\link{plot.forest}}
+\code{\link{forest}}, \code{\link{emptyforest}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

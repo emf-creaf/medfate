@@ -5,7 +5,7 @@
 \alias{SpParams}
 \alias{SpParamsDefinition}
 \alias{SpParamsMED}
-\title{Data tables with species parameter definition and values for different countries}
+\title{Data tables with species parameter definitions and values}
 \format{
 \itemize{
   \item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.}
@@ -17,7 +17,7 @@ A data sets of species parameter definition and values, the latter resulting fro
 }
 \details{
 \code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional 
-species parameter tables for different countries are distributed via package \code{traits4models}, available from GitHub (https://emf-creaf.github.io/traits4models/).
+species parameter tables for different countries are distributed via package [traits4models](https://emf-creaf.github.io/traits4models/).
 }
 \examples{
 data(SpParamsDefinition)

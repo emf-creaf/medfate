@@ -16,7 +16,7 @@
 #'
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso \code{\link{forest}}, \code{\link{forest_mergeTrees}},  \code{\link{plot.forest}}
+#' @seealso \code{\link{forest}}, \code{\link{emptyforest}}
 #' @return An object of class \code{\link{forest}}
 #' @export
 #'
@@ -24,6 +24,7 @@
 #' @examples
 #' 
 #' oak_forest <-tree2forest("Quercus ilex", Height= 200, LAI = 2)
+#' oak_forest
 #' 
 tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95 = NA,
                       CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA) {

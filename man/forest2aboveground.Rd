@@ -52,7 +52,7 @@ Function \code{forest2belowground()} calculates belowground variables such as fi
 Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x}, 
 and calculate leaf area index and crown ratio. 
 
-\emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now deprecated, but 
+\emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now internal and deprecated, but 
 they can still be used for back-compatibility. They correspond to functions \code{\link{spwbInput}} and \code{\link{growthInput}}
 }
 \examples{
@@ -85,3 +85,4 @@ forest2belowground(exampleforest, examplesoil, SpParamsMED)
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

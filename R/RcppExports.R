@@ -830,7 +830,7 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
 #' Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x}, 
 #' and calculate leaf area index and crown ratio. 
 #' 
-#' \emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now deprecated, but 
+#' \emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now internal and deprecated, but 
 #' they can still be used for back-compatibility. They correspond to functions \code{\link{spwbInput}} and \code{\link{growthInput}} 
 #' 
 #' @return 
@@ -875,11 +875,13 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
 #' 
 #' 
 #' @name forest2aboveground
+#' @keywords internal
 forest2aboveground <- function(x, SpParams, gdd = NA_real_, loading = FALSE) {
     .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, loading)
 }
 
 #' @rdname forest2aboveground
+#' @keywords internal
 forest2belowground <- function(x, soil, SpParams) {
     .Call(`_medfate_forest2belowground`, x, soil, SpParams)
 }
@@ -2547,11 +2549,13 @@ growthInput <- function(x, soil, SpParams, control) {
 }
 
 #' @rdname forest2aboveground
+#' @keywords internal
 forest2spwbInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control)
 }
 
 #' @rdname forest2aboveground
+#' @keywords internal
 forest2growthInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2growthInput`, x, soil, SpParams, control)
 }

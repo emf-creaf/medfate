@@ -49,8 +49,31 @@ Changes in forest structure and composition result from the interplay of demogra
 
 An example of simulation with `fordyn()` is provided in article [*Forest dynamics*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestDynamics.html). 
 
+## Plots, summaries and post-processing
 
-## Other package functions
+Simulation models produce multiple outputs and it is important to learn how to visualize them and extract information for further analysis. Each simulation function returns an output object whose S3 class has the same name as the simulation function (e.g. `spwb()` returns an object of class `spwb`). 
+
+  + Implementations of `summary()` and `plot()` are available for simulation output objects, which facilitates displaying and summarizing information.
+  + A generic function `shinyplot()` (as well as its implementation for different output objects) allows an interactive exploration of simulation results.
+  + Model outputs can be extracted to simple `data.frame` objects through function `extract()`.
+
+Additional package function are meant to be used on simulation results and produce time series of additional (derived) properties:
+
+- `droughtStress()` : Plant/stand drought stress indices
+- `waterUseEfficiency()` : Water use efficiency metrics
+- `resistances()` : Hydraulic resistances to water transport
+- `fireHazard()` : Potential fire behaviour (see below)
+
+## Fuel properties and fire hazard
+
+Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. 
+
+Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel_stratification()` estimates the division of live fuels in the stand between understory and canopy strata; and `fuel_FCCS()` calculates fuel characteristics from a `forest` object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's (1972) model is used in function `fire_FCCS()` to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. 
+
+
+## Internal package functions
+
+Package **medfate** contains many more functions than those visible in reference lists. Since **v.4.3.2** multiple functions are labelled as *internal*, meaning that they are accessible and documented, but they are not visible in reference list, so that the sheer number of functions does not overwhelm users.
 
 ### Plant, species and stand attributes
 
@@ -63,7 +86,7 @@ The package includes a number of functions to examine properties of the plants c
 
 ### Sub-model functions
 
-Many of the functions included in **medfate** are internally called by simulation functions. Some of them are made available to the user to facilitate a deeper understanding the different sub-models and a more creative use of the package, but most users can ignore them. For this reason, since **v.4.3.2** sub-model functions are labelled as *internal*, meaning that they are accessible and documented, but they are not visible in reference list, so that the sheer number of functions does not overwhelm users.
+Many of the functions included in **medfate** are internally called by simulation functions. Some of them are made available to the user to facilitate a deeper understanding the different sub-models and a more creative use of the package, but most users can ignore them. 
 
 Sub-model functions are grouped by *subject*, which is included in the name of the function. The different sub-model functions are (by subject):
 
@@ -81,28 +104,6 @@ Sub-model functions are grouped by *subject*, which is included in the name of t
 -   `soil_*`: Soil hydraulics and thermodynamics.
 -   `transp_*`: Stomatal regulation and resulting transpiration/photosynthesis.
 -   `wind_*`: Canopy turbulence.
-
-
-### Plots, summaries and post-processing
-
-Simulation models produce multiple outputs and it is important to learn how to visualize them and extract information for further analysis. Each simulation function returns an output object whose S3 class has the same name as the simulation function (e.g. `spwb()` returns an object of class `spwb`). 
-
-  + Implementations of `summary()` and `plot()` are available for simulation output objects, which facilitates displaying and summarizing information.
-  + A generic function `shinyplot()` (as well as its implementation for different output objects) allows an interactive exploration of simulation results.
-  + Model outputs can be extracted to simple `data.frame` objects through function `extract()`.
-
-Additional package function are meant to be used on simulation results and produce time series of additional (derived) properties:
-
-- `droughtStress()` : Plant/stand drought stress indices
-- `waterUseEfficiency()` : Water use efficiency metrics
-- `resistances()` : Hydraulic resistances to water transport
-- `fireHazard()` : Potential fire behaviour (see below)
-
-### Fuel properties and fire hazard
-
-Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. 
-
-Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel_stratification()` estimates the division of live fuels in the stand between understory and canopy strata; and `fuel_FCCS()` calculates fuel characteristics from a `forest` object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's (1972) model is used in function `fire_FCCS()` to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. 
 
 
 ## Companion packages

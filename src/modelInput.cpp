@@ -1663,12 +1663,14 @@ List growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
 }
 
 //' @rdname forest2aboveground
+//' @keywords internal
 // [[Rcpp::export("forest2spwbInput")]]
 List forest2spwbInput(List x, DataFrame soil, DataFrame SpParams, List control) {
   return(spwbInput(x, soil, SpParams, control));
 }
 
 //' @rdname forest2aboveground
+//' @keywords internal
 // [[Rcpp::export("forest2growthInput")]]
 List forest2growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
   return(growthInput(x, soil, SpParams, control));

@@ -1,4 +1,4 @@
-#' Description of the plant cohorts of a forest stand.
+#' Description of a forest stand.
 #' 
 #' \code{exampleforest} is an example of forest stand description, whereas \code{exampleforest2} is an alternative forest description where leaf area index and crown ratio are supplied instead of structural (density, DBH and cover) parameters. 
 #' 
@@ -90,7 +90,7 @@ NULL
 #' @keywords data
 NULL
 
-#' Data tables with species parameter definition and values for different countries
+#' Data tables with species parameter definitions and values
 #' 
 #' A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
 #' 
@@ -106,7 +106,7 @@ NULL
 #' }
 #' @details
 #' \code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional 
-#' species parameter tables for different countries are distributed via package \code{traits4models}, available from GitHub (https://emf-creaf.github.io/traits4models/).
+#' species parameter tables for different countries are distributed via package [traits4models](https://emf-creaf.github.io/traits4models/).
 #' 
 #' @examples
 #' data(SpParamsDefinition)

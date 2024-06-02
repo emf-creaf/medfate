@@ -5,7 +5,7 @@
 \alias{forest}
 \alias{exampleforest}
 \alias{exampleforest2}
-\title{Description of the plant cohorts of a forest stand.}
+\title{Description of a forest stand.}
 \format{
 An object of class \code{forest} contains the description of the woody (tree or shrub) cohorts and herb layer of a forest patch.
 It has the following structure (see details):

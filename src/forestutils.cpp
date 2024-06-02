@@ -1538,7 +1538,7 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
 //' Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x}, 
 //' and calculate leaf area index and crown ratio. 
 //' 
-//' \emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now deprecated, but 
+//' \emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now internal and deprecated, but 
 //' they can still be used for back-compatibility. They correspond to functions \code{\link{spwbInput}} and \code{\link{growthInput}} 
 //' 
 //' @return 
@@ -1583,6 +1583,7 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
 //' 
 //' 
 //' @name forest2aboveground
+//' @keywords internal
 // [[Rcpp::export("forest2aboveground")]]
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, bool loading = false) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -1649,6 +1650,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
 
 
 //' @rdname forest2aboveground
+//' @keywords internal
 // [[Rcpp::export("forest2belowground")]]
 NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);

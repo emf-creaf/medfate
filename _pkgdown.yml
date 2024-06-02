@@ -71,7 +71,6 @@ reference:
   contents:
   - spwbInput
   - forest2aboveground
-  - aspwbInput
   - starts_with("defaultControl")
   - starts_with("defaultManagement")
   - starts_with("resetInputs")
