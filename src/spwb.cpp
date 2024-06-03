@@ -20,6 +20,7 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+// [[Rcpp::export(".getWeatherDates")]]
 CharacterVector getWeatherDates(DataFrame meteo){
   CharacterVector dateStrings;
   String dateColumnName = NA_STRING;
@@ -27,8 +28,14 @@ CharacterVector getWeatherDates(DataFrame meteo){
   if(meteo.containsElementNamed("dates")) {
     dateColumnName = "dates";
     is_date_column = true;
+  } else if(meteo.containsElementNamed("date")) {
+    dateColumnName = "date";
+    is_date_column = true;
   } else if(meteo.containsElementNamed("Dates")) {
     dateColumnName = "Dates";
+    is_date_column = true;
+  } else if(meteo.containsElementNamed("Date")) {
+    dateColumnName = "Date";
     is_date_column = true;
   }
   if(is_date_column){
@@ -50,8 +57,19 @@ CharacterVector getWeatherDates(DataFrame meteo){
         dS[i] = d.format("%Y-%m-%d");
       }
       dateStrings = dS;
+    } else if(vector.inherits("POSIXct")) {
+      DatetimeVector datetimeVector = Rcpp::as<Rcpp::DatetimeVector>(vector);
+      CharacterVector dS(datetimeVector.size(), NA_STRING);
+      for(int i=0;i< datetimeVector.size();i++) {
+        Datetime dt = datetimeVector[i];
+        Date d(dt.getYear(), dt.getMonth(), dt.getDay());
+        dS[i] = d.format("%Y-%m-%d");
+      }
+      dateStrings = dS;
     } else if(is<StringVector>(vector)) {
       dateStrings = Rcpp::as<Rcpp::StringVector>(vector);
+    } else {
+      stop("Could not parse date column.");
     }
   } else {
     dateStrings = meteo.attr("row.names"); 

@@ -1218,6 +1218,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline CharacterVector _getWeatherDates(DataFrame meteo) {
+        typedef SEXP(*Ptr__getWeatherDates)(SEXP);
+        static Ptr__getWeatherDates p__getWeatherDates = NULL;
+        if (p__getWeatherDates == NULL) {
+            validateSignature("CharacterVector(*_getWeatherDates)(DataFrame)");
+            p__getWeatherDates = (Ptr__getWeatherDates)R_GetCCallable("medfate", "_medfate__getWeatherDates");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__getWeatherDates(Shield<SEXP>(Rcpp::wrap(meteo)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<CharacterVector >(rcpp_result_gen);
+    }
+
     inline List spwb_day(List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
         typedef SEXP(*Ptr_spwb_day)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_spwb_day p_spwb_day = NULL;

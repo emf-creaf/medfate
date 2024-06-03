@@ -3405,6 +3405,10 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
     .Call(`_medfate_temperatureChange`, widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
 }
 
+.getWeatherDates <- function(meteo) {
+    .Call(`_medfate_getWeatherDates`, meteo)
+}
+
 #' Single-day simulation
 #'
 #' Function \code{spwb_day} performs water balance for a single day and \code{growth_day} 
