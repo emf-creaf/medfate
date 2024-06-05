@@ -70,6 +70,7 @@ A list, with the following options (default values in brackets):
           }
       }
       \item{\code{cavitationRecoveryMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
+      \item{\code{lfmcComponent [= "leaf"]}: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).}
     }
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"} only):
     \itemize{

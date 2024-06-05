@@ -69,6 +69,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   String leafCavitationRecovery = control["leafCavitationRecovery"];
   double cavitationRecoveryMaximumRate = control["cavitationRecoveryMaximumRate"];
   bool sapFluidityVariation = control["sapFluidityVariation"];
+  String lfmcComponent = control["lfmcComponent"];
 
   //Meteo input
   double tmin = meteovec["tmin"];
@@ -1194,7 +1195,11 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     PLClm[c] = sum(LeafPLC(c,_))/((double)LeafPLC.ncol());
     RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
-    LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
+    if(lfmcComponent=="fine") {
+      LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
+    } else { //leaf
+      LFMC[c] = maxFMC[c]*RWClm[c];
+    }
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     DDS[c] = (1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
     if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") {
