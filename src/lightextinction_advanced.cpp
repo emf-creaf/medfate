@@ -363,6 +363,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd,
       s2 += kb[j]*ClumpingIndex[j]*0.5*(LAIme(i,j)+LAImd(i,j));
     }
     fSL[i] = exp(-1.0*s1)*exp(-1.0*s2);
+    if(fSL[i]<0.00001) fSL[i] = 0.0; //Avoids overestimation of absorbed radiation per leaf area when sunlit fraction is close to zero
   }
   return(fSL);
 }
