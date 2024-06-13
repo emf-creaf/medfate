@@ -985,6 +985,19 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
         LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
         StemSympPsiInst(c,n) = StemSympPsiVEC[c];
+        minLeafPsi[c] = LeafPsiVEC[c];
+        maxLeafPsi[c] = LeafPsiVEC[c];
+        minStemPsi[c] =  StemPsiVEC[c];
+        minRootPsi[c] = RootCrownPsiVEC[c];
+        minLeafPsi_SL[c] = LeafPsiVEC[c];
+        minLeafPsi_SH[c] = LeafPsiVEC[c];
+        maxLeafPsi_SL[c] = LeafPsiVEC[c];
+        maxLeafPsi_SH[c] = LeafPsiVEC[c];
+        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
+        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
+        StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
+        LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
+        
       }
     }
     

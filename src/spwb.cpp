@@ -2292,15 +2292,29 @@ List spwb(List x, DataFrame meteo,
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0; 
+          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          if(transpirationMode =="Sureau") {
+            NumericVector StemPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
+            NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+            for(int j=0;j<StemPsi.length();j++) {
+              StemPsi[j] = -0.033;
+              StemSympPsi[j] = -0.033;
+            } 
+          }
         }
       }
       if(leafCavitationRecovery=="annual") {
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-          for(int j=0;j<LeafPLC.length();j++) {
-            LeafPLC[j] = 0.0;
+          for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+          if(transpirationMode =="Sureau") {
+            NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
+            NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+            for(int j=0;j<LeafPsi.length();j++) {
+              LeafPsi[j] = -0.033;
+              LeafSympPsi[j] = -0.033;
+            }
           }
         }
       }
@@ -2704,14 +2718,28 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
           for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          if(transpirationMode =="Sureau") {
+            NumericVector StemPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
+            NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+            for(int j=0;j<StemPsi.length();j++) {
+              StemPsi[j] = -0.033;
+              StemSympPsi[j] = -0.033;
+            } 
+          }
         }
     }
     if(leafCavitationRecovery=="annual") {
       if(DOY[i]==1) {
         DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
         NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-        for(int j=0;j<LeafPLC.length();j++) {
-          LeafPLC[j] = 0.0;
+        for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+        if(transpirationMode =="Sureau") {
+          NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
+          NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+          for(int j=0;j<LeafPsi.length();j++) {
+            LeafPsi[j] = -0.033;
+            LeafSympPsi[j] = -0.033;
+          }
         }
       }
     }
