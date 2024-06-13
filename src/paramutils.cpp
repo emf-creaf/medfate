@@ -1115,7 +1115,7 @@ NumericVector VCstemP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCstem_P50);
 } 
 NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCstem_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P88", fillWithGenus);
+  NumericVector VCstem_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P88", false); //If true, an lead to inconsistencies
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P88.size();c++) {
     if(NumericVector::is_na(VCstem_P88[c])) {
@@ -1125,7 +1125,7 @@ NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCstem_P88);
 }
 NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCstem_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P12", fillWithGenus);
+  NumericVector VCstem_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P12", false); //If true, can lead to inconsistencies
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P12.size();c++) {
     if(NumericVector::is_na(VCstem_P12[c])) {
@@ -1149,7 +1149,7 @@ NumericVector VCleafP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCleaf_P50);
 }
 NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCleaf_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P88", fillWithGenus);
+  NumericVector VCleaf_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P88", false); //If true, can lead to inconsistencies
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P88.size();c++) {
     if(NumericVector::is_na(VCleaf_P88[c])) {
@@ -1159,7 +1159,7 @@ NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCleaf_P88);
 }
 NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCleaf_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P12", fillWithGenus);
+  NumericVector VCleaf_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P12", false); //If true, can lead to inconsistencies
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P12.size();c++) {
     if(NumericVector::is_na(VCleaf_P12[c])) {
@@ -1180,7 +1180,7 @@ NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCroot_P50);
 }
 NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCroot_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P88", fillWithGenus);
+  NumericVector VCroot_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P88", false);  //If true, can lead to inconsistencies
   NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P88.size();c++) {
     if(NumericVector::is_na(VCroot_P88[c])) {
@@ -1190,7 +1190,7 @@ NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCroot_P88);
 }
 NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCroot_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P12", fillWithGenus);
+  NumericVector VCroot_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P12", false); //If true, can lead to inconsistencies
   NumericVector VCroot_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P12.size();c++) {
     if(NumericVector::is_na(VCroot_P12[c])) {
