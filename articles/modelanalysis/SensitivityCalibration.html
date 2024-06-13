@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-06-02</h4>
+            <h4 data-toc-skip class="date">2024-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -667,6 +667,11 @@ calibration process is nevertheless rather slow.</p>
 correlation between parameters:</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Parameter values  241.786576775968 295.749078259277 177.667831744866</span></span></code></pre>
+<pre><code><span><span class="co">## Problem encountered in the calculation of the likelihood with parameter 241.786576775968295.749078259277177.667831744866</span></span>
+<span><span class="co">##  Error message wasError in spwb(x = structure(list(control = list(fillMissingRootParams = TRUE, : Object was created without names.</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  set result of the parameter evaluation to -Inf ParameterValues</span></span></code></pre>
 <pre><code><span><span class="co">## # # # # # # # # # # # # # # # # # # # # # # # # # </span></span>
 <span><span class="co">## ## MCMC chain summary ## </span></span>
 <span><span class="co">## # # # # # # # # # # # # # # # # # # # # # # # # # </span></span>
@@ -684,7 +689,7 @@ correlation between parameters:</p>
 <span><span class="co">## T2_168/Z50 1.034 109.695  59.929 306.980 490.651</span></span>
 <span><span class="co">## S1_165/Z50 1.036 179.784  57.204 182.498 294.762</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## ## DIC:  -1816.525 </span></span>
+<span><span class="co">## ## DIC:  -Inf </span></span>
 <span><span class="co">## ## Convergence </span></span>
 <span><span class="co">##  Gelman Rubin multivariate psrf:  1.077 </span></span>
 <span><span class="co">##  </span></span>
@@ -697,7 +702,7 @@ correlation between parameters:</p>
 accepted because the multivariate potential scale reduction factor was ≤
 1.1. We can plot the Markov Chains and the posterior density
 distribution of parameters that they generate using:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-42-1.png" width="633.6">
 We can also plot the marginal prior and posterior density distributions
@@ -708,12 +713,12 @@ distribution. In contrast, the posterior distribution of
 one. This happens because the LAI value of kermes oak is low, so that it
 has small influence on soil water dynamics regardless of its root
 distribution.</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/marginalPlot.html" class="external-link">marginalPlot</a></span><span class="op">(</span><span class="va">mcmc_out</span>, prior <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-43-1.png" width="633.6"></p>
 <p>Plots can also be produced to display the correlation between
 parameter values.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/correlationPlot.html" class="external-link">correlationPlot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-44-1.png" width="633.6">
 Here it can be observed the large correlation between <code>Z50</code>
@@ -723,7 +728,7 @@ exchanging their fine root distribution.</p>
 <p>Posterior model prediction distributions can be obtained if we take
 samples from the Markov chains and use them to perform simulations (here
 we use sample size of 100 but a larger value is preferred).</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/getSample.html" class="external-link">getSample</a></span><span class="op">(</span><span class="va">mcmc_out</span>, numSamples <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      T1_148/Z50 T2_168/Z50 S1_165/Z50</span></span>
@@ -738,7 +743,7 @@ we use sample size of 100 but a larger value is preferred).</p>
 a matrix of parameter values. For example, the following code runs
 <code><a href="../../reference/spwb.html">spwb()</a></code> with all combinations of fine root distribution
 specified in <code>s</code>.</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MS</span> <span class="op">=</span> <span class="fu"><a href="../../reference/optimization.html">multiple_runs</a></span><span class="op">(</span><span class="va">s</span>, x <span class="op">=</span> <span class="va">x1</span>, meteo <span class="op">=</span> <span class="va">examplemeteo</span>,</span>
 <span>                   latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Function <code><a href="../../reference/optimization.html">multiple_runs()</a></code> determines the model to be
@@ -746,25 +751,25 @@ called inspecting the class of <code>x</code> (here <code>x1</code> is a
 <code>spwbInput</code>). Once we have conducted the simulations we can
 inspect the posterior distribution of several prediction variables, for
 example total transpiration:</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_transp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Posterior transpiration"</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Total transpiration (mm)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-47-1.png" width="480"></p>
 <p>or average plant drought stress:</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>, main<span class="op">=</span><span class="st">"Posterior stress"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png" width="480"></p>
 <p>Finally, we can use object <code>prior</code> to generate another
 sample under the prior parameter distribution, perform simulations:</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_prior</span> <span class="op">=</span> <span class="va">prior</span><span class="op">$</span><span class="fu">sampler</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">s_prior</span><span class="op">)</span><span class="op">&lt;-</span> <span class="va">parNames</span></span>
 <span><span class="va">MS_prior</span> <span class="op">=</span> <span class="fu"><a href="../../reference/optimization.html">multiple_runs</a></span><span class="op">(</span><span class="va">s_prior</span>, x <span class="op">=</span> <span class="va">x1</span>, meteo <span class="op">=</span> <span class="va">examplemeteo</span>,</span>
 <span>                         latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>and compare the prior prediction uncertainty with the posterior
 prediction uncertainty for the same output variables:</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS_prior</span>, <span class="va">sf_transp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Transpiration"</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Total transpiration (mm)"</span>,</span>
 <span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">200</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
@@ -772,7 +777,7 @@ prediction uncertainty for the same output variables:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Prior"</span>, <span class="st">"Posterior"</span><span class="op">)</span>, </span>
 <span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">1</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-50-1.png" width="480"></p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS_prior</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Plant stress"</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>,</span>
 <span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>

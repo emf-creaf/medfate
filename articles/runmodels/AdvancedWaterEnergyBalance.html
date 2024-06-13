@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-06-02</h4>
+            <h4 data-toc-skip class="date">2024-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -511,11 +511,13 @@ input data and perform soil water balance for that day only:</p>
 elements:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "cohorts"          "topography"       "weather"          "WaterBalance"    </span></span>
-<span><span class="co">##  [5] "EnergyBalance"    "Soil"             "Stand"            "Plants"          </span></span>
-<span><span class="co">##  [9] "RhizoPsi"         "SunlitLeaves"     "ShadeLeaves"      "ExtractionInst"  </span></span>
-<span><span class="co">## [13] "PlantsInst"       "SunlitLeavesInst" "ShadeLeavesInst"  "LightExtinction" </span></span>
-<span><span class="co">## [17] "LWRExtinction"    "CanopyTurbulence"</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] "cohorts"            "topography"         "weather"           </span></span>
+<span><span class="co">##  [4] "WaterBalance"       "EnergyBalance"      "Soil"              </span></span>
+<span><span class="co">##  [7] "Stand"              "Plants"             "RhizoPsi"          </span></span>
+<span><span class="co">## [10] "SunlitLeaves"       "ShadeLeaves"        "ExtractionInst"    </span></span>
+<span><span class="co">## [13] "PlantsInst"         "RadiationInputInst" "SunlitLeavesInst"  </span></span>
+<span><span class="co">## [16] "ShadeLeavesInst"    "LightExtinction"    "LWRExtinction"     </span></span>
+<span><span class="co">## [19] "CanopyTurbulence"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="water-balance-output">Water balance output<a class="anchor" aria-label="anchor" href="#water-balance-output"></a>
@@ -626,7 +628,7 @@ cohort, can be accessed via:</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">SunlitLeaves</span></span></code></pre></div>
 <pre><code><span><span class="co">##        LeafPsiMin  LeafPsiMax      GSWMin     GSWMax  TempMin  TempMax</span></span>
-<span><span class="co">## T1_148 -0.9075917 -0.03995231 0.002274007 0.07232662 1.001841 12.35374</span></span>
+<span><span class="co">## T1_148 -0.9075917 -0.03995231 0.002242651 0.07232662 1.274590 12.35374</span></span>
 <span><span class="co">## T2_168 -1.6359558 -0.04198952 0.003269166 0.09304306 1.272433 17.63836</span></span>
 <span><span class="co">## S1_165 -1.1220604 -0.04703362 0.007561899 0.09612847 1.267823 17.42739</span></span></code></pre>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
