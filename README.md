@@ -67,6 +67,10 @@ which evolve together with **medfate**:
   **medfate** and **medfateland** simulation functions \[*under
   development*\].
 
+The relationships between the four packages are illustrated in the
+figure below, where black arrows indicate package dependencies and gray
+arrows indicate model parameter provision.
+
 <img src="man/figures/packages.png" width="60%" style="display: block; margin: auto;" />
 
 ## Authorship
