@@ -10,6 +10,7 @@
 - Column 'Strict' added to SpParamsDefinition
 - Detection of POSIXct date columns
 - New control option 'lfmcComponent'
+- Fixed annual recovery for spwb with sureau transpiration mode
 
 # Version 4.3.1
 - Functions forest2spwbInput/forest2growthInput deprecated. Preferred function names are spwbInput/growthInput.
