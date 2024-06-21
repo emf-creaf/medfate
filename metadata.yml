@@ -1,25 +1,29 @@
 id: 'medfate'
+title: medfate
 emf_type: softwork
 emf_public: true
 emf_automatized: true
 emf_reproducible: false
-emf_draft: true
+emf_draft: false
 emf_data_type: emf_data_product
 data_repository: ''
-model_repository: 'https://emf.creaf.cat/models/medfate_model/'
-nodes: ''
+model_repository: ''
+nodes:
+- "medfate_model"
 authors:
-- mcaceres
-- acabon
-- vgranda
+- "mcaceres"
+- "aameztegui"
+- "acabon"
+- "vgranda"
 resource_link: softworks/medfate
 tags:
 - R
 - models
-- vegetation
+- "water balance"
+- "forest dynamics"
 links:
   url_pdf: ''
-  url_doi: ''
+  url_doi: 'https://doi.org/10.1016/j.agrformet.2015.06.012'
   url_docs: 'https://emf-creaf.github.io/medfate/'
   url_source: 'https://github.com/emf-creaf/medfate/'
 requirements:
