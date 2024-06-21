@@ -66,6 +66,7 @@
 #' \item{\code{stand_quadraticMeanTreeDiameter}: Quadratic mean tree diameter, i.e. the diameter value corresponding to the current basal area and density.}
 #' \item{\code{stand_meanTreeHeight}: Mean tree height (in cm).}
 #' \item{\code{stand_dominantTreeHeight}: Dominant tree height, i.e the average height of the 100 tallest trees (in cm).}
+#' \item{\code{stand_dominantTreeSpecies}: Dominant tree species name, determined in terms of basal area (and considering all tree sizes).}
 #' \item{\code{stand_hartBeckingIndex}: Hart-Becking index.}
 #' \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
 #' \item{\code{stand_fuel}: Stand fine fuel load (in kg/m2).}

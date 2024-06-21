@@ -1,0 +1,29 @@
+id: 'medfate'
+emf_type: softwork
+emf_public: true
+emf_automatized: true
+emf_reproducible: false
+emf_draft: true
+emf_data_type: emf_data_product
+data_repository: ''
+model_repository: 'https://emf.creaf.cat/models/medfate_model/'
+nodes: ''
+authors:
+- mcaceres
+- acabon
+- vgranda
+resource_link: softworks/medfate
+tags:
+- R
+- models
+- vegetation
+links:
+  url_pdf: ''
+  url_doi: ''
+  url_docs: 'https://emf-creaf.github.io/medfate/'
+  url_source: 'https://github.com/emf-creaf/medfate/'
+requirements:
+- 'R (>= 3.5.0)'
+description: 'Simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation'
+date: '2024-06-21'
+date_lastmod: '2024-06-21'
