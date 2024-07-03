@@ -1340,7 +1340,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
         //   " lat " << sum(lateral_flows_step_mm) << " bal "<< balance_macro_step_mm<<  " corr "<< macropore_correction_step_mm<< "\n";
         max_abs_correction_step_mm = std::max(std::abs(matrix_correction_step_mm), std::abs(macropore_correction_step_mm));
       }
-      if((max_abs_correction_step_mm > 0.1)) {
+      if((max_abs_correction_step_mm > 0.001)) {
         nsubsteps = nsubsteps*2;
         if(nsubsteps >= max_nsubsteps) {
           nsubsteps = max_nsubsteps;
@@ -1407,21 +1407,17 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
   }
   
   //Correct overestimation of capillarity by using deep drainage
-  if(!freeDrainage) {
-    double dif_mm = std::min(capillarity_matrix_mm,  drainage_matrix_mm);
-    capillarity_matrix_mm -= dif_mm;
-    drainage_matrix_mm  -= dif_mm;
-  }
-
+  double dif_mm = std::min(capillarity_matrix_mm,  drainage_matrix_mm);
+  capillarity_matrix_mm -= dif_mm;
+  drainage_matrix_mm  -= dif_mm;
+  
   //Output
   NumericVector res;
   if(soilDomains=="dual") {
     double drainage_macropores_mm = drainage_macropores_m3*1000.0; //m3/m2 to mm/m2
-    if(!freeDrainage) {
-      double dif_mm = std::min(capillarity_macropores_mm,  drainage_macropores_mm);
-      capillarity_macropores_mm -= dif_mm;
-      drainage_macropores_mm  -= dif_mm;
-    }
+    double dif_mm = std::min(capillarity_macropores_mm,  drainage_macropores_mm);
+    capillarity_macropores_mm -= dif_mm;
+    drainage_macropores_mm  -= dif_mm;
     double runoff_mm = infiltration_target_macropores_mm + infiltration_excess_macropores_mm + saturation_excess_matrix_mm + saturation_excess_macropores_mm;
     res = NumericVector::create(_["Local source/sinks"] = sum(sourceSink),
                                 _["Lateral source/sinks"] = sum(lateralFlows_mm),
