@@ -11,6 +11,8 @@
 - Detection of POSIXct date columns
 - New control option 'lfmcComponent'
 - Fixed annual recovery for spwb with sureau transpiration mode
+- Stem cuticular transpiration set to FALSE by default
+- Imputation of Gs_P50 changed to either VCleaf_P50 (when not missing) or else derived from TLP
 
 # Version 4.3.1
 - Functions forest2spwbInput/forest2growthInput deprecated. Preferred function names are spwbInput/growthInput.

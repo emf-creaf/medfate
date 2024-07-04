@@ -1201,9 +1201,20 @@ NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
 }
 NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector Gs_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_P50", fillWithGenus);
-  NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
+  NumericVector VCleaf_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P50", false);
+  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams, fillWithGenus);
+  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<Gs_P50.size();c++) {
-    if(NumericVector::is_na(Gs_P50[c])) Gs_P50[c] = VCleaf_P50[c];
+    if(NumericVector::is_na(Gs_P50[c])) {
+      if(NumericVector::is_na(VCleaf_P50[c])) {
+        Gs_P50[c] = VCleaf_P50[c]; //If P50 leaf is defined in SpParams, use this value for imputation
+      } else {
+        //Use TLP for imputation
+        double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
+        //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
+        Gs_P50[c] = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
+      }
+    } 
   }
   return(Gs_P50);
 }
