@@ -406,7 +406,8 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   NumericVector VCroot_slope = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_slope");
   
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
-  NumericVector Gsw_AC_slope(numCohorts, 0.0);
+  NumericVector Gsw_AC_slope(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("Gsw_AC_slope")) Gsw_AC_slope = speciesNumericParameterFromIndex(SP, SpParams, "Gsw_AC_slope");
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -464,10 +465,12 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
     FR_root[c] = (1.0/VCroottot_kmax[c])/(1.0/Plant_kmax[c]);
     
     //Slope of Gsw vs Ac/Cs relationship
-    NumericVector LP = leafphotosynthesis(2000.0,  386.0, Gswmax[c]/1.6, 25.0, Vmax298[c], Jmax298[c]); 
-    double An_max = LP[1] - 0.015*VmaxTemp(Vmax298[c], 25.0);
-    Gsw_AC_slope[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
-    Gsw_AC_slope[c] = std::min(10.0, std::max(3.0, Gsw_AC_slope[c]));
+    if(NumericVector::is_na(Gsw_AC_slope[c])) {
+      NumericVector LP = leafphotosynthesis(2000.0,  386.0, Gswmax[c]/1.6, 25.0, Vmax298[c], Jmax298[c]); 
+      double An_max = LP[1] - 0.015*VmaxTemp(Vmax298[c], 25.0);
+      Gsw_AC_slope[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
+      Gsw_AC_slope[c] = std::min(10.0, std::max(3.0, Gsw_AC_slope[c]));
+    }
   }
   
   DataFrame paramsTranspirationdf = DataFrame::create();
@@ -1502,7 +1505,10 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'       \itemize{
 //'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 //'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-//'         \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
+//'         \item{\code{Gsw_AC_slope}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
+//'         \item{\code{Gs_P50}: Water potential causing 50\% reduction in stomatal conductance.}
+//'         \item{\code{Gs_slope}: Rate of decrease in stomatal conductance at Gs_P50.}
+//'         \item{\code{Vmax298}: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
 //'         \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
 //'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
 //'         \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).}
