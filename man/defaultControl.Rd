@@ -4,10 +4,12 @@
 \alias{defaultControl}
 \title{Control parameters for simulation models}
 \usage{
-defaultControl(transpirationMode = "Granier")
+defaultControl(transpirationMode = "Granier", soilDomains = "buckets")
 }
 \arguments{
 \item{transpirationMode}{Transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.}
+
+\item{soilDomains}{Soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.}
 }
 \value{
 A list, with the following options (default values in brackets):
@@ -49,7 +51,7 @@ A list, with the following options (default values in brackets):
       \item{\code{interceptionMode [= "Gash1995"]}: Infiltration model, either "Gash1995" or "Liu2001".}
       \item{\code{infiltrationMode [= "GreenAmpt1911"]}: Infiltration model, either "GreenAmpt1911" or "Boughton1989".}
       \item{\code{infiltrationCorrection [= 5.0]}: Factor to correct infiltration amount in the GreenAmpt1911 model in single-domain simulations.}
-      \item{\code{soilDomains [= "dual"]}: Either 'single' (for single-domain) or 'dual' (for dual-permeability).}
+      \item{\code{soilDomains [= "buckets"]}: Either 'buckets' (for multi-bucket model), 'single' (for single-domain Richards model) or 'dual' (for dual-permeability model). See \code{\link{hydrology_soilWaterBalance}}.}
       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
           \itemize{
             \item{"none" - no overlap (independent water pools).}

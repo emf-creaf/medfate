@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 4.4.0
+- Multi-bucket soil model reintroduced (default) for safety
+
 # Version 4.3.2
 - IMPORTANT: Many functions have been internalized (biophysics_, fire_,...). 
   They are documented and exported, but not listed in reference list.

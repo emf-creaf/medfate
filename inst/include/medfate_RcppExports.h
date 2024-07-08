@@ -484,7 +484,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilWaterBalance(DataFrame soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "single", int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
+    inline NumericVector hydrology_soilWaterBalance(DataFrame soil, String soilFunctions, double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilWaterBalance)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilWaterBalance p_hydrology_soilWaterBalance = NULL;
         if (p_hydrology_soilWaterBalance == NULL) {

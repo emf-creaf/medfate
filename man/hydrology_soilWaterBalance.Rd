@@ -16,7 +16,7 @@ hydrology_soilWaterBalance(
   waterTableDepth = NA_real_,
   infiltrationMode = "GreenAmpt1911",
   infiltrationCorrection = 5,
-  soilDomains = "single",
+  soilDomains = "buckets",
   nsteps = 24L,
   max_nsubsteps = 3600L,
   modifySoil = TRUE
@@ -46,7 +46,7 @@ as mm/day.}
 
 \item{infiltrationCorrection}{Correction for saturated conductivity, to account for increased infiltration due to macropore presence}
 
-\item{soilDomains}{Either "single" (for single-domain) or "dual" (for dual-permeability).}
+\item{soilDomains}{Either "buckets" (multi-bucket domain), "single" (for single-domain Richards) or "dual" (for dual-permeability model).}
 
 \item{nsteps}{Number of time steps per day}
 
@@ -89,10 +89,17 @@ Returns a named vector with different elements, depending on \code{soilDomains}.
 Function \code{hydrology_soilWaterBalance} estimates water balance of soil layers given water inputs/outputs, including the simulation of water movement within the soil.
 }
 \details{
+The multi-bucket model adds/substracts water to each layer and if content is above field capacity the excess percolates to the layer below.
+If there is still an excess for the bottom layer, the model will progressively fill upper layers (generating saturation excess if the first layer 
+becomes saturated). Every day the some layers are over field capacity, the model simulates deep drainage.
+
 The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
 Bonan et al. (2019).
 
 The dual-permeability model is an implementation of the model MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005).
+
+Both the multi-bucket and the single-domain model can apply a correction to the infiltration rate to account for macroporosity in infiltration. In the
+dual-permeability model extra infiltration through macropores is simulated explicitly.
 }
 \examples{
 # Define soil parameters
@@ -101,7 +108,11 @@ spar <- defaultSoilParams(4)
 # Initializes soil hydraulic parameters
 examplesoil <- soil(spar)
 
-# Water balance in a single-domain simulation (Richards equation)
+# Water balance in a multi-bucket model
+hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+                           soilDomains = "buckets", modifySoil = FALSE)
+                           
+# Water balance in a single-domain model (Richards equation)
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
                            soilDomains = "single", modifySoil = FALSE)
                     

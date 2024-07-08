@@ -11,6 +11,8 @@ const double mTOMPa = 0.009804139432;
 
 CharacterVector layerNames(int nlayers);
 
+double saturatedConductivitySaxton(double clay, double sand, double bd, double om = NA_REAL, bool mmol = true);
+  
 double theta2psiSaxton(double clay, double sand, double theta, double om = NA_REAL);
 double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL);
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);

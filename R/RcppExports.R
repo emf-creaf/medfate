@@ -1891,7 +1891,7 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param infiltrationMode Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 #' @param infiltrationCorrection Correction for saturated conductivity, to account for increased infiltration due to macropore presence
-#' @param soilDomains Either "single" (for single-domain) or "dual" (for dual-permeability).
+#' @param soilDomains Either "buckets" (multi-bucket domain), "single" (for single-domain Richards) or "dual" (for dual-permeability model).
 #' @param nsteps Number of time steps per day
 #' @param max_nsubsteps Maximum number of substeps per time step
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
@@ -1899,10 +1899,17 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
 #' 
 #' @details
+#' The multi-bucket model adds/substracts water to each layer and if content is above field capacity the excess percolates to the layer below.
+#' If there is still an excess for the bottom layer, the model will progressively fill upper layers (generating saturation excess if the first layer 
+#' becomes saturated). Every day the some layers are over field capacity, the model simulates deep drainage.
+#' 
 #' The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
 #' Bonan et al. (2019).
 #' 
 #' The dual-permeability model is an implementation of the model MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005).
+#' 
+#' Both the multi-bucket and the single-domain model can apply a correction to the infiltration rate to account for macroporosity in infiltration. In the
+#' dual-permeability model extra infiltration through macropores is simulated explicitly.
 #' 
 #' @author 
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -1954,7 +1961,11 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #' # Initializes soil hydraulic parameters
 #' examplesoil <- soil(spar)
 #' 
-#' # Water balance in a single-domain simulation (Richards equation)
+#' # Water balance in a multi-bucket model
+#' hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+#'                            soilDomains = "buckets", modifySoil = FALSE)
+#'                            
+#' # Water balance in a single-domain model (Richards equation)
 #' hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
 #'                            soilDomains = "single", modifySoil = FALSE)
 #'                     
@@ -1964,7 +1975,7 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #'   
 #' @name hydrology_soilWaterBalance
 #' @keywords internal
-hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "single", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "buckets", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
     .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, infiltrationCorrection, soilDomains, nsteps, max_nsubsteps, modifySoil)
 }
 
