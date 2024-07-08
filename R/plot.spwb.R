@@ -132,6 +132,7 @@
 #' @seealso  \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{summary.spwb}}
 #' 
 #' @examples 
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -155,7 +156,7 @@
 #' 
 #' #Plot results
 #' plot(S1)
-#' 
+#' }
 plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FALSE,
                     dates = NULL, subdaily = FALSE, 
                     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 

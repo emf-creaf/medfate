@@ -80,6 +80,7 @@
 #' @seealso \code{\link{spwb}}, \code{\link{growth}}, \code{\link{optimization}}, \code{\link{exampleobs}}
 #' 
 #' @examples 
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -115,6 +116,7 @@
 #' 
 #' #Loglikelihood value
 #' evaluation_metric(S1, exampleobs)
+#' }
 #' 
 #' @name evaluation
 evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, 

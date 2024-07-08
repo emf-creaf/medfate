@@ -2075,6 +2075,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' \code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
 //' 
 //' @examples
+//' \donttest{
 //' #Load example daily meteorological data
 //' data(examplemeteo)
 //' 
@@ -2096,7 +2097,6 @@ void printWaterBalanceResult(List outputList, List x,
 //' #Call simulation function
 //' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
-//' \donttest{
 //' #Switch to 'Sperry' transpiration mode
 //' control <- defaultControl("Sperry")
 //' 

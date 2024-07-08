@@ -1148,6 +1148,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
 #' 
 #' @examples
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -1169,7 +1170,6 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #' #Call simulation function
 #' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #'  
-#' \donttest{
 #' #Switch to 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
 #' 
@@ -3729,6 +3729,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' \code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
 #' 
 #' @examples
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -3750,7 +3751,6 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
 #' #Call simulation function
 #' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' \donttest{
 #' #Switch to 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
 #' 

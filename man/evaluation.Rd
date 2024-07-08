@@ -125,6 +125,7 @@ Row names in \code{measuredData} indicate the date of measurement (in the case o
 If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).
 }
 \examples{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -160,6 +161,7 @@ evaluation_plot(S1, exampleobs)
 
 #Loglikelihood value
 evaluation_metric(S1, exampleobs)
+}
 
 }
 \references{

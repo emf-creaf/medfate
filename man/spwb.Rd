@@ -200,6 +200,7 @@ The simulation functions allow using three different sub-models of transpiration
 Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 }
 \examples{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -221,7 +222,6 @@ x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #Call simulation function
 S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
-\donttest{
 #Switch to 'Sperry' transpiration mode
 control <- defaultControl("Sperry")
 

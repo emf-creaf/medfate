@@ -70,10 +70,24 @@ as.data.frame(df_site$SiteData[[1]]$remarks)|>
   kable_styling()
 ```
 
-## Climate
+## Macroclimate
+```{r, fig.height=2, fig.width=8, fig.align="center"}
+plot(df_site$Result[[1]], "PET_Precipitation")
+```
+
+## Microclimate
 ```{r, fig.height=4, fig.width=8, fig.align="center"}
-cowplot::plot_grid(plot(df_site$Result[[1]], "PET_Precipitation"),
-                   plot(df_site$Result[[2]], type = "TemperatureRange"), nrow=2)
+cowplot::plot_grid(plot(df_site$Result[[2]], "TemperatureRange")+labs(title="Sperry"),
+                   plot(df_site$Result[[3]], type = "TemperatureRange")+labs(title="Sureau"),
+                   nrow=2)
+```
+
+## Runoff & deep drainage
+```{r, fig.height=6, fig.width=8, fig.align="center"}
+cowplot::plot_grid(plot(df_site$Result[[1]], "Export")+labs(title="Granier"),
+                   plot(df_site$Result[[2]], type = "Export")+labs(title="Sperry"), 
+                   plot(df_site$Result[[3]], type = "Export")+labs(title="Sureau"),
+                   nrow=3)
 ```
 
 ## Evaluation results

@@ -103,6 +103,7 @@ Simulations using the 'Sperry' or 'Sureau' transpiration modes are computational
 than those using the 'Granier' transpiration mode.
 }
 \examples{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -124,7 +125,6 @@ x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 #Call simulation function
 G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
  
-\donttest{
 #Switch to 'Sperry' transpiration mode
 control <- defaultControl("Sperry")
 

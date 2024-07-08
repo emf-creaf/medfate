@@ -208,6 +208,7 @@ Finally, the following plots are only available for \code{\link{fordyn}} simulat
   }
 }
 \examples{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -231,7 +232,7 @@ S1 <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Plot results
 plot(S1)
-
+}
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{summary.spwb}}

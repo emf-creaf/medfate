@@ -2181,6 +2181,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
 //' 
 //' @examples
+//' \donttest{
 //' #Load example daily meteorological data
 //' data(examplemeteo)
 //' 
@@ -2202,7 +2203,6 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' #Call simulation function
 //' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 //'  
-//' \donttest{
 //' #Switch to 'Sperry' transpiration mode
 //' control <- defaultControl("Sperry")
 //' 

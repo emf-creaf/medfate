@@ -72,6 +72,7 @@ Function \code{summary} summarizes the model's output in different temporal step
 When applied to \code{\link{fordyn}} objects, the summary function can be used to gather the results of different yearly steps into a single table while keeping a daily resolution (i.e. using \code{freq = "days"}.
 }
 \examples{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -105,7 +106,7 @@ names(S1$Plants)
 #Monthly summary (averages) of plant stress
 summary(S1, freq="months",FUN=mean, output="PlantStress", 
         bySpecies = TRUE)
-
+}
 
 }
 \seealso{

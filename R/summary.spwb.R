@@ -135,6 +135,7 @@
 #' \code{\link{plot.spwb}}, \code{\link{extract}}
 #' 
 #' @examples
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -168,7 +169,7 @@
 #' #Monthly summary (averages) of plant stress
 #' summary(S1, freq="months",FUN=mean, output="PlantStress", 
 #'         bySpecies = TRUE)
-#' 
+#' }
 #' 
 #' @name summary.spwb
 summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, months = NULL, ...){  

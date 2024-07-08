@@ -1445,7 +1445,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     res.push_back(matrix_correction_mm + macropore_correction_mm, "Correction");
     res.push_back(Vfin_micro_mm - Vini0_micro_mm  + Vfin_macro_mm - Vini0_macro_mm, "VolumeChange");
     res.push_back((double) total_nsubsteps, "Substeps");
-  } else {
+  } else if(soilDomains=="single") {
     double runoff_mm = infiltration_excess_matrix_mm  + saturation_excess_matrix_mm;
     res = NumericVector::create(_["Local source/sinks"] = sum(sourceSink),
                                 _["Lateral source/sinks"] = sum(lateralFlows_mm),
