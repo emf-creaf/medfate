@@ -1206,7 +1206,7 @@ NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fil
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<Gs_P50.size();c++) {
     if(NumericVector::is_na(Gs_P50[c])) {
-      if(NumericVector::is_na(VCleaf_P50[c])) {
+      if(!NumericVector::is_na(VCleaf_P50[c])) {
         Gs_P50[c] = VCleaf_P50[c]; //If P50 leaf is defined in SpParams, use this value for imputation
       } else {
         //Use TLP for imputation
