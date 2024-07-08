@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.4.0</span>
       </span>
     </div>
 
@@ -56,13 +56,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">defaultControl</span><span class="op">(</span>transpirationMode <span class="op">=</span> <span class="st">"Granier"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">defaultControl</span><span class="op">(</span>transpirationMode <span class="op">=</span> <span class="st">"Granier"</span>, soilDomains <span class="op">=</span> <span class="st">"buckets"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>transpirationMode</dt>
 <dd><p>Transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See <code><a href="modelInput.html">spwbInput</a></code>.</p></dd>
+
+
+<dt>soilDomains</dt>
+<dd><p>Soil hydrology model (either 'buckets', 'single' or 'dual'). See <code><a href="hydrology_soilWaterBalance.html">hydrology_soilWaterBalance</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -101,7 +105,7 @@
 <li><p><code>interceptionMode [= "Gash1995"]</code>: Infiltration model, either "Gash1995" or "Liu2001".</p></li>
 <li><p><code>infiltrationMode [= "GreenAmpt1911"]</code>: Infiltration model, either "GreenAmpt1911" or "Boughton1989".</p></li>
 <li><p><code>infiltrationCorrection [= 5.0]</code>: Factor to correct infiltration amount in the GreenAmpt1911 model in single-domain simulations.</p></li>
-<li><p><code>soilDomains [= "dual"]</code>: Either 'single' (for single-domain) or 'dual' (for dual-permeability).</p></li>
+<li><p><code>soilDomains [= "buckets"]</code>: Either 'buckets' (for multi-bucket model), 'single' (for single-domain Richards model) or 'dual' (for dual-permeability model). See <code><a href="hydrology_soilWaterBalance.html">hydrology_soilWaterBalance</a></code>.</p></li>
 <li><p><code>rhizosphereOverlap [= "total"]</code>: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
           </p><ul><li><p>"none" - no overlap (independent water pools).</p></li>
 <li><p>"partial" - partial overlap determined by coarse root volume.</p></li>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.4.0</span>
       </span>
     </div>
 
@@ -68,7 +68,7 @@
 <span>  waterTableDepth <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  infiltrationMode <span class="op">=</span> <span class="st">"GreenAmpt1911"</span>,</span>
 <span>  infiltrationCorrection <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  soilDomains <span class="op">=</span> <span class="st">"single"</span>,</span>
+<span>  soilDomains <span class="op">=</span> <span class="st">"buckets"</span>,</span>
 <span>  nsteps <span class="op">=</span> <span class="fl">24L</span>,</span>
 <span>  max_nsubsteps <span class="op">=</span> <span class="fl">3600L</span>,</span>
 <span>  modifySoil <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -123,7 +123,7 @@ as mm/day.</p></dd>
 
 
 <dt>soilDomains</dt>
-<dd><p>Either "single" (for single-domain) or "dual" (for dual-permeability).</p></dd>
+<dd><p>Either "buckets" (multi-bucket domain), "single" (for single-domain Richards) or "dual" (for dual-permeability model).</p></dd>
 
 
 <dt>nsteps</dt>
@@ -173,9 +173,14 @@ as mm/day.</p></dd>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p>The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
+    <p>The multi-bucket model adds/substracts water to each layer and if content is above field capacity the excess percolates to the layer below.
+If there is still an excess for the bottom layer, the model will progressively fill upper layers (generating saturation excess if the first layer 
+becomes saturated). Every day the some layers are over field capacity, the model simulates deep drainage.</p>
+<p>The single-domain model simulates water flows by solving Richards's equation using the predictor-corrector method, as described in 
 Bonan et al. (2019).</p>
 <p>The dual-permeability model is an implementation of the model MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005).</p>
+<p>Both the multi-bucket and the single-domain model can apply a correction to the infiltration rate to account for macroporosity in infiltration. In the
+dual-permeability model extra infiltration through macropores is simulated explicitly.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -201,7 +206,17 @@ Bonan et al. (2019).</p>
 <span class="r-in"><span><span class="co"># Initializes soil hydraulic parameters</span></span></span>
 <span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Water balance in a single-domain simulation (Richards equation)</span></span></span>
+<span class="r-in"><span><span class="co"># Water balance in a multi-bucket model</span></span></span>
+<span class="r-in"><span><span class="fu">hydrology_soilWaterBalance</span><span class="op">(</span><span class="va">examplesoil</span>, <span class="st">"VG"</span>, <span class="fl">10</span>, <span class="fl">5</span>, <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>                           soilDomains <span class="op">=</span> <span class="st">"buckets"</span>, modifySoil <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Local source/sinks Lateral source/sinks         Infiltration </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            -4.000000             0.000000            10.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   InfiltrationExcess     SaturationExcess               Runoff </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0.000000             0.000000             0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         DeepDrainage      CapillarityRise </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             4.121414             0.000000 </span>
+<span class="r-in"><span>                           </span></span>
+<span class="r-in"><span><span class="co"># Water balance in a single-domain model (Richards equation)</span></span></span>
 <span class="r-in"><span><span class="fu">hydrology_soilWaterBalance</span><span class="op">(</span><span class="va">examplesoil</span>, <span class="st">"VG"</span>, <span class="fl">10</span>, <span class="fl">5</span>, <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>                           soilDomains <span class="op">=</span> <span class="st">"single"</span>, modifySoil <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Local source/sinks Lateral source/sinks         Infiltration </span>
