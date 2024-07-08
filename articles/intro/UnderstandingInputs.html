@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-06-20</h4>
+            <h4 data-toc-skip class="date">2024-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -810,6 +810,14 @@ at 20C</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
+<td align="left">Gsw_AC_slope</td>
+<td align="left">Slope of the Gsw vs Ac/Cs relationship (Baldocchi
+model).</td>
+<td align="left">Numeric</td>
+<td align="left">mol H2O * mmol CO2-1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
 <td align="left">Gs_Toptim</td>
 <td align="left">Temperature corresponding to maximal stomatal
 conductance</td>
@@ -817,14 +825,14 @@ conductance</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Gs_Tsens</td>
 <td align="left">Stomatal sensitivity to temperature</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Gs_P50</td>
 <td align="left">Water potential causing 50% reduction in stomatal
 conductance</td>
@@ -832,21 +840,21 @@ conductance</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Gs_slope</td>
 <td align="left">Rate of decrease in stomatal conductance at Gs_P50</td>
 <td align="left">Numeric</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleaf_kmax</td>
 <td align="left">Maximum leaf hydraulic conductance</td>
 <td align="left">Numeric</td>
 <td align="left">mmol H2O * s-1 * m-2 * MPa-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_P12</td>
 <td align="left">12% of maximum conductance of the leaf vulnerability
 curve</td>
@@ -854,7 +862,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleaf_P50</td>
 <td align="left">50% of maximum conductance of the leaf vulnerability
 curve</td>
@@ -862,7 +870,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_P88</td>
 <td align="left">88% of maximum conductance of the leaf vulnerability
 curve</td>
@@ -870,7 +878,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleaf_slope</td>
 <td align="left">Slope of the rate of leaf embolism spread at
 VCleaf_P50</td>
@@ -878,7 +886,7 @@ VCleaf_P50</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Kmax_stemxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of stem
 xylem</td>
@@ -886,7 +894,7 @@ xylem</td>
 <td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCstem_P12</td>
 <td align="left">12% of maximum conductance of the stem vulnerability
 curve</td>
@@ -894,7 +902,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCstem_P50</td>
 <td align="left">50% of maximum conductance of the stem vulnerability
 curve</td>
@@ -902,7 +910,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCstem_P88</td>
 <td align="left">88% of maximum conductance of the stem vulnerability
 curve</td>
@@ -910,7 +918,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCstem_slope</td>
 <td align="left">Slope of the rate of stem embolism spread at
 VCleaf_P50</td>
@@ -918,7 +926,7 @@ VCleaf_P50</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Kmax_rootxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of root
 xylem</td>
@@ -926,7 +934,7 @@ xylem</td>
 <td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCroot_P12</td>
 <td align="left">12% of maximum conductance of the root vulnerability
 curve</td>
@@ -934,7 +942,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCroot_P50</td>
 <td align="left">50% of maximum conductance of the root vulnerability
 curve</td>
@@ -942,7 +950,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCroot_P88</td>
 <td align="left">88% of maximum conductance of the root vulnerability
 curve</td>
@@ -950,7 +958,7 @@ curve</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCroot_slope</td>
 <td align="left">Slope of the rate of root embolism spread at
 VCleaf_P50</td>
@@ -958,56 +966,56 @@ VCleaf_P50</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Vmax298</td>
 <td align="left">Maximum Rubisco carboxilation rate</td>
 <td align="left">Numeric</td>
 <td align="left">mmol CO2 * s-1* m-2</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Jmax298</td>
 <td align="left">Maximum rate of electron transport at 298K</td>
 <td align="left">Numeric</td>
 <td align="left">mmol electrons * s-1 * m-2</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Nleaf</td>
 <td align="left">Nitrogen mass per leaf dry mass</td>
 <td align="left">Numeric</td>
 <td align="left">mg N / g dry</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Nsapwood</td>
 <td align="left">Nitrogen mass per sapwood dry mass</td>
 <td align="left">Numeric</td>
 <td align="left">mg N / g dry</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Nfineroot</td>
 <td align="left">Nitrogen mass per fine root dry mass</td>
 <td align="left">Numeric</td>
 <td align="left">mg N / g dry</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">WoodC</td>
 <td align="left">Wood carbon content per dry mass</td>
 <td align="left">Numeric</td>
 <td align="left">g C / g dry</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RERleaf</td>
 <td align="left">Maintenance respiration rates for leaves.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1 * day-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RERsapwood</td>
 <td align="left">Maintenance respiration rates for living cells of
 sapwood.</td>
@@ -1015,42 +1023,42 @@ sapwood.</td>
 <td align="left">g gluc * g dry-1 * day-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RERfineroot</td>
 <td align="left">Maintenance respiration rates for fine roots.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1 * day-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">CCleaf</td>
 <td align="left">Leaf construction costs</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">CCsapwood</td>
 <td align="left">Sapwood construction costs</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">CCfineroot</td>
 <td align="left">Fine root construction costs</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RGRleafmax</td>
 <td align="left">Maximum leaf relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">m2/cm2/day</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRsapwoodmax</td>
 <td align="left">Maximum sapwood growth rate relative to sapwood area
 (for shrubs)</td>
@@ -1058,7 +1066,7 @@ sapwood.</td>
 <td align="left">cm2/cm2/day</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RGRcambiummax</td>
 <td align="left">Maximum sapwood growth rate relative to cambium
 perimeter (for trees)</td>
@@ -1066,35 +1074,35 @@ perimeter (for trees)</td>
 <td align="left">cm2/cm/day</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRfinerootmax</td>
 <td align="left">Maximum fineroot relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">g dry/g dry/day</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRsapwood</td>
 <td align="left">Sapwood daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SRfineroot</td>
 <td align="left">Fine root daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RSSG</td>
 <td align="left">Minimum relative starch for sapwood growth</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MortalityBaselineRate</td>
 <td align="left">Deterministic proportion or probability specifying the
 baseline reduction of cohort’s density occurring in a year</td>
@@ -1102,7 +1110,7 @@ baseline reduction of cohort’s density occurring in a year</td>
 <td align="left">Year-1</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SurvivalModelStep</td>
 <td align="left">Time step in years of the empirical survival model
 depending on stand basal area (e.g. 10)</td>
@@ -1110,7 +1118,7 @@ depending on stand basal area (e.g. 10)</td>
 <td align="left">Year</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SurvivalB0</td>
 <td align="left">Intercept of the logistic baseline survival model
 depending on stand basal area</td>
@@ -1118,7 +1126,7 @@ depending on stand basal area</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SurvivalB1</td>
 <td align="left">Slope of the logistic baseline survival model depending
 on stand basal area</td>
@@ -1126,42 +1134,42 @@ on stand basal area</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SeedProductionHeight</td>
 <td align="left">Minimum height for seed production</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SeedMass</td>
 <td align="left">Seed dry mass</td>
 <td align="left">Numeric</td>
 <td align="left">mg</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SeedLongevity</td>
 <td align="left">Seedbank average longevity</td>
 <td align="left">Numeric</td>
 <td align="left">yr</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">DispersalDistance</td>
 <td align="left">Distance parameter for dispersal kernel</td>
 <td align="left">Numeric</td>
 <td align="left">m</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">DispersalShape</td>
 <td align="left">Shape parameter for dispersal kernel</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">ProbRecr</td>
 <td align="left">Probability of recruitment within the bioclimatic
 envelope</td>
@@ -1169,7 +1177,7 @@ envelope</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinTempRecr</td>
 <td align="left">Minimum average temperature of the coldest month for
 successful recruitment</td>
@@ -1177,7 +1185,7 @@ successful recruitment</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinMoistureRecr</td>
 <td align="left">Minimum value of the moisture index (annual
 precipitation over annual PET) for successful recruitment</td>
@@ -1185,7 +1193,7 @@ precipitation over annual PET) for successful recruitment</td>
 <td align="left">unitless</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinFPARRecr</td>
 <td align="left">Minimum percentage of PAR at the ground level for
 successful recruitment</td>
@@ -1193,42 +1201,42 @@ successful recruitment</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDBH</td>
 <td align="left">Recruitment tree dbh (typically 1 cm)</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree (sapling) height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree (sapling) density</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrZ50</td>
 <td align="left">Recruitment depth corresponding to 50% of fine
 roots</td>
@@ -1236,7 +1244,7 @@ roots</td>
 <td align="left">mm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrZ95</td>
 <td align="left">Recruitment depth corresponding to 95% of fine
 roots</td>
@@ -1244,14 +1252,14 @@ roots</td>
 <td align="left">mm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RespFire</td>
 <td align="left">Probability of resprouting after fire disturbance</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RespDist</td>
 <td align="left">Probability of resprouting after undefined disturbance
 (typically desiccation)</td>
@@ -1259,21 +1267,21 @@ roots</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RespClip</td>
 <td align="left">Probability of resprouting after clipping</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">IngrowthTreeDensity</td>
 <td align="left">Tree density when reaching DBH of ingrowth</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">IngrowthTreeDBH</td>
 <td align="left">Tree DBH of ingrowth (typically 7.5 cm)</td>
 <td align="left">Numeric</td>

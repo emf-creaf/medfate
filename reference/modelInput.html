@@ -164,7 +164,10 @@ and a soil data input to create input objects for simulation functions <code><a 
       If <code>control$transpirationMode = "Sureau"</code> columns are:
       <ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
 <li><p><code>Gswmax</code>: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
-<li><p><code>Vmax298</code>: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).</p></li>
+<li><p><code>Gsw_AC_slope</code>: Slope of the Gsw vs Ac/Cs relationship (see <code><a href="photo.html">photo_photosynthesisBaldocchi</a></code>).</p></li>
+<li><p><code>Gs_P50</code>: Water potential causing 50% reduction in stomatal conductance.</p></li>
+<li><p><code>Gs_slope</code>: Rate of decrease in stomatal conductance at Gs_P50.</p></li>
+<li><p><code>Vmax298</code>: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).</p></li>
 <li><p><code>Jmax298</code>: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).</p></li>
 <li><p><code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).</p></li>
 <li><p><code>Kmax_rootxylem</code>: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).</p></li>
@@ -359,7 +362,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dual"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
@@ -463,7 +466,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$stemCuticularTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$C_SApoInit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2e-05</span>
@@ -863,7 +866,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dual"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
@@ -967,7 +970,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$stemCuticularTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$C_SApoInit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2e-05</span>
@@ -1429,7 +1432,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dual"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
@@ -1533,7 +1536,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$stemCuticularTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$C_SApoInit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2e-05</span>
@@ -2004,7 +2007,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dual"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
@@ -2108,7 +2111,7 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$stemCuticularTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$C_SApoInit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2e-05</span>
