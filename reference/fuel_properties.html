@@ -73,6 +73,7 @@ following an adaptation of the protocols described for the Fuel Characteristics 
 <span>  <span class="va">object</span>,</span>
 <span>  <span class="va">SpParams</span>,</span>
 <span>  cohortFMC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  loadingOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  gdd <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  heightProfileStep <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  maxHeightProfile <span class="op">=</span> <span class="fl">5000</span>,</span>
@@ -109,6 +110,10 @@ following an adaptation of the protocols described for the Fuel Characteristics 
 
 <dt>cohortFMC</dt>
 <dd><p>A numeric vector of (actual) fuel moisture content by cohort.</p></dd>
+
+
+<dt>loadingOffset</dt>
+<dd><p>A vector of length five with fine fuel loading values (canopy, shrub, herb, woody and litter) to be added to loading estimations from <code>forest</code>.</p></dd>
 
 
 <dt>depthMode</dt>
@@ -207,7 +212,7 @@ following an adaptation of the protocols described for the Fuel Characteristics 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#Calculate fuel properties according to FCCS</span></span></span>
-<span class="r-in"><span><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fccs</span> <span class="op">&lt;-</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc       delta        rhob     rhop</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.52550038 100.00 2.7 7.1  2.6  7.9 4.791658510  0.10966983 592.0044</span>

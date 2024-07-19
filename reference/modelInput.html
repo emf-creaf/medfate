@@ -141,42 +141,46 @@ and a soil data input to create input objects for simulation functions <code><a 
 <li><p><code>Tmax_LAIsq</code>: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
 <li><p><code>Psi_Extract</code>: Water potential corresponding to 50% relative transpiration (in MPa).</p></li>
 <li><p><code>Exp_Extract</code>: Parameter of the Weibull function regulating transpiration reduction.</p></li>
-<li><p><code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve.</p></li>
+<li><p><code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve (Weibull).</p></li>
 <li><p><code>WUE</code>: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).</p></li>
 <li><p><code>WUE_par</code>: Coefficient regulating the influence of % PAR on gross photosynthesis.</p></li>
-<li><p><code>WUE_par</code>: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.</p></li>
-<li><p><code>WUE_par</code>: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.</p></li>
+<li><p><code>WUE_co2</code>: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.</p></li>
+<li><p><code>WUE_vpd</code>: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.</p></li>
 </ul>
      If <code>control$transpirationMode = "Sperry"</code> columns are:
       <ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
 <li><p><code>Gswmax</code>: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
 <li><p><code>Vmax298</code>: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).</p></li>
 <li><p><code>Jmax298</code>: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).</p></li>
-<li><p><code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).</p></li>
-<li><p><code>Kmax_rootxylem</code>: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).</p></li>
-<li><p><code>VCleaf_kmax</code>: Maximum leaf hydraulic conductance.</p></li>
-<li><p><code>VCleaf_c</code>, <code>VCleaf_d</code>: Parameters of the leaf vulnerability curve.</p></li>
-<li><p><code>VCstem_kmax</code>: Maximum stem xylem conductance.</p></li>
-<li><p><code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve.</p></li>
-<li><p><code>VCroot_c</code>, <code>VCroot_d</code>: Parameters of the root xylem vulnerability curve.</p></li>
-<li><p><code>Plant_kmax</code>: Maximum whole-plant conductance.</p></li>
+<li><p><code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).</p></li>
+<li><p><code>Kmax_rootxylem</code>: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).</p></li>
+<li><p><code>VCleaf_kmax</code>: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).</p></li>
+<li><p><code>VCleaf_c</code>, <code>VCleaf_d</code>: Parameters of the leaf vulnerability curve (Weibull).</p></li>
+<li><p><code>VCstem_kmax</code>: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).</p></li>
+<li><p><code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve (Weibull).</p></li>
+<li><p><code>VCroot_c</code>, <code>VCroot_d</code>: Parameters of the root xylem vulnerability curve (Weibull).</p></li>
+<li><p><code>Plant_kmax</code>: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).</p></li>
+<li><p><code>FR_leaf</code>, <code>FR_stem</code>, <code>FR_root</code>: Fraction of whole-plant resistance corresponding to each segment.</p></li>
 </ul>
       If <code>control$transpirationMode = "Sureau"</code> columns are:
       <ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
 <li><p><code>Gswmax</code>: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
 <li><p><code>Gsw_AC_slope</code>: Slope of the Gsw vs Ac/Cs relationship (see <code><a href="photo.html">photo_photosynthesisBaldocchi</a></code>).</p></li>
-<li><p><code>Gs_P50</code>: Water potential causing 50% reduction in stomatal conductance.</p></li>
-<li><p><code>Gs_slope</code>: Rate of decrease in stomatal conductance at Gs_P50.</p></li>
+<li><p><code>Gs_P50</code>, <code>Gs_slope</code>: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).</p></li>
 <li><p><code>Vmax298</code>: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).</p></li>
 <li><p><code>Jmax298</code>: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).</p></li>
-<li><p><code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).</p></li>
-<li><p><code>Kmax_rootxylem</code>: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).</p></li>
-<li><p><code>VCleaf_kmax</code>: Maximum leaf hydraulic conductance.</p></li>
-<li><p><code>VCleaf_c</code>, <code>VCleaf_d</code>: Parameters of the leaf vulnerability curve.</p></li>
-<li><p><code>VCstem_kmax</code>: Maximum stem xylem conductance.</p></li>
-<li><p><code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve.</p></li>
-<li><p><code>VCroot_c</code>, <code>VCroot_d</code>: Parameters of the root xylem vulnerability curve.</p></li>
-<li><p><code>Plant_kmax</code>: Maximum whole-plant conductance.</p></li>
+<li><p><code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).</p></li>
+<li><p><code>Kmax_rootxylem</code>: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).</p></li>
+<li><p><code>VCleaf_kmax</code>: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).</p></li>
+<li><p><code>VCleaf_c</code>, <code>VCleaf_d</code>: Parameters of the leaf vulnerability curve (Weibull).</p></li>
+<li><p><code>VCleaf_P50</code>, <code>VCleaf_slope</code>: Parameters of the leaf vulnerability curve (sigmoid).</p></li>
+<li><p><code>VCstem_kmax</code>: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).</p></li>
+<li><p><code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve (Weibull).</p></li>
+<li><p><code>VCstem_P50</code>, <code>VCstem_slope</code>: Parameters of the stem xylem vulnerability curve (sigmoid).</p></li>
+<li><p><code>VCroot_c</code>, <code>VCroot_d</code>: Parameters of the root xylem vulnerability curve (Weibull).</p></li>
+<li><p><code>VCroot_P50</code>, <code>VCroot_slope</code>: Parameters of the root xylem vulnerability curve (sigmoid).</p></li>
+<li><p><code>Plant_kmax</code>: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).</p></li>
+<li><p><code>FR_leaf</code>, <code>FR_stem</code>, <code>FR_root</code>: Fraction of whole-plant resistance corresponding to each segment.</p></li>
 </ul></li>
 <li><p><code>paramsWaterStorage</code>: A data frame with plant water storage parameters for each cohort:
       </p><ul><li><p><code>LeafPI0</code>: Osmotic potential at full turgor of leaves (MPa).</p></li>
