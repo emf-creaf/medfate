@@ -14,74 +14,67 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../../apple-touch-icon-60x60.png">
 <script src="../../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Understanding model inputs">
-<meta name="description" content="medfate">
-<meta property="og:description" content="medfate">
-<meta property="og:image" content="https://emf-creaf.github.io/medfate/logo.png">
+<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Understanding model inputs">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label=""><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>Introduction</h6>
-    <a class="dropdown-item" href="../../articles/intro/PackageOverview.html">Package overview</a>
-    <a class="dropdown-item" href="../../articles/intro/UnderstandingInputs.html">Understanding model inputs</a>
-    <a class="dropdown-item" href="../../articles/intro/PreparingInputs.html">Preparing model inputs</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Running simulation models</h6>
-    <a class="dropdown-item" href="../../articles/runmodels/BasicWaterBalance.html">Basic water balance</a>
-    <a class="dropdown-item" href="../../articles/runmodels/AdvancedWaterEnergyBalance.html">Advanced water and energy balance</a>
-    <a class="dropdown-item" href="../../articles/runmodels/ForestGrowth.html">Forest growth</a>
-    <a class="dropdown-item" href="../../articles/runmodels/ForestDynamics.html">Forest dynamics</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Model analysis and parametrization</h6>
-    <a class="dropdown-item" href="../../articles/modelanalysis/SensitivityCalibration.html">Sensitivity analysis and calibration</a>
-    <a class="dropdown-item" href="../../articles/parametrization/Metamodelling.html">Meta-modelling exercise</a>
-    <a class="dropdown-item" href="../../articles/parametrization/GrowthCalibration.html">Calibration of growth and senescence parameters</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Model performance evaluation</h6>
-    <a class="dropdown-item" href="../../articles/evaluation/StandLevelEvaluation.html">Evaluation in experimental plots</a>
-    <a class="dropdown-item" href="../../articles/evaluation/RegionalLevelEvaluation.html">Evaluation of regional-level forest dynamics with forest inventory data</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Application examples</h6>
-    <a class="dropdown-item" href="../../articles/workedexamples/FontBlanche.html">Soil and plant water balances at Font-Blanche</a>
-    <a class="dropdown-item" href="../../articles/workedexamples/PlantWaterPools.html">Water pools and species interactions</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><h6 class="dropdown-header" data-toc-skip>Introduction</h6></li>
+    <li><a class="dropdown-item" href="../../articles/intro/PackageOverview.html">Package overview</a></li>
+    <li><a class="dropdown-item" href="../../articles/intro/UnderstandingInputs.html">Understanding model inputs</a></li>
+    <li><a class="dropdown-item" href="../../articles/intro/PreparingInputs.html">Preparing model inputs</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Running simulation models</h6></li>
+    <li><a class="dropdown-item" href="../../articles/runmodels/BasicWaterBalance.html">Basic water balance</a></li>
+    <li><a class="dropdown-item" href="../../articles/runmodels/AdvancedWaterEnergyBalance.html">Advanced water and energy balance</a></li>
+    <li><a class="dropdown-item" href="../../articles/runmodels/ForestGrowth.html">Forest growth</a></li>
+    <li><a class="dropdown-item" href="../../articles/runmodels/ForestDynamics.html">Forest dynamics</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Model analysis and parametrization</h6></li>
+    <li><a class="dropdown-item" href="../../articles/modelanalysis/SensitivityCalibration.html">Sensitivity analysis and calibration</a></li>
+    <li><a class="dropdown-item" href="../../articles/parametrization/Metamodelling.html">Meta-modelling exercise</a></li>
+    <li><a class="dropdown-item" href="../../articles/parametrization/GrowthCalibration.html">Calibration of growth and senescence parameters</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Model performance evaluation</h6></li>
+    <li><a class="dropdown-item" href="../../articles/evaluation/StandLevelEvaluation.html">Evaluation in experimental plots</a></li>
+    <li><a class="dropdown-item" href="../../articles/evaluation/RegionalLevelEvaluation.html">Evaluation of regional-level forest dynamics with forest inventory data</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Application examples</h6></li>
+    <li><a class="dropdown-item" href="../../articles/workedexamples/FontBlanche.html">Soil and plant water balances at Font-Blanche</a></li>
+    <li><a class="dropdown-item" href="../../articles/workedexamples/PlantWaterPools.html">Water pools and species interactions</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/emf-creaf/medfate/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/emf-creaf/medfate/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -1411,8 +1404,9 @@ where vegetation is described using a single cohort. Functions
 <code><a href="../../reference/tree2forest.html">tree2forest()</a></code> and <code><a href="../../reference/tree2forest.html">shrub2forest()</a></code> allow
 defining single-cohort forests from attributes. For example a holm oak
 (<em>Quercus ilex</em>) forest of 4-m height and having a leaf area
-index of <span class="math inline">\(2\, m^2\cdot m^{-2}\)</span> can be
-defined using:</p>
+index of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mspace width="0.167em"></mspace><msup><mi>m</mi><mn>2</mn></msup><mo>⋅</mo><msup><mi>m</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">2\, m^2\cdot m^{-2}</annotation></semantics></math>
+can be defined using:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oak_forest</span> <span class="op">&lt;-</span><span class="fu"><a href="../../reference/tree2forest.html">tree2forest</a></span><span class="op">(</span><span class="st">"Quercus ilex"</span>, Height<span class="op">=</span> <span class="fl">400</span>, LAI <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p>The function will return a <code>forest</code> object where most
@@ -1531,11 +1525,13 @@ to default values, for a given number of layers, using function
 <p>where <code>widths</code> are soil layer widths in mm;
 <code>clay</code> and <code>sand</code> are the percentage of clay and
 sand, in percent of dry weight, <code>om</code> stands for organic
-matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the
-percentage of rock fragments. Because soil properties vary strongly at
-fine spatial scales, ideally soil physical attributes should be measured
-on samples taken at the forest stand to be simulated. For those users
-lacking such data, soil properties are available via SoilGrids.org.</p>
+matter, <code>bd</code> is bulk density (in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>⋅</mo><mi>c</mi><msup><mi>m</mi><mrow><mo>−</mo><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">g \cdot cm^{-3}</annotation></semantics></math>)
+and <code>rfc</code> the percentage of rock fragments. Because soil
+properties vary strongly at fine spatial scales, ideally soil physical
+attributes should be measured on samples taken at the forest stand to be
+simulated. For those users lacking such data, soil properties are
+available via SoilGrids.org.</p>
 </div>
 <div class="section level3">
 <h3 id="initialized-soil-object">Initialized soil object<a class="anchor" aria-label="anchor" href="#initialized-soil-object"></a>
@@ -1631,12 +1627,14 @@ input objects for simulations (see below).</p>
 </h3>
 <p>The modelled moisture content of the soil depends on the
 <strong>water retention curve</strong> used to represent the
-relationship between soil volumetric water content (<span class="math inline">\(\theta\)</span>; %) and soil water potential
-(<span class="math inline">\(\Psi\)</span>; MPa). By default the Saxton
-(<code>model = "SX"</code>) equations are used to model the water
-retention curve, but the user may choose to follow Van Genuchten -
-Mualem equations, which will give slightly different values for the same
-texture:</p>
+relationship between soil volumetric water content
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>;
+%) and soil water potential
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Ψ</mi><annotation encoding="application/x-tex">\Psi</annotation></semantics></math>;
+MPa). By default the Saxton (<code>model = "SX"</code>) equations are
+used to model the water retention curve, but the user may choose to
+follow Van Genuchten - Mualem equations, which will give slightly
+different values for the same texture:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Soil depth (mm): 4000 </span></span>
@@ -1818,7 +1816,7 @@ simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn
 <code><a href="../../reference/modelInput.html">growthInput()</a></code> to initialize the input object to function
 <code><a href="../../reference/growth.html">growth()</a></code>).</p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="TRUE"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -1835,9 +1833,9 @@ simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
