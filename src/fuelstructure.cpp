@@ -230,7 +230,7 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
 //' fuel_stratification(exampleforest, SpParamsMED)
 //'   
 //' #Calculate fuel properties according to FCCS
-//' fccs = fuel_FCCS(exampleforest, SpParamsMED)
+//' fccs <- fuel_FCCS(exampleforest, SpParamsMED)
 //' fccs
 //' 
 //' 
@@ -352,7 +352,7 @@ CharacterVector leafLitterFuelType(List object, DataFrame SpParams) {
 //'   }
 // [[Rcpp::export("fuel_FCCS")]]
 DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
-                         NumericVector loadingOffset = NumericVector(5, 0.0),
+                         NumericVector loadingOffset = NumericVector::create(0.0, 0.0, 0.0, 0.0, 0.0),
                          double gdd = NA_REAL,  
                          double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
                          String depthMode = "crownaverage") {

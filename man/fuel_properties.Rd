@@ -19,6 +19,7 @@ fuel_FCCS(
   object,
   SpParams,
   cohortFMC = as.numeric(c()),
+  loadingOffset = as.numeric(c(0, 0, 0, 0, 0)),
   gdd = NA_real_,
   heightProfileStep = 10,
   maxHeightProfile = 5000,
@@ -40,6 +41,8 @@ fuel_FCCS(
 \item{bulkDensityThreshold}{Minimum fuel bulk density to delimit fuel strata.}
 
 \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort.}
+
+\item{loadingOffset}{A vector of length five with fine fuel loading values (canopy, shrub, herb, woody and litter) to be added to loading estimations from \code{forest}.}
 
 \item{depthMode}{Specifies how fuel depth (and therefore canopy and understory bulk density) should be estimated: 
 \itemize{
@@ -99,7 +102,7 @@ data(SpParamsMED)
 fuel_stratification(exampleforest, SpParamsMED)
   
 #Calculate fuel properties according to FCCS
-fccs = fuel_FCCS(exampleforest, SpParamsMED)
+fccs <- fuel_FCCS(exampleforest, SpParamsMED)
 fccs
 
 

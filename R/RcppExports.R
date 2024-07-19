@@ -1001,7 +1001,7 @@ forest2belowground <- function(x, soil, SpParams) {
 #' fuel_stratification(exampleforest, SpParamsMED)
 #'   
 #' #Calculate fuel properties according to FCCS
-#' fccs = fuel_FCCS(exampleforest, SpParamsMED)
+#' fccs <- fuel_FCCS(exampleforest, SpParamsMED)
 #' fccs
 #' 
 #' 
@@ -1019,7 +1019,7 @@ fuel_stratification <- function(object, SpParams, gdd = NA_real_, heightProfileS
 #'     \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
 #'     \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
 #'   }
-fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOffset = numeric(5, 0.0), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
+fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOffset = as.numeric( c(0.0, 0.0, 0.0, 0.0, 0.0)), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
     .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, loadingOffset, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
