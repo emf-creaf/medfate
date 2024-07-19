@@ -18,8 +18,33 @@
       <ul class="navbar-nav me-auto"><li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../articles/index.html">Articles</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <h6 class="dropdown-header" data-toc-skip>Introduction</h6>
+    <a class="dropdown-item" href="../articles/intro/PackageOverview.html">Package overview</a>
+    <a class="dropdown-item" href="../articles/intro/UnderstandingInputs.html">Understanding model inputs</a>
+    <a class="dropdown-item" href="../articles/intro/PreparingInputs.html">Preparing model inputs</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Running simulation models</h6>
+    <a class="dropdown-item" href="../articles/runmodels/BasicWaterBalance.html">Basic water balance</a>
+    <a class="dropdown-item" href="../articles/runmodels/AdvancedWaterEnergyBalance.html">Advanced water and energy balance</a>
+    <a class="dropdown-item" href="../articles/runmodels/ForestGrowth.html">Forest growth</a>
+    <a class="dropdown-item" href="../articles/runmodels/ForestDynamics.html">Forest dynamics</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Model analysis and parametrization</h6>
+    <a class="dropdown-item" href="../articles/modelanalysis/SensitivityCalibration.html">Sensitivity analysis and calibration</a>
+    <a class="dropdown-item" href="../articles/parametrization/Metamodelling.html">Meta-modelling exercise</a>
+    <a class="dropdown-item" href="../articles/parametrization/GrowthCalibration.html">Calibration of growth and senescence parameters</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Model performance evaluation</h6>
+    <a class="dropdown-item" href="../articles/evaluation/StandLevelEvaluation.html">Evaluation in experimental plots</a>
+    <a class="dropdown-item" href="../articles/evaluation/RegionalLevelEvaluation.html">Evaluation of regional-level forest dynamics with forest inventory data</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Application examples</h6>
+    <a class="dropdown-item" href="../articles/workedexamples/FontBlanche.html">Soil and plant water balances at Font-Blanche</a>
+    <a class="dropdown-item" href="../articles/workedexamples/PlantWaterPools.html">Water pools and species interactions</a>
+  </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -42,12 +67,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.4.0" id="version-440">Version 4.4.0<a class="anchor" aria-label="anchor" href="#version-440"></a></h2>
+<h2 class="pkg-version" data-toc-text="4.4.0" id="medfate-440">medfate 4.4.0<a class="anchor" aria-label="anchor" href="#medfate-440"></a></h2>
 <ul><li>Multi-bucket soil model reintroduced (default) for safety</li>
 <li>Loading offset added as an option to fuel_FCCS</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.3.2" id="version-432">Version 4.3.2<a class="anchor" aria-label="anchor" href="#version-432"></a></h2>
+<h2 class="pkg-version" data-toc-text="4.3.2" id="medfate-432">medfate 4.3.2<a class="anchor" aria-label="anchor" href="#medfate-432"></a></h2>
 <ul><li>IMPORTANT: Many functions have been internalized (biophysics_, fire_,…). They are documented and exported, but not listed in reference list.</li>
 <li>Default control parameters changed</li>
 <li>Subdaily soil temperature change limited for stability with thin first layer</li>
@@ -59,11 +84,11 @@
 <li>Imputation of Gs_P50 changed to either VCleaf_P50 (when not missing) or else derived from TLP</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.3.1" id="version-431">Version 4.3.1<a class="anchor" aria-label="anchor" href="#version-431"></a></h2><p class="text-muted">CRAN release: 2024-05-25</p>
+<h2 class="pkg-version" data-toc-text="4.3.1" id="medfate-431">medfate 4.3.1<a class="anchor" aria-label="anchor" href="#medfate-431"></a></h2><p class="text-muted">CRAN release: 2024-05-25</p>
 <ul><li>Functions forest2spwbInput/forest2growthInput deprecated. Preferred function names are spwbInput/growthInput.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.3.0" id="version-430">Version 4.3.0<a class="anchor" aria-label="anchor" href="#version-430"></a></h2>
+<h2 class="pkg-version" data-toc-text="4.3.0" id="medfate-430">medfate 4.3.0<a class="anchor" aria-label="anchor" href="#medfate-430"></a></h2>
 <ul><li>IMPORTANT: soil objects are now data frames</li>
 <li>SWE now stored as ‘snowpack’ in spwbInput</li>
 <li>print.soil renamed to summary.soil</li>
@@ -71,7 +96,7 @@
 <li>New function forest_reduceToDominant</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.2.0" id="version-420">Version 4.2.0<a class="anchor" aria-label="anchor" href="#version-420"></a></h2>
+<h2 class="pkg-version" data-toc-text="4.2.0" id="medfate-420">medfate 4.2.0<a class="anchor" aria-label="anchor" href="#medfate-420"></a></h2>
 <ul><li>Reorganization of Soil output as a list</li>
 <li>Snow output as independent data frame</li>
 <li>New function soil_redefineLayers</li>
@@ -79,7 +104,7 @@
 <li>Option segmentedXylemVulnerability set to FALSE for Sureau</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.1.0" id="version-410">Version 4.1.0<a class="anchor" aria-label="anchor" href="#version-410"></a></h2>
+<h2 class="pkg-version" data-toc-text="4.1.0" id="medfate-410">medfate 4.1.0<a class="anchor" aria-label="anchor" href="#medfate-410"></a></h2>
 <ul><li>Single-domain and dual-permeability soil water flows</li>
 <li>Infiltration excess, saturation excess and capillarity rise reported</li>
 <li>Lateral water flows and water table depth as inputs</li>
@@ -87,7 +112,7 @@
 <li>Evaluation of moisture in multiple soil layers</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.0.0" id="version-400">Version 4.0.0<a class="anchor" aria-label="anchor" href="#version-400"></a></h2>
+<h2 class="pkg-version" data-toc-text="4.0.0" id="medfate-400">medfate 4.0.0<a class="anchor" aria-label="anchor" href="#medfate-400"></a></h2>
 <ul><li>Options leafCavitationEffects and stemCavitationEffects for Sperry</li>
 <li>New taxonomic treatment (Name/AcceptedName)</li>
 <li>Revision of Sureau sub-model</li>
@@ -110,18 +135,18 @@
 <li>Soil thermodynamics revised</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="3.2.0" id="version-320">Version 3.2.0<a class="anchor" aria-label="anchor" href="#version-320"></a></h2><p class="text-muted">CRAN release: 2023-11-30</p>
+<h2 class="pkg-version" data-toc-text="3.2.0" id="medfate-320">medfate 3.2.0<a class="anchor" aria-label="anchor" href="#medfate-320"></a></h2><p class="text-muted">CRAN release: 2023-11-30</p>
 <ul><li>Correction of a bug arisen in old Rcpp versions</li>
 <li>Functions for seed production and bank dynamics (new parameter SeedLongevity)</li>
 <li>New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)</li>
 <li>Recording of leaf PLC for Sperry and Sureau sub-models</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="3.1.4" id="version-314">Version 3.1.4<a class="anchor" aria-label="anchor" href="#version-314"></a></h2><p class="text-muted">CRAN release: 2023-08-29</p>
+<h2 class="pkg-version" data-toc-text="3.1.4" id="medfate-314">medfate 3.1.4<a class="anchor" aria-label="anchor" href="#medfate-314"></a></h2><p class="text-muted">CRAN release: 2023-08-29</p>
 <ul><li>Fixing memory access errors</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="3.1.3" id="version-313">Version 3.1.3<a class="anchor" aria-label="anchor" href="#version-313"></a></h2><p class="text-muted">CRAN release: 2023-08-23</p>
+<h2 class="pkg-version" data-toc-text="3.1.3" id="medfate-313">medfate 3.1.3<a class="anchor" aria-label="anchor" href="#medfate-313"></a></h2><p class="text-muted">CRAN release: 2023-08-23</p>
 <ul><li>New option ‘months’ in simulation summaries.</li>
 <li>Leaf area, foliar biomass and fuels of shrubs and herbs depend on the leaf area of plants above</li>
 <li>Survival model based on basal area available as an alternative to fixed mortality baseline rates</li>
@@ -129,21 +154,21 @@
 <li>Tree bark thickness parameters added to SpParamsMED</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="3.1.1" id="version-311">Version 3.1.1<a class="anchor" aria-label="anchor" href="#version-311"></a></h2>
+<h2 class="pkg-version" data-toc-text="3.1.1" id="medfate-311">medfate 3.1.1<a class="anchor" aria-label="anchor" href="#medfate-311"></a></h2>
 <ul><li>Fire severity implemented</li>
 <li>Crown bud percent decreases with PLC and fire, increases with SA growth and regulates primary growth rate</li>
 <li>Forest objects can now have additional variables defined (LAI, foliar biomass, fuel loading), to override estimations from allometric models</li>
 <li>New example forest object ‘exampleforest2’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="3.1.0" id="version-310">Version 3.1.0<a class="anchor" aria-label="anchor" href="#version-310"></a></h2>
+<h2 class="pkg-version" data-toc-text="3.1.0" id="medfate-310">medfate 3.1.0<a class="anchor" aria-label="anchor" href="#medfate-310"></a></h2>
 <ul><li>Herbaceous information in summary.forest</li>
 <li>Herbaceous transpiration added to the water balance</li>
 <li>Weather input can now have dates as Date or POSIXct objects in column ‘dates’ instead of row names</li>
 <li>Weather input can now have missing values in MinRelativeHumidity, MaxRelativeHumidity and Radiation</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="3.0.0" id="version-300">Version 3.0.0<a class="anchor" aria-label="anchor" href="#version-300"></a></h2>
+<h2 class="pkg-version" data-toc-text="3.0.0" id="medfate-300">medfate 3.0.0<a class="anchor" aria-label="anchor" href="#medfate-300"></a></h2>
 <ul><li>Leaf area limited by allometries</li>
 <li>Functions ‘growthInput()’ and ‘spwbInput()’ no longer visible at the user level</li>
 <li>No calculation mode forest structure (US mode removed)</li>
@@ -155,7 +180,7 @@
 <li>Tree foliar biomass corrected for high density. Shrub foliar biomass/fuel limited by tree basal area.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.9.3" id="version-293">Version 2.9.3<a class="anchor" aria-label="anchor" href="#version-293"></a></h2><p class="text-muted">CRAN release: 2023-03-11</p>
+<h2 class="pkg-version" data-toc-text="2.9.3" id="medfate-293">medfate 2.9.3<a class="anchor" aria-label="anchor" href="#medfate-293"></a></h2><p class="text-muted">CRAN release: 2023-03-11</p>
 <ul><li>Bounded leaf area index</li>
 <li>IFNcodes out of SpParams</li>
 <li>PlantPsi lower limit set to -40 MPa</li>
@@ -165,17 +190,17 @@
 <li>Removed fordyn dependency on input PET</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.9.1" id="version-291">Version 2.9.1<a class="anchor" aria-label="anchor" href="#version-291"></a></h2><p class="text-muted">CRAN release: 2023-01-08</p>
+<h2 class="pkg-version" data-toc-text="2.9.1" id="medfate-291">medfate 2.9.1<a class="anchor" aria-label="anchor" href="#medfate-291"></a></h2><p class="text-muted">CRAN release: 2023-01-08</p>
 <ul><li>Allows species strings as input in forests objects</li>
 <li>Clean code in growth.cpp</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.8.3" id="version-283">Version 2.8.3<a class="anchor" aria-label="anchor" href="#version-283"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.8.3" id="medfate-283">medfate 2.8.3<a class="anchor" aria-label="anchor" href="#medfate-283"></a></h2>
 <ul><li>Replacing sprintf calls</li>
 <li>Update of forest_mergeShrubs and forest_mergeTrees</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.8.2" id="version-282">Version 2.8.2<a class="anchor" aria-label="anchor" href="#version-282"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.8.2" id="medfate-282">medfate 2.8.2<a class="anchor" aria-label="anchor" href="#medfate-282"></a></h2>
 <ul><li>Function ‘redefineSoilLayers’ moved to package ‘medfateutils’</li>
 <li>Elements ‘ID’ and ‘patchsize’ removed from ‘forest’</li>
 <li>Bug correction in defaultManagementFunction for ‘above-systematic’ and ‘below-systematic’</li>
@@ -183,24 +208,24 @@
 <li>Fire hazard estimation includes dead canopy fuels (Ruffault et al. 2023)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.8.1" id="version-281">Version 2.8.1<a class="anchor" aria-label="anchor" href="#version-281"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.8.1" id="medfate-281">medfate 2.8.1<a class="anchor" aria-label="anchor" href="#medfate-281"></a></h2>
 <ul><li>New meta-modelling parameters</li>
 <li>New growth/senescence parameters</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.8.0" id="version-280">Version 2.8.0<a class="anchor" aria-label="anchor" href="#version-280"></a></h2><p class="text-muted">CRAN release: 2022-09-14</p>
+<h2 class="pkg-version" data-toc-text="2.8.0" id="medfate-280">medfate 2.8.0<a class="anchor" aria-label="anchor" href="#medfate-280"></a></h2><p class="text-muted">CRAN release: 2022-09-14</p>
 <ul><li>New control parameter ‘subdailyCarbonBalance’, applying to growth simulations with transpiration = “Sperry”</li>
 <li>Hydraulic redistribution implemented for transpiration = “Granier”</li>
 <li>Growth with “Sperry” using canopy temperature</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.7" id="version-277">Version 2.7.7<a class="anchor" aria-label="anchor" href="#version-277"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.7" id="medfate-277">medfate 2.7.7<a class="anchor" aria-label="anchor" href="#medfate-277"></a></h2>
 <ul><li>Imputation relationship between RGRcambiummax and SRsapwood</li>
 <li>Dynamic modification of LeafPI0 and StemPI0 removed</li>
 <li>Non-stomatal limitations to photosynthesis removed</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.6" id="version-276">Version 2.7.6<a class="anchor" aria-label="anchor" href="#version-276"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.6" id="medfate-276">medfate 2.7.6<a class="anchor" aria-label="anchor" href="#medfate-276"></a></h2>
 <ul><li>MeanTemperature not longer an input to medfate. It is calculated from minimum and maximum temperature.</li>
 <li>MeanRelativeHumidity not longer an input to medfate.</li>
 <li>PET not longer an input to medfate. It is calculated internally.</li>
@@ -212,30 +237,30 @@
 <li>New output data frame ‘CarbonBalance’ for growth</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.5" id="version-275">Version 2.7.5<a class="anchor" aria-label="anchor" href="#version-275"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.5" id="medfate-275">medfate 2.7.5<a class="anchor" aria-label="anchor" href="#medfate-275"></a></h2>
 <ul><li>Maximum stem conductance to avoid overestimation of stem conductance in small shrubs</li>
 <li>Bug correction in summary.forest</li>
 <li>Allows filling missing Z50/Z95 values from SpParams when creating model inputs</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.4" id="version-274">Version 2.7.4<a class="anchor" aria-label="anchor" href="#version-274"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.4" id="medfate-274">medfate 2.7.4<a class="anchor" aria-label="anchor" href="#medfate-274"></a></h2>
 <ul><li>Reducing unused parameters for Sperry model</li>
 <li>Reducing computational time for Sperry model</li>
 <li>Function fireHazard now accepts objects spwb_day and growth_day</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.3" id="version-273">Version 2.7.3<a class="anchor" aria-label="anchor" href="#version-273"></a></h2><p class="text-muted">CRAN release: 2022-05-09</p>
+<h2 class="pkg-version" data-toc-text="2.7.3" id="medfate-273">medfate 2.7.3<a class="anchor" aria-label="anchor" href="#medfate-273"></a></h2><p class="text-muted">CRAN release: 2022-05-09</p>
 <ul><li>Cleaning for CRAN</li>
 <li>New article to prepare model inputs</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.2" id="version-272">Version 2.7.2<a class="anchor" aria-label="anchor" href="#version-272"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.2" id="medfate-272">medfate 2.7.2<a class="anchor" aria-label="anchor" href="#medfate-272"></a></h2>
 <ul><li>SpParamsMED include the results of parameter estimation exercises</li>
 <li>RGRsapwoodmax and RGRcambiummax regulate sapwood formation for shrubs/trees, respectively</li>
 <li>Simplified sapwood growth (no ring of cells)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.1" id="version-271">Version 2.7.1<a class="anchor" aria-label="anchor" href="#version-271"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.1" id="medfate-271">medfate 2.7.1<a class="anchor" aria-label="anchor" href="#medfate-271"></a></h2>
 <ul><li>Revision of recruitment model, with the addition of a recruitment probability (ProbRecr) within the bioclimatic limits</li>
 <li>Temperature effects on sapwood conversion to heartwood</li>
 <li>Correction of estimation of Psi_Extract from turgor loss point</li>
@@ -243,7 +268,7 @@
 <li>Minimum DBH parameter in stand metrics</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.7.0" id="version-270">Version 2.7.0<a class="anchor" aria-label="anchor" href="#version-270"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.7.0" id="medfate-270">medfate 2.7.0<a class="anchor" aria-label="anchor" href="#medfate-270"></a></h2>
 <ul><li>Basic water balance model with relative water content</li>
 <li>‘pRootDisc’ eliminated from species parameters</li>
 <li>Plant water balance and cuticular transpiration added to the basic water balance model</li>
@@ -254,11 +279,11 @@
 <li>New species-specific parameter ‘RSSG’ (minimum relative starch for sapwood growth)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.6.2" id="version-262">Version 2.6.2<a class="anchor" aria-label="anchor" href="#version-262"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.6.2" id="medfate-262">medfate 2.6.2<a class="anchor" aria-label="anchor" href="#medfate-262"></a></h2>
 <ul><li>Control parameter ‘modifyInput’ is no longer available. Functions ‘spwb’, ‘pwb’ and ‘growth’ do not modify input objects and return an element ‘spwbOutput’ or ‘growthOutput’ with a copy of the final state.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.6.1" id="version-261">Version 2.6.1<a class="anchor" aria-label="anchor" href="#version-261"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.6.1" id="medfate-261">medfate 2.6.1<a class="anchor" aria-label="anchor" href="#medfate-261"></a></h2>
 <ul><li>Tree cover (open grown assumption)</li>
 <li>Parameters ‘ShrubCover’ and ‘CanopyCover’ no longer required in function fuel_FCCS</li>
 <li>Input weather stored in output from functions ‘spwb’, ‘pwb’ and ‘growth’</li>
@@ -270,12 +295,12 @@
 <li>Output growth rates not relative to sapwood area</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.6.0" id="version-260">Version 2.6.0<a class="anchor" aria-label="anchor" href="#version-260"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.6.0" id="medfate-260">medfate 2.6.0<a class="anchor" aria-label="anchor" href="#medfate-260"></a></h2>
 <ul><li>Nitrogen content for leaves, sapwood and fine roots added. ‘Nleaf’ replaces ‘Narea’ as the latter can be calculated from ‘Nleaf’ using ‘SLA’.</li>
 <li>Maintenance respiration rates based on N concentration of tissues</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.5.0" id="version-250">Version 2.5.0<a class="anchor" aria-label="anchor" href="#version-250"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.5.0" id="medfate-250">medfate 2.5.0<a class="anchor" aria-label="anchor" href="#medfate-250"></a></h2>
 <ul><li>spwb model with Granier transpiration now extracts water from soil layer according to unsaturated conductivity.</li>
 <li>shinyplot generic function.</li>
 <li>Update parameters fHDmin and fHDmax.</li>
@@ -285,7 +310,7 @@
 <li>Fine root growth and senescence made equal between Granier and Sperry models, inducing a new parameter ‘Ar2Al’ for Granier’s model.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.4.0" id="version-240">Version 2.4.0<a class="anchor" aria-label="anchor" href="#version-240"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.4.0" id="medfate-240">medfate 2.4.0<a class="anchor" aria-label="anchor" href="#medfate-240"></a></h2>
 <ul><li>Functions ‘spwb_stress’, ‘spwb_resistances’ and ‘spwb_waterUseEfficiency’ renamed to ‘droughtStress’, ‘resistances’ and ‘waterUseEfficiency’, respectively, since they can now be applied to the output of several simulation function.</li>
 <li>Plant biomass balance in growth. Structural changes are now daily in growth simulations.</li>
 <li>Bug correction in shrub structural update. Shrub dynamics default set to TRUE.</li>
@@ -293,26 +318,26 @@
 <li>IMPORTANT: New species parameter table.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.8" id="version-238">Version 2.3.8<a class="anchor" aria-label="anchor" href="#version-238"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.3.8" id="medfate-238">medfate 2.3.8<a class="anchor" aria-label="anchor" href="#medfate-238"></a></h2>
 <ul><li>Summary functions revised, including new function ‘summary.fordyn’</li>
 <li>Collating intra-annual ‘fordyn’ results for plotting.</li>
 <li>Forest management enabled in function ‘fordyn’ and default management actions defined in ‘defaultManagementFunction’ and ‘defaultManagementArguments’</li>
 <li>DOY, Photoperiod and JulianDay can be taken from weather input in functions ‘spwb’, ‘pwb’ and ‘growth’.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.7" id="version-237">Version 2.3.7<a class="anchor" aria-label="anchor" href="#version-237"></a></h2><p class="text-muted">CRAN release: 2021-12-16</p>
+<h2 class="pkg-version" data-toc-text="2.3.7" id="medfate-237">medfate 2.3.7<a class="anchor" aria-label="anchor" href="#medfate-237"></a></h2><p class="text-muted">CRAN release: 2021-12-16</p>
 <ul><li>CO2 made an daily input weather variable, in addition to the default control parameter ‘Catm’</li>
 <li>New function ‘shinyplot’ to create interactive graphics</li>
 <li>New function ‘plot.fordyn’ to display annual (step) summaries of forest dynamics</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.5" id="version-235">Version 2.3.5<a class="anchor" aria-label="anchor" href="#version-235"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.3.5" id="medfate-235">medfate 2.3.5<a class="anchor" aria-label="anchor" href="#medfate-235"></a></h2>
 <ul><li>New example vignette ‘FontBlanche’</li>
 <li>Modification of evaluation functions to separate the evaluation of total evapotranspiration (‘ETR’) from the evaluation of soil evaporation + plant transpiration (‘SE+TR’)</li>
 <li>Bug correction: sub-daily stomatal conductance plots</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.4" id="version-234">Version 2.3.4<a class="anchor" aria-label="anchor" href="#version-234"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.3.4" id="medfate-234">medfate 2.3.4<a class="anchor" aria-label="anchor" href="#medfate-234"></a></h2>
 <ul><li>Maximum relative sapwood growth rates effective</li>
 <li>New option ‘summary.freq’ in plot.spwb and plot.growth</li>
 <li>New species parameters (sapwood and fine root senescence rates)</li>
@@ -320,11 +345,11 @@
 <li>IMPORTANT: New species parameter tables (including estimates for conduit2sapwood)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.2" id="version-232">Version 2.3.2<a class="anchor" aria-label="anchor" href="#version-232"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.3.2" id="medfate-232">medfate 2.3.2<a class="anchor" aria-label="anchor" href="#medfate-232"></a></h2>
 <ul><li>Parameter ‘ParticleDensity’ eliminated, as it is now calculated from ‘LeafDensity’, ‘WoodDensity’ and ‘r635’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.3.1" id="version-231">Version 2.3.1<a class="anchor" aria-label="anchor" href="#version-231"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.3.1" id="medfate-231">medfate 2.3.1<a class="anchor" aria-label="anchor" href="#medfate-231"></a></h2>
 <ul><li>IMPORTANT: New species parameter tables</li>
 <li>New control parameter ‘fillMissingSpParams’</li>
 <li>Defaults for ‘LeafDensity’, ‘WoodDensity’, ‘LeafPI0’, ‘LeafEPS’ and ‘LeafAF’ from taxonomical family.</li>
@@ -337,49 +362,49 @@
 <li>Default value added for ‘pDead’.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.2.3" id="version-223">Version 2.2.3<a class="anchor" aria-label="anchor" href="#version-223"></a></h2><p class="text-muted">CRAN release: 2021-06-18</p>
+<h2 class="pkg-version" data-toc-text="2.2.3" id="medfate-223">medfate 2.2.3<a class="anchor" aria-label="anchor" href="#medfate-223"></a></h2><p class="text-muted">CRAN release: 2021-06-18</p>
 <ul><li>Functions soilgridsParams() and forest_map*Tables() moved to package ‘medfateutils’ available at GitHub (emf-creaf/medfateutils).</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.2.2" id="version-222">Version 2.2.2<a class="anchor" aria-label="anchor" href="#version-222"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.2.2" id="medfate-222">medfate 2.2.2<a class="anchor" aria-label="anchor" href="#medfate-222"></a></h2>
 <ul><li>Dependency ‘spdep’ removed</li>
 <li>Bug correction ‘windKatul.cpp’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.2.1" id="version-221">Version 2.2.1<a class="anchor" aria-label="anchor" href="#version-221"></a></h2><p class="text-muted">CRAN release: 2021-06-11</p>
+<h2 class="pkg-version" data-toc-text="2.2.1" id="medfate-221">medfate 2.2.1<a class="anchor" aria-label="anchor" href="#medfate-221"></a></h2><p class="text-muted">CRAN release: 2021-06-11</p>
 <ul><li>Calibrated minimum bioclimatic parameters for recruitment (SpParamsMED)</li>
 <li>Explicit species input parameters for phenology</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.2.0" id="version-220">Version 2.2.0<a class="anchor" aria-label="anchor" href="#version-220"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.2.0" id="medfate-220">medfate 2.2.0<a class="anchor" aria-label="anchor" href="#medfate-220"></a></h2>
 <ul><li>New simulation function ‘fordyn()’, including recruitment process</li>
 <li>New function ‘mergeShrubs’</li>
 <li>New functions ‘species_parameter’ and ‘species_characterParameter’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.4" id="version-214">Version 2.1.4<a class="anchor" aria-label="anchor" href="#version-214"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.4" id="medfate-214">medfate 2.1.4<a class="anchor" aria-label="anchor" href="#medfate-214"></a></h2>
 <ul><li>Dessication/defoliation homogenized across transpiration modes in growth function</li>
 <li>Revision of mortality (stochastic/deterministic, whole-cohort/density)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.3" id="version-213">Version 2.1.3<a class="anchor" aria-label="anchor" href="#version-213"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.3" id="medfate-213">medfate 2.1.3<a class="anchor" aria-label="anchor" href="#medfate-213"></a></h2>
 <ul><li>Update Psi_Extract according to Psi_TLP (Hydratry)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.2" id="version-212">Version 2.1.2<a class="anchor" aria-label="anchor" href="#version-212"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.2" id="medfate-212">medfate 2.1.2<a class="anchor" aria-label="anchor" href="#medfate-212"></a></h2>
 <ul><li>New control flags for defoliation/starvation/dessication in growth simulations</li>
 <li>New control flag for sink limitation in growth simulations</li>
 <li>Revision of phenology submodel</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.1" id="version-211">Version 2.1.1<a class="anchor" aria-label="anchor" href="#version-211"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.1" id="medfate-211">medfate 2.1.1<a class="anchor" aria-label="anchor" href="#medfate-211"></a></h2>
 <ul><li>Respiration rate for leaves made optionally species-specific.</li>
 <li>Update shrub allometries from De Caceres et al. (2019).</li>
 <li>LAI_live and LAI_expanded in growth.</li>
 <li>Update SpParamsUS (missing values for new parameters).</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.0" id="version-210">Version 2.1.0<a class="anchor" aria-label="anchor" href="#version-210"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.0" id="medfate-210">medfate 2.1.0<a class="anchor" aria-label="anchor" href="#medfate-210"></a></h2>
 <ul><li>Parameters of Granier’s equation made species-specific if available</li>
 <li>Parameter modification dependencies revised</li>
 <li>Modification of input objects is now optional</li>
@@ -388,21 +413,21 @@
 <li>Photosynthesis in Granier’s model corresponds to gross photosynthesis and is proportional to transpiration</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.1" id="version-201">Version 2.0.1<a class="anchor" aria-label="anchor" href="#version-201"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.1" id="medfate-201">medfate 2.0.1<a class="anchor" aria-label="anchor" href="#medfate-201"></a></h2>
 <ul><li>Cloning initial object for optimization</li>
 <li>Leaf growth costs always drawn from sugar sapwood</li>
 <li>Bug correction: LWRnet calculation</li>
 <li>Bug correction: Sperry model does not crash when LAIstand = 0</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.0" id="version-200">Version 2.0.0<a class="anchor" aria-label="anchor" href="#version-200"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.0" id="medfate-200">medfate 2.0.0<a class="anchor" aria-label="anchor" href="#medfate-200"></a></h2>
 <ul><li>IMPORTANT: Soil input merged with model input. Now the calls to simulation functions (e.g., <code>spwb</code>, <code>growth</code>) do not need to include soil as input parameter.</li>
 <li>Bug correction: NaN values for theta &gt; theta_sat in van Genuchten psi computation</li>
 <li>Function <code>modifyInputParams</code> now accepts modification of soil layer properties</li>
 <li>Sensitivity/Calibration vignette updated</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.6" id="version-116">Version 1.1.6<a class="anchor" aria-label="anchor" href="#version-116"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.6" id="medfate-116">medfate 1.1.6<a class="anchor" aria-label="anchor" href="#medfate-116"></a></h2>
 <ul><li>New canopy turbulence models by Katul et al (2004).</li>
 <li>Long-wave net radiation balance for layered canopies following Flerchinger et al. (2009).</li>
 <li>Multi-layer canopy energy balance as in Bonan et al. (2014)</li>
@@ -410,18 +435,18 @@
 <li>Modification of ‘vprofile_windExtinction’ to draw turbulence models.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.5" id="version-115">Version 1.1.5<a class="anchor" aria-label="anchor" href="#version-115"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.5" id="medfate-115">medfate 1.1.5<a class="anchor" aria-label="anchor" href="#medfate-115"></a></h2>
 <ul><li>Stomatal conductance now denoted as Gsw or GSW</li>
 <li>Boundary layer conductance considered</li>
 <li>Leaf water potential influencing leaf vapour pressure</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.4" id="version-114">Version 1.1.4<a class="anchor" aria-label="anchor" href="#version-114"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.4" id="medfate-114">medfate 1.1.4<a class="anchor" aria-label="anchor" href="#medfate-114"></a></h2>
 <ul><li>Flexible temporal resolution of model evaluation</li>
 <li>Basal area index evaluation</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.3" id="version-113">Version 1.1.3<a class="anchor" aria-label="anchor" href="#version-113"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.3" id="medfate-113">medfate 1.1.3<a class="anchor" aria-label="anchor" href="#medfate-113"></a></h2>
 <ul><li>New model evaluation functions</li>
 <li>New optimization function factories</li>
 <li>New function ‘modifyInputParams’</li>
@@ -429,7 +454,7 @@
 <li>New vignette for calibration and sensitivity analysis</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.2" id="version-112">Version 1.1.2<a class="anchor" aria-label="anchor" href="#version-112"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.2" id="medfate-112">medfate 1.1.2<a class="anchor" aria-label="anchor" href="#medfate-112"></a></h2>
 <ul><li>GW sunlit/shade minimum/maximum daily output</li>
 <li>FMC calculations with basic water balance output</li>
 <li>New output in growth simulation (biomass values)</li>
@@ -437,7 +462,7 @@
 <li>Modification of Z50/Z95</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.1" id="version-111">Version 1.1.1<a class="anchor" aria-label="anchor" href="#version-111"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.1" id="medfate-111">medfate 1.1.1<a class="anchor" aria-label="anchor" href="#medfate-111"></a></h2>
 <ul><li>Root exudation added to carbon balance</li>
 <li>Revision sapwood growth</li>
 <li>Growth cost for fine roots in basic model</li>
@@ -445,30 +470,30 @@
 <li>Bug correction in fuel calculations with US mode</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.0" id="version-110">Version 1.1.0<a class="anchor" aria-label="anchor" href="#version-110"></a></h2><p class="text-muted">CRAN release: 2020-11-05</p>
+<h2 class="pkg-version" data-toc-text="1.1.0" id="medfate-110">medfate 1.1.0<a class="anchor" aria-label="anchor" href="#medfate-110"></a></h2><p class="text-muted">CRAN release: 2020-11-05</p>
 <ul><li>Control option ‘rockyLayerDrainage’ instead of ‘drainage’ to disable macropore vertical outflow in layers with &gt; 95% of rocks</li>
 <li>Soil parameter Kdrain for saturated vertical hydraulic conductivity towards groundwaters (deep drainage)</li>
 <li>Improved validation plots with confidence intervals</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.3" id="version-103">Version 1.0.3<a class="anchor" aria-label="anchor" href="#version-103"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.3" id="medfate-103">medfate 1.0.3<a class="anchor" aria-label="anchor" href="#medfate-103"></a></h2>
 <ul><li>Nash-Sutcliffe efficiency (NSE) implemented in spwb_validation</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.2" id="version-102">Version 1.0.2<a class="anchor" aria-label="anchor" href="#version-102"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.2" id="medfate-102">medfate 1.0.2<a class="anchor" aria-label="anchor" href="#medfate-102"></a></h2>
 <ul><li>Bug correction on the use of organic matter in Saxton (2006) equations (thanks to Milan Fischer).</li>
 <li>Recodification of soilgridParams due to new SoilGrids REST API (removed dependency from GSIF).</li>
 <li>New function ‘redefineSoilLayers’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.1" id="version-101">Version 1.0.1<a class="anchor" aria-label="anchor" href="#version-101"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.1" id="medfate-101">medfate 1.0.1<a class="anchor" aria-label="anchor" href="#medfate-101"></a></h2>
 <ul><li>New root functions</li>
 <li>Bulk density stored in soil object initialization</li>
 <li>Advanced plant water pools</li>
 <li>Belowground inputs restructured</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.0" id="version-100">Version 1.0.0<a class="anchor" aria-label="anchor" href="#version-100"></a></h2><p class="text-muted">CRAN release: 2020-05-17</p>
+<h2 class="pkg-version" data-toc-text="1.0.0" id="medfate-100">medfate 1.0.0<a class="anchor" aria-label="anchor" href="#medfate-100"></a></h2><p class="text-muted">CRAN release: 2020-05-17</p>
 <ul><li>Reorganization of growth function</li>
 <li>Clarification of gross and net photosynthesis</li>
 <li>‘spwb_resetInputs’ to ‘resetInputs’</li>
@@ -476,35 +501,35 @@
 <li>Functions plot.spwb and plot.pwb modified to draw subdaily dynamics for a subset of dates</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.9.1" id="version-091">Version 0.9.1<a class="anchor" aria-label="anchor" href="#version-091"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.9.1" id="medfate-091">medfate 0.9.1<a class="anchor" aria-label="anchor" href="#medfate-091"></a></h2>
 <ul><li>Small bug fixes</li>
 <li>update ‘spwb_resetInputs’</li>
 <li>Update of plant water pools</li>
 <li>New output (annual stand summaries and aboveground structure) for function ‘growth’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.9.0" id="version-090">Version 0.9.0<a class="anchor" aria-label="anchor" href="#version-090"></a></h2><p class="text-muted">CRAN release: 2020-03-23</p>
+<h2 class="pkg-version" data-toc-text="0.9.0" id="medfate-090">medfate 0.9.0<a class="anchor" aria-label="anchor" href="#medfate-090"></a></h2><p class="text-muted">CRAN release: 2020-03-23</p>
 <ul><li>New parametrization data set ‘SpParamsUS’</li>
 <li>Function ‘hydrology_verticalInputs’ replaced by ‘hydrology_soilWaterInputs’ and ‘hydrology_soilInfiltrationPercolation’.</li>
 <li>New simulation control option: ‘plantWaterPools’.</li>
 <li>Hard (Imports) dependency from GSIF changed to soft (Suggests) one.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.9" id="version-089">Version 0.8.9<a class="anchor" aria-label="anchor" href="#version-089"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.9" id="medfate-089">medfate 0.8.9<a class="anchor" aria-label="anchor" href="#medfate-089"></a></h2>
 <ul><li>Update supply function plot.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.8" id="version-088">Version 0.8.8<a class="anchor" aria-label="anchor" href="#version-088"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.8" id="medfate-088">medfate 0.8.8<a class="anchor" aria-label="anchor" href="#medfate-088"></a></h2>
 <ul><li>New function ‘soil_rockWeight2Volume’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.7" id="version-087">Version 0.8.7<a class="anchor" aria-label="anchor" href="#version-087"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.7" id="medfate-087">medfate 0.8.7<a class="anchor" aria-label="anchor" href="#medfate-087"></a></h2>
 <ul><li>Corrections to energy balance for zero LAI (deciduous species)</li>
 <li>SFI functions moved to medfateland</li>
 <li>soilgridParams modified to accept a SpatialPoints object as input</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.6" id="version-086">Version 0.8.6<a class="anchor" aria-label="anchor" href="#version-086"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.6" id="medfate-086">medfate 0.8.6<a class="anchor" aria-label="anchor" href="#medfate-086"></a></h2>
 <ul><li>New function ‘spwb_sensitivity’ for sensitivity analyses</li>
 <li>New control parameter ‘unlimitedSoilWater’</li>
 <li>Bug correction in canopy height with LAI = 0</li>
@@ -512,7 +537,7 @@
 <li>New function spwb_ldrExploration</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.5" id="version-085">Version 0.8.5<a class="anchor" aria-label="anchor" href="#version-085"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.5" id="medfate-085">medfate 0.8.5<a class="anchor" aria-label="anchor" href="#medfate-085"></a></h2>
 <ul><li>New control parameter ‘fracLeafResistance’</li>
 <li>Different control options for parameter ‘cavitationRefill’</li>
 <li>New control parameter ‘cavitationRecoveryMaximumRate’</li>
@@ -522,7 +547,7 @@
 <li>Bug correction in estimation of root conductance proportions</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.4" id="version-084">Version 0.8.4<a class="anchor" aria-label="anchor" href="#version-084"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.4" id="medfate-084">medfate 0.8.4<a class="anchor" aria-label="anchor" href="#medfate-084"></a></h2>
 <ul><li>Water balance console output modified in spwb</li>
 <li>New approach to plant water compartments ‘capacitance = TRUE’</li>
 <li>Output of plant water balance</li>
@@ -533,7 +558,7 @@
 <li>Remove ksympver and add klatleaf/klatstem to control parameters</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.3" id="version-083">Version 0.8.3<a class="anchor" aria-label="anchor" href="#version-083"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.3" id="medfate-083">medfate 0.8.3<a class="anchor" aria-label="anchor" href="#medfate-083"></a></h2>
 <ul><li>Reference book (medfatebook) launched</li>
 <li>Fraction of absorbed SWR output in Granier’s transpiration</li>
 <li>‘Stand’ data frame output in spwb(), separated from ‘WaterBalance’</li>
@@ -544,7 +569,7 @@
 <li>Changes in light parameters: New parameter ‘alphaSWR’. ‘albedo’ renamed to ‘gammaSWR’. ‘k’ renamed to ‘kPAR’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.2" id="version-082">Version 0.8.2<a class="anchor" aria-label="anchor" href="#version-082"></a></h2><p class="text-muted">CRAN release: 2019-05-29</p>
+<h2 class="pkg-version" data-toc-text="0.8.2" id="medfate-082">medfate 0.8.2<a class="anchor" aria-label="anchor" href="#medfate-082"></a></h2><p class="text-muted">CRAN release: 2019-05-29</p>
 <ul><li>Modification of meteoland to better calculate direct/diffuse light on slopes</li>
 <li>Added Narea parameter to facilitate estimation of Vmax298</li>
 <li>New function ‘spwb_validation’.</li>
@@ -554,7 +579,7 @@
 <li>Wind for each cohort stored in the result of transp_transpirationSperry and spwb_day.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.1" id="version-081">Version 0.8.1<a class="anchor" aria-label="anchor" href="#version-081"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.1" id="medfate-081">medfate 0.8.1<a class="anchor" aria-label="anchor" href="#medfate-081"></a></h2>
 <ul><li>Export Ci from spwb_day.</li>
 <li>New function ‘maximumTranspirationRatioPlot’</li>
 <li>Output of min/max water potential for sunlit and shade leaves.</li>
@@ -565,7 +590,7 @@
 <li>New function ‘hydrology_interceptionPlot’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.0" id="version-080">Version 0.8.0<a class="anchor" aria-label="anchor" href="#version-080"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.8.0" id="medfate-080">medfate 0.8.0<a class="anchor" aria-label="anchor" href="#medfate-080"></a></h2>
 <ul><li>Move spatial classes and methods to package ‘medfateland’</li>
 <li>Implement underscores instead of dots to separate function groups and function names</li>
 <li>New function transp_Granier.</li>
@@ -577,12 +602,12 @@
 <li>New functions for leaf phenology</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.7.4" id="version-074">Version 0.7.4<a class="anchor" aria-label="anchor" href="#version-074"></a></h2><p class="text-muted">CRAN release: 2019-03-22</p>
+<h2 class="pkg-version" data-toc-text="0.7.4" id="medfate-074">medfate 0.7.4<a class="anchor" aria-label="anchor" href="#medfate-074"></a></h2><p class="text-muted">CRAN release: 2019-03-22</p>
 <ul><li>Fixing bugs for installation in all platforms</li>
 <li>Update docs</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.7.3" id="version-073">Version 0.7.3<a class="anchor" aria-label="anchor" href="#version-073"></a></h2><p class="text-muted">CRAN release: 2019-03-19</p>
+<h2 class="pkg-version" data-toc-text="0.7.3" id="medfate-073">medfate 0.7.3<a class="anchor" aria-label="anchor" href="#medfate-073"></a></h2><p class="text-muted">CRAN release: 2019-03-19</p>
 <ul><li>Shrub root system using LDR (Z50 and Z95)</li>
 <li>Percolation of infiltrated water consistent with layer subdivision</li>
 <li>New function soil.infiltrationRepartition()</li>
@@ -590,7 +615,7 @@
 <li>Checked for CRAN</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.7.2" id="version-072">Version 0.7.2<a class="anchor" aria-label="anchor" href="#version-072"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.2" id="medfate-072">medfate 0.7.2<a class="anchor" aria-label="anchor" href="#medfate-072"></a></h2>
 <ul><li>Accounting of hydraulic redistribution</li>
 <li>Update plotting functions</li>
 <li>New function vprofile.RootDistribution.</li>
@@ -600,7 +625,7 @@
 <li>Leaf area distribution (and crown fine biomass distribution) following truncated normal [-1.5,1.5]</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.7.1" id="version-071">Version 0.7.1<a class="anchor" aria-label="anchor" href="#version-071"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.1" id="medfate-071">medfate 0.7.1<a class="anchor" aria-label="anchor" href="#medfate-071"></a></h2>
 <ul><li>Interception corrected in the complex model</li>
 <li>Etol set to 0.0000001</li>
 <li>spwb export of dEdP (equivalent to soil-plant conductance)</li>
@@ -613,26 +638,26 @@
 <li>Function name changes for interception and soil hydrology</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.7.0" id="version-070">Version 0.7.0<a class="anchor" aria-label="anchor" href="#version-070"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.0" id="medfate-070">medfate 0.7.0<a class="anchor" aria-label="anchor" href="#medfate-070"></a></h2>
 <ul><li>Leaf and stem water compartments added</li>
 <li>Update of functions ‘spwb.day’ and ‘plot.spwb.day’</li>
 <li>Analytical integral of the van Genuchten function</li>
 <li>Analytical inverse of the incomplete gamma function</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.2" id="version-062">Version 0.6.2<a class="anchor" aria-label="anchor" href="#version-062"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.2" id="medfate-062">medfate 0.6.2<a class="anchor" aria-label="anchor" href="#medfate-062"></a></h2>
 <ul><li>Adapt to Rcpp changes</li>
 <li>Stem water compartments</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.1" id="version-061">Version 0.6.1<a class="anchor" aria-label="anchor" href="#version-061"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.1" id="medfate-061">medfate 0.6.1<a class="anchor" aria-label="anchor" href="#medfate-061"></a></h2>
 <ul><li>Saturated theta in Saxton model</li>
 <li>Water table depth added</li>
 <li>Boolean option ‘drainage’ added to soil water balance</li>
 <li>Added subsurface flow processes to spwbgrid</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.0" id="version-060">Version 0.6.0<a class="anchor" aria-label="anchor" href="#version-060"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.0" id="medfate-060">medfate 0.6.0<a class="anchor" aria-label="anchor" href="#medfate-060"></a></h2>
 <ul><li>Function name ‘swb’ (and all related functions) changed to ‘spwb’</li>
 <li>Added snow pack to soil state variables.</li>
 <li>Added new control option ‘snowpack’ for snowpack dynamics simulation (only when transpirationMode=‘Simple’)</li>
@@ -643,7 +668,7 @@
 <li>‘DOY’ no longer needed as column in meteorological input.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.6" id="version-056">Version 0.5.6<a class="anchor" aria-label="anchor" href="#version-056"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.6" id="medfate-056">medfate 0.5.6<a class="anchor" aria-label="anchor" href="#medfate-056"></a></h2>
 <ul><li>Growth degree days added as output of ‘swb()’</li>
 <li>New function ‘swb.resetInputs()’</li>
 <li>New function ‘hydraulics.vulnerabilityCurvePlot()’</li>
@@ -652,7 +677,7 @@
 <li>Update function ‘plot.growth()’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.5" id="version-055">Version 0.5.5<a class="anchor" aria-label="anchor" href="#version-055"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.5" id="medfate-055">medfate 0.5.5<a class="anchor" aria-label="anchor" href="#medfate-055"></a></h2>
 <ul><li>New functions for tissue moisture</li>
 <li>New function ‘fuel.cohortFineFMC’</li>
 <li>New option ‘bySpecies’ to aggregate results by species in functions ‘summary.swb’ and ‘summary.growth’</li>
@@ -661,7 +686,7 @@
 <li>New set of pedotransfer functions to calculate VG parameters from texture, bulk density and organic content</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.4" id="version-054">Version 0.5.4<a class="anchor" aria-label="anchor" href="#version-054"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.4" id="medfate-054">medfate 0.5.4<a class="anchor" aria-label="anchor" href="#medfate-054"></a></h2>
 <ul><li>New functions for pressure-volume curves</li>
 <li>Rmarkdown vignettes</li>
 <li>Added Van Genuchten pedotransfer functions</li>
@@ -670,62 +695,62 @@
 <li>Update ‘summary.swb’ function</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.3" id="version-053">Version 0.5.3<a class="anchor" aria-label="anchor" href="#version-053"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.3" id="medfate-053">medfate 0.5.3<a class="anchor" aria-label="anchor" href="#medfate-053"></a></h2>
 <ul><li>Network representation of the continuum now includes a leaf segment</li>
 <li>Stem fraction of total resistance removed as estimation of root xylem conductance</li>
 <li>Default kleaf_max (8 for temperate angiosperms and 5 for gymnosperms)</li>
 <li>New parameter rootxylem_kmax (hydraulic conductivity of roots)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.2" id="version-052">Version 0.5.2<a class="anchor" aria-label="anchor" href="#version-052"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.2" id="medfate-052">medfate 0.5.2<a class="anchor" aria-label="anchor" href="#medfate-052"></a></h2>
 <ul><li>Modification of default for ntrial</li>
 <li>Three element supply function added</li>
 <li>Parameters of the leaf maximum conductance and leaf vulnerability curve added</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.1" id="version-051">Version 0.5.1<a class="anchor" aria-label="anchor" href="#version-051"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.1" id="medfate-051">medfate 0.5.1<a class="anchor" aria-label="anchor" href="#medfate-051"></a></h2>
 <ul><li>Structure of swb.day output</li>
 <li>Increased output (leaf temperature, stomatal conductance and leaf VPD) in swb.day</li>
 <li>Taper modifications</li>
 <li>New function plot.swb.day</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.0" id="version-050">Version 0.5.0<a class="anchor" aria-label="anchor" href="#version-050"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.0" id="medfate-050">medfate 0.5.0<a class="anchor" aria-label="anchor" href="#medfate-050"></a></h2>
 <ul><li>Atmospheric CO2 is an input control parameter</li>
 <li>Added Hmed as species parameter (to correct reference conductivity values)</li>
 <li>Modified documentation</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.9" id="version-049">Version 0.4.9<a class="anchor" aria-label="anchor" href="#version-049"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.9" id="medfate-049">medfate 0.4.9<a class="anchor" aria-label="anchor" href="#medfate-049"></a></h2>
 <ul><li>Alternative way of calculating maximum root conductance</li>
 <li>Default value for averageFracRhizosphereResistance changed to 0.15</li>
 <li>Root vulnerability curve parameters taken from stem vulnerability curve when missing (d_root = d_stem/2)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.8" id="version-048">Version 0.4.8<a class="anchor" aria-label="anchor" href="#version-048"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.8" id="medfate-048">medfate 0.4.8<a class="anchor" aria-label="anchor" href="#medfate-048"></a></h2>
 <ul><li>Leaf radiation balance with LWR from soil</li>
 <li>New output for swb</li>
 <li>Bug fix in plot.swb (match according to transpiration model)</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.7" id="version-047">Version 0.4.7<a class="anchor" aria-label="anchor" href="#version-047"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.7" id="medfate-047">medfate 0.4.7<a class="anchor" aria-label="anchor" href="#medfate-047"></a></h2>
 <ul><li>Profit maximization for sunlit and shade leaves separately</li>
 <li>Bug correction in swb</li>
 <li>Check on stomatal conductances in profit maximization</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.6" id="version-046">Version 0.4.6<a class="anchor" aria-label="anchor" href="#version-046"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.6" id="medfate-046">medfate 0.4.6<a class="anchor" aria-label="anchor" href="#medfate-046"></a></h2>
 <ul><li>Radiation absorbed by trunks</li>
 <li>Separation of energy balance components</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.5" id="version-045">Version 0.4.5<a class="anchor" aria-label="anchor" href="#version-045"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.5" id="medfate-045">medfate 0.4.5<a class="anchor" aria-label="anchor" href="#medfate-045"></a></h2>
 <ul><li>New control parameter: Canopy thermal capacity per LAI</li>
 <li>Update of calls to meteoland (diffuse radiation)</li>
 <li>Wind value when missing data added to control</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.4" id="version-044">Version 0.4.4<a class="anchor" aria-label="anchor" href="#version-044"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.4" id="medfate-044">medfate 0.4.4<a class="anchor" aria-label="anchor" href="#medfate-044"></a></h2>
 <ul><li>Minimum windspeed (1.0 m/s)</li>
 <li>Progressive leaf fall</li>
 <li>Bug correction (swb.plot)</li>
@@ -733,35 +758,35 @@
 <li>Modified conductance scaling</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.3" id="version-043">Version 0.4.3<a class="anchor" aria-label="anchor" href="#version-043"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.3" id="medfate-043">medfate 0.4.3<a class="anchor" aria-label="anchor" href="#medfate-043"></a></h2>
 <ul><li>Added new parameter ‘LeafWidth’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.2" id="version-042">Version 0.4.2<a class="anchor" aria-label="anchor" href="#version-042"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.2" id="medfate-042">medfate 0.4.2<a class="anchor" aria-label="anchor" href="#medfate-042"></a></h2>
 <ul><li>Design changes for radiation balance (soil/canopy/atmosphere)</li>
 <li>Added temperature balance in summary.swb and plot.swb</li>
 <li>Added new parameter ‘albedo’</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.1" id="version-041">Version 0.4.1<a class="anchor" aria-label="anchor" href="#version-041"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.1" id="medfate-041">medfate 0.4.1<a class="anchor" aria-label="anchor" href="#medfate-041"></a></h2>
 <ul><li>Documentation of soil thermodynamics</li>
 <li>Energy balance output in swb.day</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.0" id="version-040">Version 0.4.0<a class="anchor" aria-label="anchor" href="#version-040"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="medfate-040">medfate 0.4.0<a class="anchor" aria-label="anchor" href="#medfate-040"></a></h2>
 <ul><li>Added soil temperature state variables (for ‘complex’ mode)</li>
 <li>Added canopy temperature state variable (for ‘complex’ mode)</li>
 <li>‘gdd’ in swbInput used as initial growth degree days</li>
 <li>Soil thermodynamics.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.7" id="version-037">Version 0.3.7<a class="anchor" aria-label="anchor" href="#version-037"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.7" id="medfate-037">medfate 0.3.7<a class="anchor" aria-label="anchor" href="#medfate-037"></a></h2>
 <ul><li>Added vertical layer size as option in control.</li>
 <li>New function ‘soilgridsParams’ (calls functions in package ‘GSIF’)</li>
 <li>Added longwave radiation to leaf energy balance.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.6" id="version-036">Version 0.3.6<a class="anchor" aria-label="anchor" href="#version-036"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.6" id="medfate-036">medfate 0.3.6<a class="anchor" aria-label="anchor" href="#medfate-036"></a></h2>
 <ul><li>Added new pedotransfer functions with organic matter.</li>
 <li>New function added ‘soil.waterFC’.</li>
 <li>Xylem taper added as option in control.</li>
@@ -770,7 +795,7 @@
 <li>New functions ‘transp.dayCanopyTranspiration’ and ‘transp.dayCanopyTranspirationPlot’.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.5" id="version-035">Version 0.3.5<a class="anchor" aria-label="anchor" href="#version-035"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.5" id="medfate-035">medfate 0.3.5<a class="anchor" aria-label="anchor" href="#medfate-035"></a></h2>
 <ul><li>Control of numerical methods for supply function added to ‘defaulControlParams’.</li>
 <li>Added new function ‘swb.ldrCalibration’ to calibrate root distribution for swb simulations (by Victor Granda)</li>
 <li>Added documentation for light extinction functions ‘light.layerIrradianceFraction’, ‘light.layerSunlitFraction’ and ‘light.cohortSunlitShadeAbsorbedRadiation’.</li>
