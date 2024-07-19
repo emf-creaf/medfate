@@ -1,294 +1,294 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/404.html</loc>
   </url>
   <url>
-    <loc>/CONTRIBUTING.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/evaluation/RegionalLevelEvaluation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/evaluation/RegionalLevelEvaluation.html</loc>
   </url>
   <url>
-    <loc>/articles/evaluation/StandLevelEvaluation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/evaluation/StandLevelEvaluation.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/intro/PackageOverview.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/intro/PackageOverview.html</loc>
   </url>
   <url>
-    <loc>/articles/intro/PreparingInputs.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html</loc>
   </url>
   <url>
-    <loc>/articles/intro/UnderstandingInputs.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/intro/UnderstandingInputs.html</loc>
   </url>
   <url>
-    <loc>/articles/modelanalysis/SensitivityCalibration.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/modelanalysis/SensitivityCalibration.html</loc>
   </url>
   <url>
-    <loc>/articles/parametrization/GrowthCalibration.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html</loc>
   </url>
   <url>
-    <loc>/articles/parametrization/Metamodelling.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html</loc>
   </url>
   <url>
-    <loc>/articles/runmodels/AdvancedWaterEnergyBalance.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/runmodels/AdvancedWaterEnergyBalance.html</loc>
   </url>
   <url>
-    <loc>/articles/runmodels/BasicWaterBalance.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html</loc>
   </url>
   <url>
-    <loc>/articles/runmodels/ForestDynamics.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/runmodels/ForestDynamics.html</loc>
   </url>
   <url>
-    <loc>/articles/runmodels/ForestGrowth.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html</loc>
   </url>
   <url>
-    <loc>/articles/workedexamples/FontBlanche.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/workedexamples/FontBlanche.html</loc>
   </url>
   <url>
-    <loc>/articles/workedexamples/PlantWaterPools.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/articles/workedexamples/PlantWaterPools.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/SFM_metric.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/SFM_metric.html</loc>
   </url>
   <url>
-    <loc>/reference/SpParams.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/SpParams.html</loc>
   </url>
   <url>
-    <loc>/reference/TaxonTraitMeans.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/TaxonTraitMeans.html</loc>
   </url>
   <url>
-    <loc>/reference/aspwb.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/aspwb.html</loc>
   </url>
   <url>
-    <loc>/reference/biophysics.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/biophysics.html</loc>
   </url>
   <url>
-    <loc>/reference/carbon.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/carbon.html</loc>
   </url>
   <url>
-    <loc>/reference/defaultControl.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/defaultControl.html</loc>
   </url>
   <url>
-    <loc>/reference/defaultManagementFunction.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/defaultManagementFunction.html</loc>
   </url>
   <url>
-    <loc>/reference/defaultSoilParams.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/defaultSoilParams.html</loc>
   </url>
   <url>
-    <loc>/reference/droughtStress.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/droughtStress.html</loc>
   </url>
   <url>
-    <loc>/reference/emptyforest.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/emptyforest.html</loc>
   </url>
   <url>
-    <loc>/reference/evaluation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/evaluation.html</loc>
   </url>
   <url>
-    <loc>/reference/examplemeteo.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/examplemeteo.html</loc>
   </url>
   <url>
-    <loc>/reference/exampleobs.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/exampleobs.html</loc>
   </url>
   <url>
-    <loc>/reference/extract.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/extract.html</loc>
   </url>
   <url>
-    <loc>/reference/fireHazard.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/fireHazard.html</loc>
   </url>
   <url>
-    <loc>/reference/fire_behaviour.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/fire_behaviour.html</loc>
   </url>
   <url>
-    <loc>/reference/fire_severity.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/fire_severity.html</loc>
   </url>
   <url>
-    <loc>/reference/fordyn.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/fordyn.html</loc>
   </url>
   <url>
-    <loc>/reference/forest.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/forest.html</loc>
   </url>
   <url>
-    <loc>/reference/forest2aboveground.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/forest2aboveground.html</loc>
   </url>
   <url>
-    <loc>/reference/forest_mapWoodyTables.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/forest_mapWoodyTables.html</loc>
   </url>
   <url>
-    <loc>/reference/forest_simplification.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/forest_simplification.html</loc>
   </url>
   <url>
-    <loc>/reference/fuel_properties.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/fuel_properties.html</loc>
   </url>
   <url>
-    <loc>/reference/fuel_windAdjustmentFactor.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/fuel_windAdjustmentFactor.html</loc>
   </url>
   <url>
-    <loc>/reference/growth.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/growth.html</loc>
   </url>
   <url>
-    <loc>/reference/herb_values.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/herb_values.html</loc>
   </url>
   <url>
-    <loc>/reference/hydraulics_conductancefunctions.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydraulics_conductancefunctions.html</loc>
   </url>
   <url>
-    <loc>/reference/hydraulics_defoliation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydraulics_defoliation.html</loc>
   </url>
   <url>
-    <loc>/reference/hydraulics_scalingconductance.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydraulics_scalingconductance.html</loc>
   </url>
   <url>
-    <loc>/reference/hydraulics_supplyfunctions.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydraulics_supplyfunctions.html</loc>
   </url>
   <url>
-    <loc>/reference/hydrology_infiltration.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydrology_infiltration.html</loc>
   </url>
   <url>
-    <loc>/reference/hydrology_interception.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydrology_interception.html</loc>
   </url>
   <url>
-    <loc>/reference/hydrology_soilEvaporation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydrology_soilEvaporation.html</loc>
   </url>
   <url>
-    <loc>/reference/hydrology_soilWaterBalance.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydrology_soilWaterBalance.html</loc>
   </url>
   <url>
-    <loc>/reference/hydrology_verticalInputs.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/hydrology_verticalInputs.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/light_advanced.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/light_advanced.html</loc>
   </url>
   <url>
-    <loc>/reference/light_basic.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/light_basic.html</loc>
   </url>
   <url>
-    <loc>/reference/medfate-package.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/medfate-package.html</loc>
   </url>
   <url>
-    <loc>/reference/modelInput.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/modelInput.html</loc>
   </url>
   <url>
-    <loc>/reference/modifyParams.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/modifyParams.html</loc>
   </url>
   <url>
-    <loc>/reference/moisture.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/moisture.html</loc>
   </url>
   <url>
-    <loc>/reference/mortality_dailyProbability.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/mortality_dailyProbability.html</loc>
   </url>
   <url>
-    <loc>/reference/optimization.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/optimization.html</loc>
   </url>
   <url>
-    <loc>/reference/pheno_updateLeaves.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/pheno_updateLeaves.html</loc>
   </url>
   <url>
-    <loc>/reference/photo.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/photo.html</loc>
   </url>
   <url>
-    <loc>/reference/plant_values.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/plant_values.html</loc>
   </url>
   <url>
-    <loc>/reference/plot.forest.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/plot.forest.html</loc>
   </url>
   <url>
-    <loc>/reference/plot.spwb.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/plot.spwb.html</loc>
   </url>
   <url>
-    <loc>/reference/plot.spwb_day.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/plot.spwb_day.html</loc>
   </url>
   <url>
-    <loc>/reference/poblet_trees.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/poblet_trees.html</loc>
   </url>
   <url>
-    <loc>/reference/regeneration.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/regeneration.html</loc>
   </url>
   <url>
-    <loc>/reference/resetInputs.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/resetInputs.html</loc>
   </url>
   <url>
-    <loc>/reference/resistances.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/resistances.html</loc>
   </url>
   <url>
-    <loc>/reference/root.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/root.html</loc>
   </url>
   <url>
-    <loc>/reference/shinyplot.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/shinyplot.html</loc>
   </url>
   <url>
-    <loc>/reference/soil.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/soil.html</loc>
   </url>
   <url>
-    <loc>/reference/soil_redefineLayers.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/soil_redefineLayers.html</loc>
   </url>
   <url>
-    <loc>/reference/soil_texture.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/soil_texture.html</loc>
   </url>
   <url>
-    <loc>/reference/soil_thermodynamics.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/soil_thermodynamics.html</loc>
   </url>
   <url>
-    <loc>/reference/species_values.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/species_values.html</loc>
   </url>
   <url>
-    <loc>/reference/spwb.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/spwb.html</loc>
   </url>
   <url>
-    <loc>/reference/spwb_day.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/spwb_day.html</loc>
   </url>
   <url>
-    <loc>/reference/stand_values.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/stand_values.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.forest.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/summary.forest.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.spwb.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/summary.spwb.html</loc>
   </url>
   <url>
-    <loc>/reference/sureau_ecos.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/sureau_ecos.html</loc>
   </url>
   <url>
-    <loc>/reference/transp_maximumTranspirationModel.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/transp_maximumTranspirationModel.html</loc>
   </url>
   <url>
-    <loc>/reference/transp_modes.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/transp_modes.html</loc>
   </url>
   <url>
-    <loc>/reference/transp_stomatalregulation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/transp_stomatalregulation.html</loc>
   </url>
   <url>
-    <loc>/reference/tree2forest.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/tree2forest.html</loc>
   </url>
   <url>
-    <loc>/reference/vprofile_leafAreaDensity.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.html</loc>
   </url>
   <url>
-    <loc>/reference/waterUseEfficiency.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/waterUseEfficiency.html</loc>
   </url>
   <url>
-    <loc>/reference/wind.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/wind.html</loc>
   </url>
   <url>
-    <loc>/reference/woodformation.html</loc>
+    <loc>https://emf-creaf.github.io/medfate/reference/woodformation.html</loc>
   </url>
 </urlset>
