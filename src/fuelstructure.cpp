@@ -168,6 +168,7 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
 //' @param object An object of class \code{\link{forest}}
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 //' @param cohortFMC A numeric vector of (actual) fuel moisture content by cohort.
+//' @param loadingOffset A vector of length five with fine fuel loading values (canopy, shrub, herb, woody and litter) to be added to loading estimations from \code{forest}.
 //' @param gdd Growth degree-days.
 //' @param heightProfileStep Precision for the fuel bulk density profile.
 //' @param maxHeightProfile Maximum height for the fuel bulk density profile.
@@ -351,6 +352,7 @@ CharacterVector leafLitterFuelType(List object, DataFrame SpParams) {
 //'   }
 // [[Rcpp::export("fuel_FCCS")]]
 DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
+                         NumericVector loadingOffset = NumericVector(5, 0.0),
                          double gdd = NA_REAL,  
                          double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
                          String depthMode = "crownaverage") {
@@ -415,7 +417,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
     canopyDepth = layerFuelAverageCrownLength(200.0,10000.0,  cohCL, cohLoading, cohHeight, cohCR)/100.0; 
   }
   NumericVector cohCanopyLoading = layerCohortFuelLoading(200.0, 10000.0, cohLoading, cohHeight, cohCR);
-  double canopyLoading = std::accumulate(cohCanopyLoading.begin(),cohCanopyLoading.end(),0.0);
+  double canopyLoading = loadingOffset[0] + std::accumulate(cohCanopyLoading.begin(),cohCanopyLoading.end(),0.0);
   
   //Shrub limits and loading  
   double shrubBaseHeight = liveStrat["surfaceLayerBaseHeight"];
@@ -432,7 +434,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   }
 
   NumericVector cohShrubLoading = layerCohortFuelLoading(0.0, 200.0, cohLoading, cohHeight, cohCR);
-  double shrubLoading = std::accumulate(cohShrubLoading.begin(),cohShrubLoading.end(),0.0);
+  double shrubLoading = loadingOffset[1] + std::accumulate(cohShrubLoading.begin(),cohShrubLoading.end(),0.0);
   //Herb limits and loading  
   double herbCover = object["herbCover"];
   if(NumericVector::is_na(herbCover)) herbCover = 0.0;
@@ -441,12 +443,12 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   double herbDepth = herbHeight/100.0; //in cm
   NumericVector LAIlive = cohortLAI(object, SpParams);//Without correction
   double woodyLAI = sum(LAIlive);
-  double herbLoading = herbFoliarBiomassAllometric(herbCover, herbHeight, woodyLAI); // From piropinus
+  double herbLoading = loadingOffset[2] + herbFoliarBiomassAllometric(herbCover, herbHeight, woodyLAI); // From piropinus
   
   //Woody loading  
-  double woodyLoading = std::accumulate(cohSmallBranchLitter.begin(),cohSmallBranchLitter.end(),0.0);
+  double woodyLoading = loadingOffset[3] + std::accumulate(cohSmallBranchLitter.begin(),cohSmallBranchLitter.end(),0.0);
   //Litter loading  
-  double litterLoading = std::accumulate(cohLeafLitter.begin(),cohLeafLitter.end(),0.0);
+  double litterLoading = loadingOffset[4] + std::accumulate(cohLeafLitter.begin(),cohLeafLitter.end(),0.0);
   
   //Properties
   NumericVector cover(5,NA_REAL); //Percent cover

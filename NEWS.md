@@ -4,6 +4,7 @@
 
 # Version 4.4.0
 - Multi-bucket soil model reintroduced (default) for safety
+- Loading offset added as an option to fuel_FCCS
 
 # Version 4.3.2
 - IMPORTANT: Many functions have been internalized (biophysics_, fire_,...). 

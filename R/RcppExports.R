@@ -939,6 +939,7 @@ forest2belowground <- function(x, soil, SpParams) {
 #' @param object An object of class \code{\link{forest}}
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param cohortFMC A numeric vector of (actual) fuel moisture content by cohort.
+#' @param loadingOffset A vector of length five with fine fuel loading values (canopy, shrub, herb, woody and litter) to be added to loading estimations from \code{forest}.
 #' @param gdd Growth degree-days.
 #' @param heightProfileStep Precision for the fuel bulk density profile.
 #' @param maxHeightProfile Maximum height for the fuel bulk density profile.
@@ -1018,8 +1019,8 @@ fuel_stratification <- function(object, SpParams, gdd = NA_real_, heightProfileS
 #'     \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
 #'     \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
 #'   }
-fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
-    .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
+fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOffset = numeric(5, 0.0), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
+    .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, loadingOffset, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
 #' Mortality
@@ -2389,11 +2390,11 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 #'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative transpiration (in MPa).}
 #'         \item{\code{Exp_Extract}: Parameter of the Weibull function regulating transpiration reduction.}
-#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
+#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
 #'         \item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
 #'         \item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
-#'         \item{\code{WUE_par}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}
-#'         \item{\code{WUE_par}: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.}
+#'         \item{\code{WUE_co2}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}
+#'         \item{\code{WUE_vpd}: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.}
 #'       }
 #'      If \code{control$transpirationMode = "Sperry"} columns are:
 #'       \itemize{
@@ -2401,32 +2402,36 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 #'         \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
 #'         \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
-#'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
-#'         \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).}
-#'         \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance.}
-#'         \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve.}
-#'         \item{\code{VCstem_kmax}: Maximum stem xylem conductance.}
-#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
-#'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
-#'         \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
+#'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
+#'         \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
+#'         \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
+#'         \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve (Weibull).}
+#'         \item{\code{VCstem_kmax}: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).}
+#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
+#'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve (Weibull).}
+#'         \item{\code{Plant_kmax}: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).}
+#'         \item{\code{FR_leaf}, \code{FR_stem}, \code{FR_root}: Fraction of whole-plant resistance corresponding to each segment.}
 #'       }
 #'       If \code{control$transpirationMode = "Sureau"} columns are:
 #'       \itemize{
 #'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 #'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 #'         \item{\code{Gsw_AC_slope}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
-#'         \item{\code{Gs_P50}: Water potential causing 50\% reduction in stomatal conductance.}
-#'         \item{\code{Gs_slope}: Rate of decrease in stomatal conductance at Gs_P50.}
+#'         \item{\code{Gs_P50}, \code{Gs_slope}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
 #'         \item{\code{Vmax298}: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
 #'         \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
-#'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
-#'         \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).}
-#'         \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance.}
-#'         \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve.}
-#'         \item{\code{VCstem_kmax}: Maximum stem xylem conductance.}
-#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
-#'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
-#'         \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
+#'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
+#'         \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
+#'         \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
+#'         \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve (Weibull).}
+#'         \item{\code{VCleaf_P50}, \code{VCleaf_slope}: Parameters of the leaf vulnerability curve (sigmoid).}
+#'         \item{\code{VCstem_kmax}: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).}
+#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
+#'         \item{\code{VCstem_P50}, \code{VCstem_slope}: Parameters of the stem xylem vulnerability curve (sigmoid).}
+#'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve (Weibull).}
+#'         \item{\code{VCroot_P50}, \code{VCroot_slope}: Parameters of the root xylem vulnerability curve (sigmoid).}
+#'         \item{\code{Plant_kmax}: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).}
+#'         \item{\code{FR_leaf}, \code{FR_stem}, \code{FR_root}: Fraction of whole-plant resistance corresponding to each segment.}
 #'       }
 #'     }
 #'     \item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort:

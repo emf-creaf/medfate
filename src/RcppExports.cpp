@@ -1300,20 +1300,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // FCCSproperties
-DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC, double gdd, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold, String depthMode);
-RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP cohortFMCSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP, SEXP depthModeSEXP) {
+DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC, NumericVector loadingOffset, double gdd, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold, String depthMode);
+RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP cohortFMCSEXP, SEXP loadingOffsetSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP, SEXP depthModeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type object(objectSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type cohortFMC(cohortFMCSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type loadingOffset(loadingOffsetSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< double >::type heightProfileStep(heightProfileStepSEXP);
     Rcpp::traits::input_parameter< double >::type maxHeightProfile(maxHeightProfileSEXP);
     Rcpp::traits::input_parameter< double >::type bulkDensityThreshold(bulkDensityThresholdSEXP);
     Rcpp::traits::input_parameter< String >::type depthMode(depthModeSEXP);
-    rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode));
+    rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, SpParams, cohortFMC, loadingOffset, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5847,7 +5848,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerFuelAverageParameter", (DL_FUNC) &_medfate_layerFuelAverageParameter, 6},
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 6},
-    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 8},
+    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 9},
     {"_medfate_dailyMortalityProbability", (DL_FUNC) &_medfate_dailyMortalityProbability, 2},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 11},
     {"_medfate_defineGrowthDailyOutput", (DL_FUNC) &_medfate_defineGrowthDailyOutput, 6},
