@@ -1,11 +1,11 @@
 
-# medfate - Mediterranean Forest Simulation <a href="https://emf-creaf.github.io/medfate/"><img src="man/figures/medfate_logo.png" align="right" height="139" alt="medfate website" /></a>
+# medfate - Mediterranean Forest Simulation
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/medfate)](https://cran.r-project.org/package=medfate)
 [![](https://cranlogs.r-pkg.org/badges/medfate)](https://cran.rstudio.com/web/packages/medfate/index.html)
 [![R-CMD-check](https://github.com/emf-creaf/medfate/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/emf-creaf/medfate/actions)
 
-## Introduction
+## Introduction <a href="https://emf-creaf.github.io/medfate/"><img src="man/figures/medfate_logo.png" align="right" height="139" alt="medfate website" /></a>
 
 Package **medfate** is designed to assist forest scientists to simulate
 forest functioning and dynamics, using cohort-based description of
