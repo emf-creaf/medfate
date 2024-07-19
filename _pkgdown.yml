@@ -1,116 +1,127 @@
+url: https://emf-creaf.github.io/medfate/
+template:
+  bootstrap: 5
+  light-switch: true
+  
 home:
   links:
   - text: Reference book
     href: https://emf-creaf.github.io/medfatebook/index.html
 
-articles:
-- title: Introduction
-  contents:
-    - starts_with("intro/Package")
-    - starts_with("intro/Understanding")
-    - starts_with("intro/Preparing")
-- title: Running simulation models
-  contents:
-    - starts_with("runmodels/Basic")
-    - starts_with("runmodels/Advanced")
-    - starts_with("runmodels/ForestGrowth")
-    - starts_with("runmodels/ForestDynamics")
-- title: Model analysis and parametrization
-  contents:
-    - starts_with("modelanalysis/Sensitivity")
-    - starts_with("parametrization/Metamodelling")
-    - starts_with("parametrization/GrowthCalibration")
-- title: Model performance evaluation
-  contents:
-    - starts_with("evaluation/StandLevelEvaluation")
-    - starts_with("evaluation/RegionalLevelEvaluation")
-- title: Application examples
-  contents:
-    - starts_with("workedexamples/FontBlanche")
-    - starts_with("workedexamples/PlantWaterPools")
+navbar:
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: Introduction
+      - text: Package overview
+        href: articles/intro/PackageOverview.html
+      - text: Understanding model inputs
+        href: articles/intro/UnderstandingInputs.html
+      - text: Preparing model inputs
+        href: articles/intro/PreparingInputs.html
+      - text: -------
+      - text: Running simulation models
+      - text: Basic water balance
+        href: articles/runmodels/BasicWaterBalance.html
+      - text: Advanced water and energy balance
+        href: articles/runmodels/AdvancedWaterEnergyBalance.html
+      - text: Forest growth
+        href: articles/runmodels/ForestGrowth.html
+      - text: Forest dynamics
+        href: articles/runmodels/ForestDynamics.html
+      - text: -------
+      - text: Model analysis and parametrization
+      - text: Sensitivity analysis and calibration
+        href: articles/modelanalysis/SensitivityCalibration.html      
+      - text: Meta-modelling exercise
+        href: articles/parametrization/Metamodelling.html      
+      - text: Calibration of growth and senescence parameters
+        href: articles/parametrization/GrowthCalibration.html      
+      - text: -------
+      - text: Model performance evaluation
+      - text: Evaluation in experimental plots
+        href: articles/evaluation/StandLevelEvaluation.html      
+      - text: Evaluation of regional-level forest dynamics with forest inventory data
+        href: articles/evaluation/RegionalLevelEvaluation.html      
+      - text: -------
+      - text: Application examples
+      - text: Soil and plant water balances at Font-Blanche
+        href: articles/workedexamples/FontBlanche.html      
+      - text: Water pools and species interactions
+        href: articles/workedexamples/PlantWaterPools.html      
 
-    
 reference:
 - title: Forest definition
   desc:  Forest definition and manipulation functions
-  contents:
+- contents:
   - forest
   - emptyforest
   - tree2forest
   - starts_with("forest_")
   - poblet_trees
-
 - title: Species parameters
   desc:  Species parameter data and utility functions.
-  contents:
+- contents:
   - starts_with("SpParams")
   - modifyParams
   - trait_family_means
-
 - title: Forest structure
   desc: Summarizing and displaying forest attributes
-  contents:
+- contents:
   - starts_with("summary.forest")
   - starts_with("plot.forest")
   - starts_with("shinyplot.forest")
-
 - title: Meteorology
   desc:  Meteorological forcing
-  contents:
+- contents:
   - examplemeteo
-
 - title: Soil
   desc:  Soil initialization
-  contents:
+- contents:
   - starts_with("defaultSoil")
   - soil
   - starts_with("soil_")
-
 - title: Simulation inputs
   desc:  Simulation control and input objects
-  contents:
+- contents:
   - spwbInput
   - forest2aboveground
   - starts_with("defaultControl")
   - starts_with("defaultManagement")
   - starts_with("resetInputs")
-
 - title: Simulation functions
   desc:  Simulation model functions
-  contents:
+- contents:
   - spwb
   - spwb_day
   - pwb
   - growth
   - growth_day
   - fordyn
-
 - title: Plots and summaries
   desc:  Summaries, extraction and plots of simulation results
-  contents:
+- contents:
   - starts_with("plot.spwb")
   - starts_with("summary.spwb")
   - starts_with("extract")
   - starts_with("shinyplot.spwb")
-  
 - title: Post-processing
   desc:  Other post-processing functions
-  contents:
+- contents:
   - resistances
   - droughtStress
   - waterUseEfficiency
   - fireHazard
-
 - title: Model analysis
   desc:  Evaluation and optimization
-  contents:
+- contents:
   - exampleobs
   - starts_with("evaluation_")
   - starts_with("optimization_")
-
 - title: Wildfire
   desc:  Fuel characteristics and fire behaviour
-  contents:
+- contents:
   - starts_with("fire_")
   - starts_with("fuel_")
   - SFM_metric
