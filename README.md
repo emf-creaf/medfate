@@ -1,5 +1,5 @@
 
-# medfate <a href="https://emf-creaf.github.io/medfate/"><img src="man/figures/medfate_logo.png" align="right" height="139" alt="medfate website" /></a>
+# medfate <a href="https://emf-creaf.github.io/medfate/"><img src="man/figures/logo.png" align="right" height="139" alt="medfate website" /></a>
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/medfate)](https://cran.r-project.org/package=medfate)
 [![](https://cranlogs.r-pkg.org/badges/medfate)](https://cran.rstudio.com/web/packages/medfate/index.html)
@@ -82,7 +82,7 @@ with researchers from
 [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/)
 (in France) and [*CTFC*](https://www.ctfc.cat/) (in Spain).
 
-<img src="man/figures/logos.png" width="60%" style="display: block; margin: auto;" />
+<img src="man/figures/institution_logos.png" width="60%" style="display: block; margin: auto;" />
 
 ### References
 

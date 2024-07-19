@@ -7,7 +7,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "README-")
 knitr::opts_chunk$set(fig.path = "man/figures/")
 ```
 
-# medfate <a href="https://emf-creaf.github.io/medfate/"><img src="man/figures/medfate_logo.png" align="right" height="139" alt="medfate website" /></a>
+# medfate <a href="https://emf-creaf.github.io/medfate/"><img src="man/figures/logo.png" align="right" height="139" alt="medfate website" /></a>
 
   [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/medfate)](https://cran.r-project.org/package=medfate)
   [![](https://cranlogs.r-pkg.org/badges/medfate)](https://cran.rstudio.com/web/packages/medfate/index.html)
@@ -62,7 +62,7 @@ knitr::include_graphics("man/figures/packages.png")
 The set of R packages are developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) unit at [*CREAF*](https://www.creaf.cat/) (in Spain), in close collaboration with researchers from [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/) (in France) and [*CTFC*](https://www.ctfc.cat/) (in Spain).
 
 ```{r, out.width='60%', fig.align="center", echo=FALSE}
-knitr::include_graphics("man/figures/logos.png")
+knitr::include_graphics("man/figures/institution_logos.png")
 ```
 
 
