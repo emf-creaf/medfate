@@ -13,7 +13,7 @@ knitr::opts_chunk$set(fig.path = "man/figures/")
   [![](https://cranlogs.r-pkg.org/badges/medfate)](https://cran.rstudio.com/web/packages/medfate/index.html)
   [![R-CMD-check](https://github.com/emf-creaf/medfate/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/emf-creaf/medfate/actions)
  
-### Introduction
+## Introduction
 
 Package **medfate** is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:
 
@@ -24,7 +24,7 @@ Package **medfate** is designed to assist forest scientists to simulate forest f
 
 The models are parameterized for species of the Mediterranean region (particularly for Catalonia, NE Spain), but forests with different composition could be modelled with different parameter sets.
 
-### Package installation & documentation
+## Package installation & documentation
 
 Package **medfate** can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Installation from CRAN can be done via:
 
@@ -42,7 +42,7 @@ A number of *vignettes* illustrate how to run simulation models in **medfate**. 
 
 A complete documentation of the models included in the package can be found in [medfate's reference book](https://emf-creaf.github.io/medfatebook/index.html). 
 
-### Companion R packages
+## Companion R packages
 
 During the development of **medfate** some functions have been originally placed there and then moved to more specialized packages which evolve together with **medfate**:
 
@@ -57,7 +57,7 @@ knitr::include_graphics("man/figures/packages.png")
 ```
 
 
-### Authorship
+## Authorship
 
 The set of R packages are developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) unit at [*CREAF*](https://www.creaf.cat/) (in Spain), in close collaboration with researchers from [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/) (in France) and [*CTFC*](https://www.ctfc.cat/) (in Spain).
 
@@ -66,7 +66,7 @@ knitr::include_graphics("man/figures/institution_logos.png")
 ```
 
 
-### References
+## References
 
 + De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (https://doi.org/10.1016/j.agrformet.2015.06.012).
 

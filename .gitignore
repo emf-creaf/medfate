@@ -13,4 +13,5 @@ src-i386/*.*
 src-x64/*.*
 inst/doc/*.*
 tests/testthat/*.pdf
+pkgdown/favicon/*.*
 CRAN-SUBMISSION

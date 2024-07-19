@@ -20,6 +20,7 @@
 ^cran-comments\.md$
 ^figures/*$
 ^man/figures/*$
+^pkgdown$
 ^CRAN-SUBMISSION$
 ^LICENSE\.md$
 metadata.yml

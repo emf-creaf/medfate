@@ -1,8 +1,11 @@
 url: https://emf-creaf.github.io/medfate/
+
 template:
   bootstrap: 5
-  light-switch: true
-  
+  bslib:
+    bootswatch: materia
+    pkgdown-nav-height: 80px
+    
 home:
   links:
   - text: Reference book
