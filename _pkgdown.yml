@@ -4,8 +4,8 @@ template:
   bootstrap: 5
   bslib:
     bootswatch: materia
-    pkgdown-nav-height: 60px
-    primary: "#6c5d53"
+    pkgdown-nav-height: 100px
+    primary: "#241F1C"
     
 home:
   links:

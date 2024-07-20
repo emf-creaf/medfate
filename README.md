@@ -20,9 +20,9 @@ processes:
 - Forest dynamics, including recruitment and management (De Cáceres et
   al. 2023)
 
-The models are parameterized for species of the Mediterranean region
-(particularly for Catalonia, NE Spain), but forests with different
-composition could be modelled with different parameter sets.
+The models are parameterized for species of the **Mediterranean region**
+(particularly for Spain), but forests with different composition could
+be modelled with different parameter sets.
 
 ## Package installation & documentation
 
