@@ -2,6 +2,8 @@
 title: "Evaluation of regional-level forest dynamics with forest inventory data"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
+description: >
+   Benchmark evaluation at regional level, using forest inventory data from Catalonia
 output: 
   rmarkdown::html_document:
     df_print: paged

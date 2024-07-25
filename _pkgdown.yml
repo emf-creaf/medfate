@@ -12,48 +12,43 @@ home:
   - text: Reference book
     href: https://emf-creaf.github.io/medfatebook/index.html
 
-navbar:
-  components:
-    articles:
-      text: Articles
-      menu:
-      - text: Introduction
-      - text: Package overview
-        href: articles/intro/PackageOverview.html
-      - text: Understanding model inputs
-        href: articles/intro/UnderstandingInputs.html
-      - text: Preparing model inputs
-        href: articles/intro/PreparingInputs.html
-      - text: -------
-      - text: Running simulation models
-      - text: Basic water balance
-        href: articles/runmodels/BasicWaterBalance.html
-      - text: Advanced water and energy balance
-        href: articles/runmodels/AdvancedWaterEnergyBalance.html
-      - text: Forest growth
-        href: articles/runmodels/ForestGrowth.html
-      - text: Forest dynamics
-        href: articles/runmodels/ForestDynamics.html
-      - text: -------
-      - text: Model analysis and parametrization
-      - text: Sensitivity analysis and calibration
-        href: articles/modelanalysis/SensitivityCalibration.html      
-      - text: Meta-modelling exercise
-        href: articles/parametrization/Metamodelling.html      
-      - text: Calibration of growth and senescence parameters
-        href: articles/parametrization/GrowthCalibration.html      
-      - text: -------
-      - text: Model performance evaluation
-      - text: Evaluation in experimental plots
-        href: articles/evaluation/StandLevelEvaluation.html      
-      - text: Evaluation of regional-level forest dynamics with forest inventory data
-        href: articles/evaluation/RegionalLevelEvaluation.html      
-      - text: -------
-      - text: Application examples
-      - text: Soil and plant water balances at Font-Blanche
-        href: articles/workedexamples/FontBlanche.html      
-      - text: Water pools and species interactions
-        href: articles/workedexamples/PlantWaterPools.html      
+
+articles:
+- title: Introduction
+  navbar: Introduction
+  desc: Package overview and model inputs
+  contents:
+  - intro/PackageOverview
+  - intro/UnderstandingInputs
+  - intro/PreparingInputs
+  
+- title: Running simulation models
+  navbar: Running simulations
+  desc: Articles to learn how to conduct simulations
+  contents:
+  - runmodels/BasicWaterBalance
+  - runmodels/AdvancedWaterEnergyBalance
+  - runmodels/ForestGrowth
+  - runmodels/ForestDynamics
+
+- title: Model analysis and parametrization
+  desc: Articles explaining advanced modelling tasks
+  contents:
+  - modelanalysis/SensitivityCalibration
+  - parametrization/Metamodelling
+  - parametrization/GrowthCalibration
+
+- title: Model performance evaluation
+  desc: Model benchmark evaluation at stand and regional levels
+  contents:
+  - evaluation/StandLevelEvaluation
+  - evaluation/RegionalLevelEvaluation
+
+- title: Application examples
+  desc: Examples of model application
+  contents:
+  - workedexamples/FontBlanche
+  - workedexamples/PlantWaterPools
 
 reference:
 - title: Forest definition

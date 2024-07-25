@@ -2,6 +2,8 @@
 title: "Model evaluation in experimental plots"
 author: "Miquel De Cáceres (CREAF), Víctor Granda (CREAF),  Rafael Poyatos (CREAF), Teresa Gimeno (CREAF), Nicolas Martin-StPaul (INRAE), Antoine Cabon (WSL), Vincenzo Saponaro (U. Tuscia)"
 date: "`r Sys.Date()`"
+description: >
+   Benchmark evaluation at stand-level, using soil moisture, sapflow, leaf water potential and eddy covariance data from instrumentalized forest plots
 output: 
   rmarkdown::html_document:
     df_print: paged

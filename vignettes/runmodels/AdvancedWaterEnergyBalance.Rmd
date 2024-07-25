@@ -2,6 +2,8 @@
 title: "Advanced water and energy balance"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
+description: >
+   Learn how to conduct soil plant water balance model simulations using a more detailed approach for energy balance, plant hydraulics, stomatal regulation and photosynthesis
 output: 
   rmarkdown::html_document:
     toc: TRUE

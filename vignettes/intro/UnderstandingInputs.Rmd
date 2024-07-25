@@ -2,6 +2,8 @@
 title: "Understanding model inputs"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
+description: >
+   Describes the information and data format required for model simulation
 output: 
   html_document:
     toc: TRUE

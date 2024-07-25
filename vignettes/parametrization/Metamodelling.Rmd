@@ -2,6 +2,8 @@
 title: "Meta-modelling exercise"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
+description: >
+   Description of a meta-modelling exercise used to estimate non-mensurable parameters
 always_allow_html: true
 output: 
   rmarkdown::html_document:

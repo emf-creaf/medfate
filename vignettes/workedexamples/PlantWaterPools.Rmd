@@ -2,6 +2,8 @@
 title: "Water pools and species interactions"
 author: "Miquel De Caceres (CREAF)"
 date: "`r Sys.Date()`"
+description: >
+   Preliminary results comparing simulations with different assumptions of root overlap between species
 output:
   rmarkdown::html_document:
     toc: yes

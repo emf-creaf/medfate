@@ -2,6 +2,8 @@
 title: "Package overview"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
+description: >
+  An introduction to the package and its main functions
 output: 
   html_document:
     toc: TRUE

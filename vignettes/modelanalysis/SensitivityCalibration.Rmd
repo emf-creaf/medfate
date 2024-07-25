@@ -2,6 +2,8 @@
 title: "Sensitivity analysis and calibration"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
+description: >
+   Learn how to conduct a global sensitivity analysis or a parameter calibration exercise
 output: 
   rmarkdown::html_document:
     toc: TRUE

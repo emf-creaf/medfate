@@ -2,6 +2,8 @@
 title: "Preparing model inputs"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
+description: >
+   Learn how to prepare vegetation, soil and weather inputs for simulations
 output: 
   html_document:
     toc: TRUE

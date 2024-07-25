@@ -2,6 +2,8 @@
 title: "Basic water balance"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
+description: >
+   Learn how to conduct soil plant water balance model simulations
 output: 
   rmarkdown::html_document:
     toc: TRUE

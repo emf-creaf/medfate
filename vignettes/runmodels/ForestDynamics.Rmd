@@ -2,6 +2,8 @@
 title: "Forest dynamics"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
+description: >
+   Learn how to conduct simulations of forest function and dynamics, possibly including forest management actions
 output: 
   rmarkdown::html_document:
     toc: TRUE
