@@ -105,20 +105,38 @@
 <div class="section level2">
 <h2 id="companion-r-packages">Companion R packages<a class="anchor" aria-label="anchor" href="#companion-r-packages"></a>
 </h2>
-<p>During the development of <strong>medfate</strong> some functions have been originally placed there and then moved to more specialized packages which evolve together with <strong>medfate</strong>:</p>
+<p>During the development of <strong>medfate</strong> some functions were originally placed there but then moved to more specialized packages which evolve together with <strong>medfate</strong>:</p>
 <ul>
 <li>Package <a href="https://emf-creaf.github.io/medfateland"><strong>medfateland</strong></a> extends <strong>medfate</strong> by allowing simulations to be performed in a spatially explicit context.</li>
-<li>Package <a href="https://emf-creaf.github.io/meteoland" class="external-link"><strong>meteoland</strong></a> allows generating daily weather input for simulation models in <strong>medfate</strong> and <strong>medfateland</strong>.</li>
 <li>Package <a href="https://emf-creaf.github.io/traits4models" class="external-link"><strong>traits4models</strong></a> provides functions to help creating species parameter inputs for <strong>medfate</strong> and <strong>medfateland</strong> simulation functions [<em>under development</em>].</li>
 </ul>
-<p>The relationships between the four packages are illustrated in the figure below, where black arrows indicate package dependencies and gray arrows indicate model parameter provision.</p>
-<p><img src="reference/figures/packages.png" width="60%" style="display: block; margin: auto;"></p>
+<p>Two other packages complete the simulation framework, but can be used for many other purposes beyond forest modelling:</p>
+<ul>
+<li>Package <a href="https://emf-creaf.github.io/meteoland" class="external-link"><strong>meteoland</strong></a> allows generating daily weather input for simulation models in <strong>medfate</strong> and <strong>medfateland</strong>. Package <strong>meteoland</strong> is a dependency for <strong>medfate</strong> and <strong>medfateland</strong>, but can be used independently to obtain daily weather data.</li>
+<li>Package <a href="https://emf-creaf.github.io/forestables" class="external-link"><strong>forestables</strong></a> allows reading and harmonizing forest inventory data to a common data structure. Initialization workflows in <strong>medfateland</strong> can use data from <strong>forestables</strong>, but the data structures of the package can be used for many studies beyond modelling.</li>
+</ul>
+<p>The relationships between the five packages are illustrated in the figure below, where black arrows indicate package dependencies and gray arrows indicate model parameter or data provision.</p>
+<p><img src="reference/figures/packages.png" width="80%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="authorship">Authorship<a class="anchor" aria-label="anchor" href="#authorship"></a>
 </h2>
-<p>The set of R packages are developed and maintained by the <a href="https://emf.creaf.cat" class="external-link"><em>Ecosystem Modelling Facility</em></a> unit at <a href="https://www.creaf.cat/" class="external-link"><em>CREAF</em></a> (in Spain), in close collaboration with researchers from <a href="https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/" class="external-link"><em>URFM-INRAE</em></a> (in France) and <a href="https://www.ctfc.cat/" class="external-link"><em>CTFC</em></a> (in Spain).</p>
-<p><img src="reference/figures/institution_logos.png" width="60%" style="display: block; margin: auto;"></p>
+<p>Package <strong>medfate</strong> is developed and maintained by the <a href="https://emf.creaf.cat" class="external-link"><em>Ecosystem Modelling Facility</em></a> unit at <a href="https://www.creaf.cat/" class="external-link"><em>CREAF</em></a> (in Spain), in close collaboration with researchers from <a href="https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/" class="external-link"><em>URFM-INRAE</em></a> (in France) and <a href="https://www.ctfc.cat/" class="external-link"><em>CTFC</em></a> (in Spain).</p>
+<p><img src="reference/figures/institution_logos.png" width="50%" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level2">
+<h2 id="funding">Funding<a class="anchor" aria-label="anchor" href="#funding"></a>
+</h2>
+<ul>
+<li>
+<strong>Fellowship</strong>: <em>Ramon y Cajal</em> research fellowship to M. De Cáceres. <strong>Financial Entity</strong>: Ministerio de Economía y Competitividad ( RYC-2012-11109). <strong>Duration from</strong>: 01/01/2013 <strong>to</strong>: 31/12/2018.</li>
+<li>
+<strong>Research project</strong>: Forecasting of ecosystem services on forests: impacts and adaptation to extreme climate events (FORESTCAST). <strong>Financial Entity</strong>: Ministerio de Economia y Competitividad (CGL2014-59742-C2-2-R). <strong>Duration from</strong>: 01/01/2015 <strong>to</strong>: 31/12/2017. <strong>PI</strong>: Lluís Brotons/Miquel De Cáceres.</li>
+<li>
+<strong>Research project</strong>: Modeling plant water use and drought resistance strategies across scales (DRESS). <strong>Financial Entity</strong>: Ministerio de Economia y Competitividad (CGL2017-89149-C2-2-R). <strong>Duration from</strong>: 01/01/2018 <strong>to</strong>: 31/12/2021. <strong>PI</strong>: Miquel De Cáceres.</li>
+<li>
+<strong>Research project</strong>: Boosting process-based models to project forest dynamics and associated ecosystem services at stand-to-regional scales (BOMFORES). <strong>Financial Entity</strong>: Ministerio de Ciencia e Innovación (PID2021-126679OB-I00). <strong>Duration from</strong>: 01/09/2022 <strong>to</strong>: 31/08/2024. <strong>PI</strong>: Miquel De Cáceres.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
