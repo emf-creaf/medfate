@@ -52,37 +52,68 @@ book](https://emf-creaf.github.io/medfatebook/index.html).
 
 ## Companion R packages
 
-During the development of **medfate** some functions have been
-originally placed there and then moved to more specialized packages
-which evolve together with **medfate**:
+During the development of **medfate** some functions were originally
+placed there but then moved to more specialized packages which evolve
+together with **medfate**:
 
 - Package [**medfateland**](https://emf-creaf.github.io/medfateland)
   extends **medfate** by allowing simulations to be performed in a
   spatially explicit context.
-- Package [**meteoland**](https://emf-creaf.github.io/meteoland) allows
-  generating daily weather input for simulation models in **medfate**
-  and **medfateland**.
 - Package [**traits4models**](https://emf-creaf.github.io/traits4models)
   provides functions to help creating species parameter inputs for
   **medfate** and **medfateland** simulation functions \[*under
   development*\].
 
-The relationships between the four packages are illustrated in the
-figure below, where black arrows indicate package dependencies and gray
-arrows indicate model parameter provision.
+Two other packages complete the simulation framework, but can be used
+for many other purposes beyond forest modelling:
 
-<img src="man/figures/packages.png" width="60%" style="display: block; margin: auto;" />
+- Package [**meteoland**](https://emf-creaf.github.io/meteoland) allows
+  generating daily weather input for simulation models in **medfate**
+  and **medfateland**. Package **meteoland** is a dependency for
+  **medfate** and **medfateland**, but can be used independently to
+  obtain daily weather data.
+- Package [**forestables**](https://emf-creaf.github.io/forestables)
+  allows reading and harmonizing forest inventory data to a common data
+  structure. Initialization workflows in **medfateland** can use data
+  from **forestables**, but the data structures of the package can be
+  used for many studies beyond modelling.
+
+The relationships between the five packages are illustrated in the
+figure below, where black arrows indicate package dependencies and gray
+arrows indicate model parameter or data provision.
+
+<img src="man/figures/packages.png" width="80%" style="display: block; margin: auto;" />
 
 ## Authorship
 
-The set of R packages are developed and maintained by the [*Ecosystem
+Package **medfate** is developed and maintained by the [*Ecosystem
 Modelling Facility*](https://emf.creaf.cat) unit at
 [*CREAF*](https://www.creaf.cat/) (in Spain), in close collaboration
 with researchers from
 [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/)
 (in France) and [*CTFC*](https://www.ctfc.cat/) (in Spain).
 
-<img src="man/figures/institution_logos.png" width="60%" style="display: block; margin: auto;" />
+<img src="man/figures/institution_logos.png" width="50%" style="display: block; margin: auto;" />
+
+## Funding
+
+- **Fellowship**: *Ramon y Cajal* research fellowship to M. De Cáceres.
+  **Financial Entity**: Ministerio de Economía y Competitividad (
+  RYC-2012-11109). **Duration from**: 01/01/2013 **to**: 31/12/2018.
+- **Research project**: Forecasting of ecosystem services on forests:
+  impacts and adaptation to extreme climate events (FORESTCAST).
+  **Financial Entity**: Ministerio de Economia y Competitividad
+  (CGL2014-59742-C2-2-R). **Duration from**: 01/01/2015 **to**:
+  31/12/2017. **PI**: Lluís Brotons/Miquel De Cáceres.
+- **Research project**: Modeling plant water use and drought resistance
+  strategies across scales (DRESS). **Financial Entity**: Ministerio de
+  Economia y Competitividad (CGL2017-89149-C2-2-R). **Duration from**:
+  01/01/2018 **to**: 31/12/2021. **PI**: Miquel De Cáceres.
+- **Research project**: Boosting process-based models to project forest
+  dynamics and associated ecosystem services at stand-to-regional scales
+  (BOMFORES). **Financial Entity**: Ministerio de Ciencia e Innovación
+  (PID2021-126679OB-I00). **Duration from**: 01/09/2022 **to**:
+  31/08/2024. **PI**: Miquel De Cáceres.
 
 ## References
 
