@@ -538,7 +538,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         hydraulicNetwork[c] = initSureauNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
-                                                VCroot_kmax(c,_), VGrhizo_kmax(c,_),
+                                                VCroot_kmaxc, VGrhizo_kmaxc,
                                                 psic, VG_nc, VG_alphac,
                                                 sapFluidityDay, control);
       }
