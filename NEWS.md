@@ -1,3 +1,6 @@
+# medfate 4.4.1
+* Bug correction: Zero fine root proportion in Sureau
+
 # medfate 4.4.0
 * Multi-bucket soil model reintroduced (default) for safety
 * Loading offset added as an option to fuel_FCCS
