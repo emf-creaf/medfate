@@ -129,7 +129,7 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
   NumericVector psiSoil = psi(soil, soilFunctions);
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector EherbVec(nlayers,0.0);
-  NumericVector V = ldrRS_one(50, 500, widths);
+  NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
   for(int l=0;l<nlayers;l++) {
     EherbVec[l] = V[l]*Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0); 
     if(modifySoil) {

@@ -118,7 +118,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   // Transpiration is the product of PET and CROP FACTOR. HOWEVER, it is reduced with 
   double transp_max = pet*crop_factor; 
   //Calculate current soil water potential for transpiration
-  NumericVector V = ldrRS_one(50, 500, widths);
+  NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
   for(int l=0;l<nlayers;l++) {
     ExtractionVec[l] = V[l]*transp_max * exp(-0.6931472*pow(std::abs(psiVec[l]/(-2.0)),3.0)); //Reduce transpiration when soil is dry 
   }

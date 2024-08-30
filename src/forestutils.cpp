@@ -1659,9 +1659,18 @@ NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams) {
   int nlayers = widths.size();
   NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];
+  NumericVector treeZ100(treeZ50.size(), NA_REAL);
+  if(treeData.containsElementNamed("Z100")) treeZ100 = Rcpp::as<Rcpp::NumericVector>(treeData["Z100"]);
+  
   NumericVector shrubZ50 = shrubData["Z50"];  
   NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericMatrix V = ldrDistribution(treeZ50, shrubZ50, treeZ95, shrubZ95, widths);
+  NumericVector shrubZ100(shrubData.size(), NA_REAL);
+  if(shrubData.containsElementNamed("Z100")) shrubZ100 = Rcpp::as<Rcpp::NumericVector>(shrubData["Z100"]);
+  
+  NumericMatrix V = ldrDistribution(treeZ50, shrubZ50, 
+                                    treeZ95, shrubZ95, 
+                                    treeZ100, shrubZ100, 
+                                    widths);
   V.attr("dimnames") = List::create(cohortIDs(x, SpParams), layerNames(nlayers));
   return(V);
 }

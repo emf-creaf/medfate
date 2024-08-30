@@ -3039,53 +3039,56 @@ BEGIN_RCPP
 END_RCPP
 }
 // paramsBelow
-List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control);
-RcppExport SEXP _medfate_paramsBelow(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP paramsAnatomydfSEXP, SEXP paramsTranspirationdfSEXP, SEXP controlSEXP) {
+List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control);
+RcppExport SEXP _medfate_paramsBelow(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP paramsAnatomydfSEXP, SEXP paramsTranspirationdfSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z100(Z100SEXP);
     Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsAnatomydf(paramsAnatomydfSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsTranspirationdf(paramsTranspirationdfSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(paramsBelow(above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control));
+    rcpp_result_gen = Rcpp::wrap(paramsBelow(above, Z50, Z95, Z100, soil, paramsAnatomydf, paramsTranspirationdf, control));
     return rcpp_result_gen;
 END_RCPP
 }
 // spwbInputInner
-List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_spwbInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_spwbInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z100(Z100SEXP);
     Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbInputInner(above, Z50, Z95, soil, FCCSprops, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(spwbInputInner(above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
 // growthInputInner
-List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z100(Z100SEXP);
     Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, soil, FCCSprops, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3097,6 +3100,19 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type input(inputSEXP);
     rcpp_result_gen = Rcpp::wrap(cloneInput(input));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rootDistributionComplete
+DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootParams);
+RcppExport SEXP _medfate_rootDistributionComplete(SEXP xSEXP, SEXP SpParamsSEXP, SEXP fillMissingRootParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< bool >::type fillMissingRootParams(fillMissingRootParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rootDistributionComplete(x, SpParams, fillMissingRootParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3592,15 +3608,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldrDistribution
-NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d);
-RcppExport SEXP _medfate_ldrDistribution(SEXP Z50SEXP, SEXP Z95SEXP, SEXP dSEXP) {
+NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector Z100, NumericVector d);
+RcppExport SEXP _medfate_ldrDistribution(SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z100(Z100SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(ldrDistribution(Z50, Z95, d));
+    rcpp_result_gen = Rcpp::wrap(ldrDistribution(Z50, Z95, Z100, d));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5935,10 +5952,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
-    {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 7},
-    {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 7},
-    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 7},
+    {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 8},
+    {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 8},
+    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 8},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
+    {"_medfate_rootDistributionComplete", (DL_FUNC) &_medfate_rootDistributionComplete, 3},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 4},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 4},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
@@ -5972,7 +5990,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
-    {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
+    {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 4},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
     {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 4},
     {"_medfate_specificRootSurfaceArea", (DL_FUNC) &_medfate_specificRootSurfaceArea, 2},

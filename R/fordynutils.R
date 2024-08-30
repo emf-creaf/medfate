@@ -112,9 +112,14 @@
   
   # 5.1 Prepare growth input for next year
   FCCSprops = fuel_FCCS(forest, SpParams);
+  treeZ100 <- rep(NA, nrow(forest$treeData))
+  if("Z100" %in% names(forest$treeData)) treeZ100 <- forest$treeData$Z100
+  shrubZ100 <- rep(NA, nrow(forest$shrubData))
+  if("Z100" %in% names(forest$shrubData)) shrubZ100 <- forest$shrubData$Z100
   xi <- .growthInput(above = above_all, 
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
+                     Z100 = c(treeZ100, shrubZ100),
                      xo$soil, FCCSprops, SpParams, control)
   xi$herbLAI <- xo$herbLAI
   xi$herbLAImax <- xo$herbLAImax

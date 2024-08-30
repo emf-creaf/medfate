@@ -2300,20 +2300,24 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortAbsorbedSWRFraction`, z, x, SpParams, gdd)
 }
 
-.paramsBelow <- function(above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control) {
-    .Call(`_medfate_paramsBelow`, above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control)
+.paramsBelow <- function(above, Z50, Z95, Z100, soil, paramsAnatomydf, paramsTranspirationdf, control) {
+    .Call(`_medfate_paramsBelow`, above, Z50, Z95, Z100, soil, paramsAnatomydf, paramsTranspirationdf, control)
 }
 
-.spwbInput <- function(above, Z50, Z95, soil, FCCSprops, SpParams, control) {
-    .Call(`_medfate_spwbInputInner`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
+.spwbInput <- function(above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control) {
+    .Call(`_medfate_spwbInputInner`, above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control)
 }
 
-.growthInput <- function(above, Z50, Z95, soil, FCCSprops, SpParams, control) {
-    .Call(`_medfate_growthInputInner`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
+.growthInput <- function(above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control) {
+    .Call(`_medfate_growthInputInner`, above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control)
 }
 
 .cloneInput <- function(input) {
     .Call(`_medfate_cloneInput`, input)
+}
+
+.rootDistributionComplete <- function(x, SpParams, fillMissingRootParams) {
+    .Call(`_medfate_rootDistributionComplete`, x, SpParams, fillMissingRootParams)
 }
 
 #' Input for simulation models
@@ -2871,6 +2875,7 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' 
 #' @param Z50 A vector of depths (in mm) corresponding to 50\% of roots.
 #' @param Z95 A vector of depths (in mm) corresponding to 95\% of roots.
+#' @param Z100 A vector of depths (in mm) corresponding to 100\% of roots.
 #' @param Zcone A vector of depths (in mm) corresponding to the root cone tip.
 #' @param d The width (in mm) corresponding to each soil layer.
 #' @param v Vector of proportions of fine roots in each soil layer.
@@ -2938,7 +2943,8 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #'      
 #' #Calculate LDR root system for trees (Schenck & Jackson 2002)
 #' V2 <- root_ldrDistribution(Z50 = rep(200,ntree), 
-#'                           Z95 = rep(1000,ntree), s$widths)
+#'                            Z95 = rep(1000,ntree),
+#'                            Z100 = rep(NA, ntree), s$widths)
 #' print(V2)     
 #' 
 #' @name root
@@ -2949,8 +2955,8 @@ root_conicDistribution <- function(Zcone, d) {
 
 #' @rdname root
 #' @keywords internal
-root_ldrDistribution <- function(Z50, Z95, d) {
-    .Call(`_medfate_ldrDistribution`, Z50, Z95, d)
+root_ldrDistribution <- function(Z50, Z95, Z100, d) {
+    .Call(`_medfate_ldrDistribution`, Z50, Z95, Z100, d)
 }
 
 .rootDistribution <- function(z, x) {

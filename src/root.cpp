@@ -13,20 +13,24 @@ using std::sqrt;
 /**
  *  Root distribution
  */
-NumericVector ldrRS_one(double Z50, double Z95, NumericVector d){
+NumericVector ldrRS_one(double Z50, double Z95, double Z100, NumericVector d){
   int nlayer = d.size();
   NumericVector dCum = clone(d);
   NumericVector Vd(nlayer);
   double c = 2.94/log(Z50/Z95);
-  double Vtot = 0.0;
   Vd[0] = 1.0/(1.0+pow(d[0]/Z50,c));
-  Vtot = Vd[0];
   for(int i=1;i<nlayer;i++) dCum[i] = dCum[i]+dCum[i-1];
   for(int i=1;i<nlayer;i++){
     Vd[i] = 1.0/(1.0+pow(dCum[i]/Z50,c)) -1.0/(1.0+pow(dCum[i-1]/Z50,c));
-    Vtot +=Vd[i];
+  }
+  //Truncate distribution if cumulative depth of the previous layer is larger than maximum rooting depth
+  if(!NumericVector::is_na(Z100)) {
+    for(int i=1;i<nlayer;i++){
+      if(dCum[i-1]>Z100) Vd[i] = 0.0;
+    }
   }
   //Rescale proportions so that they sum 1
+  double Vtot = sum(Vd);
   for(int i=0;i<nlayer; i++) {
     Vd[i] = Vd[i]/Vtot;
   }
@@ -99,6 +103,7 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //' 
 //' @param Z50 A vector of depths (in mm) corresponding to 50\% of roots.
 //' @param Z95 A vector of depths (in mm) corresponding to 95\% of roots.
+//' @param Z100 A vector of depths (in mm) corresponding to 100\% of roots.
 //' @param Zcone A vector of depths (in mm) corresponding to the root cone tip.
 //' @param d The width (in mm) corresponding to each soil layer.
 //' @param v Vector of proportions of fine roots in each soil layer.
@@ -166,7 +171,8 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //'      
 //' #Calculate LDR root system for trees (Schenck & Jackson 2002)
 //' V2 <- root_ldrDistribution(Z50 = rep(200,ntree), 
-//'                           Z95 = rep(1000,ntree), s$widths)
+//'                            Z95 = rep(1000,ntree),
+//'                            Z100 = rep(NA, ntree), s$widths)
 //' print(V2)     
 //' 
 //' @name root
@@ -190,27 +196,29 @@ NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
 //' @rdname root
 //' @keywords internal
 // [[Rcpp::export("root_ldrDistribution")]]
-NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d) {
+NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector Z100, NumericVector d) {
   int numCohorts = Z50.size();
   NumericMatrix P(numCohorts,d.size());
   NumericVector PC;
   for(int c=0;c<numCohorts;c++){
-    PC = ldrRS_one(Z50[c], Z95[c],d);
+    PC = ldrRS_one(Z50[c], Z95[c], Z100[c], d);
     for(int i=0;i<d.size();i++) P(c,i) = PC[i];
   }
   return(P);
 }
 NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, 
-                              NumericVector treeZ95, NumericVector shrubZ95, NumericVector d) {
+                              NumericVector treeZ95, NumericVector shrubZ95,
+                              NumericVector treeZ100, NumericVector shrubZ100,
+                              NumericVector d) {
   int ntree = treeZ50.size();
   int nshrub = shrubZ50.size();
   int nlayers = d.size();
   NumericMatrix V(ntree+nshrub,nlayers);
   for(int i=0;i<ntree;i++) {
-    V(i,_) = ldrRS_one(treeZ50[i], treeZ95[i],d);
+    V(i,_) = ldrRS_one(treeZ50[i], treeZ95[i], treeZ100[i], d);
   }
   for(int i=0;i<nshrub;i++) {
-    V(ntree+i,_) = ldrRS_one(shrubZ50[i],shrubZ95[i],d);
+    V(ntree+i,_) = ldrRS_one(shrubZ50[i], shrubZ95[i], shrubZ100[i], d);
   }
   return(V);
 }
@@ -224,10 +232,14 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
   
   NumericVector treeZ50 = Rcpp::as<Rcpp::NumericVector>(treeData["Z50"]);
   NumericVector treeZ95 = Rcpp::as<Rcpp::NumericVector>(treeData["Z95"]);
+  NumericVector treeZ100(ntree, NA_REAL);
+  if(treeData.containsElementNamed("Z100")) treeZ100 = Rcpp::as<Rcpp::NumericVector>(treeData["Z100"]);
   NumericVector shrubZ50 =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z50"]);  
-  NumericVector shrubZ95 =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z95"]);  
-  NumericMatrix rdtree = ldrDistribution(treeZ50, treeZ95, z);
-  NumericMatrix rdshrub = ldrDistribution(shrubZ50, shrubZ95, z);
+  NumericVector shrubZ95 =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z95"]);
+  NumericVector shrubZ100(nshrub, NA_REAL);
+  if(shrubData.containsElementNamed("Z100")) shrubZ100 = Rcpp::as<Rcpp::NumericVector>(shrubData["Z100"]);
+  NumericMatrix rdtree = ldrDistribution(treeZ50, treeZ95, treeZ100, z);
+  NumericMatrix rdshrub = ldrDistribution(shrubZ50, shrubZ95, shrubZ100, z);
   NumericMatrix rd = NumericMatrix(ntree+nshrub, z.length());
   for(int i=0;i<ntree;i++) {
     rd(i,_) = rdtree(i,_);
@@ -499,16 +511,16 @@ List coarseRootRadialAxialLengths(NumericVector v, NumericVector d, double depth
       vl[i] = zini[i]+ d[i]/2.0;
       maxRootDepth +=d[i];
     } else {
-      vl[i] = NA_REAL;
+      vl[i] = 0.0;
     }
     // Rcout<<vl[i]<<" ";
   }
   // Rcout<<"\n";
   int nlayerseff = nlayers;
-  for(int i=(nlayers-1);i>=0;i--) if(NumericVector::is_na(vl[i])) nlayerseff = i;
+  for(int i=(nlayers-1);i>=0;i--) if(vl[i]>0.0) nlayerseff = i;
   
   //Radial lengths
-  NumericVector r(nlayerseff), rl(nlayerseff);
+  NumericVector r(nlayers, 0.0), rl(nlayers, 0.0);
   double maxr = 0.0;
   for(int i=0;i<nlayerseff;i++) {
     r[i] = sqrt(v[i]/(d[i]*M_PI));

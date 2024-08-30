@@ -1,5 +1,6 @@
-# medfate 4.4.1
+# medfate 4.5.0
 * Bug correction: Zero fine root proportion in Sureau
+* Allowing to define Z100 to truncate root distribution
 
 # medfate 4.4.0
 * Multi-bucket soil model reintroduced (default) for safety

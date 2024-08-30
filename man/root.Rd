@@ -21,7 +21,7 @@
 \usage{
 root_conicDistribution(Zcone, d)
 
-root_ldrDistribution(Z50, Z95, d)
+root_ldrDistribution(Z50, Z95, Z100, d)
 
 root_individualRootedGroundArea(VolInd, V, d, rfc)
 
@@ -87,6 +87,8 @@ root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
 \item{Z50}{A vector of depths (in mm) corresponding to 50\% of roots.}
 
 \item{Z95}{A vector of depths (in mm) corresponding to 95\% of roots.}
+
+\item{Z100}{A vector of depths (in mm) corresponding to 100\% of roots.}
 
 \item{VolInd}{Volume of soil (in m3) occupied by coarse roots per individual.}
 
@@ -163,7 +165,8 @@ print(V1)
      
 #Calculate LDR root system for trees (Schenck & Jackson 2002)
 V2 <- root_ldrDistribution(Z50 = rep(200,ntree), 
-                          Z95 = rep(1000,ntree), s$widths)
+                           Z95 = rep(1000,ntree),
+                           Z100 = rep(NA, ntree), s$widths)
 print(V2)     
 
 }
