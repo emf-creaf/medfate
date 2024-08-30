@@ -13,6 +13,7 @@ tree2forest(
   DBH = NA,
   Z50 = NA,
   Z95 = NA,
+  Z100 = NA,
   CrownRatio = NA,
   FoliarBiomass = NA,
   FuelLoading = NA
@@ -25,6 +26,7 @@ shrub2forest(
   Cover = NA,
   Z50 = NA,
   Z95 = NA,
+  Z100 = NA,
   CrownRatio = NA,
   FoliarBiomass = NA,
   FuelLoading = NA
@@ -44,6 +46,8 @@ shrub2forest(
 \item{Z50}{Depth (in mm) corresponding to 50\% of fine roots.}
 
 \item{Z95}{Depth (in mm) corresponding to 95\% of fine roots.}
+
+\item{Z100}{Depth (in mm) corresponding to 100\% of fine roots.}
 
 \item{CrownRatio}{Crown ratio (fraction of total height)}
 

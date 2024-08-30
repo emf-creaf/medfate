@@ -48,6 +48,7 @@
 #'   \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
 #'   \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
 #'   \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+#'   \item{\code{Z100}: Depth (in mm) corresponding to 100\% of fine roots (to specify a truncated root distribution).}
 #' }
 #' Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
 #' All these values are used to override allometry-based estimates of those variables when initializing

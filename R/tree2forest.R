@@ -13,6 +13,7 @@
 #' @param FuelLoading Fine fuel loading (kg/m2)
 #' @param Z50 Depth (in mm) corresponding to 50\% of fine roots.
 #' @param Z95 Depth (in mm) corresponding to 95\% of fine roots.
+#' @param Z100 Depth (in mm) corresponding to 100\% of fine roots.
 #'
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
@@ -26,7 +27,7 @@
 #' oak_forest <-tree2forest("Quercus ilex", Height= 200, LAI = 2)
 #' oak_forest
 #' 
-tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95 = NA,
+tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95 = NA, Z100 = NA,
                       CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA) {
   f<- emptyforest(ntree = 1) 
   f$treeData[["Species"]] <- Species
@@ -35,6 +36,9 @@ tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95
   f$treeData[["DBH"]] <- DBH
   f$treeData[["Z50"]] <- Z50
   f$treeData[["Z95"]] <- Z95
+  if(!is.na(Z100)) {
+    f$treeData[["Z100"]] <- Z100
+  }
   if(!is.na(LAI)) {
     f$treeData[["LAI"]] <- LAI
   }
@@ -53,7 +57,7 @@ tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95
 #' @rdname tree2forest
 #' @param Cover Percent cover
 #' @export
-shrub2forest<-function(Species, Height, LAI = NA, Cover = NA, Z50 = NA, Z95 = NA,
+shrub2forest<-function(Species, Height, LAI = NA, Cover = NA, Z50 = NA, Z95 = NA, Z100 = NA,
                        CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA) {
   f <- emptyforest(nshrub = 1) 
   f$shrubData[["Species"]] <- Species
@@ -61,6 +65,9 @@ shrub2forest<-function(Species, Height, LAI = NA, Cover = NA, Z50 = NA, Z95 = NA
   f$shrubData[["Cover"]] <- Cover
   f$shrubData[["Z50"]] <- Z50
   f$shrubData[["Z95"]] <- Z95
+  if(!is.na(Z100)) {
+    f$shrubData[["Z100"]] <- Z100
+  }
   if(!is.na(LAI)) {
     f$shrubData[["LAI"]] <- LAI
   }

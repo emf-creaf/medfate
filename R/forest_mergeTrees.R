@@ -47,6 +47,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
       y$N <- Nsp 
       y$Z50 <- as.numeric(tapply(x$Z50*BA, x$Species, FUN = sum)/BAsp)
       y$Z95 <- as.numeric(tapply(x$Z95*BA, x$Species, FUN = sum)/BAsp)
+      if("Z100" %in% names(x)) {
+        y$Z100 <- as.numeric(tapply(x$Z100*BA, x$Species, FUN = sum)/BAsp)
+      }
       return(y)
     }
     return(x)
@@ -121,6 +124,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
                         Z50 = Z50sp, 
                         Z95 = Z95sp, 
                         row.names = 1:length(BAsp), stringsAsFactors = FALSE)
+      if("Z100" %in% names(td)) {
+        td2$Z100 <- as.numeric(tapply(td$Z100*BA, td$Species, FUN = sum)/BAsp)
+      }
     }
     x2$treeData = td2
   }
@@ -135,10 +141,10 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
   mergeShrubsSize<-function(x) {
     nshrub = nrow(x)
     if(nshrub>0) {
-      Coversp = tapply(x$Cover, x$Species, FUN = sum)
-      Heightsp = tapply(x$Height*x$Cover, x$Species, FUN = sum)/Coversp
-      Z50sp = tapply(x$Z50*x$Cover, x$Species, FUN = sum)/Coversp
-      Z95sp = tapply(x$Z95*x$Cover, x$Species, FUN = sum)/Coversp
+      Coversp <- tapply(x$Cover, x$Species, FUN = sum)
+      Heightsp <- tapply(x$Height*x$Cover, x$Species, FUN = sum)/Coversp
+      Z50sp <- tapply(x$Z50*x$Cover, x$Species, FUN = sum)/Coversp
+      Z95sp <- tapply(x$Z95*x$Cover, x$Species, FUN = sum)/Coversp
       y = data.frame(Species = names(Coversp),
                      Cover = as.numeric(Coversp),
                      Height = as.numeric(Heightsp),
@@ -146,6 +152,9 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
                      Z95 = as.numeric(Z95sp),
                      row.names = 1:length(Coversp),
                      stringsAsFactors = FALSE)
+      if("Z100" %in% names(x)) {
+        y$Z100 <- as.numeric(tapply(x$Z100*x$Cover, x$Species, FUN = sum)/Coversp)
+      }
       return(y)
     }
     return(x)

@@ -69,5 +69,19 @@ test_that("spwb can be run using species codes",{
   expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_sureau), 
                        examplemeteo2[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
-  
+})
+
+test_that("spwb can be run using truncated root systems",{
+  f <- exampleforest
+  f$treeData$Z100 <- c(1500, 1900)
+  f$shrubDataZ100 <- 800
+  expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_granier), 
+                       examplemeteo2[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_sperry), 
+                       examplemeteo2[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_sureau), 
+                       examplemeteo2[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
 })

@@ -40,12 +40,18 @@ test_that("Test forest summary",{
 })
 
 test_that("Test forest simplification",{
+  f <- exampleforest
+  f$treeData$Z100 <- c(1500, 1900)
+  f$shrubDataZ100 <- 800
   expect_s3_class(forest_reduceToDominant(exampleforest, SpParamsMED), "forest")
   expect_s3_class(forest_reduceToDominant(emptyforest(), SpParamsMED), "forest")
+  expect_s3_class(forest_reduceToDominant(f, SpParamsMED), "forest")
   expect_s3_class(forest_mergeTrees(exampleforest), "forest")
   expect_s3_class(forest_mergeTrees(emptyforest()), "forest")
+  expect_s3_class(forest_mergeTrees(f), "forest")
   expect_s3_class(forest_mergeShrubs(exampleforest), "forest")
   expect_s3_class(forest_mergeShrubs(emptyforest()), "forest")
+  expect_s3_class(forest_mergeShrubs(f), "forest")
 })
 
 test_that("Test stand metrics",{
