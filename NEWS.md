@@ -1,6 +1,7 @@
 # medfate 4.5.0
 * Bug correction: Zero fine root proportion in Sureau
 * Users can now define column Z100 in treeData or shrubData to truncate root distribution
+* AcceptedName is not a striclty required parameter (only used in parameterization)
 
 # medfate 4.4.0
 * Multi-bucket soil model reintroduced (default) for safety
