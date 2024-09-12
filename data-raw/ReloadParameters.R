@@ -18,7 +18,7 @@ usethis::use_data(SpParamsDefinition, overwrite = T)
 
 
 
-# SpParamsMED -------------------------------------------------------------
+# SpParamsMED [MODE A] -------------------------------------------------------------
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
                                               sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 
@@ -87,6 +87,12 @@ openxlsx::writeDataTable(wb, "SpParamsMED", SpParamsMED)
 openxlsx::saveWorkbook(wb,"data-raw/SpParamsMED.xlsx", overwrite=TRUE)
 
 rm(SpParamsMED)
+
+
+# SpParamsMED [MODE B] -------------------------------------------------------------
+SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
+                                              sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
+usethis::use_data(SpParamsMED, overwrite = T)
 
 
 ## Trait family means
