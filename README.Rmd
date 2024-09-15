@@ -47,7 +47,7 @@ A complete documentation of the models included in the package can be found in [
 During the development of **medfate** some functions were originally placed there but then moved to more specialized packages which evolve together with **medfate**:
 
   + Package [**medfateland**](https://emf-creaf.github.io/medfateland) extends **medfate** by allowing simulations to be performed in a spatially explicit context.
-  + Package [**traits4models**](https://emf-creaf.github.io/traits4models) provides functions to help creating species parameter inputs for **medfate** and **medfateland** simulation functions  [*under development*].
+  + Package [**traits4models**](https://emf-creaf.github.io/traits4models) provides functions to help creating species parameter inputs for **medfate** and **medfateland** simulation functions.
 
 Two other packages complete the simulation framework, but can be used for many other purposes beyond forest modelling:
 

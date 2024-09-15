@@ -61,8 +61,7 @@ together with **medfate**:
   spatially explicit context.
 - Package [**traits4models**](https://emf-creaf.github.io/traits4models)
   provides functions to help creating species parameter inputs for
-  **medfate** and **medfateland** simulation functions \[*under
-  development*\].
+  **medfate** and **medfateland** simulation functions.
 
 Two other packages complete the simulation framework, but can be used
 for many other purposes beyond forest modelling:
