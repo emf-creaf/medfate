@@ -113,6 +113,11 @@ with researchers from
   (BOMFORES). **Financial Entity**: Ministerio de Ciencia e Innovación
   (PID2021-126679OB-I00). **Duration from**: 01/09/2022 **to**:
   31/08/2024. **PI**: Miquel De Cáceres.
+- **Research project**: Improving the modelling of key forest dynamic
+  processes to forecast long-term changes in Mediterranean forests under
+  climate change (IMPROMED). **Financial Entity**: Ministerio de Ciencia
+  e Innovación (PID2023-152644NB-I00). **Duration from**: 01/09/2024
+  **to**: 31/08/2025. **PI**: Miquel De Cáceres/Josep Mª Espelta.
 
 ## References
 

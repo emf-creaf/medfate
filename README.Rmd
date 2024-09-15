@@ -75,6 +75,8 @@ knitr::include_graphics("man/figures/institution_logos.png")
 + **Research project**: Forecasting of ecosystem services on forests: impacts and adaptation to extreme climate events (FORESTCAST). **Financial Entity**: Ministerio de Economia y Competitividad (CGL2014-59742-C2-2-R). **Duration from**: 01/01/2015 **to**: 31/12/2017. **PI**: Lluís Brotons/Miquel De Cáceres.
 + **Research project**: Modeling plant water use and drought resistance strategies across scales (DRESS). **Financial Entity**: Ministerio de Economia y Competitividad (CGL2017-89149-C2-2-R). **Duration from**: 01/01/2018 **to**: 31/12/2021. **PI**: Miquel De Cáceres.
 + **Research project**: Boosting process-based models to project forest dynamics and associated ecosystem services at stand-to-regional scales (BOMFORES). **Financial Entity**: Ministerio de Ciencia e Innovación (PID2021-126679OB-I00). **Duration from**: 01/09/2022 **to**: 31/08/2024. **PI**: Miquel De Cáceres.
++ **Research project**: Improving the modelling of key forest dynamic
+processes to forecast long-term changes in Mediterranean forests under climate change (IMPROMED). **Financial Entity**: Ministerio de Ciencia e Innovación (PID2023-152644NB-I00). **Duration from**: 01/09/2024 **to**: 31/08/2025. **PI**: Miquel De Cáceres/Josep Mª Espelta.
 
 ## References
 
