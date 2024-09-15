@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,6 +90,7 @@ and <code>shrubData</code> can contain additional columns:</p><ul><li><p><code>L
 <li><p><code>FoliarBiomass</code>: Standing dry biomass of leaves (kg/m2)</p></li>
 <li><p><code>FuelLoading</code>: Fine fuel loading (kg/m2)</p></li>
 <li><p><code>CrownRatio</code>: The ratio between crown length and total height (between 0 and 1)</p></li>
+<li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
 </ul><p>Similarly, one can define <code>forest</code> list elements <code>herbLAI</code>, <code>herbFoliarBiomass</code> or <code>herbFuelLoading</code>.
 All these values are used to override allometry-based estimates of those variables when initializing
 inputs for functions <code><a href="spwb.html">spwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>. Note that leaf area index, foliar biomass and

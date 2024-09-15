@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2024-07-26</h4>
+            <h4 data-toc-skip class="date">2024-09-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="d-none name"><code>FontBlanche.Rmd</code></div>
@@ -240,9 +240,9 @@ unaltered:</p>
 <span><span class="co">## 149    Pinus halepensis     Pinus Pinaceae  Pinales Gymnosperm       Tree</span></span>
 <span><span class="co">## 169        Quercus ilex   Quercus Fagaceae  Fagales Angiosperm Tree/Shrub</span></span>
 <span><span class="co">##         LifeForm LeafShape LeafSize      PhenologyType DispersalType Hmed Hmax</span></span>
-<span><span class="co">## 143 Phanerophyte     Broad   Medium oneflush-evergreen            NA  150  900</span></span>
-<span><span class="co">## 149 Phanerophyte    Needle    Small oneflush-evergreen            NA  850 1900</span></span>
-<span><span class="co">## 169 Phanerophyte     Broad   Medium oneflush-evergreen            NA  500 1300</span></span>
+<span><span class="co">## 143 Phanerophyte     Broad   Medium oneflush-evergreen    vertebrate  150  900</span></span>
+<span><span class="co">## 149 Phanerophyte    Needle    Small oneflush-evergreen          wind  850 1900</span></span>
+<span><span class="co">## 169 Phanerophyte     Broad   Medium oneflush-evergreen    vertebrate  500 1300</span></span>
 <span><span class="co">##     Z50  Z95 fHDmin fHDmax    a_ash    b_ash    a_bsh     b_bsh    a_btsh</span></span>
 <span><span class="co">## 143  NA 2353     45    109       NA       NA       NA        NA        NA</span></span>
 <span><span class="co">## 149  NA 7500     80    160       NA       NA       NA        NA        NA</span></span>
@@ -279,34 +279,34 @@ unaltered:</p>
 <span><span class="co">## 143  -1.8969940          NA       NA        NA          NA         NA  0.002</span></span>
 <span><span class="co">## 149  -0.8507809     1.47061 8.523012 0.6843513 0.002517798 -0.3035192  0.001</span></span>
 <span><span class="co">## 169  -1.6598896     1.06530 8.447722 0.2523021 0.002721234 -0.5791330  0.002</span></span>
-<span><span class="co">##     Gswmax Gs_Toptim Gs_Tsens    Gs_P50 Gs_slope VCleaf_kmax VCleaf_P12</span></span>
-<span><span class="co">## 143 0.2200        NA       NA -2.207094 89.41176        3.00         NA</span></span>
-<span><span class="co">## 149 0.2175        NA       NA -1.871216 97.43590        4.00      -0.65</span></span>
-<span><span class="co">## 169 0.2200        NA       NA -2.114188 44.70588        2.63         NA</span></span>
-<span><span class="co">##     VCleaf_P50 VCleaf_P88 VCleaf_slope Kmax_stemxylem VCstem_P12 VCstem_P50</span></span>
-<span><span class="co">## 143         NA         NA           NA      0.4083769  -1.971750      -6.50</span></span>
-<span><span class="co">## 149  -1.195000         NA     115.1515      0.1500000  -3.707158      -4.79</span></span>
-<span><span class="co">## 169  -2.663333         NA           NA      0.4000000  -4.739642      -6.40</span></span>
-<span><span class="co">##     VCstem_P88 VCstem_slope Kmax_rootxylem VCroot_P12 VCroot_P50 VCroot_P88</span></span>
-<span><span class="co">## 143 -11.028250           11             NA -3.1224807  -5.300000  -7.477519</span></span>
-<span><span class="co">## 149  -5.872842           46             NA -1.0000000  -1.741565  -2.301482</span></span>
-<span><span class="co">## 169  -8.060358           30             NA -0.2572776  -1.836667  -4.728482</span></span>
-<span><span class="co">##     VCroot_slope  Vmax298  Jmax298    Nleaf Nsapwood Nfineroot     WoodC</span></span>
-<span><span class="co">## 143     17.45105 65.23250 146.2701 16.09170  2.78000        NA        NA</span></span>
-<span><span class="co">## 149    102.98981 72.19617 124.1687 11.91507  1.26556  9.187476 0.4979943</span></span>
-<span><span class="co">## 169     22.56335 68.51600 118.7863 14.11983  5.66150 12.166747 0.4740096</span></span>
-<span><span class="co">##        RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot RGRleafmax</span></span>
-<span><span class="co">## 143         NA         NA          NA 1.6300        NA         NA         NA</span></span>
-<span><span class="co">## 149 0.01210607         NA          NA 1.5905      1.47        1.3         NA</span></span>
-<span><span class="co">## 169 0.01757808         NA          NA 1.4300        NA         NA         NA</span></span>
-<span><span class="co">##     RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood SRfineroot   RSSG</span></span>
-<span><span class="co">## 143            NA  0.0009891472             NA        NA         NA     NA</span></span>
-<span><span class="co">## 149            NA  0.0034108138             NA        NA         NA 0.3725</span></span>
-<span><span class="co">## 169            NA  0.0015540115             NA        NA         NA 0.9500</span></span>
-<span><span class="co">##     MortalityBaselineRate SurvivalModelStep SurvivalB0 SurvivalB1</span></span>
-<span><span class="co">## 143           0.001622378                NA         NA         NA</span></span>
-<span><span class="co">## 149           0.005000000                10   7.311515 -0.6532989</span></span>
-<span><span class="co">## 169           0.001000000                10   7.484348 -0.5420550</span></span>
+<span><span class="co">##     Gswmax Gsw_AC_slope Gs_Toptim Gs_Tsens    Gs_P50 Gs_slope VCleaf_kmax</span></span>
+<span><span class="co">## 143 0.2200           NA        NA       NA -2.207094 89.41176        3.00</span></span>
+<span><span class="co">## 149 0.2175           NA        NA       NA -1.871216 97.43590        4.00</span></span>
+<span><span class="co">## 169 0.2200           NA        NA       NA -2.114188 44.70588        2.63</span></span>
+<span><span class="co">##     VCleaf_P12 VCleaf_P50 VCleaf_P88 VCleaf_slope Kmax_stemxylem VCstem_P12</span></span>
+<span><span class="co">## 143         NA         NA         NA           NA      0.4083769  -1.971750</span></span>
+<span><span class="co">## 149      -0.65  -1.195000         NA     115.1515      0.1500000  -3.707158</span></span>
+<span><span class="co">## 169         NA  -2.663333         NA           NA      0.4000000  -4.739642</span></span>
+<span><span class="co">##     VCstem_P50 VCstem_P88 VCstem_slope Kmax_rootxylem VCroot_P12 VCroot_P50</span></span>
+<span><span class="co">## 143      -6.50 -11.028250           11             NA -3.1224807  -5.300000</span></span>
+<span><span class="co">## 149      -4.79  -5.872842           46             NA -1.0000000  -1.741565</span></span>
+<span><span class="co">## 169      -6.40  -8.060358           30             NA -0.2572776  -1.836667</span></span>
+<span><span class="co">##     VCroot_P88 VCroot_slope  Vmax298  Jmax298    Nleaf Nsapwood Nfineroot</span></span>
+<span><span class="co">## 143  -7.477519     17.45105 65.23250 146.2701 16.09170  2.78000        NA</span></span>
+<span><span class="co">## 149  -2.301482    102.98981 72.19617 124.1687 11.91507  1.26556  9.187476</span></span>
+<span><span class="co">## 169  -4.728482     22.56335 68.51600 118.7863 14.11983  5.66150 12.166747</span></span>
+<span><span class="co">##         WoodC    RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot</span></span>
+<span><span class="co">## 143        NA         NA         NA          NA 1.6300        NA         NA</span></span>
+<span><span class="co">## 149 0.4979943 0.01210607         NA          NA 1.5905      1.47        1.3</span></span>
+<span><span class="co">## 169 0.4740096 0.01757808         NA          NA 1.4300        NA         NA</span></span>
+<span><span class="co">##     RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood SRfineroot</span></span>
+<span><span class="co">## 143         NA            NA  0.0009891472             NA        NA         NA</span></span>
+<span><span class="co">## 149         NA            NA  0.0034108138             NA        NA         NA</span></span>
+<span><span class="co">## 169         NA            NA  0.0015540115             NA        NA         NA</span></span>
+<span><span class="co">##       RSSG MortalityBaselineRate SurvivalModelStep SurvivalB0 SurvivalB1</span></span>
+<span><span class="co">## 143     NA           0.001622378                NA         NA         NA</span></span>
+<span><span class="co">## 149 0.3725           0.005000000                10   7.311515 -0.6532989</span></span>
+<span><span class="co">## 169 0.9500           0.001000000                10   7.484348 -0.5420550</span></span>
 <span><span class="co">##     SeedProductionHeight SeedMass SeedLongevity DispersalDistance</span></span>
 <span><span class="co">## 143                   NA       NA            NA                NA</span></span>
 <span><span class="co">## 149                   NA       NA            NA                NA</span></span>

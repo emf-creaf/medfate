@@ -9,7 +9,7 @@ and a soil data input to create input objects for simulation functions spwb (or 
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -689,10 +689,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -702,10 +702,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$L</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           1        2        3        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 1137.834 1645.161 3058.717</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 1891.826 1812.060 3097.046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1480.808 1750.917 3096.459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          1   2    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 150 650 1500 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 150 650 1500 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 150 650 1500 3000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$Wpool</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1 2 3 4</span>
@@ -755,10 +755,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  93.15304 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           StemAF Vsapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.9236406 6.440145</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.6238125 1.339581</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6238125 1.163264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           StemAF  Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.9236406 4.1638559</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.6238125 0.8135590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6238125 0.3177724</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -1221,10 +1221,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -1787,10 +1787,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -2334,10 +2334,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.80     0.03         0.03        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -2347,10 +2347,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$L</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           1        2        3        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 1137.834 1645.161 3058.717</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 1891.826 1812.060 3097.046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1480.808 1750.917 3096.459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          1   2    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 150 650 1500 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 150 650 1500 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 150 650 1500 3000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$Wpool</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1 2 3 4</span>
@@ -2400,10 +2400,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  93.15304 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           StemAF Vsapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.9236406 6.440145</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.6238125 1.339581</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6238125 1.163264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           StemAF  Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.9236406 4.1638559</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.6238125 0.8135590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6238125 0.3177724</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>

@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-07-26</h4>
+            <h4 data-toc-skip class="date">2024-09-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="d-none name"><code>BasicWaterBalance.Rmd</code></div>
@@ -331,10 +331,10 @@ leaves), canopy water retention capacity and the proportion of light
 <span><span class="co">## T1_148    0.40874422           2.7741548   -0.033 0.005808769 0.9998350</span></span>
 <span><span class="co">## T2_168    0.23318589           2.1058696   -0.033 0.010612890 0.9997489</span></span>
 <span><span class="co">## S1_165    0.02675376           0.1635903   -0.033 0.003088161 0.9983684</span></span>
-<span><span class="co">##          LeafRWC      LFMC      StemPLC      LeafPLC WaterBalance</span></span>
-<span><span class="co">## T1_148 0.9979679 125.89003 1.320577e-11 3.713826e-03            0</span></span>
-<span><span class="co">## T2_168 0.9986794  93.07448 1.691266e-06 3.473351e-05            0</span></span>
-<span><span class="co">## S1_165 0.9987207  96.39176 4.394058e-08 3.473351e-05            0</span></span>
+<span><span class="co">##          LeafRWC      LFMC      StemPLC      LeafPLC  WaterBalance</span></span>
+<span><span class="co">## T1_148 0.9979679 125.89003 1.320577e-11 3.713826e-03 -4.440892e-16</span></span>
+<span><span class="co">## T2_168 0.9986794  93.07448 1.691266e-06 3.473351e-05  0.000000e+00</span></span>
+<span><span class="co">## S1_165 0.9987207  96.39176 4.394058e-08 3.473351e-05  0.000000e+00</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "spwb_day" "list"</span></span></code></pre>
@@ -361,18 +361,18 @@ simulation:</p>
 <p>Now we are ready to call function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Initial plant water content (mm): 7.05859</span></span>
+<pre><code><span><span class="co">## Initial plant water content (mm): 4.73001</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  [Year 2001]:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant water content (mm): 7.05713</span></span>
+<span><span class="co">## Final plant water content (mm): 4.72883</span></span>
 <span><span class="co">## Final soil water content (mm): 278.275</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): -0.00146023</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00146023</span></span>
+<span><span class="co">## Change in plant water content (mm): -0.00117924</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00117924</span></span>
 <span><span class="co">## Change in soil water content (mm): -12.6</span></span>
 <span><span class="co">## Soil water balance result (mm): -12.6</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
@@ -585,12 +585,12 @@ variables:</p>
 <span><span class="co">## 5            35.07634    0.17555608           1.6168831 -0.03300000 0.003941519</span></span>
 <span><span class="co">## 6            35.07634    0.12648719           1.3093913 -0.03336015 0.003941519</span></span>
 <span><span class="co">##        StemPLC PlantWaterBalance   LeafRWC   StemRWC     LFMC PlantStress</span></span>
-<span><span class="co">## 1 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.8900 0.005808769</span></span>
+<span><span class="co">## 1 1.320577e-11     -4.440892e-16 0.9979679 0.9998350 125.8900 0.005808769</span></span>
 <span><span class="co">## 2 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.8900 0.005808769</span></span>
 <span><span class="co">## 3 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.8900 0.005808769</span></span>
-<span><span class="co">## 4 1.622580e-11     -7.556383e-05 0.9978830 0.9998281 125.8842 0.006168100</span></span>
-<span><span class="co">## 5 1.622580e-11      7.556383e-05 0.9979679 0.9998350 125.8900 0.005808769</span></span>
-<span><span class="co">## 6 1.622580e-11     -1.973564e-05 0.9979457 0.9998332 125.8885 0.005901961</span></span></code></pre>
+<span><span class="co">## 4 1.622580e-11     -6.224432e-05 0.9978830 0.9998281 125.8842 0.006168100</span></span>
+<span><span class="co">## 5 1.622580e-11      6.224432e-05 0.9979679 0.9998350 125.8900 0.005808769</span></span>
+<span><span class="co">## 6 1.622580e-11     -1.625689e-05 0.9979457 0.9998332 125.8885 0.005901961</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="temporal-summaries">Temporal summaries<a class="anchor" aria-label="anchor" href="#temporal-summaries"></a>

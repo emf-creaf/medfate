@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">root_conicDistribution</span><span class="op">(</span><span class="va">Zcone</span>, <span class="va">d</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">root_ldrDistribution</span><span class="op">(</span><span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu">root_ldrDistribution</span><span class="op">(</span><span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">Z100</span>, <span class="va">d</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">root_individualRootedGroundArea</span><span class="op">(</span><span class="va">VolInd</span>, <span class="va">V</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
 <span></span>
@@ -133,6 +133,10 @@
 
 <dt id="arg-z-">Z95<a class="anchor" aria-label="anchor" href="#arg-z-"></a></dt>
 <dd><p>A vector of depths (in mm) corresponding to 95% of roots.</p></dd>
+
+
+<dt id="arg-z-">Z100<a class="anchor" aria-label="anchor" href="#arg-z-"></a></dt>
+<dd><p>A vector of depths (in mm) corresponding to 100% of roots.</p></dd>
 
 
 <dt id="arg-volind">VolInd<a class="anchor" aria-label="anchor" href="#arg-volind"></a></dt>
@@ -260,7 +264,8 @@
 <span class="r-in"><span>     </span></span>
 <span class="r-in"><span><span class="co">#Calculate LDR root system for trees (Schenck &amp; Jackson 2002)</span></span></span>
 <span class="r-in"><span><span class="va">V2</span> <span class="op">&lt;-</span> <span class="fu">root_ldrDistribution</span><span class="op">(</span>Z50 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">200</span>,<span class="va">ntree</span><span class="op">)</span>, </span></span>
-<span class="r-in"><span>                          Z95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="va">ntree</span><span class="op">)</span>, <span class="va">s</span><span class="op">$</span><span class="va">widths</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                           Z95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="va">ntree</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                           Z100 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">ntree</span><span class="op">)</span>, <span class="va">s</span><span class="op">$</span><span class="va">widths</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">V2</span><span class="op">)</span>     </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]      [,2]       [,3]       [,4]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.6799879 0.2737911 0.03567632 0.01054468</span>

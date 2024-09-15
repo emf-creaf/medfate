@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-07-26</h4>
+            <h4 data-toc-skip class="date">2024-09-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -295,9 +295,9 @@ storage carbon levels can be seen in <code>internalCarbon</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">internalCarbon</span></span></code></pre></div>
 <pre><code><span><span class="co">##        sugarLeaf starchLeaf sugarSapwood starchSapwood</span></span>
-<span><span class="co">## T1_148 0.4029239 0.00925123    0.5738487      3.276375</span></span>
-<span><span class="co">## T2_168 0.3585751 0.00925123    1.0741383      3.280965</span></span>
-<span><span class="co">## S1_165 0.7223526 0.00925123    0.2857655      3.445161</span></span></code></pre>
+<span><span class="co">## T1_148 0.4029239 0.00925123    0.5738487      3.201897</span></span>
+<span><span class="co">## T2_168 0.3585751 0.00925123    1.0741383      3.100817</span></span>
+<span><span class="co">## S1_165 0.7223526 0.00925123    0.2857655      2.654773</span></span></code></pre>
 <p>and <code>internalAllocation</code> stores the carbon allocation
 targets:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -325,35 +325,35 @@ model sink limitations on wood formation.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.1]</span></span></code></pre>
-<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 6110.86</span></span>
-<span><span class="co">## Initial plant water content (mm): 7.05859</span></span>
+<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 5068.34</span></span>
+<span><span class="co">## Initial plant water content (mm): 4.73001</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 6274.27</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 163.412</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 163.412</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 5282.81</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 214.478</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 214.478</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 79 Labile balance (g/m2) 94</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 173 Mortality loss (g/m2) 10</span></span>
-<span><span class="co">## Final plant water content (mm): 7.07876</span></span>
-<span><span class="co">## Final soil water content (mm): 278.326</span></span>
+<span><span class="co">##   Structural balance (g/m2) 131 Labile balance (g/m2) 92</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 222 Mortality loss (g/m2) 8</span></span>
+<span><span class="co">## Final plant water content (mm): 4.74321</span></span>
+<span><span class="co">## Final soil water content (mm): 278.327</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.0201684</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00116899</span></span>
-<span><span class="co">## Change in soil water content (mm): -12.5489</span></span>
-<span><span class="co">## Soil water balance result (mm): -12.5489</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0132023</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.000930528</span></span>
+<span><span class="co">## Change in soil water content (mm): -12.5477</span></span>
+<span><span class="co">## Soil water balance result (mm): -12.5477</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): -7.10543e-15</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 92 Net rainfall (mm) 370</span></span>
 <span><span class="co">##   Infiltration (mm) 398 Infiltration excess (mm) 23 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 31  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 185</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 185  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
+<span><span class="co">##   Soil evaporation (mm) 31  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 184</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 184  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
 <span><span class="co">##   Runoff (mm) 23 Deep drainage (mm) 182</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
@@ -501,9 +501,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.2191758 -15.9764398   0.2207305  16.0897655   0.9920926 </span></span>
+<span><span class="co">##  12.0000000  -0.2191728 -15.9762176   0.2207277  16.0895639   0.9920924 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.9245610   0.7924024</span></span></code></pre>
+<span><span class="co">##   0.9245622   0.7924050</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

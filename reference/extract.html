@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,18 +141,18 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function (ten days)</span></span></span>
 <span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.05859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 4.73001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 290.875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 4.72997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 294.814</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -5.7277e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -5.7277e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -4.6264e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -4.6264e-05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 3.93862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 3.93862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
@@ -404,36 +404,36 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29            2.366131   0.013590343          0.09935134 -0.03331559</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30            2.366131   0.005680839          0.04743368 -0.03372586</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         LeafPLC      StemPLC PlantWaterBalance   LeafRWC   StemRWC      LFMC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  3.713826e-03 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.89003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  3.713826e-03 1.320577e-11     -4.440892e-16 0.9979679 0.9998350 125.89003</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  3.713826e-03 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.89003</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  3.713826e-03 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.89003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  3.941519e-03 1.622580e-11     -7.556383e-05 0.9978830 0.9998281 125.88416</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  3.941519e-03 1.622580e-11      7.556383e-05 0.9979679 0.9998350 125.89003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  3.941519e-03 1.622580e-11     -1.973564e-05 0.9979457 0.9998332 125.88850</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  3.941519e-03 1.622580e-11      2.475861e-05 0.9979735 0.9998354 125.89042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  3.941519e-03 1.622580e-11     -1.118882e-05 0.9979610 0.9998344 125.88955</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  3.941519e-03 1.622580e-11     -1.483184e-05 0.9979443 0.9998331 125.88840</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 3.941519e-03 1.622580e-11     -2.680080e-05 0.9979142 0.9998306 125.88632</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  3.941519e-03 1.622580e-11     -6.224432e-05 0.9978830 0.9998281 125.88416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  3.941519e-03 1.622580e-11      6.224432e-05 0.9979679 0.9998350 125.89003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  3.941519e-03 1.622580e-11     -1.625689e-05 0.9979457 0.9998332 125.88850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  3.941519e-03 1.622580e-11      2.039446e-05 0.9979735 0.9998354 125.89042</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  3.941519e-03 1.622580e-11     -9.216593e-06 0.9979610 0.9998344 125.88955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  3.941519e-03 1.622580e-11     -1.221746e-05 0.9979443 0.9998331 125.88840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 3.941519e-03 1.622580e-11     -2.207667e-05 0.9979142 0.9998306 125.88632</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11 3.473351e-05 1.691266e-06      0.000000e+00 0.9986794 0.9997489  93.07448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12 3.473351e-05 1.691266e-06      0.000000e+00 0.9986794 0.9997489  93.07448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13 3.473351e-05 1.691266e-06      0.000000e+00 0.9986794 0.9997489  93.07448</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 3.673597e-05 1.810103e-06     -1.117624e-05 0.9986462 0.9997425  93.07250</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 3.673597e-05 1.810103e-06      1.117624e-05 0.9986794 0.9997489  93.07448</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 3.673597e-05 1.810103e-06     -2.820075e-06 0.9986710 0.9997473  93.07398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 3.673597e-05 1.810103e-06      5.173816e-06 0.9986864 0.9997503  93.07490</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 3.673597e-05 1.810103e-06     -2.589997e-06 0.9986787 0.9997488  93.07444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 3.673597e-05 1.810103e-06     -3.128590e-06 0.9986694 0.9997470  93.07389</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 3.673597e-05 1.810103e-06     -4.482014e-06 0.9986561 0.9997444  93.07309</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 3.673597e-05 1.810103e-06     -8.813207e-06 0.9986462 0.9997425  93.07250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 3.673597e-05 1.810103e-06      8.813207e-06 0.9986794 0.9997489  93.07448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 3.673597e-05 1.810103e-06     -2.223865e-06 0.9986710 0.9997473  93.07398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 3.673597e-05 1.810103e-06      4.080013e-06 0.9986864 0.9997503  93.07490</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 3.673597e-05 1.810103e-06     -2.042457e-06 0.9986787 0.9997488  93.07444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 3.673597e-05 1.810103e-06     -2.467151e-06 0.9986694 0.9997470  93.07389</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 3.673597e-05 1.810103e-06     -3.534366e-06 0.9986561 0.9997444  93.07309</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21 3.473351e-05 4.394058e-08      0.000000e+00 0.9987207 0.9983684  96.39176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 22 3.473351e-05 4.394058e-08      0.000000e+00 0.9987207 0.9983684  96.39176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 23 3.473351e-05 4.394058e-08      0.000000e+00 0.9987207 0.9983684  96.39176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 3.740883e-05 4.865223e-08     -2.481630e-06 0.9986779 0.9983139  96.38699</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 3.740883e-05 4.865223e-08      2.481630e-06 0.9987207 0.9983684  96.39176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 3.740883e-05 4.865223e-08     -6.398948e-07 0.9987096 0.9983543  96.39053</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 3.740883e-05 4.865223e-08      1.112844e-06 0.9987288 0.9983788  96.39267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 3.740883e-05 4.865223e-08     -5.196272e-07 0.9987199 0.9983674  96.39167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 3.740883e-05 4.865223e-08     -6.627544e-07 0.9987084 0.9983528  96.39040</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 3.740883e-05 4.865223e-08     -9.222438e-07 0.9986925 0.9983325  96.38863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 3.740883e-05 4.865223e-08     -1.069296e-06 0.9986779 0.9983139  96.38699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 3.740883e-05 4.865223e-08      1.069296e-06 0.9987207 0.9983684  96.39176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 3.740883e-05 4.865223e-08     -2.757199e-07 0.9987096 0.9983543  96.39053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 3.740883e-05 4.865223e-08      4.795051e-07 0.9987288 0.9983788  96.39267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 3.740883e-05 4.865223e-08     -2.238981e-07 0.9987199 0.9983674  96.39167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 3.740883e-05 4.865223e-08     -2.855698e-07 0.9987084 0.9983528  96.39040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 3.740883e-05 4.865223e-08     -3.973807e-07 0.9986925 0.9983325  96.38863</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    PlantStress</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.005808769</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.005808769</span>
