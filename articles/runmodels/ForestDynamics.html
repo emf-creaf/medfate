@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-09-15</h4>
+            <h4 data-toc-skip class="date">2024-09-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestDynamics.Rmd" class="external-link"><code>vignettes/runmodels/ForestDynamics.Rmd</code></a></small>
       <div class="d-none name"><code>ForestDynamics.Rmd</code></div>
@@ -378,7 +378,7 @@ function for objects of class <code>fordyn</code>. For example, we can
 show the interannual variation in stand-level basal area using:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-10-1.png" alt="Stand basal area over time" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="treeshrub-tables">Tree/shrub tables<a class="anchor" aria-label="anchor" href="#treeshrub-tables"></a>
@@ -467,13 +467,13 @@ patterns of desired variables. For example, the following shows the leaf
 area for individuals of the three cohorts during the second year:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-13-1.png" width="672">
+<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-13-1.png" alt="Leaf area variation over one year" width="672">
 Instead of examining year by year, it is possible to plot the whole
 series of results by passing a <code>fordyn</code> object to the
 <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
+<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" alt="Leaf area variation for multiple years" width="672"></p>
 <p>Finally, we can create interactive plots for particular steps using
 function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
