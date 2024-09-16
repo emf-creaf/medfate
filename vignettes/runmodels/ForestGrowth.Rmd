@@ -147,7 +147,7 @@ These data frames are easy handle in R or can be written into text files for pos
 Several plots are available, in addition to all the plots that were available to display the results of `spwb()` simulations. Some of them are illustrated in the following subsections:
 
 To inspect components of the plant carbon balance we can first display daily gross photosynthesis expressed as the carbon fixation relative to dry biomass:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4, fig.alt = "Gross photosynthesis"}
 plot(G1, "GrossPhotosynthesis", bySpecies = T)
 ```
 Then we can draw the maintenance respiration costs (which include the sum of leaf, sapwood and fine root respiration) in the same units:

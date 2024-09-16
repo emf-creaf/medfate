@@ -98,7 +98,7 @@ fd$SpeciesSummary
 
 Package `medfate` provides a simple `plot` function for objects of class `fordyn`. For example, we can show the interannual variation in stand-level basal area using:
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5, fig.alt="Stand basal area over time"}
 plot(fd, type = "StandBasalArea")
 ```
 
@@ -119,12 +119,12 @@ fd$DeadTreeTable
 
 Since function `fordyn()` makes internal calls to function `growth()`, it stores the result in a vector called `GrowthResults`, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the second year:
 
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3, fig.alt="Leaf area variation over one year"}
 plot(fd$GrowthResults[[2]], "LeafArea", bySpecies = T)
 ```
 Instead of examining year by year, it is possible to plot the whole series of results by passing a `fordyn` object to the `plot()` function:
 
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3, fig.alt="Leaf area variation for multiple years"}
 plot(fd, "LeafArea")
 ```
 

@@ -13,7 +13,8 @@ output:
 
 
 ```{r setup, include=FALSE}
-params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
+params = list(medfate_ver = "4.4.0", #packageVersion('medfate')[[1]],
+              wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/',
               model='spwb',
               # names = c("xxx"),
               # codes = c("COLLELONGO"),
@@ -76,7 +77,7 @@ for(i in 1:n_sites) {
     cnt <- cnt+1
     df_all$Site[cnt] <- site
     df_all$Mode[cnt] <- conf
-    df_all$Path[cnt] <- file.path(params$wd, 'Output', packageVersion('medfate')[[1]], params$model, conf, site)
+    df_all$Path[cnt] <- file.path(params$wd, 'Output', params$medfate_ver, params$model, conf, site)
     file_name_input <- file.path(df_all$Path[cnt],
                        paste0('simulation_input.rds'))
     file_name_output <- file.path(df_all$Path[cnt],
@@ -102,7 +103,7 @@ knitr::opts_knit$set(root.dir = this_path)
 
 # Introduction
 
-This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data are SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)) and FLUXNET 2015 dataset ([Pastorello et al. 2020](https://doi.org/10.1038/s41597-020-0534-3)).
+This document presents **medfate** (**ver. `r params$medfate_ver`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data are SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)) and FLUXNET 2015 dataset ([Pastorello et al. 2020](https://doi.org/10.1038/s41597-020-0534-3)).
 
 ## List of sites
 

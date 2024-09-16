@@ -101,10 +101,10 @@ Of course, the resulting data frame has missing values, whereas the other values
 
 Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
 
-```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
+```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Leaf area density plot"}
 vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = F)
 ```
-```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
+```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Leaf area density plot by species"}
 vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = T)
 ```
 
@@ -117,7 +117,7 @@ Z95 <- c(exampleforest$treeData$Z95, exampleforest$shrubData$Z95)
 ```
 These parameters specify a continuous distribution of fine roots. Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
 
-```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
+```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Fine root distribution"}
 vprofile_rootDistribution(exampleforest, SpParamsMED)
 ```
 
@@ -176,7 +176,7 @@ summary(examplesoil, model="VG")
 ```
 While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `soil_retentionCurvePlot()` to illustrate the difference between the two water retention models in this soil:
 
-```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
+```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Soil water retention"}
 soil_retentionCurvePlot(examplesoil, model="both")
 ```
 

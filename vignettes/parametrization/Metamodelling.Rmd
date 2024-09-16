@@ -20,7 +20,7 @@ library(readxl)
 library(tidyverse)
 library(medfate)
 library(nlme)
-meta_dir <- "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/Metamodelling_TR_WUE/"
+meta_dir <- "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_parameterization/Metamodelling_TR_WUE/"
 ```
 
 ## Introduction
