@@ -39,10 +39,9 @@ articles:
   - parametrization/GrowthCalibration
 
 - title: Model performance evaluation
-  desc: Model benchmark evaluation at stand and regional levels
+  desc: Model benchmark evaluation at stand level
   contents:
   - evaluation/StandLevelEvaluation
-  - evaluation/RegionalLevelEvaluation
 
 - title: Application examples
   desc: Examples of model application
