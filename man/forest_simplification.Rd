@@ -7,9 +7,9 @@
 \alias{forest_reduceToDominant}
 \title{Forest complexity reduction}
 \usage{
-forest_mergeTrees(x, byDBHclass = TRUE)
+forest_mergeTrees(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE)
 
-forest_mergeShrubs(x, byHeightclass = TRUE)
+forest_mergeShrubs(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE)
 
 forest_reduceToDominant(x, SpParams)
 }
@@ -17,6 +17,8 @@ forest_reduceToDominant(x, SpParams)
 \item{x}{An object of class \code{\link{forest}}.}
 
 \item{byDBHclass}{Logical flag to indicate that 5-cm tree DBH classes should be kept separated.}
+
+\item{keepCohortsWithObsID}{Logical flag to indicate that cohorts with non-missin ObsID should be spared from merging.}
 
 \item{byHeightclass}{Boolean flag to indicate that 10-cm shrub height classes should be kept separated.}
 

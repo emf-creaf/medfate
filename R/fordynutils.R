@@ -22,9 +22,22 @@
   # print(forest)
   if(control$removeEmptyCohorts) {
     emptyTrees <- (forest$treeData$N < control$minimumTreeCohortDensity)
-    if(control$shrubDynamics) emptyShrubs <- (forest$shrubData$Cover < control$minimumShrubCohortCover)
+    if(control$keepCohortsWithObsID) { # Exclude from removal if cohort has non-missing ID
+      if("ID" %in% names(forest$treeData)) {
+        emptyTrees[!is.na(forest$treeData)] <- FALSE
+      }
+    }
+    if(control$shrubDynamics) {
+      emptyShrubs <- (forest$shrubData$Cover < control$minimumShrubCohortCover)
+      if(control$keepCohortsWithObsID) { # Exclude from removal if cohort has non-missing ID
+        if("ID" %in% names(forest$shrubData)) {
+          emptyShrubs[!is.na(forest$shrubData)] <- FALSE
+        }
+      }
+    }
   }
   emptyCohorts <- c(emptyTrees, emptyShrubs)
+  
   # print(emptyTrees)
   # print(emptyShrubs)
   if(sum(emptyCohorts)>0) {
@@ -106,9 +119,18 @@
                rep(control$shrubDynamics, nrow(forest$shrubData)))
   
   # 4. Merge cohorts in forest object
+  if("ObsID" %in% names(forest$treeData)) {
+    planted_forest$treeData$ObsID <- rep(as.character(NA), nrow(planted_forest$treeData))
+    recr_forest$treeData$ObsID <- rep(as.character(NA), nrow(recr_forest$treeData))
+    resp_forest$treeData$ObsID <- rep(as.character(NA), nrow(resp_forest$treeData))
+  }
+  if("ObsID" %in% names(forest$shrubData)) {
+    planted_forest$shrubData$ObsID <- rep(as.character(NA), nrow(planted_forest$shrubData))
+    recr_forest$shrubData$ObsID <- rep(as.character(NA), nrow(recr_forest$shrubData))
+    resp_forest$shrubData$ObsID <- rep(as.character(NA), nrow(resp_forest$shrubData))
+  }
   forest$treeData <- rbind(forest$treeData, planted_forest$treeData, recr_forest$treeData, resp_forest$treeData)
   forest$shrubData <- rbind(forest$shrubData, planted_forest$shrubData, recr_forest$shrubData, resp_forest$shrubData)
-  
   
   # 5.1 Prepare growth input for next year
   FCCSprops = fuel_FCCS(forest, SpParams);
@@ -149,13 +171,47 @@
   xi$internalAllocation[repl_vec,] <- xo$internalAllocation[sel_vec,, drop=FALSE]
   
   # This causes loss of cohort identity and reinitizalization of vegetation state variables
+  # except for cohorts with ObsID when control variable 'keepCohortsWithObsID = TRUE'
   if(control$dynamicallyMergeCohorts) {
-    merged_forest <- forest_mergeTrees(forest, byDBHclass = TRUE)
-    merged_forest <- forest_mergeShrubs(merged_forest, byHeightclass = TRUE)
-    # Only replace if merging caused a reduction in woody cohorts
+    merged_forest <- forest_mergeTrees(forest, byDBHclass = TRUE, keepCohortsWithObsID = control$keepCohortsWithObsID)
+    merged_forest <- forest_mergeShrubs(merged_forest, byHeightclass = TRUE, keepCohortsWithObsID = control$keepCohortsWithObsID)
+    # Only replace growth input if merging caused a reduction in woody cohorts
     if((nrow(merged_forest$treeData) < nrow(forest$treeData)) || (nrow(merged_forest$shrubData) < nrow(forest$shrubData))) {
+      xi_merged <- growthInput(merged_forest, xo$soil, SpParams, control)
+      if(control$keepCohortsWithObsID && ("ObsID" %in% names(xi$above))) { # Try to copy values from spared cohorts into new growth input
+        # Determine sel_vec for spared cohorts
+        sel_vec <- rep(FALSE, nrow(xi$above))
+        sel_vec[!is.na(xi$above$ObsID)] <- TRUE
+        repl_vec <- rep(FALSE, nrow(xi_merged$above))
+        repl_vec[!is.na(xi_merged$above$ObsID)] <- TRUE
+        
+        # Replace previous state for spared cohorts
+        xi_merged$cohorts[repl_vec,] <- xi$cohorts[sel_vec,, drop=FALSE]
+        xi_merged$above[repl_vec,] <- xi$above[sel_vec,, drop=FALSE]
+        xi_merged$below[repl_vec,] <- xi$below[sel_vec,, drop=FALSE]
+        xi_merged$belowLayers$V[repl_vec,] <- xi$belowLayers$V[sel_vec,, drop=FALSE]
+        xi_merged$belowLayers$L[repl_vec,] <- xi$belowLayers$L[sel_vec,, drop=FALSE]
+        if(control$transpirationMode!="Granier") {
+          xi_merged$belowLayers$VGrhizo_kmax[repl_vec,] <- xi$belowLayers$VGrhizo_kmax[sel_vec,, drop=FALSE]
+          xi_merged$belowLayers$VCroot_kmax[repl_vec,] <- xi$belowLayers$VCroot_kmax[sel_vec,, drop=FALSE]
+          xi_merged$belowLayers$RhizoPsi[repl_vec,] <- xi$belowLayers$RhizoPsi[sel_vec,, drop=FALSE]
+        }
+        xi_merged$belowLayers$Wpool[repl_vec,] <- xi$belowLayers$Wpool[sel_vec,, drop=FALSE]
+        xi_merged$paramsPhenology[repl_vec,] <- xi$paramsPhenology[sel_vec,, drop=FALSE]
+        xi_merged$paramsAnatomy[repl_vec,] <- xi$paramsAnatomy[sel_vec,, drop=FALSE]
+        xi_merged$paramsInterception[repl_vec,] <- xi$paramsInterception[sel_vec,, drop=FALSE]
+        xi_merged$paramsTranspiration[repl_vec,] <- xi$paramsTranspiration[sel_vec,, drop=FALSE]
+        xi_merged$paramsWaterStorage[repl_vec,] <- xi$paramsWaterStorage[sel_vec,, drop=FALSE]
+        xi_merged$paramsGrowth[repl_vec,] <- xi$paramsGrowth[sel_vec,, drop=FALSE]
+        xi_merged$paramsAllometries[repl_vec,] <- xi$paramsAllometries[sel_vec,, drop=FALSE]
+        xi_merged$internalPhenology[repl_vec,] <- xi$internalPhenology[sel_vec,, drop=FALSE]
+        xi_merged$internalWater[repl_vec,] <- xi$internalWater[sel_vec,, drop=FALSE]
+        xi_merged$internalCarbon[repl_vec,] <- xi$internalCarbon[sel_vec,, drop=FALSE]
+        xi_merged$internalAllocation[repl_vec,] <- xi$internalAllocation[sel_vec,, drop=FALSE]
+      }
+      # Replace growthInput and forest by the one after merging
       forest <- merged_forest
-      xi <- growthInput(forest, xo$soil, SpParams, control)
+      xi <- xi_merged
     }
   }
   return(list(forest = forest, xi = xi))
@@ -292,6 +348,9 @@
                  N = x$above$N[range],
                  Z50 = x$below$Z50[range],
                  Z95 = x$below$Z95[range])
+  if("ObsID" %in% names(x$above)) {
+    tt$ObsID <- x$above$ObsID[range]
+  }
   tt = tt[tt$N>0,, drop=FALSE]
   return(tt)
 }
@@ -312,13 +371,16 @@
                   N_burnt = x$internalMortality$N_burnt[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range])
+  if("ObsID" %in% names(x$above)) {
+    dtt$ObsID <- x$above$ObsID[range]
+  }
   dtt = dtt[dtt$N>0,, drop = FALSE]
   return(dtt)
 }
 .createCutTreeTable<-function(step, year, x, N_cut) {
   range = numeric(0)
   if(length(N_cut)>0) range = 1:length(N_cut)
-  tt<-data.frame(Step = rep(step, length(N_cut)), 
+  ctt<-data.frame(Step = rep(step, length(N_cut)), 
                  Year = rep(year, length(N_cut)),
                  Cohort = row.names(x$cohorts)[range],
                  Species = x$cohorts$Name[range],
@@ -327,8 +389,11 @@
                  N = N_cut,
                  Z50 = x$below$Z50[range],
                  Z95 = x$below$Z95[range])
-  tt = tt[tt$N>0,, drop=FALSE]
-  return(tt)
+  if("ObsID" %in% names(x$above)) {
+    ctt$ObsID <- x$above$ObsID[range]
+  }
+  ctt = ctt[ctt$N>0,, drop=FALSE]
+  return(ctt)
 }
 .createShrubTable<-function(step, year, x) {
   isShrub = !is.na(x$above$Cover)
@@ -344,6 +409,9 @@
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
                  Z95 = x$below$Z95[range])
+  if("ObsID" %in% names(x$above)) {
+    st$ObsID <- x$above$ObsID[range]
+  }
   st = st[st$Cover>0,, drop = FALSE]
   return(st)
 }
@@ -364,6 +432,9 @@
                   Height = x$above$H[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range])
+  if("ObsID" %in% names(x$above)) {
+    dst$ObsID <- x$above$ObsID[range]
+  }
   dst = dst[dst$Cover>0,,drop=FALSE]
   return(dst)
 }
@@ -373,7 +444,7 @@
   numCohorts = length(isShrub)
   range = numeric(0)
   if(numCohorts>nt) range = (nt+1):numCohorts
-  st<-data.frame(Step = rep(step, length(range)), 
+  cst<-data.frame(Step = rep(step, length(range)), 
                  Year = rep(year, length(range)),
                  Cohort = row.names(x$cohorts)[range],
                  Species = x$cohorts$Name[range],
@@ -381,6 +452,9 @@
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
                  Z95 = x$below$Z95[range])
-  st = st[st$Cover>0,, drop = FALSE]
-  return(st)
+  if("ObsID" %in% names(x$above)) {
+    cst$ObsID <- x$above$ObsID[range]
+  }
+  cst = cst[cst$Cover>0,, drop = FALSE]
+  return(cst)
 }

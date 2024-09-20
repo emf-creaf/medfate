@@ -120,6 +120,11 @@ fordyn<-function(forest, soil, SpParams,
   control$verbose <- FALSE
   control$subdailyResults <- FALSE
   
+  # Back-compatibility of control parameters
+  if(!("keepCohortsWithObsID" %in% names(control))) control$keepCohortsWithObsID = FALSE
+  if(!("removeEmptyCohorts" %in% names(control))) control$removeEmptyCohorts = TRUE
+  if(!("dynamicallyMergeCohorts" %in% names(control))) control$dynamicallyMergeCohorts = TRUE
+  
   if("dates" %in% names(meteo)) {
     dates <- as.Date(meteo$dates)
   } else {
@@ -151,8 +156,16 @@ fordyn<-function(forest, soil, SpParams,
     }
     #Subset columns relevant for fordyn (in case there are other)
     if(control$allowRecruitment) {
-      forest$treeData <- forest$treeData[,c("Species","DBH", "Height","N","Z50","Z95")]
-      forest$shrubData <- forest$shrubData[,c("Species","Height","Cover", "Z50","Z95")]
+      if("ObsID" %in% names(forest$treeData)) {
+        forest$treeData <- forest$treeData[,c("Species","DBH", "Height","N","Z50","Z95", "ObsID")]
+      } else {
+        forest$treeData <- forest$treeData[,c("Species","DBH", "Height","N","Z50","Z95")]
+      }
+      if("ObsID" %in% names(forest$shrubData)) {
+        forest$shrubData <- forest$shrubData[,c("Species","Height","Cover", "Z50","Z95", "ObsID")]
+      } else {
+        forest$shrubData <- forest$shrubData[,c("Species","Height","Cover", "Z50","Z95")]
+      }
     }
     #Fill missing root params
     if(control$fillMissingRootParams) {

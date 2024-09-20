@@ -1616,12 +1616,16 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   NumericVector treeDBH = treeData["DBH"];
   NumericVector shrubH = shrubData["Height"];  
   NumericVector shrubCover = shrubData["Cover"];  
-  
+  CharacterVector treeObsID(ntree, NA_STRING);
+  CharacterVector shrubObsID(nshrub, NA_STRING);
+  if(treeData.containsElementNamed("ObsID")) treeObsID = treeData["ObsID"];
+  if(shrubData.containsElementNamed("ObsID")) shrubObsID = shrubData["ObsID"];
   NumericVector N = cohortDensity(x, SpParams);
     
-  NumericVector LAI_dead(ntree+nshrub);
-  NumericVector DBH(ntree+nshrub);
-  NumericVector Cover(ntree+nshrub);
+  NumericVector LAI_dead(ntree+nshrub, 0.0);
+  NumericVector DBH(ntree+nshrub, NA_REAL);
+  NumericVector Cover(ntree+nshrub, NA_REAL);
+  CharacterVector ObsID(ntree+nshrub, NA_STRING);
   
   for(int i=0;i<ntree;i++) {
     SP[i] = treeSP[i];
@@ -1629,15 +1633,18 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
     DBH[i] = treeDBH[i];
     LAI_dead[i] = 0.0;
     Cover[i] = NA_REAL;
+    ObsID[i] = treeObsID[i];
   }
   for(int i=0;i<nshrub;i++) {
     SP[ntree+i] = shrubSP[i];
     H[ntree+i] = shrubH[i];
     DBH[ntree+i] = NA_REAL;
+    LAI_dead[i] = 0.0;
+    ObsID[ntree+i] = shrubObsID[i];
     Cover[ntree+i] = shrubCover[i];
   }
   DataFrame above = DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
-                    _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead);
+                    _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead, _["ObsID"] = ObsID);
   if(loading) {
     NumericVector cohLoading = cohortFuelLoading(x, SpParams, gdd, true);
     above.push_back(cohLoading, "Loading");

@@ -2,6 +2,9 @@
 * Bug correction: Zero fine root proportion in Sureau
 * Users can now define column Z100 in treeData or shrubData to truncate root distribution
 * AcceptedName is not a striclty required parameter (only used in parameterization)
+* ObsID column is allowed in treeData and shrubData to indicate cohort ID from observation
+* Tree and shrub merging allow preserving cohorts with non-missing ObsID
+* New control parameter to ask fordyn() to preserve (i.e. not remove or merge) cohorts with non-missing ObsID
 
 # medfate 4.4.0
 * Multi-bucket soil model reintroduced (default) for safety

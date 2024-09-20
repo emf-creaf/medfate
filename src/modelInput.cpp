@@ -1103,6 +1103,8 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
   NumericVector H = above["H"];
   NumericVector DBH = above["DBH"];
   NumericVector CR = above["CR"];
+  CharacterVector ObsID = (SP.size(), NA_STRING);
+  if(above.containsElementNamed("ObsID")) ObsID = above["ObsID"];
   
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Sureau")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Sureau')");
@@ -1128,7 +1130,8 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
   DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR,
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead);
+                                         _["LAI_dead"] = LAI_dead,
+                                         _["ObsID"] = ObsID);
   if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
   plantsdf.attr("row.names") = above.attr("row.names");
   
@@ -1219,6 +1222,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   NumericVector Loading = above["Loading"];
+  CharacterVector ObsID = (SP.size(), NA_STRING);
+  if(above.containsElementNamed("ObsID")) ObsID = above["ObsID"];
   
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Sureau")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Sureau')");
@@ -1279,7 +1284,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"]=LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead,
-                                         _["Loading"] = Loading);
+                                         _["Loading"] = Loading,
+                                         _["ObsID"] = ObsID);
   plantsdf.attr("row.names") = above.attr("row.names");
   
 

@@ -155,6 +155,7 @@
 #'      \item{\code{minimumTreeCohortDensity [= 1]}: Threshold of tree density resulting in cohort removal.}
 #'      \item{\code{minimumShrubCohortCover [= 0.01]}: Threshold of shrub cover resulting in cohort removal.}
 #'      \item{\code{dynamicallyMergeCohorts [= TRUE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.}
+#'      \item{\code{keepCohortsWithID [= TRUE]}: Boolean flag to indicate that cohorts having a non-missing value in a column \code{"ID"} (if present) should not be merged or removed.}
 #'      \item{\code{seedRain [= NULL]}: Vector of species names whose seed rain is to be added to seed bank, regardless of local seed production.}
 #'      \item{\code{seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
 #'      \item{\code{seedProductionShrubHeight [= 30]}: Default minimum shrub height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
@@ -300,6 +301,7 @@ defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets")
     minimumTreeCohortDensity = 1,
     minimumShrubCohortCover = 0.01,
     dynamicallyMergeCohorts = TRUE,
+    keepCohortsWithObsID = FALSE,
     seedRain = NULL,
     seedProductionTreeHeight = 300,
     seedProductionShrubHeight = 30,

@@ -52,6 +52,14 @@ test_that("Test forest simplification",{
   expect_s3_class(forest_mergeShrubs(exampleforest), "forest")
   expect_s3_class(forest_mergeShrubs(emptyforest()), "forest")
   expect_s3_class(forest_mergeShrubs(f), "forest")
+  f2 <- exampleforest
+  f2$shrubData <- rbind(f2$shrubData, f2$shrubData, f2$shrubData)
+  f2$shrubData$ObsID <- c(NA,"1", NA)
+  f2$treeData$ObsID <- c("1", NA)
+  expect_s3_class(forest_mergeTrees(f2), "forest")
+  expect_s3_class(forest_mergeShrubs(f2), "forest")
+  expect_s3_class(forest_mergeTrees(f2, keepCohortsWithObsID = TRUE), "forest")
+  expect_s3_class(forest_mergeShrubs(f2, keepCohortsWithObsID = TRUE), "forest")
 })
 
 test_that("Test stand metrics",{

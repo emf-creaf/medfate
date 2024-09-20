@@ -5,6 +5,7 @@
 #' 
 #' @param x An object of class \code{\link{forest}}.
 #' @param byDBHclass Logical flag to indicate that 5-cm tree DBH classes should be kept separated.
+#' @param keepCohortsWithObsID Logical flag to indicate that cohorts with non-missin ObsID should be spared from merging.
 #' 
 #' @details Tree DBH classes are defined in 5-cm intervals, whereas shrub height classes are defined in 10-cm intervals.
 #' Tree DBH and shrub height classes are defined up to a specific size (i.e. larger plants are not merged) 
@@ -31,7 +32,7 @@
 #' # Check that overall LAI does not change
 #' stand_LAI(exampleforest, SpParamsMED)
 #' stand_LAI(reduced, SpParamsMED)
-forest_mergeTrees<-function(x, byDBHclass = TRUE) {
+forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) {
   mergeTreesSize<-function(x) {
     ntree <- nrow(x)
     if(ntree>0) {
@@ -49,6 +50,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
       y$Z95 <- as.numeric(tapply(x$Z95*BA, x$Species, FUN = sum)/BAsp)
       if("Z100" %in% names(x)) {
         y$Z100 <- as.numeric(tapply(x$Z100*BA, x$Species, FUN = sum)/BAsp)
+      }
+      if("ObsID" %in% names(x)) {
+        y$ObsID <- rep(as.character(NA), nrow(y)) 
       }
       return(y)
     }
@@ -104,11 +108,18 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
     return(y)
   }
   td <- x$treeData
+  td_spared <- NULL
+  if(keepCohortsWithObsID) {
+    if("ObsID" %in% names(td)) {
+      td_spared <- td[!is.na(td$ObsID), , drop = FALSE]
+      td <- td[is.na(td$ObsID), , drop = FALSE]
+    }
+  }
   ntree <- nrow(td)
   x2 <- x
   if(ntree>0) {
     if(byDBHclass) {
-      td2 <- mergeTreesBySizeClass(x$treeData)
+      td_merged <- mergeTreesBySizeClass(td)
     } else {
       BA <- td$N*pi*(td$DBH/200)^2
       BAsp <- tapply(BA, td$Species, FUN = sum)
@@ -117,18 +128,25 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
       DBHsp <-  2*sqrt(10000*as.numeric(BAsp)/(pi*Nsp))
       Z50sp <- as.numeric(tapply(td$Z50*BA, td$Species, FUN = sum)/BAsp)
       Z95sp <- as.numeric(tapply(td$Z95*BA, td$Species, FUN = sum)/BAsp)
-      td2 <- data.frame(Species = names(BAsp), 
-                        DBH = DBHsp,
-                        Height = Hsp, 
-                        N = Nsp, 
-                        Z50 = Z50sp, 
-                        Z95 = Z95sp, 
-                        row.names = 1:length(BAsp), stringsAsFactors = FALSE)
+      td_merged <- data.frame(Species = names(BAsp), 
+                              DBH = DBHsp,
+                              Height = Hsp, 
+                              N = Nsp, 
+                              Z50 = Z50sp, 
+                              Z95 = Z95sp, 
+                              row.names = 1:length(BAsp), stringsAsFactors = FALSE)
       if("Z100" %in% names(td)) {
-        td2$Z100 <- as.numeric(tapply(td$Z100*BA, td$Species, FUN = sum)/BAsp)
+        td_merged$Z100 <- as.numeric(tapply(td$Z100*BA, td$Species, FUN = sum)/BAsp)
+      }
+      if("ObsID" %in% names(td)) {
+        td_merged$ObsID <- rep(as.character(NA), nrow(td_merged)) 
       }
     }
-    x2$treeData = td2
+    if(!is.null(td_spared)) {
+      x2$treeData <- rbind(td_spared, td_merged)
+    } else {
+      x2$treeData <- td_merged
+    }
   }
   return(x2)
 }
@@ -137,7 +155,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
 #' 
 #' @param byHeightclass Boolean flag to indicate that 10-cm shrub height classes should be kept separated.
 #' 
-forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
+forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE) {
   mergeShrubsSize<-function(x) {
     nshrub = nrow(x)
     if(nshrub>0) {
@@ -154,6 +172,9 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
                      stringsAsFactors = FALSE)
       if("Z100" %in% names(x)) {
         y$Z100 <- as.numeric(tapply(x$Z100*x$Cover, x$Species, FUN = sum)/Coversp)
+      }
+      if("ObsID" %in% names(x)) {
+        y$ObsID <- rep(as.character(NA), nrow(y)) 
       }
       return(y)
     }
@@ -209,15 +230,26 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
     return(y)
   }
   sd <- x$shrubData
+  sd_spared <- NULL
+  if(keepCohortsWithObsID) {
+    if("ObsID" %in% names(sd)) {
+      sd_spared <- sd[!is.na(sd$ObsID), , drop = FALSE]
+      sd <- sd[is.na(sd$ObsID), , drop = FALSE]
+    }
+  }
   nshrub <- nrow(sd)
   x2 <- x
   if(nshrub>0) {
     if(byHeightclass) {
-      sd2 <- mergeShrubsBySizeClass(x$shrubData)
+      sd_merged <- mergeShrubsBySizeClass(sd)
     } else {
-      sd2 <- mergeShrubsSize(x$shrubData)
+      sd_merged <- mergeShrubsSize(sd)
     }
-    x2$shrubData <- sd2
+    if(!is.null(sd_spared)) {
+      x2$shrubData <- rbind(sd_spared, sd_merged)
+    } else {
+      x2$shrubData <- sd_merged
+    }
   }
   return(x2)
 }
@@ -242,7 +274,7 @@ forest_reduceToDominant <- function(x, SpParams) {
       max_tree_species_lai <- names(tree_species_lai)[which.max(tree_species_lai)]
       sel_tree_cohort <- (plant_species[is_tree] == max_tree_species_lai)
       sel_tree_cohort[sel_tree_cohort] <- plant_lai[is_tree][sel_tree_cohort]==max(plant_lai[is_tree][sel_tree_cohort])
-      tree_cohort <- which(sel_tree_cohort)
+      tree_cohort <- which(sel_tree_cohort)[1]
       x$treeData <- x$treeData[tree_cohort, , drop=FALSE]
       x$treeData$LAI <- tree_lai
     }
@@ -251,7 +283,7 @@ forest_reduceToDominant <- function(x, SpParams) {
       max_shrub_species_lai <- names(shrub_species_lai)[which.max(shrub_species_lai)]
       sel_shrub_cohort <- (plant_species[!is_tree] == max_shrub_species_lai)
       sel_shrub_cohort[sel_shrub_cohort] <- plant_lai[!is_tree][sel_shrub_cohort]==max(plant_lai[!is_tree][sel_shrub_cohort])
-      shrub_cohort <- which(sel_shrub_cohort)
+      shrub_cohort <- which(sel_shrub_cohort)[1]
       x$shrubData <- x$shrubData[shrub_cohort, , drop=FALSE]
       x$shrubData$LAI <- shrub_lai
     }
