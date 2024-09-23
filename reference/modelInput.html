@@ -9,7 +9,7 @@ and a soil data input to create input objects for simulation functions spwb (or 
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -609,6 +609,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$dynamicallyMergeCohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$keepCohortsWithObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedRain</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -683,10 +686,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -1113,6 +1116,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$dynamicallyMergeCohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$keepCohortsWithObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedRain</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1215,10 +1221,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -1679,6 +1685,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$dynamicallyMergeCohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$keepCohortsWithObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedRain</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1781,10 +1790,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -2254,6 +2263,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$dynamicallyMergeCohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$keepCohortsWithObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedRain</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2328,10 +2340,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H   CR LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.66     0.80         0.80        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.60     0.50         0.50        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.80     0.03         0.03        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H   CR LAI_live LAI_expanded LAI_dead ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.66     0.80         0.80        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.60     0.50         0.50        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.80     0.03         0.03        0  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>

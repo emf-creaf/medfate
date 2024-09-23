@@ -9,7 +9,7 @@ Function forest_reduceToDominant performs a strongest simplification of plant co
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,9 +57,9 @@ Function <code>forest_reduceToDominant</code> performs a strongest simplificatio
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">forest_mergeTrees</span><span class="op">(</span><span class="va">x</span>, byDBHclass <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">forest_mergeTrees</span><span class="op">(</span><span class="va">x</span>, byDBHclass <span class="op">=</span> <span class="cn">TRUE</span>, keepCohortsWithObsID <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">forest_mergeShrubs</span><span class="op">(</span><span class="va">x</span>, byHeightclass <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">forest_mergeShrubs</span><span class="op">(</span><span class="va">x</span>, byHeightclass <span class="op">=</span> <span class="cn">TRUE</span>, keepCohortsWithObsID <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">forest_reduceToDominant</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -74,6 +74,10 @@ Function <code>forest_reduceToDominant</code> performs a strongest simplificatio
 
 <dt id="arg-bydbhclass">byDBHclass<a class="anchor" aria-label="anchor" href="#arg-bydbhclass"></a></dt>
 <dd><p>Logical flag to indicate that 5-cm tree DBH classes should be kept separated.</p></dd>
+
+
+<dt id="arg-keepcohortswithobsid">keepCohortsWithObsID<a class="anchor" aria-label="anchor" href="#arg-keepcohortswithobsid"></a></dt>
+<dd><p>Logical flag to indicate that cohorts with non-missin ObsID should be spared from merging.</p></dd>
 
 
 <dt id="arg-byheightclass">byHeightclass<a class="anchor" aria-label="anchor" href="#arg-byheightclass"></a></dt>

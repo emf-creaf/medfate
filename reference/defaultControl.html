@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -182,6 +182,7 @@
 <li><p><code>minimumTreeCohortDensity [= 1]</code>: Threshold of tree density resulting in cohort removal.</p></li>
 <li><p><code>minimumShrubCohortCover [= 0.01]</code>: Threshold of shrub cover resulting in cohort removal.</p></li>
 <li><p><code>dynamicallyMergeCohorts [= TRUE]</code>: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.</p></li>
+<li><p><code>keepCohortsWithID [= TRUE]</code>: Boolean flag to indicate that cohorts having a non-missing value in a column <code>"ID"</code> (if present) should not be merged or removed.</p></li>
 <li><p><code>seedRain [= NULL]</code>: Vector of species names whose seed rain is to be added to seed bank, regardless of local seed production.</p></li>
 <li><p><code>seedProductionTreeHeight [= 300]</code>: Default minimum tree height for producing seeds (when species parameter <code>SeedProductionHeight</code> is missing).</p></li>
 <li><p><code>seedProductionShrubHeight [= 30]</code>: Default minimum shrub height for producing seeds (when species parameter <code>SeedProductionHeight</code> is missing).</p></li>

@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-09-17</h4>
+            <h4 data-toc-skip class="date">2024-09-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestDynamics.Rmd" class="external-link"><code>vignettes/runmodels/ForestDynamics.Rmd</code></a></small>
       <div class="d-none name"><code>ForestDynamics.Rmd</code></div>
@@ -388,29 +388,29 @@ format with cohort structural information (i.e. DBH, height, density,
 etc) for each time step:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span></code></pre></div>
-<pre><code><span><span class="co">##    Step Year Cohort          Species      DBH   Height        N Z50  Z95</span></span>
-<span><span class="co">## 1     0   NA T1_148 Pinus halepensis 37.55000 800.0000 168.0000 100  600</span></span>
-<span><span class="co">## 2     0   NA T2_168     Quercus ilex 14.60000 660.0000 384.0000 300 1000</span></span>
-<span><span class="co">## 3     1 2001 T1_148 Pinus halepensis 37.78378 812.5184 167.6983 100  600</span></span>
-<span><span class="co">## 4     1 2001 T2_168     Quercus ilex 14.70048 663.1356 383.6663 300 1000</span></span>
-<span><span class="co">## 5     2 2002 T1_148 Pinus halepensis 38.01864 824.9624 167.3916 100  600</span></span>
-<span><span class="co">## 6     2 2002 T2_168     Quercus ilex 14.80124 666.2860 383.3277 300 1000</span></span>
-<span><span class="co">## 7     3 2003 T1_148 Pinus halepensis 38.25412 837.3085 167.0799 100  600</span></span>
-<span><span class="co">## 8     3 2003 T2_168     Quercus ilex 14.90213 669.4452 382.9843 300 1000</span></span>
-<span><span class="co">## 9     4 2004 T1_148 Pinus halepensis 38.48999 849.5444 166.7622 100  600</span></span>
-<span><span class="co">## 10    4 2004 T2_168     Quercus ilex 15.00308 672.6104 382.6351 300 1000</span></span>
-<span><span class="co">## 11    5 2005 T1_148 Pinus halepensis 38.72610 861.6634 166.4402 100  600</span></span>
-<span><span class="co">## 12    5 2005 T2_168     Quercus ilex 15.10407 675.7801 382.2818 300 1000</span></span>
-<span><span class="co">## 13    6 2006 T1_148 Pinus halepensis 38.96235 873.6612 166.1130 100  600</span></span>
-<span><span class="co">## 14    6 2006 T2_168     Quercus ilex 15.20507 678.9524 381.9235 300 1000</span></span>
-<span><span class="co">## 15    7 2007 T1_148 Pinus halepensis 39.19868 885.5363 165.7805 100  600</span></span>
-<span><span class="co">## 16    7 2007 T2_168     Quercus ilex 15.30608 682.1261 381.5602 300 1000</span></span>
-<span><span class="co">## 17    8 2008 T1_148 Pinus halepensis 39.43508 897.2880 165.4418 100  600</span></span>
-<span><span class="co">## 18    8 2008 T2_168     Quercus ilex 15.40709 685.3002 381.1907 300 1000</span></span>
-<span><span class="co">## 19    9 2009 T1_148 Pinus halepensis 39.67151 908.9162 165.0987 100  600</span></span>
-<span><span class="co">## 20    9 2009 T2_168     Quercus ilex 15.50808 688.4738 380.8171 300 1000</span></span>
-<span><span class="co">## 21   10 2010 T1_148 Pinus halepensis 39.90795 920.4213 164.7521 100  600</span></span>
-<span><span class="co">## 22   10 2010 T2_168     Quercus ilex 15.60907 691.6462 380.4404 300 1000</span></span></code></pre>
+<pre><code><span><span class="co">##    Step Year Cohort          Species      DBH   Height        N Z50  Z95 ObsID</span></span>
+<span><span class="co">## 1     0   NA T1_148 Pinus halepensis 37.55000 800.0000 168.0000 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 2     0   NA T2_168     Quercus ilex 14.60000 660.0000 384.0000 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 3     1 2001 T1_148 Pinus halepensis 37.78378 812.5184 167.6983 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 4     1 2001 T2_168     Quercus ilex 14.70048 663.1356 383.6663 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 5     2 2002 T1_148 Pinus halepensis 38.01864 824.9624 167.3916 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 6     2 2002 T2_168     Quercus ilex 14.80124 666.2860 383.3277 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 7     3 2003 T1_148 Pinus halepensis 38.25412 837.3085 167.0799 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 8     3 2003 T2_168     Quercus ilex 14.90213 669.4452 382.9843 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 9     4 2004 T1_148 Pinus halepensis 38.48999 849.5444 166.7622 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 10    4 2004 T2_168     Quercus ilex 15.00308 672.6104 382.6351 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 11    5 2005 T1_148 Pinus halepensis 38.72610 861.6634 166.4402 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 12    5 2005 T2_168     Quercus ilex 15.10407 675.7801 382.2818 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 13    6 2006 T1_148 Pinus halepensis 38.96235 873.6612 166.1130 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 14    6 2006 T2_168     Quercus ilex 15.20507 678.9524 381.9235 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 15    7 2007 T1_148 Pinus halepensis 39.19868 885.5363 165.7805 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 16    7 2007 T2_168     Quercus ilex 15.30608 682.1261 381.5602 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 17    8 2008 T1_148 Pinus halepensis 39.43508 897.2880 165.4418 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 18    8 2008 T2_168     Quercus ilex 15.40709 685.3002 381.1907 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 19    9 2009 T1_148 Pinus halepensis 39.67151 908.9162 165.0987 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 20    9 2009 T2_168     Quercus ilex 15.50808 688.4738 380.8171 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 21   10 2010 T1_148 Pinus halepensis 39.90795 920.4213 164.7521 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 22   10 2010 T2_168     Quercus ilex 15.60907 691.6462 380.4404 300 1000  &lt;NA&gt;</span></span></code></pre>
 <p>The same can be shown for dead trees:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></span></code></pre></div>
@@ -435,27 +435,27 @@ etc) for each time step:</p>
 <span><span class="co">## 18    9 2009 T2_168     Quercus ilex 15.50808 688.4738 0.3735872            0</span></span>
 <span><span class="co">## 19   10 2010 T1_148 Pinus halepensis 39.90795 920.4213 0.3465899            0</span></span>
 <span><span class="co">## 20   10 2010 T2_168     Quercus ilex 15.60907 691.6462 0.3766686            0</span></span>
-<span><span class="co">##    N_dessication N_burnt Z50  Z95</span></span>
-<span><span class="co">## 1              0       0 100  600</span></span>
-<span><span class="co">## 2              0       0 300 1000</span></span>
-<span><span class="co">## 3              0       0 100  600</span></span>
-<span><span class="co">## 4              0       0 300 1000</span></span>
-<span><span class="co">## 5              0       0 100  600</span></span>
-<span><span class="co">## 6              0       0 300 1000</span></span>
-<span><span class="co">## 7              0       0 100  600</span></span>
-<span><span class="co">## 8              0       0 300 1000</span></span>
-<span><span class="co">## 9              0       0 100  600</span></span>
-<span><span class="co">## 10             0       0 300 1000</span></span>
-<span><span class="co">## 11             0       0 100  600</span></span>
-<span><span class="co">## 12             0       0 300 1000</span></span>
-<span><span class="co">## 13             0       0 100  600</span></span>
-<span><span class="co">## 14             0       0 300 1000</span></span>
-<span><span class="co">## 15             0       0 100  600</span></span>
-<span><span class="co">## 16             0       0 300 1000</span></span>
-<span><span class="co">## 17             0       0 100  600</span></span>
-<span><span class="co">## 18             0       0 300 1000</span></span>
-<span><span class="co">## 19             0       0 100  600</span></span>
-<span><span class="co">## 20             0       0 300 1000</span></span></code></pre>
+<span><span class="co">##    N_dessication N_burnt Z50  Z95 ObsID</span></span>
+<span><span class="co">## 1              0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 2              0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 3              0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 4              0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 5              0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 6              0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 7              0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 8              0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 9              0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 10             0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 11             0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 12             0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 13             0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 14             0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 15             0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 16             0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 17             0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 18             0       0 300 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 19             0       0 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 20             0       0 300 1000  &lt;NA&gt;</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="accessing-the-output-from-function-growth">Accessing the output from function growth()<a class="anchor" aria-label="anchor" href="#accessing-the-output-from-function-growth"></a>
@@ -517,9 +517,9 @@ management:</p>
 produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">CutTreeTable</span></span></code></pre></div>
-<pre><code><span><span class="co">##   Step Year Cohort          Species      DBH   Height          N Z50  Z95</span></span>
-<span><span class="co">## 1    1 2001 T1_148 Pinus halepensis 37.78378 812.5184   9.655463 100  600</span></span>
-<span><span class="co">## 2    1 2001 T2_168     Quercus ilex 14.70048 663.1356 383.666270 300 1000</span></span></code></pre>
+<pre><code><span><span class="co">##   Step Year Cohort          Species      DBH   Height          N Z50  Z95 ObsID</span></span>
+<span><span class="co">## 1    1 2001 T1_148 Pinus halepensis 37.78378 812.5184   9.655463 100  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 2    1 2001 T2_168     Quercus ilex 14.70048 663.1356 383.666270 300 1000  &lt;NA&gt;</span></span></code></pre>
 <p>Management parameters were those of an irregular model with thinning
 interventions from ‘below’, indicating that smaller trees were to be cut
 earlier:</p>
@@ -557,29 +557,29 @@ ilex</em> after the thinning intervention, evidenced by the new cohort
 <span><span class="co">## 20    9 2009 T2_168     Quercus ilex  1.761608  95.16230 1643.2394 281.5475</span></span>
 <span><span class="co">## 21   10 2010 T1_148 Pinus halepensis 39.909327 919.48963  156.3865 100.0000</span></span>
 <span><span class="co">## 22   10 2010 T2_168     Quercus ilex  1.864609 101.47622 1546.9178 281.5475</span></span>
-<span><span class="co">##     Z95</span></span>
-<span><span class="co">## 1   600</span></span>
-<span><span class="co">## 2  1000</span></span>
-<span><span class="co">## 3   600</span></span>
-<span><span class="co">## 4  1000</span></span>
-<span><span class="co">## 5   600</span></span>
-<span><span class="co">## 6  1000</span></span>
-<span><span class="co">## 7   600</span></span>
-<span><span class="co">## 8  1000</span></span>
-<span><span class="co">## 9   600</span></span>
-<span><span class="co">## 10 1000</span></span>
-<span><span class="co">## 11  600</span></span>
-<span><span class="co">## 12 1000</span></span>
-<span><span class="co">## 13  600</span></span>
-<span><span class="co">## 14 1000</span></span>
-<span><span class="co">## 15  600</span></span>
-<span><span class="co">## 16 1000</span></span>
-<span><span class="co">## 17  600</span></span>
-<span><span class="co">## 18 1000</span></span>
-<span><span class="co">## 19  600</span></span>
-<span><span class="co">## 20 1000</span></span>
-<span><span class="co">## 21  600</span></span>
-<span><span class="co">## 22 1000</span></span></code></pre>
+<span><span class="co">##     Z95 ObsID</span></span>
+<span><span class="co">## 1   600  &lt;NA&gt;</span></span>
+<span><span class="co">## 2  1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 3   600  &lt;NA&gt;</span></span>
+<span><span class="co">## 4  1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 5   600  &lt;NA&gt;</span></span>
+<span><span class="co">## 6  1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 7   600  &lt;NA&gt;</span></span>
+<span><span class="co">## 8  1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 9   600  &lt;NA&gt;</span></span>
+<span><span class="co">## 10 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 11  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 12 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 13  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 14 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 15  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 16 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 17  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 18 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 19  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 20 1000  &lt;NA&gt;</span></span>
+<span><span class="co">## 21  600  &lt;NA&gt;</span></span>
+<span><span class="co">## 22 1000  &lt;NA&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
