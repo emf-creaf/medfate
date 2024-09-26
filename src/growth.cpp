@@ -247,6 +247,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector LAI_nocomp = above["LAI_nocomp"];
   NumericVector SA = above["SA"];
   
   //Allometric parameters
@@ -319,10 +320,11 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   NumericVector ltba = largerTreeBasalArea(N, DBH, 1.0); //Allometries were calibrated including the target cohort
   for(int j=0;j<numCohorts;j++) {
     if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-      if(budFormation[j]) {
+      double leafBiomassNoComp = Afbt[j]*pow(std::min(100.0,DBH[j]), Bfbt[j])*exp(-0.0001*N[j]);//Correct for high density packing
+      LAI_nocomp[j] = SLA[j]*leafBiomassNoComp*N[j]/10000.0; //LAI without competition effect
+      if(budFormation[j]) { //Update target if buds are active
         // Rcout <<j<< " "<< ltba[j]<< " "<<leafAreaTarget[j];
-        leafAreaTarget[j] = SLA[j]*(Afbt[j]*pow(std::min(50.0,DBH[j]), Bfbt[j])*exp(Cfbt[j]*ltba[j]));
-        leafAreaTarget[j] = leafAreaTarget[j] * exp(-0.0001*N[j]);//Correct for high density packing
+        leafAreaTarget[j] = SLA[j]*leafBiomassNoComp*exp(Cfbt[j]*ltba[j]); //Include competition effect in leaf biomass estimation
         LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
         // Rcout << " "<< leafAreaTarget[j]<<"\n";
       }
@@ -354,6 +356,8 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
           Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
           LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
         }
+        //Update LAI without tree competition effect
+        LAI_nocomp[j] = LAI_live[j]/exp(-0.235*treeLAI);
       }
     }
   }
@@ -453,6 +457,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector LAI_nocomp = above["LAI_nocomp"];
   NumericVector SA = above["SA"];
 
   //Belowground parameters  
@@ -734,15 +739,16 @@ List growthDayInner(List x, NumericVector meteovec,
       // List ring = ringList[j];
       double rleafcell = NA_REAL, rcambiumcell = NA_REAL;
       NumericVector rfineroot(numLayers);
+      double relative_hormone_factor = std::max(0.0, std::min(1.0, LAI_expanded[j]/LAI_nocomp[j]));
       if(transpirationMode=="Granier") {
         // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
         rleafcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
         rleafcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
         for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< psiSympStem[j]<< " pi0:"<< " r:"<< rcambiumcell<<"\n";
       }

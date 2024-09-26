@@ -91,9 +91,11 @@
   row.names(forest_above) <- row.names(xo$cohorts)
   forest_above$LAI_live[!is.na(forest_above$DBH)] <- xo$above$LAI_live[!is.na(forest_above$DBH)]
   forest_above$LAI_expanded[!is.na(forest_above$DBH)] <- xo$above$LAI_expanded[!is.na(forest_above$DBH)]
+  forest_above$LAI_nocomp[!is.na(forest_above$DBH)] <- xo$above$LAI_nocomp[!is.na(forest_above$DBH)]
   if(control$shrubDynamics) {
     forest_above$LAI_live[is.na(forest_above$DBH)] <- xo$above$LAI_live[is.na(forest_above$DBH)]
     forest_above$LAI_expanded[is.na(forest_above$DBH)] <- xo$above$LAI_expanded[is.na(forest_above$DBH)]
+    forest_above$LAI_nocomp[is.na(forest_above$DBH)] <- xo$above$LAI_nocomp[is.na(forest_above$DBH)]
   }
 
   # 2.2 Merge aboveground data (first trees)

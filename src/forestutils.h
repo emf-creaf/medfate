@@ -49,7 +49,7 @@ NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, dou
 
 NumericVector cohortCover(List x, DataFrame SpParams);
 
-NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, bool bounded = true);
+NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, bool bounded = true, bool competitionEffect = true);
 
 double herbFoliarBiomassAllometric(double herbCover, double herbHeight, double woodyLAI);
 double herbLAIAllometric(double herbCover, double herbHeight, double woodyLAI, double sla_herb = 9.0);

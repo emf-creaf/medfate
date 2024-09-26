@@ -48,7 +48,7 @@ plant_crownBaseHeight(x, SpParams)
 
 plant_crownLength(x, SpParams)
 
-plant_foliarBiomass(x, SpParams, gdd = NA_real_)
+plant_foliarBiomass(x, SpParams, gdd = NA_real_, competitionEffect = TRUE)
 
 plant_fuelLoading(x, SpParams, gdd = NA_real_, includeDead = TRUE)
 
@@ -62,7 +62,13 @@ plant_equilibriumSmallBranchLitter(
 
 plant_phytovolume(x, SpParams)
 
-plant_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
+plant_LAI(
+  x,
+  SpParams,
+  gdd = NA_real_,
+  bounded = TRUE,
+  competitionEffect = TRUE
+)
 
 plant_characterParameter(x, SpParams, parName)
 
@@ -78,6 +84,8 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE)
 \item{self_proportion}{Proportion of the target cohort included in the assessment}
 
 \item{gdd}{Growth degree days (to account for leaf phenology effects).}
+
+\item{competitionEffect}{Logical flag to indicate the inclusion of competition effect on LAI estimates.}
 
 \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
 

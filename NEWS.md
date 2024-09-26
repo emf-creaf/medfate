@@ -1,3 +1,7 @@
+# medfate 4.7.0
+* LAI can be estimated without the competition effect of cohorts of larger size
+* Growth rates corrected by the ratio between LAI and maximum LAI without competition effects
+
 # medfate 4.6.0
 * ObsID column is allowed in treeData and shrubData to indicate cohort ID from observation
 * Tree and shrub merging allow preserving cohorts with non-missing ObsID
@@ -6,7 +10,7 @@
 # medfate 4.5.0
 * Bug correction: Zero fine root proportion in Sureau
 * Users can now define column Z100 in treeData or shrubData to truncate root distribution
-* AcceptedName is not a striclty required parameter (only used in parameterization)
+* AcceptedName is not a strictly required parameter (only used in parameterization)
 
 # medfate 4.4.0
 * Multi-bucket soil model reintroduced (default) for safety

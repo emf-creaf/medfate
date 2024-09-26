@@ -618,8 +618,8 @@ plant_crownLength <- function(x, SpParams) {
 
 #' @rdname plant_values
 #' @keywords internal
-plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd)
+plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, competitionEffect = TRUE) {
+    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, competitionEffect)
 }
 
 #' @rdname plant_values
@@ -647,9 +647,10 @@ plant_phytovolume <- function(x, SpParams) {
 }
 
 #' @rdname plant_values
+#' @param competitionEffect Logical flag to indicate the inclusion of competition effect on LAI estimates.
 #' @keywords internal
-plant_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
-    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, bounded)
+plant_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE, competitionEffect = TRUE) {
+    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, bounded, competitionEffect)
 }
 
 #' Herbaceous description functions

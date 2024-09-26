@@ -1216,6 +1216,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector LAI_nocomp = above["LAI_nocomp"];
   NumericVector N = above["N"];
   NumericVector DBH = above["DBH"];
   NumericVector Cover = above["Cover"];
@@ -1284,6 +1285,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"]=LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead,
+                                         _["LAI_nocomp"] = LAI_nocomp,
                                          _["Loading"] = Loading,
                                          _["ObsID"] = ObsID);
   plantsdf.attr("row.names") = above.attr("row.names");

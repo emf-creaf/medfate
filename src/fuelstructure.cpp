@@ -302,7 +302,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   if(index3abs<(numSteps-2)) cthabs = z[index3abs];
   // Rcout<<" cbhabs: " << cbhabs<< " "<<" cthabs: " << cthabs<< "\n";
   
-  NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, true);
+  NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, true, true);
   NumericVector cH = cohortHeight(object, SpParams);
   NumericVector cCR = cohortCrownRatio(object,SpParams);
   double understoryLAI = layerLAI(fbbh, fbh, cLAI, cH, cCR);
@@ -441,7 +441,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   double herbHeight = object["herbHeight"];
   if(NumericVector::is_na(herbHeight)) herbHeight = 0.0;
   double herbDepth = herbHeight/100.0; //in cm
-  NumericVector LAIlive = cohortLAI(object, SpParams);//Without correction
+  NumericVector LAIlive = cohortLAI(object, SpParams, NA_REAL, true, true);//Without correction
   double woodyLAI = sum(LAIlive);
   double herbLoading = loadingOffset[2] + herbFoliarBiomassAllometric(herbCover, herbHeight, woodyLAI); // From piropinus
   

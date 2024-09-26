@@ -785,15 +785,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortFoliarBiomass
-NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_cohortFoliarBiomass(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd, bool competitionEffect);
+RcppExport SEXP _medfate_cohortFoliarBiomass(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP competitionEffectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFoliarBiomass(x, SpParams, gdd));
+    Rcpp::traits::input_parameter< bool >::type competitionEffect(competitionEffectSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortFoliarBiomass(x, SpParams, gdd, competitionEffect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -850,8 +851,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortLAI
-NumericVector cohortLAI(List x, DataFrame SpParams, double gdd, bool bounded);
-RcppExport SEXP _medfate_cohortLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP boundedSEXP) {
+NumericVector cohortLAI(List x, DataFrame SpParams, double gdd, bool bounded, bool competitionEffect);
+RcppExport SEXP _medfate_cohortLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP boundedSEXP, SEXP competitionEffectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -859,7 +860,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortLAI(x, SpParams, gdd, bounded));
+    Rcpp::traits::input_parameter< bool >::type competitionEffect(competitionEffectSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortLAI(x, SpParams, gdd, bounded, competitionEffect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5827,12 +5829,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortCrownRatio", (DL_FUNC) &_medfate_cohortCrownRatio, 2},
     {"_medfate_cohortCrownBaseHeight", (DL_FUNC) &_medfate_cohortCrownBaseHeight, 2},
     {"_medfate_cohortCrownLength", (DL_FUNC) &_medfate_cohortCrownLength, 2},
-    {"_medfate_cohortFoliarBiomass", (DL_FUNC) &_medfate_cohortFoliarBiomass, 3},
+    {"_medfate_cohortFoliarBiomass", (DL_FUNC) &_medfate_cohortFoliarBiomass, 4},
     {"_medfate_cohortFuelLoading", (DL_FUNC) &_medfate_cohortFuelLoading, 4},
     {"_medfate_cohortEquilibriumLeafLitter", (DL_FUNC) &_medfate_cohortEquilibriumLeafLitter, 3},
     {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 3},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
-    {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 4},
+    {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 5},
     {"_medfate_herbFoliarBiomass", (DL_FUNC) &_medfate_herbFoliarBiomass, 2},
     {"_medfate_herbFuelLoading", (DL_FUNC) &_medfate_herbFuelLoading, 2},
     {"_medfate_herbLAI", (DL_FUNC) &_medfate_herbLAI, 2},
