@@ -65,3 +65,20 @@ test_that("growth can be run using species codes",{
                        latitude = 41.82592, elevation = 100), "growth")
   
 })
+
+test_that("growth can be run disabling output",{
+  control <- control_granier
+  control$soilResults <- FALSE
+  control$snowResults <- FALSE
+  control$standResults <- FALSE
+  control$temperatureResults <- FALSE
+  control$leafResults <- FALSE
+  control$plantResults <- FALSE
+  control$plantLabileCarbonBalanceResults  <- FALSE
+  control$plantStructureResults  <- FALSE
+  control$growthMortalityResults  <- FALSE
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control), 
+                         examplemeteo[1:10,],
+                         latitude = 41.82592, elevation = 100), "growth")
+})
+
