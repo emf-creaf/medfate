@@ -1890,11 +1890,11 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
     if(control["snowResults"]) l.push_back(Snow, "Snow");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]) {
-      l.push_back(plantDWOL, "Plants");
-      l.push_back(labileCarbonBalance, "LabileCarbonBalance");
-      l.push_back(plantBiomassBalance, "PlantBiomassBalance");
-      l.push_back(plantStructure, "PlantStructure");
-      l.push_back(growthMortality, "GrowthMortality");
+      if(control["plantWaterBalanceResults"]) l.push_back(plantDWOL, "Plants");
+      if(control["plantLabileCarbonBalanceResults"]) l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+      if(control["plantBiomassBalanceResults"]) l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+      if(control["plantStructureResults"]) l.push_back(plantStructure, "PlantStructure");
+      if(control["plantGrowthMortalityResults"]) l.push_back(growthMortality, "GrowthMortality");
     }
     if(control["fireHazardResults"]) {
       DataFrame fireHazard = defineFireHazardOutput(dateStrings);
@@ -1922,12 +1922,12 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
     if(control["soilResults"]) l.push_back(Soil, "Soil");
     if(control["snowResults"]) l.push_back(Snow, "Snow");
     if(control["standResults"]) l.push_back(Stand, "Stand");
-    if(control["plantResults"]){
-      l.push_back(plantDWOL, "Plants");
-      l.push_back(labileCarbonBalance, "LabileCarbonBalance");
-      l.push_back(plantBiomassBalance, "PlantBiomassBalance");
-      l.push_back(plantStructure, "PlantStructure");
-      l.push_back(growthMortality, "GrowthMortality");
+    if(control["plantResults"]) {
+      if(control["plantWaterBalanceResults"]) l.push_back(plantDWOL, "Plants");
+      if(control["plantLabileCarbonBalanceResults"]) l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+      if(control["plantBiomassBalanceResults"]) l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+      if(control["plantStructureResults"]) l.push_back(plantStructure, "PlantStructure");
+      if(control["plantGrowthMortalityResults"]) l.push_back(growthMortality, "GrowthMortality");
     }
     if(control["leafResults"]) {
       l.push_back(sunlitDO, "SunlitLeaves");
@@ -1971,7 +1971,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
     fillStandDailyOutput(Stand, sDay,iday); 
   }
-  if(control["plantResults"]) {
+  if(control["plantResults"] && control["plantWaterBalanceResults"]) {
     List plantDWOL = l["Plants"];
     fillPlantWaterDailyOutput(plantDWOL, sDay, iday, transpirationMode); 
     if(transpirationMode!= "Granier") {
@@ -2005,86 +2005,92 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   List sb = sDay["Soil"];
   List db = sDay["WaterBalance"];
   List Plants = sDay["Plants"];
+  DataFrame gm = Rcpp::as<Rcpp::DataFrame>(sDay["GrowthMortality"]);
   DataFrame cb = Rcpp::as<Rcpp::DataFrame>(sDay["LabileCarbonBalance"]);
   DataFrame bb = Rcpp::as<Rcpp::DataFrame>(sDay["PlantBiomassBalance"]);
   DataFrame ps = Rcpp::as<Rcpp::DataFrame>(sDay["PlantStructure"]);
-  DataFrame gm = Rcpp::as<Rcpp::DataFrame>(sDay["GrowthMortality"]);
   
 
-  List labileCarbonBalance = Rcpp::as<Rcpp::List>(l["LabileCarbonBalance"]);
-  NumericMatrix LabileCarbonBalance = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["LabileCarbonBalance"]);
-  NumericMatrix GrossPhotosynthesis = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["GrossPhotosynthesis"]);
-  NumericMatrix GrowthCosts = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["GrowthCosts"]);
-  NumericMatrix RootExudation = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["RootExudation"]);
-  NumericMatrix MaintenanceRespiration = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["MaintenanceRespiration"]);
-  NumericMatrix PlantSugarLeaf = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarLeaf"]);
-  NumericMatrix PlantStarchLeaf = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["StarchLeaf"]);
-  NumericMatrix PlantSugarSapwood = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarSapwood"]);
-  NumericMatrix PlantStarchSapwood = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["StarchSapwood"]);
-  NumericMatrix PlantSugarTransport = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarTransport"]);
+  if(control["plantResults"] && control["plantLabileCarbonBalanceResults"]) {
+    List labileCarbonBalance = Rcpp::as<Rcpp::List>(l["LabileCarbonBalance"]);
+    NumericMatrix LabileCarbonBalance = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["LabileCarbonBalance"]);
+    NumericMatrix GrossPhotosynthesis = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["GrossPhotosynthesis"]);
+    NumericMatrix GrowthCosts = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["GrowthCosts"]);
+    NumericMatrix RootExudation = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["RootExudation"]);
+    NumericMatrix MaintenanceRespiration = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["MaintenanceRespiration"]);
+    NumericMatrix PlantSugarLeaf = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarLeaf"]);
+    NumericMatrix PlantStarchLeaf = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["StarchLeaf"]);
+    NumericMatrix PlantSugarSapwood = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarSapwood"]);
+    NumericMatrix PlantStarchSapwood = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["StarchSapwood"]);
+    NumericMatrix PlantSugarTransport = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarTransport"]);
+    LabileCarbonBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["LabileCarbonBalance"]);
+    MaintenanceRespiration(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["MaintenanceRespiration"]);
+    GrowthCosts(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["GrowthCosts"]);
+    GrossPhotosynthesis(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["GrossPhotosynthesis"]);
+    PlantSugarLeaf(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarLeaf"]);
+    PlantStarchLeaf(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchLeaf"]);
+    PlantSugarSapwood(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarSapwood"]);
+    PlantStarchSapwood(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchSapwood"]);
+    PlantSugarTransport(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarTransport"]);
+    RootExudation(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["RootExudation"]);
+  }
   
-  LabileCarbonBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["LabileCarbonBalance"]);
-  MaintenanceRespiration(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["MaintenanceRespiration"]);
-  GrowthCosts(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["GrowthCosts"]);
-  GrossPhotosynthesis(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["GrossPhotosynthesis"]);
-  PlantSugarLeaf(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarLeaf"]);
-  PlantStarchLeaf(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchLeaf"]);
-  PlantSugarSapwood(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarSapwood"]);
-  PlantStarchSapwood(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchSapwood"]);
-  PlantSugarTransport(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarTransport"]);
-  RootExudation(iday,_) = Rcpp::as<Rcpp::NumericVector>(cb["RootExudation"]);
+  if(control["plantResults"] && control["plantStructureResults"]) {
+    List plantStructure = Rcpp::as<Rcpp::List>(l["PlantStructure"]);
+    NumericMatrix LeafBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafBiomass"]);
+    NumericMatrix SapwoodBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodBiomass"]);
+    NumericMatrix FineRootBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootBiomass"]);
+    NumericMatrix LeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafArea"]);
+    NumericMatrix SapwoodArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodArea"]);
+    NumericMatrix FineRootArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootArea"]);
+    NumericMatrix HuberValue = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["HuberValue"]);
+    NumericMatrix RootAreaLeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["RootAreaLeafArea"]);
+    NumericMatrix DBH = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["DBH"]);
+    NumericMatrix Height = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["Height"]);
+    
+    SapwoodBiomass(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodBiomass"]);
+    LeafBiomass(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafBiomass"]);
+    FineRootBiomass(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
+    SapwoodArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodArea"]);
+    LeafArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafArea"]);
+    FineRootArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
+    HuberValue(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["HuberValue"]);
+    RootAreaLeafArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["RootAreaLeafArea"]);
+    DBH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["DBH"]);
+    Height(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["Height"]);
+  }
   
-  List plantStructure = Rcpp::as<Rcpp::List>(l["PlantStructure"]);
-  NumericMatrix LeafBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafBiomass"]);
-  NumericMatrix SapwoodBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodBiomass"]);
-  NumericMatrix FineRootBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootBiomass"]);
-  NumericMatrix LeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafArea"]);
-  NumericMatrix SapwoodArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodArea"]);
-  NumericMatrix FineRootArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootArea"]);
-  NumericMatrix HuberValue = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["HuberValue"]);
-  NumericMatrix RootAreaLeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["RootAreaLeafArea"]);
-  NumericMatrix DBH = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["DBH"]);
-  NumericMatrix Height = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["Height"]);
+  if(control["plantResults"] && control["plantBiomassBalanceResults"]) {
+    List plantBiomassBalance = Rcpp::as<Rcpp::List>(l["PlantBiomassBalance"]);
+    NumericMatrix StructuralBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["StructuralBiomassBalance"]);
+    NumericMatrix LabileBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["LabileBiomassBalance"]);
+    NumericMatrix PlantBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["PlantBiomassBalance"]);
+    NumericMatrix MortalityBiomassLoss = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["MortalityBiomassLoss"]);
+    NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
+    
+    StructuralBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["StructuralBiomassBalance"]);
+    LabileBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["LabileBiomassBalance"]);
+    PlantBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["PlantBiomassBalance"]);
+    MortalityBiomassLoss(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["MortalityBiomassLoss"]);
+    CohortBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["CohortBiomassBalance"]);
+  }
   
-  SapwoodBiomass(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodBiomass"]);
-  LeafBiomass(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafBiomass"]);
-  FineRootBiomass(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
-  SapwoodArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodArea"]);
-  LeafArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafArea"]);
-  FineRootArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
-  HuberValue(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["HuberValue"]);
-  RootAreaLeafArea(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["RootAreaLeafArea"]);
-  DBH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["DBH"]);
-  Height(iday,_) = Rcpp::as<Rcpp::NumericVector>(ps["Height"]);
-  
- 
-  List plantBiomassBalance = Rcpp::as<Rcpp::List>(l["PlantBiomassBalance"]);
-  NumericMatrix StructuralBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["StructuralBiomassBalance"]);
-  NumericMatrix LabileBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["LabileBiomassBalance"]);
-  NumericMatrix PlantBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["PlantBiomassBalance"]);
-  NumericMatrix MortalityBiomassLoss = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["MortalityBiomassLoss"]);
-  NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
-  
-  StructuralBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["StructuralBiomassBalance"]);
-  LabileBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["LabileBiomassBalance"]);
-  PlantBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["PlantBiomassBalance"]);
-  MortalityBiomassLoss(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["MortalityBiomassLoss"]);
-  CohortBiomassBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(bb["CohortBiomassBalance"]);
-
-  List growthMortality = Rcpp::as<Rcpp::List>(l["GrowthMortality"]);
-  NumericMatrix LAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["LAgrowth"]);
-  NumericMatrix SAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["SAgrowth"]);
-  NumericMatrix FRAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["FRAgrowth"]);
-  NumericMatrix starvationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["StarvationRate"]);
-  NumericMatrix dessicationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["DessicationRate"]);
-  NumericMatrix mortalityRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["MortalityRate"]);
-  
-  LAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["LAgrowth"]);
-  SAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["SAgrowth"]);
-  FRAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["FRAgrowth"]);
-  starvationRate(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["StarvationRate"]);
-  dessicationRate(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["DessicationRate"]);
-  mortalityRate(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["MortalityRate"]);
+  if(control["plantResults"] && control["plantGrowthMortalityResults"]) {
+    List growthMortality = Rcpp::as<Rcpp::List>(l["GrowthMortality"]);
+    NumericMatrix LAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["LAgrowth"]);
+    NumericMatrix SAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["SAgrowth"]);
+    NumericMatrix FRAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["FRAgrowth"]);
+    NumericMatrix starvationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["StarvationRate"]);
+    NumericMatrix dessicationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["DessicationRate"]);
+    NumericMatrix mortalityRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["MortalityRate"]);
+    
+    LAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["LAgrowth"]);
+    SAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["SAgrowth"]);
+    FRAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["FRAgrowth"]);
+    starvationRate(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["StarvationRate"]);
+    dessicationRate(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["DessicationRate"]);
+    mortalityRate(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["MortalityRate"]);
+  }
   
   NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(l["BiomassBalance"]);
   StandBiomassBalance(iday,_) = standLevelBiomassBalance(bb);

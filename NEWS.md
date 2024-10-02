@@ -1,6 +1,7 @@
 # medfate 4.7.0
 * LAI can be estimated without the competition effect of cohorts of larger size
 * Growth rates corrected by the ratio between LAI and maximum LAI without competition effects
+* New control flags for plant-level outputs in growth simulations
 
 # medfate 4.6.0
 * ObsID column is allowed in treeData and shrubData to indicate cohort ID from observation

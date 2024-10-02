@@ -22,6 +22,11 @@
 #'       \item{\code{soilResults [= TRUE]}: Boolean flag to keep soil-level results (in a list called 'Soil').}
 #'       \item{\code{snowResults [= TRUE]}: Boolean flag to keep snow results (in a data frame called 'Snow').}
 #'       \item{\code{plantResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
+#'       \item{\code{plantWaterBalanceResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
+#'       \item{\code{plantLabileCarbonBalanceResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
+#'       \item{\code{plantBiomassBalanceResults [= TRUE]}: Boolean flag to keep plant-level biomass balance results (in a list called 'Plants').}
+#'       \item{\code{plantStructureResults [= TRUE]}: Boolean flag to keep plant-level structure results (in a list called 'Plants').}
+#'       \item{\code{plantGrowthMortalityResults [= TRUE]}: Boolean flag to keep plant-level growth and mortality results (in a list called 'Plants').}
 #'       \item{\code{leafResults [= TRUE]}: Boolean flag to keep leaf-level results (in elements called 'SunlitLeaves' and 'ShadeLeaves').}
 #'       \item{\code{temperatureResults [= TRUE]}: Boolean flag to keep temperature results (in elements called 'Temperature' and 'TemperatureLayers').}
 #'       \item{\code{subdailyResults [= FALSE]}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
@@ -193,6 +198,11 @@ defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets")
     soilResults = TRUE,
     snowResults = TRUE,
     plantResults = TRUE,
+    plantWaterBalanceResults = TRUE,
+    plantLabileCarbonBalanceResults = TRUE,
+    plantBiomassBalanceResults = TRUE,
+    plantStructureResults = TRUE,
+    plantGrowthMortalityResults = TRUE,
     leafResults = TRUE,
     temperatureResults = TRUE,
     fireHazardResults = FALSE,
