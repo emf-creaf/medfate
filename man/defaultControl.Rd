@@ -24,8 +24,8 @@ A list, with the following options (default values in brackets):
       \item{\code{soilResults [= TRUE]}: Boolean flag to keep soil-level results (in a list called 'Soil').}
       \item{\code{snowResults [= TRUE]}: Boolean flag to keep snow results (in a data frame called 'Snow').}
       \item{\code{plantResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
-      \item{\code{plantWaterBalanceResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
-      \item{\code{plantLabileCarbonBalanceResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
+      \item{\code{plantWaterBalanceResults [= TRUE]}: Boolean flag to keep plant-level water/energy/photosynthesis results (in a list called 'Plants').}
+      \item{\code{plantLabileCarbonBalanceResults [= TRUE]}: Boolean flag to keep plant-level labile carbon balance results (in a list called 'Plants').}
       \item{\code{plantBiomassBalanceResults [= TRUE]}: Boolean flag to keep plant-level biomass balance results (in a list called 'Plants').}
       \item{\code{plantStructureResults [= TRUE]}: Boolean flag to keep plant-level structure results (in a list called 'Plants').}
       \item{\code{plantGrowthMortalityResults [= TRUE]}: Boolean flag to keep plant-level growth and mortality results (in a list called 'Plants').}
