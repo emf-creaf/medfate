@@ -171,7 +171,7 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
 // [[Rcpp::export("hydraulics_xylemConductanceSigmoid")]]
 double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double slope){
   if(psi>=0.0) return(kxylemmax);
-  return (kxylemmax / (1.0 + exp(slope / 25.0 * (psi - P50))));
+  return (kxylemmax * (1.0 - 1.0/(1.0 + exp(slope / 25.0 * (psi - P50)))));
 }
 
 //' @rdname hydraulics_conductancefunctions
