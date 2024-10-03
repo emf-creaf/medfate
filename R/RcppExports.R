@@ -1297,6 +1297,11 @@ hydraulics_xylemConductance <- function(psi, kxylemmax, c, d) {
 }
 
 #' @rdname hydraulics_conductancefunctions
+hydraulics_xylemConductanceSigmoid <- function(psi, kxylemmax, P50, slope) {
+    .Call(`_medfate_xylemConductanceSigmoid`, psi, kxylemmax, P50, slope)
+}
+
+#' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
     .Call(`_medfate_xylemPsi`, kxylem, kxylemmax, c, d)
@@ -1541,6 +1546,9 @@ hydraulics_regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemm
 #' @param rootc,rootd Parameters of the Weibull function for roots (root xylem vulnerability curve).
 #' @param stemc,stemd Parameters of the Weibull function for stems (stem xylem vulnerability curve).
 #' @param leafc,leafd Parameters of the Weibull function for leaves (leaf vulnerability curve).
+#' @param root_P50,root_slope Parameters of the Sigmoid function for roots (root xylem vulnerability curve).
+#' @param stem_P50,stem_slope Parameters of the Sigmoid function for stems (stem xylem vulnerability curve).
+#' @param leaf_P50,leaf_slope Parameters of the Sigmoid function for leaves (leaf vulnerability curve).
 #' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
 #' @param averageResistancePercent Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).
 #' @param initialValue Initial value of rhizosphere conductance.
@@ -1581,8 +1589,14 @@ hydraulics_maximumSoilPlantConductance <- function(krhizomax, krootmax, kstemmax
 
 #' @rdname hydraulics_scalingconductance
 #' @keywords internal
-hydraulics_soilPlantResistances <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
-    .Call(`_medfate_soilPlantResistances`, psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
+hydraulics_soilPlantResistancesSigmoid <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, PLCleaf, krhizomax, n, alpha, krootmax, root_P50, root_slope, kstemmax, stem_P50, stem_slope, kleafmax, leaf_P50, leaf_slope) {
+    .Call(`_medfate_soilPlantResistancesSigmoid`, psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, PLCleaf, krhizomax, n, alpha, krootmax, root_P50, root_slope, kstemmax, stem_P50, stem_slope, kleafmax, leaf_P50, leaf_slope)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_soilPlantResistancesWeibull <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, PLCleaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
+    .Call(`_medfate_soilPlantResistancesWeibull`, psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, PLCleaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
 }
 
 #' @rdname hydraulics_scalingconductance

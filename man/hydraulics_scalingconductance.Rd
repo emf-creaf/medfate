@@ -3,7 +3,8 @@
 \name{hydraulics_scalingconductance}
 \alias{hydraulics_scalingconductance}
 \alias{hydraulics_maximumSoilPlantConductance}
-\alias{hydraulics_soilPlantResistances}
+\alias{hydraulics_soilPlantResistancesSigmoid}
+\alias{hydraulics_soilPlantResistancesWeibull}
 \alias{hydraulics_averageRhizosphereResistancePercent}
 \alias{hydraulics_findRhizosphereMaximumConductance}
 \alias{hydraulics_taperFactorSavage}
@@ -15,12 +16,34 @@
 \usage{
 hydraulics_maximumSoilPlantConductance(krhizomax, krootmax, kstemmax, kleafmax)
 
-hydraulics_soilPlantResistances(
+hydraulics_soilPlantResistancesSigmoid(
   psiSoil,
   psiRhizo,
   psiStem,
   PLCstem,
   psiLeaf,
+  PLCleaf,
+  krhizomax,
+  n,
+  alpha,
+  krootmax,
+  root_P50,
+  root_slope,
+  kstemmax,
+  stem_P50,
+  stem_slope,
+  kleafmax,
+  leaf_P50,
+  leaf_slope
+)
+
+hydraulics_soilPlantResistancesWeibull(
+  psiSoil,
+  psiRhizo,
+  psiStem,
+  PLCstem,
+  psiLeaf,
+  PLCleaf,
   krhizomax,
   n,
   alpha,
@@ -103,6 +126,12 @@ hydraulics_rootxylemConductanceProportions(L, V)
 \item{psiLeaf}{Water potential (in MPa) in the leaf.}
 
 \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
+
+\item{root_P50, root_slope}{Parameters of the Sigmoid function for roots (root xylem vulnerability curve).}
+
+\item{stem_P50, stem_slope}{Parameters of the Sigmoid function for stems (stem xylem vulnerability curve).}
+
+\item{leaf_P50, leaf_slope}{Parameters of the Sigmoid function for leaves (leaf vulnerability curve).}
 
 \item{rootc, rootd}{Parameters of the Weibull function for roots (root xylem vulnerability curve).}
 

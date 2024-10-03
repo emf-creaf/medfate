@@ -7,6 +7,7 @@
 \alias{hydraulics_K2Psi}
 \alias{hydraulics_averagePsi}
 \alias{hydraulics_xylemConductance}
+\alias{hydraulics_xylemConductanceSigmoid}
 \alias{hydraulics_xylemPsi}
 \alias{hydraulics_psiCrit}
 \alias{hydraulics_vanGenuchtenConductance}
@@ -22,6 +23,8 @@ hydraulics_K2Psi(K, psi_extract, exp_extract = 3)
 hydraulics_averagePsi(psi, v, exp_extract, psi_extract)
 
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
+
+hydraulics_xylemConductanceSigmoid(psi, kxylemmax, P50, slope)
 
 hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
 

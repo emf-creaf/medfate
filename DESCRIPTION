@@ -11,11 +11,12 @@ Authors@R: c(
 	person('Antoine', 'Cabon', role='aut', comment = c(ORCID = "0000-0001-6426-1726")),
 	person('Jordi', 'Martínez-Vilalta', role='ctb', comment = c(ORCID = "0000-0002-2332-7298")),
 	person('Maurizio', 'Mencuccini', role='ctb', comment = c(ORCID = "0000-0003-0840-1477")),
-	person('Julien', 'Ruffault', role='ctb'),
+	person('Julien', 'Ruffault', role='ctb', comment = c(ORCID = "0000-0003-3647-8172")),
 	person('François', 'Pimont', role='ctb', comment = c(ORCID = "0000-0002-9842-6207")),
 	person('Hervé', 'Cochard', role='ctb', comment = c(ORCID = "0000-0002-2727-7072")),
 	person('Aitor', 'Améztegui', role='ctb', comment = c(ORCID = "0000-0003-2006-1559")),
 	person('Shengli', 'Huang', role='ctb', comment = c(ORCID = "0000-0003-3927-7042")),
+	person('Léa', 'Veuillen', role='ctb', comment = c(ORCID = "0000-0002-2790-3627")),
 	person('John', 'Burkardt', role='cph', comment = c("Copyright holder of C++ code in 'incgamma.cpp'"))
 	)
 Description: Simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation [De Caceres et al. (2015) <doi:10.1016/j.agrformet.2015.06.012>; De Caceres et al. (2021) <doi:10.1016/j.agrformet.2020.108233>].

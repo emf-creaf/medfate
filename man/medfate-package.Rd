@@ -40,13 +40,16 @@ Contributors: \itemize{
 [\href{https://orcid.org/0000-0002-2332-7298}{ORCID}]}
 \item{ Maurizio Mencuccini
 [\href{https://orcid.org/0000-0003-0840-1477}{ORCID}]}
-\item{ Julien Ruffault}
+\item{ Julien Ruffault
+[\href{https://orcid.org/0000-0003-3647-8172}{ORCID}]}
 \item{ François Pimont
 [\href{https://orcid.org/0000-0002-9842-6207}{ORCID}]}
 \item{ Hervé Cochard
 [\href{https://orcid.org/0000-0002-2727-7072}{ORCID}]}
 \item{ Aitor Améztegui
 [\href{https://orcid.org/0000-0001-6426-1726}{ORCID}]}
+\item{ Léa Veuillen
+[\href{https://orcid.org/0000-0002-2790-3627}{ORCID}]}
 \item{ Shengli Huang
 [\href{https://orcid.org/0003-3927-7042}{ORCID}]}
 }

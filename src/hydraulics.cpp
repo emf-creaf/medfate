@@ -168,6 +168,13 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
 }
 
 //' @rdname hydraulics_conductancefunctions
+// [[Rcpp::export("hydraulics_xylemConductanceSigmoid")]]
+double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double slope){
+  if(psi>=0.0) return(kxylemmax);
+  return (kxylemmax / (1.0 + exp(slope / 25.0 * (psi - P50))));
+}
+
+//' @rdname hydraulics_conductancefunctions
 //' @keywords internal
 // [[Rcpp::export("hydraulics_xylemPsi")]]
 double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
@@ -1408,6 +1415,9 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 //' @param rootc,rootd Parameters of the Weibull function for roots (root xylem vulnerability curve).
 //' @param stemc,stemd Parameters of the Weibull function for stems (stem xylem vulnerability curve).
 //' @param leafc,leafd Parameters of the Weibull function for leaves (leaf vulnerability curve).
+//' @param root_P50,root_slope Parameters of the Sigmoid function for roots (root xylem vulnerability curve).
+//' @param stem_P50,stem_slope Parameters of the Sigmoid function for stems (stem xylem vulnerability curve).
+//' @param leaf_P50,leaf_slope Parameters of the Sigmoid function for leaves (leaf vulnerability curve).
 //' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
 //' @param averageResistancePercent Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).
 //' @param initialValue Initial value of rhizosphere conductance.
@@ -1461,33 +1471,53 @@ double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootm
 
 //' @rdname hydraulics_scalingconductance
 //' @keywords internal
-// [[Rcpp::export("hydraulics_soilPlantResistances")]]
-NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, 
-                                   NumericVector psiStem, NumericVector PLCstem,
-                                   double psiLeaf, 
-                                   NumericVector krhizomax, NumericVector n, NumericVector alpha,
-                                   NumericVector krootmax, double rootc, double rootd, 
-                                   double kstemmax, double stemc, double stemd,
-                                   double kleafmax, double leafc, double leafd) {
+// [[Rcpp::export("hydraulics_soilPlantResistancesSigmoid")]]
+List soilPlantResistancesSigmoid(NumericVector psiSoil, NumericVector psiRhizo, 
+                                  double psiStem, double PLCstem,
+                                  double psiLeaf, double PLCleaf,
+                                  NumericVector krhizomax, NumericVector n, NumericVector alpha,
+                                  NumericVector krootmax, double root_P50, double root_slope, 
+                                  double kstemmax, double stem_P50, double stem_slope,
+                                  double kleafmax, double leaf_P50, double leaf_slope) {
+   int nlayers = psiSoil.length();
+   NumericVector rrhizo(nlayers, 0.0);
+   NumericVector rroot(nlayers, 0.0);
+   for(int i=0;i<nlayers;i++) {
+     rrhizo[i] = 1.0/vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
+     rroot[i] = 1.0/xylemConductanceSigmoid(psiRhizo[i], krootmax[i], root_P50, root_slope);
+   }
+   double rstem = 1.0/(kstemmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid(psiStem, 1.0, stem_P50, stem_slope)));
+   double rleaf = 1.0/(kleafmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid(psiLeaf, kleafmax, leaf_P50, leaf_slope)));
+   List resistances = List::create(_["rhizosphere"] = rrhizo, 
+                                   _["root"] = rroot, 
+                                   _["stem"] = rstem, 
+                                   _["leaf"] = rleaf);
+   return(resistances);
+ }
+
+//' @rdname hydraulics_scalingconductance
+//' @keywords internal
+// [[Rcpp::export("hydraulics_soilPlantResistancesWeibull")]]
+List soilPlantResistancesWeibull(NumericVector psiSoil, NumericVector psiRhizo, 
+                                 double psiStem, double PLCstem,
+                                 double psiLeaf, double PLCleaf,
+                                 NumericVector krhizomax, NumericVector n, NumericVector alpha,
+                                 NumericVector krootmax, double rootc, double rootd, 
+                                 double kstemmax, double stemc, double stemd,
+                                 double kleafmax, double leafc, double leafd) {
   int nlayers = psiSoil.length();
-  double krhizo = 0.0;
-  double kroot = 0.0;
+  NumericVector rrhizo(nlayers, 0.0);
+  NumericVector rroot(nlayers, 0.0);
   for(int i=0;i<nlayers;i++) {
-    krhizo = krhizo + vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
-    kroot = kroot + xylemConductance(psiRhizo[i], krootmax[i], rootc, rootd);
+    rrhizo[i] = 1.0/vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
+    rroot[i] = 1.0/xylemConductance(psiRhizo[i], krootmax[i], rootc, rootd);
   }
-  double rrhizo = 1.0/krhizo;
-  double rroot = 1.0/kroot;
-  int nStemSegments = psiStem.length();
-  double kxsegmax = kstemmax*((double) nStemSegments);
-  double rstem = 0.0;
-  double plcCond = NA_REAL;
-  for(int i=0;i<nStemSegments;i++) {
-    plcCond = (1.0-PLCstem[i]);
-    rstem = rstem + 1.0/(kxsegmax*std::min(plcCond, xylemConductance(psiStem[i], 1.0, stemc, stemd)));
-  }
-  double rleaf = 1.0/xylemConductance(psiLeaf, kleafmax, leafc, leafd);
-  NumericVector resistances = NumericVector::create(rrhizo, rroot, rstem, rleaf);
+  double rstem = 1.0/(kstemmax*std::min(1.0-PLCstem, xylemConductance(psiStem, 1.0, stemc, stemd)));
+  double rleaf = 1.0/(kleafmax*std::min(1.0-PLCleaf, xylemConductance(psiLeaf, 1.0, leafc, leafd)));
+  List resistances = List::create(_["rhizosphere"] = rrhizo, 
+                                  _["root"] = rroot, 
+                                  _["stem"] = rstem, 
+                                  _["leaf"] = rleaf);
   return(resistances);
 }
 

@@ -1569,6 +1569,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xylemConductanceSigmoid
+double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double slope);
+RcppExport SEXP _medfate_xylemConductanceSigmoid(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP P50SEXP, SEXP slopeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    rcpp_result_gen = Rcpp::wrap(xylemConductanceSigmoid(psi, kxylemmax, P50, slope));
+    return rcpp_result_gen;
+END_RCPP
+}
 // xylemPsi
 double xylemPsi(double kxylem, double kxylemmax, double c, double d);
 RcppExport SEXP _medfate_xylemPsi(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
@@ -1974,17 +1988,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// soilPlantResistances
-NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, NumericVector psiStem, NumericVector PLCstem, double psiLeaf, NumericVector krhizomax, NumericVector n, NumericVector alpha, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd);
-RcppExport SEXP _medfate_soilPlantResistances(SEXP psiSoilSEXP, SEXP psiRhizoSEXP, SEXP psiStemSEXP, SEXP PLCstemSEXP, SEXP psiLeafSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP) {
+// soilPlantResistancesSigmoid
+List soilPlantResistancesSigmoid(NumericVector psiSoil, NumericVector psiRhizo, double psiStem, double PLCstem, double psiLeaf, double PLCleaf, NumericVector krhizomax, NumericVector n, NumericVector alpha, NumericVector krootmax, double root_P50, double root_slope, double kstemmax, double stem_P50, double stem_slope, double kleafmax, double leaf_P50, double leaf_slope);
+RcppExport SEXP _medfate_soilPlantResistancesSigmoid(SEXP psiSoilSEXP, SEXP psiRhizoSEXP, SEXP psiStemSEXP, SEXP PLCstemSEXP, SEXP psiLeafSEXP, SEXP PLCleafSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP root_P50SEXP, SEXP root_slopeSEXP, SEXP kstemmaxSEXP, SEXP stem_P50SEXP, SEXP stem_slopeSEXP, SEXP kleafmaxSEXP, SEXP leaf_P50SEXP, SEXP leaf_slopeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type psiSoil(psiSoilSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type psiRhizo(psiRhizoSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type psiStem(psiStemSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type PLCstem(PLCstemSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStem(psiStemSEXP);
+    Rcpp::traits::input_parameter< double >::type PLCstem(PLCstemSEXP);
     Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
+    Rcpp::traits::input_parameter< double >::type PLCleaf(PLCleafSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krootmax(krootmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type root_P50(root_P50SEXP);
+    Rcpp::traits::input_parameter< double >::type root_slope(root_slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type stem_P50(stem_P50SEXP);
+    Rcpp::traits::input_parameter< double >::type stem_slope(stem_slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type leaf_P50(leaf_P50SEXP);
+    Rcpp::traits::input_parameter< double >::type leaf_slope(leaf_slopeSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilPlantResistancesSigmoid(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, PLCleaf, krhizomax, n, alpha, krootmax, root_P50, root_slope, kstemmax, stem_P50, stem_slope, kleafmax, leaf_P50, leaf_slope));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilPlantResistancesWeibull
+List soilPlantResistancesWeibull(NumericVector psiSoil, NumericVector psiRhizo, double psiStem, double PLCstem, double psiLeaf, double PLCleaf, NumericVector krhizomax, NumericVector n, NumericVector alpha, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd);
+RcppExport SEXP _medfate_soilPlantResistancesWeibull(SEXP psiSoilSEXP, SEXP psiRhizoSEXP, SEXP psiStemSEXP, SEXP PLCstemSEXP, SEXP psiLeafSEXP, SEXP PLCleafSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type psiRhizo(psiRhizoSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStem(psiStemSEXP);
+    Rcpp::traits::input_parameter< double >::type PLCstem(PLCstemSEXP);
+    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
+    Rcpp::traits::input_parameter< double >::type PLCleaf(PLCleafSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type krhizomax(krhizomaxSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
@@ -1997,7 +2040,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
     Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilPlantResistances(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd));
+    rcpp_result_gen = Rcpp::wrap(soilPlantResistancesWeibull(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, PLCleaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5877,6 +5920,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_K2Psi", (DL_FUNC) &_medfate_K2Psi, 3},
     {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
     {"_medfate_xylemConductance", (DL_FUNC) &_medfate_xylemConductance, 4},
+    {"_medfate_xylemConductanceSigmoid", (DL_FUNC) &_medfate_xylemConductanceSigmoid, 4},
     {"_medfate_xylemPsi", (DL_FUNC) &_medfate_xylemPsi, 4},
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 3},
     {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
@@ -5903,7 +5947,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
     {"_medfate_maximumSoilPlantConductance", (DL_FUNC) &_medfate_maximumSoilPlantConductance, 4},
-    {"_medfate_soilPlantResistances", (DL_FUNC) &_medfate_soilPlantResistances, 17},
+    {"_medfate_soilPlantResistancesSigmoid", (DL_FUNC) &_medfate_soilPlantResistancesSigmoid, 18},
+    {"_medfate_soilPlantResistancesWeibull", (DL_FUNC) &_medfate_soilPlantResistancesWeibull, 18},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},
     {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 13},
     {"_medfate_taperFactorSavage", (DL_FUNC) &_medfate_taperFactorSavage, 1},
