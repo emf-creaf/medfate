@@ -27,7 +27,9 @@ meta_dir <- "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_param
 
 ### Goal
 
-This document presents a meta-modelling exercise between basic (Granier's) and advanced (Sperry's) versions of the soil plant water balance model. The goal is to make transpiration and photosynthesis predictions produced by the basic water balance model as similar as possible to those produced by the advanced model which, given its greater process detail and physical basis, is assumed to provide more realistic and accurate predictions when appropriate functional traits are supplied. The meta-modelling results should benefit not only water balance simulations (function `spwb`) but also simulations of forest growth (`growth`) and dynamics (`fordyn`).
+This document presents a meta-modelling exercise between basic (under Granier's transpiration) and advanced (under Sperry's transpiration mode) versions of the soil plant water balance model. The goal is to make transpiration and photosynthesis predictions produced by the basic water balance model as similar as possible to those produced by the advanced model which, given its greater process detail and physical basis, is assumed to provide more realistic and accurate predictions when appropriate functional traits are supplied. Such exercise was included, among others, in De Cáceres et al. (2023). 
+
+The meta-modelling results should benefit not only water balance simulations (function `spwb`) but also simulations of forest growth (`growth`) and dynamics (`fordyn`). The results presented here were obtained using **ver. 4.7.0** of medfate.
 
 ### Target parameters
 
@@ -40,16 +42,15 @@ The following parameters are used in the basic model, that cannot easily be para
  + `WUE_co2`, which specifies the dependency of WUE on air CO2 concentration. 
  + `WUE_vpd`, which specifies the dependency of WUE on vapor pressure deficit (VPD). 
 
-
 As stated above, the general idea is to use simulation results issued by the advanced water balance model to obtain appropriate species-level estimates of the previous parameters, so that simulations with the basic water balance model (which is faster) produce an output similar that of the advanced model (which is slower). In the case of `Tmax_LAI` and `Tmax_LAIsp` we aim to determine a species-specific factor that can be used to modify the empirical coefficients obtained by Granier (1999). Water use efficiency is an emergent property of the advanced water balance model, depending on multiple parameters (hydraulics, photosynthetic capacity, stomatal conductance, etc). We can thus estimate `WUE` values (for [CO2] = 386) using simulations with high light levels and no water deficit. The decrease of WUE for plant cohorts in progressively shadier environments with respect to WUE under full light can provide us with an estimate of `WUE_par`, which again will depend on multiple plant traits. Finally, we can use additional simulations of the complex model under increasing [CO2] values to model the relationship between gross photosynthesis at a given [CO2] compared to [CO2] = 386 for each species.
 
 ### Target species
 
-The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus faginea*, *Quercus ilex*, *Quercus pubescens*,   *Quercus suber*, *Fagus sylvatica* and *Abies alba*.
+The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: *Abies alba*, *Castanea sativa*, *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus faginea*, *Quercus ilex*, *Quercus pubescens*,   *Quercus suber* and *Fagus sylvatica*. These species are included in the species parameter table `SpParamsMED` from package **medfate**.
 
 For each of those species, we first revised the values of the most important parameters in the advanced water balance model (parameters of the hydraulic vulnerability curve are omitted as they should not be relevant in simulations without soil water deficit): 
 ```{r, echo = FALSE}
-customParamsSpecies = read_xlsx(paste0(meta_dir,"Data/SpParamsCUSTOM.xlsx"), sheet = "SpParamsCUSTOM")
+customParamsSpecies = read_xlsx(paste0(meta_dir,"data-raw/SpParamsCUSTOM.xlsx"), sheet = "SpParamsCUSTOM")
 customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "Gswmax","Vmax298", "Jmax298")] %>%
   kbl() %>%
   kable_styling()
@@ -60,24 +61,24 @@ Ideally, the transpiration and photosynthesis predictions of the advanced water 
 ## Simulations for the meta-modelling exercise
 
 ```{r, echo = FALSE}
-df = readRDS(paste0(meta_dir,"Rdata/metamodelling_E_Ag_results.rds"))
-df_K = readRDS(paste0(meta_dir,"Rdata/metamodelling_K_results.rds"))
-df_co2 = readRDS(paste0(meta_dir,"Rdata/metamodelling_co2_results.rds"))
-df_vpd = readRDS(paste0(meta_dir,"Rdata/metamodelling_vpd_results.rds"))
+df = readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_E_Ag_results.rds"))
+df_K = readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_K_results.rds"))
+df_co2 = readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_co2_results.rds"))
+df_vpd = readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_vpd_results.rds"))
 target_spp = sort(unique(as.numeric(df$SP)))
 ```
 
 ### Forest, soil and weather inputs
 
-We used forest plot data from the third edition of the Spanish National Forest Inventory (IFN3). Forest plots were located in Catalonia and with a minimum basal area of 3 $m^2·ha^{-1}$. For each target species we randomly selected up to 60 forest plots where the species was dominant (> 80% in basal area). Plant records corresponding to species different than the target species were excluded. 
+We used forest plot data from the third edition of the Spanish National Forest Inventory (IFN3). Forest plots were located in Catalonia and with a minimum basal area of 5 $m^2·ha^{-1}$. For each target species we randomly selected up to 50 forest plots where the species was dominant (> 50% in basal area). Plant records corresponding to species different than the target species were excluded. 
 
 Like in other simulation exercises with IFN data, soil data was obtained from SoilGrids from plot coordinates, with rock fragment contents corrected according to the amount of surface stoniness recorded in the field sampling. Daily weather data corresponding to year 2000 was obtained by interpolation using package **meteoland** on the location of each forest plot.
 
 ### Soil water balance simulations
 
-For each target species, we ran the soil water balance model using function `spwb` (actually, `spwbpoints` from package **medfateland**) and either Granier's or Sperry's transpiration mode. Simulations were conducted using `control$unlimitedSoilWater = TRUE` so that transpiration and photosynthesis estimates did not include soil water limitations (cohorts in the shade were still affected by the lower PAR, however). For each plant cohort in each simulated plot we recorded the percentage of PAR available to the plant cohort, the annual transpiration and annual photosynthesis produced by each model.
+For each target species, we ran the soil water balance model using function `spwb` (actually, `spwb_spatial()` from package **medfateland**) and either Granier's or Sperry's transpiration mode. Simulations were conducted using `control$unlimitedSoilWater = TRUE` so that transpiration and photosynthesis estimates did not include soil water limitations (cohorts in the shade were still affected by the lower PAR, however). For each plant cohort in each simulated plot we recorded the percentage of PAR available to the plant cohort, the annual transpiration and annual photosynthesis produced by each model.
 
-Additional simulations with increasing carbon dioxide concentration were conducted using the Sperry transpiration mode and [CO2] values increasing from 350 ppm to 900 ppm. We also avoided soil water limitations using `control$unlimitedSoilWater = TRUE`. For each plot we recorded the  annual gross photosynthesis per leaf area averaged across plant cohorts using their LAI as weights.
+Additional simulations with increasing carbon dioxide concentration were conducted using the Sperry transpiration mode and $[CO_2]$ values increasing from 350 ppm to 900 ppm. We also avoided soil water limitations using `control$unlimitedSoilWater = TRUE`. For each plot we recorded the  annual gross photosynthesis per leaf area averaged across plant cohorts using their LAI as weights.
 
 ## Transpiration ratio
 
@@ -112,6 +113,7 @@ TR_sp %>%
 
 ## Relative transpiration function
 
+Parameters `Psi_Extract` and `Exp_Extract` determine the actual transpiration as a fraction of maximum transpiration, as a function of soil water potential for a given layer. They are parameters of a Weibull function. They can be estimated by fitting the Weibull function to the ratio of transpiration values obtained in simulations with vs without soil drought limitations (under Sperry's transpiration mode) as a function of soil water potential. This is illustrated in the figure below for the different species:
 
 ```{r, echo = FALSE}
 Name <- character(0)
@@ -133,7 +135,7 @@ df_K$Pred<-Pred
 df_K$Name <- Name
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 g2<-ggplot(df_K)+
   geom_point(aes(x = psi, y = Tr_ratio, col = Name), size=0.1, alpha = 0.3)+
   geom_point(aes(x = psi, y = Pred, col = Name), size=0.1)+
@@ -255,7 +257,9 @@ g4
 
 ## Dependency of photosynthesis on [CO2]
 
-```{r, echo = FALSE}
+The parameter `WUE_co2`, which specifies the dependency of WUE on air CO2 concentration is estimated by fitting a non-linear function on the ratio of photosynthesis under a given $[CO_2]$ value over the photosynthesis at $[CO_2] = 386$ ppm:
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 a = rep(NA, length(target_spp))
 b = rep(NA, length(target_spp))
 Pred = numeric(0)
@@ -281,7 +285,7 @@ g5
 ```
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE, message = FALSE}
 g <- plot_grid(g1 + theme(legend.position = "none"),
                g2 + theme(legend.position = "none"),
                g3 + theme(legend.position = "none"),
@@ -289,7 +293,7 @@ g <- plot_grid(g1 + theme(legend.position = "none"),
                g5 + theme(legend.position = "none"),
                get_legend(g3),
                labels = c("a)","b)", "c)", "d)", "e)", ""), nrow=3, ncol=2)
-ggsave2(paste0(meta_dir,"/Plots/meta_fit.png"), g, width = 9, height = 11, bg = "white")
+ggsave2(paste0(meta_dir,"/plots/SpParamsMED/meta_fit.png"), g, width = 9, height = 11, bg = "white")
 ```
 
 
@@ -297,7 +301,7 @@ ggsave2(paste0(meta_dir,"/Plots/meta_fit.png"), g, width = 9, height = 11, bg = 
 
 The table containing the five parameters estimated via meta-modelling is the following:
 ```{r, echo = FALSE}
-df_par = readRDS(paste0(meta_dir,"Rdata/metamodelling_params.rds"))
+df_par = readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_params.rds"))
 
 df_par[,-1] %>%
   kbl() %>%
@@ -309,12 +313,12 @@ Here we evaluated whether the estimated parameters indeed increased the similari
 
 The following plots show the effect of the new parameters on annual E and annual Ag for plant cohorts of the plots included in the study:
 ```{r, echo = FALSE}
-df_E_Ag = readRDS(paste0(meta_dir,"Rdata/metamodelling_E_Ag_evaluation.rds"))
-df_soil= readRDS(paste0(meta_dir,"Rdata/metamodelling_soil_evaluation.rds"))
+df_E_Ag = readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_E_Ag_evaluation.rds"))
+df_soil= readRDS(paste0(meta_dir,"data/SpParamsMED/metamodelling_soil_evaluation.rds"))
 ```
 
 
-```{r, echo = FALSE, fig.width=10, fig.height=10, warning=FALSE}
+```{r, echo = FALSE, fig.width=10, fig.height=10, warning=FALSE, message = FALSE}
 r1 <- cor(df_E_Ag$E_sperry, df_E_Ag$E_granier, use="complete")^2
 g1<-ggplot(df_E_Ag, aes(x=E_granier, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
@@ -382,11 +386,23 @@ g0<-plot_grid(g1,g2,g3,g4, g5, g6,
               labels = c("a)", "b)", "c)", "d)", "e)", "f)"), 
               ncol=2, nrow = 3)
 g<-plot_grid(g0,l, ncol=2, nrow = 1, rel_widths = c(1,0.2))
-ggsave2(paste0(meta_dir,"Plots/meta_eval.png"), g, width = 11, height = 11, bg = "white")
+ggsave2(paste0(meta_dir,"plots/SpParamsMED/meta_eval.png"), g, width = 11, height = 11, bg = "white")
 g
 ```
 
+## Meta-modelling results for other datasets
+
+The same procedure has been used to estimate Granier's parameters in the case of the species parameter table `SpParamsES`, intended to be used for simulations across Spain and distributed using package **traits4models**. In this case, additional tree species are included, because they are often found in Spain but only seldom in Catalonia. The table containing the five parameters estimated via meta-modelling for `SpParamsES` is the following:
+```{r, echo = FALSE}
+df_par = readRDS(paste0(meta_dir,"data/SpParamsES/metamodelling_params.rds"))
+
+df_par[,-1] %>%
+  kbl() %>%
+  kable_styling()
+```
 
 ## References
 
-Medrano, H., A. Pou, M. Tomás, S. Martorell, J. Gulias, J. Flexas, and J. M. Escalona. 2012. Average daily light interception determines leaf water use efficiency among different canopy locations in grapevine. Agricultural Water Management 114:4–10.
++ De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate Mediterranean forest function and dynamics at regional scales. Geoscientific Model Development 16, 3165–3201 (https://doi.org/10.5194/gmd-16-3165-2023).
+
++ Medrano, H., A. Pou, M. Tomás, S. Martorell, J. Gulias, J. Flexas, and J. M. Escalona. 2012. Average daily light interception determines leaf water use efficiency among different canopy locations in grapevine. Agricultural Water Management 114:4–10.
