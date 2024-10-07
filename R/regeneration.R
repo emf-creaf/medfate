@@ -59,19 +59,24 @@
 #' @keywords internal
 regeneration_seedproduction<-function(forest, SpParams, control) {
   treeSpp <- forest$treeData$Species
-  if(length(treeSpp)>0) {
-    sph <- species_parameter(treeSpp, SpParams, "SeedProductionHeight")
+  if(length(treeSpp)>0) { 
+    # Whether the tree reaches seed production diameter or height
+    # We could use the Dmat ~ Dmax relationship in https://onlinelibrary.wiley.com/doi/10.1111/ele.14500
+    spd <- species_parameter(treeSpp, SpParams, "SeedProductionDiameter", fillMissing = FALSE)
+    selDiam  <- (forest$treeData$DBH > spd)
+    sph <- species_parameter(treeSpp, SpParams, "SeedProductionHeight", fillMissing = FALSE)
     sph[is.na(sph)] <- control$seedProductionTreeHeight
-    treeSpp <- treeSpp[forest$treeData$Height > sph]
-    treeSpp <- unique(treeSpp)
+    selHeight <- (forest$treeData$Height > sph)
+    selDiam[is.na(selDiam)] <- selHeight[is.na(selDiam)] # Replace missing selection values with height criterion
+    treeSpp <- unique(treeSpp[selDiam])
   }
   if(control$shrubDynamics) {
     shrubSpp <- forest$shrubData$Species
     if(length(shrubSpp)>0) {
-      sph <- species_parameter(shrubSpp, SpParams, "SeedProductionHeight")
+      sph <- species_parameter(shrubSpp, SpParams, "SeedProductionHeight", fillMissing = FALSE)
       sph[is.na(sph)] <- control$seedProductionShrubHeight
-      shrubSpp <- shrubSpp[forest$shrubData$Height > sph]
-      shrubSpp <- unique(shrubSpp)
+      selHeight <- forest$shrubData$Height > sph
+      shrubSpp <- unique(shrubSpp[selHeight])
     }
   } else {
     shrubSpp <- character(0)

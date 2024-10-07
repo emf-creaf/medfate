@@ -35,12 +35,12 @@ The calibration data set corresponds to 75 permanent forest plots of the Spanish
 
 # cal_uncinata_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_uncinata_SL_ga.rds"))
 
-plot_desc = readRDS(paste0(base_calibration,"Rdata/plot_desc_FUN2FUN.rds"))
-obs_FUN2FUN = readRDS(paste0(base_calibration,"Rdata/obs_FUN2FUN_IFN.rds"))
-eval_data_df = readRDS(paste0(base_calibration,"Rdata/eval_data_FUN2FUN.rds"))
-eval_stats_df = readRDS(paste0(base_calibration,"Rdata/eval_stats_FUN2FUN.rds"))
-cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_SL_ga.rds"))
-cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_NSL_ga.rds"))
+plot_desc = readRDS(paste0(base_calibration,"data/SpParamsMED/output/plot_desc_FUN2FUN.rds"))
+obs_FUN2FUN = readRDS(paste0(base_calibration,"data/SpParamsMED/output/obs_FUN2FUN_IFN.rds"))
+eval_data_df = readRDS(paste0(base_calibration,"data/SpParamsMED/output/eval_data_FUN2FUN.rds"))
+eval_stats_df = readRDS(paste0(base_calibration,"data/SpParamsMED/output/eval_stats_FUN2FUN.rds"))
+cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"data/SpParamsMED/output/cal_FUN2FUN_SL_ga.rds"))
+cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"data/SpParamsMED/output/cal_FUN2FUN_NSL_ga.rds"))
 sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
 cal_FUN2FUN_SL_ga = cal_FUN2FUN_SL_ga[sel,]
 cal_FUN2FUN_NSL_ga = cal_FUN2FUN_NSL_ga[sel,]
