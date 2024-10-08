@@ -1,10 +1,10 @@
 ## Reload MEGAN parameters
-MEGANParams<-read.csv("data-raw/MEGANParams.csv",skip=0)
-usethis::use_data(MEGANParams, overwrite = T)
-rm(MEGANParams)
+# MEGANParams<-read.csv("data-raw/MEGANParams.csv",skip=0)
+# usethis::use_data(MEGANParams, overwrite = T)
+# rm(MEGANParams)
 
 # Poblet tree data
-poblet_trees = openxlsx::read.xlsx("data-raw/PobletData.xlsx", sheet="TreeData")
+poblet_trees <- openxlsx::read.xlsx("data-raw/PobletData.xlsx", sheet="TreeData")
 usethis::use_data(poblet_trees, overwrite = T)
 
 
@@ -22,43 +22,52 @@ usethis::use_data(SpParamsDefinition, overwrite = T)
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
                                               sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 
-MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_development/"
+MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/"
+harmonized_allometry_path <- "~/OneDrive/EMF_datasets/AllometryDatabases/Products/harmonized"
+harmonized_trait_path <- "~/OneDrive/EMF_datasets/PlantTraitDatabases/Products/harmonized"
 
 # Revised hydraulic/photosynthesis parameters
-customParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx"))
-customParamsSpecies$SpIndex = NA
-for(i in 1:nrow(customParamsSpecies)) customParamsSpecies$SpIndex[i] = SpParamsMED$SpIndex[SpParamsMED$Name==customParamsSpecies$Name[i]]
-SpParamsMED = medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
+customParamsSpecies <- readxl::read_xlsx(paste0(MFWdir,"Metamodelling_TR_WUE/data-raw/SpParamsCUSTOM.xlsx"))
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
 # Results of meta-modelling exercise
-metamodellingParamsSpecies = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/metamodelling_params.rds"))
-SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, subsetSpecies = FALSE)
+metamodellingParamsSpecies <- readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/data/SpParamsMED/metamodelling_params.rds"))
+metamodellingParamsSpecies$SpIndex <- NULL
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, subsetSpecies = FALSE)
 # Load growth calibration results
-RGRcambiummaxTrees = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/RGRcambiummax_trees.rds"))
-SpParamsMED = medfate::modifySpParams(SpParamsMED, RGRcambiummaxTrees, subsetSpecies = FALSE)
+RGRcambiummaxTrees <- readRDS(paste0(MFWdir,"GrowthCalibration/data/SpParamsMED/output/RGRcambiummax_trees.rds")) |>
+  dplyr::rename(Species = Name)
+RGRcambiummaxTrees$SpIndex <- NULL
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, RGRcambiummaxTrees, subsetSpecies = FALSE)
 # Load ingrowth calibration results
 ## SHOULD BE RECALIBRATED: THEY REFER TO INGROWTH (~7.5 cm) 
-recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/final_recruitment_params.rds"))
+recruitmentParamsSpecies <- readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/data/final_recruitment_params.rds"))
+recruitmentParamsSpecies$SpIndex <- NULL
+recruitmentParamsSpecies$IFNcodes <- NULL
 recruitmentParamsSpecies$RecrTreeHeight <- recruitmentParamsSpecies$RecrTreeHeight/10
 recruitmentParamsSpecies$IngrowthTreeDensity <- recruitmentParamsSpecies$RecrTreeDensity
 recruitmentParamsSpecies$RecrTreeDensity <- NULL
-SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
 # Load Baseline mortality calibration results
-mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/mort_rates.rds"))
-SpParamsMED = medfate::modifySpParams(SpParamsMED, mortalityParamsSpecies, subsetSpecies = FALSE)
+mortalityParamsSpecies <- readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/data/mort_rates.rds"))
+mortalityParamsSpecies$SpIndex <- NULL
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, mortalityParamsSpecies, subsetSpecies = FALSE)
 # Load SurvivalModel calibration results
-survivalParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/survival_models.rds"))
-SpParamsMED = medfate::modifySpParams(SpParamsMED, survivalParamsSpecies, subsetSpecies = FALSE)
+survivalParamsSpecies <- readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/data/survival_models.rds"))
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, survivalParamsSpecies, subsetSpecies = FALSE)
 # Load SurvivalModel calibration results
-resproutingParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"MortalityRegenerationCalibration/Data/ResproutingMED.xlsx"))
-names(resproutingParamsSpecies)[1] = "Species"
-SpParamsMED = medfate::modifySpParams(SpParamsMED, resproutingParamsSpecies, subsetSpecies = FALSE)
-# Add bark thickness parameters
-bt_models <- openxlsx::read.xlsx(paste0(MFWdir,"MedfateSpeciesParametrization/AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), 
-                                 sheet= "Tree_BT_models", rowNames = TRUE)
-SpParamsMED <- traits4models::populate_tree_allometries(SpParamsMED, bt_models, "barkthickness")
-
+resproutingParamsSpecies <- readxl::read_xlsx(paste0(MFWdir,"MortalityRegenerationCalibration/data-raw/ResproutingMED.xlsx"))
+SpParamsMED <- medfate::modifySpParams(SpParamsMED, resproutingParamsSpecies, subsetSpecies = FALSE)
+# Add bark thickness parameters from harmonized allometries
+SpParamsMED <- traits4models::fill_medfate_allometries(SpParamsMED, 
+                                                       harmonized_allometry_path = harmonized_allometry_path,
+                                                       responses = "BarkThickness")
+# Add maturation diameter parameters from harmonized traits
+SpParamsMED <- traits4models::fill_medfate_traits(SpParamsMED, harmonized_trait_path = harmonized_trait_path,
+                                                  parameters = "SeedProductionDiameter")
+  
 # Manual tuning
-tree_all_cols = 30:42
+tree_all_cols = 31:43
+names(SpParamsMED)[tree_all_cols] # CHECK!
 #Use allometries of A. alba for P. abies
 SpParamsMED[147,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of A. alba for A. pinsapo
@@ -90,9 +99,9 @@ rm(SpParamsMED)
 
 
 # SpParamsMED [MODE B] -------------------------------------------------------------
-SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
-                                              sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
-usethis::use_data(SpParamsMED, overwrite = T)
+# SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
+#                                               sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
+# usethis::use_data(SpParamsMED, overwrite = T)
 
 
 ## Trait family means
@@ -126,9 +135,9 @@ S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 fmc<-S1$Plants$LFMC
 DI_PH = S1$PlantStructure$DBH[,PH_cohName] - c(DBH_ini_PH, S1$PlantStructure$DBH[-nrow(examplemeteo),PH_cohName])
 DI_QI = S1$PlantStructure$DBH[,QI_cohName] - c(DBH_ini_QI, S1$PlantStructure$DBH[-nrow(examplemeteo),QI_cohName])
-dates <- row.names(S1$Soil)
+dates <- row.names(S1$Soil$SWC)
 exampleobs = data.frame(dates = as.Date(dates),
-                        SWC = S1$Soil$RWC.1*(soil_thetaFC(examplesoil)[1]), 
+                        SWC = S1$Soil$SWC[,1], 
                         ETR  = S1$WaterBalance$Evapotranspiration, 
                         E_PH = S1$Plants$Transpiration[,PH_cohName]/x1$above[PH_cohName,"LAI_expanded"],
                         E_QI = S1$Plants$Transpiration[,QI_cohName]/x1$above[QI_cohName,"LAI_expanded"],

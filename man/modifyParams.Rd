@@ -34,7 +34,9 @@ Routines to modify species parameter table or model input objects
 }
 \details{
 When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species 
-and as many columns as parameters to modify, plus a column called 'SpIndex' or 'Species' to match species between the two tables.
+and as many columns as parameters to modify, plus a column called 'Name' or 'Species' to match species names between the two tables. In both
+cases, the function will match input strings with column 'Name' of \code{x}. Alternatively, \code{customParams} can contain a column 'SpIndex' for
+matching of species indices, but this is deprecated. 
 
 When calling \code{modifyCohortParams}, \code{customParams} can be a data frame with as many rows as cohorts 
 and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names 

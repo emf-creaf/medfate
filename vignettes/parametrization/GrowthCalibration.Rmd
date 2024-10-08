@@ -26,54 +26,36 @@ base_calibration = "/home/miquel/OneDrive/mcaceres_work/model_development/medfat
 
   The growth model included in **medfate** implements processes regulating plant carbon balance and growth. Species-level parameter values for these processes are obtained from: (a) global functional trait databases; (b) meta-modelling exercises; (c) model calibration exercises. The main goal of the current exercise is to obtain suitable values (via model calibration) for parameters related with the maintenance respiration costs, formation rates and senescence rates of sapwood, because these are difficult to obtain using other means. At the same time, the exercise provides information on the performance of the model to predict secondary growth at the tree and stand levels.
 
+The results presented here were obtained using **ver. 4.7.0** of medfate.
+
 ### Observational data
 
 The calibration data set corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are *Fagus sylvatica*, *Pinus halepensis*, *Pinus nigra*, *Pinus sylvestris* or *Quercus pubescens*. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Plot characteristics are described in Rosas et al. (2019). Dendrochronological series are available for up to 6 trees per plot and were sampled in December 2015. Note that a sixth species (*Quercus ilex*) was included in Rosas et al (2019), but dendrochronological dating is not available.
 
 
 ```{r, echo = FALSE}
+plot_desc_obs <- readRDS(paste0(base_calibration,"data/SpParamsMED/input/plot_desc_observed.rds"))
+eval_data_df <- readRDS(paste0(base_calibration,"data/SpParamsMED/output/eval_data_FUN2FUN.rds"))
+eval_stats_df <- readRDS(paste0(base_calibration,"data/SpParamsMED/output/eval_stats_FUN2FUN.rds"))
+cal_FUN2FUN_ga <- readRDS(paste0(base_calibration,"data/SpParamsMED/output/cal_FUN2FUN_ga.rds"))
+sel <- !is.na(cal_FUN2FUN_ga$value_cal)
+cal_FUN2FUN_ga <- cal_FUN2FUN_ga[sel,]
+plot_desc_obs <- plot_desc_obs[sel,]
 
-# cal_uncinata_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_uncinata_SL_ga.rds"))
-
-plot_desc = readRDS(paste0(base_calibration,"data/SpParamsMED/output/plot_desc_FUN2FUN.rds"))
-obs_FUN2FUN = readRDS(paste0(base_calibration,"data/SpParamsMED/output/obs_FUN2FUN_IFN.rds"))
-eval_data_df = readRDS(paste0(base_calibration,"data/SpParamsMED/output/eval_data_FUN2FUN.rds"))
-eval_stats_df = readRDS(paste0(base_calibration,"data/SpParamsMED/output/eval_stats_FUN2FUN.rds"))
-cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"data/SpParamsMED/output/cal_FUN2FUN_SL_ga.rds"))
-cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"data/SpParamsMED/output/cal_FUN2FUN_NSL_ga.rds"))
-sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
-cal_FUN2FUN_SL_ga = cal_FUN2FUN_SL_ga[sel,]
-cal_FUN2FUN_NSL_ga = cal_FUN2FUN_NSL_ga[sel,]
-plot_desc = plot_desc[sel,]
-obs_FUN2FUN = obs_FUN2FUN[sel]
-
-plot_desc$targetName = as.character(plot_desc$targetName)
-plot_desc$targetName[plot_desc$targetName=="Quercus humilis"] = "Quercus pubescens"
-
-plot_desc$meanBAI = NA
-plot_desc$sdBAI = NA
-for(i in 1:length(obs_FUN2FUN)) {
-  obs_i = obs_FUN2FUN[[i]]
+plot_desc_obs$meanBAI = NA
+plot_desc_obs$sdBAI = NA
+for(i in 1:nrow(plot_desc_obs)) {
+  obs_i = plot_desc_obs$observed[[i]]
   if(!is.null(obs_i)) {
-    plot_desc$meanBAI[i] = mean(apply(obs_i[,-1, drop =FALSE],2,mean, na.rm=T), na.rm=T)
-    plot_desc$sdBAI[i] = mean(apply(obs_i[,-1, drop =FALSE],2,sd, na.rm=T), na.rm=T)
+    plot_desc_obs$meanBAI[i] = mean(apply(obs_i[,-1, drop =FALSE],2,mean, na.rm=T), na.rm=T)
+    plot_desc_obs$sdBAI[i] = mean(apply(obs_i[,-1, drop =FALSE],2,sd, na.rm=T), na.rm=T)
   }
 }
 
+cal_FUN2FUN_ga$MeanBAI <- plot_desc_obs$meanBAI
 
-eval_stats_df$Species[eval_stats_df$Species=="Quercus humilis"] = "Quercus pubescens"
-
-cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
-cal_FUN2FUN_SL_ga$Species[cal_FUN2FUN_SL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
-cal_FUN2FUN_SL_ga$MeanBAI = plot_desc$meanBAI
-
-cal_FUN2FUN_NSL_ga$Species = as.character(cal_FUN2FUN_NSL_ga$Species)
-cal_FUN2FUN_NSL_ga$Species[cal_FUN2FUN_NSL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
-cal_FUN2FUN_NSL_ga$MeanBAI = plot_desc$meanBAI
-
-cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
-cal_FUN2FUN_SL_ga$P.PET_SpringSummer = plot_desc$P.PET_SpringSummer
-cal_FUN2FUN_SL_ga$P.PET_Summer = plot_desc$P.PET_Summer
+cal_FUN2FUN_ga$P.PET_SpringSummer <- plot_desc_obs$P.PET_SpringSummer
+cal_FUN2FUN_ga$P.PET_Summer <- plot_desc_obs$P.PET_Summer
 ```
 
 ### Target parameters for calibration
@@ -98,8 +80,8 @@ df<-data.frame(Minimum = c(1e-6, 0.0001, 0.00001, 25),
                Maximum = c(1e-4, 0.0200, 0.00025, 95), 
                row.names = c("RERsapwood","RGRcambiummax","SRsapwood", "rfc@2"))
 
-df %>%
-  kbl() %>%
+df |>
+  kbl() |>
   kable_styling()
 ```
 
@@ -109,7 +91,8 @@ df %>%
 
 ### Error function
 ```{r, echo = FALSE}
-df = cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)]
+df <- cal_FUN2FUN_ga |>
+  dplyr::select(Species, value_ini, value_cal, RERsapwood_cal, RGRcambiummax_cal, SRsapwood_cal, rfc_cal)
 ```
 
 The following panel shows the distribution of the final (optimum) values of the error function (average relative MAE) by dominant species:
@@ -123,7 +106,7 @@ p1<-ggplot(df)+
                    panel.grid = element_blank(),
                    legend.position = "none")
 
-ggsave(paste0(base_calibration,"Plots/relMAE.png"), p1, width=3.5, height = 3.5)
+ggplot2::ggsave(file.path(base_calibration,"plots", "SpParamsMED", "relMAE.png"), p1, width=3.5, height = 3.5)
 p1
 ```
 
@@ -171,26 +154,23 @@ p6<-ggplot(dfpar)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    panel.grid = element_blank(),legend.position = "none")
 p<-plot_grid(p3,p4, p5, p6, labels=c("a", "b", "c","d"), nrow=2)
-ggsave(paste0(base_calibration,"Plots/parameter_distribution.png"), p, width=7, height = 8)
+ggsave(file.path(base_calibration,"plots", "SpParamsMED", "parameter_distribution.png"), p, width=7, height = 8)
 p
 ```
 
 The following table shows mean error and parameter values by species and overall means:
 
 ```{r echo = FALSE}
-MAE_cal = cal_FUN2FUN_SL_ga$value_cal
-ms_F2F = apply(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)})
-# ms_UNC = apply(cal_uncinata_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_uncinata_SL_ga$Species, mean, na.rm=T)})
-# ms_UNC = data.frame(row.names  = "Pinus uncinata", t(ms_UNC))
-# df <- rbind(ms_F2F, ms_UNC)
+MAE_cal <- cal_FUN2FUN_ga$value_cal
+ms_F2F <- apply(cal_FUN2FUN_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_ga$Species, mean, na.rm=T)})
 df <- ms_F2F
 names(df) <-  c("Rel. MAE (%)", "RERsapwood","RGRcambiummax", "SRsapwood", "rfc@2")
 # ma <- apply(rbind(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)], cal_uncinata_SL_ga[,c(3, 5,7,9,11)]),2,mean, na.rm=TRUE)
-ma <- apply(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)],2,mean, na.rm=TRUE)
+ma <- apply(cal_FUN2FUN_ga[,c(3, 5,7,9,11)],2,mean, na.rm=TRUE)
 df <- rbind(df, ma)
 row.names(df)[nrow(df)] = "All"
-df %>%
-  kbl() %>%
+df |>
+  kbl() |>
   kable_styling()
 ```
 
@@ -241,8 +221,8 @@ g6<-ggplot(dfpar)+
   geom_point(aes(x=rfc_cal, y = SRsapwood_cal, col=Species, shape = Species))+
   labs(x="Rock content (%)", y="Sapwood senescence rate (day-1)")+
   theme_bw()+theme(legend.position = "none")
-p<-plot_grid(g1,g2,g3,g4,g5,g6, ncol=2)
-plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))
+p<-cowplot::plot_grid(g1,g2,g3,g4,g5,g6, ncol=2)
+cowplot::plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))
 ```
 
 ## Comparison of the basic and advanced sub-models
@@ -260,11 +240,16 @@ eval_sperry_df = eval_stats_df[,c("Species", "Bias_sperry", "Biasrel_sperry" ,"M
                                   "Bias_BAItot_sperry", "MAE_BAItot_sperry", "MAErel_BAItot_sperry")]
 names(eval_sperry_df)<-names(eval_cal_df)
 
-eval_cal_df$type = "Basic sub-model"
-eval_sperry_df$type = "Advanced sub-model"
+eval_sureau_df = eval_stats_df[,c("Species", "Bias_sureau", "Biasrel_sureau" ,"MAE_sureau", "MAErel_sureau",
+                                  "Bias_BAItot_sureau", "MAE_BAItot_sureau", "MAErel_BAItot_sureau")]
+names(eval_sureau_df)<-names(eval_cal_df)
 
-eval_all_df = bind_rows(eval_cal_df, eval_sperry_df)
-eval_all_df$type = factor(eval_all_df$type, levels = c("Basic sub-model", "Advanced sub-model"))
+eval_cal_df$type = "Granier (calibrated)"
+eval_sperry_df$type = "Sperry"
+eval_sureau_df$type = "Sureau"
+
+eval_all_df = bind_rows(eval_cal_df, eval_sperry_df, eval_sureau_df)
+eval_all_df$type = factor(eval_all_df$type, levels = c("Granier (calibrated)", "Sperry", "Sureau"))
 ```
 
 ```{r, eval = TRUE, echo = FALSE, fig.width=8, fig.height=7, warning= FALSE}
@@ -295,7 +280,7 @@ p4<-ggplot(eval_all_df)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")+ theme(panel.grid = element_blank())
 p <- plot_grid(p1, p2, p3, p4, labels = c("a)","b)", "c)", "d)"), nrow=2, ncol=2)
-ggsave(paste0(base_calibration,"Plots/calibration_eval.png"), p, width = 8, height = 7, bg = "white")
+ggsave(file.path(base_calibration,"plots", "SpParamsMED", "calibration_eval.png"), p, width = 8, height = 7, bg = "white")
 p
 ```
 
