@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
 <span></span>
 <span><span class="fu">plant_crownLength</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
+<span><span class="fu">plant_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, competitionEffect <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_fuelLoading</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -92,7 +92,13 @@
 <span></span>
 <span><span class="fu">plant_phytovolume</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">plant_LAI</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">SpParams</span>,</span>
+<span>  gdd <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  bounded <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  competitionEffect <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_characterParameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span><span class="op">)</span></span>
 <span></span>
@@ -121,6 +127,10 @@
 
 <dt id="arg-gdd">gdd<a class="anchor" aria-label="anchor" href="#arg-gdd"></a></dt>
 <dd><p>Growth degree days (to account for leaf phenology effects).</p></dd>
+
+
+<dt id="arg-competitioneffect">competitionEffect<a class="anchor" aria-label="anchor" href="#arg-competitioneffect"></a></dt>
+<dd><p>Logical flag to indicate the inclusion of competition effect on LAI estimates.</p></dd>
 
 
 <dt id="arg-includedead">includeDead<a class="anchor" aria-label="anchor" href="#arg-includedead"></a></dt>
@@ -227,7 +237,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

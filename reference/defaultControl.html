@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,10 @@
 <li><p><code>standResults [= TRUE]</code>: Boolean flag to keep stand-level results (in a data frame called 'Stand').</p></li>
 <li><p><code>soilResults [= TRUE]</code>: Boolean flag to keep soil-level results (in a list called 'Soil').</p></li>
 <li><p><code>snowResults [= TRUE]</code>: Boolean flag to keep snow results (in a data frame called 'Snow').</p></li>
-<li><p><code>plantResults [= TRUE]</code>: Boolean flag to keep plant-level results (in a list called 'Plants').</p></li>
+<li><p><code>plantResults [= TRUE]</code>: Boolean flag to keep plant-level water/energy/photosynthesis results (in a list called 'Plants').</p></li>
+<li><p><code>labileCarbonBalanceResults [= TRUE]</code>: Boolean flag to keep plant-level labile carbon balance results (in a list called 'LabileCarbonBalance').</p></li>
+<li><p><code>plantStructureResults [= TRUE]</code>: Boolean flag to keep plant-level structure results (in a list called 'PlantStructure').</p></li>
+<li><p><code>growthMortalityResults [= TRUE]</code>: Boolean flag to keep plant-level growth and mortality results (in a list called 'GrowthMortality').</p></li>
 <li><p><code>leafResults [= TRUE]</code>: Boolean flag to keep leaf-level results (in elements called 'SunlitLeaves' and 'ShadeLeaves').</p></li>
 <li><p><code>temperatureResults [= TRUE]</code>: Boolean flag to keep temperature results (in elements called 'Temperature' and 'TemperatureLayers').</p></li>
 <li><p><code>subdailyResults [= FALSE]</code>: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of <code><a href="spwb_day.html">spwb_day</a></code> objects, one by simulated date) in calls to <code><a href="spwb.html">spwb</a></code>. In function <code>fordyn</code> <code>subdailyResults</code> is always set to FALSE.</p></li>
@@ -223,7 +226,7 @@ The relevant parameters are different for each model function.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

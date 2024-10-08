@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,8 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>. The function only works with the result of simulations with <code>transpirationMode = "Sperry"</code>.</p></dd>
+<dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>.
+The function only works with the result of simulations with <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Sureau"</code>.</p></dd>
 
 
 <dt id="arg-cohort">cohort<a class="anchor" aria-label="anchor" href="#arg-cohort"></a></dt>
@@ -78,11 +79,11 @@
 
 
 <dt id="arg-relative">relative<a class="anchor" aria-label="anchor" href="#arg-relative"></a></dt>
-<dd><p>A boolean flag to indicate that relative percentages are desired as output</p></dd>
+<dd><p>A boolean flag to indicate that relative percentages are desired as output.</p></dd>
 
 
 <dt id="arg-draw">draw<a class="anchor" aria-label="anchor" href="#arg-draw"></a></dt>
-<dd><p>A boolean flag to indicate that a plot should be drawn.</p></dd>
+<dd><p>A boolean flag to indicate that a plot should be drawn (only pathway resistances, without discriminating between soil layers).</p></dd>
 
 
 <dt id="arg-cumulative">cumulative<a class="anchor" aria-label="anchor" href="#arg-cumulative"></a></dt>
@@ -99,13 +100,16 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf).
-Values depend on whether <code>relative = TRUE</code> (percentages) or <code>relative = FALSE</code> (absolute resistance values).
-If <code>draw = TRUE</code> then a plot object is returned.</p>
+    <p>If <code>draw = FALSE</code>, the function returns list with three items:</p><ul><li><p><code>pathway</code>: A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf).</p></li>
+<li><p><code>root</code>: A data frame with dates in rows and root resistances for soil layers in columns.</p></li>
+<li><p><code>rhizosphere</code>: A data frame with dates in rows and rhizosphere resistances for soil layers in columns.</p></li>
+</ul><p>Values depend on whether <code>relative = TRUE</code> (percentages) or <code>relative = FALSE</code> (absolute resistance values).</p>
+<p>If <code>draw = TRUE</code>, a plot object is returned showing the time series of pathway resistances.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The function makes internal calls to <code><a href="hydraulics_scalingconductance.html">hydraulics_soilPlantResistances</a></code>.</p>
+    <p>The function makes internal calls to <code><a href="hydraulics_scalingconductance.html">hydraulics_soilPlantResistancesWeibull</a></code> or
+<code><a href="hydraulics_scalingconductance.html">hydraulics_soilPlantResistancesSigmoid</a></code> depending on the value of <code>transpirationMode</code> in <code>x</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -114,6 +118,7 @@ If <code>draw = TRUE</code> then a plot object is returned.</p>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Miquel De Cáceres Ainsa, CREAF</p>
+<p>Léa Veuillen, INRAE-URFM</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -125,7 +130,7 @@ If <code>draw = TRUE</code> then a plot object is returned.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

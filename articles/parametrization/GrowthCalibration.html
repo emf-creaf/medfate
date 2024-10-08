@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-09-23</h4>
+            <h4 data-toc-skip class="date">2024-10-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/GrowthCalibration.Rmd" class="external-link"><code>vignettes/parametrization/GrowthCalibration.Rmd</code></a></small>
       <div class="d-none name"><code>GrowthCalibration.Rmd</code></div>
@@ -107,6 +107,8 @@ rates of sapwood, because these are difficult to obtain using other
 means. At the same time, the exercise provides information on the
 performance of the model to predict secondary growth at the tree and
 stand levels.</p>
+<p>The results presented here were obtained using <strong>ver.
+4.7.0</strong> of medfate.</p>
 </div>
 <div class="section level3">
 <h3 id="observational-data">Observational data<a class="anchor" aria-label="anchor" href="#observational-data"></a>
@@ -291,19 +293,19 @@ rfc_cal
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-43.95563
+44.42173
 </td>
 <td style="text-align:right;">
-5.11e-05
+4.75e-05
 </td>
 <td style="text-align:right;">
-0.0028215
+0.0030717
 </td>
 <td style="text-align:right;">
-0.0001262
+0.0001413
 </td>
 <td style="text-align:right;">
-47.72419
+70.62993
 </td>
 </tr>
 <tr>
@@ -311,19 +313,19 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-46.25125
+51.74750
 </td>
 <td style="text-align:right;">
-5.51e-05
+4.58e-05
 </td>
 <td style="text-align:right;">
-0.0022197
+0.0012585
 </td>
 <td style="text-align:right;">
-0.0001026
+0.0001108
 </td>
 <td style="text-align:right;">
-56.32354
+71.51148
 </td>
 </tr>
 <tr>
@@ -331,19 +333,19 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-41.97312
+41.81043
 </td>
 <td style="text-align:right;">
-4.18e-05
+5.29e-05
 </td>
 <td style="text-align:right;">
-0.0017254
+0.0012309
 </td>
 <td style="text-align:right;">
-0.0001391
+0.0001167
 </td>
 <td style="text-align:right;">
-72.48055
+65.38852
 </td>
 </tr>
 <tr>
@@ -351,19 +353,19 @@ Pinus nigra
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-40.50649
+46.20288
 </td>
 <td style="text-align:right;">
-6.05e-05
+5.11e-05
 </td>
 <td style="text-align:right;">
-0.0023457
+0.0020654
 </td>
 <td style="text-align:right;">
-0.0001416
+0.0001261
 </td>
 <td style="text-align:right;">
-72.13271
+75.76548
 </td>
 </tr>
 <tr>
@@ -371,19 +373,19 @@ Pinus sylvestris
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-39.70155
+37.27032
 </td>
 <td style="text-align:right;">
-4.88e-05
+5.25e-05
 </td>
 <td style="text-align:right;">
-0.0015056
+0.0014387
 </td>
 <td style="text-align:right;">
-0.0001644
+0.0001334
 </td>
 <td style="text-align:right;">
-54.51127
+56.13528
 </td>
 </tr>
 <tr>
@@ -391,19 +393,19 @@ Quercus pubescens
 All
 </td>
 <td style="text-align:right;">
-42.47761
+44.29057
 </td>
 <td style="text-align:right;">
-5.15e-05
+5.00e-05
 </td>
 <td style="text-align:right;">
-0.0021236
+0.0018130
 </td>
 <td style="text-align:right;">
-0.0001348
+0.0001256
 </td>
 <td style="text-align:right;">
-60.63445
+67.88614
 </td>
 </tr>
 </tbody>
@@ -415,30 +417,28 @@ the following ANOVA tables:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: RERsapwood_cal</span></span>
 <span><span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span></span>
-<span><span class="co">## Species    4 2.9480e-09 7.3699e-10  1.3127 0.2738</span></span>
-<span><span class="co">## Residuals 70 3.9301e-08 5.6144e-10</span></span></code></pre>
+<span><span class="co">## Species    4 6.0420e-10 1.5104e-10  0.3657 0.8323</span></span>
+<span><span class="co">## Residuals 70 2.8913e-08 4.1305e-10</span></span></code></pre>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: RGRcambiummax_cal</span></span>
-<span><span class="co">##           Df     Sum Sq    Mean Sq F value  Pr(&gt;F)  </span></span>
-<span><span class="co">## Species    4 1.6290e-05 4.0726e-06  3.1039 0.02068 *</span></span>
-<span><span class="co">## Residuals 70 9.1846e-05 1.3121e-06                  </span></span>
+<span><span class="co">##           Df     Sum Sq    Mean Sq F value    Pr(&gt;F)    </span></span>
+<span><span class="co">## Species    4 3.6516e-05 9.1291e-06  7.8876 2.625e-05 ***</span></span>
+<span><span class="co">## Residuals 70 8.1018e-05 1.1574e-06                      </span></span>
 <span><span class="co">## ---</span></span>
 <span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: SRsapwood_cal</span></span>
-<span><span class="co">##           Df     Sum Sq    Mean Sq F value  Pr(&gt;F)  </span></span>
-<span><span class="co">## Species    4 3.0774e-08 7.6935e-09  2.3528 0.06226 .</span></span>
-<span><span class="co">## Residuals 70 2.2890e-07 3.2700e-09                  </span></span>
-<span><span class="co">## ---</span></span>
-<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
+<span><span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span></span>
+<span><span class="co">## Species    4 9.0900e-09 2.2725e-09  0.7766 0.5441</span></span>
+<span><span class="co">## Residuals 70 2.0484e-07 2.9263e-09</span></span></code></pre>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: rfc_cal</span></span>
-<span><span class="co">##           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    </span></span>
-<span><span class="co">## Species    4  7429.4 1857.34  5.6629 0.0005235 ***</span></span>
-<span><span class="co">## Residuals 70 22959.0  327.99                      </span></span>
+<span><span class="co">##           Df  Sum Sq Mean Sq F value  Pr(&gt;F)  </span></span>
+<span><span class="co">## Species    4  3406.1  851.54  2.3969 0.05837 .</span></span>
+<span><span class="co">## Residuals 70 24868.7  355.27                  </span></span>
 <span><span class="co">## ---</span></span>
 <span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
 <p>Finally, the following panels illustrate the overall lack of
@@ -489,7 +489,7 @@ and stem traits along a water availability gradient. New Phytologist
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

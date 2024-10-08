@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2024-09-23</h4>
+            <h4 data-toc-skip class="date">2024-10-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="d-none name"><code>FontBlanche.Rmd</code></div>
@@ -243,10 +243,10 @@ unaltered:</p>
 <span><span class="co">## 143 Phanerophyte     Broad   Medium oneflush-evergreen    vertebrate  150  900</span></span>
 <span><span class="co">## 149 Phanerophyte    Needle    Small oneflush-evergreen          wind  850 1900</span></span>
 <span><span class="co">## 169 Phanerophyte     Broad   Medium oneflush-evergreen    vertebrate  500 1300</span></span>
-<span><span class="co">##     Z50  Z95 fHDmin fHDmax    a_ash    b_ash    a_bsh     b_bsh    a_btsh</span></span>
-<span><span class="co">## 143  NA 2353     45    109       NA       NA       NA        NA        NA</span></span>
-<span><span class="co">## 149  NA 7500     80    160       NA       NA       NA        NA        NA</span></span>
-<span><span class="co">## 169  NA 5020     40    100 1.857486 1.885548 0.523883 0.7337293 0.7327147</span></span>
+<span><span class="co">##     Dmax Z50  Z95 fHDmin fHDmax    a_ash    b_ash    a_bsh     b_bsh    a_btsh</span></span>
+<span><span class="co">## 143   NA  NA 2353     45    109       NA       NA       NA        NA        NA</span></span>
+<span><span class="co">## 149   NA  NA 7500     80    160       NA       NA       NA        NA        NA</span></span>
+<span><span class="co">## 169   NA  NA 5020     40    100 1.857486 1.885548 0.523883 0.7337293 0.7327147</span></span>
 <span><span class="co">##       b_btsh cr BTsh      a_fbt    b_fbt       c_fbt    a_cr  b_1cr    b_2cr</span></span>
 <span><span class="co">## 143       NA NA   NA         NA       NA          NA      NA     NA       NA</span></span>
 <span><span class="co">## 149       NA NA   NA 0.07607828 1.462411 -0.02280106      NA     NA       NA</span></span>
@@ -307,26 +307,26 @@ unaltered:</p>
 <span><span class="co">## 143     NA           0.001622378                NA         NA         NA</span></span>
 <span><span class="co">## 149 0.3725           0.005000000                10   7.311515 -0.6532989</span></span>
 <span><span class="co">## 169 0.9500           0.001000000                10   7.484348 -0.5420550</span></span>
-<span><span class="co">##     SeedProductionHeight SeedMass SeedLongevity DispersalDistance</span></span>
-<span><span class="co">## 143                   NA       NA            NA                NA</span></span>
-<span><span class="co">## 149                   NA       NA            NA                NA</span></span>
-<span><span class="co">## 169                   NA       NA            NA                NA</span></span>
-<span><span class="co">##     DispersalShape   ProbRecr MinTempRecr MinMoistureRecr MinFPARRecr</span></span>
-<span><span class="co">## 143             NA 0.04459023   -2.570181      0.05070956   0.4943654</span></span>
-<span><span class="co">## 149             NA 0.02473379    1.083300      0.10154153   4.5625766</span></span>
-<span><span class="co">## 169             NA 0.03005748   -3.744526      0.09657161   0.1307250</span></span>
-<span><span class="co">##     RecrTreeDBH RecrTreeHeight RecrShrubHeight RecrTreeDensity RecrShrubCover</span></span>
-<span><span class="co">## 143          NA       52.54367              NA              NA             NA</span></span>
-<span><span class="co">## 149          NA       56.93647              NA              NA             NA</span></span>
-<span><span class="co">## 169          NA       47.23629              NA              NA             NA</span></span>
-<span><span class="co">##     RecrZ50 RecrZ95 RespFire RespDist RespClip IngrowthTreeDensity</span></span>
-<span><span class="co">## 143      NA      NA      0.9     0.95     0.96            235.1347</span></span>
-<span><span class="co">## 149      NA      NA       NA       NA       NA            246.2793</span></span>
-<span><span class="co">## 169      NA      NA      0.9     0.95     0.96            352.2668</span></span>
-<span><span class="co">##     IngrowthTreeDBH</span></span>
-<span><span class="co">## 143              NA</span></span>
-<span><span class="co">## 149              NA</span></span>
-<span><span class="co">## 169              NA</span></span></code></pre>
+<span><span class="co">##     SeedProductionHeight SeedProductionDiameter SeedMass SeedLongevity</span></span>
+<span><span class="co">## 143                   NA                     NA       NA            NA</span></span>
+<span><span class="co">## 149                   NA                     NA       NA            NA</span></span>
+<span><span class="co">## 169                   NA                     NA       NA            NA</span></span>
+<span><span class="co">##     DispersalDistance DispersalShape   ProbRecr MinTempRecr MinMoistureRecr</span></span>
+<span><span class="co">## 143                NA             NA 0.04459023   -2.570181      0.05070956</span></span>
+<span><span class="co">## 149                NA             NA 0.02473379    1.083300      0.10154153</span></span>
+<span><span class="co">## 169                NA             NA 0.03005748   -3.744526      0.09657161</span></span>
+<span><span class="co">##     MinFPARRecr RecrTreeDBH RecrTreeHeight RecrShrubHeight RecrTreeDensity</span></span>
+<span><span class="co">## 143   0.4943654          NA       52.54367              NA              NA</span></span>
+<span><span class="co">## 149   4.5625766          NA       56.93647              NA              NA</span></span>
+<span><span class="co">## 169   0.1307250          NA       47.23629              NA              NA</span></span>
+<span><span class="co">##     RecrShrubCover RecrZ50 RecrZ95 RespFire RespDist RespClip</span></span>
+<span><span class="co">## 143             NA      NA      NA      0.9     0.95     0.96</span></span>
+<span><span class="co">## 149             NA      NA      NA       NA       NA       NA</span></span>
+<span><span class="co">## 169             NA      NA      NA      0.9     0.95     0.96</span></span>
+<span><span class="co">##     IngrowthTreeDensity IngrowthTreeDBH</span></span>
+<span><span class="co">## 143            235.1347              NA</span></span>
+<span><span class="co">## 149            246.2793              NA</span></span>
+<span><span class="co">## 169            352.2668              NA</span></span></code></pre>
 <p>Note that the function returns a subset of rows for the species
 mentioned in <code>customParams</code>. Not all parameters are needed
 for the soil water balance model. The user can find parameter
@@ -437,10 +437,10 @@ object <code>fb_forest</code> to show how should the data look like:</p>
 <span><span class="co">## T1_142 142 1248  2.587859    NA  323.0000 0.5510653 0.2581029    0.2581029</span></span>
 <span><span class="co">## T2_148 148  256 26.759914    NA 1195.7667 0.6126601 1.0035486    1.0035486</span></span>
 <span><span class="co">## T3_168 168 3104  6.220031    NA  495.5532 0.5531152 1.4383485    1.4383485</span></span>
-<span><span class="co">##        LAI_dead ObsID</span></span>
-<span><span class="co">## T1_142        0  &lt;NA&gt;</span></span>
-<span><span class="co">## T2_148        0  &lt;NA&gt;</span></span>
-<span><span class="co">## T3_168        0  &lt;NA&gt;</span></span></code></pre>
+<span><span class="co">##        LAI_dead LAI_nocomp ObsID</span></span>
+<span><span class="co">## T1_142        0  0.2581029  &lt;NA&gt;</span></span>
+<span><span class="co">## T2_148        0  1.0035486  &lt;NA&gt;</span></span>
+<span><span class="co">## T3_168        0  1.4383485  &lt;NA&gt;</span></span></code></pre>
 <p>Note that the call to <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code> included
 species parameters, because species-specific parameter values are needed
 to calculate leaf area from tree diameters or shrub cover using
@@ -1119,7 +1119,7 @@ Meteorol. 308–309, 108472. <a href="https://doi.org/10.1016/j.agrformet.2021.1
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
