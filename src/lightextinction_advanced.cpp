@@ -544,6 +544,9 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
   double Kdlw = 0.7815; //Extinction coefficient fo LWR
   double eps_c = 0.97;
   double eps_g = 0.97;
+  
+  double sigma_pow_Tsoil = SIGMA_Wm2*pow(Tsoil+273.16,4.0);
+  
   //Transmissivity
   for(int i=0;i<ncanlayers;i++) {
     double lai_layer = 0.0;
@@ -564,7 +567,7 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
     Ldown[i] = tau[i]*Ldown_upper + (1.0 - tau[i])*eps_c*SIGMA_Wm2*pow(Tair[i]+273.16,4.0);
   }
   //Upwards
-  double Lup_g = (1.0 - eps_g)*Ldown[0] + eps_g*SIGMA_Wm2*pow(Tsoil+273.16,4.0);
+  double Lup_g = (1.0 - eps_g)*Ldown[0] + eps_g*sigma_pow_Tsoil;
   for(int i=0;i<ncanlayers;i++) {
     double Lup_lower = 0.0;
     if(i==0) Lup_lower = Lup_g;
@@ -587,7 +590,7 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
       } 
     }
   }
-  double Lnet_g = eps_g*(Ldown[0] - SIGMA_Wm2*pow(Tsoil+273.16,4.0));
+  double Lnet_g = eps_g*(Ldown[0] - sigma_pow_Tsoil);
   double Lnet_c = sum(Lnet);
   DataFrame LWR = DataFrame::create(_["Ldown"] = Ldown, 
                                     _["Lup"] = Lup,
