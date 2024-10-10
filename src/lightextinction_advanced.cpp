@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "modelInput.h"
 #include "forestutils.h"
 #include "paramutils.h"
 #include "incbeta.h"
@@ -521,21 +522,19 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   return(res);
 }
 
-/**
- *  LWR model of Ma and Liu (2019), based on Flerchinger et al (2009)
- *  
- *  Ma Y, Liu H (2019) An Advanced Multiple-Layer Canopy Model in the WRF Model With Large-Eddy Simulations to Simulate Canopy Flows and Scalar Transport Under Different Stability Conditions. J Adv Model Earth Syst 11:2330–2351. https://doi.org/10.1029/2018MS001347
- *  Flerchinger GN, Xiao W, Sauer TJ, Yu Q (2009) Simulation of within-canopy radiation exchange. NJAS - Wageningen J Life Sci 57:5–15. https://doi.org/10.1016/j.njas.2009.07.004
- */
-//' @rdname light_advanced
-//' @keywords internal
-// [[Rcpp::export("light_longwaveRadiationSHAW")]]
-List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
-                           double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
+void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
+                                 double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
   int ncoh = LAIme.ncol();
   int ncanlayers = Tair.size();
-  NumericVector Lup(ncanlayers), Ldown(ncanlayers), Lnet(ncanlayers);
-  NumericVector tau(ncanlayers), sumTauComp(ncanlayers);
+  
+  DataFrame LWR_layer = as<Rcpp::DataFrame>(internalLWR["LWR_layer"]);
+  
+  NumericVector Lup = as<NumericVector>(LWR_layer["Lup"]);
+  NumericVector Ldown = as<NumericVector>(LWR_layer["Ldown"]);
+  NumericVector Lnet = as<NumericVector>(LWR_layer["Lnet"]);
+  NumericVector tau = as<NumericVector>(LWR_layer["tau"]);
+  NumericVector sumTauComp = as<NumericVector>(LWR_layer["sumTauComp"]);
+  
   NumericMatrix lai_ij(ncanlayers, ncoh);
   NumericMatrix tauM(ncanlayers, ncoh);
   NumericMatrix LnetM(ncanlayers, ncoh);
@@ -592,15 +591,31 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
   }
   double Lnet_g = eps_g*(Ldown[0] - sigma_pow_Tsoil);
   double Lnet_c = sum(Lnet);
-  DataFrame LWR = DataFrame::create(_["Ldown"] = Ldown, 
-                                    _["Lup"] = Lup,
-                                    _["Lnet"] = Lnet);
-  return(List::create(_["LWR_layer"] = LWR,
-                      _["Ldown_ground"] = Ldown[0],
-                      _["Lup_ground"] = Lup_g,
-                      _["Lnet_ground"] = Lnet_g,
-                      _["Ldown_canopy"] = LWRatm,
-                      _["Lup_canopy"] = Lup[(ncanlayers-1)],
-                      _["Lnet_canopy"] = Lnet_c,
-                      _["Lnet_cohort_layer"] = LnetM));
+
+  internalLWR["Ldown_ground"] = Ldown[0];
+  internalLWR["Lup_ground"] = Lup_g;
+  internalLWR["Lnet_ground"] = Lnet_g;
+  internalLWR["Ldown_canopy"] = LWRatm;
+  internalLWR["Lup_canopy"] = Lup[(ncanlayers-1)];
+  internalLWR["Lnet_canopy"] = Lnet_c;
+  internalLWR["Lnet_cohort_layer"] = LnetM;
 }
+
+
+/**
+ *  LWR model of Ma and Liu (2019), based on Flerchinger et al (2009)
+ *  
+ *  Ma Y, Liu H (2019) An Advanced Multiple-Layer Canopy Model in the WRF Model With Large-Eddy Simulations to Simulate Canopy Flows and Scalar Transport Under Different Stability Conditions. J Adv Model Earth Syst 11:2330–2351. https://doi.org/10.1029/2018MS001347
+ *  Flerchinger GN, Xiao W, Sauer TJ, Yu Q (2009) Simulation of within-canopy radiation exchange. NJAS - Wageningen J Life Sci 57:5–15. https://doi.org/10.1016/j.njas.2009.07.004
+ */
+//' @rdname light_advanced
+//' @keywords internal
+// [[Rcpp::export("light_longwaveRadiationSHAW")]]
+List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
+                            double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
+   List internalLWR = internalLongWaveRadiation(Tair.size());
+   longwaveRadiationSHAW_inner(internalLWR, LAIme, LAImd, LAImx,
+                               LWRatm, Tsoil, Tair, trunkExtinctionFraction);
+   return(internalLWR);
+ }
+

@@ -886,12 +886,13 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
-    List lwrExtinction = longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
-                                               lwdr[n], Tsoil[0], Tair);
-    lwrExtinctionList[n] = lwrExtinction;
-    net_LWR_soil[n] = lwrExtinction["Lnet_ground"];
-    net_LWR_can[n]= lwrExtinction["Lnet_canopy"];
-    NumericMatrix Lnet_cohort_layer = lwrExtinction["Lnet_cohort_layer"];
+    List internalLWR = as<Rcpp::List>(x["internalLWR"]);
+    longwaveRadiationSHAW_inner(internalLWR, LAIme, LAImd, LAImx, 
+                               lwdr[n], Tsoil[0], Tair);
+    lwrExtinctionList[n] = internalLWR;
+    net_LWR_soil[n] = internalLWR["Lnet_ground"];
+    net_LWR_can[n]= internalLWR["Lnet_canopy"];
+    NumericMatrix Lnet_cohort_layer = internalLWR["Lnet_cohort_layer"];
 
     ////////////////////////////////////////
     // STEP 5.2 Sunlit/shade leaf energy balance, stomatal conductance and plant hydraulics
@@ -1066,7 +1067,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       double maxMoistureChange = 0.001/((double)nsubsteps); //=0.16 kPa per step
       double maxCO2Change = 180.0/((double)nsubsteps); //= 10 ppm per step
       double deltaZ = (verticalLayerSize/100.0); //Vertical layer size in m
-      DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(lwrExtinction["LWR_layer"]);
+      DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(internalLWR["LWR_layer"]);
       NumericVector LWRnet_layer = LWR_layer["Lnet"];
       Ebal[n] = 0.0;
       LEVcan[n] = 0.0;
