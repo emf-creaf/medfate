@@ -3640,6 +3640,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// start_profiler
+SEXP start_profiler(SEXP str);
+RcppExport SEXP _medfate_start_profiler(SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(start_profiler(str));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stop_profiler
+SEXP stop_profiler();
+RcppExport SEXP _medfate_stop_profiler() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(stop_profiler());
+    return rcpp_result_gen;
+END_RCPP
+}
 // conicDistribution
 NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d);
 RcppExport SEXP _medfate_conicDistribution(SEXP ZconeSEXP, SEXP dSEXP) {
@@ -6036,6 +6057,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 15},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
+    {"_medfate_start_profiler", (DL_FUNC) &_medfate_start_profiler, 1},
+    {"_medfate_stop_profiler", (DL_FUNC) &_medfate_stop_profiler, 0},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 4},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},

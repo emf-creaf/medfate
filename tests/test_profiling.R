@@ -1,0 +1,11 @@
+library(medfate)
+
+data(examplemeteo)
+data(exampleforest)
+data(SpParamsMED)
+examplesoil <- defaultSoilParams(4)
+control <- defaultControl("Granier")
+x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+start_profiler("/tmp/profile.out")
+S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+stop_profiler()

@@ -2884,6 +2884,14 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
     .Call(`_medfate_multilayerPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
 }
 
+start_profiler <- function(str) {
+    .Call(`_medfate_start_profiler`, str)
+}
+
+stop_profiler <- function() {
+    .Call(`_medfate_stop_profiler`)
+}
+
 #' Root functions
 #' 
 #' Functions to calculate properties of fine/coarse roots within the soil, given root system parameters and soil layer definition.
