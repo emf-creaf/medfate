@@ -2499,6 +2499,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   //Clone input
   x = clone(x);
   
+  //Add communication structures
+  addSPWBCommunicationStructures(x);
+  
+  
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
