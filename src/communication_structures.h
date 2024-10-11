@@ -6,5 +6,6 @@
 using namespace Rcpp;
 
 void addSPWBCommunicationStructures(List x);
+void clearCommunicationStructures(List x);
 
 List internalLongWaveRadiation(int ncanlayers);

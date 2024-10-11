@@ -34,3 +34,8 @@ void addSPWBCommunicationStructures(List x) {
   x["internalCommunication"] = ic;
 }
 
+// [[Rcpp::export(".clearCommunicationStructures")]]
+void clearCommunicationStructures(List x) {
+  List control = x["control"];
+  x["internalCommunication"] = List::create();
+}

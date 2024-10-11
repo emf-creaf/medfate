@@ -988,6 +988,8 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
                  runon, lateralFlows, waterTableDepth, 
                  verbose);
   }
+  //Clear communication structures
+  clearCommunicationStructures(x);
   // Rcout<<"hola4\n";
   return(s);
 }
@@ -1822,7 +1824,7 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   
   if(control["subdailyResults"]) {
     List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
-    subdailyRes[iday] = sDay;
+    subdailyRes[iday] = clone(sDay); //Clones subdaily results because they are communication structures
   }
 }
 
@@ -2455,7 +2457,9 @@ List spwb(List x, DataFrame meteo,
       Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
     }
   }
-
+  
+  //Clear communication structures
+  clearCommunicationStructures(x);
 
   return(outputList);
 }
@@ -2929,5 +2933,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   }
   if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("pwb","list");
+  
+  //Clear communication structures
+  clearCommunicationStructures(x);
   return(l);                    
 }
