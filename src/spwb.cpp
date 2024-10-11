@@ -170,8 +170,8 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Add communication structures
   addSPWBCommunicationStructures(x);
   List internalCommunication = x["internalCommunication"];
-  List output = internalCommunication["basicSPWBOutput"];
-  output["weather"] = clone(meteovec);
+  List basicSPWBOutput = internalCommunication["basicSPWBOutput"];
+  basicSPWBOutput["weather"] = clone(meteovec);
   
   //Control parameters
   List control = x["control"];
@@ -302,9 +302,9 @@ List spwbDay_basic(List x, NumericVector meteovec,
   }
 
   //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
-  List transp = transpirationBasic(x, meteovec, elevation, true);
+  List outputTransp = transpirationBasic(x, meteovec, elevation, true);
   //Determine hydraulic redistribution and source sink for overall soil
-  NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
+  NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(outputTransp["Extraction"]);
   NumericVector ExtractionVec(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
   NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
@@ -344,7 +344,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     CapillarityRise = sf["CapillarityRise"];
   } else { //Apply soil flows to water pools
     NumericVector poolProportions = belowdf["poolProportions"];
-    List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
+    List ExtractionPools = Rcpp::as<Rcpp::List>(outputTransp["ExtractionPools"]);
     // NumericVector sourceSinkCheck(nlayers, 0.0);
     //Set Wsoil to zero
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
@@ -393,18 +393,16 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
     // for(int l=0; l<nlayers;l++) Rcout<< sourceSinkCheck[l] << " " << sourceSinkVec[l]<<"\n";
   }
+  
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   
   //STEP 6 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) output["FireHazard"] = fccsHazard(x, meteovec, transp, slope);
-  
-  // Arrange output
-  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
-  NumericVector Eplant = Rcpp::as<Rcpp::NumericVector>(Plants["Transpiration"]);
+  if(fireHazardResults) basicSPWBOutput["FireHazard"] = fccsHazard(x, meteovec, outputTransp, slope);
 
-  NumericVector WaterBalance = output["WaterBalance"];
+  // Arrange output
+  NumericVector WaterBalance = basicSPWBOutput["WaterBalance"];
   WaterBalance["PET"] = pet;
   WaterBalance["Rain"] = hydroInputs["Rain"];
   WaterBalance["Snow"] = hydroInputs["Snow"]; 
@@ -420,10 +418,12 @@ List spwbDay_basic(List x, NumericVector meteovec,
   WaterBalance["SoilEvaporation"] = Esoil;
   WaterBalance["HerbTranspiration"] = sum(EherbVec);
   WaterBalance["PlantExtraction"] = sum(ExtractionVec);
+  DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(outputTransp["Plants"]);
+  NumericVector Eplant = Rcpp::as<Rcpp::NumericVector>(outputPlants["Transpiration"]);
   WaterBalance["Transpiration"] = sum(Eplant);
   WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
   
-  NumericVector Stand = output["Stand"];
+  NumericVector Stand = basicSPWBOutput["Stand"];
   Stand["LAI"] = LAIcell;
   Stand["LAIherb"] = herbLAI; 
   Stand["LAIlive"] = LAIcelllive;
@@ -433,7 +433,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   Stand["LgroundPAR"] = LgroundPAR; 
   Stand["LgroundSWR"] = LgroundSWR;
   
-  DataFrame Soil = as<DataFrame>(output["Soil"]);
+  DataFrame Soil = as<DataFrame>(basicSPWBOutput["Soil"]);
   NumericVector Psi = Soil["Psi"];
   NumericVector HerbTranspiration = Soil["HerbTranspiration"];
   NumericVector HydraulicInput = Soil["HydraulicInput"];
@@ -446,8 +446,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     HydraulicOutput[l] = soilHydraulicOutput[l];
     PlantExtraction[l] = ExtractionVec[l];
   }
-  output["Plants"] = Plants;
-  return(output);
+  return(basicSPWBOutput);
 }
 
 

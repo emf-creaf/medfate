@@ -1,6 +1,72 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+List basicTranspirationOutput(List x) {
+  List control = x["control"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
+  int numCohorts = above.nrow();
+  
+  NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
+  Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  
+  List ExtractionPools(numCohorts);
+  if(plantWaterPools) {
+    for(int c=0;c<numCohorts;c++) {
+      NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers);
+      ExtractionPools[c] = ExtractionPoolsCoh;
+    }
+  }
+  
+  NumericVector Stand = NumericVector::create(_["LAI"] = NA_REAL,
+                                              _["LAIlive"] = NA_REAL, 
+                                              _["LAIexpanded"] = NA_REAL, 
+                                              _["LAIdead"] = NA_REAL);
+  
+  NumericVector LAI(numCohorts, NA_REAL);
+  NumericVector LAIlive(numCohorts, NA_REAL);
+  NumericVector FPAR(numCohorts, NA_REAL);
+  NumericVector AbsorbedSWRFraction(numCohorts, NA_REAL);
+  NumericVector ExtractionByPlant(numCohorts, NA_REAL);
+  NumericVector Transpiration(numCohorts, NA_REAL);
+  NumericVector GrossPhotosynthesis(numCohorts, NA_REAL);
+  NumericVector PlantPsi(numCohorts, NA_REAL);
+  NumericVector DDS(numCohorts, NA_REAL);
+  NumericVector StemRWC(numCohorts, NA_REAL);
+  NumericVector LeafRWC(numCohorts, NA_REAL);
+  NumericVector LFMC(numCohorts, NA_REAL);
+  NumericVector StemPLC(numCohorts, NA_REAL);
+  NumericVector LeafPLC(numCohorts, NA_REAL);
+  NumericVector PWB(numCohorts, NA_REAL);
+  
+  DataFrame Plants = DataFrame::create(_["LAI"] = LAI,
+                                       _["LAIlive"] = LAIlive,
+                                       _["FPAR"] = FPAR,
+                                       _["AbsorbedSWRFraction"] = AbsorbedSWRFraction, 
+                                       _["Extraction"] = ExtractionByPlant,
+                                       _["Transpiration"] = Transpiration, 
+                                       _["GrossPhotosynthesis"] = GrossPhotosynthesis,
+                                       _["PlantPsi"] = PlantPsi, 
+                                       _["DDS"] = DDS,
+                                       _["StemRWC"] = StemRWC,
+                                       _["LeafRWC"] = LeafRWC,
+                                       _["LFMC"] = LFMC,
+                                       _["StemPLC"] = StemPLC,
+                                       _["LeafPLC"] = LeafPLC,
+                                       _["WaterBalance"] = PWB);
+  Plants.attr("row.names") = above.attr("row.names");
+  
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["Stand"] = Stand,
+                        _["Plants"] = Plants,
+                        _["Extraction"] = Extraction,
+                        _["ExtractionPools"] = ExtractionPools);
+  return(l);
+}
 
 List basicSPWBOutput(List x) {
   List control = x["control"];
@@ -88,7 +154,11 @@ void addSPWBCommunicationStructures(List x) {
   String transpirationMode = control["transpirationMode"];
   List ic = as<List>(x["internalCommunication"]);
   if(transpirationMode=="Granier") {
+    if(!ic.containsElementNamed("basicTranspirationOutput")) ic.push_back(basicTranspirationOutput(x), "basicTranspirationOutput"); 
     if(!ic.containsElementNamed("basicSPWBOutput")) ic.push_back(basicSPWBOutput(x), "basicSPWBOutput"); 
+    List basicTranspirationOutput = ic["basicTranspirationOutput"];
+    List basicSPWBOutput = ic["basicSPWBOutput"];
+    basicSPWBOutput["Plants"] = basicTranspirationOutput["Plants"];
   } else {
     DataFrame paramsCanopydf = as<DataFrame>(x["canopy"]);
     if(!ic.containsElementNamed("internalLWR")) ic.push_back(internalLongWaveRadiation(paramsCanopydf.nrow()), "internalLWR"); 

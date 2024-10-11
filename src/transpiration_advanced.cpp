@@ -1380,12 +1380,16 @@ List transpirationSperry(List x, DataFrame meteo, int day,
     Named("Catm") = Catm,
     Named("Patm") = Patm[day-1],
     Named("pet") = pet);
-  return(transpirationAdvanced(x, meteovec,
-                     latitude, elevation, slope, aspect,
-                     solarConstant, delta,
-                     canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
-                     false, stepFunctions, 
-                     modifyInput));
+  
+  List transpOutput = transpirationAdvanced(x, meteovec,
+                                            latitude, elevation, slope, aspect,
+                                            solarConstant, delta,
+                                            canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
+                                            false, stepFunctions, 
+                                            modifyInput);
+  
+  clearCommunicationStructures(x);
+  return(transpOutput);
 } 
 
 //' @rdname transp_modes
@@ -1466,12 +1470,17 @@ List transpirationSureau(List x, DataFrame meteo, int day,
     Named("Catm") = Catm,
     Named("Patm") = Patm[day-1],
     Named("pet") = pet);
-  return(transpirationAdvanced(x, meteovec,
-                             latitude, elevation, slope, aspect,
-                             solarConstant, delta,
-                             canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
-                             false, NA_INTEGER, 
-                             modifyInput));
+  
+  
+  List transpOutput = transpirationAdvanced(x, meteovec,
+                                            latitude, elevation, slope, aspect,
+                                            solarConstant, delta,
+                                            canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
+                                            false, NA_INTEGER, 
+                                            modifyInput);
+  
+  clearCommunicationStructures(x);
+  return(transpOutput);
 } 
 
 
