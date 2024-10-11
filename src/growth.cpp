@@ -2,6 +2,7 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
+#include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
 #include "phenology.h"
@@ -1650,6 +1651,10 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                      solarConstant, delta, 
                      runon, lateralFlows, waterTableDepth,
                      verbose);
+  
+  //Clear communication structures
+  clearCommunicationStructures(x);
+  
   return(s);
 }
 
@@ -1995,7 +2000,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
   if(control["subdailyResults"]) {
     List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
-    subdailyRes[iday] = sDay;
+    subdailyRes[iday] = clone(sDay); //Clones subdaily results because they are communication structures
   }
   
   List sb = sDay["Soil"];
@@ -2558,5 +2563,9 @@ List growth(List x, DataFrame meteo, double latitude,
       Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
     }
   }
+  
+  //Clear communication structures
+  clearCommunicationStructures(x);
+  
   return(outputList);
 }
