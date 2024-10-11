@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "modelInput.h"
+#include "communication_structures.h"
 #include "forestutils.h"
 #include "paramutils.h"
 #include "incbeta.h"

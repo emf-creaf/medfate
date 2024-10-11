@@ -1,6 +1,7 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
+#include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
 #include "windextinction.h"
@@ -49,6 +50,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   if(!modifyInput) {
     x = clone(x);
   }
+  
+  List internalCommunication = as<List>(x["internalCommunication"]);
   
   //Control parameters
   List control = x["control"];
@@ -886,7 +889,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
-    List internalLWR = as<Rcpp::List>(x["internalLWR"]);
+    List internalLWR = as<Rcpp::List>(internalCommunication["internalLWR"]);
     longwaveRadiationSHAW_inner(internalLWR, LAIme, LAImd, LAImx, 
                                lwdr[n], Tsoil[0], Tair);
     lwrExtinctionList[n] = internalLWR;
@@ -1306,6 +1309,9 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                         int stepFunctions = NA_INTEGER, 
                         bool modifyInput = true) {
+  //If necessary, add communication structures
+  if(!x.containsElementNamed("internalCommunication"))  addSPWBCommunicationStructures(x);
+  
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   if(transpirationMode != "Sperry") stop("Transpiration mode in 'x' must be 'Sperry'");
@@ -1389,6 +1395,10 @@ List transpirationSureau(List x, DataFrame meteo, int day,
                          double latitude, double elevation, double slope, double aspect,
                          double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                          bool modifyInput = true) {
+  
+  //If necessary, add communication structures
+  if(!x.containsElementNamed("internalCommunication"))  addSPWBCommunicationStructures(x);
+  
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   if(transpirationMode != "Sureau") stop("Transpiration mode in 'x' must be 'Sureau'");

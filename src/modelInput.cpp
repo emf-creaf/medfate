@@ -1051,24 +1051,6 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
-List internalLongWaveRadiation(int ncanlayers) {
-  NumericVector Lup(ncanlayers, NA_REAL), Ldown(ncanlayers, NA_REAL), Lnet(ncanlayers, NA_REAL);
-  NumericVector tau(ncanlayers, NA_REAL), sumTauComp(ncanlayers, NA_REAL);
-  DataFrame LWR_layer = DataFrame::create(_["tau"] = tau,
-                                          _["sumTauComp"] = sumTauComp,
-                                          _["Ldown"] = Ldown, 
-                                          _["Lup"] = Lup,
-                                          _["Lnet"] = Lnet);
-  List lwr_struct = List::create(_["LWR_layer"] = LWR_layer,
-                                 _["Ldown_ground"] = NA_REAL,
-                                 _["Lup_ground"] = NA_REAL,
-                                 _["Lnet_ground"] = NA_REAL,
-                                 _["Ldown_canopy"] = NA_REAL,
-                                 _["Lup_canopy"] = NA_REAL,
-                                 _["Lnet_canopy"] = NA_REAL,
-                                 _["Lnet_cohort_layer"] = NA_REAL);
-  return(lwr_struct);
-}
 
 
 DataFrame paramsCanopy(DataFrame above, List control) {
@@ -1212,8 +1194,8 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                             _["internalPhenology"] = internalPhenologyDataFrame(above),
                             _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                             _["internalFCCS"] = FCCSprops);
-                            
-  if(transpirationMode!="Granier") input.push_back(internalLongWaveRadiation(paramsCanopydf.nrow()), "internalLWR");
+  List internalCommunication = List::create();
+  input.push_back(internalCommunication, "internalCommunication");                       
 
   input.attr("class") = CharacterVector::create("spwbInput","list");
   return(input);
@@ -1370,8 +1352,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
-  if(transpirationMode!="Granier") input.push_back(internalLongWaveRadiation(paramsCanopydf.nrow()), "internalLWR");
-  
+  List internalCommunication = List::create();
+  input.push_back(internalCommunication, "internalCommunication");                       
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);
 }

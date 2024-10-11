@@ -5,8 +5,6 @@
 #endif
 using namespace Rcpp;
 
-List internalLongWaveRadiation(int ncanlayers);
-
 List forest2spwbInput(List x, DataFrame soil, DataFrame SpParams, List control);
 List forest2growthInput(List x, DataFrame soil, DataFrame SpParams, List control);
 

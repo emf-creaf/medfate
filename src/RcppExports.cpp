@@ -453,6 +453,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// addSPWBCommunicationStructures
+void addSPWBCommunicationStructures(List x);
+RcppExport SEXP _medfate_addSPWBCommunicationStructures(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    addSPWBCommunicationStructures(x);
+    return R_NilValue;
+END_RCPP
+}
 // criticalFirelineIntensity
 double criticalFirelineIntensity(double CBH, double M);
 RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
@@ -5847,6 +5857,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
+    {"_medfate_addSPWBCommunicationStructures", (DL_FUNC) &_medfate_addSPWBCommunicationStructures, 1},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},

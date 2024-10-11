@@ -4,6 +4,7 @@
 * New control flags for plant-level outputs in growth simulations
 * Revision of function resistances() to produce extra results and adapt it to Sureau
 * New parameters Dmax and SeedProductionDiameter for trees
+* Code optimization: communication using data structures
 
 # medfate 4.6.0
 * ObsID column is allowed in treeData and shrubData to indicate cohort ID from observation

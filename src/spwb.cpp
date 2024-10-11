@@ -3,6 +3,7 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
+#include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
 #include "windextinction.h"
@@ -159,12 +160,16 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
   return(fireHazard);
 }
 
+
 // Soil water balance with simple hydraulic model
 List spwbDay_basic(List x, NumericVector meteovec, 
               double elevation, double slope, double aspect,
               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
               bool verbose = false) {
 
+  //Add communication structures
+  addSPWBCommunicationStructures(x);
+    
   //Control parameters
   List control = x["control"];
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
@@ -438,6 +443,9 @@ List spwbDay_advanced(List x, NumericVector meteovec,
              double solarConstant, double delta, 
              double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
              bool verbose = false) {
+  
+  //Add communication structures
+  addSPWBCommunicationStructures(x);
   
   //Control parameters
   List control = x["control"];
