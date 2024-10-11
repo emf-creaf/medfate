@@ -170,8 +170,8 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Add communication structures
   addSPWBCommunicationStructures(x);
   List internalCommunication = x["internalCommunication"];
-  List basicSPWBOutput = internalCommunication["basicSPWBOutput"];
-  basicSPWBOutput["weather"] = clone(meteovec);
+  List modelOutput = internalCommunication["modelOutput"];
+  modelOutput["weather"] = clone(meteovec);
   
   //Control parameters
   List control = x["control"];
@@ -399,10 +399,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   //STEP 6 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) basicSPWBOutput["FireHazard"] = fccsHazard(x, meteovec, outputTransp, slope);
+  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, outputTransp, slope);
 
   // Arrange output
-  NumericVector WaterBalance = basicSPWBOutput["WaterBalance"];
+  NumericVector WaterBalance = modelOutput["WaterBalance"];
   WaterBalance["PET"] = pet;
   WaterBalance["Rain"] = hydroInputs["Rain"];
   WaterBalance["Snow"] = hydroInputs["Snow"]; 
@@ -423,7 +423,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   WaterBalance["Transpiration"] = sum(Eplant);
   WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
   
-  NumericVector Stand = basicSPWBOutput["Stand"];
+  NumericVector Stand = modelOutput["Stand"];
   Stand["LAI"] = LAIcell;
   Stand["LAIherb"] = herbLAI; 
   Stand["LAIlive"] = LAIcelllive;
@@ -433,7 +433,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   Stand["LgroundPAR"] = LgroundPAR; 
   Stand["LgroundSWR"] = LgroundSWR;
   
-  DataFrame Soil = as<DataFrame>(basicSPWBOutput["Soil"]);
+  DataFrame Soil = as<DataFrame>(modelOutput["Soil"]);
   NumericVector Psi = Soil["Psi"];
   NumericVector HerbTranspiration = Soil["HerbTranspiration"];
   NumericVector HydraulicInput = Soil["HydraulicInput"];
@@ -446,7 +446,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     HydraulicOutput[l] = soilHydraulicOutput[l];
     PlantExtraction[l] = ExtractionVec[l];
   }
-  return(basicSPWBOutput);
+  return(modelOutput);
 }
 
 

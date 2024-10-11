@@ -115,40 +115,34 @@ double qResp(double Tmean) {
 // }
 
 
-DataFrame initPlantBiomassBalance(DataFrame ccIni, DataFrame above) {
+void fillInitialPlantBiomassBalance(DataFrame plantBiomassBalance, DataFrame ccIni, DataFrame above) {
 
-  NumericVector Nprev = above["N"];
-  int numCohorts = Nprev.length();
-  
+  NumericVector N = above["N"];
   //Initial Biomass compartments
   NumericVector SapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
   NumericVector TotalLivingBiomass= Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
-  NumericVector CohortBiomass = TotalBiomass*(Nprev/10000.0);
   NumericVector LabileBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["LabileBiomass"]);
   NumericVector StructuralBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["StructuralBiomass"]);
   
-  NumericVector LabileBiomassBalance(numCohorts,0.0), StructuralBiomassBalance(numCohorts,0.0), PlantBiomassBalance(numCohorts,0.0), MortalityBiomassLoss(numCohorts,0.0), CohortBiomassBalance(numCohorts,0.0);
-  NumericVector StructuralBiomassChange(numCohorts,0.0), LabileBiomassChange(numCohorts,0.0), PlantBiomassChange(numCohorts,0.0), CohortBiomassChange(numCohorts,0.0);
-  
-  DataFrame plantBiomassBalance = DataFrame::create(_["InitialDensity"] = clone(Nprev),
-                                               _["InitialSapwoodBiomass"] = SapwoodBiomass,
-                                               _["InitialStructuralBiomass"] = StructuralBiomass,
-                                               _["StructuralBiomassBalance"] = StructuralBiomassBalance,
-                                               _["StructuralBiomassChange"] = StructuralBiomassChange,
-                                               _["InitialLabileBiomass"] = LabileBiomass,
-                                               _["LabileBiomassBalance"] = LabileBiomassBalance,
-                                               _["LabileBiomassChange"] = LabileBiomassChange,
-                                               _["InitialLivingPlantBiomass"] = TotalLivingBiomass,
-                                               _["InitialPlantBiomass"] = TotalBiomass,
-                                               _["PlantBiomassBalance"] = PlantBiomassBalance,
-                                               _["PlantBiomassChange"] = PlantBiomassChange,
-                                               _["MortalityBiomassLoss"] = MortalityBiomassLoss,
-                                               _["InitialCohortBiomass"] = CohortBiomass,
-                                               _["CohortBiomassBalance"] = CohortBiomassBalance,
-                                               _["CohortBiomassChange"] = CohortBiomassChange);
-  plantBiomassBalance.attr("row.names") = above.attr("row.names");
-  return(plantBiomassBalance);  
+  NumericVector Nprev = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialDensity"]);
+  NumericVector InitialSapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialSapwoodBiomass"]);
+  NumericVector InitialStructuralBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialStructuralBiomass"]);
+  NumericVector InitialLabileBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialLabileBiomass"]);
+  NumericVector InitialPlantBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialPlantBiomass"]);
+  NumericVector InitialLivingPlantBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialLivingPlantBiomass"]);
+  NumericVector InitialCohortBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialCohortBiomass"]);
+  int numCohorts = Nprev.length();
+  for(int c=0; c < numCohorts;c++) {
+    Nprev[c] = N[c];
+    InitialSapwoodBiomass[c] = SapwoodBiomass[c];
+    InitialStructuralBiomass[c] = StructuralBiomass[c];
+    InitialLabileBiomass[c] = LabileBiomass[c];
+    InitialPlantBiomass[c] = TotalBiomass[c];
+    InitialCohortBiomass[c] = TotalBiomass[c]*(Nprev[c]/10000.0);
+    InitialLivingPlantBiomass[c] = TotalLivingBiomass[c];
+    InitialStructuralBiomass[c] = StructuralBiomass[c];
+  }
 }
 
 
@@ -383,8 +377,27 @@ List growthDayInner(List x, NumericVector meteovec,
   
   //Control params
   List control = x["control"];  
-  
   String transpirationMode = control["transpirationMode"];
+  
+  //Soil-plant water balance (this creates communication structures as well)
+  List spwbOut;
+  if(transpirationMode=="Granier") {
+    spwbOut = spwbDay_basic(x, meteovec, 
+                       elevation, slope, aspect,
+                       runon, lateralFlows, waterTableDepth,
+                       verbose); 
+  } else {
+    spwbOut = spwbDay_advanced(x, meteovec, 
+                       latitude, elevation, slope, aspect,
+                       solarConstant, delta, 
+                       runon, lateralFlows, waterTableDepth,
+                       verbose);
+  }
+
+  //Get internal communication structures
+  List internalCommunication = x["internalCommunication"];
+  List modelOutput = internalCommunication["modelOutput"];
+
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
   bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
@@ -405,21 +418,7 @@ List growthDayInner(List x, NumericVector meteovec,
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-
-  //Soil-plant water balance
-  List spwbOut;
-  if(transpirationMode=="Granier") {
-    spwbOut = spwbDay_basic(x, meteovec, 
-                       elevation, slope, aspect,
-                       runon, lateralFlows, waterTableDepth,
-                       verbose); 
-  } else {
-    spwbOut = spwbDay_advanced(x, meteovec, 
-                       latitude, elevation, slope, aspect,
-                       solarConstant, delta, 
-                       runon, lateralFlows, waterTableDepth,
-                       verbose);
-  }
+  
   //Weather
   double tday = meteovec["tday"];
   double tmax = meteovec["tmax"];
@@ -693,7 +692,10 @@ List growthDayInner(List x, NumericVector meteovec,
   //Initial Biomass balance
   NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
   DataFrame ccIni = carbonCompartments(x, "g_ind");
-  DataFrame plantBiomassBalance = initPlantBiomassBalance(ccIni, above);
+  
+  DataFrame plantBiomassBalance = as<DataFrame>(modelOutput["PlantBiomassBalance"]);
+  fillInitialPlantBiomassBalance(plantBiomassBalance, ccIni, above);
+  
   NumericVector Volume_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStorageVolume"]);
   NumericVector Volume_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStorageVolume"]);
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
@@ -1418,7 +1420,7 @@ List growthDayInner(List x, NumericVector meteovec,
 
   //CLOSE BIOMASS BALANCE
   closePlantBiomassBalance(plantBiomassBalance, x,
-                      LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
+                           LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
   
   //Update pool proportions and rhizosphere overlap
   if(plantWaterPools) {
@@ -1457,60 +1459,80 @@ List growthDayInner(List x, NumericVector meteovec,
       _["SugarTransport"] = PlantSugarTransportInst
     );
   }
-  DataFrame labileCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
-                                                   _["MaintenanceRespiration"] = MaintenanceRespiration,
-                                                   _["GrowthCosts"] = GrowthCosts,
-                                                   _["RootExudation"] = RootExudation,
-                                                   _["LabileCarbonBalance"] = LabileCarbonBalance,
-                                                   _["SugarLeaf"] = PlantSugarLeaf,
-                                                   _["StarchLeaf"] = PlantStarchLeaf,
-                                                   _["SugarSapwood"] = PlantSugarSapwood,
-                                                   _["StarchSapwood"] = PlantStarchSapwood,
-                                                   _["SugarTransport"] = PlantSugarTransport);
-  labileCarbonBalance.attr("row.names") = above.attr("row.names");
   
-  NumericVector standCB = {standGrossPrimaryProduction, standMaintenanceRespiration, standSynthesisRespiration,
-                           standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration};
-  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"});
-    
-  //Final Biomass compartments
-  DataFrame plantStructure = DataFrame::create(
-    _["LeafBiomass"] = LeafBiomass,
-    _["SapwoodBiomass"] = SapwoodBiomass,
-    _["FineRootBiomass"] = clone(fineRootBiomass),
-    _["LeafArea"] = LeafArea,
-    _["SapwoodArea"] = SapwoodArea,
-    _["FineRootArea"] = FineRootArea,
-    _["HuberValue"] = HuberValue,
-    _["RootAreaLeafArea"] = RootAreaLeafArea,
-    _["DBH"] = clone(DBH),
-    _["Height"] = clone(H)
-  );
   
-  DataFrame growthMortality = DataFrame::create(
-    _["SAgrowth"] = SAgrowth,
-    _["LAgrowth"] = LAgrowth,
-    _["FRAgrowth"] = FRAgrowth,
-    _["StarvationRate"] = starvationRate,
-    _["DessicationRate"] = dessicationRate,
-    _["MortalityRate"] = mortalityRate
-  );
-  growthMortality.attr("row.names") = above.attr("row.names");
+  DataFrame labileCarbonBalance = as<DataFrame>(modelOutput["LabileCarbonBalance"]);
+  NumericVector outputGrossPhotosynthesis = labileCarbonBalance["GrossPhotosynthesis"];
+  NumericVector outputMaintenanceRespiration = labileCarbonBalance["MaintenanceRespiration"];
+  NumericVector outputGrowthCosts = labileCarbonBalance["GrowthCosts"];
+  NumericVector outputRootExudation = labileCarbonBalance["RootExudation"];
+  NumericVector outputLabileCarbonBalance = labileCarbonBalance["LabileCarbonBalance"];
+  NumericVector outputSugarLeaf = labileCarbonBalance["SugarLeaf"];
+  NumericVector outputStarchLeaf = labileCarbonBalance["StarchLeaf"];
+  NumericVector outputSugarSapwood = labileCarbonBalance["SugarSapwood"];
+  NumericVector outputStarchSapwood = labileCarbonBalance["StarchSapwood"];
+  NumericVector outputSugarTransport = labileCarbonBalance["SugarTransport"];
+  for(int c=0;c<numCohorts;c++) {
+    outputGrossPhotosynthesis[c] = GrossPhotosynthesis[c];
+    outputMaintenanceRespiration[c] = MaintenanceRespiration[c];
+    outputGrowthCosts[c] = GrowthCosts[c];
+    outputRootExudation[c] = RootExudation[c];
+    outputLabileCarbonBalance[c] = LabileCarbonBalance[c];
+    outputSugarLeaf[c] = PlantSugarLeaf[c];
+    outputStarchLeaf[c] = PlantStarchLeaf[c];
+    outputSugarSapwood[c] = PlantSugarSapwood[c];
+    outputStarchSapwood[c] = PlantStarchSapwood[c];
+    outputSugarTransport[c] = PlantSugarTransport[c];
+  }
+  NumericVector standCB = modelOutput["CarbonBalance"];
+  standCB["GrossPrimaryProduction"] = standGrossPrimaryProduction;
+  standCB["MaintenanceRespiration"] = standMaintenanceRespiration;
+  standCB["SynthesisRespiration"] = standSynthesisRespiration;
+  standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
+
+  
+  DataFrame plantStructure = as<DataFrame>(modelOutput["PlantStructure"]);
+  NumericVector outputLeafBiomass = plantStructure["LeafBiomass"];
+  NumericVector outputSapwoodBiomass = plantStructure["SapwoodBiomass"];
+  NumericVector outputFineRootBiomass = plantStructure["FineRootBiomass"];
+  NumericVector outputLeafArea = plantStructure["LeafArea"];
+  NumericVector outputSapwoodArea = plantStructure["SapwoodArea"];
+  NumericVector outputFineRootArea = plantStructure["FineRootArea"];
+  NumericVector outputHuberValue = plantStructure["HuberValue"];
+  NumericVector outputRootAreaLeafArea = plantStructure["RootAreaLeafArea"];
+  NumericVector outputDBH = plantStructure["DBH"];
+  NumericVector outputHeight = plantStructure["Height"];
+  for(int c=0;c<numCohorts;c++) {
+    outputLeafBiomass[c] = LeafBiomass[c];
+    outputSapwoodBiomass[c] = SapwoodBiomass[c];
+    outputFineRootBiomass[c] = fineRootBiomass[c];
+    outputLeafArea[c] = LeafArea[c];
+    outputSapwoodArea[c] = SapwoodArea[c];
+    outputFineRootArea[c] = FineRootArea[c];
+    outputHuberValue[c] = HuberValue[c];
+    outputRootAreaLeafArea[c] = RootAreaLeafArea[c];
+    outputDBH[c] = DBH[c];
+    outputHeight[c] = H[c];
+  }
+  
+  DataFrame growthMortality = as<DataFrame>(modelOutput["GrowthMortality"]);
+  NumericVector outputSAgrowth = growthMortality["SAgrowth"];
+  NumericVector outputLAgrowth = growthMortality["LAgrowth"];
+  NumericVector outputFRAgrowth = growthMortality["FRAgrowth"];
+  NumericVector outputStarvationRate = growthMortality["StarvationRate"];
+  NumericVector outputDessicationRate = growthMortality["DessicationRate"];
+  NumericVector outputMortalityRate = growthMortality["MortalityRate"];
+  for(int c=0;c<numCohorts;c++) {
+    outputSAgrowth[c] = SAgrowth[c];
+    outputLAgrowth[c] = LAgrowth[c];
+    outputFRAgrowth[c] = FRAgrowth[c];
+    outputStarvationRate[c] = starvationRate[c];
+    outputDessicationRate[c] = dessicationRate[c];
+    outputMortalityRate[c] = mortalityRate[c];
+  }
   
   List l;
   if(transpirationMode=="Granier"){
-       l = List::create(_["cohorts"] = clone(cohorts),
-                        _["topography"] = spwbOut["topography"],
-                        _["weather"] = spwbOut["weather"],
-                        _["WaterBalance"] = spwbOut["WaterBalance"], 
-                        _["CarbonBalance"] = standCB,
-                        _["Soil"] = spwbOut["Soil"], 
-                        _["Stand"] = spwbOut["Stand"], 
-                        _["Plants"] = spwbOut["Plants"],
-                        _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["PlantBiomassBalance"] = plantBiomassBalance,
-                        _["PlantStructure"] = plantStructure,
-                        _["GrowthMortality"] = growthMortality);
   } else {
          l = List::create(_["cohorts"] = clone(cohorts),
                           _["topography"] = spwbOut["topography"],
@@ -1536,9 +1558,7 @@ List growthDayInner(List x, NumericVector meteovec,
     l.push_back(spwbOut["LightExtinction"], "LightExtinction");
     l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   }
-  if(control["fireHazardResults"]) l.push_back(spwbOut["FireHazard"], "FireHazard");
-  l.attr("class") = CharacterVector::create("growth_day","list");
-  return(l);
+  return(modelOutput);
 }
 
 
