@@ -916,7 +916,12 @@
   } 
   else if(type=="Temperature") {
     m = .extractSubdaily(x, "Temperature", dates)
-    m = m[,c("datetime","Tatm", "Tcan", "Tsoil.1")]
+    if("Tsoil.1" %in% colnames(m)) {
+      m = m[,c("datetime","Tatm", "Tcan", "Tsoil.1")]
+    } else {
+      sm = .extractSubdaily(x, "SoilTemperature", dates)
+      m = cbind(m, sm[,"1"])
+    }
     names(m) = c("datetime", "Above-canopy","Inside-canopy", "Soil")
     if(is.null(ylab)) ylab = "Temperature (Celsius)"
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))

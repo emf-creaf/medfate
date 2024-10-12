@@ -560,7 +560,11 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df = data.frame(row.names=timesteps)
     df[["Above-canopy"]] = EB$Temperature$Tatm
     df[["Inside-canopy"]] = EB$Temperature$Tcan
-    df[["Soil"]] = EB$Temperature$Tsoil.1
+    if("Tsoil.1" %in% names(EB$Temperature)) {
+      df[["Soil"]] = EB$Temperature$Tsoil.1
+    } else {
+      df[["Soil"]] = EB$SoilTemperature[,1]
+    }
     g<-.multiple_subday_dynamics(as.matrix(df), ylab=ylab, ylim = ylim)
     return(g)
   } 

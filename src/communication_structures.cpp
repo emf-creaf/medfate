@@ -524,7 +524,6 @@ List advancedSPWBOutput(List x, List outputTransp) {
                         _["LWRExtinction"] = outputTransp["LWRExtinction"],
                         _["CanopyTurbulence"] = outputTransp["CanopyTurbulence"]);
   l.attr("class") = CharacterVector::create("spwb_day","list");
-  
   return(l);
 }
 
@@ -605,6 +604,7 @@ List basicGROWTHOutput(List x, List outputTransp) {
                         _["PlantStructure"] = plantStructure,
                         _["GrowthMortality"] = growthMortality);
   if(control["fireHazardResults"]) l.push_back(spwbOut["FireHazard"], "FireHazard");
+  l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
 List advancedGROWTHOutput(List x, List outputTransp) {
@@ -736,6 +736,7 @@ List advancedGROWTHOutput(List x, List outputTransp) {
   l.push_back(spwbOut["LightExtinction"], "LightExtinction");
   l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   if(control["fireHazardResults"]) l.push_back(spwbOut["FireHazard"], "FireHazard");
+  l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
 

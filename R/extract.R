@@ -5,7 +5,7 @@
   plantTypes = c("E","Ag","An","dEdP","RootPsi",
                 "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
                 "LeafSympPsi", "StemSympPsi","PWB")
-  PWBTYPES = c("PlantLAI","Temperature", "CanopyEnergyBalance", "SoilEnergyBalance",
+  PWBTYPES = c("PlantLAI","Temperature", "SoilTemperature","CanopyEnergyBalance", "SoilEnergyBalance",
                "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
   CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation", "LabileCarbonBalance",
               "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")
@@ -46,7 +46,7 @@
       m[((i-1)*numSteps+1):(i*numSteps), 2:(nc+1)] = matrix(ori, nrow = numSteps, ncol = nc, byrow = TRUE) 
     }
     colnames(m) = c("datetime", row.names(input$above))
-  } else if(output %in% c("Temperature", "CanopyEnergyBalance", "SoilEnergyBalance")) {
+  } else if(output %in% c("Temperature", "SoilTemperature","CanopyEnergyBalance", "SoilEnergyBalance")) {
     ori1 = x$subdaily[[as.character(dates[1])]]$EnergyBalance[[output]]
     ncols = ncol(ori1)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
@@ -245,7 +245,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
   
   if(level=="forest") {
     stand_level_names <-c("WaterBalance", "Stand", "Snow",
-                          "EnergyBalance", "Temperature","CarbonBalance", "BiomassBalance", "FireHazard")
+                          "EnergyBalance", "Temperature", "CarbonBalance", "BiomassBalance", "FireHazard")
     if(is.null(output)) {
       output <- stand_level_names
     } else {
