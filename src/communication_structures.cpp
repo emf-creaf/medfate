@@ -209,6 +209,35 @@ List basicGROWTHOutput(List x) {
   return(l);
 }
 
+DataFrame internalCarbonCompartments(DataFrame above) {
+  int numCohorts = above.nrow();
+  DataFrame df = DataFrame::create(
+    _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStorageVolume"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafStarchMaximumConcentration"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStarchMaximumConcentration"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafStarchCapacity"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStarchCapacity"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodLivingStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["StructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["LabileBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["TotalLivingBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["TotalBiomass"] = NumericVector(numCohorts, NA_REAL)
+  );
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}
+
+List dailyInternalCarbonCompartments(DataFrame above) {
+  DataFrame ccFin_g_ind = internalCarbonCompartments(above);
+  DataFrame ccIni_g_ind = clone(ccFin_g_ind);
+  List l = List::create(_["ccIni_g_ind"] = ccIni_g_ind,
+                        _["ccFin_g_ind"] = ccFin_g_ind);
+  return(l);
+}
 List internalLongWaveRadiation(int ncanlayers) {
   NumericVector Lup(ncanlayers, NA_REAL), Ldown(ncanlayers, NA_REAL), Lnet(ncanlayers, NA_REAL);
   NumericVector tau(ncanlayers, NA_REAL), sumTauComp(ncanlayers, NA_REAL);
@@ -228,8 +257,8 @@ List internalLongWaveRadiation(int ncanlayers) {
   return(lwr_struct);
 }
 
-// [[Rcpp::export(".addSPWBCommunicationStructures")]]
-void addSPWBCommunicationStructures(List x) {
+// [[Rcpp::export(".addCommunicationStructures")]]
+void addCommunicationStructures(List x) {
   String model = "spwb";
   if(x.inherits("growthInput")) model = "growth";
   List control = x["control"];
@@ -247,6 +276,10 @@ void addSPWBCommunicationStructures(List x) {
   } else {
     DataFrame paramsCanopydf = as<DataFrame>(x["canopy"]);
     if(!ic.containsElementNamed("internalLWR")) ic.push_back(internalLongWaveRadiation(paramsCanopydf.nrow()), "internalLWR"); 
+  }
+  if(model=="growth") {
+    DataFrame above = as<DataFrame>(x["above"]);
+    if(!ic.containsElementNamed("internalCC")) ic.push_back(dailyInternalCarbonCompartments(above), "internalCC");
   }
   x["internalCommunication"] = ic;
 }

@@ -168,7 +168,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
               bool verbose = false) {
 
   //Add communication structures
-  addSPWBCommunicationStructures(x);
+  addCommunicationStructures(x);
   List internalCommunication = x["internalCommunication"];
   List modelOutput = internalCommunication["modelOutput"];
   modelOutput["weather"] = clone(meteovec);
@@ -459,7 +459,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
              bool verbose = false) {
   
   //Add communication structures
-  addSPWBCommunicationStructures(x);
+  addCommunicationStructures(x);
   
   //Control parameters
   List control = x["control"];
@@ -2500,7 +2500,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   x = clone(x);
   
   //Add communication structures
-  addSPWBCommunicationStructures(x);
+  addCommunicationStructures(x);
   
   
   List control = x["control"];

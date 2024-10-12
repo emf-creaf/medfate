@@ -38,3 +38,4 @@ double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSug
 double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
 
 DataFrame carbonCompartments(List x, String biomassUnits = "g_m2");
+void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits);

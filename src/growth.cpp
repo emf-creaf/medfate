@@ -154,7 +154,10 @@ void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
   NumericVector Nfinal = above["N"];
   int numCohorts = Nfinal.length();
   
-  DataFrame ccFin = carbonCompartments(x, "g_ind");
+  List internalCommunication = x["internalCommunication"];
+  List internalCC = internalCommunication["internalCC"];
+  DataFrame ccFin = as<DataFrame>(internalCC["ccFin_g_ind"]);
+  fillCarbonCompartments(ccFin, x, "g_ind");
   
   NumericVector finalSapwoodBiomass_ind= Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]);
   NumericVector plantFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
@@ -690,8 +693,10 @@ List growthDayInner(List x, NumericVector meteovec,
   double rcellmax = relative_expansion_rate(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
   
   //Initial Biomass balance
+  List internalCC = internalCommunication["internalCC"];
+  DataFrame ccIni = as<DataFrame>(internalCC["ccIni_g_ind"]);
+  fillCarbonCompartments(ccIni, x, "g_ind");
   NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
-  DataFrame ccIni = carbonCompartments(x, "g_ind");
   
   DataFrame plantBiomassBalance = as<DataFrame>(modelOutput["PlantBiomassBalance"]);
   fillInitialPlantBiomassBalance(plantBiomassBalance, ccIni, above);
@@ -2388,6 +2393,8 @@ List growth(List x, DataFrame meteo, double latitude,
   NumericVector initialSoilContent = water(soil, soilFunctions);
   NumericVector initialPlantContent = plantWaterContent(x);
   double initialSnowContent = x["snowpack"];
+  
+  
   DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
   double cohortBiomassBalanceSum = 0.0;
   double initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));

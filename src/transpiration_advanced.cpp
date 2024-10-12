@@ -1310,7 +1310,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                         int stepFunctions = NA_INTEGER, 
                         bool modifyInput = true) {
   //Add communication structures
-  addSPWBCommunicationStructures(x);
+  addCommunicationStructures(x);
   
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
@@ -1401,7 +1401,7 @@ List transpirationSureau(List x, DataFrame meteo, int day,
                          bool modifyInput = true) {
   
   //Add communication structures
-  addSPWBCommunicationStructures(x);
+  addCommunicationStructures(x);
   
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];

@@ -682,7 +682,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
                           double latitude, double elevation, double slope, double aspect, 
                           bool modifyInput = true) {
   //Add communication structures
-  addSPWBCommunicationStructures(x);
+  addCommunicationStructures(x);
   
   List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");

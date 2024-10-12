@@ -5,7 +5,8 @@
 #endif
 using namespace Rcpp;
 
-void addSPWBCommunicationStructures(List x);
+void addCommunicationStructures(List x);
 void clearCommunicationStructures(List x);
 
 List internalLongWaveRadiation(int ncanlayers);
+DataFrame internalCarbonCompartments(DataFrame above);
