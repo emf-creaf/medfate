@@ -657,17 +657,7 @@ List growthDayInner(List x, NumericVector meteovec,
   
   //Ring of forming vessels
   // List ringList = as<Rcpp::List>(x["internalRings"]);
-  
-  //Subdaily output matrices (Sperry/Sureau)
-  NumericMatrix LabileCarbonBalanceInst(numCohorts, numSteps);  
-  NumericMatrix GrossPhotosynthesisInst(numCohorts, numSteps);  
-  NumericMatrix MaintenanceRespirationInst(numCohorts, numSteps);  
-  NumericMatrix GrowthCostsInst(numCohorts, numSteps);  
-  NumericMatrix RootExudationInst(numCohorts, numSteps);  
-  NumericMatrix PlantSugarTransportInst(numCohorts, numSteps);
-  NumericMatrix PlantSugarLeafInst(numCohorts, numSteps), PlantStarchLeafInst(numCohorts, numSteps);
-  NumericMatrix PlantSugarSapwoodInst(numCohorts, numSteps), PlantStarchSapwoodInst(numCohorts, numSteps);
-  
+
   //Daily output vectors
   NumericVector LabileCarbonBalance(numCohorts,0.0);
   NumericVector MaintenanceRespiration(numCohorts,0.0);
@@ -866,6 +856,19 @@ List growthDayInner(List x, NumericVector meteovec,
         starchSapwood[j] +=conversionSapwood;
         sugarSapwood[j] -=conversionSapwood;
       } else {
+        //Get output matrices
+        List labileCBInst = modelOutput["LabileCarbonBalanceInst"];
+        NumericMatrix LabileCarbonBalanceInst = labileCBInst["LabileCarbonBalance"];
+        NumericMatrix GrossPhotosynthesisInst = labileCBInst["GrossPhotosynthesis"];
+        NumericMatrix MaintenanceRespirationInst = labileCBInst["MaintenanceRespiration"];
+        NumericMatrix GrowthCostsInst = labileCBInst["GrowthCosts"];
+        NumericMatrix RootExudationInst = labileCBInst["RootExudation"];
+        NumericMatrix PlantSugarTransportInst = labileCBInst["SugarTransport"];
+        NumericMatrix PlantSugarLeafInst = labileCBInst["SugarLeaf"];
+        NumericMatrix PlantStarchLeafInst = labileCBInst["StarchLeaf"];
+        NumericMatrix PlantSugarSapwoodInst = labileCBInst["SugarSapwood"]; 
+        NumericMatrix PlantStarchSapwoodInst = labileCBInst["StarchSapwood"];
+        
         //3.1 Carbon balance and growth by steps
         for(int s=0;s<numSteps;s++) {
           
@@ -1438,33 +1441,6 @@ List growthDayInner(List x, NumericVector meteovec,
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
-
-  List labileCBInst;
-  if(subdailyCarbonBalance) {
-    GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    LabileCarbonBalanceInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    GrowthCostsInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantSugarLeafInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantStarchLeafInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantSugarSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantStarchSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantSugarTransportInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    RootExudationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    labileCBInst = List::create(
-      _["GrossPhotosynthesis"] = GrossPhotosynthesisInst,
-      _["MaintenanceRespiration"] = MaintenanceRespirationInst,
-      _["GrowthCosts"] = GrowthCostsInst,
-      _["RootExudation"] = RootExudationInst,
-      _["LabileCarbonBalance"] = LabileCarbonBalanceInst,
-      _["SugarLeaf"] = PlantSugarLeafInst,
-      _["StarchLeaf"] = PlantStarchLeafInst,
-      _["SugarSapwood"] = PlantSugarSapwoodInst,
-      _["StarchSapwood"] = PlantStarchSapwoodInst,
-      _["SugarTransport"] = PlantSugarTransportInst
-    );
-  }
-  
   
   DataFrame labileCarbonBalance = as<DataFrame>(modelOutput["LabileCarbonBalance"]);
   NumericVector outputGrossPhotosynthesis = labileCarbonBalance["GrossPhotosynthesis"];
@@ -1536,33 +1512,6 @@ List growthDayInner(List x, NumericVector meteovec,
     outputMortalityRate[c] = mortalityRate[c];
   }
   
-  List l;
-  if(transpirationMode=="Granier"){
-  } else {
-         l = List::create(_["cohorts"] = clone(cohorts),
-                          _["topography"] = spwbOut["topography"],
-                          _["weather"] = spwbOut["weather"],
-                          _["WaterBalance"] = spwbOut["WaterBalance"], 
-                          _["EnergyBalance"] = spwbOut["EnergyBalance"],
-                          _["CarbonBalance"] = standCB,
-                          _["Soil"] = spwbOut["Soil"], 
-                          _["Stand"] = spwbOut["Stand"],
-                          _["Plants"] = spwbOut["Plants"],
-                          _["LabileCarbonBalance"] = labileCarbonBalance,
-                          _["PlantBiomassBalance"] = plantBiomassBalance,
-                          _["PlantStructure"] = plantStructure,
-                          _["GrowthMortality"] = growthMortality,
-                          _["RhizoPsi"] = spwbOut["RhizoPsi"],
-                          _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
-                          _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
-                          _["ExtractionInst"] = spwbOut["ExtractionInst"],
-                          _["PlantsInst"] = spwbOut["PlantsInst"],
-                          _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
-                          _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
-    if(subdailyCarbonBalance) l.push_back(labileCBInst,"LabileCarbonBalanceInst");
-    l.push_back(spwbOut["LightExtinction"], "LightExtinction");
-    l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
-  }
   return(modelOutput);
 }
 

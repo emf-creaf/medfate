@@ -56,7 +56,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   }
   // Should have internal communication 
   List internalCommunication = x["internalCommunication"];
-  List transpOutput = internalCommunication["basicTranspirationOutput"];
+  List transpOutput = internalCommunication["transpirationOutput"];
   NumericVector outputStand = as<NumericVector>(transpOutput["Stand"]);
   DataFrame outputPlants = as<DataFrame>(transpOutput["Plants"]);
   NumericMatrix outputExtraction = as<NumericMatrix>(transpOutput["Extraction"]);

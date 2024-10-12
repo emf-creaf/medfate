@@ -78,14 +78,14 @@ CharacterVector getWeatherDates(DataFrame meteo){
   return(dateStrings);
 }
 
-NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope) {
+NumericVector fccsHazard(List x, NumericVector meteovec, List outputTransp, double slope) {
   List control = x["control"];
   
   double fireHazardStandardWind = control["fireHazardStandardWind"];
   double fireHazardStandardDFMC = control["fireHazardStandardDFMC"];
   
   DataFrame FCCSprops = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
-  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(outputTransp["Plants"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   
   double tmin = meteovec["tmin"];
@@ -172,6 +172,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
   List internalCommunication = x["internalCommunication"];
   List modelOutput = internalCommunication["modelOutput"];
   modelOutput["weather"] = clone(meteovec);
+  NumericVector topo = modelOutput["topography"];
+  topo["elevation"] = elevation;
+  topo["slope"] = slope;
+  topo["aspect"] = aspect;
   
   //Control parameters
   List control = x["control"];
@@ -433,6 +437,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   Stand["LgroundPAR"] = LgroundPAR; 
   Stand["LgroundSWR"] = LgroundSWR;
   
+  
   DataFrame Soil = as<DataFrame>(modelOutput["Soil"]);
   NumericVector Psi = Soil["Psi"];
   NumericVector HerbTranspiration = Soil["HerbTranspiration"];
@@ -460,6 +465,13 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   
   //Add communication structures
   addCommunicationStructures(x);
+  List internalCommunication = x["internalCommunication"];
+  List modelOutput = internalCommunication["modelOutput"];
+  modelOutput["weather"] = clone(meteovec);
+  NumericVector topo = modelOutput["topography"];
+  topo["elevation"] = elevation;
+  topo["slope"] = slope;
+  topo["aspect"] = aspect;
   
   //Control parameters
   List control = x["control"];
@@ -585,18 +597,13 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   }
   
   //STEPS 4-8 - Energy balance, transpiration, photosynthesis, uptake 
-  List transp = transpirationAdvanced(x, meteovec, 
+  List outputTransp = transpirationAdvanced(x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], Esoil, sum(EherbVec),
                                     verbose, NA_INTEGER, true);
-  NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
-  NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(transp["RhizoPsi"]);
-  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
-  NumericVector Eplant = Plants["Transpiration"];
-  List PlantsInst = Rcpp::as<Rcpp::List>(transp["PlantsInst"]);
-  List EnergyBalance = Rcpp::as<Rcpp::List>(transp["EnergyBalance"]);
-  
+  NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(outputTransp["ExtractionInst"]);
+
   NumericVector ExtractionVec(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
   NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
@@ -635,7 +642,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     CapillarityRise = sf["CapillarityRise"]; 
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
-    List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
+    List ExtractionPools = Rcpp::as<Rcpp::List>(outputTransp["ExtractionPools"]);
     //Set Wsoil to zero
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
     NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
@@ -687,56 +694,55 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 
   //STEP 11 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  NumericVector fireHazard(1,NA_REAL);
-  if(fireHazardResults) fireHazard = fccsHazard(x, meteovec, transp, slope);
+  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, outputTransp, slope);
 
-  //Arrange output
-  NumericVector topo = NumericVector::create(elevation, slope, aspect);
-  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  // Arrange output
+  NumericVector WaterBalance = modelOutput["WaterBalance"];
+  WaterBalance["PET"] = pet;
+  WaterBalance["Rain"] = hydroInputs["Rain"];
+  WaterBalance["Snow"] = hydroInputs["Snow"]; 
+  WaterBalance["NetRain"] = hydroInputs["NetRain"];
+  WaterBalance["Snowmelt"] = Snowmelt;
+  WaterBalance["Runon"] = runon; 
+  WaterBalance["Infiltration"] = Infiltration; 
+  WaterBalance["InfiltrationExcess"] = InfiltrationExcess;
+  WaterBalance["SaturationExcess"] = SaturationExcess;
+  WaterBalance["Runoff"] = Runoff; 
+  WaterBalance["DeepDrainage"] = DeepDrainage;
+  WaterBalance["CapillarityRise"] = CapillarityRise;
+  WaterBalance["SoilEvaporation"] = Esoil;
+  WaterBalance["HerbTranspiration"] = sum(EherbVec);
+  WaterBalance["PlantExtraction"] = sum(ExtractionVec);
+  DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(outputTransp["Plants"]);
+  NumericVector Eplant = outputPlants["Transpiration"];
+  WaterBalance["Transpiration"] = sum(Eplant);
+  WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
   
-  NumericVector DB = NumericVector::create(_["PET"] = pet,
-                                           _["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],
-                                           _["NetRain"] = hydroInputs["NetRain"], 
-                                           _["Snowmelt"] = Snowmelt,
-                                           _["Runon"] = runon, 
-                                           _["Infiltration"] = Infiltration, _["InfiltrationExcess"] = InfiltrationExcess, _["SaturationExcess"] = SaturationExcess, _["Runoff"] = Runoff, 
-                                           _["DeepDrainage"] = DeepDrainage, _["CapillarityRise"] = CapillarityRise,
-                                           _["SoilEvaporation"] = Esoil, _["HerbTranspiration"] = sum(EherbVec),
-                                           _["PlantExtraction"] = sum(ExtractionVec), _["Transpiration"] = sum(Eplant),
-                                           _["HydraulicRedistribution"] = sum(soilHydraulicInput));
+  NumericVector Stand = modelOutput["Stand"];
+  Stand["LAI"] = LAIcell;
+  Stand["LAIherb"] = herbLAI; 
+  Stand["LAIlive"] = LAIcelllive;
+  Stand["LAIexpanded"] = LAIcellexpanded;
+  Stand["LAIdead"] = LAIcelldead;
+  Stand["Cm"] = Cm; 
+  Stand["LgroundPAR"] = LgroundPAR; 
+  Stand["LgroundSWR"] = LgroundSWR;
   
-  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIherb"] = herbLAI, 
-                                              _["LAIlive"] = LAIcelllive, _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead,
-                                              _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
+  DataFrame Soil = as<DataFrame>(modelOutput["Soil"]);
+  NumericVector Psi = Soil["Psi"];
+  NumericVector HerbTranspiration = Soil["HerbTranspiration"];
+  NumericVector HydraulicInput = Soil["HydraulicInput"];
+  NumericVector HydraulicOutput = Soil["HydraulicOutput"];
+  NumericVector PlantExtraction = Soil["PlantExtraction"];
+  for(int l=0;l<nlayers;l++) {
+    Psi[l] = psiVec[l];
+    HerbTranspiration[l] = EherbVec[l];
+    HydraulicInput[l] = soilHydraulicInput[l];
+    HydraulicOutput[l] = soilHydraulicOutput[l];
+    PlantExtraction[l] = ExtractionVec[l];
+  }
   
-  DataFrame SB = DataFrame::create(_["Psi"] = psiVec,
-                                   _["HerbTranspiration"] = EherbVec, 
-                                   _["HydraulicInput"] = soilHydraulicInput, 
-                                   _["HydraulicOutput"] = soilHydraulicOutput, 
-                                   _["PlantExtraction"] = ExtractionVec);
-  
-  List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["topography"] = topo,
-                        _["weather"] = clone(meteovec),
-                        _["WaterBalance"] = DB, 
-                        _["EnergyBalance"] = EnergyBalance,
-                        _["Soil"] = SB, 
-                        _["Stand"] = Stand, 
-                        _["Plants"] = Plants,
-                        _["RhizoPsi"] = RhizoPsi,
-                        _["SunlitLeaves"] = transp["SunlitLeaves"],
-                        _["ShadeLeaves"] = transp["ShadeLeaves"],
-                        _["ExtractionInst"] = soilLayerExtractInst,
-                        _["PlantsInst"] = PlantsInst,
-                        _["RadiationInputInst"] = transp["RadiationInputInst"],
-                        _["SunlitLeavesInst"] = transp["SunlitLeavesInst"],
-                        _["ShadeLeavesInst"] = transp["ShadeLeavesInst"],
-                        _["LightExtinction"] = transp["LightExtinction"],
-                        _["LWRExtinction"] = transp["LWRExtinction"],
-                        _["CanopyTurbulence"] = transp["CanopyTurbulence"]);
-  if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
-  l.attr("class") = CharacterVector::create("spwb_day","list");
-  return(l);
+  return(modelOutput);
 }
 
 //' Single-day simulation
@@ -1560,9 +1566,10 @@ void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday) {
   DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
   DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]); 
   DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(EB["SoilEnergyBalance"]); 
+  NumericMatrix TsoilMat = Rcpp::as<Rcpp::NumericMatrix>(EB["SoilTemperature"]); 
   NumericVector Tatm = Rcpp::as<Rcpp::NumericVector>(Tinst["Tatm"]);
   NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(Tinst["Tcan"]);
-  NumericVector Tsoil = Rcpp::as<Rcpp::NumericVector>(Tinst["Tsoil.1"]);
+  NumericVector Tsoil = TsoilMat(_,1);
   int ntimesteps = Tcan.length();
   double tstep = 86400.0/((double) ntimesteps);
   
@@ -1595,7 +1602,8 @@ void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday) {
   DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
   NumericVector Tatm = Rcpp::as<Rcpp::NumericVector>(Tinst["Tatm"]);
   NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(Tinst["Tcan"]);
-  NumericVector Tsoil = Rcpp::as<Rcpp::NumericVector>(Tinst["Tsoil.1"]);
+  NumericMatrix TsoilMat = Rcpp::as<Rcpp::NumericMatrix>(EB["SoilTemperature"]); 
+  NumericVector Tsoil = TsoilMat(_,1);
   int ntimesteps = Tcan.length();
 
   NumericVector Tatm_min = DT["Tatm_min"];
@@ -1822,6 +1830,7 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   if(transpirationMode!= "Granier") {
     List DEB = l["EnergyBalance"];
     fillEnergyBalanceDailyOutput(DEB,sDay, iday);
+    
     if(control["temperatureResults"]) {
       List DT = l["Temperature"];
       fillTemperatureDailyOutput(DT,sDay, iday);
