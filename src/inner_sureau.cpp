@@ -125,26 +125,26 @@ double Turgor(double PiFT, double Esymp, double Rstemp) {
   return(-1.0*PiFT - Esymp * Rstemp);
 }
 
-NumericVector regulFact(double psi, List params, String regulationType = "Sigmoid") {
-  double stomatalClosure = NA_REAL;
+double regulFact(double psi, List params, String regulationType = "Sigmoid") {
+  // double stomatalClosure = NA_REAL;
   double regulFact = NA_REAL;
-  double regulFactPrime = NA_REAL;
+  // double regulFactPrime = NA_REAL;
   
   if(regulationType == "PiecewiseLinear") {
     double PsiStartClosing = params["PsiStartClosing"];
     double PsiClose = params["PsiClose"];
     if (psi > PsiStartClosing) {
-      stomatalClosure = 0.0;
+      // stomatalClosure = 0.0;
       regulFact = 1.0;
-      regulFactPrime = 0.0;
+      // regulFactPrime = 0.0;
     } else if (psi > PsiClose) {
-      stomatalClosure = 1.0;
+      // stomatalClosure = 1.0;
       regulFact = (psi - PsiClose) / (PsiStartClosing - PsiClose);
-      regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
+      // regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
     } else {
-      stomatalClosure = 2.0;
+      // stomatalClosure = 2.0;
       regulFact = 0.0;
-      regulFactPrime = 0.0;
+      // regulFactPrime = 0.0;
     }
   } else if (regulationType == "Sigmoid") {
     double slope_gs = params["slope_gs"];
@@ -152,7 +152,7 @@ NumericVector regulFact(double psi, List params, String regulationType = "Sigmoi
     double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
     regulFact = 1.0 - PL_gs;
     double al = slope_gs / 25.0;
-    regulFactPrime = al * PL_gs * regulFact;
+    // regulFactPrime = al * PL_gs * regulFact;
   } else if (regulationType == "Turgor") {
     double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
     double epsilonSym_Leaf = params["epsilonSym_Leaf"];
@@ -163,10 +163,7 @@ NumericVector regulFact(double psi, List params, String regulationType = "Sigmoi
     regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
     // Rcout<< psi << " "<< turgor<< " "<< regulFact << "\n";
   }
-  NumericVector res = NumericVector::create(_["regulFact"] = regulFact, 
-                                            _["stomatalClosure"] = stomatalClosure, 
-                                            _["regulFactPrime"] = regulFactPrime);
-  return(res);
+  return(regulFact);
 }
 
 //# stomatal conductance calculation with Jarvis type formulations
@@ -666,6 +663,7 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
 void innerSureau(List x, List input, List output, int n, double tstep, 
                  bool verbose = false) {
   
+  
   // Extract hydraulic networks
   List networks = input["networks"];
   
@@ -913,7 +911,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           
           //Current leaf water potential (same for sunlit and shade leaves)
           double Psi_LSym = network_n["Psi_LSym"];
-          NumericVector regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
+          double regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
 
           //Leaf temperature for sunlit and shade leaves
           double Elim_SL = network_n["Elim_SL"];
@@ -959,15 +957,14 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
           
           // Current stomatal regulation
-          NumericVector regul = regulFact(Psi_LSym, params, "Sigmoid");
-          double RF = regul["regulFact"];
+          double regul = regulFact(Psi_LSym, params, "Sigmoid");
           double gs_SL, gs_SH;
           if(stomatalSubmodel=="Jarvis") {
             gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
             gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
             //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
-            gs_SL = gs_SL * RF;
-            gs_SH = gs_SH * RF;
+            gs_SL = gs_SL * regul;
+            gs_SH = gs_SH * regul;
           } else {
             double Gsw_AC_slope = params["Gsw_AC_slope"];
             double gsNight = params["gsNight"];
@@ -981,7 +978,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol 
-            gs_SL = std::max(gsNight, gs_SL)*RF;
+            gs_SL = std::max(gsNight, gs_SL)*regul;
             NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
                                                           Cair[iLayerSunlit[c]], 
                                                           std::max(0.0,Temp_SH(c,n)), 
@@ -992,7 +989,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol
-            gs_SH = std::max(gsNight, gs_SH)*RF;
+            gs_SH = std::max(gsNight, gs_SH)*regul;
           }
           if(!sunlitShade) gs_SH = gs_SL;
           
@@ -1045,7 +1042,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           
           // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
           // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
-          deltaRegulMax = std::max(deltaRegulMax,std::abs(((double) regul["regulFact"]) - ((double) regul_ini["regulFact"])));
+          deltaRegulMax = std::max(deltaRegulMax,std::abs(regul - regul_ini));
           
           // # 2. PLC at n and np1
           deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Leaf"] - (double) network_n["PLC_Leaf"]);
