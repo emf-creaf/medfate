@@ -45,20 +45,22 @@ void update_conductances(List network) {
   double k_SLApoInit = params["k_SLApoInit"];
   
   double k_LSym = network["k_LSym"];
+  double plc_leaf = network["PLC_Leaf"];
+  double plc_stem = network["PLC_Stem"];
   
   NumericVector k_RSApo = network["k_RSApo"];
   NumericVector k_SoilToStem = network["k_SoilToStem"];
   NumericVector k_Soil = network["k_Soil"];
   NumericVector k_RCApo(k_RSApo.size(), NA_REAL);
   
-  double k_SLApo  = k_SLApoInit * (1.0 - ((double) network["PLC_Leaf"])/100.0); //Conductance from stem apo to leaf apo
+  double k_SLApo  = k_SLApoInit * (1.0 - (plc_leaf/100.0)); //Conductance from stem apo to leaf apo
   network["k_SLApo"] = k_SLApo;
     
-  double k_CSApo = k_CSApoInit * (1.0 - ((double) network["PLC_Stem"])/100.0); //conductance from root crown to stem apo
+  double k_CSApo = k_CSApoInit * (1.0 - (plc_stem/100.0)); //conductance from root crown to stem apo
   network["k_CSApo"] = k_CSApo;
   //# calculate k_SoilToStem and k_RSApo with cavitation
   for(int i = 0;i<k_RSApo.size();i++) {
-    k_RCApo[i] = k_RCApoInit[i] * (1.0 - ((double) network["PLC_Stem"])/100.0); // conductance from root surface to root crown
+    k_RCApo[i] = k_RCApoInit[i] * (1.0 - (plc_stem/100.0)); // conductance from root surface to root crown
     k_RSApo[i] = 1.0/((1.0/k_RCApo[i]) + (1.0/k_CSApo)); // conductance from root surface to stem
     //# Root from root length
     k_SoilToStem[i] = 1.0/((1.0/k_Soil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to stem
@@ -151,7 +153,7 @@ double regulFact(double psi, List params, String regulationType = "Sigmoid") {
     double P50_gs = params["P50_gs"];
     double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
     regulFact = 1.0 - PL_gs;
-    double al = slope_gs / 25.0;
+    // double al = slope_gs / 25.0;
     // regulFactPrime = al * PL_gs * regulFact;
   } else if (regulationType == "Turgor") {
     double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
@@ -663,6 +665,11 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
 void innerSureau(List x, List input, List output, int n, double tstep, 
                  bool verbose = false) {
   
+  // Communication structures
+  NumericVector PB_SL(5, NA_REAL);
+  PB_SL.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
+  NumericVector PB_SH(5, NA_REAL);
+  PB_SH.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
   
   // Extract hydraulic networks
   List networks = input["networks"];
@@ -968,26 +975,28 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           } else {
             double Gsw_AC_slope = params["Gsw_AC_slope"];
             double gsNight = params["gsNight"];
-            NumericVector PB_SL = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
-                                                          Cair[iLayerSunlit[c]], 
-                                                          std::max(0.0,Temp_SL(c,n)), 
-                                                          zWind[iLayerCohort[c]],
-                                                          Vmax298_SL(c,n)/LAI_SL(c,n), 
-                                                          Jmax298_SL(c,n)/LAI_SL(c,n), 
-                                                          LeafWidth[c],
-                                                          Gsw_AC_slope,
-                                                          gsNight/1000.0);
+            photosynthesisBaldocchi_inner(PB_SL, 
+                                          irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
+                                          Cair[iLayerSunlit[c]], 
+                                          std::max(0.0,Temp_SL(c,n)), 
+                                          zWind[iLayerCohort[c]],
+                                          Vmax298_SL(c,n)/LAI_SL(c,n), 
+                                          Jmax298_SL(c,n)/LAI_SL(c,n), 
+                                          LeafWidth[c],
+                                          Gsw_AC_slope,
+                                          gsNight/1000.0);
             gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol 
             gs_SL = std::max(gsNight, gs_SL)*regul;
-            NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
-                                                          Cair[iLayerSunlit[c]], 
-                                                          std::max(0.0,Temp_SH(c,n)), 
-                                                          zWind[iLayerCohort[c]],
-                                                          Vmax298_SH(c,n)/LAI_SH(c,n), 
-                                                          Jmax298_SH(c,n)/LAI_SH(c,n), 
-                                                          LeafWidth[c],
-                                                          Gsw_AC_slope,
-                                                          gsNight/1000.0);
+            photosynthesisBaldocchi_inner(PB_SH, 
+                                          irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
+                                          Cair[iLayerSunlit[c]], 
+                                          std::max(0.0,Temp_SH(c,n)), 
+                                          zWind[iLayerCohort[c]],
+                                          Vmax298_SH(c,n)/LAI_SH(c,n), 
+                                          Jmax298_SH(c,n)/LAI_SH(c,n), 
+                                          LeafWidth[c],
+                                          Gsw_AC_slope,
+                                          gsNight/1000.0);
             gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol
             gs_SH = std::max(gsNight, gs_SH)*regul;
           }

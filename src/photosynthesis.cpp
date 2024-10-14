@@ -315,21 +315,16 @@ double gLeafBoundary(double u, double leafWidth, double gBound0 = 0.397){
   return(gBound0*pow(u/(leafWidth*0.0072), 0.5));
 }
 
-// From Baldocchi D (1994). An analytical solution for the coupled leaf photosynthesis and stomatal conductance models. Tree Physiology 14: 1069-1079 
-//' @rdname photo
-//' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
-//' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
-//' @keywords internal
-// [[Rcpp::export("photo_photosynthesisBaldocchi")]]
-NumericVector photosynthesisBaldocchi(double Q, 
-                                      double Catm, 
-                                      double Tleaf, 
-                                      double u,
-                                      double Vmax298, 
-                                      double Jmax298, 
-                                      double leafWidth,
-                                      double Gsw_AC_slope,
-                                      double Gsw_AC_intercept) {
+void photosynthesisBaldocchi_inner(NumericVector photoOut,
+                                   double Q, 
+                                   double Catm, 
+                                   double Tleaf, 
+                                   double u,
+                                   double Vmax298, 
+                                   double Jmax298, 
+                                   double leafWidth,
+                                   double Gsw_AC_slope,
+                                   double Gsw_AC_intercept) {
   double Vmax = VmaxTemp(Vmax298, Tleaf);
   double Jmax = JmaxTemp(Jmax298, Tleaf);
   //Dark respiration
@@ -357,7 +352,7 @@ NumericVector photosynthesisBaldocchi(double Q,
   double b_j = 8.0*Gamma_comp;
   double d_j = Gamma_comp;
   double e_j = 4.0;
-
+  
   //Solving for An when Rubisco limits (c) and when electron transport limits (j)
   double alpha = 1.0 + (b_prime/Gbc) - mrh;
   double beta = Catm*(Gbc*mrh - 2.0*b_prime - Gbc);
@@ -383,8 +378,31 @@ NumericVector photosynthesisBaldocchi(double Q,
   double Ci = Cs - (An/Gsc);
   //Gross photosynthesis
   double Ag = An + Rd;
-  NumericVector res = NumericVector::create(Gsw, Cs, Ci, An, Ag);
+  photoOut[0] = Gsw;
+  photoOut[1] = Cs;
+  photoOut[2] = Ci;
+  photoOut[3] = An;
+  photoOut[4] = Ag;
+}
+
+// From Baldocchi D (1994). An analytical solution for the coupled leaf photosynthesis and stomatal conductance models. Tree Physiology 14: 1069-1079 
+//' @rdname photo
+//' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
+//' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+//' @keywords internal
+// [[Rcpp::export("photo_photosynthesisBaldocchi")]]
+NumericVector photosynthesisBaldocchi(double Q, 
+                                      double Catm, 
+                                      double Tleaf, 
+                                      double u,
+                                      double Vmax298, 
+                                      double Jmax298, 
+                                      double leafWidth,
+                                      double Gsw_AC_slope,
+                                      double Gsw_AC_intercept) {
+  NumericVector res(5, NA_REAL);
   res.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
+  photosynthesisBaldocchi_inner(res, Q, Catm, Tleaf, u,Vmax298,Jmax298, leafWidth,Gsw_AC_slope,Gsw_AC_intercept);
   return(res);
 }
 
