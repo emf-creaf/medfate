@@ -1269,7 +1269,12 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                                             false, stepFunctions, 
                                             modifyInput);
   
-  clearCommunicationStructures(x);
+  //Clear communication structures
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   return(transpOutput);
 } 
 
@@ -1360,7 +1365,12 @@ List transpirationSureau(List x, DataFrame meteo, int day,
                                             false, NA_INTEGER, 
                                             modifyInput);
   
-  clearCommunicationStructures(x);
+  //Clear communication structures
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   return(transpOutput);
 } 
 

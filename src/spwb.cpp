@@ -1009,7 +1009,11 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
                  verbose);
   }
   //Clear communication structures
-  clearCommunicationStructures(x);
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   // Rcout<<"hola4\n";
   return(s);
 }
@@ -2482,7 +2486,11 @@ List spwb(List x, DataFrame meteo,
   }
   
   //Clear communication structures
-  clearCommunicationStructures(x);
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
 
   return(outputList);
 }
@@ -2962,6 +2970,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   l.attr("class") = CharacterVector::create("pwb","list");
   
   //Clear communication structures
-  clearCommunicationStructures(x);
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   return(l);                    
 }

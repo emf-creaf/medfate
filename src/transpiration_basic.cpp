@@ -738,7 +738,12 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   
   List transpOutput = transpirationBasic(x, meteovec, elevation, modifyInput);
   
-  clearCommunicationStructures(x);
+  //Clear communication structures
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   return(transpOutput);
 } 
 

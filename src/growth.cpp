@@ -1627,7 +1627,11 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                      verbose);
   
   //Clear communication structures
-  clearCommunicationStructures(x);
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   
   return(s);
 }
@@ -2541,7 +2545,11 @@ List growth(List x, DataFrame meteo, double latitude,
   }
   
   //Clear communication structures
-  clearCommunicationStructures(x);
+  bool clear_communications = true;
+  if(control.containsElementNamed("clearCommunications")) {
+    clear_communications = control["clearCommunications"];
+  }
+  if(clear_communications) clearCommunicationStructures(x);
   
   return(outputList);
 }
