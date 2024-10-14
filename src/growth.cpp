@@ -41,7 +41,7 @@ using namespace Rcpp;
 double dailyMortalityProbability(double stressValue, double stressThreshold) {
   double exponent = 40.0;
   double y = (stressValue - stressThreshold);
-  double P_annual = 1.0 - exp(exponent*y)/(1.0 + exp(exponent*y));
+  double P_annual = std::min(1.0, 1.0 - exp(exponent*y)/(1.0 + exp(exponent*y)));
   double P_daily = 1.0 - exp(log(1.0 - P_annual)/356.0);
   return(P_daily);
 }
@@ -1282,10 +1282,13 @@ List growthDayInner(List x, NumericVector meteovec,
             } else if((starvationRate[j] > basalMortalityRate) && (starvationRate[j] > dessicationRate[j])) {
               cause = "starvation";
             }
+            if(NumericVector::is_na(mortalityRate[j])) {
+              Rcout<< " Basal mortality rate " << basalMortalityRate << " Dessication rate " << dessicationRate[j] << " starvation rate "<< starvationRate[j]<<"\n"; 
+              stop("Missing value for mortality rate");
+            }
             // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
             if(mortalityMode =="density/deterministic") {
               Ndead_day = N[j]*mortalityRate[j];
-              // Rcout<< "mortalityRate " << mortalityRate[j]<< " Ndead "<<Ndead_day<<"\n";
             } else if(mortalityMode =="whole-cohort/stochastic") {
               if(R::runif(0.0,1.0) < mortalityRate[j]) {
                 Ndead_day = N[j];
