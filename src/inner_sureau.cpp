@@ -127,6 +127,7 @@ double Turgor(double PiFT, double Esymp, double Rstemp) {
   return(-1.0*PiFT - Esymp * Rstemp);
 }
 
+//Currently not called for optimization purposes
 double regulFact(double psi, List params, String regulationType = "Sigmoid") {
   // double stomatalClosure = NA_REAL;
   double regulFact = NA_REAL;
@@ -877,6 +878,10 @@ void innerSureau(List x, List input, List output, int n, double tstep,
       double Q10_1_gmin = params["Q10_1_gmin"];
       double Q10_2_gmin = params["Q10_2_gmin"];
       double fTRBToLeaf = params["fTRBToLeaf"];
+      double Gsw_AC_slope = params["Gsw_AC_slope"];
+      double gsNight = params["gsNight"];
+      double slope_gs = params["slope_gs"];
+      double P50_gs = params["P50_gs"];
       
       NumericVector kSoil = network["k_Soil"];
       
@@ -918,8 +923,9 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           
           //Current leaf water potential (same for sunlit and shade leaves)
           double Psi_LSym = network_n["Psi_LSym"];
-          double regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
-
+          // Current stomatal regulation ("Sigmoid")
+          double regul_ini = 1.0 - (1.0 / (1.0 + exp(slope_gs / 25.0 * (Psi_LSym - P50_gs))));
+          
           //Leaf temperature for sunlit and shade leaves
           double Elim_SL = network_n["Elim_SL"];
           double Elim_SH = network_n["Elim_SH"];
@@ -963,8 +969,9 @@ void innerSureau(List x, List input, List output, int n, double tstep,
           network_n["Emin_S"] =  Emin_S*f_dry; //Add f_dry to decrease transpiration in rainy days
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
           
-          // Current stomatal regulation
-          double regul = regulFact(Psi_LSym, params, "Sigmoid");
+          // Current stomatal regulation ("Sigmoid")
+          double regul = 1.0 - (1.0 / (1.0 + exp(slope_gs / 25.0 * (Psi_LSym - P50_gs))));
+          
           double gs_SL, gs_SH;
           if(stomatalSubmodel=="Jarvis") {
             gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
@@ -973,8 +980,6 @@ void innerSureau(List x, List input, List output, int n, double tstep,
             gs_SL = gs_SL * regul;
             gs_SH = gs_SH * regul;
           } else {
-            double Gsw_AC_slope = params["Gsw_AC_slope"];
-            double gsNight = params["gsNight"];
             photosynthesisBaldocchi_inner(PB_SL, 
                                           irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
                                           Cair[iLayerSunlit[c]], 
