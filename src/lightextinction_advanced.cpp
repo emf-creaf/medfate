@@ -94,9 +94,9 @@ double leafAngleCDF(double leafAngle, double p, double q) {
 //' @keywords internal
 // [[Rcpp::export("light_leafAngleBetaParameters")]]
 NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD) {
-  double pow_sum = pow(leafAngleSD,2.0) + pow(leafAngle,2.0);
+  double pow_sum = (leafAngleSD*leafAngleSD) + (leafAngle*leafAngle);
   double p_num = 1.0 - pow_sum/(leafAngle*M_PI/2.0);
-  double p_den = pow_sum/pow(leafAngle,2.0) - 1.0;
+  double p_den = pow_sum/(leafAngle*leafAngle) - 1.0;
   double p = p_num/p_den;
   double q = (M_PI/(2.0*leafAngle) - 1.0)*p;
   return(NumericVector::create(_["p"] = p,
@@ -152,7 +152,7 @@ NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix L
     for(int j =0;j<ncoh;j++) {
       gsum = gamma[j]*(LAIme(i,j)+LAImd(i,j));
       lsum = LAIme(i,j)+LAImd(i,j);
-      s = s + (kb[j]*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+      s = s + (kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
     }
     //Average gamma according to LAI
     gamma_i = gsum/lsum;
@@ -171,7 +171,7 @@ double groundDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,N
     //for subsequent layers increase s
     //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
     for(int j =0;j<ncoh;j++) {
-      s = s + (kb[j]*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+      s = s + (kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
     }
   }
   return(exp(-1.0*s));
@@ -205,7 +205,7 @@ NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix 
        for(int j =0;j<ncoh;j++) {
          gsum = gamma[j]*(LAIme(i,j)+LAImd(i,j));
          lsum = LAIme(i,j)+LAImd(i,j);
-         s = s + (K(k,j)*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+         s = s + (K(k,j)*sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
        }
        //Average gamma according to LAI
        gamma_i = gsum/lsum;
@@ -229,7 +229,7 @@ double groundDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,
       //for subsequent layers increase s
       //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
       for(int j =0;j<ncoh;j++) {
-        s = s + (K(k,j)*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+        s = s + (K(k,j)*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
       }
     }
     // I fraction for the current layer (no extinction for top layer)
@@ -257,9 +257,9 @@ NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericMatrix Idf,
     for(int k = 0;k<nZ;k++) { //Over all sky zones
       if(NumericVector::is_na(Idf(k,i))) stop("NA Idf");
       double s = 0.0;
-      for(int j = 0;j<ncoh;j++) s += K(k,j)*pow(alpha[j],0.5)*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      for(int j = 0;j<ncoh;j++) s += K(k,j)*std::sqrt(alpha[j])*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
       for(int j = 0;j<ncoh;j++) {
-        Ida(i,j) = Ida(i,j) + Id0*(1.0-gamma[j])*Idf(k,i)*pow(alpha[j],0.5)*K(k,j)*exp(-1.0*s);
+        Ida(i,j) = Ida(i,j) + Id0*(1.0-gamma[j])*Idf(k,i)*std::sqrt(alpha[j])*K(k,j)*exp(-1.0*s);
       }
     }
   }
@@ -281,14 +281,14 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf,
   for(int i = 0;i<nlayer;i++) {
     double s1 = 0.0, s2=0.0;
     for(int j = 0;j<ncoh;j++) {
-      s1 += kb[j]*pow(alpha[j],0.5)*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      s1 += kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
       s2 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
     }
     for(int j = 0;j<ncoh;j++) {
-      double diff = pow(alpha[j],0.5)*exp(-1.0*s1) - alpha[j]*exp(-1.0*s2);
+      double diff = std::sqrt(alpha[j])*exp(-1.0*s1) - alpha[j]*exp(-1.0*s2);
       // double diff = exp(-1.0*s1) - exp(-1.0*s2);
       // Rcout<< i << " "<< j << " "<< s1 << " " << s2 << " " << diff<<"\n";
-      Ibsa(i,j) = Ib0*Ibf[i]*pow(alpha[j], 0.5)*kb[j]*diff;
+      Ibsa(i,j) = Ib0*Ibf[i]*std::sqrt(alpha[j])*kb[j]*diff;
     }
   }
   return(Ibsa);
