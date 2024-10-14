@@ -5,8 +5,8 @@
 #endif
 using namespace Rcpp;
 
-DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
-                                     String model = "k-epsilon");
+NumericMatrix windCanopyTurbulenceModel_inner(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
+                                              String model = "k-epsilon");
 
-DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
+void windCanopyTurbulence_inner(DataFrame output, NumericVector zmid, NumericVector LAD, double canopyHeight,
                                 double u, double windMeasurementHeight = 200, String model = "k-epsilon");

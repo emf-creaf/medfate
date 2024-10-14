@@ -442,11 +442,11 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
   NumericVector zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
   if(canopyHeight>0.0) {
-    transpOutput["CanopyTurbulence"] = windCanopyTurbulence(zmid, lad,  canopyHeight, 
-                                                            wind, windMeasurementHeight);
     DataFrame canopyTurbulence = as<DataFrame>(transpOutput["CanopyTurbulence"]);
+    windCanopyTurbulence_inner(canopyTurbulence, zmid, lad,  canopyHeight, 
+                               wind, windMeasurementHeight);
     zWind = canopyTurbulence["u"]; 
-    dU = Rcpp::as<Rcpp::NumericVector>(canopyTurbulence["du"]);
+    dU = canopyTurbulence["du"];
     uw = canopyTurbulence["uw"];
   } 
   ////////////////////////////////////////

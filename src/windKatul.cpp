@@ -25,11 +25,11 @@ double alphaCNT=0.05;
 const double AAu=2.3;
 const double AAv=2.1;
 const double AAw=1.25;
-const double Aq=0.5*(pow(AAu,2.0)+pow(AAv,2.0)+pow(AAw,2.0));
+const double Aq=0.5*((AAu*AAu) + (AAv*AAv) + (AAw*AAw));
       
 // Determine the Kolmogorov constant from Au, Av, Aw
 // (constant for the turbulent viscocity)
-const double Cu=pow(1.0/Aq,2.0);
+const double Cu=1.0/(Aq*Aq);
       
 // Von karman constant
 const double kv=0.4;
@@ -42,7 +42,7 @@ const double Ce2=1.92;
 // Prandtl number (PrTKE = 1) for TKE hardwired in solver routines.
 const double PrTKE=1.0;
 // dissipation budget (Detering and Etling, 1974)
-const double Pr=pow(kv,2.0)/(sqrt(Cu)*(Ce2-Ce1));
+const double Pr=(kv*kv)/(sqrt(Cu)*(Ce2-Ce1));
       
 // Wake TKE budget coefficients (Sanz, 2003)
 const double Cg=pow(2.0/alphaCNT,2.0/3.0);
@@ -99,95 +99,9 @@ IntegerVector which(LogicalVector l) {
   for(int i=0;i<l.size();i++) if(l[i]) {w[cnt] = i;cnt++;}
   return(w);
 }
-/* (C)
- * 
- *  K-epsilon model (equations 1-7 with equation 4b)
- *  K-U model (equations 9 and 10)
- *  
- *  k_epsilon_CSL(z, Cx, h, do,zo)
- *  output [z1, U1, k1, uw1, Lmix1]
- */
-//' Models for canopy turbulence
-//' 
-//' Models for canopy turbulence by Katul et al (2004).
-//' 
-//' @param zm A numeric vector with height values (m).
-//' @param Cx Effective drag = Cd x leaf area density.
-//' @param hm Canopy height (m).
-//' @param d0 Zero displacement height (m).
-//' @param z0 Momentum roughness height (m).
-//' @param zmid A numeric vector of mid-point heights (in cm) for canopy layers.
-//' @param LAD A numeric vector of leaf area density values (m3/m2).
-//' @param canopyHeight Canopy height (in cm).
-//' @param u Measured wind speed (m/s).
-//' @param windMeasurementHeight Height of wind speed measurement with respect to canopy height (cm).
-//' @param model Closure model.
-//' 
-//' @return 
-//' Function \code{wind_canopyTurbulenceModel} returns a data frame of vertical profiles for variables:
-//' \itemize{
-//'   \item{\code{z1}: Height values.}
-//'   \item{\code{U1}: U/u*, where U is mean velocity and u* is friction velocity.}
-//'   \item{\code{dU1}: dUdz/u*, where dUdz is mean velocity gradient and u* is friction velocity.}
-//'   \item{\code{epsilon1}: epsilon/(u^3/h) where epsilon is the turbulent kinetic dissipation rate, u* is friction velocity and h is canopy height.}
-//'   \item{\code{k1}: k/(u*^2), where k is the turbulent kinetic energy and u* is friction velocity.}
-//'   \item{\code{uw1}: <uw>/(u*^2), where <uw> is the Reynolds stress and u* is friction velocity.}
-//'   \item{\code{Lmix1}: Mixing length.}
-//' }
-//' 
-//' Function \code{wind_canopyTurbulence} returns a data frame of vertical profiles for transformed variables:
-//'   \itemize{
-//'     \item{\code{zmid}: Input mid-point heights (in cm) for canopy layers.}
-//'     \item{\code{u}: Wind speed (m/s).}
-//'     \item{\code{du}: Mean velocity gradient (1/s).}
-//'     \item{\code{epsilon}: Turbulent kinetic dissipation rate.}
-//'     \item{\code{k}: Turbulent kinetic energy.}
-//'     \item{\code{uw}: Reynolds stress.}
-//'   }
-//' 
-//' @details
-//' Implementation in Rcpp of the K-epsilon canopy turbulence models by Katul et al (2004) originally in Matlab code (https://nicholas.duke.edu/people/faculty/katul/k_epsilon_model.htm).
-//' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' @references 
-//' Katul GG, Mahrt L, Poggi D, Sanz C (2004) One- and two-equation models for canopy turbulence. Boundary-Layer Meteorol 113:81–109. https://doi.org/10.1023/B:BOUN.0000037333.48760.e5
-//' 
-//' @seealso
-//' \code{\link{vprofile_windExtinction}}
-//' 
-//' @examples
-//' #Default species parameterization
-//' data(SpParamsMED)
-//' 
-//' #Load example plot plant data
-//' data(exampleforest)
-//' 
-//' #Canopy height (in m)
-//' h= max(exampleforest$treeData$Height/100) 
-//' d0 = 0.67*h
-//' z0 = 0.08*h
-//' 
-//' #Height values (cm)
-//' z = seq(50,1000, by=50)
-//' zm = z/100 # (in m)
-//' 
-//' # Leaf area density
-//' lad = vprofile_leafAreaDensity(exampleforest, SpParamsMED, draw = FALSE,
-//'                                z = c(0,z))
-//'   
-//' # Effective drag
-//' Cd = 0.2
-//' Cx = Cd*lad
-//'   
-//' # canopy turbulence model
-//' wind_canopyTurbulenceModel(zm, Cx,h,d0,z0)
-//' 
-//' @name wind
-//' @keywords internal
-// [[Rcpp::export("wind_canopyTurbulenceModel")]]
-DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
-                                     String model = "k-epsilon") {
+
+NumericMatrix windCanopyTurbulenceModel_inner(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
+                                              String model = "k-epsilon") {
   if(zm.size() != Cx.size()) stop("Height and effective drag vectors should have the same length!");
   int N=zm.size();
   double zmax=max(zm);
@@ -196,15 +110,15 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   double Ulow=0.0;
   double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
   NumericVector U=linspace(Ulow,Uhigh,N);
-
-  double khigh=0.5*(pow(AAu,2.0)+pow(AAv,2.0)+pow(AAw,2.0));
+  
+  double khigh=0.5*((AAu*AAu) + (AAv*AAv) + (AAw*AAw));
   double klow=0.001*khigh;
   NumericVector k=linspace(klow,khigh,N);
   
   double epsilonhigh=(1.0/(kv*(zmax-d0)));
   double epsilonlow=0.001*epsilonhigh;
   NumericVector epsilon=linspace(epsilonlow,epsilonhigh,N);
-
+  
   // Mixing Length model
   double alpha = kv*(hm-d0)/hm;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
   NumericVector Lmix(N, alpha*hm);
@@ -215,7 +129,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   }
   Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0;
   
-  double am3=-pow(Aq,3.0)*(pow(AAu,2.0)-pow(AAw,2.0))/(pow(AAw,2.0)-pow(Aq,2.0)/3.0);
+  double am3=-(Aq*Aq*Aq)*((AAu*AAu)-(AAw*AAw))/((AAw*AAw)-(Aq*Aq)/3.0);
   NumericVector lambda3=am3*Lmix;
   
   NumericVector y(N); 
@@ -309,7 +223,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
       aa[i]=lod[i];
       bb[i]=dia[i];
       cc[i]=upd[i];
-      dd[i] = epsilon[i]-Cx[i]*Bp*pow(std::abs(U[i]),3.0)-vt[i]*pow(dU[i],2.0);
+      dd[i] = epsilon[i]-Cx[i]*Bp*pow(std::abs(U[i]),3.0)-vt[i]*(dU[i]*dU[i]);
     }
     aa[0]=0.0;
     bb[0]=1.0;
@@ -319,7 +233,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     bb[N-1]=1.0;
     cc[N-1]=0.0;
     dd[N-1]=khigh;
-
+    
     //   ------Use the Thomas Algorithm to solve the tridiagonal matrix
     NumericVector Kn=thomas(aa,bb,cc,dd);
     maxerr=max(abs(Kn-k));
@@ -331,10 +245,10 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     if(model=="k-epsilon") {
       //   Set up coefficients for dissipation ODE ---------------------------------------------------------------------------------
       for(int i=0;i<N;i++){
-        Su[i]=Cx[i]*pow(U[i],2.0); 
-        Sk[i]=Cx[i]*(Bp*pow(U[i],3.0)-Bd*U[i]*k[i]);
+        Su[i]=Cx[i]*(U[i]*U[i]); 
+        Sk[i]=Cx[i]*(Bp*(U[i]*U[i]*U[i])-Bd*U[i]*k[i]);
         Se1[i]=(Ce4*epsilon[i]/k[i])*Sk[i];
-        Se2[i]=epsilon[i]*Cx[i]*((Ce4*Bp*pow(U[i],3.0)/k[i])-Bd*Ce5*U[i]);
+        Se2[i]=epsilon[i]*Cx[i]*((Ce4*Bp*(U[i]*U[i]*U[i])/k[i])-Bd*Ce5*U[i]);
       }
       for(int i=0;i<N;i++){
         a1[i]=vt[i]/Pr;
@@ -350,7 +264,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
         aa[i]=lod[i];
         bb[i]=dia[i];
         cc[i]=upd[i];
-        dd[i] = -Ce1*Cu*k[i]*pow(dU[i],2.0)-Se2[i];
+        dd[i] = -Ce1*Cu*k[i]*(dU[i]*dU[i])-Se2[i];
       }
       aa[0]=0.0;
       bb[0]=1.0;
@@ -370,25 +284,20 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     cnt++;
     if(cnt==maxcnt) warning("too many iterations in canopy turbulence model");
   }
-  return(DataFrame::create(Named("z1") = zm,
-                           Named("U1") = U,
-                           Named("dU1") = dU,
-                           Named("epsilon1") = epsilon,
-                           Named("k1") = k,
-                           Named("uw1") = uw/(abs(uw[N-1])),
-                           Named("Lmix1") = Lmix));
+  NumericMatrix res(zm.size(), 7);
+  res(_,0) = zm;
+  res(_,1) = U;
+  res(_,2) = dU;
+  res(_,3) = epsilon;
+  res(_,4) = k;
+  res(_,5) = uw/(abs(uw[N-1]));
+  res(_,6) = Lmix;  
+  res.attr("dimnames") = List::create(seq(1,zm.size()), 
+           CharacterVector::create("z1", "U1" ,"dU1", "epsilon1", "k1", "uw1", "Lmix1"));
+  return(res);
 }
-/*
- *   zmid - Vector of mid heights for canopy layers (cm)
- *   LAD - Vector of leaf area density for canopy layers (m2/m3)
- *   canopyHeight - Canopy height (cm)
- *   u - Wind speed over the canopy (m/s)
- *   windMeasurementHeight - Height of wind measurement over canopy
- */
-//' @rdname wind
-//' @keywords internal
-// [[Rcpp::export("wind_canopyTurbulence")]]
-DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
+
+void windCanopyTurbulence_inner(DataFrame output, NumericVector zmid, NumericVector LAD, double canopyHeight,
                                 double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
   
   //z - height vector in m
@@ -406,17 +315,143 @@ DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double can
   
   //u_f - Friction velocity
   double u_f = u*kv/log(((hm + windMeasurementHeight/100.0)-d0)/z0);
-  DataFrame cmout = windCanopyTurbulenceModel(zm, Cx, hm, d0, z0);
-  NumericVector U1 = cmout["U1"];
-  NumericVector dU1 = cmout["dU1"];
-  NumericVector epsilon1 = cmout["epsilon1"];
-  NumericVector k1 = cmout["k1"];
-  NumericVector uw1 = cmout["uw1"];
-  NumericVector Lmix1 = cmout["Lmix1"];
-  return(DataFrame::create(Named("zmid") = zmid,
-                           Named("u") = U1*u_f,
-                           Named("du") = dU1*u_f,
-                           Named("epsilon") = epsilon1*(pow(u_f,3.0)/hm),
-                           Named("k") = k1*pow(u_f,2.0),
-                           Named("uw") = uw1*pow(u_f,2.0)));
+  NumericMatrix cmout = windCanopyTurbulenceModel_inner(zm, Cx, hm, d0, z0);
+  
+  //"z1", "U1" ,"dU1", "epsilon1", "k1", "uw1", "Lmix1"
+  NumericVector U1 = cmout(_,1); 
+  NumericVector dU1 = cmout(_,2);
+  NumericVector epsilon1 = cmout(_,3);
+  NumericVector k1 = cmout(_,4);
+  NumericVector uw1 = cmout(_,5);
+  NumericVector out_zmid = output["zmid"];
+  NumericVector out_u = output["u"];
+  NumericVector out_du = output["du"];
+  NumericVector out_epsilon = output["epsilon"];
+  NumericVector out_k = output["k"];
+  NumericVector out_uw = output["uw"];
+  for(int i=0;i<zmid.size();i++) {
+    out_zmid[i] = zmid[i];
+    out_u[i] = U1[i]*u_f;
+    out_du[i] = dU1[i]*u_f;
+    out_epsilon[i] = epsilon1[i]*((u_f*u_f*u_f)/hm);
+    out_k = k1[i]*u_f*u_f;
+    out_uw = uw1[i]*u_f*u_f;
+  }
+}
+
+/* (C)
+ * 
+ *  K-epsilon model (equations 1-7 with equation 4b)
+ *  K-U model (equations 9 and 10)
+ *  
+ *  k_epsilon_CSL(z, Cx, h, do,zo)
+ *  output [z1, U1, k1, uw1, Lmix1]
+ */
+//' Models for canopy turbulence
+//' 
+//' Models for canopy turbulence by Katul et al (2004).
+//' 
+//' @param zm A numeric vector with height values (m).
+//' @param Cx Effective drag = Cd x leaf area density.
+//' @param hm Canopy height (m).
+//' @param d0 Zero displacement height (m).
+//' @param z0 Momentum roughness height (m).
+//' @param zmid A numeric vector of mid-point heights (in cm) for canopy layers.
+//' @param LAD A numeric vector of leaf area density values (m3/m2).
+//' @param canopyHeight Canopy height (in cm).
+//' @param u Measured wind speed (m/s).
+//' @param windMeasurementHeight Height of wind speed measurement with respect to canopy height (cm).
+//' @param model Closure model.
+//' 
+//' @return 
+//' Function \code{wind_canopyTurbulenceModel} returns a data frame of vertical profiles for variables:
+//' \itemize{
+//'   \item{\code{z1}: Height values.}
+//'   \item{\code{U1}: U/u*, where U is mean velocity and u* is friction velocity.}
+//'   \item{\code{dU1}: dUdz/u*, where dUdz is mean velocity gradient and u* is friction velocity.}
+//'   \item{\code{epsilon1}: epsilon/(u^3/h) where epsilon is the turbulent kinetic dissipation rate, u* is friction velocity and h is canopy height.}
+//'   \item{\code{k1}: k/(u*^2), where k is the turbulent kinetic energy and u* is friction velocity.}
+//'   \item{\code{uw1}: <uw>/(u*^2), where <uw> is the Reynolds stress and u* is friction velocity.}
+//'   \item{\code{Lmix1}: Mixing length.}
+//' }
+//' 
+//' Function \code{wind_canopyTurbulence} returns a data frame of vertical profiles for transformed variables:
+//'   \itemize{
+//'     \item{\code{zmid}: Input mid-point heights (in cm) for canopy layers.}
+//'     \item{\code{u}: Wind speed (m/s).}
+//'     \item{\code{du}: Mean velocity gradient (1/s).}
+//'     \item{\code{epsilon}: Turbulent kinetic dissipation rate.}
+//'     \item{\code{k}: Turbulent kinetic energy.}
+//'     \item{\code{uw}: Reynolds stress.}
+//'   }
+//' 
+//' @details
+//' Implementation in Rcpp of the K-epsilon canopy turbulence models by Katul et al (2004) originally in Matlab code (https://nicholas.duke.edu/people/faculty/katul/k_epsilon_model.htm).
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @references 
+//' Katul GG, Mahrt L, Poggi D, Sanz C (2004) One- and two-equation models for canopy turbulence. Boundary-Layer Meteorol 113:81–109. https://doi.org/10.1023/B:BOUN.0000037333.48760.e5
+//' 
+//' @seealso
+//' \code{\link{vprofile_windExtinction}}
+//' 
+//' @examples
+//' #Default species parameterization
+//' data(SpParamsMED)
+//' 
+//' #Load example plot plant data
+//' data(exampleforest)
+//' 
+//' #Canopy height (in m)
+//' h= max(exampleforest$treeData$Height/100) 
+//' d0 = 0.67*h
+//' z0 = 0.08*h
+//' 
+//' #Height values (cm)
+//' z = seq(50,1000, by=50)
+//' zm = z/100 # (in m)
+//' 
+//' # Leaf area density
+//' lad = vprofile_leafAreaDensity(exampleforest, SpParamsMED, draw = FALSE,
+//'                                z = c(0,z))
+//'   
+//' # Effective drag
+//' Cd = 0.2
+//' Cx = Cd*lad
+//'   
+//' # canopy turbulence model
+//' wind_canopyTurbulenceModel(zm, Cx,h,d0,z0)
+//' 
+//' @name wind
+//' @keywords internal
+// [[Rcpp::export("wind_canopyTurbulenceModel")]]
+DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
+                                        String model = "k-epsilon") {
+  NumericMatrix res = windCanopyTurbulenceModel_inner(zm, Cx, hm, d0, z0, model);
+  return(as<DataFrame>(res));
+}
+/*
+ *   zmid - Vector of mid heights for canopy layers (cm)
+ *   LAD - Vector of leaf area density for canopy layers (m2/m3)
+ *   canopyHeight - Canopy height (cm)
+ *   u - Wind speed over the canopy (m/s)
+ *   windMeasurementHeight - Height of wind measurement over canopy
+ */
+//' @rdname wind
+//' @keywords internal
+// [[Rcpp::export("wind_canopyTurbulence")]]
+DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
+                                double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
+  
+  int n = zmid.size();
+  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(n, NA_REAL),
+                    Named("u") = NumericVector(n, NA_REAL),
+                    Named("du") = NumericVector(n, NA_REAL),
+                    Named("epsilon") = NumericVector(n, NA_REAL),
+                    Named("k") = NumericVector(n, NA_REAL),
+                    Named("uw") = NumericVector(n, NA_REAL));
+  windCanopyTurbulence_inner(output, zmid, LAD, canopyHeight,
+                             u, windMeasurementHeight, model);
+  return(output);
 }

@@ -19,7 +19,15 @@ List internalLongWaveRadiation(int ncanlayers) {
                                  _["Lnet_cohort_layer"] = NA_REAL);
   return(lwr_struct);
 }
-
+DataFrame internalCanopyTurbulence(int ncanlayers) {
+  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(ncanlayers, NA_REAL),
+                                       Named("u") = NumericVector(ncanlayers, NA_REAL),
+                                       Named("du") = NumericVector(ncanlayers, NA_REAL),
+                                       Named("epsilon") = NumericVector(ncanlayers, NA_REAL),
+                                       Named("k") = NumericVector(ncanlayers, NA_REAL),
+                                       Named("uw") = NumericVector(ncanlayers, NA_REAL));
+  return(output);
+}
 List basicTranspirationOutput(List x) {
   List control = x["control"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -384,7 +392,7 @@ List advancedTranspirationOutput(List x) {
                         _["ShadeLeavesInst"] = ShadeInst,
                         _["LightExtinction"] = List::create(), //To be replaced
                         _["LWRExtinction"] = lwrExtinctionList,
-                        _["CanopyTurbulence"] = DataFrame::create()); //To be replaced
+                        _["CanopyTurbulence"] = internalCanopyTurbulence(ncanlayers)); //To be replaced
   
   List outPhotoSunlit(numCohorts);
   List outPhotoShade(numCohorts);
