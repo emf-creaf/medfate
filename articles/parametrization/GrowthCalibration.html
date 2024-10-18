@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-10-08</h4>
+            <h4 data-toc-skip class="date">2024-10-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/GrowthCalibration.Rmd" class="external-link"><code>vignettes/parametrization/GrowthCalibration.Rmd</code></a></small>
       <div class="d-none name"><code>GrowthCalibration.Rmd</code></div>
@@ -170,8 +170,13 @@ transformed DI into annual BAI.</p>
 plot, obtained via interpolation using package
 <strong>meteoland</strong> (2001 - 2015 period or 1990-2004 period,
 depending on the data set), and soil physical characteristics where
-drawn from SoilGrids data base. Transpiration and photosynthesis
-parameters were given values resulting from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html">meta-modelling
+drawn from SoilGrids data base. Model simulations were done using the
+basic water balance model
+(i.e. <code>transpirationMode = "Granier"</code>), which explains why
+evaluation of calibrated growth is better for this model than the
+advanced ones (i.e. <code>Sperry</code> or <code>Sureau</code>).
+Transpiration and photosynthesis parameters were given values resulting
+from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html">meta-modelling
 exercise</a>, whereas other parameters of the sensitivity analysis were
 left to the species-level defaults of <code>SpParamsMED</code>. We
 calibrated the four target parameters for the target dominant species of
@@ -293,19 +298,19 @@ rfc_cal
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-44.42173
+44.58113
 </td>
 <td style="text-align:right;">
-4.75e-05
+5.16e-05
 </td>
 <td style="text-align:right;">
-0.0030717
+0.0030927
 </td>
 <td style="text-align:right;">
-0.0001413
+0.0001391
 </td>
 <td style="text-align:right;">
-70.62993
+67.64601
 </td>
 </tr>
 <tr>
@@ -313,19 +318,19 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-51.74750
+50.12844
 </td>
 <td style="text-align:right;">
-4.58e-05
+3.76e-05
 </td>
 <td style="text-align:right;">
-0.0012585
+0.0012879
 </td>
 <td style="text-align:right;">
-0.0001108
+0.0001432
 </td>
 <td style="text-align:right;">
-71.51148
+72.04303
 </td>
 </tr>
 <tr>
@@ -333,19 +338,19 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-41.81043
+41.60647
 </td>
 <td style="text-align:right;">
-5.29e-05
+5.45e-05
 </td>
 <td style="text-align:right;">
-0.0012309
+0.0013369
 </td>
 <td style="text-align:right;">
-0.0001167
+0.0001019
 </td>
 <td style="text-align:right;">
-65.38852
+68.78204
 </td>
 </tr>
 <tr>
@@ -353,19 +358,19 @@ Pinus nigra
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-46.20288
+46.40091
 </td>
 <td style="text-align:right;">
-5.11e-05
+5.44e-05
 </td>
 <td style="text-align:right;">
-0.0020654
+0.0020224
 </td>
 <td style="text-align:right;">
-0.0001261
+0.0001305
 </td>
 <td style="text-align:right;">
-75.76548
+65.11412
 </td>
 </tr>
 <tr>
@@ -373,19 +378,19 @@ Pinus sylvestris
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-37.27032
+38.80396
 </td>
 <td style="text-align:right;">
-5.25e-05
+5.11e-05
 </td>
 <td style="text-align:right;">
-0.0014387
+0.0014198
 </td>
 <td style="text-align:right;">
-0.0001334
+0.0001173
 </td>
 <td style="text-align:right;">
-56.13528
+61.55416
 </td>
 </tr>
 <tr>
@@ -393,19 +398,19 @@ Quercus pubescens
 All
 </td>
 <td style="text-align:right;">
-44.29057
+44.30418
 </td>
 <td style="text-align:right;">
-5.00e-05
+4.98e-05
 </td>
 <td style="text-align:right;">
-0.0018130
+0.0018319
 </td>
 <td style="text-align:right;">
-0.0001256
+0.0001264
 </td>
 <td style="text-align:right;">
-67.88614
+67.02787
 </td>
 </tr>
 </tbody>
@@ -416,31 +421,33 @@ the following ANOVA tables:</p>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: RERsapwood_cal</span></span>
-<span><span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span></span>
-<span><span class="co">## Species    4 6.0420e-10 1.5104e-10  0.3657 0.8323</span></span>
-<span><span class="co">## Residuals 70 2.8913e-08 4.1305e-10</span></span></code></pre>
+<span><span class="co">##           Df     Sum Sq    Mean Sq F value  Pr(&gt;F)  </span></span>
+<span><span class="co">## Species    4 2.9387e-09 7.3468e-10  2.4538 0.05371 .</span></span>
+<span><span class="co">## Residuals 70 2.0958e-08 2.9941e-10                  </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: RGRcambiummax_cal</span></span>
 <span><span class="co">##           Df     Sum Sq    Mean Sq F value    Pr(&gt;F)    </span></span>
-<span><span class="co">## Species    4 3.6516e-05 9.1291e-06  7.8876 2.625e-05 ***</span></span>
-<span><span class="co">## Residuals 70 8.1018e-05 1.1574e-06                      </span></span>
+<span><span class="co">## Species    4 3.5051e-05 8.7627e-06  7.2156 6.342e-05 ***</span></span>
+<span><span class="co">## Residuals 70 8.5008e-05 1.2144e-06                      </span></span>
 <span><span class="co">## ---</span></span>
 <span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: SRsapwood_cal</span></span>
-<span><span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span></span>
-<span><span class="co">## Species    4 9.0900e-09 2.2725e-09  0.7766 0.5441</span></span>
-<span><span class="co">## Residuals 70 2.0484e-07 2.9263e-09</span></span></code></pre>
+<span><span class="co">##           Df     Sum Sq    Mean Sq F value  Pr(&gt;F)  </span></span>
+<span><span class="co">## Species    4 1.7168e-08 4.2920e-09  2.6302 0.04147 *</span></span>
+<span><span class="co">## Residuals 70 1.1422e-07 1.6318e-09                  </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
 <pre><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Response: rfc_cal</span></span>
-<span><span class="co">##           Df  Sum Sq Mean Sq F value  Pr(&gt;F)  </span></span>
-<span><span class="co">## Species    4  3406.1  851.54  2.3969 0.05837 .</span></span>
-<span><span class="co">## Residuals 70 24868.7  355.27                  </span></span>
-<span><span class="co">## ---</span></span>
-<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
+<span><span class="co">##           Df  Sum Sq Mean Sq F value Pr(&gt;F)</span></span>
+<span><span class="co">## Species    4   933.5  233.38  0.5634   0.69</span></span>
+<span><span class="co">## Residuals 70 28996.7  414.24</span></span></code></pre>
 <p>Finally, the following panels illustrate the overall lack of
 covariance between calibrated parameter values:</p>
 <pre><code><span><span class="co">## Warning in get_plot_component(plot, "guide-box"): Multiple components found;</span></span>
@@ -452,10 +459,13 @@ covariance between calibrated parameter values:</p>
 <h2 id="comparison-of-the-basic-and-advanced-sub-models">Comparison of the basic and advanced sub-models<a class="anchor" aria-label="anchor" href="#comparison-of-the-basic-and-advanced-sub-models"></a>
 </h2>
 <p>Since the calibration exercise had been conducted using the basic
-sub-model, it is expected that growth simulations with the advanced
-sub-model have larger error rates and, potentially, larger bias. To
-check this, we repeated growth simulations using the calibrated
-parameters for each plot and the advanced sub-model.</p>
+sub-model (<code>transpirationMode = "Granier"</code>), it is expected
+that growth simulations with the advanced sub-model
+(<code>transpirationMode = "Sperry"</code> or
+<code>transpirationMode = "Sureau"</code>) have larger error rates and,
+potentially, larger bias. To check this, we repeated growth simulations
+using the calibrated parameters for each plot and the advanced
+sub-model.</p>
 <p>The following figures show the bias and mean absolute error of annual
 basal area increments obtained in simulations using the basic and
 advanced sub-models, in both cases using the calibrated parameters.</p>

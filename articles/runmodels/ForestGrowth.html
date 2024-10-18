@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-10-08</h4>
+            <h4 data-toc-skip class="date">2024-10-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -225,7 +225,8 @@ object, whose names are:</p>
 <span><span class="co">## [17] "paramsMortalityRegeneration" "paramsAllometries"          </span></span>
 <span><span class="co">## [19] "internalPhenology"           "internalWater"              </span></span>
 <span><span class="co">## [21] "internalCarbon"              "internalAllocation"         </span></span>
-<span><span class="co">## [23] "internalMortality"           "internalFCCS"</span></span></code></pre>
+<span><span class="co">## [23] "internalMortality"           "internalFCCS"               </span></span>
+<span><span class="co">## [25] "internalCommunication"</span></span></code></pre>
 <p>As with <code>spwbInput</code> objects, information about the cohort
 species is found in element <code>cohorts</code> (i.e. code, species and
 name):</p>
@@ -262,8 +263,8 @@ parameters for the forest growth model are
 <span><span class="co">## T2_168 0.01757808   5.15e-05 0.0072846640 1.4300      1.47        1.3</span></span>
 <span><span class="co">## S1_165 0.02647746   5.15e-05 0.0072846640 1.5320      1.47        1.3</span></span>
 <span><span class="co">##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood</span></span>
-<span><span class="co">## T1_148       0.09            NA   0.003410814            0.1  0.000135</span></span>
-<span><span class="co">## T2_168       0.09            NA   0.001554011            0.1  0.000135</span></span>
+<span><span class="co">## T1_148       0.09            NA   0.002628095            0.1  0.000135</span></span>
+<span><span class="co">## T2_168       0.09            NA   0.002500000            0.1  0.000135</span></span>
 <span><span class="co">## S1_165       0.09         0.002            NA            0.1  0.000135</span></span>
 <span><span class="co">##         SRfineroot      RSSG fHDmin fHDmax     WoodC</span></span>
 <span><span class="co">## T1_148 0.001897231 0.3725000     80    160 0.4979943</span></span>
@@ -324,7 +325,7 @@ model sink limitations on wood formation.</p>
 <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.1]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.2]</span></span></code></pre>
 <pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 5068.34</span></span>
 <span><span class="co">## Initial plant water content (mm): 4.73001</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
@@ -333,28 +334,28 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 5255.98</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 187.648</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 187.648</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 5256.66</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 188.319</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 188.319</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 106 Labile balance (g/m2) 90</span></span>
+<span><span class="co">##   Structural balance (g/m2) 104 Labile balance (g/m2) 92</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 196 Mortality loss (g/m2) 8</span></span>
-<span><span class="co">## Final plant water content (mm): 4.73738</span></span>
-<span><span class="co">## Final soil water content (mm): 278.329</span></span>
+<span><span class="co">## Final plant water content (mm): 4.73794</span></span>
+<span><span class="co">## Final soil water content (mm): 274.787</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.00736325</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00093121</span></span>
-<span><span class="co">## Change in soil water content (mm): -12.5462</span></span>
-<span><span class="co">## Soil water balance result (mm): -12.5462</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.00793061</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00116878</span></span>
+<span><span class="co">## Change in soil water content (mm): -16.0878</span></span>
+<span><span class="co">## Soil water balance result (mm): -16.0878</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 92 Net rainfall (mm) 370</span></span>
-<span><span class="co">##   Infiltration (mm) 398 Infiltration excess (mm) 23 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 31  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 184</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 184  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
-<span><span class="co">##   Runoff (mm) 23 Deep drainage (mm) 182</span></span></code></pre>
+<span><span class="co">##   Infiltration (mm) 400 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
+<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 248</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 248  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4</span></span>
+<span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 128</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -500,10 +501,10 @@ relationship:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.6236622 -45.4607690   0.6236622  45.4607690   0.9919501 </span></span>
-<span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.5331450   0.4134440</span></span></code></pre>
+<pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
+<span><span class="co">##  12.00000000  -0.07781249 -12.01817423   0.07962016  12.29737074   0.99395785 </span></span>
+<span><span class="co">##          NSE      NSE.abs </span></span>
+<span><span class="co">##   0.95935261   0.83966608</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

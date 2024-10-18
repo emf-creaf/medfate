@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-10-08</h4>
+            <h4 data-toc-skip class="date">2024-10-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>PreparingInputs.Rmd</code></div>
@@ -107,8 +107,8 @@ processing his/her own data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/">medfate</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Package 'medfate' [ver. 4.7.0]</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Package 'meteoland' [ver. 2.2.1]</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/" class="external-link">meteoland</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Package 'meteoland' [ver. 2.2.2]</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="buildingmanipulating-forest-objects">Building/manipulating forest objects<a class="anchor" aria-label="anchor" href="#buildingmanipulating-forest-objects"></a>
@@ -477,9 +477,9 @@ package.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"meteoland_interpolator_example"</span><span class="op">)</span></span></code></pre></div>
 <p>Once we have this interpolator, obtaining interpolated weather for a
 set of target points is rather straightforward using function
-<code><a href="https://rdrr.io/pkg/meteoland/man/interpolate_data.html" class="external-link">interpolate_data()</a></code> from <strong>meteoland</strong>:</p>
+<code><a href="https://emf-creaf.github.io/meteoland/reference/interpolate_data.html" class="external-link">interpolate_data()</a></code> from <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolate_data.html" class="external-link">interpolate_data</a></span><span class="op">(</span><span class="va">pobl_spt</span>, <span class="va">meteoland_interpolator_example</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/meteoland/reference/interpolate_data.html" class="external-link">interpolate_data</a></span><span class="op">(</span><span class="va">pobl_spt</span>, <span class="va">meteoland_interpolator_example</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Starting interpolation...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Temperature interpolation is needed also...</span></span>
 <span><span class="co">#&gt; • Interpolating temperature...</span></span>
@@ -493,7 +493,7 @@ set of target points is rather straightforward using function
 <span><span class="co">#&gt; • Interpolating wind...</span></span>
 <span><span class="co">#&gt; • Calculating PET...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Interpolation done...</span></span></code></pre></div>
-<p>The output of function <code><a href="https://rdrr.io/pkg/meteoland/man/interpolate_data.html" class="external-link">interpolate_data()</a></code> is an object
+<p>The output of function <code><a href="https://emf-creaf.github.io/meteoland/reference/interpolate_data.html" class="external-link">interpolate_data()</a></code> is an object
 of class <code>sf</code>:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meteo</span></span>
