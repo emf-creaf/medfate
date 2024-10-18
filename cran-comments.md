@@ -1,10 +1,10 @@
 ## Major change submission
 
-This submission (v4.4.0) incorporates many new features compared to previous versions.
+This submission (v4.4.7) incorporates many several features compared to previous versions.
 
 ## Tested environments
 
-* local R installation (Arch Linux), R 4.4.0
+* local R installation (Arch Linux), R 4.4.1
 * windows-latest (on github actions), R release
 * macOS (on github actions), macos-13 on GitHub
 * macOS-latest (on github actions), R release
@@ -18,3 +18,7 @@ This submission (v4.4.0) incorporates many new features compared to previous ver
 ## R CMD check results
 
 In all CI tests only NOTEs are generated
+
+## Reverse/Downstream dependencies
+
+`medfate` has a reverse dependency with `medfateland`, under our responsibility.
