@@ -21,13 +21,13 @@ usethis::use_data(SpParamsDefinition, overwrite = T)
 # SpParamsMED [MODE A] -------------------------------------------------------------
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
                                               sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
-
 MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/"
 harmonized_allometry_path <- "~/OneDrive/EMF_datasets/AllometryDatabases/Products/harmonized"
 harmonized_trait_path <- "~/OneDrive/EMF_datasets/PlantTraitDatabases/Products/harmonized"
 
 # Revised hydraulic/photosynthesis parameters
-customParamsSpecies <- readxl::read_xlsx(paste0(MFWdir,"Metamodelling_TR_WUE/data-raw/SpParamsCUSTOM.xlsx"))
+source(paste0(MFWdir, "Metamodelling_TR_WUE/R/utils.R"))
+customParamsSpecies <- get_custom_params(paste0(MFWdir,"Metamodelling_TR_WUE/data-raw"))
 SpParamsMED <- medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
 # Results of meta-modelling exercise
 metamodellingParamsSpecies <- readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/data/SpParamsMED/metamodelling_params.rds"))

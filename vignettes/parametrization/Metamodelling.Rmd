@@ -46,7 +46,7 @@ As stated above, the general idea is to use simulation results issued by the adv
 
 ### Target species
 
-The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: *Abies alba*, *Castanea sativa*, *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus faginea*, *Quercus ilex*, *Quercus pubescens*,   *Quercus suber* and *Fagus sylvatica*. These species are included in the species parameter table `SpParamsMED` from package **medfate**.
+The metamodelling procedure could be applied to any target species, but we focused on twelve main tree species in Catalonia: *Abies alba*, *Castanea sativa*, *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus faginea*, *Quercus ilex*, *Quercus pubescens*,   *Quercus suber* and *Fagus sylvatica*. These species are included in the species parameter table `SpParamsMED` from package **medfate**.
 
 For each of those species, we first revised the values of the most important parameters in the advanced water balance model (parameters of the hydraulic vulnerability curve are omitted as they should not be relevant in simulations without soil water deficit): 
 ```{r, echo = FALSE}
