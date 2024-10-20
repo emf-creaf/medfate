@@ -77,7 +77,7 @@ for(i in 1:n_sites) {
     cnt <- cnt+1
     df_all$Site[cnt] <- site
     df_all$Mode[cnt] <- conf
-    df_all$Path[cnt] <- file.path(params$wd, 'Output', params$medfate_ver, params$model, conf, site)
+    df_all$Path[cnt] <- file.path(params$wd,'data', 'output', params$medfate_ver, params$model, conf, site)
     file_name_input <- file.path(df_all$Path[cnt],
                        paste0('simulation_input.rds'))
     file_name_output <- file.path(df_all$Path[cnt],
