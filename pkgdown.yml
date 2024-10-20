@@ -15,7 +15,7 @@ articles:
   modelanalysis/SensitivityCalibration: modelanalysis/SensitivityCalibration.html
   evaluation/StandLevelEvaluation: evaluation/StandLevelEvaluation.html
   intro/UnderstandingInputs: intro/UnderstandingInputs.html
-last_built: 2024-10-18T14:24Z
+last_built: 2024-10-20T17:44Z
 urls:
   reference: https://emf-creaf.github.io/medfate/reference
   article: https://emf-creaf.github.io/medfate/articles
