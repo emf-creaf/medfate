@@ -67,6 +67,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   DataFrame outputSEBinst =  as<DataFrame>(outputEnergyBalance["SoilEnergyBalance"]);
   List lwrExtinctionList = transpOutput["LWRExtinction"];
   List supply = transpOutput["SupplyFunctions"]; 
+  // List internalLAIDistribution = internalCommunication["internalLAIDistribution"];
+  // NumericMatrix LAImx = internalLAIDistribution["live"];
+  // NumericMatrix LAIme = internalLAIDistribution["expanded"];
+  // NumericMatrix LAImd = internalLAIDistribution["dead"];
   
   //Control parameters
   List control = x["control"];
@@ -137,6 +141,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector zlow = canopyParams["zlow"];
   NumericVector zmid = canopyParams["zmid"];
   NumericVector zup = canopyParams["zup"];
+  // NumericVector LAIpx = canopyParams["LAIlive"];
+  // NumericVector LAIpe = canopyParams["LAIexpanded"];
+  // NumericVector LAIpd = canopyParams["LAIdead"];
   NumericVector Tair = canopyParams["Tair"];
   NumericVector VPair = canopyParams["VPair"];
   NumericVector Cair = canopyParams["Cair"];
@@ -430,11 +437,22 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericMatrix LAIme = LAIdistributionVectors(z, LAI, H, CR); //Expanded leaves
   NumericMatrix LAImd = LAIdistributionVectors(z, LAIdead, H, CR); //Dead (standing) leaves
   NumericMatrix LAImx = LAIdistributionVectors(z, LAIlive, H, CR); //Maximum leaf expansion
-  //LAI profile per layer
+  //Update LAI distribution per layer and cohort, if necessary
+  // updateLAIdistributionVectors(LAIme, z, LAI, H, CR); //Expanded leaves
+  // updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR); //Dead (standing) leaves
+  // updateLAIdistributionVectors(LAImx, z, LAIlive, H, CR); //Maximum leaf expansion
+  
+  //Update LAI profile per layer
+  // for(int i=0;i<ncanlayers;i++) {
+  //   LAIpx[i] = sum(LAImx(i,_));
+  //   LAIpe[i] = sum(LAIme(i,_));
+  //   LAIpd[i] = sum(LAImd(i,_));
+  // }
   NumericVector LAIpx = LAIprofileVectors(z, LAIlive, H, CR);
   NumericVector LAIpe = LAIprofileVectors(z, LAI, H, CR);
   NumericVector LAIpd = LAIprofileVectors(z, LAIdead, H, CR);
   NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
+  
   ////////////////////////////////////////
   // STEP 2. Determine vertical wind speed profile
   ////////////////////////////////////////
