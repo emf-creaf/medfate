@@ -420,7 +420,7 @@ double microporeImbibitionRate(double theta_b, double theta_micro,
   double gamma_w = 0.1; //Scaling factor
   double D_w = ((D_theta_b + D_theta_micro)/2.0)*S_macro;//Effective water diffusivity
   double d = 9.35*1e-3; //Effective diffusion pathlength in m
-  double S_w = std::max(0.0, ((G_f*D_w*gamma_w)/pow(d, 2.0))*(theta_b - theta_micro));
+  double S_w = std::max(0.0, ((G_f*D_w*gamma_w)/(d*d))*(theta_b - theta_micro));
   // Rcout<< "D_w " << D_w << " S_w "<< S_w<<"\n";
   return(S_w);
 }

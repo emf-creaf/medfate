@@ -345,7 +345,7 @@ double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double th
   double Se_b = pow(1.0 + pow(alpha*std::abs(psi_b),n),-m);
   //For pressure heads above psi_b, micropore conductivity set to k_b (MACRO 5.0 Larsbo & Jarvis)
   Se = std::min(Se, Se_b);
-  double k = k_b*pow(Se/Se_b,0.5)*pow(1.0 - pow(1.0 - pow(Se, 1.0/m), m), 2.0)/pow(1.0 - pow(1.0 - pow(Se_b, 1.0/m), m), 2.0);
+  double k = k_b*pow(Se/Se_b,0.5)*std::pow(1.0 - std::pow(1.0 - std::pow(Se, 1.0/m), m), 2.0)/std::pow(1.0 - std::pow(1.0 - std::pow(Se_b, 1.0/m), m), 2.0);
   return(k);
 }
 
