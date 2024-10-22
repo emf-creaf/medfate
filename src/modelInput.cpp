@@ -1079,9 +1079,9 @@ DataFrame paramsCanopy(DataFrame above, List control) {
   DataFrame paramsCanopy = DataFrame::create(_["zlow"] = zlow,
                                              _["zmid"] = zmid,
                                              _["zup"] = zup,
-                                             // _["LAIlive"]= NumericVector(nz, NA_REAL),
-                                             // _["LAIexpanded"]= NumericVector(nz, NA_REAL),
-                                             // _["LAIdead"]= NumericVector(nz, NA_REAL),
+                                             _["LAIlive"]= NumericVector(nz, NA_REAL),
+                                             _["LAIexpanded"]= NumericVector(nz, NA_REAL),
+                                             _["LAIdead"]= NumericVector(nz, NA_REAL),
                                              _["Tair"] = NumericVector(nz, NA_REAL),
                                              _["Cair"] = NumericVector(nz, NA_REAL),
                                              _["VPair"] = NumericVector(nz, NA_REAL));

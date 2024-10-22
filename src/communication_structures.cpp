@@ -34,13 +34,13 @@ List internalLAIDistribution(List x) {
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers
   // double h1, h2;
-  //NumericMatrix LAImx(ncanlayers, numCohorts);
+  NumericMatrix LAImx(ncanlayers, numCohorts);
   NumericMatrix LAIme(ncanlayers, numCohorts);
   NumericMatrix LAImd(ncanlayers, numCohorts);
-  //LAImx.fill(0.0);
+  LAImx.fill(0.0);
   LAIme.fill(0.0);
   LAImd.fill(0.0);
-  return(List::create(//_["live"] = LAImx,
+  return(List::create(_["live"] = LAImx,
                       _["expanded"] = LAIme,
                       _["dead"] = LAImd));
 }
