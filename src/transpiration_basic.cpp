@@ -216,7 +216,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   //Apply fractions to potential evapotranspiration
   //Maximum canopy transpiration
   //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
-  NumericVector Tmax = pet*(Tmax_LAIsq*pow(LAIcell,2.0)+ Tmax_LAI*LAIcell); //From Granier (1999)
+  NumericVector Tmax = pet*(Tmax_LAIsq*(LAIcell*LAIcell)+ Tmax_LAI*LAIcell); //From Granier (1999)
   
   //Fraction of Tmax attributed to each plant cohort
   double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
@@ -286,7 +286,7 @@ List transpirationBasic(List x, NumericVector meteovec,
         if(stemCavitationRecovery!="total") {
           Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
         }
-        Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
+        Kunlc[l] = std::sqrt(Kunsat[l])*V(c,l);
       }
       double sumKunlc = sum(Kunlc);
       double Klcmean = sum(Klc*V(c,_));
@@ -318,7 +318,7 @@ List transpirationBasic(List x, NumericVector meteovec,
           Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
           //Limit Mean Kl due to previous cavitation
           if(stemCavitationRecovery!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
-          Kunlc(j,l) = pow(KunsatM(j,l),0.5)*RHOPcohV(j,l);
+          Kunlc(j,l) = std::sqrt(KunsatM(j,l))*RHOPcohV(j,l);
         }
       }
       double sumKunlc = sum(Kunlc);
