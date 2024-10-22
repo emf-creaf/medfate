@@ -71,6 +71,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericMatrix LAImx = internalLAIDistribution["live"];
   NumericMatrix LAIme = internalLAIDistribution["expanded"];
   NumericMatrix LAImd = internalLAIDistribution["dead"];
+  NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
+  NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
+  NumericVector PARcohort = internalLAIDistribution["PARcohort"];
   
   //Control parameters
   List control = x["control"];
@@ -270,7 +273,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Transpiration and photosynthesis
   NumericMatrix minPsiRhizo = transpOutput["RhizoPsi"];
   
-  NumericVector PARcohort = outputPlants["FPAR"];
+  NumericVector outputFPAR = outputPlants["FPAR"];
   NumericVector SoilExtractCoh = outputPlants["Extraction"];
   NumericVector DDS = outputPlants["DDS"];
   NumericVector LFMC = outputPlants["LFMC"];
@@ -426,25 +429,44 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     LAIcellexpanded +=LAI[c];
     if((canopyHeight<H[c]) && ((LAI[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
-  //Create z vector with all layer height limits
-  NumericVector z(ncanlayers+1,0.0);
-  for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
   
-  NumericVector parC = parcohortC(H, LAI,  LAIdead, kPAR, CR);
-  for(int c=0; c<numCohorts;c++) PARcohort[c] = parC[c];
-  
-  //Update LAI distribution per layer and cohort, if necessary
-  updateLAIdistributionVectors(LAIme, z, LAI, H, CR); //Expanded leaves
-  updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR); //Dead (standing) leaves
-  updateLAIdistributionVectors(LAImx, z, LAIlive, H, CR); //Maximum leaf expansion
-  
-  //Update LAI profile per layer
-  for(int i=0;i<ncanlayers;i++) {
-    LAIpx[i] = sum(LAImx(i,_));
-    LAIpe[i] = sum(LAIme(i,_));
-    LAIpd[i] = sum(LAImd(i,_));
+  if(numCohorts>0) {
+    bool recalc_LAI = false;
+    if(NumericVector::is_na(PrevLAIexpanded[0]) || NumericVector::is_na(PrevLAIdead[0])) {
+      recalc_LAI = true; 
+    } else{
+      if(sum(abs(LAI - PrevLAIexpanded))>0.001) {
+        recalc_LAI = true; 
+      } else {
+        if(sum(abs(LAIdead - PrevLAIdead))>0.001) recalc_LAI = true;
+      }
+    }
+    if(recalc_LAI) {
+      int ncanlayers = canopyParams.nrow();
+      NumericVector z(ncanlayers+1,0.0);
+      for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
+      for(int i=0; i<numCohorts;i++) {
+        PARcohort[i] = availableLight(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAI, LAIdead, kPAR, CR);
+        PrevLAIexpanded[i] = LAI[i];
+        PrevLAIdead[i] = LAIdead[i];
+      }
+      //Update LAI distribution if necessary
+      updateLAIdistributionVectors(LAIme, z, LAI, H, CR);
+      updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR);
+      updateLAIdistributionVectors(LAImx, z, LAIlive, H, CR); //Maximum leaf expansion
+      //Update LAI profile per layer
+      for(int i=0;i<ncanlayers;i++) {
+        LAIpx[i] = sum(LAImx(i,_));
+        LAIpe[i] = sum(LAIme(i,_));
+        LAIpd[i] = sum(LAImd(i,_));
+      }
+    }
   }
+
   NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
+  for(int i=0; i<numCohorts;i++) {
+    outputFPAR[i] = PARcohort[i];
+  }
   
   ////////////////////////////////////////
   // STEP 2. Determine vertical wind speed profile

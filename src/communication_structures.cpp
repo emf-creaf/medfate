@@ -33,6 +33,10 @@ List internalLAIDistribution(List x) {
   int numCohorts = above.nrow();
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers
+  NumericVector PARcohort(numCohorts,0.0);
+  NumericVector PrevLAIexpanded(numCohorts,0.0);
+  NumericVector PrevLAIdead(numCohorts,0.0);
+
   // double h1, h2;
   NumericMatrix LAImx(ncanlayers, numCohorts);
   NumericMatrix LAIme(ncanlayers, numCohorts);
@@ -40,7 +44,10 @@ List internalLAIDistribution(List x) {
   LAImx.fill(0.0);
   LAIme.fill(0.0);
   LAImd.fill(0.0);
-  return(List::create(_["live"] = LAImx,
+  return(List::create(_["PrevLAIexpanded"] = PrevLAIexpanded,
+                      _["PrevLAIdead"] = PrevLAIdead,
+                      _["PARcohort"] = PARcohort,
+                      _["live"] = LAImx,
                       _["expanded"] = LAIme,
                       _["dead"] = LAImd));
 }

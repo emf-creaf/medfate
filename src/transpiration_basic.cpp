@@ -64,6 +64,9 @@ List transpirationBasic(List x, NumericVector meteovec,
   List internalLAIDistribution = internalCommunication["internalLAIDistribution"];
   NumericMatrix LAIme = internalLAIDistribution["expanded"];
   NumericMatrix LAImd = internalLAIDistribution["dead"];
+  NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
+  NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
+  NumericVector PARcohort = internalLAIDistribution["PARcohort"];
   
   //Control parameters
   List control = x["control"];
@@ -202,14 +205,32 @@ List transpirationBasic(List x, NumericVector meteovec,
     LAIcelllive += LAIlive[c];
   }
   
-  int ncanlayers = canopyParams.nrow();
-  NumericVector z(ncanlayers+1,0.0);
-  for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
 
-  NumericVector PARcohort = parcohortC(H, LAIphe,  LAIdead, kPAR, CR);
-  //Update LAI distribution if necessary
-  updateLAIdistributionVectors(LAIme, z, LAIphe, H, CR);
-  updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR);
+  if(numCohorts>0) {
+    bool recalc_LAI = false;
+    if(NumericVector::is_na(PrevLAIexpanded[0]) || NumericVector::is_na(PrevLAIdead[0])) {
+      recalc_LAI = true; 
+    } else{
+      if(sum(abs(LAIphe - PrevLAIexpanded))>0.001) {
+        recalc_LAI = true; 
+      } else {
+        if(sum(abs(LAIdead - PrevLAIdead))>0.001) recalc_LAI = true;
+      }
+    }
+    if(recalc_LAI) {
+      int ncanlayers = canopyParams.nrow();
+      NumericVector z(ncanlayers+1,0.0);
+      for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
+      for(int i=0; i<numCohorts;i++) {
+        PARcohort[i] = availableLight(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, kPAR, CR);
+        PrevLAIexpanded[i] = LAIphe[i];
+        PrevLAIdead[i] = LAIdead[i];
+      }
+      //Update LAI distribution if necessary
+      updateLAIdistributionVectors(LAIme, z, LAIphe, H, CR);
+      updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR);
+    }
+  }
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
   CohASWRF = pow(CohASWRF, 0.75);
   

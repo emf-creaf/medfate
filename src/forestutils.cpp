@@ -1425,21 +1425,17 @@ void updateLAIdistributionVectors(NumericMatrix LAIdist, NumericVector z, Numeri
   int ncanlayers = LAIdist.nrow();
   int numCohorts = LAIdist.ncol();
   for(int ci=0;ci<numCohorts;ci++) {
-    //Only update if LAI for the cohort has changed (due to phenology or growth)
-    //This saves calls to leafAreaProportion
-    double LAIdist_sum = sum(LAIdist(_,ci));
-    if(std::abs(LAIdist_sum - LAI[ci]) > 0.00001) {
-      double cbh = H[ci]*(1.0-CR[ci]);
-      for(int hi=0;hi<ncanlayers;hi++) {
-        if(z[hi]<= H[ci]) {
-          LAIdist(hi,ci) = LAI[ci]*leafAreaProportion(z[hi],z[hi+1], cbh,H[ci]);
-        } else {
-          LAIdist(hi,ci) = 0.0;
-        }
+    double cbh = H[ci]*(1.0-CR[ci]);
+    for(int hi=0;hi<ncanlayers;hi++) {
+      if(z[hi]<= H[ci]) {
+        LAIdist(hi,ci) = LAI[ci]*leafAreaProportion(z[hi],z[hi+1], cbh,H[ci]);
+      } else {
+        LAIdist(hi,ci) = 0.0;
       }
     }
   }
 }
+
 
 // [[Rcpp::export(".LAIdistributionVectors")]]
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {

@@ -872,6 +872,7 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
+
 DataFrame internalCarbonDataFrame(DataFrame above, 
                                   DataFrame belowdf,
                                   List belowLayers,
