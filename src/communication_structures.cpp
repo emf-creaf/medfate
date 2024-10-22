@@ -28,6 +28,20 @@ DataFrame internalCanopyTurbulence(int ncanlayers) {
                                        Named("uw") = NumericVector(ncanlayers, NA_REAL));
   return(output);
 }
+List internalLAIDistribution(List x) {
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  int numCohorts = above.nrow();
+  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
+  // double h1, h2;
+  NumericMatrix LAIme(ncanlayers, numCohorts);
+  NumericMatrix LAImd(ncanlayers, numCohorts);
+  LAIme.fill(0.0);
+  LAImd.fill(0.0);
+  return(List::create(_["expanded"] = LAIme,
+                      _["dead"] = LAImd));
+}
+
 List basicTranspirationOutput(List x) {
   List control = x["control"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -801,6 +815,9 @@ void addCommunicationStructures(List x) {
       if(model=="spwb") ic.push_back(advancedSPWBOutput(x, outputTransp), "modelOutput"); 
       else ic.push_back(advancedGROWTHOutput(x, outputTransp), "modelOutput"); 
     } 
+  }
+  if(!ic.containsElementNamed("internalLAIDistribution")) {
+    ic.push_back(internalLAIDistribution(x), "internalLAIDistribution");
   }
   if(model=="growth") {
     DataFrame above = as<DataFrame>(x["above"]);

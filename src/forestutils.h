@@ -54,6 +54,7 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, bool b
 double herbFoliarBiomassAllometric(double herbCover, double herbHeight, double woodyLAI);
 double herbLAIAllometric(double herbCover, double herbHeight, double woodyLAI, double sla_herb = 9.0);
 
+void updateLAIdistributionVectors(NumericMatrix LAIdist, NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
 NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
 

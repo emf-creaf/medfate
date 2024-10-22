@@ -1,3 +1,6 @@
+# medfate 4.7.1
+* Code optimization: LAI distribution
+
 # medfate 4.7.0
 * LAI can be estimated without the competition effect of cohorts of larger size
 * Growth rates corrected by the ratio between LAI and maximum LAI without competition effects

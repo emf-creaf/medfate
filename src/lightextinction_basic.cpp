@@ -249,13 +249,6 @@ NumericVector cohortAbsorbedSWRFraction(NumericMatrix LAIme, NumericMatrix LAImd
   return(fj);
 }
 
-NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector H, NumericVector CR, NumericVector kPAR) {
-  NumericMatrix LAIme =  LAIdistributionVectors(z, LAI_expanded, H, CR);
-  NumericMatrix LAImd =  LAIdistributionVectors(z, LAI_dead, H, CR);
-  NumericVector kSWR(kPAR.size());
-  for(int i=0;i<kPAR.size();i++) kSWR[i] = kPAR[i]/1.35;
-  return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
-}
 
 //' @rdname light_basic
 //' @keywords internal

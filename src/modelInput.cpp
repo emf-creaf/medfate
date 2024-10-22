@@ -68,6 +68,7 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
   DataFrame paramsInterceptiondf;
   if(transpirationMode=="Granier") {
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
+                                             _["kSWR"] = kPAR/1.35,
                                              _["g"] = g);
   } else {
     NumericVector alphaSWR = speciesNumericParameterWithImputation(SP, SpParams, "alphaSWR", fillMissingSpParams, fillWithGenus);
@@ -1163,12 +1164,9 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
   //Initialize snowpack
   double SWE = 0.0;
   
-  DataFrame paramsCanopydf;
+  DataFrame paramsCanopydf = paramsCanopy(above, control);
   List ctl = clone(control);
-  if(transpirationMode=="Granier") {
-    paramsCanopydf = List::create();
-  } else {
-    paramsCanopydf = paramsCanopy(above, control);
+  if(transpirationMode!="Granier") {
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       ctl["soilFunctions"] = soilFunctions;
@@ -1309,12 +1307,9 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   //Initialize snowpack
   double SWE = 0.0;
   
-  DataFrame paramsCanopydf;
+  DataFrame paramsCanopydf = paramsCanopy(above, control);
   List ctl = clone(control);
-  if(transpirationMode=="Granier") {
-    paramsCanopydf = List::create();
-  } else {
-    paramsCanopydf = paramsCanopy(above, control);
+  if(transpirationMode!="Granier") {
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       ctl["soilFunctions"] = soilFunctions;

@@ -61,7 +61,10 @@ List transpirationBasic(List x, NumericVector meteovec,
   DataFrame outputPlants = as<DataFrame>(transpOutput["Plants"]);
   NumericMatrix outputExtraction = as<NumericMatrix>(transpOutput["Extraction"]);
   List outputExtractionPools = transpOutput["ExtractionPools"];
-
+  List internalLAIDistribution = internalCommunication["internalLAIDistribution"];
+  NumericMatrix LAIme = internalLAIDistribution["expanded"];
+  NumericMatrix LAImd = internalLAIDistribution["dead"];
+  
   //Control parameters
   List control = x["control"];
   String stemCavitationRecovery = control["stemCavitationRecovery"];
@@ -94,7 +97,10 @@ List transpirationBasic(List x, NumericVector meteovec,
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
   double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
     
-    
+
+  // Canopy
+  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -132,6 +138,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
+  NumericVector kSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kSWR"]);
   
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
@@ -186,25 +193,24 @@ List transpirationBasic(List x, NumericVector meteovec,
 
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
   for(int c=0;c<numCohorts;c++) {
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
     LAIcellexpanded +=LAIphe[c];
     LAIcelllive += LAIlive[c];
-    if(canopyHeight<H[c]) canopyHeight = H[c];
-  }
-  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
-  NumericVector z(nz+1,0.0);
-  NumericVector zmid(nz);
-  for(int i=1;i<=nz;i++) {
-    z[i] = z[i-1] + verticalLayerSize;
-    zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
   }
   
+  int ncanlayers = canopyParams.nrow();
+  NumericVector z(ncanlayers+1,0.0);
+  for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
+
   NumericVector PARcohort = parcohortC(H, LAIphe,  LAIdead, kPAR, CR);
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(z, LAIphe,  LAIdead, H, CR, kPAR);
+  //Update LAI distribution if necessary
+  updateLAIdistributionVectors(LAIme, z, LAIphe, H, CR);
+  updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR);
+  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
   CohASWRF = pow(CohASWRF, 0.75);
   
   //Apply fractions to potential evapotranspiration
