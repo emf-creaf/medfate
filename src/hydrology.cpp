@@ -916,7 +916,18 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double* Kmacro_step_ms = new double[nlayers];
     double* theta_macro_step = new double[nlayers];
     double* theta_micro_step = new double[nlayers];
-
+    for(int l=0;l<nlayers;l++) {
+      C_step[l] = 0.0;
+      C_step_m[l] = 0.0;
+      K_step_ms[l] = 0.0;
+      K_step[l] = 0.0;
+      Psi_step[l] = 0.0;
+      Psi_step_m[l] = 0.0;
+      S_macro_step[l] = 0.0;
+      Kmacro_step_ms[l] = 0.0;
+      theta_macro_step[l] = 0.0;
+      theta_micro_step[l] = 0.0;
+    }
     double* finalSourceSinks_m3s = new double[nlayers];
     double* capill_below = new double[nlayers];
     double* drain_above = new double[nlayers];
