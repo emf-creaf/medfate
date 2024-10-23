@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Computing time assessment • medfate</title>
+<title>Computing time estimates • medfate</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <link href="../../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="../../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Computing time assessment">
+<script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Computing time estimates">
 <meta name="description" content="Estimates of approximate computing time
 ">
 <meta property="og:description" content="Estimates of approximate computing time
@@ -78,9 +78,9 @@
 <script src="ComputingTime_files/kePrint-0.0.1/kePrint.js"></script><link href="ComputingTime_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../../logo.png" class="logo" alt=""><h1>Computing time assessment</h1>
+      <img src="../../logo.png" class="logo" alt=""><h1>Computing time estimates</h1>
                         <h4 data-toc-skip class="author">Miquel De
-Caceres</h4>
+Cáceres (EMF-CREAF)</h4>
             
             <h4 data-toc-skip class="date">2024-10-23</h4>
       
@@ -93,16 +93,23 @@ Caceres</h4>
 <div class="section level2">
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
-<p>The results presented here were obtained using <strong>4.7.1</strong>
-of medfate.</p>
+<p>The aim of this vignette is to provide users with a rough estimation
+of computing times for simulation models included in package
+<strong>medfate</strong>.</p>
+<p>The results presented here were obtained using <strong>1 year of
+simulation</strong> with the <strong>example data sets</strong> on a
+laptop (16 GiB memory and 11th Gen Inter Core I5 processor @ 2.40 GHz x
+8) with Ubuntu Linux OS.</p>
 </div>
 <div class="section level2">
 <h2 id="table-of-computational-times">Table of computational times<a class="anchor" aria-label="anchor" href="#table-of-computational-times"></a>
 </h2>
+<p>Computational times were estimated using <code><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time()</a></code>,
+are in <strong>seconds</strong> and are shown by package version.</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-model
+function
 </th>
 <th style="text-align:left;">
 transpirationMode
@@ -111,7 +118,13 @@ transpirationMode
 soilDomains
 </th>
 <th style="text-align:right;">
-Elapsed_time_sec
+4.4.0
+</th>
+<th style="text-align:right;">
+4.7.0
+</th>
+<th style="text-align:right;">
+4.7.1
 </th>
 </tr></thead>
 <tbody>
@@ -126,7 +139,13 @@ Granier
 buckets
 </td>
 <td style="text-align:right;">
-0.105
+0.382
+</td>
+<td style="text-align:right;">
+0.117
+</td>
+<td style="text-align:right;">
+0.106
 </td>
 </tr>
 <tr>
@@ -140,7 +159,13 @@ Granier
 single
 </td>
 <td style="text-align:right;">
-0.153
+0.426
+</td>
+<td style="text-align:right;">
+0.143
+</td>
+<td style="text-align:right;">
+0.150
 </td>
 </tr>
 <tr>
@@ -154,7 +179,13 @@ Granier
 dual
 </td>
 <td style="text-align:right;">
-4.902
+6.850
+</td>
+<td style="text-align:right;">
+5.090
+</td>
+<td style="text-align:right;">
+5.099
 </td>
 </tr>
 <tr>
@@ -168,7 +199,13 @@ Sperry
 buckets
 </td>
 <td style="text-align:right;">
-6.337
+9.531
+</td>
+<td style="text-align:right;">
+6.681
+</td>
+<td style="text-align:right;">
+6.432
 </td>
 </tr>
 <tr>
@@ -182,7 +219,13 @@ Sperry
 single
 </td>
 <td style="text-align:right;">
-6.392
+10.208
+</td>
+<td style="text-align:right;">
+6.726
+</td>
+<td style="text-align:right;">
+6.620
 </td>
 </tr>
 <tr>
@@ -196,7 +239,13 @@ Sperry
 dual
 </td>
 <td style="text-align:right;">
-11.732
+18.375
+</td>
+<td style="text-align:right;">
+12.623
+</td>
+<td style="text-align:right;">
+11.628
 </td>
 </tr>
 <tr>
@@ -210,7 +259,13 @@ Sureau
 buckets
 </td>
 <td style="text-align:right;">
-6.019
+9.730
+</td>
+<td style="text-align:right;">
+6.679
+</td>
+<td style="text-align:right;">
+6.426
 </td>
 </tr>
 <tr>
@@ -224,7 +279,13 @@ Sureau
 single
 </td>
 <td style="text-align:right;">
-6.165
+10.565
+</td>
+<td style="text-align:right;">
+6.555
+</td>
+<td style="text-align:right;">
+6.588
 </td>
 </tr>
 <tr>
@@ -238,7 +299,373 @@ Sureau
 dual
 </td>
 <td style="text-align:right;">
-11.535
+19.013
+</td>
+<td style="text-align:right;">
+15.222
+</td>
+<td style="text-align:right;">
+10.498
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:left;">
+buckets
+</td>
+<td style="text-align:right;">
+1.576
+</td>
+<td style="text-align:right;">
+0.209
+</td>
+<td style="text-align:right;">
+0.211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:left;">
+single
+</td>
+<td style="text-align:right;">
+1.762
+</td>
+<td style="text-align:right;">
+0.254
+</td>
+<td style="text-align:right;">
+0.273
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:left;">
+dual
+</td>
+<td style="text-align:right;">
+8.468
+</td>
+<td style="text-align:right;">
+5.805
+</td>
+<td style="text-align:right;">
+5.682
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Sperry
+</td>
+<td style="text-align:left;">
+buckets
+</td>
+<td style="text-align:right;">
+17.586
+</td>
+<td style="text-align:right;">
+15.088
+</td>
+<td style="text-align:right;">
+14.802
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Sperry
+</td>
+<td style="text-align:left;">
+single
+</td>
+<td style="text-align:right;">
+16.947
+</td>
+<td style="text-align:right;">
+15.025
+</td>
+<td style="text-align:right;">
+14.506
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Sperry
+</td>
+<td style="text-align:left;">
+dual
+</td>
+<td style="text-align:right;">
+25.108
+</td>
+<td style="text-align:right;">
+21.341
+</td>
+<td style="text-align:right;">
+20.545
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Sureau
+</td>
+<td style="text-align:left;">
+buckets
+</td>
+<td style="text-align:right;">
+17.009
+</td>
+<td style="text-align:right;">
+14.063
+</td>
+<td style="text-align:right;">
+14.275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Sureau
+</td>
+<td style="text-align:left;">
+single
+</td>
+<td style="text-align:right;">
+18.023
+</td>
+<td style="text-align:right;">
+14.200
+</td>
+<td style="text-align:right;">
+20.946
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+growth
+</td>
+<td style="text-align:left;">
+Sureau
+</td>
+<td style="text-align:left;">
+dual
+</td>
+<td style="text-align:right;">
+26.702
+</td>
+<td style="text-align:right;">
+22.414
+</td>
+<td style="text-align:right;">
+17.070
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:left;">
+buckets
+</td>
+<td style="text-align:right;">
+1.545
+</td>
+<td style="text-align:right;">
+0.245
+</td>
+<td style="text-align:right;">
+0.241
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:left;">
+single
+</td>
+<td style="text-align:right;">
+1.783
+</td>
+<td style="text-align:right;">
+0.292
+</td>
+<td style="text-align:right;">
+0.282
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:left;">
+dual
+</td>
+<td style="text-align:right;">
+8.168
+</td>
+<td style="text-align:right;">
+6.134
+</td>
+<td style="text-align:right;">
+5.319
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Sperry
+</td>
+<td style="text-align:left;">
+buckets
+</td>
+<td style="text-align:right;">
+18.099
+</td>
+<td style="text-align:right;">
+16.756
+</td>
+<td style="text-align:right;">
+14.626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Sperry
+</td>
+<td style="text-align:left;">
+single
+</td>
+<td style="text-align:right;">
+18.595
+</td>
+<td style="text-align:right;">
+16.675
+</td>
+<td style="text-align:right;">
+14.678
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Sperry
+</td>
+<td style="text-align:left;">
+dual
+</td>
+<td style="text-align:right;">
+27.134
+</td>
+<td style="text-align:right;">
+25.285
+</td>
+<td style="text-align:right;">
+19.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Sureau
+</td>
+<td style="text-align:left;">
+buckets
+</td>
+<td style="text-align:right;">
+18.832
+</td>
+<td style="text-align:right;">
+17.116
+</td>
+<td style="text-align:right;">
+15.425
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Sureau
+</td>
+<td style="text-align:left;">
+single
+</td>
+<td style="text-align:right;">
+18.604
+</td>
+<td style="text-align:right;">
+16.090
+</td>
+<td style="text-align:right;">
+18.065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fordyn
+</td>
+<td style="text-align:left;">
+Sureau
+</td>
+<td style="text-align:left;">
+dual
+</td>
+<td style="text-align:right;">
+26.987
+</td>
+<td style="text-align:right;">
+28.045
+</td>
+<td style="text-align:right;">
+16.791
 </td>
 </tr>
 </tbody>
