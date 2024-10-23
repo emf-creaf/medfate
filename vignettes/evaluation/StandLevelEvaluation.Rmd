@@ -13,7 +13,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-params = list(medfate_ver = packageVersion('medfate')[[1]],
+params = list(medfate_ver = "4.7.0",# packageVersion('medfate')[[1]],
               wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/',
               model='spwb',
               # names = c("Wombat"),

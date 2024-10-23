@@ -1,6 +1,6 @@
 ---
-title: "Computing time estimation"
-author: "Miquel De Caceres"
+title: "Computing time estimates"
+author: "Miquel De Cáceres (EMF-CREAF)"
 date: "`r Sys.Date()`"
 description: >
    Estimates of approximate computing time
@@ -16,11 +16,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## About this vignette
+
+The aim of this vignette is to provide users with a rough estimation of computing times for simulation models included in package **medfate**.
+
+The results presented here were obtained using **1 year of simulation** with the **example data sets** on a laptop (16 GiB memory and 11th Gen Inter Core I5 processor @ 2.40 GHz x 8) with Ubuntu Linux OS. 
+
 ```{r, include = FALSE, echo = FALSE}
 medfate_ver <- packageVersion("medfate")
 ```
 
-The results presented here were obtained using 1 year of simulation with the example data sets and a Ubuntu Linux OS. Computational times are in seconds and are shown by package version.
+
 
 ```{r, echo = FALSE, include=FALSE}
 library(medfate)
@@ -36,25 +41,57 @@ if(!file.exists(file_out)) {
   data(exampleforest)
   data(SpParamsMED)
   examplesoil <- defaultSoilParams(4)
-  df_res <- data.frame(model = "spwb",
+  #spwb
+  df_res_spwb <- data.frame(model = "spwb",
                        transpirationMode = c(rep("Granier", 3),
                                              rep("Sperry", 3),
                                              rep("Sureau", 3)),
-                       soilDomains = rep(c("buckets", "single", "dual"),3))
-  df_res$Elapsed_time_sec = NA
-  for(i in 1:nrow(df_res)) {
-    control <- defaultControl(df_res$transpirationMode[i], df_res$soilDomains[i])
+                       soilDomains = rep(c("buckets", "single", "dual"),3),
+                       Elapsed_time_sec = NA)
+  for(i in 1:nrow(df_res_spwb)) {
+    control <- defaultControl(df_res_spwb$transpirationMode[i], df_res_spwb$soilDomains[i])
     control$verbose <- FALSE
     st <- system.time({spwb(spwbInput(exampleforest,examplesoil, SpParamsMED, control), 
                                     examplemeteo, latitude = 41.82592, elevation = 100)})
-    df_res$Elapsed_time_sec[i] <- st[[3]]
+    df_res_spwb$Elapsed_time_sec[i] <- st[[3]]
   }
+  #growth
+  df_res_growth <- data.frame(model = "growth",
+                       transpirationMode = c(rep("Granier", 3),
+                                             rep("Sperry", 3),
+                                             rep("Sureau", 3)),
+                       soilDomains = rep(c("buckets", "single", "dual"),3),
+                       Elapsed_time_sec = NA)
+  for(i in 1:nrow(df_res_growth)) {
+    control <- defaultControl(df_res_growth$transpirationMode[i], df_res_growth$soilDomains[i])
+    control$verbose <- FALSE
+    st <- system.time({growth(growthInput(exampleforest,examplesoil, SpParamsMED, control), 
+                                    examplemeteo, latitude = 41.82592, elevation = 100)})
+    df_res_growth$Elapsed_time_sec[i] <- st[[3]]
+  }
+  #fordyn
+  df_res_fordyn <- data.frame(model = "fordyn",
+                       transpirationMode = c(rep("Granier", 3),
+                                             rep("Sperry", 3),
+                                             rep("Sureau", 3)),
+                       soilDomains = rep(c("buckets", "single", "dual"),3),
+                       Elapsed_time_sec = NA)
+  for(i in 1:nrow(df_res_fordyn)) {
+    control <- defaultControl(df_res_fordyn$transpirationMode[i], df_res_fordyn$soilDomains[i])
+    control$verbose <- FALSE
+    st <- system.time({fordyn(exampleforest,examplesoil, SpParamsMED, control = control, 
+                              meteo = examplemeteo, latitude = 41.82592, elevation = 100)})
+    df_res_fordyn$Elapsed_time_sec[i] <- st[[3]]
+  }
+  df_res <- dplyr::bind_rows(df_res_spwb, df_res_growth, df_res_fordyn)
   names(df_res)[4] <- as.character(medfate_ver)
   write.csv2(df_res, file = file_out, row.names = FALSE)
 }
 ```
 
 ## Table of computational times
+
+Computational times were estimated using `system.time()`, are in **seconds** and are shown by package version.
 
 ```{r, echo = FALSE}
 files <- list.files("computing_times/", full.names = TRUE)
@@ -69,8 +106,9 @@ for(i in 1:length(files)) {
       dplyr::left_join(df_res_i, by = c("model", "transpirationMode", "soilDomains"))
   }
 }
-df_res %>%
-  kbl() %>%
+df_res |>
+  dplyr::rename("function" = "model") |>
+  kbl() |>
   kable_styling()
 ```
 
