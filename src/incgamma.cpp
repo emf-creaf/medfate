@@ -482,7 +482,7 @@ double dompart(double a, double x, bool qt) {
  //    ENDDO
  //    fractio=a/b
  //    END FUNCTION fractio
-double fractio(double x, int n, NumericVector r, NumericVector s) {
+double fractio(double x, int n, double r[9], double s[9]) {
   double a=r[n];
   double b=1.0;
   for(int k=n-1;k>=0;k--) {
@@ -585,7 +585,7 @@ double fractio(double x, int n, NumericVector r, NumericVector s) {
 //   END FUNCTION errorfunction
 double errorfunction(double x, bool erfcc, bool expo){
   double y, z, errfu;
-  NumericVector r(9), s(9); 
+  double r[9], s[9];
   if(erfcc) {
     if(x<-6.5) {
       y = 2.0;
@@ -656,15 +656,15 @@ double errorfunction(double x, bool erfcc, bool expo){
     } else if(x < -0.5) {
       y=errorfunction(-x, true, false)-1.0;
     } else {
-      r(0)=3.209377589138469473e3;
-      r(1)=3.774852376853020208e2;
-      r(2)=1.138641541510501556e2;
-      r(3)=3.161123743870565597e0;
-      r(4)=1.857777061846031527e-1;
-      s(0)=2.844236833439170622e3;
-      s(1)=1.282616526077372276e3;
-      s(2)=2.440246379344441733e2;
-      s(3)=2.360129095234412093e1;
+      r[0]=3.209377589138469473e3;
+      r[1]=3.774852376853020208e2;
+      r[2]=1.138641541510501556e2;
+      r[3]=3.161123743870565597e0;
+      r[4]=1.857777061846031527e-1;
+      s[0]=2.844236833439170622e3;
+      s[1]=1.282616526077372276e3;
+      s[2]=2.440246379344441733e2;
+      s[3]=2.360129095234412093e1;
       z=x*x;
       y=x*fractio(z,4,r,s);
     }
@@ -727,7 +727,7 @@ double errorfunction(double x, bool erfcc, bool expo){
 double saeta(double a, double eta){
   double saeta, y, s, t, eps;
   int m;
-  NumericVector fm(27), bm(27);
+  double fm[27], bm[27];
   eps=epss;
   fm[0]=1.0;
   fm[1]=-1.0/3.0;
@@ -761,7 +761,7 @@ double saeta(double a, double eta){
   for(m=24;m>=1; m--) {
     bm[m-1]=fm[m]+(((double)m)+1.0)*bm[m+1]/a;
   }
-  s=bm(0);
+  s=bm[0];
   t=s;
   y=eta;
   m=1;

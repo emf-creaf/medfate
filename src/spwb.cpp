@@ -2300,7 +2300,7 @@ List spwb(List x, DataFrame meteo,
         if(DOY[i]==1 || i==0) {
           Rcout<<"\n [Year "<< yearString << "]:";
         } 
-        else if(i%10 == 0) Rcout<<".";//<<i;
+        else if(i%30 == 0) Rcout<<".";//<<i;
       } 
       
       double wind = WindSpeed[i];
@@ -2690,7 +2690,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       if(DOY[i]==1 || i==0) {
         Rcout<<"\n Year "<< yearString<< ":";
       } 
-      else if(i%10 == 0) Rcout<<".";//<<i;
+      else if(i%30 == 0) Rcout<<".";//<<i;
     } 
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day

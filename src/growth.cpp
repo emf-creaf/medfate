@@ -2373,7 +2373,7 @@ List growth(List x, DataFrame meteo, double latitude,
       if(DOY[i]==1 || i==0) {
         Rcout<<"\n Year "<< yearString<< ":";
       } 
-      else if(i%10 == 0) Rcout<<".";//<<i;
+      else if(i%30 == 0) Rcout<<".";//<<i;
     } 
     
     double wind = WindSpeed[i];
