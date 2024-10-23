@@ -796,14 +796,25 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     NumericVector Theta = theta(soil, "VG");
     NumericVector Theta_FC = thetaFC(soil, "VG");
     //Microporosity or single domain
-    NumericVector theta_micro(nlayers), theta_b(nlayers), theta_macro(nlayers), theta_sat_fict(nlayers), Ksat_b(nlayers), Ksat_b_ms(nlayers);
-    NumericVector Ksat(nlayers), Ksat_ms(nlayers);
+    double* theta_micro = new double[nlayers];
+    double* theta_b = new double[nlayers];
+    double* theta_macro = new double[nlayers];
+    double* theta_sat_fict = new double[nlayers];
+    double* Ksat_b = new double[nlayers];
+    double* Ksat_b_ms = new double[nlayers];
+    double* Ksat = new double[nlayers];
+    double* Ksat_ms = new double[nlayers];
     NumericVector Psi(nlayers), K(nlayers), C(nlayers);
     NumericVector Psi_m(nlayers), K_ms(nlayers), Kbc(nlayers), Kbc_ms(nlayers), C_m(nlayers);
-    //Macroporosoty domain
-    NumericVector S_macro(nlayers), e_macro(nlayers), Kmacro_ms(nlayers);
-    NumericVector waterFluidity(nlayers, 1.0);
+    
+    //Macroporosity domain
+    double* S_macro = new double[nlayers];
+    double* e_macro = new double[nlayers];
+    double* Kmacro_ms = new double[nlayers];
+    
+    double* waterFluidity = new double[nlayers];
     for(int l=0;l<nlayers;l++) {
+      waterFluidity[l] = 1.0;
       if(!NumericVector::is_na(Tsoil[l])) {
         if(Tsoil[l]>0) {
           waterFluidity[l] = 1.0/waterDynamicViscosity(Tsoil[l]); 
