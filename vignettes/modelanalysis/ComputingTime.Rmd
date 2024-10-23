@@ -1,5 +1,5 @@
 ---
-title: "Computing time assessment"
+title: "Computing time estimation"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 description: >
@@ -16,35 +16,59 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## About this vignette
+```{r, include = FALSE, echo = FALSE}
+medfate_ver <- packageVersion("medfate")
+```
 
-The results presented here were obtained using **`r packageVersion("medfate")`** of medfate.
+The results presented here were obtained using 1 year of simulation with the example data sets and a Ubuntu Linux OS. Computational times are in seconds and are shown by package version.
 
 ```{r, echo = FALSE, include=FALSE}
 library(medfate)
 library(kableExtra)
 library(knitr)
-#Load example daily meteorological data
-data(examplemeteo)
-data(exampleforest)
-data(SpParamsMED)
-examplesoil <- defaultSoilParams(4)
-df_res <- data.frame(model = "spwb",
-                     transpirationMode = c(rep("Granier", 3),
-                                           rep("Sperry", 3),
-                                           rep("Sureau", 3)),
-                     soilDomains = rep(c("buckets", "single", "dual"),3))
-df_res$Elapsed_time_sec = NA
-for(i in 1:nrow(df_res)) {
-  control <- defaultControl(df_res$transpirationMode[i], df_res$soilDomains[i])
-  st <- system.time({spwb(spwbInput(exampleforest,examplesoil, SpParamsMED, control), 
+```
+
+```{r, echo = FALSE, include=FALSE}
+file_out <- paste0("computing_times/ct_", medfate_ver, ".csv")
+if(!file.exists(file_out)) {
+  #Load example daily meteorological data
+  data(examplemeteo)
+  data(exampleforest)
+  data(SpParamsMED)
+  examplesoil <- defaultSoilParams(4)
+  df_res <- data.frame(model = "spwb",
+                       transpirationMode = c(rep("Granier", 3),
+                                             rep("Sperry", 3),
+                                             rep("Sureau", 3)),
+                       soilDomains = rep(c("buckets", "single", "dual"),3))
+  df_res$Elapsed_time_sec = NA
+  for(i in 1:nrow(df_res)) {
+    control <- defaultControl(df_res$transpirationMode[i], df_res$soilDomains[i])
+    control$verbose <- FALSE
+    st <- system.time({spwb(spwbInput(exampleforest,examplesoil, SpParamsMED, control), 
                                     examplemeteo, latitude = 41.82592, elevation = 100)})
-  df_res$Elapsed_time_sec[i] <- st[[3]]
+    df_res$Elapsed_time_sec[i] <- st[[3]]
+  }
+  names(df_res)[4] <- as.character(medfate_ver)
+  write.csv2(df_res, file = file_out, row.names = FALSE)
 }
 ```
 
 ## Table of computational times
 
 ```{r, echo = FALSE}
+files <- list.files("computing_times/", full.names = TRUE)
+df_res <- NULL
+for(i in 1:length(files)) {
+  df_res_i <- read.csv2(files[i])
+  names(df_res_i)[4] <- substr(names(df_res_i)[4], 2, nchar(names(df_res_i)[4]))
+  if(is.null(df_res)) {
+    df_res <- df_res_i
+  } else {
+    df_res <- df_res |>
+      dplyr::left_join(df_res_i, by = c("model", "transpirationMode", "soilDomains"))
+  }
+}
 df_res %>%
   kbl() %>%
   kable_styling()

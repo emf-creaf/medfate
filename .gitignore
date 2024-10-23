@@ -8,6 +8,7 @@ src/*.dll
 .gitignore
 .Rbuildignore
 vignettes/parametrization/*.png
+vignettes/modelanalysis/computing_times/*
 medfate.Rproj
 src-i386/*.*
 src-x64/*.*
