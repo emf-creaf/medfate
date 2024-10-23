@@ -812,11 +812,33 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double* Kbc = new double[nlayers];
     double* Kbc_ms = new double[nlayers];
     double* C_m = new double[nlayers];
-
+    for(int l=0;l<nlayers;l++) {
+      theta_micro[l] = 0.0;
+      theta_b[l] = 0.0;
+      theta_macro[l] = 0.0;
+      theta_sat_fict[l] = 0.0;
+      Ksat_b[l] = 0.0;
+      Ksat_b_ms[l] = 0.0;
+      Ksat[l] = 0.0;
+      Psi[l] = 0.0;
+      K[l] = 0.0;
+      C[l] = 0.0;
+      Psi_m[l] = 0.0;
+      K_ms[l] = 0.0;
+      Kbc[l] = 0.0;
+      Kbc_ms[l] = 0.0;
+      C_m[l] = 0.0;
+    }
+    
     //Macroporosity domain
     double* S_macro = new double[nlayers];
     double* e_macro = new double[nlayers];
     double* Kmacro_ms = new double[nlayers];
+    for(int l=0;l<nlayers;l++) {
+      S_macro[l] = 0.0;
+      e_macro[l] = 0.0;
+      Kmacro_ms[l] = 0.0;
+    }
     
     double* waterFluidity = new double[nlayers];
     for(int l=0;l<nlayers;l++) {
