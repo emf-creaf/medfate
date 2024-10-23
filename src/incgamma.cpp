@@ -171,8 +171,7 @@ double lnec(double x) {
 //   chepolsum=a(0)/2.0_r8-r+h*x
 //   ENDIF
 //   END FUNCTION chepolsum
-double chepolsum(double x, NumericVector a) {
-  int n = a.size() - 1;
+double chepolsum(double x, double* a, int n) {
   if(n==0) {
     return(a[0]/2.0);
   } else if (n==1) {
@@ -221,7 +220,7 @@ double chepolsum(double x, NumericVector a) {
 // ENDIF
 //   END FUNCTION auxgam
 double auxgam(double x) {
-  NumericVector dr(18);
+  double dr[18];
   double auxgamm;
   if(x<0.0) {
     auxgamm = -(1.0+(1.0+x)*(1.0+x)*auxgam(1.0+x))/(1.0-x);
@@ -245,7 +244,7 @@ double auxgam(double x) {
     dr[16]= 0.347e-19;
     dr[17]= -0.9e-21;
     double t=2*x-1.0;
-    auxgamm=chepolsum(t,dr);
+    auxgamm=chepolsum(t,dr, 17);
   }
   return(auxgamm);
 }
@@ -317,8 +316,8 @@ double lngam1(double x) {
 //   END FUNCTION stirling
 double  stirling(double x) {
   double stirling, z;
-  NumericVector a(18);
-  NumericVector c(7);
+  double a[18];
+  double c[7];
   if(x<dwarf) {
     stirling = giant; 
   } else if(x<1.0) {
@@ -350,7 +349,7 @@ double  stirling(double x) {
     a[16]=0.332e-19;
     a[17]=-0.58e-20;
     z=18.0/(x*x)-1.0;
-    stirling=chepolsum(z,a)/(12.0*x);
+    stirling=chepolsum(z,a, 17)/(12.0*x);
   } else {
     z=1.0/(x*x);
     if(x<1000.0) {
@@ -1093,9 +1092,7 @@ double qfraction(double a, double x, double dp){
 //     ENDIF
 //   ENDIF
 //   END SUBROUTINE incgam
-  
-// [[Rcpp::export(".incgam")]]
-NumericVector incgam(double a, double x) {
+double* incgam(double a, double x) {
   double lnx, p = NA_REAL, q = NA_REAL;
   double dp;
   if(x<dwarf) {
@@ -1142,7 +1139,10 @@ NumericVector incgam(double a, double x) {
       }
     }
   }
-  return(NumericVector::create(p,q));
+  double* res = new double[2];
+  res[0] = p;
+  res[1] = q;
+  return(res);
 }
 
 
@@ -1279,7 +1279,7 @@ double ratfun(double x, double ak[5], double bk[5]){
   //     
 double lambdaeta(double eta) {
   double q, r, s, L, la;
-  NumericVector ak(6);
+  double ak[6];
   double L2, L3, L4, L5;
   s=eta*eta*0.5;
   if(eta==0.0) {
@@ -1726,7 +1726,7 @@ double invincgam(double a, double p, double q) {
   double porq, s, dlnr, logr, r, a2, a3, a4, ap1, ap12, ap13, ap14;
   double ap2, ap22, x0, b, eta, L, L2, L3, L4;
   double b2, b3, x, x2, t, px, qx, y, fp;
-  NumericVector ck(5); //ck(1:5)
+  double ck[5]; //ck(1:5)
   int n, m;
   bool pcase;
     
@@ -1831,12 +1831,12 @@ double invincgam(double a, double p, double q) {
       } else {
         r=exp(dlnr);
         if(pcase) {
-          NumericVector pq = incgam(a,x);
+          double* pq = incgam(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=-r*(px-p);
         } else {
-          NumericVector pq = incgam(a,x);
+          double* pq = incgam(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=r*(qx-q);
@@ -1860,12 +1860,12 @@ double invincgam(double a, double p, double q) {
       fp=-sqrt(a/twopi)*exp(-0.5*a*y*y)/(gamstar(a));
       r=-(1.0/fp)*x;
       if(pcase) {
-        NumericVector pq = incgam(a,x);
+        double* pq = incgam(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=-r*(px-p);
       } else {
-        NumericVector pq = incgam(a,x);
+        double* pq = incgam(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=r*(qx-q);

@@ -2741,18 +2741,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// incgam
-NumericVector incgam(double a, double x);
-RcppExport SEXP _medfate_incgam(SEXP aSEXP, SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(incgam(a, x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // invincgam
 double invincgam(double a, double p, double q);
 RcppExport SEXP _medfate_invincgam(SEXP aSEXP, SEXP pSEXP, SEXP qSEXP) {
@@ -5996,7 +5984,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
     {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},
     {"_medfate_incbeta", (DL_FUNC) &_medfate_incbeta, 3},
-    {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},

@@ -2019,10 +2019,6 @@ hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainf
     .Call(`_medfate_incbeta`, a, b, x)
 }
 
-.incgam <- function(a, x) {
-    .Call(`_medfate_incgam`, a, x)
-}
-
 .invincgam <- function(a, p, q) {
     .Call(`_medfate_invincgam`, a, p, q)
 }

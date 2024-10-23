@@ -234,14 +234,14 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
   else if(psi==0.0) return(0.0);
   double h = 1.0/c;
   double z = pow(psi/d,c);
-  NumericVector pq = incgam(h,z);
+  double* pq = incgam(h,z);
   double g = tgamma(h)*pq[0]; //Upper incomplete gamma, without the normalizing factor
   double E = kxylemmax*(-d/c)*g;
   if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
     if(psiCav < psi) {
       E = xylemConductance(psiCav,kxylemmax,c,d)*(-psi); //square integral
     } else {
-      NumericVector pq = incgam(h,pow(psiCav/d,c));
+      double* pq = incgam(h,pow(psiCav/d,c));
       double Epsimin = kxylemmax*(-d/c)*tgamma(h)*pq[0];
       E = E - Epsimin + xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
     }
