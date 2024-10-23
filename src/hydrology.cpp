@@ -877,7 +877,11 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double saturation_excess_macropores_mm = 0.0;
     double K_up= 0.0, K_down= 0.0;
     
-    NumericVector a(nlayers, 0.0), b(nlayers, 0.0), c(nlayers, 0.0), d(nlayers, 0.0);
+    double* a = new double[nlayers];
+    double* b = new double[nlayers];
+    double* c = new double[nlayers];
+    double* d = new double[nlayers];
+
     NumericVector C_step(nlayers, 0.0), C_step_m(nlayers, 0.0), K_step_ms(nlayers, 0.0), K_step(nlayers, 0.0), Psi_step(nlayers, 0.0), Psi_step_m(nlayers, 0.0);
     NumericVector S_macro_step(nlayers, 0.0), Kmacro_step_ms(nlayers, 0.0), theta_macro_step(nlayers, 0.0), theta_micro_step(nlayers, 0.0);
     double C_step_05, K_step_05;

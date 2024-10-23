@@ -208,7 +208,10 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
     }
   }
   NumericVector k_up(nlayers), k_down(nlayers);
-  NumericVector a(nlayers),  b(nlayers),  c(nlayers),  d(nlayers);
+  double* a = new double[nlayers];
+  double* b = new double[nlayers];
+  double* c = new double[nlayers];
+  double* d = new double[nlayers];
   for(int l=0;l<nlayers;l++) {
     if(l==0) { //first layer
       k_down[l] = (k[l]*k[l+1]*(Zcent[l]-Zcent[l+1]))/(k[l]*(Zdown[l] - Zcent[l+1]) + k[l+1]*(Zcent[l] - Zdown[l]));
