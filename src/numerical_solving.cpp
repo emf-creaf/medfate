@@ -3,10 +3,10 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-NumericVector tridiagonalSolving(double* a, double* b, double* c, double* d, int n) {
+double* tridiagonalSolving(double* a, double* b, double* c, double* d, int n) {
   double* e = new double[n];
   double* f = new double[n];
-  NumericVector u(n);
+  double* u = new double[n];
   
   //Forward steps
   double e_prev = 0.0;

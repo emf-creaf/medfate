@@ -1053,8 +1053,9 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
               d[l] = (lambda[l]*C_step_m[l]*dZ_m[l]/halftsubstep)*Psi_step_m[l] + drain_above[l] - drain_below[l] + capill_below[l] + finalSourceSinks_m3s[l];
             }
           }
-          NumericVector Psi_step_m_t05 = tridiagonalSolving(a,b,c,d, nlayers);
-          NumericVector Psi_step_t05 = Psi_step_m_t05*mTOMPa; // m to MPa
+          double* Psi_step_m_t05 = tridiagonalSolving(a,b,c,d, nlayers);
+          double* Psi_step_t05 = new double[nlayers];
+          for(int l=0;l<nlayers;l++) Psi_step_t05[l] = Psi_step_m_t05[l]*mTOMPa; // m to MPa
           //Calculate K and C at t05
           for(int l=0;l<nlayers;l++) {
             if(soilDomains=="single") {
@@ -1120,8 +1121,10 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
               d[l] = (lambda[l]*C_step_m05[l]*dZ_m[l]/tsubstep)*Psi_step_m[l] + a[l]*(Psi_step_m[l - 1] - Psi_step_m[l]) + capill_below[l] + drain_above[l] - drain_below[l] + finalSourceSinks_m3s[l];
             }
           }
-          NumericVector Psi_step_m_t1 = tridiagonalSolving(a,b,c,d, nlayers);
-          NumericVector Psi_step_t1 = Psi_step_m_t1*mTOMPa; // m to MPa
+          double* Psi_step_m_t1 = tridiagonalSolving(a,b,c,d, nlayers);
+          double* Psi_step_t1 = new double[nlayers];
+          for(int l=0;l<nlayers;l++) Psi_step_t1[l] = Psi_step_m_t1[l]*mTOMPa; // m to MPa
+          
           //calculate drainage (m3)
           if(freeDrainage) {
             drainage_matrix_step_m3 += drain_below[nlayers -1]*tsubstep;

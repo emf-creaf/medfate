@@ -185,11 +185,15 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
                                           Temp);
   int nlayers = Temp.length();
 
-  NumericVector dZ_m = widths*0.001; //mm to m
-
   //Estimate layer interfaces
-  NumericVector dZUp(nlayers), dZDown(nlayers), Zcent(nlayers), Zup(nlayers), Zdown(nlayers);
+  double* dZ_m = new double[nlayers];
+  double* dZUp = new double[nlayers];
+  double* dZDown = new double[nlayers];
+  double* Zcent = new double[nlayers];
+  double* Zup = new double[nlayers];
+  double* Zdown = new double[nlayers];
   for(int l=0;l<nlayers;l++) {
+    dZ_m[l] = widths[l]*0.001; //mm to m
     if(l==0) { //first layer
       dZUp[l] = dZ_m[0]/2.0; //Distance from ground to mid-layer
       Zcent[l] = -1.0*dZ_m[0]/2.0; //Center of the layer (negative downwards)
@@ -207,7 +211,8 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       dZDown[l] = dZ_m[l]/2.0;
     }
   }
-  NumericVector k_up(nlayers), k_down(nlayers);
+  double* k_up = new double[nlayers];
+  double* k_down = new double[nlayers];
   double* a = new double[nlayers];
   double* b = new double[nlayers];
   double* c = new double[nlayers];
@@ -233,8 +238,10 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       d[l] = (k_up[l]/dZUp[l])*(Temp[l-1] - Temp[l]);
     }
   }
-  NumericVector tempch = tridiagonalSolving(a,b,c,d, nlayers);
-  return(tempch);
+  double* tempch = tridiagonalSolving(a,b,c,d, nlayers);
+  NumericVector out(nlayers);
+  for(int l=0;l<nlayers;l++) out[l] = tempch[l];
+  return(out);
 }
 // NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
 //                                 NumericVector sand, NumericVector clay,
