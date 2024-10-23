@@ -739,12 +739,16 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     NumericVector matrixExcess_m3s(nlayers, 0.0);
     NumericVector saturated_matrix_correction_m3s(nlayers, 0.0);
     NumericVector saturated_macropore_correction_m3s(nlayers, 0.0);
-    NumericVector dZ_m = widths*0.001; //mm to m
     
+    
+    double* dZ_m = new double[nlayers];
+    double* dZUp = new double[nlayers];
+    double* dZDown = new double[nlayers];
+    double* lambda = new double[nlayers];
     
     //Estimate layer interfaces
-    NumericVector dZUp(nlayers), dZDown(nlayers), lambda(nlayers);
     for(int l=0;l<nlayers;l++) {
+      dZ_m[l] = widths[l]*0.001; //mm to m
       lambda[l] = 1.0 - (rfc[l]/100.0);
       if(l==0) { //first layer
         dZUp[l] = dZ_m[0]/2.0;
