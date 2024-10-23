@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-10-20</h4>
+            <h4 data-toc-skip class="date">2024-10-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -332,19 +332,19 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  Year 2001:....................................</span></span>
+<span><span class="co">##  Year 2001:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 5256.66</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 188.319</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 188.319</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 5256.53</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 188.193</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 188.193</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
 <span><span class="co">##   Structural balance (g/m2) 104 Labile balance (g/m2) 92</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 196 Mortality loss (g/m2) 8</span></span>
 <span><span class="co">## Final plant water content (mm): 4.73794</span></span>
 <span><span class="co">## Final soil water content (mm): 274.787</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.00793061</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00116878</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.00793033</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00116903</span></span>
 <span><span class="co">## Change in soil water content (mm): -16.0878</span></span>
 <span><span class="co">## Soil water balance result (mm): -16.0878</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
@@ -502,9 +502,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
-<span><span class="co">##  12.00000000  -0.07781249 -12.01817423   0.07962016  12.29737074   0.99395785 </span></span>
+<span><span class="co">##  12.00000000  -0.07781339 -12.01831387   0.07962106  12.29751007   0.99395791 </span></span>
 <span><span class="co">##          NSE      NSE.abs </span></span>
-<span><span class="co">##   0.95935261   0.83966608</span></span></code></pre>
+<span><span class="co">##   0.95935190   0.83966426</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

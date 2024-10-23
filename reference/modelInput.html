@@ -9,7 +9,7 @@ and a soil data input to create input objects for simulation functions spwb (or 
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -686,7 +686,35 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0   50  100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   100  150  200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   200  250  300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   300  350  400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   400  450  500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   500  550  600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   600  650  700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   700  750  800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   800  850  900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  900  950 1000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1736369</span>
@@ -753,10 +781,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 1.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.55 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR      kSWR   g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 0.3703704 1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.55 0.4074074 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.4074074 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCleaf_c</span>
@@ -1211,35 +1239,35 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup Tair Cair VPair</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0   50  100   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   100  150  200   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   200  250  300   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   300  350  400   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   400  450  500   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   500  550  600   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   600  650  700   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   700  750  800   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   800  850  900   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  900  950 1000   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1000 1050 1100   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1100 1150 1200   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1200 1250 1300   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1300 1350 1400   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1400 1450 1500   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1500 1550 1600   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1600 1650 1700   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1700 1750 1800   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1800 1850 1900   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1900 1950 2000   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2000 2050 2100   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2100 2150 2200   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2200 2250 2300   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2300 2350 2400   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2400 2450 2500   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0   50  100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   100  150  200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   200  250  300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   300  350  400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   400  450  500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   500  550  600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   600  650  700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   700  750  800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   800  850  900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  900  950 1000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1736369</span>
@@ -1798,35 +1826,35 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup Tair Cair VPair</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0   50  100   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   100  150  200   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   200  250  300   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   300  350  400   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   400  450  500   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   500  550  600   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   600  650  700   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   700  750  800   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   800  850  900   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  900  950 1000   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1000 1050 1100   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1100 1150 1200   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1200 1250 1300   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1300 1350 1400   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1400 1450 1500   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1500 1550 1600   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1600 1650 1700   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1700 1750 1800   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1800 1850 1900   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1900 1950 2000   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2000 2050 2100   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2100 2150 2200   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2200 2250 2300   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2300 2350 2400   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2400 2450 2500   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700   NA   NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0   50  100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   100  150  200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   200  250  300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   300  350  400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   400  450  500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   500  550  600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   600  650  700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   700  750  800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   800  850  900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  900  950 1000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1736369</span>
@@ -2394,7 +2422,35 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0   50  100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   100  150  200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   200  250  300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   300  350  400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   400  450  500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   500  550  600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   600  650  700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   700  750  800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   800  850  900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  900  950 1000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
@@ -2461,10 +2517,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 1.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.55 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR      kSWR   g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 0.3703704 1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.55 0.4074074 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.4074074 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCleaf_c</span>
