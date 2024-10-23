@@ -804,9 +804,15 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double* Ksat_b_ms = new double[nlayers];
     double* Ksat = new double[nlayers];
     double* Ksat_ms = new double[nlayers];
-    NumericVector Psi(nlayers), K(nlayers), C(nlayers);
-    NumericVector Psi_m(nlayers), K_ms(nlayers), Kbc(nlayers), Kbc_ms(nlayers), C_m(nlayers);
-    
+    double* Psi = new double[nlayers];
+    double* K = new double[nlayers];
+    double* C = new double[nlayers];
+    double* Psi_m = new double[nlayers];
+    double* K_ms = new double[nlayers];
+    double* Kbc = new double[nlayers];
+    double* Kbc_ms = new double[nlayers];
+    double* C_m = new double[nlayers];
+
     //Macroporosity domain
     double* S_macro = new double[nlayers];
     double* e_macro = new double[nlayers];
