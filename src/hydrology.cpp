@@ -742,13 +742,14 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     
     
     double* dZ_m = new double[nlayers];
+    for(int l=0;l<nlayers;l++) dZ_m[l] = widths[l]*0.001; //mm to m
+    
     double* dZUp = new double[nlayers];
     double* dZDown = new double[nlayers];
     double* lambda = new double[nlayers];
     
     //Estimate layer interfaces
     for(int l=0;l<nlayers;l++) {
-      dZ_m[l] = widths[l]*0.001; //mm to m
       lambda[l] = 1.0 - (rfc[l]/100.0);
       if(l==0) { //first layer
         dZUp[l] = dZ_m[0]/2.0;
