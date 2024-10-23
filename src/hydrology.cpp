@@ -916,13 +916,20 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double* Kmacro_step_ms = new double[nlayers];
     double* theta_macro_step = new double[nlayers];
     double* theta_micro_step = new double[nlayers];
-    
-    NumericVector finalSourceSinks_m3s(nlayers, 0.0);
-    NumericVector capill_below(nlayers, 0.0);
-    NumericVector drain_above(nlayers, 0.0);
-    NumericVector drain_below(nlayers, 0.0);
-    NumericVector lateral_flows_step_mm(nlayers, 0.0);
-    
+
+    double* finalSourceSinks_m3s = new double[nlayers];
+    double* capill_below = new double[nlayers];
+    double* drain_above = new double[nlayers];
+    double* drain_below = new double[nlayers];
+    double* lateral_flows_step_mm = new double[nlayers];
+    for(int l=0;l<nlayers;l++) {
+      finalSourceSinks_m3s[l] = 0.0;
+      capill_below[l] = 0.0;
+      drain_above[l] = 0.0;
+      drain_below[l] = 0.0;
+      lateral_flows_step_mm[l] = 0.0;
+    }
+
     double drainage_matrix_step_m3 = 0.0;
     double drainage_macropores_step_m3 = 0.0;
     double capillarity_matrix_step_m3 = 0.0;
@@ -1368,8 +1375,10 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
         } else {
           //Add remaining target to infiltration excess
           infiltration_excess_macropores_step_mm = infiltration_remaining_macropores_step_mm;
-          double balance_micro_step_mm = m3_2_mm*(tstep*sum(source_sink_def_m3s) + capillarity_matrix_step_m3 - drainage_matrix_step_m3) + sum(lateral_flows_step_mm) - saturation_excess_matrix_step_mm;
-          double balance_macro_step_mm = infiltration_macropores_step_mm + m3_2_mm*(capillarity_macropores_step_m3 - drainage_macropores_step_m3) - sum(lateral_flows_step_mm) - saturation_excess_macropores_step_mm;
+          double sum_lateral_flows_step_mm = 0.0;
+          for(int l=0;l<nlayers;l++) sum_lateral_flows_step_mm += lateral_flows_step_mm[l];
+          double balance_micro_step_mm = m3_2_mm*(tstep*sum(source_sink_def_m3s) + capillarity_matrix_step_m3 - drainage_matrix_step_m3) + sum_lateral_flows_step_mm - saturation_excess_matrix_step_mm;
+          double balance_macro_step_mm = infiltration_macropores_step_mm + m3_2_mm*(capillarity_macropores_step_m3 - drainage_macropores_step_m3) - sum_lateral_flows_step_mm - saturation_excess_macropores_step_mm;
           // Correct possible mismatch between balance and volume change
           matrix_correction_step_mm = balance_micro_step_mm + Vini_step_micro_mm - Vfin_micro_mm;
           macropore_correction_step_mm = balance_macro_step_mm + Vini_step_macro_mm - Vfin_macro_mm;
