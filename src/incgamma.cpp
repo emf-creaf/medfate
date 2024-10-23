@@ -1215,7 +1215,7 @@ double inverfc(double x)  {
 // q= bk(0)+x*(bk(1)+x*(bk(2)+x*(bk(3)+x*bk(4))));
 // ratfun=p/q
 //   END FUNCTION ratfun
-double ratfun(double x, NumericVector ak, NumericVector bk){
+double ratfun(double x, double ak[5], double bk[5]){
   double p= ak[0]+x*(ak[1]+x*(ak[2]+x*(ak[3]+x*ak[4])));
   double q= bk[0]+x*(bk[1]+x*(bk[2]+x*(bk[3]+x*bk[4])));
   return(p/q);
@@ -1347,7 +1347,7 @@ double lambdaeta(double eta) {
 //     END FUNCTION eps1
 double eps1(double eta) {
   double eps1, la;
-  NumericVector ak(5), bk(5);
+  double ak[5], bk[5];
   if(std::abs(eta)<1.0) {
     ak[0]=-3.333333333438e-1;  bk[0]= 1.000000000000e+0;
     ak[1]=-2.070740359969e-1;  bk[1]= 7.045554412463e-1;
@@ -1398,7 +1398,7 @@ double eps1(double eta) {
 //           END FUNCTION
 double eps2(double eta) {
   double eps2, x, lnmeta;
-  NumericVector ak(5), bk(5);
+  double ak[5], bk[5];
   if(eta < -5.0) {
     x=eta*eta;
     lnmeta=log(-eta);
@@ -1484,7 +1484,7 @@ double eps2(double eta) {
 //             END FUNCTION eps3
 double eps3(double eta) {
   double eps3, eta3, x, y;
-  NumericVector ak(5), bk(5);
+  double ak[5], bk[5];
   if(eta<-8.0) {
     x=eta*eta;
     y=log(-eta)/eta;
