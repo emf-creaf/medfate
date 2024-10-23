@@ -233,7 +233,7 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       d[l] = (k_up[l]/dZUp[l])*(Temp[l-1] - Temp[l]);
     }
   }
-  NumericVector tempch = tridiagonalSolving(a,b,c,d);
+  NumericVector tempch = tridiagonalSolving(a,b,c,d, nlayers);
   return(tempch);
 }
 // NumericVector temperatureChange(NumericVector widths, NumericVector Temp,

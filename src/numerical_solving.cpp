@@ -3,8 +3,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-NumericVector tridiagonalSolving(double* a, double* b, double* c, double* d) {
-  int n = sizeof(a);
+NumericVector tridiagonalSolving(double* a, double* b, double* c, double* d, int n) {
   double* e = new double[n];
   double* f = new double[n];
   NumericVector u(n);
