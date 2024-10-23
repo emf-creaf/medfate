@@ -903,14 +903,26 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double* c = new double[nlayers];
     double* d = new double[nlayers];
 
-    NumericVector C_step(nlayers, 0.0), C_step_m(nlayers, 0.0), K_step_ms(nlayers, 0.0), K_step(nlayers, 0.0), Psi_step(nlayers, 0.0), Psi_step_m(nlayers, 0.0);
-    NumericVector S_macro_step(nlayers, 0.0), Kmacro_step_ms(nlayers, 0.0), theta_macro_step(nlayers, 0.0), theta_micro_step(nlayers, 0.0);
     double C_step_05, K_step_05;
-    NumericVector K_step_ms05(nlayers, 0.0), C_step_m05(nlayers, 0.0);
+    double* K_step_ms05 = new double[nlayers];
+    double* C_step_m05 = new double[nlayers];
+    double* C_step = new double[nlayers];
+    double* C_step_m = new double[nlayers];
+    double* K_step_ms = new double[nlayers];
+    double* K_step = new double[nlayers];
+    double* Psi_step = new double[nlayers];
+    double* Psi_step_m = new double[nlayers];
+    double* S_macro_step = new double[nlayers];
+    double* Kmacro_step_ms = new double[nlayers];
+    double* theta_macro_step = new double[nlayers];
+    double* theta_micro_step = new double[nlayers];
+    
     NumericVector finalSourceSinks_m3s(nlayers, 0.0);
     NumericVector capill_below(nlayers, 0.0);
     NumericVector drain_above(nlayers, 0.0);
     NumericVector drain_below(nlayers, 0.0);
+    NumericVector lateral_flows_step_mm(nlayers, 0.0);
+    
     double drainage_matrix_step_m3 = 0.0;
     double drainage_macropores_step_m3 = 0.0;
     double capillarity_matrix_step_m3 = 0.0;
@@ -923,7 +935,6 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double macropore_correction_step_mm = 0.0;
     double infiltration_remaining_macropores_step_mm = 0.0; 
     double infiltration_target_macropores_step_mm = 0.0;
-    NumericVector lateral_flows_step_mm(nlayers, 0.0);
     
     int total_nsubsteps = 0;
     int nsubsteps = 1;
