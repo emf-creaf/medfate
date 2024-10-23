@@ -1,0 +1,52 @@
+---
+title: "Computing time assessment"
+author: "Miquel De Caceres"
+date: "`r Sys.Date()`"
+description: >
+   Estimates of approximate computing time
+output: 
+  rmarkdown::html_document:
+    toc: FALSE
+params:
+  complete_rebuild: FALSE
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## About this vignette
+
+The results presented here were obtained using **`r packageVersion("medfate")`** of medfate.
+
+```{r, echo = FALSE, include=FALSE}
+library(medfate)
+library(kableExtra)
+library(knitr)
+#Load example daily meteorological data
+data(examplemeteo)
+data(exampleforest)
+data(SpParamsMED)
+examplesoil <- defaultSoilParams(4)
+df_res <- data.frame(model = "spwb",
+                     transpirationMode = c(rep("Granier", 3),
+                                           rep("Sperry", 3),
+                                           rep("Sureau", 3)),
+                     soilDomains = rep(c("buckets", "single", "dual"),3))
+df_res$Elapsed_time_sec = NA
+for(i in 1:nrow(df_res)) {
+  control <- defaultControl(df_res$transpirationMode[i], df_res$soilDomains[i])
+  st <- system.time({spwb(spwbInput(exampleforest,examplesoil, SpParamsMED, control), 
+                                    examplemeteo, latitude = 41.82592, elevation = 100)})
+  df_res$Elapsed_time_sec[i] <- st[[3]]
+}
+```
+
+## Table of computational times
+
+```{r, echo = FALSE}
+df_res %>%
+  kbl() %>%
+  kable_styling()
+```
+
