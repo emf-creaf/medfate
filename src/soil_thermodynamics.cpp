@@ -218,6 +218,8 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
   double* c = new double[nlayers];
   double* d = new double[nlayers];
   for(int l=0;l<nlayers;l++) {
+    k_up[l] = 0.0;
+    k_down[l] = 0.0;
     if(l==0) { //first layer
       k_down[l] = (k[l]*k[l+1]*(Zcent[l]-Zcent[l+1]))/(k[l]*(Zdown[l] - Zcent[l+1]) + k[l+1]*(Zcent[l] - Zdown[l]));
       a[l] = 0.0;

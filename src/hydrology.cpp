@@ -917,6 +917,10 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     double* theta_macro_step = new double[nlayers];
     double* theta_micro_step = new double[nlayers];
     for(int l=0;l<nlayers;l++) {
+      a[l] = 0.0;
+      b[l] = 0.0;
+      c[l] = 0.0;
+      d[l] = 0.0;
       C_step[l] = 0.0;
       C_step_m[l] = 0.0;
       K_step_ms[l] = 0.0;
