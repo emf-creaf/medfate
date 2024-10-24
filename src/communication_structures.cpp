@@ -24,6 +24,7 @@ List communicationLongWaveRadiation() {
                                  _["Lnet_cohort_layer"] = NA_REAL);
   return(lwr_struct);
 }
+
 DataFrame communicationCanopyTurbulence() {
   DataFrame output = DataFrame::create(Named("zmid") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
                                        Named("u") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
@@ -354,6 +355,17 @@ NumericMatrix copyNumericMatrix(NumericMatrix comm, int rows, int cols) {
   }
   return(out);
 }
+List copyCommunicationLongWaveRadiation(List clwr, int ncanlayers) {
+  List lwr_struct = List::create(_["LWR_layer"] = copyDataFrame(as<DataFrame>(clwr["LWR_layer"]), ncanlayers),
+                                 _["Ldown_ground"] = clwr["Ldown_ground"],
+                                 _["Lup_ground"] = clwr["Lup_ground"],
+                                 _["Lnet_ground"] = clwr["Lnet_ground"],
+                                 _["Ldown_canopy"] = clwr["Ldown_canopy"],
+                                 _["Lup_canopy"] = clwr["Lup_canopy"],
+                                 _["Lnet_canopy"] = clwr["Lnet_canopy"],
+                                 _["Lnet_cohort_layer"] = clwr["Lnet_cohort_layer"]);
+  return(lwr_struct);
+}
 List copyBasicTranspirationOutput(List btc, List x) {
   List control = x["control"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -411,154 +423,88 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
   SoilWaterExtract.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   
   List ExtractionPools(numCohorts);
+  List ExtractionPoolsComm = atc["ExtractionPools"];
   if(plantWaterPools) {
     for(int c=0;c<numCohorts;c++) {
-      NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers);
-      std::fill(ExtractionPoolsCoh.begin(), ExtractionPoolsCoh.end(), 0.0);
-      ExtractionPools[c] = ExtractionPoolsCoh;
+      NumericMatrix ExtractionPoolsCohComm = ExtractionPoolsComm[c];
+      ExtractionPools[c] = copyNumericMatrix(ExtractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
     }
   }
   
-  NumericMatrix soilLayerExtractInst(nlayers, ntimesteps);
-  std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
+  NumericMatrix soilLayerExtractInstComm = atc["ExtractionInst"];
+  NumericMatrix soilLayerExtractInst = copyNumericMatrix(soilLayerExtractInstComm, nlayers, ntimesteps);
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
   
-  NumericMatrix minPsiRhizo(numCohorts, nlayers);
-  if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), NA_REAL);
+  NumericMatrix minPsiRhizoComm = atc["RhizoPsi"];
+  NumericMatrix minPsiRhizo = copyNumericMatrix(minPsiRhizoComm, numCohorts, nlayers);
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-  
   
   NumericVector StandComm = atc["Stand"];
   NumericVector Stand = clone(StandComm);
   
   // ARRANGE OUTPUT
-  NumericVector solarHour(ntimesteps, NA_REAL);
-  NumericVector Tatm(ntimesteps, NA_REAL), Tcan(ntimesteps, NA_REAL);
-  NumericVector Hcansoil(ntimesteps, NA_REAL);
-  NumericVector Ebalsoil(ntimesteps, NA_REAL);
-  NumericVector LEVsoil(ntimesteps, NA_REAL);
-  NumericVector LEFsnow(ntimesteps, NA_REAL);
-  NumericVector abs_SWR_soil(ntimesteps, NA_REAL);
-  NumericVector net_LWR_soil(ntimesteps, NA_REAL);
-  NumericVector abs_SWR_can(ntimesteps, NA_REAL);
-  NumericVector net_LWR_can(ntimesteps, NA_REAL);
-  NumericVector LEVcan(ntimesteps, NA_REAL), Hcan_heat(ntimesteps, NA_REAL), Ebal(ntimesteps, NA_REAL);
-  
-  DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                      _["Tatm"] = Tatm, _["Tcan"] = Tcan);
-  DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["SWRcan"] = abs_SWR_can, 
-                                        _["LWRcan"] = net_LWR_can,
-                                        _["LEVcan"] = LEVcan, 
-                                        _["LEFsnow"] = LEFsnow, 
-                                        _["Hcan"] = Hcan_heat, 
-                                        _["Ebalcan"] = Ebal);
-  DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["Hcansoil"] = Hcansoil, 
-                                        _["LEVsoil"] = LEVsoil, 
-                                        _["SWRsoil"] = abs_SWR_soil, 
-                                        _["LWRsoil"] = net_LWR_soil,
-                                        _["Ebalsoil"] = Ebalsoil);
-  NumericMatrix Tcan_mat(ntimesteps, ncanlayers);
-  NumericMatrix VPcan_mat(ntimesteps, ncanlayers);
+  List EnergyBalanceComm = atc["EnergyBalance"];
+  DataFrame Tinst = copyDataFrame(as<DataFrame>(EnergyBalanceComm["Temperature"]), ntimesteps);
+  DataFrame CEBinst = copyDataFrame(as<DataFrame>(EnergyBalanceComm["CanopyEnergyBalance"]), ntimesteps);
+  DataFrame SEBinst = copyDataFrame(as<DataFrame>(EnergyBalanceComm["SoilEnergyBalance"]), ntimesteps);
+  NumericMatrix Tcan_mat= copyNumericMatrix(as<NumericMatrix>(EnergyBalanceComm["TemperatureLayers"]), ntimesteps, ncanlayers);
   Tcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
+  NumericMatrix VPcan_mat= copyNumericMatrix(as<NumericMatrix>(EnergyBalanceComm["VaporPressureLayers"]), ntimesteps, ncanlayers);
   VPcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
-  NumericMatrix Tsoil_mat(ntimesteps, nlayers);
+  NumericMatrix Tsoil_mat= copyNumericMatrix(as<NumericMatrix>(EnergyBalanceComm["SoilTemperature"]), ntimesteps, nlayers);
   Tsoil_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,nlayers));
-  List EB = List::create(_["Temperature"]=Tinst, 
-                         _["SoilTemperature"] = Tsoil_mat,
-                         _["CanopyEnergyBalance"] = CEBinst, 
-                         _["SoilEnergyBalance"] = SEBinst,
-                         _["TemperatureLayers"] = Tcan_mat, 
-                         _["VaporPressureLayers"] = VPcan_mat);
+  List EnergyBalance = List::create(_["Temperature"]=Tinst, 
+                                    _["SoilTemperature"] = Tsoil_mat,
+                                    _["CanopyEnergyBalance"] = CEBinst, 
+                                    _["SoilEnergyBalance"] = SEBinst,
+                                    _["TemperatureLayers"] = Tcan_mat, 
+                                    _["VaporPressureLayers"] = VPcan_mat);
   
-  NumericVector LAI(numCohorts,0.0);
-  NumericVector LAIlive(numCohorts,0.0);
-  NumericVector PARcohort(numCohorts,0.0);
-  NumericVector SoilExtractCoh(numCohorts,0.0);
-  NumericVector DDS(numCohorts, 0.0), LFMC(numCohorts, 0.0);
-  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
-  NumericVector minStemPsi(numCohorts, NA_REAL), minRootPsi(numCohorts,NA_REAL); //Minimum potentials experienced
-  NumericVector minLeafPsi(numCohorts,NA_REAL), maxLeafPsi(numCohorts,NA_REAL); 
-  NumericVector PLClm(numCohorts, NA_REAL), PLCsm(numCohorts, NA_REAL);
-  NumericVector dEdPm(numCohorts, NA_REAL), PWB(numCohorts,0.0);
-  NumericVector RWCsm(numCohorts, NA_REAL), RWClm(numCohorts, NA_REAL);
-  
-  DataFrame Plants = DataFrame::create(_["LAI"] = LAI,
-                                       _["LAIlive"] = LAIlive,
-                                       _["FPAR"] = PARcohort,
-                                       _["Extraction"] = SoilExtractCoh,
-                                       _["Transpiration"] = Eplant,
-                                       _["GrossPhotosynthesis"] = Agplant,
-                                       _["NetPhotosynthesis"] = Anplant,
-                                       _["RootPsi"] = minRootPsi, 
-                                       _["StemPsi"] = minStemPsi, 
-                                       _["LeafPLC"] = PLClm, //Average daily leaf PLC
-                                       _["StemPLC"] = PLCsm, //Average daily stem PLC
-                                       _["LeafPsiMin"] = minLeafPsi, 
-                                       _["LeafPsiMax"] = maxLeafPsi, 
-                                       _["dEdP"] = dEdPm,//Average daily soilplant conductance
-                                       _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
-                                       _["StemRWC"] = RWCsm,
-                                       _["LeafRWC"] = RWClm,
-                                       _["LFMC"] = LFMC,
-                                       _["WaterBalance"] = PWB);
+
+  DataFrame Plants = copyDataFrame(as<DataFrame>(atc["Plants"]), numCohorts);
   Plants.attr("row.names") = above.attr("row.names");
   
-  NumericVector maxGSW_SL(numCohorts,NA_REAL), maxGSW_SH(numCohorts,NA_REAL); 
-  NumericVector minGSW_SL(numCohorts,NA_REAL), minGSW_SH(numCohorts,NA_REAL); 
-  NumericVector maxTemp_SL(numCohorts,NA_REAL), maxTemp_SH(numCohorts,NA_REAL); 
-  NumericVector minTemp_SL(numCohorts,NA_REAL), minTemp_SH(numCohorts,NA_REAL); 
-  NumericVector minLeafPsi_SL(numCohorts,NA_REAL), maxLeafPsi_SL(numCohorts,NA_REAL); 
-  NumericVector minLeafPsi_SH(numCohorts,NA_REAL), maxLeafPsi_SH(numCohorts,NA_REAL);
-  
-  DataFrame Sunlit = DataFrame::create(
-    _["LeafPsiMin"] = minLeafPsi_SL, 
-    _["LeafPsiMax"] = maxLeafPsi_SL, 
-    _["GSWMin"] = minGSW_SL,
-    _["GSWMax"] = maxGSW_SL,
-    _["TempMin"] = minTemp_SL,
-    _["TempMax"] = maxTemp_SL  
-  );
-  DataFrame Shade = DataFrame::create(
-    _["LeafPsiMin"] = minLeafPsi_SH, 
-    _["LeafPsiMax"] = maxLeafPsi_SH, 
-    _["GSWMin"] = minGSW_SH,
-    _["GSWMax"] = maxGSW_SH,
-    _["TempMin"] = minTemp_SH,
-    _["TempMax"] = maxTemp_SH  
-  );
+  DataFrame Sunlit = copyDataFrame(as<DataFrame>(atc["SunlitLeaves"]), numCohorts);
   Sunlit.attr("row.names") = above.attr("row.names");
+  
+  DataFrame Shade = copyDataFrame(as<DataFrame>(atc["ShadeLeaves"]), numCohorts);
   Shade.attr("row.names") = above.attr("row.names");
   
   
-  NumericMatrix Einst(numCohorts, ntimesteps);
-  NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
-  NumericMatrix dEdPInst(numCohorts, ntimesteps);
-  NumericMatrix LeafPsiInst(numCohorts, ntimesteps), StemPsiInst(numCohorts, ntimesteps);
-  NumericMatrix RootPsiInst(numCohorts, ntimesteps);
-  NumericMatrix LeafSympPsiInst(numCohorts, ntimesteps), StemSympPsiInst(numCohorts, ntimesteps);
-  NumericMatrix StemPLC(numCohorts, ntimesteps), LeafPLC(numCohorts, ntimesteps);
-  NumericMatrix LeafRWCInst(numCohorts, ntimesteps), StemRWCInst(numCohorts, ntimesteps);
-  NumericMatrix LeafSympRWCInst(numCohorts, ntimesteps), StemSympRWCInst(numCohorts, ntimesteps);
-  NumericMatrix PWBinst(numCohorts, ntimesteps);
+  List PlantsInstComm = atc["PlantsInst"];
+  NumericMatrix Einst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["E"]), numCohorts, ntimesteps);
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  dEdPInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LeafPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  StemPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LeafSympPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  StemSympPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LeafSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  StemSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  RootPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Aginst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["Ag"]), numCohorts, ntimesteps);
   Aginst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Aninst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["An"]), numCohorts, ntimesteps);
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix dEdPInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["dEdP"]), numCohorts, ntimesteps);
+  dEdPInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LeafPsiInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["LeafPsi"]), numCohorts, ntimesteps);
+  LeafPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix StemPsiInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["StemPsi"]), numCohorts, ntimesteps);
+  StemPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix RootPsiInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["RootPsi"]), numCohorts, ntimesteps);
+  RootPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LeafSympPsiInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["LeafSympPsi"]), numCohorts, ntimesteps);
+  LeafSympPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix StemSympPsiInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["StemSympPsi"]), numCohorts, ntimesteps);
+  StemSympPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LeafSympRWCInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["LeafSympRWC"]), numCohorts, ntimesteps);
+  LeafSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix StemSympRWCInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["StemSympRWC"]), numCohorts, ntimesteps);
+  StemSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix StemPLC = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["StemPLC"]), numCohorts, ntimesteps);
   StemPLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LeafPLC = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["LeafPLC"]), numCohorts, ntimesteps);
   LeafPLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LeafRWCInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["LeafRWC"]), numCohorts, ntimesteps);
   LeafRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix StemRWCInst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["StemRWC"]), numCohorts, ntimesteps);
   StemRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix PWBinst = copyNumericMatrix(as<NumericMatrix>(PlantsInstComm["PWB"]), numCohorts, ntimesteps);
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  
+
   List PlantsInst = List::create(
     _["E"]=Einst, _["Ag"]=Aginst, _["An"]=Aninst,
     _["dEdP"] = dEdPInst,
@@ -575,60 +521,64 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
     _["LeafSympRWC"] = LeafSympRWCInst,
     _["PWB"] = PWBinst);
   
-  NumericMatrix LAI_SL(numCohorts, ntimesteps);
-  NumericMatrix LAI_SH(numCohorts, ntimesteps);
-  NumericMatrix Vmax298_SL(numCohorts, ntimesteps);
-  NumericMatrix Vmax298_SH(numCohorts, ntimesteps);
-  NumericMatrix Jmax298_SL(numCohorts, ntimesteps);
-  NumericMatrix Jmax298_SH(numCohorts, ntimesteps);
-  NumericMatrix SWR_SL(numCohorts, ntimesteps);
-  NumericMatrix SWR_SH(numCohorts, ntimesteps);
-  NumericMatrix PAR_SL(numCohorts, ntimesteps);
-  NumericMatrix PAR_SH(numCohorts, ntimesteps);
-  NumericMatrix LWR_SL(numCohorts, ntimesteps);
-  NumericMatrix LWR_SH(numCohorts, ntimesteps);
-  NumericMatrix An_SL(numCohorts, ntimesteps), Ag_SL(numCohorts, ntimesteps);
-  NumericMatrix An_SH(numCohorts, ntimesteps), Ag_SH(numCohorts, ntimesteps);
-  NumericMatrix Ci_SL(numCohorts, ntimesteps);
-  NumericMatrix Ci_SH(numCohorts, ntimesteps);
-  NumericMatrix E_SL(numCohorts, ntimesteps);
-  NumericMatrix E_SH(numCohorts, ntimesteps);
-  NumericMatrix GSW_SH(numCohorts, ntimesteps);
-  NumericMatrix GSW_SL(numCohorts, ntimesteps);
-  NumericMatrix VPD_SH(numCohorts, ntimesteps);
-  NumericMatrix VPD_SL(numCohorts, ntimesteps);
-  NumericMatrix Temp_SH(numCohorts, ntimesteps);
-  NumericMatrix Temp_SL(numCohorts, ntimesteps);
-  NumericMatrix Psi_SL(numCohorts, ntimesteps);
-  NumericMatrix Psi_SH(numCohorts, ntimesteps);
-  LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  List SunlitInstComm = atc["SunlitLeavesInst"];
+  List ShadeInstComm = atc["ShadeLeavesInst"];
+  NumericMatrix LAI_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["LAI"]), numCohorts, ntimesteps);
   LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Vmax298_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LAI_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["LAI"]), numCohorts, ntimesteps);
+  LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Vmax298_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Vmax298"]), numCohorts, ntimesteps);
   Vmax298_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Jmax298_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Vmax298_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Vmax298"]), numCohorts, ntimesteps);
+  Vmax298_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Jmax298_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Jmax298"]), numCohorts, ntimesteps);
   Jmax298_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  E_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  E_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Psi_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  An_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  An_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Ag_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Ag_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Jmax298_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Jmax298"]), numCohorts, ntimesteps);
+  Jmax298_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix SWR_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Abs_SWR"]), numCohorts, ntimesteps);
   SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  PAR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix SWR_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Abs_SWR"]), numCohorts, ntimesteps);
+  SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix PAR_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Abs_PAR"]), numCohorts, ntimesteps);
   PAR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix PAR_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Abs_PAR"]), numCohorts, ntimesteps);
+  PAR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LWR_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Net_LWR"]), numCohorts, ntimesteps);
   LWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Ci_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix LWR_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Net_LWR"]), numCohorts, ntimesteps);
+  LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix An_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["An"]), numCohorts, ntimesteps);
+  An_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix An_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["An"]), numCohorts, ntimesteps);
+  An_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Ag_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Ag"]), numCohorts, ntimesteps);
+  Ag_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Ag_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Ag"]), numCohorts, ntimesteps);
+  Ag_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Ci_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Ci"]), numCohorts, ntimesteps);
   Ci_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  GSW_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Ci_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Ci"]), numCohorts, ntimesteps);
+  Ci_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix E_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["E"]), numCohorts, ntimesteps);
+  E_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix E_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["E"]), numCohorts, ntimesteps);
+  E_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix GSW_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Gsw"]), numCohorts, ntimesteps);
   GSW_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Temp_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Temp_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  VPD_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix GSW_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Gsw"]), numCohorts, ntimesteps);
+  GSW_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix VPD_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["VPD"]), numCohorts, ntimesteps);
   VPD_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix VPD_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["VPD"]), numCohorts, ntimesteps);
+  VPD_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Temp_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Temp"]), numCohorts, ntimesteps);
+  Temp_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Temp_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Temp"]), numCohorts, ntimesteps);
+  Temp_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Psi_SL = copyNumericMatrix(as<NumericMatrix>(SunlitInstComm["Psi"]), numCohorts, ntimesteps);
+  Psi_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  NumericMatrix Psi_SH = copyNumericMatrix(as<NumericMatrix>(ShadeInstComm["Psi"]), numCohorts, ntimesteps);
+  Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   
   List ShadeInst = List::create(
     _["LAI"] = LAI_SH,
@@ -661,18 +611,14 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
     _["Temp"] = Temp_SL,
     _["Psi"] = Psi_SL);
   
+  List lwrExtinctionListComm = atc["LWRExtinction"];
   List lwrExtinctionList(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
-    lwrExtinctionList[n] = communicationLongWaveRadiation();
+    lwrExtinctionList[n] = copyCommunicationLongWaveRadiation(as<List>(lwrExtinctionListComm[n]), ncanlayers);
   }
-  List supply(numCohorts); 
-  for(int c=0;c<numCohorts;c++) {
-    supply[c] = List::create(); //To be replaced
-  }
-  supply.attr("names") = above.attr("row.names");
-  
+
   List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["EnergyBalance"] = EB,
+                        _["EnergyBalance"] = EnergyBalance,
                         _["Extraction"] = SoilWaterExtract,
                         _["ExtractionPools"] = ExtractionPools,
                         _["RhizoPsi"] = minPsiRhizo,
@@ -681,21 +627,23 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
                         _["SunlitLeaves"] = Sunlit,
                         _["ShadeLeaves"] = Shade,
                         _["ExtractionInst"] = soilLayerExtractInst,
-                        _["RadiationInputInst"] = DataFrame::create(), //To be replaced
+                        _["RadiationInputInst"] = clone(as<List>(atc["RadiationInputInst"])), 
                         _["PlantsInst"] = PlantsInst,
                         _["SunlitLeavesInst"] = SunlitInst,
                         _["ShadeLeavesInst"] = ShadeInst,
-                        _["LightExtinction"] = List::create(), //To be replaced
+                        _["LightExtinction"] =  clone(as<List>(atc["LightExtinction"])), 
                         _["LWRExtinction"] = lwrExtinctionList,
-                        _["CanopyTurbulence"] = communicationCanopyTurbulence()); //To be replaced
+                        _["CanopyTurbulence"] = copyDataFrame(as<DataFrame>(atc["CanopyTurbulence"]), ncanlayers)); //To be replaced
   
-  List outPhotoSunlit(numCohorts);
-  List outPhotoShade(numCohorts);
-  List outPMSunlit(numCohorts);
-  List outPMShade(numCohorts);
+  List supply = clone(as<List>(atc["SupplyFunctions"]));
+  supply.attr("names") = above.attr("row.names");
+  List outPhotoSunlit = clone(as<List>(atc["PhotoSunlitFunctions"]));
   outPhotoSunlit.attr("names") = above.attr("row.names");
+  List outPhotoShade = clone(as<List>(atc["PhotoShadeFunctions"]));
   outPhotoShade.attr("names") = above.attr("row.names");
+  List outPMSunlit = clone(as<List>(atc["PMSunlitFunctions"]));
   outPMSunlit.attr("names") = above.attr("row.names");
+  List outPMShade = clone(as<List>(atc["PMShadeFunctions"]));
   outPMShade.attr("names") = above.attr("row.names");
   l.push_back(supply, "SupplyFunctions");
   l.push_back(outPhotoSunlit, "PhotoSunlitFunctions");
