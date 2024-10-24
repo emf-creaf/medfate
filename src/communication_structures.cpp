@@ -1,9 +1,12 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-List communicationLongWaveRadiation(int ncanlayers) {
-  NumericVector Lup(ncanlayers, NA_REAL), Ldown(ncanlayers, NA_REAL), Lnet(ncanlayers, NA_REAL);
-  NumericVector tau(ncanlayers, NA_REAL), sumTauComp(ncanlayers, NA_REAL);
+const int MAX_CAN_LAYERS = 100;
+const int MAX_NUM_COHORTS = 10;
+
+List communicationLongWaveRadiation() {
+  NumericVector Lup(MAX_CAN_LAYERS, NA_REAL), Ldown(MAX_CAN_LAYERS, NA_REAL), Lnet(MAX_CAN_LAYERS, NA_REAL);
+  NumericVector tau(MAX_CAN_LAYERS, NA_REAL), sumTauComp(MAX_CAN_LAYERS, NA_REAL);
   DataFrame LWR_layer = DataFrame::create(_["tau"] = tau,
                                           _["sumTauComp"] = sumTauComp,
                                           _["Ldown"] = Ldown, 
@@ -19,13 +22,13 @@ List communicationLongWaveRadiation(int ncanlayers) {
                                  _["Lnet_cohort_layer"] = NA_REAL);
   return(lwr_struct);
 }
-DataFrame communicationCanopyTurbulence(int ncanlayers) {
-  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(ncanlayers, NA_REAL),
-                                       Named("u") = NumericVector(ncanlayers, NA_REAL),
-                                       Named("du") = NumericVector(ncanlayers, NA_REAL),
-                                       Named("epsilon") = NumericVector(ncanlayers, NA_REAL),
-                                       Named("k") = NumericVector(ncanlayers, NA_REAL),
-                                       Named("uw") = NumericVector(ncanlayers, NA_REAL));
+DataFrame communicationCanopyTurbulence() {
+  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
+                                       Named("u") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
+                                       Named("du") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
+                                       Named("epsilon") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
+                                       Named("k") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
+                                       Named("uw") = NumericVector(MAX_CAN_LAYERS, NA_REAL));
   return(output);
 }
 
@@ -369,7 +372,7 @@ List advancedTranspirationOutput(List x) {
   
   List lwrExtinctionList(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
-    lwrExtinctionList[n] = communicationLongWaveRadiation(ncanlayers);
+    lwrExtinctionList[n] = communicationLongWaveRadiation();
   }
   List supply(numCohorts); 
   for(int c=0;c<numCohorts;c++) {
@@ -393,7 +396,7 @@ List advancedTranspirationOutput(List x) {
                         _["ShadeLeavesInst"] = ShadeInst,
                         _["LightExtinction"] = List::create(), //To be replaced
                         _["LWRExtinction"] = lwrExtinctionList,
-                        _["CanopyTurbulence"] = communicationCanopyTurbulence(ncanlayers)); //To be replaced
+                        _["CanopyTurbulence"] = communicationCanopyTurbulence()); //To be replaced
   
   List outPhotoSunlit(numCohorts);
   List outPhotoShade(numCohorts);
@@ -749,30 +752,28 @@ List advancedGROWTHOutput(List x, List outputTransp) {
   return(l);
 }
 
-DataFrame communicationCarbonCompartments(DataFrame above) {
-  int numCohorts = above.nrow();
+DataFrame communicationCarbonCompartments() {
   DataFrame df = DataFrame::create(
-    _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodStorageVolume"] = NumericVector(numCohorts, NA_REAL),
-    _["LeafStarchMaximumConcentration"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodStarchMaximumConcentration"] = NumericVector(numCohorts, NA_REAL),
-    _["LeafStarchCapacity"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodStarchCapacity"] = NumericVector(numCohorts, NA_REAL),
-    _["LeafStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodLivingStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["StructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["LabileBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["TotalLivingBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["TotalBiomass"] = NumericVector(numCohorts, NA_REAL)
+    _["LeafStorageVolume"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["SapwoodStorageVolume"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["LeafStarchMaximumConcentration"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["SapwoodStarchMaximumConcentration"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["LeafStarchCapacity"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["SapwoodStarchCapacity"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["LeafStructuralBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["SapwoodStructuralBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["SapwoodLivingStructuralBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["FineRootBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["StructuralBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["LabileBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["TotalLivingBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL),
+    _["TotalBiomass"] = NumericVector(MAX_NUM_COHORTS, NA_REAL)
   );
-  df.attr("row.names") = above.attr("row.names");
   return(df);
 }
 
-List communicationInitialFinalCarbonCompartments(DataFrame above) {
-  DataFrame ccFin_g_ind = communicationCarbonCompartments(above);
+List communicationInitialFinalCarbonCompartments() {
+  DataFrame ccFin_g_ind = communicationCarbonCompartments();
   DataFrame ccIni_g_ind = clone(ccFin_g_ind);
   List l = List::create(_["ccIni_g_ind"] = ccIni_g_ind,
                         _["ccFin_g_ind"] = ccFin_g_ind);
@@ -804,8 +805,7 @@ void addCommunicationStructures(List x) {
     } 
   }
   if(model=="growth") {
-    DataFrame above = as<DataFrame>(x["above"]);
-    if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(above), "initialFinalCC");
+    if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(), "initialFinalCC");
   }
   x["internalCommunication"] = ic;
 }

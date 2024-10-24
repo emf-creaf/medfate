@@ -259,18 +259,14 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
   
   if((biomassUnits!="g_m2") && (biomassUnits !="g_ind")) stop("Wrong biomass units");
-  //Cohort info
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
-  int numCohorts = SP.size();
-  
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector H = above["H"];
   NumericVector N = above["N"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector SA = above["SA"];
-  
+  int numCohorts = above.nrow();
+
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   NumericVector fineRootBiomassIn = Rcpp::as<Rcpp::NumericVector>(belowdf["fineRootBiomass"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);

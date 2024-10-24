@@ -118,6 +118,8 @@ double qResp(double Tmean) {
 void fillInitialPlantBiomassBalance(DataFrame plantBiomassBalance, DataFrame ccIni, DataFrame above) {
 
   NumericVector N = above["N"];
+  int numCohorts = N.size();
+
   //Initial Biomass compartments
   NumericVector SapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
@@ -132,7 +134,7 @@ void fillInitialPlantBiomassBalance(DataFrame plantBiomassBalance, DataFrame ccI
   NumericVector InitialPlantBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialPlantBiomass"]);
   NumericVector InitialLivingPlantBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialLivingPlantBiomass"]);
   NumericVector InitialCohortBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialCohortBiomass"]);
-  int numCohorts = Nprev.length();
+
   for(int c=0; c < numCohorts;c++) {
     Nprev[c] = N[c];
     InitialSapwoodBiomass[c] = SapwoodBiomass[c];
@@ -152,8 +154,8 @@ void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
                          NumericVector FineRootBiomassBalance) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector Nfinal = above["N"];
-  int numCohorts = Nfinal.length();
-  
+  int numCohorts = Nfinal.size();
+
   List internalCommunication = x["internalCommunication"];
   List initialFinalCC = internalCommunication["initialFinalCC"];
   DataFrame ccFin = as<DataFrame>(initialFinalCC["ccFin_g_ind"]);
@@ -161,7 +163,7 @@ void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
   
   NumericVector finalSapwoodBiomass_ind= Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]);
   NumericVector plantFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
-  NumericVector cohortFinalBiomass_m2 = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"])*(Nfinal/10000.0);
+  NumericVector cohortFinalBiomass_m2 = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
   NumericVector labileFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]);
   NumericVector structuralFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["StructuralBiomass"]);
 
@@ -209,8 +211,9 @@ void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
     
     //COHORT BIOMASS balance (g/m2) 
     CohortBiomassBalance[j] = PlantBiomassBalance[j] - MortalityBiomassLoss[j];
-    CohortBiomassChange[j] = cohortFinalBiomass_m2[j] - InitialCohortBiomass[j];
+    CohortBiomassChange[j] = cohortFinalBiomass_m2[j]*(Nfinal[j]/10000.0) - InitialCohortBiomass[j];
   }
+  
 }
 
 NumericVector standLevelBiomassBalance(DataFrame biomassBalance) {

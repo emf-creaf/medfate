@@ -1064,9 +1064,9 @@ List internalLAIDistribution(DataFrame above, DataFrame canopyParams) {
   NumericMatrix LAImx(ncanlayers, numCohorts);
   NumericMatrix LAIme(ncanlayers, numCohorts);
   NumericMatrix LAImd(ncanlayers, numCohorts);
-  LAImx.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("rownames"));
-  LAIme.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("rownames"));
-  LAImd.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("rownames"));
+  LAImx.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
+  LAIme.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
+  LAImd.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
   LAImx.fill(0.0);
   LAIme.fill(0.0);
   LAImd.fill(0.0);
