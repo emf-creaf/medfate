@@ -47,7 +47,7 @@ double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double ro
 }
 
 
-List transpirationBasic(List x, NumericVector meteovec,  
+void transpirationBasic(List transpOutput, List x, NumericVector meteovec,  
                         double elevation, bool modifyInput = true) {
   
   //Will not modify input x 
@@ -55,8 +55,6 @@ List transpirationBasic(List x, NumericVector meteovec,
     x = clone(x);
   }
   // Should have internal communication 
-  List internalCommunication = x["internalCommunication"];
-  List transpOutput = internalCommunication["transpirationOutput"];
   NumericVector outputStand = as<NumericVector>(transpOutput["Stand"]);
   DataFrame outputPlants = as<DataFrame>(transpOutput["Plants"]);
   NumericMatrix outputExtraction = as<NumericMatrix>(transpOutput["Extraction"]);
@@ -518,7 +516,6 @@ List transpirationBasic(List x, NumericVector meteovec,
     outputWaterBalance[c] = PWB[c];
   }
 
-  return(transpOutput);
 }
 
 //' Transpiration modes
@@ -709,9 +706,8 @@ List transpirationBasic(List x, NumericVector meteovec,
 List transpirationGranier(List x, DataFrame meteo, int day,
                           double latitude, double elevation, double slope, double aspect, 
                           bool modifyInput = true) {
-  //Add communication structures
-  addCommunicationStructures(x);
-  
+
+
   List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
@@ -764,15 +760,12 @@ List transpirationGranier(List x, DataFrame meteo, int day,
     Named("Catm") = Catm,
     Named("Patm") = Patm[day-1]);
   
-  List transpOutput = transpirationBasic(x, meteovec, elevation, modifyInput);
-  
-  //Clear communication structures
-  bool clear_communications = true;
-  if(control.containsElementNamed("clearCommunications")) {
-    clear_communications = control["clearCommunications"];
-  }
-  if(clear_communications) clearCommunicationStructures(x);
-  return(transpOutput);
+  List transpOutput = basicTranspirationCommunicationOutput();
+  transpirationBasic(transpOutput, x, meteovec, elevation, modifyInput);
+
+  List transpBasic = copyBasicTranspirationOutput(transpOutput, x);
+    
+  return(transpBasic);
 } 
 
 

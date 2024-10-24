@@ -7,3 +7,5 @@ using namespace Rcpp;
 
 void addCommunicationStructures(List x);
 void clearCommunicationStructures(List x);
+List basicTranspirationCommunicationOutput();
+List copyBasicTranspirationOutput(List btc, List x);

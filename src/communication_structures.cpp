@@ -1,12 +1,13 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-const int MAX_CAN_LAYERS = 100;
-const int MAX_NUM_COHORTS = 10;
+const int MAX_SOIL_LAYERS = 10;
+const int MAX_CANOPY_LAYERS = 100;
+const int MAX_NUM_COHORTS = 100;
 
 List communicationLongWaveRadiation() {
-  NumericVector Lup(MAX_CAN_LAYERS, NA_REAL), Ldown(MAX_CAN_LAYERS, NA_REAL), Lnet(MAX_CAN_LAYERS, NA_REAL);
-  NumericVector tau(MAX_CAN_LAYERS, NA_REAL), sumTauComp(MAX_CAN_LAYERS, NA_REAL);
+  NumericVector Lup(MAX_CANOPY_LAYERS, NA_REAL), Ldown(MAX_CANOPY_LAYERS, NA_REAL), Lnet(MAX_CANOPY_LAYERS, NA_REAL);
+  NumericVector tau(MAX_CANOPY_LAYERS, NA_REAL), sumTauComp(MAX_CANOPY_LAYERS, NA_REAL);
   DataFrame LWR_layer = DataFrame::create(_["tau"] = tau,
                                           _["sumTauComp"] = sumTauComp,
                                           _["Ldown"] = Ldown, 
@@ -23,35 +24,23 @@ List communicationLongWaveRadiation() {
   return(lwr_struct);
 }
 DataFrame communicationCanopyTurbulence() {
-  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
-                                       Named("u") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
-                                       Named("du") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
-                                       Named("epsilon") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
-                                       Named("k") = NumericVector(MAX_CAN_LAYERS, NA_REAL),
-                                       Named("uw") = NumericVector(MAX_CAN_LAYERS, NA_REAL));
+  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
+                                       Named("u") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
+                                       Named("du") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
+                                       Named("epsilon") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
+                                       Named("k") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL),
+                                       Named("uw") = NumericVector(MAX_CANOPY_LAYERS, NA_REAL));
   return(output);
 }
+List basicTranspirationCommunicationOutput() {
 
-List basicTranspirationOutput(List x) {
-  List control = x["control"];
-  String rhizosphereOverlap = control["rhizosphereOverlap"];
-  bool plantWaterPools = (rhizosphereOverlap!="total");
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
-  int numCohorts = above.nrow();
-  
-  NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
-  Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-  
-  List ExtractionPools(numCohorts);
-  if(plantWaterPools) {
-    for(int c=0;c<numCohorts;c++) {
-      NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers);
-      std::fill(ExtractionPoolsCoh.begin(), ExtractionPoolsCoh.end(), 0.0);
-      ExtractionPools[c] = ExtractionPoolsCoh;
-    }
+  NumericMatrix Extraction(MAX_NUM_COHORTS, MAX_SOIL_LAYERS); // this is final extraction of each cohort from each layer
+
+  List ExtractionPools(MAX_NUM_COHORTS);
+  for(int c=0;c<MAX_NUM_COHORTS;c++) {
+    NumericMatrix ExtractionPoolsCoh(MAX_NUM_COHORTS, MAX_SOIL_LAYERS);
+    std::fill(ExtractionPoolsCoh.begin(), ExtractionPoolsCoh.end(), 0.0);
+    ExtractionPools[c] = ExtractionPoolsCoh;
   }
   
   NumericVector Stand = NumericVector::create(_["LAI"] = NA_REAL,
@@ -59,21 +48,21 @@ List basicTranspirationOutput(List x) {
                                               _["LAIexpanded"] = NA_REAL, 
                                               _["LAIdead"] = NA_REAL);
   
-  NumericVector LAI(numCohorts, NA_REAL);
-  NumericVector LAIlive(numCohorts, NA_REAL);
-  NumericVector FPAR(numCohorts, NA_REAL);
-  NumericVector AbsorbedSWRFraction(numCohorts, NA_REAL);
-  NumericVector ExtractionByPlant(numCohorts, NA_REAL);
-  NumericVector Transpiration(numCohorts, NA_REAL);
-  NumericVector GrossPhotosynthesis(numCohorts, NA_REAL);
-  NumericVector PlantPsi(numCohorts, NA_REAL);
-  NumericVector DDS(numCohorts, NA_REAL);
-  NumericVector StemRWC(numCohorts, NA_REAL);
-  NumericVector LeafRWC(numCohorts, NA_REAL);
-  NumericVector LFMC(numCohorts, NA_REAL);
-  NumericVector StemPLC(numCohorts, NA_REAL);
-  NumericVector LeafPLC(numCohorts, NA_REAL);
-  NumericVector PWB(numCohorts, NA_REAL);
+  NumericVector LAI(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector LAIlive(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector FPAR(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector AbsorbedSWRFraction(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector ExtractionByPlant(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector Transpiration(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector GrossPhotosynthesis(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector PlantPsi(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector DDS(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector StemRWC(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector LeafRWC(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector LFMC(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector StemPLC(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector LeafPLC(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector PWB(MAX_NUM_COHORTS, NA_REAL);
   
   DataFrame Plants = DataFrame::create(_["LAI"] = LAI,
                                        _["LAIlive"] = LAIlive,
@@ -90,6 +79,75 @@ List basicTranspirationOutput(List x) {
                                        _["StemPLC"] = StemPLC,
                                        _["LeafPLC"] = LeafPLC,
                                        _["WaterBalance"] = PWB);
+
+  List l = List::create(_["Stand"] = Stand,
+                        _["Plants"] = Plants,
+                        _["Extraction"] = Extraction,
+                        _["ExtractionPools"] = ExtractionPools);
+  return(l);
+}
+
+DataFrame copyDataFrame(DataFrame comm, int numCohorts) {
+  CharacterVector names = comm.attr("names");
+  int n = names.size();
+  DataFrame out; 
+  for(int i = 0;i<n;i++) {
+    String nameCol = names[i];
+    NumericVector vecIn = comm[nameCol];
+    NumericVector vecOut(n);
+    for(int c = 0;c<numCohorts;c++) {
+      vecOut[c] = vecIn[c];
+    }
+    if(i==0) {
+      out = DataFrame::create(_[nameCol] = vecOut);
+    } else {
+      out.push_back(vecOut, nameCol);
+    }
+  }
+  return(out);
+}
+List copyBasicTranspirationOutput(List btc, List x) {
+  List control = x["control"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
+  int numCohorts = above.nrow();
+  
+  NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
+  NumericMatrix ExtractionComm = btc["Extraction"];
+  for(int c=0;c<numCohorts;c++) {
+    for(int l=0;l<nlayers; l++) {
+      Extraction(c,l) = ExtractionComm(c, l);
+    }
+  }
+  Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  
+  List ExtractionPools(numCohorts);
+  List ExtractionPoolsComm = btc["ExtractionPools"];
+  if(plantWaterPools) {
+    for(int c=0;c<numCohorts;c++) {
+      NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers);
+      NumericMatrix ExtractionPoolsCohComm = ExtractionPoolsComm[c];
+      for(int c2=0;c2<numCohorts;c2++) {
+        for(int l=0;l<nlayers; l++) {
+          ExtractionPoolsCoh(c2,l) = ExtractionPoolsCohComm(c2, l);
+        }
+      }
+      ExtractionPools[c] = ExtractionPoolsCoh;
+    }
+  }
+  
+  NumericVector StandComm = btc["Stand"];
+  NumericVector Stand = NumericVector::create(_["LAI"] = StandComm["LAI"],
+                                              _["LAIlive"] = StandComm["LAIlive"], 
+                                              _["LAIexpanded"] = StandComm["LAIexpanded"], 
+                                              _["LAIdead"] = StandComm["LAIdead"]);
+  
+  DataFrame PlantsComm = Rcpp::as<Rcpp::DataFrame>(btc["Plants"]);
+  DataFrame Plants = copyDataFrame(PlantsComm, numCohorts);
   Plants.attr("row.names") = above.attr("row.names");
   
   List l = List::create(_["cohorts"] = clone(cohorts),
@@ -788,12 +846,12 @@ void addCommunicationStructures(List x) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   List ic = as<List>(x["internalCommunication"]);
+  ic.push_back(basicTranspirationCommunicationOutput(), "basicTranspirationOutput"); 
+  List communicationOutputTransp = ic["basicTranspirationOutput"];
   if(transpirationMode=="Granier") {
-    if(!ic.containsElementNamed("transpirationOutput")) ic.push_back(basicTranspirationOutput(x), "transpirationOutput"); 
-    List outputTransp = ic["transpirationOutput"];
     if(!ic.containsElementNamed("modelOutput")) {
-      if(model=="spwb") ic.push_back(basicSPWBOutput(x, outputTransp), "modelOutput"); 
-      else ic.push_back(basicGROWTHOutput(x, outputTransp), "modelOutput"); 
+      if(model=="spwb") ic.push_back(basicSPWBOutput(x, communicationOutputTransp), "modelOutput"); 
+      else ic.push_back(basicGROWTHOutput(x, communicationOutputTransp), "modelOutput"); 
     } 
   } else {
     DataFrame paramsCanopydf = as<DataFrame>(x["canopy"]);

@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax);
-List transpirationBasic(List x, NumericVector meteovec,
+void transpirationBasic(List transpOutput, List x, NumericVector meteovec,  
                         double elevation, bool modifyInput = true);
 List transpirationAdvanced(List x, NumericVector meteovec,
                   double latitude, double elevation, double slope, double aspect,

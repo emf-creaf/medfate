@@ -306,9 +306,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
   }
 
   //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
-  List outputTransp = transpirationBasic(x, meteovec, elevation, true);
+  List transpOutput = basicTranspirationCommunicationOutput();
+  transpirationBasic(transpOutput, x, meteovec, elevation, true);
   //Determine hydraulic redistribution and source sink for overall soil
-  NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(outputTransp["Extraction"]);
+  NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transpOutput["Extraction"]);
   NumericVector ExtractionVec(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
   NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
@@ -348,7 +349,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     CapillarityRise = sf["CapillarityRise"];
   } else { //Apply soil flows to water pools
     NumericVector poolProportions = belowdf["poolProportions"];
-    List ExtractionPools = Rcpp::as<Rcpp::List>(outputTransp["ExtractionPools"]);
+    List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
     // NumericVector sourceSinkCheck(nlayers, 0.0);
     //Set Wsoil to zero
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
@@ -403,7 +404,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   //STEP 6 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, outputTransp, slope);
+  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, transpOutput, slope);
 
   // Arrange output
   NumericVector WaterBalance = modelOutput["WaterBalance"];
@@ -422,7 +423,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   WaterBalance["SoilEvaporation"] = Esoil;
   WaterBalance["HerbTranspiration"] = sum(EherbVec);
   WaterBalance["PlantExtraction"] = sum(ExtractionVec);
-  DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(outputTransp["Plants"]);
+  DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(transpOutput["Plants"]);
   NumericVector Eplant = Rcpp::as<Rcpp::NumericVector>(outputPlants["Transpiration"]);
   WaterBalance["Transpiration"] = sum(Eplant);
   WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
@@ -2799,7 +2800,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       
     
     int ntimesteps = control["ndailysteps"];
-   
+    List transpOutput;
+    
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
       NumericVector meteovec = NumericVector::create(
@@ -2811,7 +2813,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("Patm") = Patm[i],
         Named("pet") = PET[i]);
       try{
-        s = transpirationBasic(x, meteovec, elevation, true);
+        transpOutput = basicTranspirationCommunicationOutput();
+        transpirationBasic(transpOutput, x, meteovec, elevation, true);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -2859,13 +2862,13 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     }
     
     //Update plant daily water output
-    fillPlantWaterDailyOutput(plantDWOL, s, i, transpirationMode);
+    fillPlantWaterDailyOutput(plantDWOL, transpOutput, i, transpirationMode);
     if(transpirationMode!="Granier") fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, s, i);
     if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, s, i);
     
-    List Plants = s["Plants"];
+    List Plants = transpOutput["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
-    NumericMatrix SoilWaterExtract = s["Extraction"];
+    NumericMatrix SoilWaterExtract = transpOutput["Extraction"];
     for(int l=0;l<nlayers;l++) {
       Eplantdays(i,l) = sum(SoilWaterExtract(_,l));
     }
