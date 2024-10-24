@@ -78,14 +78,14 @@ CharacterVector getWeatherDates(DataFrame meteo){
   return(dateStrings);
 }
 
-NumericVector fccsHazard(List x, NumericVector meteovec, List outputTransp, double slope) {
+NumericVector fccsHazard(List x, NumericVector meteovec, List transpOutput, double slope) {
   List control = x["control"];
   
   double fireHazardStandardWind = control["fireHazardStandardWind"];
   double fireHazardStandardDFMC = control["fireHazardStandardDFMC"];
   
   DataFrame FCCSprops = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
-  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(outputTransp["Plants"]);
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transpOutput["Plants"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   
   double tmin = meteovec["tmin"];
@@ -598,12 +598,13 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   }
   
   //STEPS 4-8 - Energy balance, transpiration, photosynthesis, uptake 
-  List outputTransp = transpirationAdvanced(x, meteovec, 
+  List transpOutput = advancedTranspirationCommunicationOutput();
+  transpirationAdvanced(transpOutput, x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], Esoil, sum(EherbVec),
                                     verbose, NA_INTEGER, true);
-  NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(outputTransp["ExtractionInst"]);
+  NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transpOutput["ExtractionInst"]);
 
   NumericVector ExtractionVec(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
@@ -643,7 +644,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     CapillarityRise = sf["CapillarityRise"]; 
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
-    List ExtractionPools = Rcpp::as<Rcpp::List>(outputTransp["ExtractionPools"]);
+    List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
     //Set Wsoil to zero
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
     NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
@@ -695,7 +696,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 
   //STEP 11 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, outputTransp, slope);
+  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, transpOutput, slope);
 
   // Arrange output
   NumericVector WaterBalance = modelOutput["WaterBalance"];
@@ -714,7 +715,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   WaterBalance["SoilEvaporation"] = Esoil;
   WaterBalance["HerbTranspiration"] = sum(EherbVec);
   WaterBalance["PlantExtraction"] = sum(ExtractionVec);
-  DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(outputTransp["Plants"]);
+  DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(transpOutput["Plants"]);
   NumericVector Eplant = outputPlants["Transpiration"];
   WaterBalance["Transpiration"] = sum(Eplant);
   WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
@@ -2842,7 +2843,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("Catm") = Catm,
         Named("Patm") = Patm[i]);
       try{
-        s = transpirationAdvanced(x, meteovec, 
+        transpOutput = advancedTranspirationCommunicationOutput();
+        transpirationAdvanced(transpOutput, x, meteovec, 
                                 latitude, elevation, slope, aspect,
                                 solarConstant, delta,
                                 canopyEvaporation[i], snowMelt[i], soilEvaporation[i], herbTranspiration[i],
@@ -2852,19 +2854,19 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
       }
-      fillEnergyBalanceDailyOutput(DEB,s, i);
+      fillEnergyBalanceDailyOutput(DEB,transpOutput, i);
       if(control["temperatureResults"]) {
-        fillTemperatureDailyOutput(DT,s, i);
+        fillTemperatureDailyOutput(DT,transpOutput, i);
         if(multiLayerBalance) {
-          fillTemperatureLayersDailyOutput(DLT,s, i);
+          fillTemperatureLayersDailyOutput(DLT,transpOutput, i);
         }
       }
     }
     
     //Update plant daily water output
     fillPlantWaterDailyOutput(plantDWOL, transpOutput, i, transpirationMode);
-    if(transpirationMode!="Granier") fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, s, i);
-    if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, s, i);
+    if(transpirationMode!="Granier") fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, transpOutput, i);
+    if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, transpOutput, i);
     
     List Plants = transpOutput["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
@@ -2878,7 +2880,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     NumericVector HydrInVec(nlayers, 0.0);
 
     if(transpirationMode=="Sperry")  {
-      NumericMatrix soilLayerExtractInst = s["ExtractionInst"];
+      NumericMatrix soilLayerExtractInst = transpOutput["ExtractionInst"];
       for(int l=0;l<nlayers;l++) {
         for(int n=0;n<ntimesteps;n++) {
           HydrInVec[l] += (-1.0)*std::min(soilLayerExtractInst(l,n),0.0);
@@ -2887,7 +2889,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       HydraulicRedistribution[i] = sum(HydrInVec);
       HydrIndays(i,_) = HydrInVec;
     } 
-    List stand = s["Stand"];
+    NumericVector stand = transpOutput["Stand"];
     LAI[i] = stand["LAI"];
     LAIlive[i] = stand["LAIlive"];
     LAIexpanded[i] = stand["LAIexpanded"];
@@ -2897,7 +2899,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     Eplanttot[i] = sum(EplantCoh);
     
     if(subdailyResults) {
-      subdailyRes[i] = clone(s);
+      subdailyRes[i] = copyAdvancedTranspirationOutput(transpOutput, x);
     }
   }
   if(verbose) Rcout << "done\n";

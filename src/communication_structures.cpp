@@ -4,6 +4,7 @@ using namespace Rcpp;
 const int MAX_SOIL_LAYERS = 10;
 const int MAX_CANOPY_LAYERS = 100;
 const int MAX_NUM_COHORTS = 100;
+const int MAX_NUM_TIMESTEPS = 100;
 
 List communicationLongWaveRadiation() {
   NumericVector Lup(MAX_CANOPY_LAYERS, NA_REAL), Ldown(MAX_CANOPY_LAYERS, NA_REAL), Lnet(MAX_CANOPY_LAYERS, NA_REAL);
@@ -86,22 +87,269 @@ List basicTranspirationCommunicationOutput() {
                         _["ExtractionPools"] = ExtractionPools);
   return(l);
 }
+List advancedTranspirationCommunicationOutput() {
+  NumericMatrix SoilWaterExtract(MAX_NUM_COHORTS, MAX_SOIL_LAYERS);
+  std::fill(SoilWaterExtract.begin(), SoilWaterExtract.end(), 0.0);
+  
+  List ExtractionPools(MAX_NUM_COHORTS);
+  for(int c=0;c<MAX_NUM_COHORTS;c++) {
+    NumericMatrix ExtractionPoolsCoh(MAX_NUM_COHORTS, MAX_SOIL_LAYERS);
+    std::fill(ExtractionPoolsCoh.begin(), ExtractionPoolsCoh.end(), 0.0);
+    ExtractionPools[c] = ExtractionPoolsCoh;
+  }
+  
+  NumericMatrix soilLayerExtractInst(MAX_SOIL_LAYERS, MAX_NUM_TIMESTEPS);
+  std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
 
-DataFrame copyDataFrame(DataFrame comm, int numCohorts) {
-  CharacterVector names = comm.attr("names");
-  int n = names.size();
-  DataFrame out; 
+  NumericMatrix minPsiRhizo(MAX_NUM_COHORTS, MAX_SOIL_LAYERS);
+  std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), NA_REAL);
+
+  NumericVector Stand = NumericVector::create(_["LAI"] = NA_REAL,
+                                              _["LAIlive"] = NA_REAL, 
+                                              _["LAIexpanded"] = NA_REAL, 
+                                              _["LAIdead"] = NA_REAL);
+  
+  // ARRANGE OUTPUT
+  NumericVector solarHour(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector Tatm(MAX_NUM_TIMESTEPS, NA_REAL), Tcan(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector Hcansoil(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector Ebalsoil(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector LEVsoil(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector LEFsnow(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector abs_SWR_soil(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector net_LWR_soil(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector abs_SWR_can(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector net_LWR_can(MAX_NUM_TIMESTEPS, NA_REAL);
+  NumericVector LEVcan(MAX_NUM_TIMESTEPS, NA_REAL), Hcan_heat(MAX_NUM_TIMESTEPS, NA_REAL), Ebal(MAX_NUM_TIMESTEPS, NA_REAL);
+  
+  DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                      _["Tatm"] = Tatm, _["Tcan"] = Tcan);
+  DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                        _["SWRcan"] = abs_SWR_can, 
+                                        _["LWRcan"] = net_LWR_can,
+                                        _["LEVcan"] = LEVcan, 
+                                        _["LEFsnow"] = LEFsnow, 
+                                        _["Hcan"] = Hcan_heat, 
+                                        _["Ebalcan"] = Ebal);
+  DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                        _["Hcansoil"] = Hcansoil, 
+                                        _["LEVsoil"] = LEVsoil, 
+                                        _["SWRsoil"] = abs_SWR_soil, 
+                                        _["LWRsoil"] = net_LWR_soil,
+                                        _["Ebalsoil"] = Ebalsoil);
+  NumericMatrix Tcan_mat(MAX_NUM_TIMESTEPS, MAX_CANOPY_LAYERS);
+  NumericMatrix VPcan_mat(MAX_NUM_TIMESTEPS, MAX_CANOPY_LAYERS);
+  NumericMatrix Tsoil_mat(MAX_NUM_TIMESTEPS, MAX_SOIL_LAYERS);
+  List EB = List::create(_["Temperature"]=Tinst, 
+                         _["SoilTemperature"] = Tsoil_mat,
+                         _["CanopyEnergyBalance"] = CEBinst, 
+                         _["SoilEnergyBalance"] = SEBinst,
+                         _["TemperatureLayers"] = Tcan_mat, 
+                         _["VaporPressureLayers"] = VPcan_mat);
+  
+  NumericVector LAI(MAX_NUM_COHORTS,0.0);
+  NumericVector LAIlive(MAX_NUM_COHORTS,0.0);
+  NumericVector PARcohort(MAX_NUM_COHORTS,0.0);
+  NumericVector SoilExtractCoh(MAX_NUM_COHORTS,0.0);
+  NumericVector DDS(MAX_NUM_COHORTS, 0.0), LFMC(MAX_NUM_COHORTS, 0.0);
+  NumericVector Eplant(MAX_NUM_COHORTS, 0.0), Anplant(MAX_NUM_COHORTS, 0.0), Agplant(MAX_NUM_COHORTS, 0.0);
+  NumericVector minStemPsi(MAX_NUM_COHORTS, NA_REAL), minRootPsi(MAX_NUM_COHORTS,NA_REAL); //Minimum potentials experienced
+  NumericVector minLeafPsi(MAX_NUM_COHORTS,NA_REAL), maxLeafPsi(MAX_NUM_COHORTS,NA_REAL); 
+  NumericVector PLClm(MAX_NUM_COHORTS, NA_REAL), PLCsm(MAX_NUM_COHORTS, NA_REAL);
+  NumericVector dEdPm(MAX_NUM_COHORTS, NA_REAL), PWB(MAX_NUM_COHORTS,0.0);
+  NumericVector RWCsm(MAX_NUM_COHORTS, NA_REAL), RWClm(MAX_NUM_COHORTS, NA_REAL);
+  
+  DataFrame Plants = DataFrame::create(_["LAI"] = LAI,
+                                       _["LAIlive"] = LAIlive,
+                                       _["FPAR"] = PARcohort,
+                                       _["Extraction"] = SoilExtractCoh,
+                                       _["Transpiration"] = Eplant,
+                                       _["GrossPhotosynthesis"] = Agplant,
+                                       _["NetPhotosynthesis"] = Anplant,
+                                       _["RootPsi"] = minRootPsi, 
+                                       _["StemPsi"] = minStemPsi, 
+                                       _["LeafPLC"] = PLClm, //Average daily leaf PLC
+                                       _["StemPLC"] = PLCsm, //Average daily stem PLC
+                                       _["LeafPsiMin"] = minLeafPsi, 
+                                       _["LeafPsiMax"] = maxLeafPsi, 
+                                       _["dEdP"] = dEdPm,//Average daily soilplant conductance
+                                       _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
+                                       _["StemRWC"] = RWCsm,
+                                       _["LeafRWC"] = RWClm,
+                                       _["LFMC"] = LFMC,
+                                       _["WaterBalance"] = PWB);
+
+  NumericVector maxGSW_SL(MAX_NUM_COHORTS,NA_REAL), maxGSW_SH(MAX_NUM_COHORTS,NA_REAL); 
+  NumericVector minGSW_SL(MAX_NUM_COHORTS,NA_REAL), minGSW_SH(MAX_NUM_COHORTS,NA_REAL); 
+  NumericVector maxTemp_SL(MAX_NUM_COHORTS,NA_REAL), maxTemp_SH(MAX_NUM_COHORTS,NA_REAL); 
+  NumericVector minTemp_SL(MAX_NUM_COHORTS,NA_REAL), minTemp_SH(MAX_NUM_COHORTS,NA_REAL); 
+  NumericVector minLeafPsi_SL(MAX_NUM_COHORTS,NA_REAL), maxLeafPsi_SL(MAX_NUM_COHORTS,NA_REAL); 
+  NumericVector minLeafPsi_SH(MAX_NUM_COHORTS,NA_REAL), maxLeafPsi_SH(MAX_NUM_COHORTS,NA_REAL);
+  
+  DataFrame Sunlit = DataFrame::create(
+    _["LeafPsiMin"] = minLeafPsi_SL, 
+    _["LeafPsiMax"] = maxLeafPsi_SL, 
+    _["GSWMin"] = minGSW_SL,
+    _["GSWMax"] = maxGSW_SL,
+    _["TempMin"] = minTemp_SL,
+    _["TempMax"] = maxTemp_SL  
+  );
+  DataFrame Shade = DataFrame::create(
+    _["LeafPsiMin"] = minLeafPsi_SH, 
+    _["LeafPsiMax"] = maxLeafPsi_SH, 
+    _["GSWMin"] = minGSW_SH,
+    _["GSWMax"] = maxGSW_SH,
+    _["TempMin"] = minTemp_SH,
+    _["TempMax"] = maxTemp_SH  
+  );
+
+  
+  NumericMatrix Einst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Aninst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), Aginst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix dEdPInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LeafPsiInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), StemPsiInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix RootPsiInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LeafSympPsiInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), StemSympPsiInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix StemPLC(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), LeafPLC(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LeafRWCInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), StemRWCInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LeafSympRWCInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), StemSympRWCInst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix PWBinst(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+
+  List PlantsInst = List::create(
+    _["E"]=Einst, _["Ag"]=Aginst, _["An"]=Aninst,
+    _["dEdP"] = dEdPInst,
+    _["RootPsi"] = RootPsiInst, 
+    _["StemPsi"] = StemPsiInst,
+    _["LeafPsi"] = LeafPsiInst,
+    _["StemSympPsi"] = StemSympPsiInst,
+    _["LeafSympPsi"] = LeafSympPsiInst,
+    _["StemPLC"] = StemPLC, 
+    _["LeafPLC"] = LeafPLC, 
+    _["StemRWC"] = StemRWCInst,
+    _["LeafRWC"] = LeafRWCInst,
+    _["StemSympRWC"] = StemSympRWCInst,
+    _["LeafSympRWC"] = LeafSympRWCInst,
+    _["PWB"] = PWBinst);
+  
+  NumericMatrix LAI_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LAI_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Vmax298_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Vmax298_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Jmax298_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Jmax298_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix SWR_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix SWR_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix PAR_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix PAR_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LWR_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix LWR_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix An_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), Ag_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix An_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS), Ag_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Ci_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Ci_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix E_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix E_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix GSW_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix GSW_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix VPD_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix VPD_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Temp_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Temp_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Psi_SL(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+  NumericMatrix Psi_SH(MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
+
+  List ShadeInst = List::create(
+    _["LAI"] = LAI_SH,
+    _["Vmax298"] = Vmax298_SH,
+    _["Jmax298"] = Jmax298_SH,
+    _["Abs_SWR"] = SWR_SH,
+    _["Abs_PAR"]=PAR_SH,
+    _["Net_LWR"] = LWR_SH,
+    _["Ag"] = Ag_SH,
+    _["An"] = An_SH,
+    _["Ci"] = Ci_SH,
+    _["E"] = E_SH,
+    _["Gsw"] = GSW_SH,
+    _["VPD"] = VPD_SH,
+    _["Temp"] = Temp_SH,
+    _["Psi"] = Psi_SH);
+  List SunlitInst = List::create(
+    _["LAI"] = LAI_SL,
+    _["Vmax298"] = Vmax298_SL,
+    _["Jmax298"] = Jmax298_SL,
+    _["Abs_SWR"]=SWR_SL,
+    _["Abs_PAR"]=PAR_SL,
+    _["Net_LWR"] = LWR_SL,
+    _["Ag"] = Ag_SL,
+    _["An"] = An_SL,
+    _["Ci"] = Ci_SL,
+    _["E"] = E_SL,
+    _["Gsw"] = GSW_SL,
+    _["VPD"] = VPD_SL,
+    _["Temp"] = Temp_SL,
+    _["Psi"] = Psi_SL);
+  
+  List lwrExtinctionList(MAX_NUM_TIMESTEPS);
+  for(int n=0;n<MAX_NUM_TIMESTEPS;n++) {
+    lwrExtinctionList[n] = communicationLongWaveRadiation();
+  }
+  List supply(MAX_NUM_COHORTS); 
+  for(int c=0;c<MAX_NUM_COHORTS;c++) {
+    supply[c] = List::create(); //To be replaced
+  }
+
+  List l = List::create(_["EnergyBalance"] = EB,
+                        _["Extraction"] = SoilWaterExtract,
+                        _["ExtractionPools"] = ExtractionPools,
+                        _["RhizoPsi"] = minPsiRhizo,
+                        _["Stand"] = Stand,
+                        _["Plants"] = Plants,
+                        _["SunlitLeaves"] = Sunlit,
+                        _["ShadeLeaves"] = Shade,
+                        _["ExtractionInst"] = soilLayerExtractInst,
+                        _["RadiationInputInst"] = DataFrame::create(), //To be replaced
+                        _["PlantsInst"] = PlantsInst,
+                        _["SunlitLeavesInst"] = SunlitInst,
+                        _["ShadeLeavesInst"] = ShadeInst,
+                        _["LightExtinction"] = List::create(), //To be replaced
+                        _["LWRExtinction"] = lwrExtinctionList,
+                        _["CanopyTurbulence"] = communicationCanopyTurbulence()); //To be replaced
+  
+  List outPhotoSunlit(MAX_NUM_COHORTS);
+  List outPhotoShade(MAX_NUM_COHORTS);
+  List outPMSunlit(MAX_NUM_COHORTS);
+  List outPMShade(MAX_NUM_COHORTS);
+  l.push_back(supply, "SupplyFunctions");
+  l.push_back(outPhotoSunlit, "PhotoSunlitFunctions");
+  l.push_back(outPhotoShade, "PhotoShadeFunctions");
+  l.push_back(outPMSunlit, "PMSunlitFunctions");
+  l.push_back(outPMShade, "PMShadeFunctions");
+  
+  l.attr("class") = CharacterVector::create("pwb_day","list");
+  return(l);
+}
+DataFrame copyDataFrame(DataFrame comm, int numRows) {
+  CharacterVector colnames = comm.attr("names");
+  int n = colnames.size();
+  List out(n); 
   for(int i = 0;i<n;i++) {
-    String nameCol = names[i];
+    String nameCol = colnames[i];
     NumericVector vecIn = comm[nameCol];
-    NumericVector vecOut(n);
-    for(int c = 0;c<numCohorts;c++) {
+    NumericVector vecOut(numRows);
+    for(int c = 0;c<numRows;c++) {
       vecOut[c] = vecIn[c];
     }
-    if(i==0) {
-      out = DataFrame::create(_[nameCol] = vecOut);
-    } else {
-      out.push_back(vecOut, nameCol);
+    out[i] = vecOut;
+  }
+  out.attr("names") = clone(colnames);
+  DataFrame dfout(out);
+  return(dfout);
+}
+NumericMatrix copyNumericMatrix(NumericMatrix comm, int rows, int cols) {
+  NumericMatrix out(rows, cols);
+  for(int r=0;r<rows;r++) {
+    for(int c=0;c<cols; c++) {
+      out(r, c) = comm(r, c);
     }
   }
   return(out);
@@ -113,38 +361,24 @@ List copyBasicTranspirationOutput(List btc, List x) {
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
+  int nlayers = soil.nrow();
   int numCohorts = above.nrow();
   
-  NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
   NumericMatrix ExtractionComm = btc["Extraction"];
-  for(int c=0;c<numCohorts;c++) {
-    for(int l=0;l<nlayers; l++) {
-      Extraction(c,l) = ExtractionComm(c, l);
-    }
-  }
+  NumericMatrix Extraction = copyNumericMatrix(ExtractionComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
   Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   
   List ExtractionPools(numCohorts);
   List ExtractionPoolsComm = btc["ExtractionPools"];
   if(plantWaterPools) {
     for(int c=0;c<numCohorts;c++) {
-      NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers);
       NumericMatrix ExtractionPoolsCohComm = ExtractionPoolsComm[c];
-      for(int c2=0;c2<numCohorts;c2++) {
-        for(int l=0;l<nlayers; l++) {
-          ExtractionPoolsCoh(c2,l) = ExtractionPoolsCohComm(c2, l);
-        }
-      }
-      ExtractionPools[c] = ExtractionPoolsCoh;
+      ExtractionPools[c] = copyNumericMatrix(ExtractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
     }
   }
   
   NumericVector StandComm = btc["Stand"];
-  NumericVector Stand = NumericVector::create(_["LAI"] = StandComm["LAI"],
-                                              _["LAIlive"] = StandComm["LAIlive"], 
-                                              _["LAIexpanded"] = StandComm["LAIexpanded"], 
-                                              _["LAIdead"] = StandComm["LAIdead"]);
+  NumericVector Stand = clone(StandComm);
   
   DataFrame PlantsComm = Rcpp::as<Rcpp::DataFrame>(btc["Plants"]);
   DataFrame Plants = copyDataFrame(PlantsComm, numCohorts);
@@ -157,7 +391,7 @@ List copyBasicTranspirationOutput(List btc, List x) {
                         _["ExtractionPools"] = ExtractionPools);
   return(l);
 }
-List advancedTranspirationOutput(List x) {
+List copyAdvancedTranspirationOutput(List atc, List x) {
   List control = x["control"];
   int ntimesteps = control["ndailysteps"];
   String transpirationMode = control["transpirationMode"];
@@ -166,14 +400,15 @@ List advancedTranspirationOutput(List x) {
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
+  int nlayers = soil.nrow();
   int numCohorts = above.nrow();
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   NumericVector Tair = canopyParams["Tair"];
   int ncanlayers = Tair.size(); //Number of canopy layers
   
-  NumericMatrix SoilWaterExtract(numCohorts, nlayers);
-  std::fill(SoilWaterExtract.begin(), SoilWaterExtract.end(), 0.0);
+  NumericMatrix SoilWaterExtractComm = atc["Extraction"];
+  NumericMatrix SoilWaterExtract = copyNumericMatrix(SoilWaterExtractComm, numCohorts, nlayers);
+  SoilWaterExtract.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   
   List ExtractionPools(numCohorts);
   if(plantWaterPools) {
@@ -193,10 +428,8 @@ List advancedTranspirationOutput(List x) {
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   
   
-  NumericVector Stand = NumericVector::create(_["LAI"] = NA_REAL,
-                                              _["LAIlive"] = NA_REAL, 
-                                              _["LAIexpanded"] = NA_REAL, 
-                                              _["LAIdead"] = NA_REAL);
+  NumericVector StandComm = atc["Stand"];
+  NumericVector Stand = clone(StandComm);
   
   // ARRANGE OUTPUT
   NumericVector solarHour(ntimesteps, NA_REAL);
@@ -847,24 +1080,24 @@ void addCommunicationStructures(List x) {
   String transpirationMode = control["transpirationMode"];
   List ic = as<List>(x["internalCommunication"]);
   ic.push_back(basicTranspirationCommunicationOutput(), "basicTranspirationOutput"); 
-  List communicationOutputTransp = ic["basicTranspirationOutput"];
-  if(transpirationMode=="Granier") {
-    if(!ic.containsElementNamed("modelOutput")) {
-      if(model=="spwb") ic.push_back(basicSPWBOutput(x, communicationOutputTransp), "modelOutput"); 
-      else ic.push_back(basicGROWTHOutput(x, communicationOutputTransp), "modelOutput"); 
-    } 
-  } else {
-    DataFrame paramsCanopydf = as<DataFrame>(x["canopy"]);
-    if(!ic.containsElementNamed("transpirationOutput")) ic.push_back(advancedTranspirationOutput(x), "transpirationOutput"); 
-    List outputTransp = ic["transpirationOutput"];
-    if(!ic.containsElementNamed("modelOutput")) {
-      if(model=="spwb") ic.push_back(advancedSPWBOutput(x, outputTransp), "modelOutput"); 
-      else ic.push_back(advancedGROWTHOutput(x, outputTransp), "modelOutput"); 
-    } 
-  }
-  if(model=="growth") {
-    if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(), "initialFinalCC");
-  }
+  ic.push_back(advancedTranspirationCommunicationOutput(), "advancedTranspirationOutput"); 
+  // List communicationOutputTransp = ic["basicTranspirationOutput"];
+  // if(transpirationMode=="Granier") {
+  //   if(!ic.containsElementNamed("modelOutput")) {
+  //     if(model=="spwb") ic.push_back(basicSPWBOutput(x, communicationOutputTransp), "modelOutput"); 
+  //     else ic.push_back(basicGROWTHOutput(x, communicationOutputTransp), "modelOutput"); 
+  //   } 
+  // } else {
+  //   DataFrame paramsCanopydf = as<DataFrame>(x["canopy"]);
+  //   List outputTransp = ic["transpirationOutput"];
+  //   if(!ic.containsElementNamed("modelOutput")) {
+  //     if(model=="spwb") ic.push_back(advancedSPWBOutput(x, outputTransp), "modelOutput"); 
+  //     else ic.push_back(advancedGROWTHOutput(x, outputTransp), "modelOutput"); 
+  //   } 
+  // }
+  // if(model=="growth") {
+  //   if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(), "initialFinalCC");
+  // }
   x["internalCommunication"] = ic;
 }
 
