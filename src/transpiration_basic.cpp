@@ -61,12 +61,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   DataFrame outputPlants = as<DataFrame>(transpOutput["Plants"]);
   NumericMatrix outputExtraction = as<NumericMatrix>(transpOutput["Extraction"]);
   List outputExtractionPools = transpOutput["ExtractionPools"];
-  List internalLAIDistribution = internalCommunication["internalLAIDistribution"];
-  NumericMatrix LAIme = internalLAIDistribution["expanded"];
-  NumericMatrix LAImd = internalLAIDistribution["dead"];
-  NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
-  NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
-  NumericVector PARcohort = internalLAIDistribution["PARcohort"];
+
   
   //Control parameters
   List control = x["control"];
@@ -100,7 +95,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
   double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
     
-
+    
   // Canopy
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   
@@ -193,7 +188,13 @@ List transpirationBasic(List x, NumericVector meteovec,
   NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
   NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-
+  //LAI distribution
+  List internalLAIDistribution = x["internalLAIDistribution"];
+  NumericMatrix LAIme = internalLAIDistribution["expanded"];
+  NumericMatrix LAImd = internalLAIDistribution["dead"];
+  NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
+  NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
+  NumericVector PARcohort = internalLAIDistribution["PARcohort"];
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;

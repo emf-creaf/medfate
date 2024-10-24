@@ -67,13 +67,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   DataFrame outputSEBinst =  as<DataFrame>(outputEnergyBalance["SoilEnergyBalance"]);
   List lwrExtinctionList = transpOutput["LWRExtinction"];
   List supply = transpOutput["SupplyFunctions"]; 
-  List internalLAIDistribution = internalCommunication["internalLAIDistribution"];
-  NumericMatrix LAImx = internalLAIDistribution["live"];
-  NumericMatrix LAIme = internalLAIDistribution["expanded"];
-  NumericMatrix LAImd = internalLAIDistribution["dead"];
-  NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
-  NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
-  NumericVector PARcohort = internalLAIDistribution["PARcohort"];
+
   
   //Control parameters
   List control = x["control"];
@@ -227,6 +221,13 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
   NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+  List internalLAIDistribution = x["internalLAIDistribution"];
+  NumericMatrix LAImx = internalLAIDistribution["live"];
+  NumericMatrix LAIme = internalLAIDistribution["expanded"];
+  NumericMatrix LAImd = internalLAIDistribution["dead"];
+  NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
+  NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
+  NumericVector PARcohort = internalLAIDistribution["PARcohort"];
   
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;

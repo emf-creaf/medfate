@@ -1,5 +1,7 @@
-# medfate 4.7.1
+# medfate 4.8.0
 * Code optimization: LAI distribution
+* Using ANSI C in internal vectors
+* Global communication structures
 
 # medfate 4.7.0
 * LAI can be estimated without the competition effect of cohorts of larger size

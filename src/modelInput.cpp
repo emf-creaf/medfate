@@ -1053,6 +1053,30 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
+List internalLAIDistribution(DataFrame above, DataFrame canopyParams) {
+  int numCohorts = above.nrow();
+  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
+  NumericVector PARcohort(numCohorts,0.0);
+  NumericVector PrevLAIexpanded(numCohorts,0.0);
+  NumericVector PrevLAIdead(numCohorts,0.0);
+  
+  // double h1, h2;
+  NumericMatrix LAImx(ncanlayers, numCohorts);
+  NumericMatrix LAIme(ncanlayers, numCohorts);
+  NumericMatrix LAImd(ncanlayers, numCohorts);
+  LAImx.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("rownames"));
+  LAIme.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("rownames"));
+  LAImd.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("rownames"));
+  LAImx.fill(0.0);
+  LAIme.fill(0.0);
+  LAImd.fill(0.0);
+  return(List::create(_["PrevLAIexpanded"] = PrevLAIexpanded,
+                      _["PrevLAIdead"] = PrevLAIdead,
+                      _["PARcohort"] = PARcohort,
+                      _["live"] = LAImx,
+                      _["expanded"] = LAIme,
+                      _["dead"] = LAImd));
+}
 
 
 DataFrame paramsCanopy(DataFrame above, List control) {
@@ -1195,6 +1219,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                             _["paramsWaterStorage"] = paramsWaterStoragedf,
                             _["internalPhenology"] = internalPhenologyDataFrame(above),
                             _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                            _["internalLAIDistribution"] = internalLAIDistribution(above, paramsCanopydf),
                             _["internalFCCS"] = FCCSprops);
   List internalCommunication = List::create();
   input.push_back(internalCommunication, "internalCommunication");                       
@@ -1341,6 +1366,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                        _["paramsAllometries"] = paramsAllometriesdf,
                        _["internalPhenology"] = internalPhenologyDataFrame(above),
                        _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
+  input.push_back(internalLAIDistribution(above, paramsCanopydf),"internalLAIDistribution");
   input.push_back(internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
                                           paramsAnatomydf, 
                                           paramsWaterStoragedf,

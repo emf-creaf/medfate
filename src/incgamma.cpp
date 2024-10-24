@@ -1835,11 +1835,13 @@ double invincgam(double a, double p, double q) {
           px = pq[0];
           qx = pq[1];
           ck[0]=-r*(px-p);
+          delete[] pq;
         } else {
           double* pq = incgam(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=r*(qx-q);
+          delete[] pq;
         }
         ck[1]=(x-a+1.0)/(2.0*x);
         ck[2]=(2.0*x2-4.0*x*a+4.0*x+2.0*a2-3.0*a+1.0)/(6.0*x2);
@@ -1864,11 +1866,13 @@ double invincgam(double a, double p, double q) {
         px = pq[0];
         qx = pq[1];
         ck[0]=-r*(px-p);
+        delete[] pq;
       } else {
         double* pq = incgam(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=r*(qx-q);
+        delete[] pq;
       }
       ck[1]=(x-a+1.0)/(2.0*x);
       ck[2]=(2.0*x2-4.0*x*a+4.0*x+2.0*a2-3.0*a+1.0)/(6.0*x2);

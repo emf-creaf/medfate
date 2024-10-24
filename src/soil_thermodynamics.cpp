@@ -244,6 +244,19 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
   double* tempch = tridiagonalSolving(a,b,c,d, nlayers);
   NumericVector out(nlayers);
   for(int l=0;l<nlayers;l++) out[l] = tempch[l];
+  delete[] tempch;
+  delete[] dZ_m;
+  delete[] dZUp;
+  delete[] dZDown;
+  delete[] Zcent;
+  delete[] Zup;
+  delete[] Zdown;
+  delete[] k_up;
+  delete[] k_down;
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
   return(out);
 }
 // NumericVector temperatureChange(NumericVector widths, NumericVector Temp,

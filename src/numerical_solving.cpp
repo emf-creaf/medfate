@@ -23,6 +23,8 @@ double* tridiagonalSolving(double* a, double* b, double* c, double* d, int n) {
   for(int i = (n - 2);i>=0;i--) {
     u[i] = f[i] - e[i]*u[i + 1];
   }  
+  delete[] e;
+  delete[] f;
   return(u);
 }
 

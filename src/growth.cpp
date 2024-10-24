@@ -155,8 +155,8 @@ void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
   int numCohorts = Nfinal.length();
   
   List internalCommunication = x["internalCommunication"];
-  List internalCC = internalCommunication["internalCC"];
-  DataFrame ccFin = as<DataFrame>(internalCC["ccFin_g_ind"]);
+  List initialFinalCC = internalCommunication["initialFinalCC"];
+  DataFrame ccFin = as<DataFrame>(initialFinalCC["ccFin_g_ind"]);
   fillCarbonCompartments(ccFin, x, "g_ind");
   
   NumericVector finalSapwoodBiomass_ind= Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]);
@@ -683,8 +683,8 @@ List growthDayInner(List x, NumericVector meteovec,
   double rcellmax = relative_expansion_rate(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
   
   //Initial Biomass balance
-  List internalCC = internalCommunication["internalCC"];
-  DataFrame ccIni = as<DataFrame>(internalCC["ccIni_g_ind"]);
+  List initialFinalCC = internalCommunication["initialFinalCC"];
+  DataFrame ccIni = as<DataFrame>(initialFinalCC["ccIni_g_ind"]);
   fillCarbonCompartments(ccIni, x, "g_ind");
   NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
   

@@ -1544,6 +1544,53 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                   _["VolumeChange"] = Vfin_mm - Vini0_mm,
                                   _["Substeps"] = (double) total_nsubsteps);
     } 
+    
+    delete[] dZ_m;
+    delete[] dZUp;
+    delete[] dZDown;
+    delete[] lambda;
+    delete[] theta_micro;
+    delete[] theta_b;
+    delete[] theta_macro;
+    delete[] theta_sat_fict;
+    delete[] Ksat_b;
+    delete[] Ksat_b_ms;
+    delete[] Ksat;
+    delete[] Ksat_ms;
+    delete[] Psi;
+    delete[] K;
+    delete[] C;
+    delete[] Psi_m;
+    delete[] K_ms;
+    delete[] Kbc;
+    delete[] Kbc_ms;
+    delete[] C_m;
+    delete[] S_macro;
+    delete[] e_macro;
+    delete[] Kmacro_ms;
+    delete[] waterFluidity;
+    delete[] a;
+    delete[] b;
+    delete[] c;
+    delete[] d;
+    delete[] K_step_ms05;
+    delete[] C_step_m05;
+    delete[] C_step;
+    delete[] C_step_m;
+    delete[] K_step_ms;
+    delete[] K_step;
+    delete[] Psi_step;
+    delete[] Psi_step_m;
+    delete[] S_macro_step;
+    delete[] Kmacro_step_ms;
+    delete[] theta_macro_step;
+    delete[] theta_micro_step;
+    delete[] finalSourceSinks_m3s;
+    delete[] capill_below;
+    delete[] drain_above;
+    delete[] drain_below;
+    delete[] lateral_flows_step_mm;
+
   }
 
   return(res);

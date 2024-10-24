@@ -7,6 +7,3 @@ using namespace Rcpp;
 
 void addCommunicationStructures(List x);
 void clearCommunicationStructures(List x);
-
-List internalLongWaveRadiation(int ncanlayers);
-DataFrame internalCarbonCompartments(DataFrame above);

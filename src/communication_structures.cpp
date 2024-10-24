@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-List internalLongWaveRadiation(int ncanlayers) {
+List communicationLongWaveRadiation(int ncanlayers) {
   NumericVector Lup(ncanlayers, NA_REAL), Ldown(ncanlayers, NA_REAL), Lnet(ncanlayers, NA_REAL);
   NumericVector tau(ncanlayers, NA_REAL), sumTauComp(ncanlayers, NA_REAL);
   DataFrame LWR_layer = DataFrame::create(_["tau"] = tau,
@@ -19,7 +19,7 @@ List internalLongWaveRadiation(int ncanlayers) {
                                  _["Lnet_cohort_layer"] = NA_REAL);
   return(lwr_struct);
 }
-DataFrame internalCanopyTurbulence(int ncanlayers) {
+DataFrame communicationCanopyTurbulence(int ncanlayers) {
   DataFrame output = DataFrame::create(Named("zmid") = NumericVector(ncanlayers, NA_REAL),
                                        Named("u") = NumericVector(ncanlayers, NA_REAL),
                                        Named("du") = NumericVector(ncanlayers, NA_REAL),
@@ -27,29 +27,6 @@ DataFrame internalCanopyTurbulence(int ncanlayers) {
                                        Named("k") = NumericVector(ncanlayers, NA_REAL),
                                        Named("uw") = NumericVector(ncanlayers, NA_REAL));
   return(output);
-}
-List internalLAIDistribution(List x) {
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  int numCohorts = above.nrow();
-  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
-  NumericVector PARcohort(numCohorts,0.0);
-  NumericVector PrevLAIexpanded(numCohorts,0.0);
-  NumericVector PrevLAIdead(numCohorts,0.0);
-
-  // double h1, h2;
-  NumericMatrix LAImx(ncanlayers, numCohorts);
-  NumericMatrix LAIme(ncanlayers, numCohorts);
-  NumericMatrix LAImd(ncanlayers, numCohorts);
-  LAImx.fill(0.0);
-  LAIme.fill(0.0);
-  LAImd.fill(0.0);
-  return(List::create(_["PrevLAIexpanded"] = PrevLAIexpanded,
-                      _["PrevLAIdead"] = PrevLAIdead,
-                      _["PARcohort"] = PARcohort,
-                      _["live"] = LAImx,
-                      _["expanded"] = LAIme,
-                      _["dead"] = LAImd));
 }
 
 List basicTranspirationOutput(List x) {
@@ -392,7 +369,7 @@ List advancedTranspirationOutput(List x) {
   
   List lwrExtinctionList(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
-    lwrExtinctionList[n] = internalLongWaveRadiation(ncanlayers);
+    lwrExtinctionList[n] = communicationLongWaveRadiation(ncanlayers);
   }
   List supply(numCohorts); 
   for(int c=0;c<numCohorts;c++) {
@@ -416,7 +393,7 @@ List advancedTranspirationOutput(List x) {
                         _["ShadeLeavesInst"] = ShadeInst,
                         _["LightExtinction"] = List::create(), //To be replaced
                         _["LWRExtinction"] = lwrExtinctionList,
-                        _["CanopyTurbulence"] = internalCanopyTurbulence(ncanlayers)); //To be replaced
+                        _["CanopyTurbulence"] = communicationCanopyTurbulence(ncanlayers)); //To be replaced
   
   List outPhotoSunlit(numCohorts);
   List outPhotoShade(numCohorts);
@@ -772,7 +749,7 @@ List advancedGROWTHOutput(List x, List outputTransp) {
   return(l);
 }
 
-DataFrame internalCarbonCompartments(DataFrame above) {
+DataFrame communicationCarbonCompartments(DataFrame above) {
   int numCohorts = above.nrow();
   DataFrame df = DataFrame::create(
     _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
@@ -794,8 +771,8 @@ DataFrame internalCarbonCompartments(DataFrame above) {
   return(df);
 }
 
-List dailyInternalCarbonCompartments(DataFrame above) {
-  DataFrame ccFin_g_ind = internalCarbonCompartments(above);
+List communicationInitialFinalCarbonCompartments(DataFrame above) {
+  DataFrame ccFin_g_ind = communicationCarbonCompartments(above);
   DataFrame ccIni_g_ind = clone(ccFin_g_ind);
   List l = List::create(_["ccIni_g_ind"] = ccIni_g_ind,
                         _["ccFin_g_ind"] = ccFin_g_ind);
@@ -826,12 +803,9 @@ void addCommunicationStructures(List x) {
       else ic.push_back(advancedGROWTHOutput(x, outputTransp), "modelOutput"); 
     } 
   }
-  if(!ic.containsElementNamed("internalLAIDistribution")) {
-    ic.push_back(internalLAIDistribution(x), "internalLAIDistribution");
-  }
   if(model=="growth") {
     DataFrame above = as<DataFrame>(x["above"]);
-    if(!ic.containsElementNamed("internalCC")) ic.push_back(dailyInternalCarbonCompartments(above), "internalCC");
+    if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(above), "initialFinalCC");
   }
   x["internalCommunication"] = ic;
 }

@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-#include "communication_structures.h"
 #include "tissuemoisture.h"
 #include "biophysicsutils.h"
 using namespace Rcpp;
@@ -353,7 +352,24 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
 // [[Rcpp::export("carbon_carbonCompartments")]]
 DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   DataFrame above = as<DataFrame>(x["above"]);
-  DataFrame cc = internalCarbonCompartments(above);
+  int numCohorts = above.nrow();
+  DataFrame cc = DataFrame::create(
+    _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStorageVolume"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafStarchMaximumConcentration"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStarchMaximumConcentration"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafStarchCapacity"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStarchCapacity"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodLivingStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["StructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["LabileBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["TotalLivingBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["TotalBiomass"] = NumericVector(numCohorts, NA_REAL)
+  );
+  cc.attr("row.names") = above.attr("row.names");
   fillCarbonCompartments(cc, x, biomassUnits);
   return(cc);
 }
