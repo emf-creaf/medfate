@@ -148,19 +148,18 @@ void fillInitialPlantBiomassBalance(DataFrame plantBiomassBalance, DataFrame ccI
 }
 
 
-void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
+void closePlantBiomassBalance(List initialFinalCC, DataFrame plantBiomassBalance, List x,
                          NumericVector LabileCarbonBalance,
                          NumericVector LeafBiomassBalance,
                          NumericVector FineRootBiomassBalance) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  int numCohorts = above.nrow();
+  
   NumericVector Nfinal = above["N"];
-  int numCohorts = Nfinal.size();
 
-  List internalCommunication = x["internalCommunication"];
-  List initialFinalCC = internalCommunication["initialFinalCC"];
   DataFrame ccFin = as<DataFrame>(initialFinalCC["ccFin_g_ind"]);
   fillCarbonCompartments(ccFin, x, "g_ind");
-  
+
   NumericVector finalSapwoodBiomass_ind= Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]);
   NumericVector plantFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
   NumericVector cohortFinalBiomass_m2 = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
@@ -1433,9 +1432,9 @@ List growthDayInner(List internalCommunication, List x, NumericVector meteovec,
   }
 
   //CLOSE BIOMASS BALANCE
-  closePlantBiomassBalance(plantBiomassBalance, x,
+  closePlantBiomassBalance(initialFinalCC, plantBiomassBalance, x,
                            LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
-  
+
   //Update pool proportions and rhizosphere overlap
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
@@ -1611,7 +1610,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   
   //Instance communication structures
   List internalCommunication = instanceCommunicationStructures(x);
-  
+
   NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday,
     Named("tmin") = tmin, 

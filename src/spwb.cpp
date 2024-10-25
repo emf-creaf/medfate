@@ -171,7 +171,19 @@ List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   List modelOutputComm = internalCommunication["basicSPWBOutput"];
   List transpOutput = internalCommunication["basicTranspirationOutput"];
   
-  modelOutputComm["weather"] = clone(meteovec);
+  NumericVector weather = modelOutputComm["weather"];
+  weather["tday"] = meteovec["tday"];
+  weather["prec"] = meteovec["prec"];
+  weather["tmin"] = meteovec["tmin"];
+  weather["tmax"] = meteovec["tmax"];
+  weather["rhmin"] = meteovec["rhmin"];
+  weather["rhmax"] = meteovec["rhmax"];
+  weather["rad"] = meteovec["rad"];
+  weather["wind"] = meteovec["wind"];
+  weather["Catm"] = meteovec["Catm"];
+  weather["Patm"] = meteovec["Patm"];
+  weather["pet"] = meteovec["pet"];
+  weather["rint"] = meteovec["rint"];
   NumericVector topo = modelOutputComm["topography"];
   topo["elevation"] = elevation;
   topo["slope"] = slope;
@@ -192,7 +204,7 @@ List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   //Soil parameters
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
+  int nlayers = soil.nrow();
   NumericVector Wsoil = soil["W"];
   NumericVector Tsoil = soil["Temp"];
   
@@ -471,7 +483,22 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   List modelOutputComm = internalCommunication["advancedSPWBOutput"];
   List transpOutput = internalCommunication["advancedTranspirationOutput"];
   
-  modelOutputComm["weather"] = clone(meteovec);
+  NumericVector weather = modelOutputComm["weather"];
+  weather["tday"] = meteovec["tday"];
+  weather["prec"] = meteovec["prec"];
+  weather["tmin"] = meteovec["tmin"];
+  weather["tmax"] = meteovec["tmax"];
+  weather["tminPrev"] = meteovec["tminPrev"];
+  weather["tmaxPrev"] = meteovec["tmaxPrev"];
+  weather["tminNext"] = meteovec["tminNext"];
+  weather["rhmin"] = meteovec["rhmin"];
+  weather["rhmax"] = meteovec["rhmax"];
+  weather["rad"] = meteovec["rad"];
+  weather["wind"] = meteovec["wind"];
+  weather["Catm"] = meteovec["Catm"];
+  weather["Patm"] = meteovec["Patm"];
+  weather["pet"] = meteovec["pet"];
+  weather["rint"] = meteovec["rint"];
   NumericVector topo = modelOutputComm["topography"];
   topo["elevation"] = elevation;
   topo["slope"] = slope;

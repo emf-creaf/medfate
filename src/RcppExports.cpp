@@ -474,16 +474,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// clearCommunicationStructures
-void clearCommunicationStructures(List x);
-RcppExport SEXP _medfate_clearCommunicationStructures(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    clearCommunicationStructures(x);
-    return R_NilValue;
-END_RCPP
-}
 // criticalFirelineIntensity
 double criticalFirelineIntensity(double CBH, double M);
 RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
@@ -5868,7 +5858,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 1},
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 0},
-    {"_medfate_clearCommunicationStructures", (DL_FUNC) &_medfate_clearCommunicationStructures, 1},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
