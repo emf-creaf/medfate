@@ -243,6 +243,8 @@ List advancedTranspirationCommunicationOutput(int numCohorts, int nlayers, int n
     _["TempMin"] = minTemp_SL,
     _["TempMax"] = maxTemp_SL  
   );
+  Rcout<<Sunlit.nrow()<<"\n";
+  
   DataFrame Shade = DataFrame::create(
     _["LeafPsiMin"] = minLeafPsi_SH, 
     _["LeafPsiMax"] = maxLeafPsi_SH, 

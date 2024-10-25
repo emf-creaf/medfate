@@ -459,21 +459,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   NumericVector minStemPsi = Plants["StemPsi"];
   NumericVector minRootPsi = Plants["RootPsi"];
   
-  // Rcout<<"Leaves\n";
-  List Sunlit = output["SunlitLeaves"];
-  List Shade = output["ShadeLeaves"];
-  NumericVector maxGSW_SL = Sunlit["GSWMax"];
-  NumericVector minGSW_SL = Sunlit["GSWMin"];
-  NumericVector minTemp_SL = Sunlit["TempMin"];
-  NumericVector maxTemp_SL = Sunlit["TempMax"];
-  NumericVector minLeafPsi_SL = Sunlit["LeafPsiMin"];
-  NumericVector maxLeafPsi_SL = Sunlit["LeafPsiMax"];
-  NumericVector maxGSW_SH = Shade["GSWMax"];
-  NumericVector minGSW_SH = Shade["GSWMin"];
-  NumericVector minTemp_SH = Shade["TempMin"];
-  NumericVector maxTemp_SH = Shade["TempMax"];
-  NumericVector minLeafPsi_SH = Shade["LeafPsiMin"];
-  NumericVector maxLeafPsi_SH = Shade["LeafPsiMax"];
   
   // Rcout<<"PlantsInst\n";
   List PlantsInst = output["PlantsInst"];

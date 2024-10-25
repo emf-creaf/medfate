@@ -787,20 +787,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
   NumericVector maxLeafPsi = Plants["LeafPsiMax"];
   NumericVector minStemPsi = Plants["StemPsi"];
   NumericVector minRootPsi = Plants["RootPsi"];
-  List Sunlit = output["SunlitLeaves"];
-  List Shade = output["ShadeLeaves"];
-  NumericVector maxGSW_SL = Sunlit["GSWMax"];
-  NumericVector minGSW_SL = Sunlit["GSWMin"];
-  NumericVector minTemp_SL = Sunlit["TempMin"];
-  NumericVector maxTemp_SL = Sunlit["TempMax"];
-  NumericVector minLeafPsi_SL = Sunlit["LeafPsiMin"];
-  NumericVector maxLeafPsi_SL = Sunlit["LeafPsiMax"];
-  NumericVector maxGSW_SH = Shade["GSWMax"];
-  NumericVector minGSW_SH = Shade["GSWMin"];
-  NumericVector minTemp_SH = Shade["TempMin"];
-  NumericVector maxTemp_SH = Shade["TempMax"];
-  NumericVector minLeafPsi_SH = Shade["LeafPsiMin"];
-  NumericVector maxLeafPsi_SH = Shade["LeafPsiMax"];
+
   List PlantsInst = output["PlantsInst"];
   NumericMatrix Einst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["E"]);
   NumericMatrix Aginst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);

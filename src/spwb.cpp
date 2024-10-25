@@ -746,8 +746,7 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
     PlantExtraction[l] = ExtractionVec[l];
   }
   
-  List modelOutput = copyAdvancedSPWBOutput(modelOutputComm, x);
-  return(modelOutput);
+  return(modelOutputComm);
 }
 
 //' Single-day simulation
@@ -1735,7 +1734,7 @@ void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpiration
   }
 }
 
-void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int iday) {
+void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int iday, int numCohorts) {
 
   NumericMatrix LeafPsiMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMin"]);
   NumericMatrix LeafPsiMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMax"]);
@@ -1750,21 +1749,35 @@ void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int id
   NumericMatrix LeafTempMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["TempMin"]);
   NumericMatrix LeafTempMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["TempMax"]);    
 
-  List SunlitLeaves = sDay["SunlitLeaves"]; 
-  List ShadeLeaves = sDay["ShadeLeaves"]; 
+  DataFrame SunlitLeaves = as<DataFrame>(sDay["SunlitLeaves"]);
+  DataFrame ShadeLeaves = as<DataFrame>(sDay["ShadeLeaves"]); 
+  NumericVector GSWMin_SL = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GSWMin"]);
+  NumericVector GSWMin_SH = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GSWMin"]);
+  NumericVector GSWMax_SL = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GSWMax"]);
+  NumericVector GSWMax_SH = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GSWMax"]);
+  NumericVector PsiMin_SL = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMin"]);
+  NumericVector PsiMin_SH =  Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMin"]);
+  NumericVector PsiMax_SL = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMax"]);
+  NumericVector PsiMax_SH = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMax"]);
+  NumericVector TempMin_SL = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["TempMin"]);
+  NumericVector TempMin_SH = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["TempMin"]);
+  NumericVector TempMax_SL = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["TempMax"]);
+  NumericVector TempMax_SH = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["TempMax"]);
   
-  LeafGSWMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GSWMin"]);
-  LeafGSWMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GSWMin"]);
-  LeafGSWMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GSWMax"]);
-  LeafGSWMax_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GSWMax"]);
-  LeafPsiMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMin"]);
-  LeafPsiMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMax"]);
-  LeafPsiMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMin"]);
-  LeafPsiMax_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMax"]);
-  LeafTempMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["TempMin"]);
-  LeafTempMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["TempMax"]);
-  LeafTempMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["TempMin"]);
-  LeafTempMax_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["TempMax"]);
+  for(int i=0;i<numCohorts;i++) {
+    LeafGSWMin_SL(iday,i) = GSWMin_SL[i];
+    LeafGSWMin_SH(iday,i) = GSWMin_SH[i];
+    LeafGSWMax_SL(iday,i) = GSWMax_SL[i];
+    LeafGSWMax_SH(iday,i) = GSWMax_SH[i];
+    LeafPsiMin_SL(iday,i) = PsiMin_SL[i];
+    LeafPsiMin_SH(iday,i) = PsiMin_SH[i];
+    LeafPsiMax_SL(iday,i) = PsiMax_SL[i];
+    LeafPsiMax_SH(iday,i) = PsiMax_SH[i];
+    LeafTempMin_SL(iday,i) = TempMin_SL[i];
+    LeafTempMin_SH(iday,i) = TempMin_SH[i];
+    LeafTempMax_SL(iday,i) = TempMax_SL[i];
+    LeafTempMax_SH(iday,i) = TempMax_SH[i];
+  }
 }
 
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
@@ -1803,6 +1816,8 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
 void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   
   List control = x["control"];
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  int numCohorts = above.nrow();
   int ntimesteps = control["ndailysteps"];
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers
@@ -1835,7 +1850,7 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
       if(control["leafResults"]) {
         List sunlitDO = l["SunlitLeaves"];
         List shadeDO = l["ShadeLeaves"];
-        fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday); 
+        fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday, numCohorts); 
       }
     } 
   }
@@ -2298,6 +2313,7 @@ List spwb(List x, DataFrame meteo,
   
   //Instance communication structures
   List internalCommunication = instanceCommunicationStructures(x);
+  // List internalCommunication = generalCommunicationStructures();
   
   
   bool error_occurence = false;
@@ -2871,7 +2887,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     
     //Update plant daily water output
     fillPlantWaterDailyOutput(plantDWOL, transpOutput, i, transpirationMode);
-    if(transpirationMode!="Granier") fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, transpOutput, i);
+    if(transpirationMode!="Granier") fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, transpOutput, i, numCohorts);
     if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, transpOutput, i);
     
     List Plants = transpOutput["Plants"];

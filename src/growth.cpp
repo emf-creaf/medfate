@@ -1929,6 +1929,8 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
   List control = x["control"];
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  int numCohorts = above.nrow();
   int ntimesteps = control["ndailysteps"];
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers
@@ -1960,7 +1962,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     if(transpirationMode!= "Granier") {
       List sunlitDO = l["SunlitLeaves"];
       List shadeDO = l["ShadeLeaves"];
-      fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday); 
+      fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday, numCohorts); 
     } 
   }
   if(transpirationMode!= "Granier") {

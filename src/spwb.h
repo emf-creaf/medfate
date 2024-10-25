@@ -30,7 +30,7 @@ void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday, int ntimes
 void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday, int ntimesteps);
 void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday, int ncanlayers, int ntimesteps);
 void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpirationMode);
-void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int day);
+void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int day, int numCohorts);
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday);
 
 void printWaterBalanceResult(List outputList, List x,
