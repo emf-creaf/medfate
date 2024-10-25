@@ -525,7 +525,6 @@ void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericM
                                  double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
   int ncoh = LAIme.ncol();
   int ncanlayers = Tair.size();
-  
   DataFrame LWR_layer = as<Rcpp::DataFrame>(internalLWR["LWR_layer"]);
   
   NumericVector Lup = as<NumericVector>(LWR_layer["Lup"]);
@@ -589,7 +588,8 @@ void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericM
     }
   }
   double Lnet_g = eps_g*(Ldown[0] - sigma_pow_Tsoil);
-  double Lnet_c = sum(Lnet);
+  double Lnet_c = 0.0;
+  for(int i=0;i<ncanlayers;i++) Lnet_c += Lnet[i];
 
   internalLWR["Ldown_ground"] = Ldown[0];
   internalLWR["Lup_ground"] = Lup_g;

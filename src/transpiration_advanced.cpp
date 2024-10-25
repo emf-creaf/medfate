@@ -560,9 +560,12 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   NumericVector abs_SWR_can_LEA = lightExtinctionAbsortion["SWR_can"];
   NumericVector abs_SWR_soil_LEA = lightExtinctionAbsortion["SWR_soil"];
   //Copy to output data structures
+  double sum_abs_SWR_soil = 0.0, sum_abs_SWR_can = 0.0;
   for(int n=0; n<ntimesteps;n++) {
     abs_SWR_can[n] = abs_SWR_can_LEA[n];
     abs_SWR_soil[n] = abs_SWR_soil_LEA[n];
+    sum_abs_SWR_soil += abs_SWR_soil[n];
+    sum_abs_SWR_can += abs_SWR_can[n];
   }
 
   ////////////////////////////////////////
@@ -739,19 +742,19 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   for(int n=0;n<ntimesteps;n++) { //Time loop
     
     // Determine soil evaporation and snow melt for the corresponding step
-    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum(abs_SWR_soil));
-    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum(abs_SWR_soil));
+    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum_abs_SWR_soil);
+    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum_abs_SWR_soil);
     //Canopy evaporation (mm) in the current step and fraction of dry canopy
-    double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
+    double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum_abs_SWR_can);
     double f_dry = 1.0;
     if(canEvapStep>0.0) {
       f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
     }
-    if(sum(abs_SWR_soil)==0.0) { // avoid zero sums
+    if(sum_abs_SWR_soil==0.0) { // avoid zero sums
       soilEvapStep = 0.0; 
       snowMeltStep = 0.0;
     }
-    if(sum(abs_SWR_can)==0.0) { // avoid zero sums
+    if(sum_abs_SWR_can==0.0) { // avoid zero sums
       canEvapStep = 0.0;
       f_dry = 1.0;
     }
@@ -975,10 +978,11 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
       net_LWR_soil[n] = 0.0; //Set net LWR to zero
     } 
     LEVsoil[n] = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
+    // Rcout<<n<<" "<<sum_abs_SWR_soil<<" "<<soilEvapStep << " "<<Tsoil[0]<<" " << LEVsoil[n]<<"\n";
     LEFsnow[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
 
     //Herbaceous transpiration (mm) in the current step
-    double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum(abs_SWR_can));
+    double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum_abs_SWR_can);
     
     //Canopy convective heat exchange
     double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
@@ -994,7 +998,9 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
         Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
       } 
       //Latent heat (evaporation + transpiration)
-      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep + herbTranspStep)/tstep;
+      double sum_Einst_n = 0.0;
+      for(int c=0;c<numCohorts;c++) sum_Einst_n +=Einst(c, n);
+      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum_Einst_n + canEvapStep + herbTranspStep)/tstep;
       LEVcan[n] = LEwat; 
       //Canopy temperature changes
       Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEVcan[n] - LEFsnow[n] - Hcan_heat[n] - Hcansoil[n];
