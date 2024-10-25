@@ -162,17 +162,17 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transpOutput, doub
 
 
 // Soil water balance with simple hydraulic model
-List spwbDay_basic(List x, NumericVector meteovec, 
-              double elevation, double slope, double aspect,
-              double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
-              bool verbose = false) {
+List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec, 
+                   double elevation, double slope, double aspect,
+                   double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
+                   bool verbose = false) {
 
-  //Add communication structures
-  addCommunicationStructures(x);
-  List internalCommunication = x["internalCommunication"];
-  List modelOutput = internalCommunication["modelOutput"];
-  modelOutput["weather"] = clone(meteovec);
-  NumericVector topo = modelOutput["topography"];
+  //Retrieve communication structures
+  List modelOutputComm = internalCommunication["basicSPWBOutput"];
+  List transpOutput = internalCommunication["basicTranspirationOutput"];
+  
+  modelOutputComm["weather"] = clone(meteovec);
+  NumericVector topo = modelOutputComm["topography"];
   topo["elevation"] = elevation;
   topo["slope"] = slope;
   topo["aspect"] = aspect;
@@ -306,7 +306,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
   }
 
   //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
-  List transpOutput = basicTranspirationCommunicationOutput();
   transpirationBasic(transpOutput, x, meteovec, elevation, true);
   //Determine hydraulic redistribution and source sink for overall soil
   NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transpOutput["Extraction"]);
@@ -404,10 +403,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   //STEP 6 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) modelOutput["FireHazard"] = fccsHazard(x, meteovec, transpOutput, slope);
+  if(fireHazardResults) modelOutputComm["FireHazard"] = fccsHazard(x, meteovec, transpOutput, slope);
 
   // Arrange output
-  NumericVector WaterBalance = modelOutput["WaterBalance"];
+  NumericVector WaterBalance = modelOutputComm["WaterBalance"];
   WaterBalance["PET"] = pet;
   WaterBalance["Rain"] = hydroInputs["Rain"];
   WaterBalance["Snow"] = hydroInputs["Snow"]; 
@@ -428,7 +427,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   WaterBalance["Transpiration"] = sum(Eplant);
   WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
   
-  NumericVector Stand = modelOutput["Stand"];
+  NumericVector Stand = modelOutputComm["Stand"];
   Stand["LAI"] = LAIcell;
   Stand["LAIherb"] = herbLAI; 
   Stand["LAIlive"] = LAIcelllive;
@@ -439,7 +438,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   Stand["LgroundSWR"] = LgroundSWR;
   
   
-  DataFrame Soil = as<DataFrame>(modelOutput["Soil"]);
+  DataFrame Soil = as<DataFrame>(modelOutputComm["Soil"]);
   NumericVector Psi = Soil["Psi"];
   NumericVector HerbTranspiration = Soil["HerbTranspiration"];
   NumericVector HydraulicInput = Soil["HydraulicInput"];
@@ -452,6 +451,8 @@ List spwbDay_basic(List x, NumericVector meteovec,
     HydraulicOutput[l] = soilHydraulicOutput[l];
     PlantExtraction[l] = ExtractionVec[l];
   }
+  
+  List modelOutput = copyBasicSPWBOutput(modelOutputComm, x);
   return(modelOutput);
 }
 
@@ -465,7 +466,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
              bool verbose = false) {
   
   //Add communication structures
-  addCommunicationStructures(x);
+  // addCommunicationStructures(x);
   List internalCommunication = x["internalCommunication"];
   List modelOutput = internalCommunication["modelOutput"];
   modelOutput["weather"] = clone(meteovec);
@@ -969,6 +970,9 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
     updateLeaves(x, wind, false);
   }
 
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures();
+  
   List s;
   if(transpirationMode=="Granier") {
     NumericVector meteovec_bas = NumericVector::create(
@@ -984,7 +988,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
       Named("Patm") = Patm,
       Named("pet") = pet,
       Named("rint") = Rint);
-    s = spwbDay_basic(x, meteovec_bas,
+    s = spwbDay_basic(internalCommunication, x, meteovec_bas,
                  elevation, slope, aspect, 
                  runon, lateralFlows, waterTableDepth, 
                  verbose);
@@ -1011,11 +1015,11 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
                  verbose);
   }
   //Clear communication structures
-  bool clear_communications = true;
-  if(control.containsElementNamed("clearCommunications")) {
-    clear_communications = control["clearCommunications"];
-  }
-  if(clear_communications) clearCommunicationStructures(x);
+  // bool clear_communications = true;
+  // if(control.containsElementNamed("clearCommunications")) {
+  //   clear_communications = control["clearCommunications"];
+  // }
+  // if(clear_communications) clearCommunicationStructures(x);
   // Rcout<<"hola4\n";
   return(s);
 }
@@ -2290,6 +2294,10 @@ List spwb(List x, DataFrame meteo,
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures();
+  
+  
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
   NumericVector Eplanttot(numDays,0.0);
@@ -2428,7 +2436,7 @@ List spwb(List x, DataFrame meteo,
           Named("pet") = PET[i],
           Named("rint") = Rint);
         try{
-          s = spwbDay_basic(x, meteovec, 
+          s = spwbDay_basic(internalCommunication, x, meteovec, 
                             elevation, slope, aspect, 
                             0.0, R_NilValue, waterTableDepth, 
                             verbose);
@@ -2517,10 +2525,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   
   //Clone input
   x = clone(x);
-  
-  //Add communication structures
-  addCommunicationStructures(x);
-  
+
   
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
@@ -2679,7 +2684,15 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   //Fire hazard output variables
   DataFrame fireHazard;
   if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(dateStrings);
-  
+    
+    
+  List internalCommunication = instanceCommunicationStructures();
+  List transpOutput;
+  if(transpirationMode == "Granier") {
+    transpOutput  = internalCommunication["basicTranspirationOutput"];
+  } else {
+    transpOutput  = internalCommunication["advancedTranspirationOutput"];
+  }
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations ";
   NumericVector Eplanttot(numDays,0.0);
@@ -2801,7 +2814,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       
     
     int ntimesteps = control["ndailysteps"];
-    List transpOutput;
     
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
@@ -2814,7 +2826,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("Patm") = Patm[i],
         Named("pet") = PET[i]);
       try{
-        transpOutput = basicTranspirationCommunicationOutput();
         transpirationBasic(transpOutput, x, meteovec, elevation, true);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";

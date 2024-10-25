@@ -388,7 +388,8 @@ List growthDayInner(List x, NumericVector meteovec,
   //Soil-plant water balance (this creates communication structures as well)
   List spwbOut;
   if(transpirationMode=="Granier") {
-    spwbOut = spwbDay_basic(x, meteovec, 
+    List internalCommunication = List::create();
+    spwbOut = spwbDay_basic(internalCommunication, x, meteovec, 
                        elevation, slope, aspect,
                        runon, lateralFlows, waterTableDepth,
                        verbose); 

@@ -88,6 +88,54 @@ List basicTranspirationCommunicationOutput() {
                         _["ExtractionPools"] = ExtractionPools);
   return(l);
 }
+List basicSPWBCommunicationOutput(List outputTransp) {
+  
+  NumericVector topo = NumericVector::create(NA_REAL, NA_REAL, NA_REAL);
+  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  NumericVector meteovec_bas = NumericVector::create(
+    Named("tday") = NA_REAL, 
+    Named("prec") = NA_REAL,
+    Named("tmin") = NA_REAL, 
+    Named("tmax") = NA_REAL,
+    Named("rhmin") = NA_REAL, 
+    Named("rhmax") = NA_REAL, 
+    Named("rad") = NA_REAL, 
+    Named("wind") = NA_REAL, 
+    Named("Catm") = NA_REAL,
+    Named("Patm") = NA_REAL,
+    Named("pet") = NA_REAL,
+    Named("rint") = NA_REAL);
+  NumericVector WaterBalance = NumericVector::create(_["PET"] = NA_REAL, 
+                                                     _["Rain"] = NA_REAL, 
+                                                     _["Snow"] = NA_REAL, 
+                                                     _["NetRain"] = NA_REAL, _["Snowmelt"] = NA_REAL,
+                                                     _["Runon"] = NA_REAL, 
+                                                     _["Infiltration"] = NA_REAL, _["InfiltrationExcess"] = NA_REAL, _["SaturationExcess"] = NA_REAL, _["Runoff"] = NA_REAL, 
+                                                       _["DeepDrainage"] = NA_REAL, _["CapillarityRise"] = NA_REAL,
+                                                       _["SoilEvaporation"] = NA_REAL, _["HerbTranspiration"] = NA_REAL,
+                                                       _["PlantExtraction"] = NA_REAL, _["Transpiration"] = NA_REAL,
+                                                       _["HydraulicRedistribution"] = NA_REAL);
+  
+  NumericVector Stand = NumericVector::create(_["LAI"] = NA_REAL, _["LAIherb"] = NA_REAL, 
+                                              _["LAIlive"] = NA_REAL,  _["LAIexpanded"] = NA_REAL, _["LAIdead"] = NA_REAL,
+                                                _["Cm"] = NA_REAL, _["LgroundPAR"] = NA_REAL, _["LgroundSWR"] = NA_REAL);
+  
+  DataFrame Soil = DataFrame::create(_["Psi"] = NumericVector(MAX_SOIL_LAYERS, 0.0),
+                                     _["HerbTranspiration"] = NumericVector(MAX_SOIL_LAYERS, 0.0),
+                                     _["HydraulicInput"] = NumericVector(MAX_SOIL_LAYERS, 0.0), //Water that entered into the layer across all time steps
+                                     _["HydraulicOutput"] = NumericVector(MAX_SOIL_LAYERS, 0.0), //Water that left the layer across all time steps
+                                     _["PlantExtraction"] = NumericVector(MAX_SOIL_LAYERS, 0.0));
+  
+  List l = List::create(_["topography"] = topo,
+                        _["weather"] = meteovec_bas,
+                        _["WaterBalance"] = WaterBalance, 
+                        _["Soil"] = Soil,
+                        _["Stand"] = Stand,
+                        _["Plants"] = outputTransp["Plants"]);
+  l.push_back(List::create(), "FireHazard");
+  l.attr("class") = CharacterVector::create("spwb_day","list");
+  return(l);
+}
 List advancedTranspirationCommunicationOutput() {
   NumericMatrix SoilWaterExtract(MAX_NUM_COHORTS, MAX_SOIL_LAYERS);
   std::fill(SoilWaterExtract.begin(), SoilWaterExtract.end(), 0.0);
@@ -662,49 +710,25 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
   return(l);
 }
 
-List basicSPWBOutput(List x, List outputTransp) {
+
+List copyBasicSPWBOutput(List boc, List x) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["widths"]).size();
+  int nlayers = soil.nrow();
+  int numCohorts = cohorts.nrow();
   
+  NumericVector topo = clone(as<NumericVector>(boc["topography"]));
+  NumericVector meteovec_bas = clone(as<NumericVector>(boc["weather"]));
+  NumericVector WaterBalance = clone(as<NumericVector>(boc["WaterBalance"]));
   
-  NumericVector topo = NumericVector::create(NA_REAL, NA_REAL, NA_REAL);
-  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
-  NumericVector meteovec_bas = NumericVector::create(
-    Named("tday") = NA_REAL, 
-    Named("prec") = NA_REAL,
-    Named("tmin") = NA_REAL, 
-    Named("tmax") = NA_REAL,
-    Named("rhmin") = NA_REAL, 
-    Named("rhmax") = NA_REAL, 
-    Named("rad") = NA_REAL, 
-    Named("wind") = NA_REAL, 
-    Named("Catm") = NA_REAL,
-    Named("Patm") = NA_REAL,
-    Named("pet") = NA_REAL,
-    Named("rint") = NA_REAL);
-  NumericVector WaterBalance = NumericVector::create(_["PET"] = NA_REAL, 
-                                           _["Rain"] = NA_REAL, 
-                                           _["Snow"] = NA_REAL, 
-                                           _["NetRain"] = NA_REAL, _["Snowmelt"] = NA_REAL,
-                                           _["Runon"] = NA_REAL, 
-                                           _["Infiltration"] = NA_REAL, _["InfiltrationExcess"] = NA_REAL, _["SaturationExcess"] = NA_REAL, _["Runoff"] = NA_REAL, 
-                                           _["DeepDrainage"] = NA_REAL, _["CapillarityRise"] = NA_REAL,
-                                           _["SoilEvaporation"] = NA_REAL, _["HerbTranspiration"] = NA_REAL,
-                                           _["PlantExtraction"] = NA_REAL, _["Transpiration"] = NA_REAL,
-                                           _["HydraulicRedistribution"] = NA_REAL);
+  NumericVector Stand = clone(as<NumericVector>(boc["Stand"]));
   
+  DataFrame Soil = copyDataFrame(as<DataFrame>(boc["Soil"]), nlayers);
   
-  NumericVector Stand = NumericVector::create(_["LAI"] = NA_REAL, _["LAIherb"] = NA_REAL, 
-                                              _["LAIlive"] = NA_REAL,  _["LAIexpanded"] = NA_REAL, _["LAIdead"] = NA_REAL,
-                                              _["Cm"] = NA_REAL, _["LgroundPAR"] = NA_REAL, _["LgroundSWR"] = NA_REAL);
-  
-  DataFrame Soil = DataFrame::create(_["Psi"] = NumericVector(nlayers, 0.0),
-                                     _["HerbTranspiration"] = NumericVector(nlayers, 0.0),
-                                     _["HydraulicInput"] = NumericVector(nlayers, 0.0), //Water that entered into the layer across all time steps
-                                     _["HydraulicOutput"] = NumericVector(nlayers, 0.0), //Water that left the layer across all time steps
-                                     _["PlantExtraction"] = NumericVector(nlayers, 0.0));
+  DataFrame PlantsComm = Rcpp::as<Rcpp::DataFrame>(boc["Plants"]);
+  DataFrame Plants = copyDataFrame(PlantsComm, numCohorts);
+  Plants.attr("row.names") = cohorts.attr("row.names");
   
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["topography"] = topo,
@@ -712,8 +736,10 @@ List basicSPWBOutput(List x, List outputTransp) {
                         _["WaterBalance"] = WaterBalance, 
                         _["Soil"] = Soil,
                         _["Stand"] = Stand,
-                        _["Plants"] = outputTransp["Plants"]);
-  if(control["fireHazardResults"]) l.push_back(List::create(), "FireHazard");
+                        _["Plants"] = Plants);
+  if(control["fireHazardResults"]) {
+    l.push_back(clone(as<NumericVector>(boc["FireHazard"])), "FireHazard"); 
+  }
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -790,7 +816,7 @@ List basicGROWTHOutput(List x, List outputTransp) {
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   int numCohorts = cohorts.nrow();
-  List spwbOut = basicSPWBOutput(x, outputTransp);
+  List spwbOut = basicSPWBCommunicationOutput(outputTransp);
   
   DataFrame labileCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = NumericVector(numCohorts, NA_REAL),
                                                     _["MaintenanceRespiration"] = NumericVector(numCohorts, NA_REAL),
@@ -1027,15 +1053,15 @@ List communicationInitialFinalCarbonCompartments() {
 }
 
 
-// [[Rcpp::export(".addCommunicationStructures")]]
-void addCommunicationStructures(List x) {
-  String model = "spwb";
-  if(x.inherits("growthInput")) model = "growth";
-  List control = x["control"];
-  String transpirationMode = control["transpirationMode"];
-  List ic = as<List>(x["internalCommunication"]);
-  ic.push_back(basicTranspirationCommunicationOutput(), "basicTranspirationOutput"); 
-  ic.push_back(advancedTranspirationCommunicationOutput(), "advancedTranspirationOutput"); 
+// [[Rcpp::export(".instanceCommunicationStructures")]]
+List instanceCommunicationStructures() {
+  List basicTranspirationOutput = basicTranspirationCommunicationOutput();
+  List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput);
+  List advancedTranspirationOutput = advancedTranspirationCommunicationOutput();
+  List ic = List::create(_["basicTranspirationOutput"] = basicTranspirationOutput,
+                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
+                         _["basicSPWBOutput"] = basicSPWBOutput);
+  // ic.push_back(advancedTranspirationCommunicationOutput(), "advancedTranspirationOutput"); 
   // List communicationOutputTransp = ic["basicTranspirationOutput"];
   // if(transpirationMode=="Granier") {
   //   if(!ic.containsElementNamed("modelOutput")) {
@@ -1053,7 +1079,7 @@ void addCommunicationStructures(List x) {
   // if(model=="growth") {
   //   if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(), "initialFinalCC");
   // }
-  x["internalCommunication"] = ic;
+  return(ic);
 }
 
 // [[Rcpp::export(".clearCommunicationStructures")]]

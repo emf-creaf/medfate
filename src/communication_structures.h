@@ -5,9 +5,10 @@
 #endif
 using namespace Rcpp;
 
-void addCommunicationStructures(List x);
+List instanceCommunicationStructures();
 void clearCommunicationStructures(List x);
 List basicTranspirationCommunicationOutput();
 List advancedTranspirationCommunicationOutput();
 List copyBasicTranspirationOutput(List btc, List x);
 List copyAdvancedTranspirationOutput(List atc, List x);
+List copyBasicSPWBOutput(List boc, List x);

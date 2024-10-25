@@ -279,8 +279,8 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
 
-.addCommunicationStructures <- function(x) {
-    invisible(.Call(`_medfate_addCommunicationStructures`, x))
+.instanceCommunicationStructures <- function() {
+    .Call(`_medfate_instanceCommunicationStructures`)
 }
 
 .clearCommunicationStructures <- function(x) {
