@@ -387,13 +387,15 @@ List growthDayInner(List internalCommunication, List x, NumericVector meteovec,
   
   //Soil-plant water balance (this creates communication structures as well)
   List spwbOut;
+  List modelOutput;
   if(transpirationMode=="Granier") {
-    List internalCommunication = List::create();
+    modelOutput = internalCommunication["basicGROWTHOutput"];
     spwbOut = spwbDay_basic(internalCommunication, x, meteovec, 
                        elevation, slope, aspect,
                        runon, lateralFlows, waterTableDepth,
                        verbose); 
   } else {
+    modelOutput = internalCommunication["advancedGROWTHOutput"];
     spwbOut = spwbDay_advanced(internalCommunication, x, meteovec, 
                        latitude, elevation, slope, aspect,
                        solarConstant, delta, 
@@ -401,7 +403,6 @@ List growthDayInner(List internalCommunication, List x, NumericVector meteovec,
                        verbose);
   }
 
-  List modelOutput = internalCommunication["modelOutput"];
   
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
@@ -1628,13 +1629,18 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     Named("pet") = pet,
     Named("rint") = Rint,
     Named("pfire") = pfire);
-  List s = growthDayInner(internalCommunication, x, meteovec_inner, 
+  List modelOutputComm = growthDayInner(internalCommunication, x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, 
                      runon, lateralFlows, waterTableDepth,
                      verbose);
-  
-  return(s);
+  List modelOutput;
+  if(transpirationMode=="Granier") {
+    modelOutput = copyBasicGROWTHOutput(modelOutputComm, x);
+  } else {
+    modelOutput = copyAdvancedGROWTHOutput(modelOutputComm, x);
+  }
+  return(modelOutput);
 }
 
 

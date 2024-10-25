@@ -136,6 +136,79 @@ List basicSPWBCommunicationOutput(List outputTransp, int nlayers) {
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
+List basicGROWTHCommunicationOutput(List spwbOut, int numCohorts, int nlayers) {
+  
+  DataFrame labileCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["MaintenanceRespiration"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["GrowthCosts"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["RootExudation"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["LabileCarbonBalance"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["SugarLeaf"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["StarchLeaf"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["SugarSapwood"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
+  
+  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL};
+  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"});
+  
+  //Final Biomass compartments
+  DataFrame plantStructure = DataFrame::create(
+    _["LeafBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafArea"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodArea"] = NumericVector(numCohorts, NA_REAL),
+    _["FineRootArea"] = NumericVector(numCohorts, NA_REAL),
+    _["HuberValue"] = NumericVector(numCohorts, NA_REAL),
+    _["RootAreaLeafArea"] = NumericVector(numCohorts, NA_REAL),
+    _["DBH"] = NumericVector(numCohorts, NA_REAL),
+    _["Height"] = NumericVector(numCohorts, NA_REAL)
+  );
+  
+  DataFrame growthMortality = DataFrame::create(
+    _["SAgrowth"] = NumericVector(numCohorts, NA_REAL),
+    _["LAgrowth"] = NumericVector(numCohorts, NA_REAL),
+    _["FRAgrowth"] = NumericVector(numCohorts, NA_REAL),
+    _["StarvationRate"] = NumericVector(numCohorts, NA_REAL),
+    _["DessicationRate"] = NumericVector(numCohorts, NA_REAL),
+    _["MortalityRate"] = NumericVector(numCohorts, NA_REAL)
+  );
+  
+  DataFrame plantBiomassBalance = DataFrame::create(_["InitialDensity"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialSapwoodBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialStructuralBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["StructuralBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["StructuralBiomassChange"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialLabileBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["LabileBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["LabileBiomassChange"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialLivingPlantBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialPlantBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["PlantBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["PlantBiomassChange"] = NumericVector(numCohorts, 0.0),
+                                                    _["MortalityBiomassLoss"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialCohortBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["CohortBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["CohortBiomassChange"] = NumericVector(numCohorts, 0.0));
+  
+  List l = List::create(_["cohorts"] = spwbOut["cohorts"],
+                        _["topography"] = spwbOut["topography"],
+                                                 _["weather"] = spwbOut["weather"],
+                                                                       _["WaterBalance"] = spwbOut["WaterBalance"], 
+                                                                                                  _["CarbonBalance"] = standCB,
+                                                                                                  _["Soil"] = spwbOut["Soil"], 
+                                                                                                                     _["Stand"] = spwbOut["Stand"], 
+                                                                                                                                         _["Plants"] = spwbOut["Plants"],
+                                                                                                                                                              _["LabileCarbonBalance"] = labileCarbonBalance,
+                                                                                                                                                              _["PlantBiomassBalance"] = plantBiomassBalance,
+                                                                                                                                                              _["PlantStructure"] = plantStructure,
+                                                                                                                                                              _["GrowthMortality"] = growthMortality);
+  l.push_back(spwbOut["FireHazard"], "FireHazard");
+  l.attr("class") = CharacterVector::create("growth_day","list");
+  return(l);
+}
+
 List advancedTranspirationCommunicationOutput(int numCohorts, int nlayers, int ncanlayers, int ntimesteps) {
   NumericMatrix SoilWaterExtract(numCohorts, nlayers);
   std::fill(SoilWaterExtract.begin(), SoilWaterExtract.end(), 0.0);
@@ -243,7 +316,7 @@ List advancedTranspirationCommunicationOutput(int numCohorts, int nlayers, int n
     _["TempMin"] = minTemp_SL,
     _["TempMax"] = maxTemp_SL  
   );
-  Rcout<<Sunlit.nrow()<<"\n";
+  // Rcout<<Sunlit.nrow()<<"\n";
   
   DataFrame Shade = DataFrame::create(
     _["LeafPsiMin"] = minLeafPsi_SH, 
@@ -439,6 +512,113 @@ List advancedSPWBCommunicationOutput(List outputTransp, int nlayers) {
                         _["LWRExtinction"] = outputTransp["LWRExtinction"],
                         _["CanopyTurbulence"] = outputTransp["CanopyTurbulence"]);
   l.attr("class") = CharacterVector::create("spwb_day","list");
+  return(l);
+}
+List advancedGROWTHCommunicationOutput(List spwbOut, int numCohorts, int ntimesteps) {
+
+  DataFrame labileCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["MaintenanceRespiration"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["GrowthCosts"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["RootExudation"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["LabileCarbonBalance"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["SugarLeaf"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["StarchLeaf"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["SugarSapwood"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
+                                                    _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
+
+  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL};
+  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"});
+  
+  //Final Biomass compartments
+  DataFrame plantStructure = DataFrame::create(
+    _["LeafBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["LeafArea"] = NumericVector(numCohorts, NA_REAL),
+    _["SapwoodArea"] = NumericVector(numCohorts, NA_REAL),
+    _["FineRootArea"] = NumericVector(numCohorts, NA_REAL),
+    _["HuberValue"] = NumericVector(numCohorts, NA_REAL),
+    _["RootAreaLeafArea"] = NumericVector(numCohorts, NA_REAL),
+    _["DBH"] = NumericVector(numCohorts, NA_REAL),
+    _["Height"] = NumericVector(numCohorts, NA_REAL)
+  );
+  
+  DataFrame growthMortality = DataFrame::create(
+    _["SAgrowth"] = NumericVector(numCohorts, NA_REAL),
+    _["LAgrowth"] = NumericVector(numCohorts, NA_REAL),
+    _["FRAgrowth"] = NumericVector(numCohorts, NA_REAL),
+    _["StarvationRate"] = NumericVector(numCohorts, NA_REAL),
+    _["DessicationRate"] = NumericVector(numCohorts, NA_REAL),
+    _["MortalityRate"] = NumericVector(numCohorts, NA_REAL)
+  );
+
+  DataFrame plantBiomassBalance = DataFrame::create(_["InitialDensity"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialSapwoodBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialStructuralBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["StructuralBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["StructuralBiomassChange"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialLabileBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["LabileBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["LabileBiomassChange"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialLivingPlantBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialPlantBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["PlantBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["PlantBiomassChange"] = NumericVector(numCohorts, 0.0),
+                                                    _["MortalityBiomassLoss"] = NumericVector(numCohorts, 0.0),
+                                                    _["InitialCohortBiomass"] = NumericVector(numCohorts, 0.0),
+                                                    _["CohortBiomassBalance"] = NumericVector(numCohorts, 0.0),
+                                                    _["CohortBiomassChange"] = NumericVector(numCohorts, 0.0));
+
+  List l = List::create(_["cohorts"] = spwbOut["cohorts"],
+                        _["topography"] = spwbOut["topography"],
+                        _["weather"] = spwbOut["weather"],
+                        _["WaterBalance"] = spwbOut["WaterBalance"], 
+                        _["EnergyBalance"] = spwbOut["EnergyBalance"],
+                        _["CarbonBalance"] = standCB,
+                                                                                                                              _["Soil"] = spwbOut["Soil"], 
+                                                                                                                                                 _["Stand"] = spwbOut["Stand"], 
+                                                                                                                                                                     _["Plants"] = spwbOut["Plants"],
+                                                                                                                                                                                          _["LabileCarbonBalance"] = labileCarbonBalance,
+                                                                                                                                                                                          _["PlantBiomassBalance"] = plantBiomassBalance,
+                                                                                                                                                                                          _["PlantStructure"] = plantStructure,
+                                                                                                                                                                                          _["GrowthMortality"] = growthMortality,
+                                                                                                                                                                                          _["RhizoPsi"] = spwbOut["RhizoPsi"],
+                                                                                                                                                                                                                 _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
+                                                                                                                                                                                                                                            _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
+                                                                                                                                                                                                                                                                      _["ExtractionInst"] = spwbOut["ExtractionInst"],
+                                                                                                                                                                                                                                                                                                   _["PlantsInst"] = spwbOut["PlantsInst"],
+                                                                                                                                                                                                                                                                                                                            _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
+                        _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
+
+    
+  //Subdaily output matrices (Sperry/Sureau)
+  NumericMatrix LabileCarbonBalanceInst(numCohorts, ntimesteps);  
+  NumericMatrix GrossPhotosynthesisInst(numCohorts, ntimesteps);  
+  NumericMatrix MaintenanceRespirationInst(numCohorts, ntimesteps);  
+  NumericMatrix GrowthCostsInst(numCohorts, ntimesteps);  
+  NumericMatrix RootExudationInst(numCohorts, ntimesteps);  
+  NumericMatrix PlantSugarTransportInst(numCohorts, ntimesteps);
+  NumericMatrix PlantSugarLeafInst(numCohorts, ntimesteps), PlantStarchLeafInst(numCohorts, ntimesteps);
+  NumericMatrix PlantSugarSapwoodInst(numCohorts, ntimesteps), PlantStarchSapwoodInst(numCohorts, ntimesteps);
+    
+  List labileCBInst = List::create(
+      _["GrossPhotosynthesis"] = GrossPhotosynthesisInst,
+      _["MaintenanceRespiration"] = MaintenanceRespirationInst,
+      _["GrowthCosts"] = GrowthCostsInst,
+      _["RootExudation"] = RootExudationInst,
+      _["LabileCarbonBalance"] = LabileCarbonBalanceInst,
+      _["SugarLeaf"] = PlantSugarLeafInst,
+      _["StarchLeaf"] = PlantStarchLeafInst,
+      _["SugarSapwood"] = PlantSugarSapwoodInst,
+      _["StarchSapwood"] = PlantStarchSapwoodInst,
+      _["SugarTransport"] = PlantSugarTransportInst
+  );
+  l.push_back(labileCBInst,"LabileCarbonBalanceInst");
+  l.push_back(spwbOut["LightExtinction"], "LightExtinction");
+  l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
+  l.push_back(spwbOut["FireHazard"], "FireHazard");
+  l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
 
@@ -863,14 +1043,14 @@ List copyAdvancedSPWBOutput(List aoc, List x) {
   return(l);
 }
 
-List basicGROWTHOutput(List x, List outputTransp) {
+List copyBasicGROWTHOutput(List boc, List x) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   int nlayers = soil.nrow();
   int numCohorts = cohorts.nrow();
-  List spwbOut = basicSPWBCommunicationOutput(outputTransp, nlayers);
+  List spwbOut = copyBasicSPWBOutput(boc, x);
   
   DataFrame labileCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = NumericVector(numCohorts, NA_REAL),
                                                     _["MaintenanceRespiration"] = NumericVector(numCohorts, NA_REAL),
@@ -945,7 +1125,7 @@ List basicGROWTHOutput(List x, List outputTransp) {
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
-List advancedGROWTHOutput(List x, List outputTransp) {
+List copyAdvancedGROWTHOutput(List aoc, List x) {
   List control = x["control"];
   bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -1036,30 +1216,27 @@ List advancedGROWTHOutput(List x, List outputTransp) {
                         _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
                         _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
   if(subdailyCarbonBalance) {
-    List PlantsInst = spwbOut["PlantsInst"];
-    NumericMatrix AgStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
-    int numSteps = AgStep.ncol();
 
     //Subdaily output matrices (Sperry/Sureau)
-    NumericMatrix LabileCarbonBalanceInst(numCohorts, numSteps);  
-    NumericMatrix GrossPhotosynthesisInst(numCohorts, numSteps);  
-    NumericMatrix MaintenanceRespirationInst(numCohorts, numSteps);  
-    NumericMatrix GrowthCostsInst(numCohorts, numSteps);  
-    NumericMatrix RootExudationInst(numCohorts, numSteps);  
-    NumericMatrix PlantSugarTransportInst(numCohorts, numSteps);
-    NumericMatrix PlantSugarLeafInst(numCohorts, numSteps), PlantStarchLeafInst(numCohorts, numSteps);
-    NumericMatrix PlantSugarSapwoodInst(numCohorts, numSteps), PlantStarchSapwoodInst(numCohorts, numSteps);
+    NumericMatrix LabileCarbonBalanceInst(numCohorts, ntimesteps);  
+    NumericMatrix GrossPhotosynthesisInst(numCohorts, ntimesteps);  
+    NumericMatrix MaintenanceRespirationInst(numCohorts, ntimesteps);  
+    NumericMatrix GrowthCostsInst(numCohorts, ntimesteps);  
+    NumericMatrix RootExudationInst(numCohorts, ntimesteps);  
+    NumericMatrix PlantSugarTransportInst(numCohorts, ntimesteps);
+    NumericMatrix PlantSugarLeafInst(numCohorts, ntimesteps), PlantStarchLeafInst(numCohorts, ntimesteps);
+    NumericMatrix PlantSugarSapwoodInst(numCohorts, ntimesteps), PlantStarchSapwoodInst(numCohorts, ntimesteps);
     
-    GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    LabileCarbonBalanceInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    GrowthCostsInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantSugarLeafInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantStarchLeafInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantSugarSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantStarchSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    PlantSugarTransportInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
-    RootExudationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
+    GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    LabileCarbonBalanceInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    GrowthCostsInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    PlantSugarLeafInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    PlantStarchLeafInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    PlantSugarSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    PlantStarchSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    PlantSugarTransportInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    RootExudationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
     List labileCBInst = List::create(
       _["GrossPhotosynthesis"] = GrossPhotosynthesisInst,
       _["MaintenanceRespiration"] = MaintenanceRespirationInst,
@@ -1124,12 +1301,16 @@ List instanceCommunicationStructures(List x) {
   int ntimesteps = control["ndailysteps"];
   List basicTranspirationOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
   List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, nlayers);
+  List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
   List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
   List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, nlayers);
+  List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
   List ic = List::create(_["basicTranspirationOutput"] = basicTranspirationOutput,
-                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
                          _["basicSPWBOutput"] = basicSPWBOutput,
-                         _["advancedSPWBOutput"] = advancedSPWBOutput);
+                         _["basicGROWTHOutput"] = basicGROWTHOutput,
+                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
+                         _["advancedSPWBOutput"] = advancedSPWBOutput,
+                         _["advancedGROWTHOutput"] = advancedGROWTHOutput);
   return(ic);
 }
 
@@ -1138,35 +1319,15 @@ List instanceCommunicationStructures(List x) {
 List generalCommunicationStructures() {
   List basicTranspirationOutput = basicTranspirationCommunicationOutput(MAX_NUM_COHORTS, MAX_NUM_SOIL_LAYERS);
   List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, MAX_NUM_SOIL_LAYERS);
+  List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, MAX_NUM_COHORTS, MAX_NUM_SOIL_LAYERS);
   List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(MAX_NUM_COHORTS, MAX_NUM_SOIL_LAYERS, MAX_NUM_CANOPY_LAYERS, MAX_NUM_TIMESTEPS);
   List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, MAX_NUM_SOIL_LAYERS);
+  List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
   List ic = List::create(_["basicTranspirationOutput"] = basicTranspirationOutput,
-                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
                          _["basicSPWBOutput"] = basicSPWBOutput,
-                         _["advancedSPWBOutput"] = advancedSPWBOutput);
-  // ic.push_back(advancedTranspirationCommunicationOutput(), "advancedTranspirationOutput"); 
-  // List communicationOutputTransp = ic["basicTranspirationOutput"];
-  // if(transpirationMode=="Granier") {
-  //   if(!ic.containsElementNamed("modelOutput")) {
-  //     if(model=="spwb") ic.push_back(basicSPWBOutput(x, communicationOutputTransp), "modelOutput"); 
-  //     else ic.push_back(basicGROWTHOutput(x, communicationOutputTransp), "modelOutput"); 
-  //   } 
-  // } else {
-  //   DataFrame paramsCanopydf = as<DataFrame>(x["canopy"]);
-  //   List outputTransp = ic["transpirationOutput"];
-  //   if(!ic.containsElementNamed("modelOutput")) {
-  //     if(model=="spwb") ic.push_back(advancedSPWBOutput(x, outputTransp), "modelOutput"); 
-  //     else ic.push_back(advancedGROWTHOutput(x, outputTransp), "modelOutput"); 
-  //   } 
-  // }
-  // if(model=="growth") {
-  //   if(!ic.containsElementNamed("initialFinalCC")) ic.push_back(communicationInitialFinalCarbonCompartments(), "initialFinalCC");
-  // }
+                         _["basicGROWTHOutput"] = basicGROWTHOutput,
+                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
+                         _["advancedSPWBOutput"] = advancedSPWBOutput,
+                         _["advancedGROWTHOutput"] = advancedGROWTHOutput);
   return(ic);
-}
-
-// [[Rcpp::export(".clearCommunicationStructures")]]
-void clearCommunicationStructures(List x) {
-  List control = x["control"];
-  x["internalCommunication"] = List::create();
 }
