@@ -369,7 +369,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
     x["herbLAI"] = herbLAImax*exp(-0.235*woodyLAI);
   }
 }
-List growthDayInner(List x, NumericVector meteovec, 
+List growthDayInner(List internalCommunication, List x, NumericVector meteovec, 
                     double latitude, double elevation, double slope, double aspect,
                     double solarConstant, double delta, 
                     double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
@@ -394,17 +394,15 @@ List growthDayInner(List x, NumericVector meteovec,
                        runon, lateralFlows, waterTableDepth,
                        verbose); 
   } else {
-    spwbOut = spwbDay_advanced(x, meteovec, 
+    spwbOut = spwbDay_advanced(internalCommunication, x, meteovec, 
                        latitude, elevation, slope, aspect,
                        solarConstant, delta, 
                        runon, lateralFlows, waterTableDepth,
                        verbose);
   }
 
-  //Get internal communication structures
-  List internalCommunication = x["internalCommunication"];
   List modelOutput = internalCommunication["modelOutput"];
-
+  
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
   bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
@@ -1610,6 +1608,9 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     updateLeaves(x, wind, true);
   }
   
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures();
+  
   NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday,
     Named("tmin") = tmin, 
@@ -1627,7 +1628,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     Named("pet") = pet,
     Named("rint") = Rint,
     Named("pfire") = pfire);
-  List s = growthDayInner(x, meteovec_inner, 
+  List s = growthDayInner(internalCommunication, x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, 
                      runon, lateralFlows, waterTableDepth,
@@ -2366,6 +2367,9 @@ List growth(List x, DataFrame meteo, double latitude,
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures();
+  
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
@@ -2472,7 +2476,7 @@ List growth(List x, DataFrame meteo, double latitude,
       meteovec_inner.push_back(Rint, "rint");
       meteovec_inner.push_back(FireProbability[i], "pfire"); 
       try{
-        s = growthDayInner(x, meteovec_inner,  
+        s = growthDayInner(internalCommunication, x, meteovec_inner,  
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, R_NilValue, waterTableDepth,
@@ -2508,7 +2512,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("rint") = Rint);
       meteovec.push_back(FireProbability[i], "pfire"); 
       try{
-        s = growthDayInner(x, meteovec, 
+        s = growthDayInner(internalCommunication, x, meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, R_NilValue, waterTableDepth,
@@ -2550,13 +2554,6 @@ List growth(List x, DataFrame meteo, double latitude,
       Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
     }
   }
-  
-  //Clear communication structures
-  bool clear_communications = true;
-  if(control.containsElementNamed("clearCommunications")) {
-    clear_communications = control["clearCommunications"];
-  }
-  if(clear_communications) clearCommunicationStructures(x);
   
   return(outputList);
 }

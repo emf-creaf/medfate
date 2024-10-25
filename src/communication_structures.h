@@ -12,3 +12,4 @@ List advancedTranspirationCommunicationOutput();
 List copyBasicTranspirationOutput(List btc, List x);
 List copyAdvancedTranspirationOutput(List atc, List x);
 List copyBasicSPWBOutput(List boc, List x);
+List copyAdvancedSPWBOutput(List aoc, List x);
