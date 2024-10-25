@@ -873,8 +873,12 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
         PAR_SH(c,n) = absPAR_SH_COH[c];
         SWR_SL(c,n) = absSWR_SL_COH[c];
         SWR_SH(c,n) = absSWR_SH_COH[c];
-        LWR_SL(c,n) = sum(Lnet_cohort_layer(_,c)*fsunlit);
-        LWR_SH(c,n) = sum(Lnet_cohort_layer(_,c)*(1.0 - fsunlit));
+        LWR_SL(c,n) = 0.0;
+        LWR_SH(c,n) = 0.0;
+        for(int i=0;i<ncanlayers;i++) {
+          LWR_SL(c,n) += Lnet_cohort_layer(i,c)*fsunlit[i];
+          LWR_SH(c,n) += Lnet_cohort_layer(i,c)*(1.0 - fsunlit[i]);
+        }
       }
     }
 
