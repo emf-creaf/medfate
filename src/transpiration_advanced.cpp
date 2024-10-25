@@ -1304,7 +1304,16 @@ List transpirationSperry(List x, DataFrame meteo, int day,
     Named("Patm") = Patm[day-1],
     Named("pet") = pet);
   
-  List transpOutput = advancedTranspirationCommunicationOutput();
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
+  int nlayers = soil.nrow();
+  int numCohorts = cohorts.nrow();
+  int ntimesteps = control["ndailysteps"];
+  List transpOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
+  
   transpirationAdvanced(transpOutput, x, meteovec,
                         latitude, elevation, slope, aspect,
                         solarConstant, delta,
@@ -1394,7 +1403,15 @@ List transpirationSureau(List x, DataFrame meteo, int day,
     Named("pet") = pet);
   
   
-  List transpOutput = advancedTranspirationCommunicationOutput();
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
+  int nlayers = soil.nrow();
+  int numCohorts = cohorts.nrow();
+  int ntimesteps = control["ndailysteps"];
+  List transpOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
   transpirationAdvanced(transpOutput, x, meteovec,
                                             latitude, elevation, slope, aspect,
                                             solarConstant, delta,

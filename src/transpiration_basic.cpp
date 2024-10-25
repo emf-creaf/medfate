@@ -760,7 +760,11 @@ List transpirationGranier(List x, DataFrame meteo, int day,
     Named("Catm") = Catm,
     Named("Patm") = Patm[day-1]);
   
-  List transpOutput = basicTranspirationCommunicationOutput();
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  int nlayers = soil.nrow();
+  int numCohorts = cohorts.nrow();
+  List transpOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
   transpirationBasic(transpOutput, x, meteovec, elevation, modifyInput);
 
   List transpBasic = copyBasicTranspirationOutput(transpOutput, x);
