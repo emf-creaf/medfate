@@ -484,7 +484,6 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   List transpOutput = internalCommunication["advancedTranspirationOutput"];
   
   NumericVector weather = modelOutputComm["weather"];
-  weather["tday"] = meteovec["tday"];
   weather["prec"] = meteovec["prec"];
   weather["tmin"] = meteovec["tmin"];
   weather["tmax"] = meteovec["tmax"];

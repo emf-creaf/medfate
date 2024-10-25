@@ -2071,7 +2071,9 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     NumericMatrix starvationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["StarvationRate"]);
     NumericMatrix dessicationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["DessicationRate"]);
     NumericMatrix mortalityRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["MortalityRate"]);
-    
+    Rcout<<LAgrowth.ncol()<<"\n";
+    NumericVector v = Rcpp::as<Rcpp::NumericVector>(gm["LAgrowth"]);
+    Rcout<<v.size()<<"\n";
     LAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["LAgrowth"]);
     SAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["SAgrowth"]);
     FRAgrowth(iday,_) = Rcpp::as<Rcpp::NumericVector>(gm["FRAgrowth"]);
@@ -2371,7 +2373,8 @@ List growth(List x, DataFrame meteo, double latitude,
   }
   
   //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x);
+  List internalCommunication = generalCommunicationStructures();
+  // List internalCommunication = instanceCommunicationStructures(x);
   
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
