@@ -96,6 +96,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     
   // Canopy
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  int ncanlayers = canopyParams.nrow();
   
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -217,7 +218,6 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       }
     }
     if(recalc_LAI) {
-      int ncanlayers = canopyParams.nrow();
       NumericVector z(ncanlayers+1,0.0);
       for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
       for(int i=0; i<numCohorts;i++) {

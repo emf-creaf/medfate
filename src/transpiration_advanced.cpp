@@ -114,12 +114,12 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
 
-  int numCohorts = LAIlive.size();
+  int numCohorts = above.nrow();
   
   //Soil input
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  int nlayers = soil.nrow();
   NumericVector widths = soil["widths"];
-  int nlayers = widths.length();
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Theta_FC = thetaFC(soil, soilFunctions);
   NumericVector Theta_SAT = thetaSAT(soil, soilFunctions);
@@ -133,6 +133,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
 
   //Canopy params
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  int ncanlayers = canopyParams.nrow();
   NumericVector zlow = canopyParams["zlow"];
   NumericVector zmid = canopyParams["zmid"];
   NumericVector zup = canopyParams["zup"];
@@ -142,7 +143,6 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   NumericVector Tair = canopyParams["Tair"];
   NumericVector VPair = canopyParams["VPair"];
   NumericVector Cair = canopyParams["Cair"];
-  int ncanlayers = Tair.size(); //Number of canopy layers
   for(int l=0;l<ncanlayers;l++) { //If canopy layers have missing values, then initialize with Catm
     if(!multiLayerBalance) Cair[l] = Catm;
     else {
@@ -441,7 +441,6 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
       }
     }
     if(recalc_LAI) {
-      int ncanlayers = canopyParams.nrow();
       NumericVector z(ncanlayers+1,0.0);
       for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
       for(int i=0; i<numCohorts;i++) {
@@ -481,6 +480,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
     dU = canopyTurbulence["du"];
     uw = canopyTurbulence["uw"];
   } 
+  
   ////////////////////////////////////////
   // STEP 3a. Direct and diffuse shorwave radiation for sub-steps
   ////////////////////////////////////////
@@ -536,7 +536,9 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
     VPcan_mat(0,j) = VPair[j];
   }
   //Take temperature soil vector 
-  Tsoil_mat(0,_) = Tsoil; 
+  for(int l=0;l<nlayers;l++) {
+    Tsoil_mat(0,l) = Tsoil[l]; 
+  }
   
   ////////////////////////////////////////
   // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
@@ -570,6 +572,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   IntegerVector nlayerscon(numCohorts,0);
   LogicalMatrix layerConnected(numCohorts, nlayers);
   List layerConnectedPools(numCohorts);
+
 
 
   //Average sap fluidity
@@ -703,7 +706,6 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
       }
     }
   }
-  
   
   
   
@@ -880,7 +882,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
       innerSureau(x, innerInput, innerOutput, n, tstep,
                    verbose);
     }
-
+    
     for(int c=0;c<numCohorts;c++) {
       if(LAIlive[c]>0.0 && (LeafPLCVEC[c] < 0.999)) {
         //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
@@ -1014,9 +1016,11 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
       
       //Soil temperature changes
       NumericVector soilTchange = temperatureChange(widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
-      for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + std::max(-3.0, std::min(3.0, soilTchange[l]));
-      if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
-      
+      for(int l=0;l<nlayers;l++) {
+        Tsoil[l] = Tsoil[l] + std::max(-3.0, std::min(3.0, soilTchange[l])); 
+        if(n<(ntimesteps-1)) Tsoil_mat(n+1,l)= Tsoil[l];
+      }
+
     } else { //Multilayer canopy balance
       double moistureAtm = 0.622*(vpatm/Patm)*meteoland::utils_airDensity(Tatm[n],Patm);
       double CO2Atm = 0.409*Catm*44.01; //mg/m3

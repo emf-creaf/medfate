@@ -334,8 +334,8 @@ void windCanopyTurbulence_inner(DataFrame output, NumericVector zmid, NumericVec
     out_u[i] = U1[i]*u_f;
     out_du[i] = dU1[i]*u_f;
     out_epsilon[i] = epsilon1[i]*((u_f*u_f*u_f)/hm);
-    out_k = k1[i]*u_f*u_f;
-    out_uw = uw1[i]*u_f*u_f;
+    out_k[i] = k1[i]*u_f*u_f;
+    out_uw[i] = uw1[i]*u_f*u_f;
   }
 }
 

@@ -355,6 +355,13 @@ NumericMatrix copyNumericMatrix(NumericMatrix comm, int rows, int cols) {
   }
   return(out);
 }
+List copyList(List comm, int n) {
+  List out(n);
+  for(int i=0;i<n;i++) {
+    out[i] = clone(as<List>(comm[i]));
+  }
+  return(out);
+}
 List copyCommunicationLongWaveRadiation(List clwr, int ncanlayers) {
   List lwr_struct = List::create(_["LWR_layer"] = copyDataFrame(as<DataFrame>(clwr["LWR_layer"]), ncanlayers),
                                  _["Ldown_ground"] = clwr["Ldown_ground"],
@@ -635,15 +642,15 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
                         _["LWRExtinction"] = lwrExtinctionList,
                         _["CanopyTurbulence"] = copyDataFrame(as<DataFrame>(atc["CanopyTurbulence"]), ncanlayers)); //To be replaced
   
-  List supply = clone(as<List>(atc["SupplyFunctions"]));
+  List supply = copyList(as<List>(atc["SupplyFunctions"]), numCohorts);
   supply.attr("names") = above.attr("row.names");
-  List outPhotoSunlit = clone(as<List>(atc["PhotoSunlitFunctions"]));
+  List outPhotoSunlit = copyList(as<List>(atc["PhotoSunlitFunctions"]), numCohorts);
   outPhotoSunlit.attr("names") = above.attr("row.names");
-  List outPhotoShade = clone(as<List>(atc["PhotoShadeFunctions"]));
+  List outPhotoShade = copyList(as<List>(atc["PhotoShadeFunctions"]), numCohorts);
   outPhotoShade.attr("names") = above.attr("row.names");
-  List outPMSunlit = clone(as<List>(atc["PMSunlitFunctions"]));
+  List outPMSunlit = copyList(as<List>(atc["PMSunlitFunctions"]), numCohorts);
   outPMSunlit.attr("names") = above.attr("row.names");
-  List outPMShade = clone(as<List>(atc["PMShadeFunctions"]));
+  List outPMShade = copyList(as<List>(atc["PMShadeFunctions"]), numCohorts);
   outPMShade.attr("names") = above.attr("row.names");
   l.push_back(supply, "SupplyFunctions");
   l.push_back(outPhotoSunlit, "PhotoSunlitFunctions");
