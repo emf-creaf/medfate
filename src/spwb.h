@@ -26,9 +26,9 @@ void fillSoilDailyOutput(List Soil, DataFrame soil, List sDay,
                          int iday, int numDays, String soilFunctions,
                          bool includePlants = true);
 void fillSnowDailyOutput(DataFrame Snow, List x, int iday);
-void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday);
-void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday);
-void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday);
+void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday, int ntimesteps);
+void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday, int ntimesteps);
+void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday, int ncanlayers, int ntimesteps);
 void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpirationMode);
 void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int day);
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday);

@@ -1609,7 +1609,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   }
   
   //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures();
+  List internalCommunication = instanceCommunicationStructures(x);
   
   NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday,
@@ -1633,13 +1633,6 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                      solarConstant, delta, 
                      runon, lateralFlows, waterTableDepth,
                      verbose);
-  
-  //Clear communication structures
-  bool clear_communications = true;
-  if(control.containsElementNamed("clearCommunications")) {
-    clear_communications = control["clearCommunications"];
-  }
-  if(clear_communications) clearCommunicationStructures(x);
   
   return(s);
 }
@@ -1936,6 +1929,9 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
   List control = x["control"];
+  int ntimesteps = control["ndailysteps"];
+  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   String transpirationMode = control["transpirationMode"];
   
@@ -1969,13 +1965,13 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   }
   if(transpirationMode!= "Granier") {
     List DEB = l["EnergyBalance"];
-    fillEnergyBalanceDailyOutput(DEB,sDay, iday);
+    fillEnergyBalanceDailyOutput(DEB,sDay, iday, ntimesteps);
     if(control["temperatureResults"]) {
       List DT = l["Temperature"];
-      fillTemperatureDailyOutput(DT,sDay, iday);
+      fillTemperatureDailyOutput(DT,sDay, iday, ntimesteps);
       if(control["multiLayerBalance"]) {
         NumericMatrix DLT = l["TemperatureLayers"];
-        fillTemperatureLayersDailyOutput(DLT,sDay, iday);
+        fillTemperatureLayersDailyOutput(DLT,sDay, iday, ncanlayers, ntimesteps);
       }
     }
   } 
@@ -2368,7 +2364,7 @@ List growth(List x, DataFrame meteo, double latitude,
   }
   
   //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures();
+  List internalCommunication = instanceCommunicationStructures(x);
   
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";

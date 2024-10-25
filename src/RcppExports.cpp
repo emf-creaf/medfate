@@ -454,12 +454,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // instanceCommunicationStructures
-List instanceCommunicationStructures();
-RcppExport SEXP _medfate_instanceCommunicationStructures() {
+List instanceCommunicationStructures(List x);
+RcppExport SEXP _medfate_instanceCommunicationStructures(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(instanceCommunicationStructures());
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(instanceCommunicationStructures(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// generalCommunicationStructures
+List generalCommunicationStructures();
+RcppExport SEXP _medfate_generalCommunicationStructures() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(generalCommunicationStructures());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5855,7 +5866,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
-    {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 0},
+    {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 1},
+    {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 0},
     {"_medfate_clearCommunicationStructures", (DL_FUNC) &_medfate_clearCommunicationStructures, 1},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
