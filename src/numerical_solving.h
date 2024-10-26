@@ -5,4 +5,5 @@
 #endif
 using namespace Rcpp;
 
-double* tridiagonalSolving(double* a, double* b, double* c, double* d, int n);
+NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector c, NumericVector d,
+                                 NumericVector e, NumericVector f, int n);

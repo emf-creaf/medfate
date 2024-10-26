@@ -6,6 +6,54 @@ const int MAX_NUM_CANOPY_LAYERS = 100;
 const int MAX_NUM_COHORTS = 100;
 const int MAX_NUM_TIMESTEPS = 100;
 
+const int SOILCOM_dZ_m = 0;
+const int SOILCOM_dZUp = 1;
+const int SOILCOM_dZDown = 2;
+const int SOILCOM_lambda = 3;
+const int SOILCOM_theta_micro = 4;
+const int SOILCOM_theta_b = 5;
+const int SOILCOM_theta_macro = 6;
+const int SOILCOM_theta_sat_fict = 7;
+const int SOILCOM_Ksat_b = 8;
+const int SOILCOM_Ksat_b_ms = 9;
+const int SOILCOM_Ksat = 10;
+const int SOILCOM_Ksat_ms = 11;
+const int SOILCOM_Psi = 12;
+const int SOILCOM_K = 13;
+const int SOILCOM_C = 14;
+const int SOILCOM_Psi_m = 15;
+const int SOILCOM_K_ms = 16;
+const int SOILCOM_Kbc = 17;
+const int SOILCOM_Kbc_ms = 18;
+const int SOILCOM_C_m = 19;
+const int SOILCOM_S_macro = 20;
+const int SOILCOM_e_macro = 21;
+const int SOILCOM_Kmacro_ms = 22;
+const int SOILCOM_waterFluidity = 23;
+const int SOILCOM_a = 24;
+const int SOILCOM_b = 25;
+const int SOILCOM_c = 26;
+const int SOILCOM_d = 27;
+const int SOILCOM_e = 28;
+const int SOILCOM_f = 29;
+const int SOILCOM_K_step_ms05 = 30;
+const int SOILCOM_C_step_m05 = 31;
+const int SOILCOM_C_step = 32;
+const int SOILCOM_C_step_m = 33;
+const int SOILCOM_K_step_ms = 34;
+const int SOILCOM_K_step = 35;
+const int SOILCOM_Psi_step = 36;
+const int SOILCOM_Psi_step_m = 37;
+const int SOILCOM_S_macro_step = 38;
+const int SOILCOM_Kmacro_step_ms = 39;
+const int SOILCOM_theta_macro_step = 40;
+const int SOILCOM_theta_micro_step = 41;
+const int SOILCOM_finalSourceSinks_m3s = 42;
+const int SOILCOM_capill_below = 43;
+const int SOILCOM_drain_above = 44;
+const int SOILCOM_drain_below = 45;
+const int SOILCOM_lateral_flows_step_mm = 46;
+
 List communicationLongWaveRadiation(int ncanlayers) {
   NumericVector Lup(ncanlayers, NA_REAL), Ldown(ncanlayers, NA_REAL), Lnet(ncanlayers, NA_REAL);
   NumericVector tau(ncanlayers, NA_REAL), sumTauComp(ncanlayers, NA_REAL);
@@ -34,6 +82,62 @@ DataFrame communicationCanopyTurbulence(int ncanlayers) {
                                        Named("uw") = NumericVector(ncanlayers, NA_REAL));
   return(output);
 }
+List communicationSoilWaterBalance(int nlayers) {
+  int ncol = 50;
+  List out(ncol);
+  CharacterVector colnames(ncol);
+  for(int i = 0; i<ncol; i++) out[i] = NumericVector(nlayers, NA_REAL);
+  colnames[SOILCOM_dZ_m] = "dZ_m";
+  colnames[SOILCOM_dZUp] = "dZUp";
+  colnames[SOILCOM_dZDown] = "dZDown";
+  colnames[SOILCOM_lambda] = "lambda";
+  colnames[SOILCOM_theta_micro] = "theta_micro";
+  colnames[SOILCOM_theta_b] = "theta_b";
+  colnames[SOILCOM_theta_macro] = "theta_macro";
+  colnames[SOILCOM_theta_sat_fict] = "theta_sat_fict";
+  colnames[SOILCOM_Ksat_b] = "Ksat_b";
+  colnames[SOILCOM_Ksat_b_ms] = "Ksat_b_ms";
+  colnames[SOILCOM_Ksat] = "Ksat";
+  colnames[SOILCOM_Ksat_ms] = "Ksat_ms";
+  colnames[SOILCOM_Psi] = "Psi";
+  colnames[SOILCOM_K] = "K";
+  colnames[SOILCOM_C] = "C";
+  colnames[SOILCOM_Psi_m] = "Psi_m";
+  colnames[SOILCOM_K_ms] = "K_ms";
+  colnames[SOILCOM_Kbc] = "Kbc";
+  colnames[SOILCOM_Kbc_ms] = "Kbc_ms";
+  colnames[SOILCOM_C_m] = "C_m";
+  colnames[SOILCOM_S_macro] = "S_macro";
+  colnames[SOILCOM_e_macro] = "e_macro";
+  colnames[SOILCOM_Kmacro_ms] = "Kmacro_ms";
+  colnames[SOILCOM_waterFluidity] = "waterFluidity";
+  colnames[SOILCOM_a] = "a";
+  colnames[SOILCOM_b] = "b";
+  colnames[SOILCOM_c] = "c";
+  colnames[SOILCOM_d] = "d";
+  colnames[SOILCOM_e] = "e";
+  colnames[SOILCOM_f] = "f";
+  colnames[SOILCOM_K_step_ms05] = "K_step_ms05";
+  colnames[SOILCOM_C_step_m05] = "C_step_m05";
+  colnames[SOILCOM_C_step] = "C_step";
+  colnames[SOILCOM_C_step_m] = "C_step_m";
+  colnames[SOILCOM_K_step_ms] = "K_step_ms";
+  colnames[SOILCOM_K_step] = "K_step";
+  colnames[SOILCOM_Psi_step] = "Psi_step";
+  colnames[SOILCOM_Psi_step_m] = "Psi_step_m";
+  colnames[SOILCOM_S_macro_step] = "S_macro_step";
+  colnames[SOILCOM_Kmacro_step_ms] = "Kmacro_step_ms";
+  colnames[SOILCOM_theta_macro_step] = "theta_macro_step";
+  colnames[SOILCOM_theta_micro_step] = "theta_micro_step";
+  colnames[SOILCOM_finalSourceSinks_m3s] = "finalSourceSinks_m3s";
+  colnames[SOILCOM_capill_below] = "capill_below";
+  colnames[SOILCOM_drain_above] = "drain_above";
+  colnames[SOILCOM_drain_below] = "drain_below";
+  colnames[SOILCOM_lateral_flows_step_mm] = "lateral_flows_step_mm";
+  out.attr("names") = colnames;
+  return(out);
+}
+
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers) {
 
   NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
@@ -1214,6 +1318,7 @@ List instanceCommunicationStructures(List x) {
   int nlayers = soil.nrow();
   int numCohorts = cohorts.nrow();
   int ntimesteps = control["ndailysteps"];
+  List SWBcommunication = communicationSoilWaterBalance(nlayers);
   List basicTranspirationOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
   List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, nlayers);
   List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
@@ -1221,7 +1326,8 @@ List instanceCommunicationStructures(List x) {
   List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, nlayers);
   List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
   List initialFinalCC = communicationInitialFinalCarbonCompartments(numCohorts);
-  List ic = List::create(_["basicTranspirationOutput"] = basicTranspirationOutput,
+  List ic = List::create(_["SWBcommunication"] = SWBcommunication,
+                         _["basicTranspirationOutput"] = basicTranspirationOutput,
                          _["basicSPWBOutput"] = basicSPWBOutput,
                          _["basicGROWTHOutput"] = basicGROWTHOutput,
                          _["advancedTranspirationOutput"] = advancedTranspirationOutput,
@@ -1241,7 +1347,9 @@ List generalCommunicationStructures() {
   List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, MAX_NUM_SOIL_LAYERS);
   List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
   List initialFinalCC = communicationInitialFinalCarbonCompartments(MAX_NUM_COHORTS);
-  List ic = List::create(_["basicTranspirationOutput"] = basicTranspirationOutput,
+  List SWBcommunication = communicationSoilWaterBalance(MAX_NUM_SOIL_LAYERS);
+  List ic = List::create(_["SWBcommunication"] = SWBcommunication,
+                         _["basicTranspirationOutput"] = basicTranspirationOutput,
                          _["basicSPWBOutput"] = basicSPWBOutput,
                          _["basicGROWTHOutput"] = basicGROWTHOutput,
                          _["advancedTranspirationOutput"] = advancedTranspirationOutput,

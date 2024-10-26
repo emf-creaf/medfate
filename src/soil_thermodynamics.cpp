@@ -184,6 +184,8 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
                                           W, Theta_SAT, Theta_FC, 
                                           Temp);
   int nlayers = Temp.length();
+  
+  NumericVector a(nlayers, 0.0), b(nlayers, 0.0), c(nlayers, 0.0), d(nlayers, 0.0), e(nlayers, 0.0), f(nlayers, 0.0);
 
   //Estimate layer interfaces
   double* dZ_m = new double[nlayers];
@@ -214,10 +216,6 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
   }
   double* k_up = new double[nlayers];
   double* k_down = new double[nlayers];
-  double* a = new double[nlayers];
-  double* b = new double[nlayers];
-  double* c = new double[nlayers];
-  double* d = new double[nlayers];
   for(int l=0;l<nlayers;l++) {
     k_up[l] = 0.0;
     k_down[l] = 0.0;
@@ -241,23 +239,8 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       d[l] = (k_up[l]/dZUp[l])*(Temp[l-1] - Temp[l]);
     }
   }
-  double* tempch = tridiagonalSolving(a,b,c,d, nlayers);
-  NumericVector out(nlayers);
-  for(int l=0;l<nlayers;l++) out[l] = tempch[l];
-  delete[] tempch;
-  delete[] dZ_m;
-  delete[] dZUp;
-  delete[] dZDown;
-  delete[] Zcent;
-  delete[] Zup;
-  delete[] Zdown;
-  delete[] k_up;
-  delete[] k_down;
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
-  return(out);
+  NumericVector tempch = tridiagonalSolving(a,b,c,d, e,f, nlayers);
+  return(tempch);
 }
 // NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
 //                                 NumericVector sand, NumericVector clay,

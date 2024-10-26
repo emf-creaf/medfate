@@ -5,6 +5,7 @@
 #include "root.h"
 #include "spwb.h"
 #include "biophysicsutils.h"
+#include "communication_structures.h"
 #include "hydrology.h"
 using namespace Rcpp;
 using namespace meteoland;
@@ -130,8 +131,9 @@ List aspwb_day_internal(List x, NumericVector meteovec,
     if(l ==0) sourceSinkVec[l] -= Esoil;
   }
   
+  DataFrame SWBcommunication = communicationSoilWaterBalance(nlayers);
   //Determine water flows, returning deep drainage
-  NumericVector sf = soilWaterBalance(soil, soilFunctions,
+  NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
                                       NetRain, rainfallIntensity, Snowmelt, sourceSinkVec, 
                                       runon, lateralFlows, waterTableDepth,
                                       infiltrationMode, infiltrationCorrection, soilDomains, 

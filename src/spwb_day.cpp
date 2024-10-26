@@ -114,6 +114,7 @@ List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   //Retrieve communication structures
   List modelOutputComm = internalCommunication["basicSPWBOutput"];
   List transpOutput = internalCommunication["basicTranspirationOutput"];
+  List SWBcommunication = internalCommunication["SWBcommunication"];
   
   NumericVector weather = modelOutputComm["weather"];
   weather["tday"] = meteovec["tday"];
@@ -291,7 +292,7 @@ List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
-    NumericVector sf = soilWaterBalance(soil, soilFunctions,
+    NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
                                         RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
                                         runon, lateralFlows, waterTableDepth,
                                         infiltrationMode, infiltrationCorrection, soilDomains, 
@@ -326,7 +327,7 @@ List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
         sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
         if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
       }
-      NumericVector sf_c = soilWaterBalance(soil_c, soilFunctions,
+      NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
                                             RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
                                             runon, lateralFlows, waterTableDepth,
                                             infiltrationMode, infiltrationCorrection, soilDomains, 
@@ -424,6 +425,7 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   //Retrieve communication structures
   List modelOutputComm = internalCommunication["advancedSPWBOutput"];
   List transpOutput = internalCommunication["advancedTranspirationOutput"];
+  List SWBcommunication = internalCommunication["SWBcommunication"];
   
   NumericVector weather = modelOutputComm["weather"];
   weather["prec"] = meteovec["prec"];
@@ -601,7 +603,7 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   }
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
-    NumericVector sf = soilWaterBalance(soil, soilFunctions,
+    NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
                                         RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
                                         runon, lateralFlows, waterTableDepth,
                                         infiltrationMode, infiltrationCorrection, soilDomains, 
@@ -635,7 +637,7 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
         sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
         if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
       }
-      NumericVector sf_c = soilWaterBalance(soil_c, soilFunctions,
+      NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
                                             RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
                                             runon, lateralFlows, waterTableDepth,
                                             infiltrationMode, infiltrationCorrection, soilDomains, 
