@@ -1177,17 +1177,32 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
   ////////////////////////////////////////
   for(int c=0;c<numCohorts;c++) {
-    SoilExtractCoh[c] =  sum(outputExtraction(c,_));
-    PLCsm[c] = sum(StemPLC(c,_))/((double)StemPLC.ncol());
-    PLClm[c] = sum(LeafPLC(c,_))/((double)LeafPLC.ncol());
-    RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
-    RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
+    SoilExtractCoh[c] = 0.0;
+    for(int l=0;l<nlayers;l++) {
+      SoilExtractCoh[c] += outputExtraction(c,l);
+    }
+    PLCsm[c] = 0.0;
+    PLClm[c] = 0.0;
+    RWCsm[c] = 0.0;
+    RWClm[c] = 0.0;
+    dEdPm[c] = 0.0;
+    for(int n=0;n<ntimesteps;n++) {
+      PLCsm[c] += StemPLC(c,n);
+      PLClm[c] += LeafPLC(c,n);
+      RWCsm[c] += StemRWCInst(c,n);
+      RWClm[c] += LeafRWCInst(c,n);
+      dEdPm[c] += dEdPInst(c,n);
+    }
+    PLCsm[c] = PLCsm[c]/((double) ntimesteps);
+    PLClm[c] = PLClm[c]/((double) ntimesteps);
+    RWCsm[c] = RWCsm[c]/((double) ntimesteps);
+    RWClm[c] = RWClm[c]/((double) ntimesteps);
+    dEdPm[c] = dEdPm[c]/((double) ntimesteps);
     if(lfmcComponent=="fine") {
       LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     } else { //leaf
       LFMC[c] = maxFMC[c]*RWClm[c];
     }
-    dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     DDS[c] = (1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
     if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") {
       DDS[c] = phi[c]*DDS[c];

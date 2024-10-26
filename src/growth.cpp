@@ -406,6 +406,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
+  int ntimesteps = control["ndailysteps"];
   bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
   double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
@@ -445,6 +446,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   
   //Soil
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  int nlayers = soil.nrow();
   NumericVector psiSoil = psi(soil,"soilFunctions");
   NumericVector widths = soil["widths"];
   NumericVector rfc = soil["rfc"];
@@ -483,8 +485,6 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
     VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
     VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
   }
-  
-  int numLayers = V.ncol();
   
   //Internal state variables
   internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -552,7 +552,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   }
 
   //Data from spwb
-  NumericVector Tcan;
+  NumericVector Tcan(ntimesteps);
   NumericMatrix StemSympPsiInst, LeafSympPsiInst;
   List eb;
   double tcan_day = NA_REAL;
@@ -562,7 +562,8 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
 
     eb = spwbOut["EnergyBalance"];  
     DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
-    Tcan = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
+    NumericVector TcanIN = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
+    for(int n=0;n<ntimesteps;n++) Tcan[n] = TcanIN[n];
     tcan_day = meteoland::utils_averageDaylightTemperature(min(Tcan), max(Tcan));
   }
   
@@ -662,16 +663,67 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   // List ringList = as<Rcpp::List>(x["internalRings"]);
 
   //Daily output vectors
-  NumericVector LabileCarbonBalance(numCohorts,0.0);
-  NumericVector MaintenanceRespiration(numCohorts,0.0);
-  NumericVector GrowthCosts(numCohorts,0.0);
-  NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
-  NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector LeafBiomass(numCohorts,0.0), SapwoodBiomass(numCohorts, 0.0), SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
-  NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
-  NumericVector GrossPhotosynthesis(numCohorts,0.0);
-  NumericVector RootExudation(numCohorts,0.0);
-
+  DataFrame labileCarbonBalance = as<DataFrame>(modelOutput["LabileCarbonBalance"]);
+  NumericVector GrossPhotosynthesis = labileCarbonBalance["GrossPhotosynthesis"];
+  NumericVector MaintenanceRespiration = labileCarbonBalance["MaintenanceRespiration"];
+  NumericVector GrowthCosts = labileCarbonBalance["GrowthCosts"];
+  NumericVector RootExudation = labileCarbonBalance["RootExudation"];
+  NumericVector LabileCarbonBalance = labileCarbonBalance["LabileCarbonBalance"];
+  NumericVector PlantSugarLeaf = labileCarbonBalance["SugarLeaf"];
+  NumericVector PlantStarchLeaf = labileCarbonBalance["StarchLeaf"];
+  NumericVector PlantSugarSapwood = labileCarbonBalance["SugarSapwood"];
+  NumericVector PlantStarchSapwood = labileCarbonBalance["StarchSapwood"];
+  NumericVector PlantSugarTransport = labileCarbonBalance["SugarTransport"];
+  for(int c=0;c<numCohorts;c++) {
+    GrossPhotosynthesis[c] = 0.0;
+    MaintenanceRespiration[c] = 0.0;
+    GrowthCosts[c] = 0.0;
+    RootExudation[c] = 0.0;
+    LabileCarbonBalance[c] = 0.0;
+    PlantSugarLeaf[c] = 0.0;
+    PlantStarchLeaf[c] = 0.0;
+    PlantSugarSapwood[c] = 0.0;
+    PlantStarchSapwood[c] = 0.0;
+    PlantSugarTransport[c] = 0.0;
+  }
+  
+  DataFrame plantStructure = as<DataFrame>(modelOutput["PlantStructure"]);
+  NumericVector LeafBiomass = plantStructure["LeafBiomass"];
+  NumericVector SapwoodBiomass = plantStructure["SapwoodBiomass"];
+  NumericVector FineRootBiomass = plantStructure["FineRootBiomass"];
+  NumericVector LeafArea = plantStructure["LeafArea"];
+  NumericVector SapwoodArea = plantStructure["SapwoodArea"];
+  NumericVector FineRootArea = plantStructure["FineRootArea"];
+  NumericVector HuberValue = plantStructure["HuberValue"];
+  NumericVector RootAreaLeafArea = plantStructure["RootAreaLeafArea"];
+  NumericVector OutputDBH = plantStructure["DBH"];
+  NumericVector OutputHeight = plantStructure["Height"];
+  
+  DataFrame growthMortality = as<DataFrame>(modelOutput["GrowthMortality"]);
+  NumericVector SAgrowth = growthMortality["SAgrowth"];
+  NumericVector LAgrowth = growthMortality["LAgrowth"];
+  NumericVector FRAgrowth = growthMortality["FRAgrowth"];
+  NumericVector StarvationRate = growthMortality["StarvationRate"];
+  NumericVector DessicationRate = growthMortality["DessicationRate"];
+  NumericVector MortalityRate = growthMortality["MortalityRate"];
+  
+  for(int c=0;c<numCohorts;c++) {
+    SAgrowth[c] = 0.0;
+    LAgrowth[c] = 0.0;
+    FRAgrowth[c] = 0.0;
+    StarvationRate[c] = 0.0;
+    DessicationRate[c] = 0.0;
+    MortalityRate[c] = 0.0;
+    LeafBiomass[c] = 0.0;
+    SapwoodBiomass[c] = 0.0;
+    FineRootBiomass[c] = 0.0;
+    LeafArea[c] =  0.0;
+    SapwoodArea[c] = 0.0;
+    FineRootArea[c] = 0.0;
+    HuberValue[c] = 0.0;
+    RootAreaLeafArea[c] = 0.0;
+  }
+  
   NumericVector deltaLAgrowth(numCohorts,0.0);
   NumericVector deltaSAgrowth(numCohorts,0.0);
   
@@ -715,7 +767,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
     if(N[j] > 0.0) {
       double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
-      NumericVector deltaFRBgrowth(numLayers, 0.0);
+      NumericVector deltaFRBgrowth(nlayers, 0.0);
       
       double LAexpanded = leafArea(LAI_expanded[j], N[j]);
       double LAlive = leafArea(LAI_live[j], N[j]);
@@ -739,19 +791,19 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
       //Xylogenesis
       // List ring = ringList[j];
       double rleafcell = NA_REAL, rcambiumcell = NA_REAL;
-      NumericVector rfineroot(numLayers);
+      NumericVector rfineroot(nlayers);
       double relative_hormone_factor = std::max(0.0, std::min(1.0, LAI_expanded[j]/LAI_nocomp[j]));
       if(transpirationMode=="Granier") {
         // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
         rleafcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
+        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
         rleafcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
         rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
-        // if(j==0) Rcout<<j<< " Psi:"<< psiSympStem[j]<< " pi0:"<< " r:"<< rcambiumcell<<"\n";
+        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
+        // Rcout<<j<< " rcellmax "<< rcellmax<<" tcan_day "<< tcan_day<< " Psi:"<< psiRootCrown[j]<< " r:"<< rcambiumcell<<"\n";
       }
       if(!subdailyCarbonBalance) {
         //MAINTENANCE RESPIRATION
@@ -801,7 +853,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
         
         //fine root growth
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
-          for(int s = 0;s<numLayers;s++) {
+          for(int s = 0;s<nlayers;s++) {
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rcellmax);
             if(!sinkLimitation) deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
@@ -829,11 +881,12 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
           }
           double deltaSAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
           deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
-          // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<" rgrcellfile"<< rgrcellfile<<"\n";
+          // Rcout<< rcambiumcell<<" deltaSAsink "<< deltaSAsink << " dSAgrowth "<< deltaSAgrowth<<"\n"; 
           growthCostSA = deltaSAgrowth[j]*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
           synthesisRespSA = growthCostSA*(CCsapwood[j] - 1.0)/CCsapwood[j];
         }
         
+        // Rcout<<growthCostLA<<" "<<growthCostSA<<" "<<growthCostFRB<< " "<< TotalLivingBiomass[j]<<"\n";
         GrowthCosts[j] +=(growthCostLA + growthCostSA + growthCostFRB)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
         
         //PARTIAL CARBON BALANCE
@@ -928,7 +981,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
           }
           //fine root growth
           if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
-            for(int l = 0;l<numLayers;l++) {
+            for(int l = 0;l<nlayers;l++) {
               double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
               double deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[l]/rcellmax);
               if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
@@ -1075,8 +1128,8 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
       propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
         
       //FRB SENESCENCE
-      NumericVector deltaFRBsenescence(numLayers, 0.0);
-      for(int l=0;l<numLayers;l++) {
+      NumericVector deltaFRBsenescence(nlayers, 0.0);
+      for(int l=0;l<nlayers;l++) {
         double daySenescence = NA_REAL;
         if(transpirationMode=="Granier") daySenescence = SRfineroot[j]*std::max(0.0,(tday-5.0)/20.0);
         else daySenescence = SRfineroot[j]*std::max(0.0,(Tsoil[l]-5.0)/20.0);
@@ -1127,12 +1180,12 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       // double SAprev = SA[j];
       SA[j] = SA[j] + deltaSAgrowth[j] - deltaSASenescence; 
-      NumericVector newFRB(numLayers,0.0);
-      for(int s=0;s<numLayers;s++) {
+      NumericVector newFRB(nlayers,0.0);
+      for(int s=0;s<nlayers;s++) {
         newFRB[s] = fineRootBiomass[j]*V(j,s) + deltaFRBgrowth[s] - deltaFRBsenescence[s];
       }
       fineRootBiomass[j] = sum(newFRB);
-      for(int s=0;s<numLayers;s++) { 
+      for(int s=0;s<nlayers;s++) { 
         V(j,s) = newFRB[s]/fineRootBiomass[j];
       }
 
@@ -1161,7 +1214,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
           //Update rhizosphere maximum conductance
           NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],
                                                                     SRL[j], FineRootDensity[j], RLD[j]);
-          for(int s=0;s<numLayers;s++) { 
+          for(int s=0;s<nlayers;s++) { 
             VGrhizo_kmax(j,s) = VGrhizo_new[s];
           }
           VGrhizo_kmaxVEC[j] = sum(VGrhizo_kmax(j,_));
@@ -1277,28 +1330,28 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
               //Daily basal mortality rate based on model
               basalMortalityRate = 1.0 - exp(log(1.0 - Pmodel1yr)/356.0);
             }
-            if(allowStarvation) starvationRate[j] = dailyMortalityProbability(relativeSugarSapwood, mortalityRelativeSugarThreshold);
-            if(allowDessication) dessicationRate[j] = dailyMortalityProbability((stemSympRWC + (1.0 - StemPLC[j]))/2.0, mortalityRWCThreshold);
-            mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
-            if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
+            if(allowStarvation) StarvationRate[j] = dailyMortalityProbability(relativeSugarSapwood, mortalityRelativeSugarThreshold);
+            if(allowDessication) DessicationRate[j] = dailyMortalityProbability((stemSympRWC + (1.0 - StemPLC[j]))/2.0, mortalityRWCThreshold);
+            MortalityRate[j] = max(NumericVector::create(basalMortalityRate, DessicationRate[j],  StarvationRate[j]));
+            if((DessicationRate[j] > basalMortalityRate) && (DessicationRate[j] > StarvationRate[j])) {
               cause = "dessication";
-            } else if((starvationRate[j] > basalMortalityRate) && (starvationRate[j] > dessicationRate[j])) {
+            } else if((StarvationRate[j] > basalMortalityRate) && (StarvationRate[j] > DessicationRate[j])) {
               cause = "starvation";
             }
-            if(NumericVector::is_na(mortalityRate[j])) {
-              Rcout<< " Basal mortality rate " << basalMortalityRate << " Dessication rate " << dessicationRate[j] << " starvation rate "<< starvationRate[j]<<"\n"; 
+            if(NumericVector::is_na(MortalityRate[j])) {
+              Rcout<< " Basal mortality rate " << basalMortalityRate << " Dessication rate " << DessicationRate[j] << " starvation rate "<< StarvationRate[j]<<"\n"; 
               stop("Missing value for mortality rate");
             }
-            // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
+            // Rcout<< j << " "<< stemSympRWC<< " "<< DessicationRate[j]<<"\n";
             if(mortalityMode =="density/deterministic") {
-              Ndead_day = N[j]*mortalityRate[j];
+              Ndead_day = N[j]*MortalityRate[j];
             } else if(mortalityMode =="whole-cohort/stochastic") {
-              if(R::runif(0.0,1.0) < mortalityRate[j]) {
+              if(R::runif(0.0,1.0) < MortalityRate[j]) {
                 Ndead_day = N[j];
                 Rcout<<" [Cohort "<< j<<" died from " << cause.get_cstring() << "] ";
               }
             } else if(mortalityMode == "density/stochastic") {
-              Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
+              Ndead_day = R::rbinom(round(N[j]), MortalityRate[j]);
             }
           }
         } else { //Cohort burned
@@ -1376,8 +1429,8 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
           } else if(allocationStrategy =="Al2As") {
             sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j];
           }
-          NumericVector VGrhizo_target(numLayers,0.0);
-          for(int s=0;s<numLayers;s++) {
+          NumericVector VGrhizo_target(nlayers,0.0);
+          for(int s=0;s<nlayers;s++) {
             // Rcout<<VCroot_kmaxVEC[j]<< " "<<VCstem_kmax[j]<<"\n";
             VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0,
                                                    VG_n[s], VG_alpha[s],
@@ -1394,6 +1447,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
       
       //Output variables
       // Rcout<<"-output";
+      FineRootBiomass[j] = fineRootBiomass[j];
       SapwoodArea[j] = SA[j];
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
       SapwoodBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
@@ -1426,6 +1480,8 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
     // if(j==(numCohorts-1)) Rcout<< j << " after recalculation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
     
     //OUTPUT VARIABLES
+    OutputDBH[j] = DBH[j];
+    OutputHeight[j] = H[j];
     PlantSugarLeaf[j] = sugarLeaf[j];
     PlantStarchLeaf[j] = starchLeaf[j];
     PlantSugarSapwood[j] = sugarSapwood[j];
@@ -1448,76 +1504,12 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   }
   
   
-  DataFrame labileCarbonBalance = as<DataFrame>(modelOutput["LabileCarbonBalance"]);
-  NumericVector outputGrossPhotosynthesis = labileCarbonBalance["GrossPhotosynthesis"];
-  NumericVector outputMaintenanceRespiration = labileCarbonBalance["MaintenanceRespiration"];
-  NumericVector outputGrowthCosts = labileCarbonBalance["GrowthCosts"];
-  NumericVector outputRootExudation = labileCarbonBalance["RootExudation"];
-  NumericVector outputLabileCarbonBalance = labileCarbonBalance["LabileCarbonBalance"];
-  NumericVector outputSugarLeaf = labileCarbonBalance["SugarLeaf"];
-  NumericVector outputStarchLeaf = labileCarbonBalance["StarchLeaf"];
-  NumericVector outputSugarSapwood = labileCarbonBalance["SugarSapwood"];
-  NumericVector outputStarchSapwood = labileCarbonBalance["StarchSapwood"];
-  NumericVector outputSugarTransport = labileCarbonBalance["SugarTransport"];
-  for(int c=0;c<numCohorts;c++) {
-    outputGrossPhotosynthesis[c] = GrossPhotosynthesis[c];
-    outputMaintenanceRespiration[c] = MaintenanceRespiration[c];
-    outputGrowthCosts[c] = GrowthCosts[c];
-    outputRootExudation[c] = RootExudation[c];
-    outputLabileCarbonBalance[c] = LabileCarbonBalance[c];
-    outputSugarLeaf[c] = PlantSugarLeaf[c];
-    outputStarchLeaf[c] = PlantStarchLeaf[c];
-    outputSugarSapwood[c] = PlantSugarSapwood[c];
-    outputStarchSapwood[c] = PlantStarchSapwood[c];
-    outputSugarTransport[c] = PlantSugarTransport[c];
-  }
   NumericVector standCB = modelOutput["CarbonBalance"];
   standCB["GrossPrimaryProduction"] = standGrossPrimaryProduction;
   standCB["MaintenanceRespiration"] = standMaintenanceRespiration;
   standCB["SynthesisRespiration"] = standSynthesisRespiration;
   standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
 
-  
-  DataFrame plantStructure = as<DataFrame>(modelOutput["PlantStructure"]);
-  NumericVector outputLeafBiomass = plantStructure["LeafBiomass"];
-  NumericVector outputSapwoodBiomass = plantStructure["SapwoodBiomass"];
-  NumericVector outputFineRootBiomass = plantStructure["FineRootBiomass"];
-  NumericVector outputLeafArea = plantStructure["LeafArea"];
-  NumericVector outputSapwoodArea = plantStructure["SapwoodArea"];
-  NumericVector outputFineRootArea = plantStructure["FineRootArea"];
-  NumericVector outputHuberValue = plantStructure["HuberValue"];
-  NumericVector outputRootAreaLeafArea = plantStructure["RootAreaLeafArea"];
-  NumericVector outputDBH = plantStructure["DBH"];
-  NumericVector outputHeight = plantStructure["Height"];
-  for(int c=0;c<numCohorts;c++) {
-    outputLeafBiomass[c] = LeafBiomass[c];
-    outputSapwoodBiomass[c] = SapwoodBiomass[c];
-    outputFineRootBiomass[c] = fineRootBiomass[c];
-    outputLeafArea[c] = LeafArea[c];
-    outputSapwoodArea[c] = SapwoodArea[c];
-    outputFineRootArea[c] = FineRootArea[c];
-    outputHuberValue[c] = HuberValue[c];
-    outputRootAreaLeafArea[c] = RootAreaLeafArea[c];
-    outputDBH[c] = DBH[c];
-    outputHeight[c] = H[c];
-  }
-  
-  DataFrame growthMortality = as<DataFrame>(modelOutput["GrowthMortality"]);
-  NumericVector outputSAgrowth = growthMortality["SAgrowth"];
-  NumericVector outputLAgrowth = growthMortality["LAgrowth"];
-  NumericVector outputFRAgrowth = growthMortality["FRAgrowth"];
-  NumericVector outputStarvationRate = growthMortality["StarvationRate"];
-  NumericVector outputDessicationRate = growthMortality["DessicationRate"];
-  NumericVector outputMortalityRate = growthMortality["MortalityRate"];
-  for(int c=0;c<numCohorts;c++) {
-    outputSAgrowth[c] = SAgrowth[c];
-    outputLAgrowth[c] = LAgrowth[c];
-    outputFRAgrowth[c] = FRAgrowth[c];
-    outputStarvationRate[c] = starvationRate[c];
-    outputDessicationRate[c] = dessicationRate[c];
-    outputMortalityRate[c] = mortalityRate[c];
-  }
-  
   return(modelOutput);
 }
 

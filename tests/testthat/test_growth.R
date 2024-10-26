@@ -115,3 +115,32 @@ test_that("growth_day gives same result with inner and direct calls",{
   
 })
 
+test_that("growth_day gives same result with inner and direct calls with general communication",{
+  x1i <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  x1d <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  expect_equal(x1i, x1d)
+  ic <- medfate:::.generalCommunicationStructures()
+  s_inner <- medfate:::.growth_day_inner(ic, x1i, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  s_dir <- medfate::growth_day(x1d, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x1i, x1d)
+  expect_equal(s_inner, s_dir)
+
+  x2i <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  x2d <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  expect_equal(x2i, x2d)
+  ic <- medfate:::.generalCommunicationStructures()
+  s_inner <- medfate:::.growth_day_inner(ic, x2i, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  s_dir <- medfate::growth_day(x2d, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x2i, x2d)
+  expect_equal(s_inner, s_dir)
+
+  x3i <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  x3d <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  expect_equal(x3i, x3d)
+  ic <- medfate:::.generalCommunicationStructures()
+  s_inner <- medfate:::.growth_day_inner(ic, x3i, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  s_dir <- medfate::growth_day(x3d, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x3i, x3d)
+  expect_equal(s_inner, s_dir)
+
+})

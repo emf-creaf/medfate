@@ -118,3 +118,33 @@ test_that("spwb_day gives same result with inner and direct calls",{
   expect_equal(s_inner, s_dir)
   
 })
+
+test_that("spwb_day gives same result with inner and direct calls with general communication",{
+  x1i <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  x1d <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  expect_equal(x1i, x1d)
+  ic <- medfate:::.generalCommunicationStructures()
+  s_inner <- medfate:::.spwb_day_inner(ic, x1i, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  s_dir <- medfate::spwb_day(x1d, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x1i, x1d)
+  expect_equal(s_inner, s_dir)
+
+  x2i <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  x2d <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  expect_equal(x2i, x2d)
+  ic <- medfate:::.generalCommunicationStructures()
+  s_inner <- medfate:::.spwb_day_inner(ic, x2i, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  s_dir <- medfate::spwb_day(x2d, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x2i, x2d)
+  expect_equal(s_inner, s_dir)
+
+  x3i <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  x3d <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  expect_equal(x3i, x3d)
+  ic <- medfate:::.generalCommunicationStructures()
+  s_inner <- medfate:::.spwb_day_inner(ic, x3i, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  s_dir <- medfate::spwb_day(x3d, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x3i, x3d)
+  expect_equal(s_inner, s_dir)
+
+})
