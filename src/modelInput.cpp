@@ -1219,8 +1219,6 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                             _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                             _["internalLAIDistribution"] = internalLAIDistribution(above, paramsCanopydf),
                             _["internalFCCS"] = FCCSprops);
-  List internalCommunication = List::create();
-  input.push_back(internalCommunication, "internalCommunication");                       
 
   input.attr("class") = CharacterVector::create("spwbInput","list");
   return(input);
@@ -1375,8 +1373,6 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
-  List internalCommunication = List::create();
-  input.push_back(internalCommunication, "internalCommunication");                       
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);
 }

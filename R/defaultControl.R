@@ -31,7 +31,6 @@
 #'       \item{\code{fireHazardResults [= FALSE]}: Boolean flag to force calculation of daily fire hazard.}
 #'       \item{\code{fireHazardStandardWind [= NA]}: Wind speed (in m/s) for fire-hazard estimation. If missing, actual wind-speed is used.}
 #'       \item{\code{fireHazardStandardDFMC [= NA]}: Dead fuel moisture content for fire-hazard estimation. If missing, estimation from current weather is used.}
-#'       \item{\code{clearCommunications [= TRUE]}: Boolean flag to indicate that internal communication structures should be removed at the end of the simulation.}
 #'     }
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
 #'     \itemize{
@@ -206,8 +205,7 @@ defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets")
     fireHazardResults = FALSE,
     fireHazardStandardWind = NA,
     fireHazardStandardDFMC = NA,
-    clearCommunications = TRUE,
-    
+
     # For water balance
     transpirationMode = transpirationMode,
     soilFunctions = "VG",
