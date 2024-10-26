@@ -1085,74 +1085,25 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
-  int nlayers = soil.nrow();
   int numCohorts = cohorts.nrow();
   int ntimesteps = control["ndailysteps"];
   bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
 
   List spwbOut = copyAdvancedSPWBOutput(aoc, x);
   
-  DataFrame labileCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["MaintenanceRespiration"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["GrowthCosts"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["RootExudation"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["LabileCarbonBalance"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["SugarLeaf"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["StarchLeaf"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["SugarSapwood"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
-                                                    _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
+  DataFrame labileCarbonBalance = copyDataFrame(as<DataFrame>(aoc["LabileCarbonBalance"]), numCohorts);
   labileCarbonBalance.attr("row.names") = above.attr("row.names");
   
-  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL};
-  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"});
+  NumericVector standCB = clone(as<NumericVector>(aoc["CarbonBalance"]));
   
-  //Final Biomass compartments
-  DataFrame plantStructure = DataFrame::create(
-    _["LeafBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
-    _["LeafArea"] = NumericVector(numCohorts, NA_REAL),
-    _["SapwoodArea"] = NumericVector(numCohorts, NA_REAL),
-    _["FineRootArea"] = NumericVector(numCohorts, NA_REAL),
-    _["HuberValue"] = NumericVector(numCohorts, NA_REAL),
-    _["RootAreaLeafArea"] = NumericVector(numCohorts, NA_REAL),
-    _["DBH"] = NumericVector(numCohorts, NA_REAL),
-    _["Height"] = NumericVector(numCohorts, NA_REAL)
-  );
+  DataFrame plantStructure = copyDataFrame(as<DataFrame>(aoc["PlantStructure"]), numCohorts);
+  plantStructure.attr("row.names") = above.attr("row.names");
   
-  DataFrame growthMortality = DataFrame::create(
-    _["SAgrowth"] = NumericVector(numCohorts, NA_REAL),
-    _["LAgrowth"] = NumericVector(numCohorts, NA_REAL),
-    _["FRAgrowth"] = NumericVector(numCohorts, NA_REAL),
-    _["StarvationRate"] = NumericVector(numCohorts, NA_REAL),
-    _["DessicationRate"] = NumericVector(numCohorts, NA_REAL),
-    _["MortalityRate"] = NumericVector(numCohorts, NA_REAL)
-  );
+  DataFrame growthMortality  = copyDataFrame(as<DataFrame>(aoc["GrowthMortality"]), numCohorts);
   growthMortality.attr("row.names") = above.attr("row.names");
   
-  DataFrame plantBiomassBalance = DataFrame::create(_["InitialDensity"] = NumericVector(numCohorts, 0.0),
-                                                    _["InitialSapwoodBiomass"] = NumericVector(numCohorts, 0.0),
-                                                    _["InitialStructuralBiomass"] = NumericVector(numCohorts, 0.0),
-                                                    _["StructuralBiomassBalance"] = NumericVector(numCohorts, 0.0),
-                                                    _["StructuralBiomassChange"] = NumericVector(numCohorts, 0.0),
-                                                    _["InitialLabileBiomass"] = NumericVector(numCohorts, 0.0),
-                                                    _["LabileBiomassBalance"] = NumericVector(numCohorts, 0.0),
-                                                    _["LabileBiomassChange"] = NumericVector(numCohorts, 0.0),
-                                                    _["InitialLivingPlantBiomass"] = NumericVector(numCohorts, 0.0),
-                                                    _["InitialPlantBiomass"] = NumericVector(numCohorts, 0.0),
-                                                    _["PlantBiomassBalance"] = NumericVector(numCohorts, 0.0),
-                                                    _["PlantBiomassChange"] = NumericVector(numCohorts, 0.0),
-                                                    _["MortalityBiomassLoss"] = NumericVector(numCohorts, 0.0),
-                                                    _["InitialCohortBiomass"] = NumericVector(numCohorts, 0.0),
-                                                    _["CohortBiomassBalance"] = NumericVector(numCohorts, 0.0),
-                                                    _["CohortBiomassChange"] = NumericVector(numCohorts, 0.0));
+  DataFrame plantBiomassBalance = copyDataFrame(as<DataFrame>(aoc["PlantBiomassBalance"]), numCohorts);
   plantBiomassBalance.attr("row.names") = above.attr("row.names");
-  
-  
   
   List l = List::create(_["cohorts"] = spwbOut["cohorts"],
                         _["topography"] = spwbOut["topography"],
@@ -1175,16 +1126,18 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
                         _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
                         _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
   if(subdailyCarbonBalance) {
-
-    //Subdaily output matrices (Sperry/Sureau)
-    NumericMatrix LabileCarbonBalanceInst(numCohorts, ntimesteps);  
-    NumericMatrix GrossPhotosynthesisInst(numCohorts, ntimesteps);  
-    NumericMatrix MaintenanceRespirationInst(numCohorts, ntimesteps);  
-    NumericMatrix GrowthCostsInst(numCohorts, ntimesteps);  
-    NumericMatrix RootExudationInst(numCohorts, ntimesteps);  
-    NumericMatrix PlantSugarTransportInst(numCohorts, ntimesteps);
-    NumericMatrix PlantSugarLeafInst(numCohorts, ntimesteps), PlantStarchLeafInst(numCohorts, ntimesteps);
-    NumericMatrix PlantSugarSapwoodInst(numCohorts, ntimesteps), PlantStarchSapwoodInst(numCohorts, ntimesteps);
+    List labileCBInstComm = aoc["LabileCarbonBalanceInst"];
+    
+    NumericMatrix LabileCarbonBalanceInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["LabileCarbonBalance"]), numCohorts, ntimesteps);  
+    NumericMatrix GrossPhotosynthesisInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["GrossPhotosynthesis"]), numCohorts, ntimesteps);  
+    NumericMatrix MaintenanceRespirationInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["MaintenanceRespiration"]), numCohorts, ntimesteps);    
+    NumericMatrix GrowthCostsInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["GrowthCosts"]), numCohorts, ntimesteps);    
+    NumericMatrix RootExudationInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["RootExudation"]), numCohorts, ntimesteps);    
+    NumericMatrix PlantSugarLeafInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["SugarLeaf"]), numCohorts, ntimesteps);  
+    NumericMatrix PlantStarchLeafInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["StarchLeaf"]), numCohorts, ntimesteps);  
+    NumericMatrix PlantSugarSapwoodInst= copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["SugarSapwood"]), numCohorts, ntimesteps);  
+    NumericMatrix PlantStarchSapwoodInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["StarchSapwood"]), numCohorts, ntimesteps);  
+    NumericMatrix PlantSugarTransportInst = copyNumericMatrix(as<NumericMatrix>(labileCBInstComm["SugarTransport"]), numCohorts, ntimesteps);  
     
     GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
     MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1196,6 +1149,7 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
     PlantStarchSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
     PlantSugarTransportInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
     RootExudationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+    
     List labileCBInst = List::create(
       _["GrossPhotosynthesis"] = GrossPhotosynthesisInst,
       _["MaintenanceRespiration"] = MaintenanceRespirationInst,
@@ -1208,7 +1162,7 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
       _["StarchSapwood"] = PlantStarchSapwoodInst,
       _["SugarTransport"] = PlantSugarTransportInst
     );
-    if(subdailyCarbonBalance) l.push_back(labileCBInst,"LabileCarbonBalanceInst");
+    l.push_back(labileCBInst,"LabileCarbonBalanceInst");
   }
   l.push_back(spwbOut["LightExtinction"], "LightExtinction");
   l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
