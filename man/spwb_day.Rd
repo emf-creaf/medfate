@@ -145,6 +145,18 @@ x4  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 sd4 <- growth_day(x4, date, meteovec,
                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 
+#Simulate water and carbon balance for one day only (Sperry mode)
+control <- defaultControl("Sperry")
+x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+sd5 <- growth_day(x5, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+
+#Simulate water and carbon balance for one day only (Sureau mode)
+control <- defaultControl("Sureau")
+x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+sd6 <- growth_day(x6, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+
 }
 \references{
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).

@@ -575,19 +575,19 @@ List advancedGROWTHCommunicationOutput(List spwbOut, int numCohorts, int ntimest
                         _["WaterBalance"] = spwbOut["WaterBalance"], 
                         _["EnergyBalance"] = spwbOut["EnergyBalance"],
                         _["CarbonBalance"] = standCB,
-                                                                                                                              _["Soil"] = spwbOut["Soil"], 
-                                                                                                                                                 _["Stand"] = spwbOut["Stand"], 
-                                                                                                                                                                     _["Plants"] = spwbOut["Plants"],
-                                                                                                                                                                                          _["LabileCarbonBalance"] = labileCarbonBalance,
-                                                                                                                                                                                          _["PlantBiomassBalance"] = plantBiomassBalance,
-                                                                                                                                                                                          _["PlantStructure"] = plantStructure,
-                                                                                                                                                                                          _["GrowthMortality"] = growthMortality,
-                                                                                                                                                                                          _["RhizoPsi"] = spwbOut["RhizoPsi"],
-                                                                                                                                                                                                                 _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
-                                                                                                                                                                                                                                            _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
-                                                                                                                                                                                                                                                                      _["ExtractionInst"] = spwbOut["ExtractionInst"],
-                                                                                                                                                                                                                                                                                                   _["PlantsInst"] = spwbOut["PlantsInst"],
-                                                                                                                                                                                                                                                                                                                            _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
+                        _["Soil"] = spwbOut["Soil"], 
+                        _["Stand"] = spwbOut["Stand"], 
+                        _["Plants"] = spwbOut["Plants"],
+                        _["LabileCarbonBalance"] = labileCarbonBalance,
+                        _["PlantBiomassBalance"] = plantBiomassBalance,
+                        _["PlantStructure"] = plantStructure,
+                        _["GrowthMortality"] = growthMortality,
+                        _["RhizoPsi"] = spwbOut["RhizoPsi"],
+                        _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
+                        _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
+                        _["ExtractionInst"] = spwbOut["ExtractionInst"],
+                        _["PlantsInst"] = spwbOut["PlantsInst"],
+                        _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
                         _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
 
     
@@ -614,7 +614,9 @@ List advancedGROWTHCommunicationOutput(List spwbOut, int numCohorts, int ntimest
       _["SugarTransport"] = PlantSugarTransportInst
   );
   l.push_back(labileCBInst,"LabileCarbonBalanceInst");
+  l.push_back(spwbOut["RadiationInputInst"], "RadiationInputInst");
   l.push_back(spwbOut["LightExtinction"], "LightExtinction");
+  l.push_back(spwbOut["LWRExtinction"], "LWRExtinction");
   l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   l.push_back(spwbOut["FireHazard"], "FireHazard");
   l.attr("class") = CharacterVector::create("growth_day","list");
@@ -1051,9 +1053,7 @@ List copyAdvancedSPWBOutput(List aoc, List x) {
   List SunlitInst = copyLeavesInstOutput(as<List>(aoc["SunlitLeavesInst"]), x);
   List ShadeInst = copyLeavesInstOutput(as<List>(aoc["ShadeLeavesInst"]), x);
   
-  Rcout<<"hola";
   List lwrExtinctionListComm = aoc["LWRExtinction"];
-  Rcout<<"perola";
   List lwrExtinctionList(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
     lwrExtinctionList[n] = copyCommunicationLongWaveRadiation(as<List>(lwrExtinctionListComm[n]), ncanlayers);

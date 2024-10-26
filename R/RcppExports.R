@@ -3835,6 +3835,18 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
 #' sd4 <- growth_day(x4, date, meteovec,
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
+#' #Simulate water and carbon balance for one day only (Sperry mode)
+#' control <- defaultControl("Sperry")
+#' x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' sd5 <- growth_day(x5, date, meteovec,
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+#' 
+#' #Simulate water and carbon balance for one day only (Sureau mode)
+#' control <- defaultControl("Sureau")
+#' x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' sd6 <- growth_day(x6, date, meteovec,
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+#' 
 #' @name spwb_day
 spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)

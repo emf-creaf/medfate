@@ -987,6 +987,18 @@ List spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //' sd4 <- growth_day(x4, date, meteovec,
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
+//' #Simulate water and carbon balance for one day only (Sperry mode)
+//' control <- defaultControl("Sperry")
+//' x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+//' sd5 <- growth_day(x5, date, meteovec,
+//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+//' 
+//' #Simulate water and carbon balance for one day only (Sureau mode)
+//' control <- defaultControl("Sureau")
+//' x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+//' sd6 <- growth_day(x6, date, meteovec,
+//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+//' 
 //' @name spwb_day
 // [[Rcpp::export("spwb_day")]]
 List spwbDay(List x, CharacterVector date, NumericVector meteovec, 
