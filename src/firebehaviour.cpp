@@ -3,7 +3,6 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
-#include "spwb.h"
 #include "forestutils.h"
 #include "fuelstructure.h"
 #include "fuelmoisture.h"

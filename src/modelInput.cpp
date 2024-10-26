@@ -1,6 +1,4 @@
 #include <Rcpp.h>
-#include "spwb.h"
-#include "growth.h"
 #include "carbon.h"
 #include "root.h"
 #include "soil.h"

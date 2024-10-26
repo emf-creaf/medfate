@@ -18,6 +18,7 @@
 #include "woodformation.h"
 #include "soil.h"
 #include "spwb.h"
+#include "spwb_day.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -368,7 +369,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
     x["herbLAI"] = herbLAImax*exp(-0.235*woodyLAI);
   }
 }
-List growthDayInner(List internalCommunication, List x, NumericVector meteovec, 
+List growthDay_private(List internalCommunication, List x, NumericVector meteovec, 
                     double latitude, double elevation, double slope, double aspect,
                     double solarConstant, double delta, 
                     double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
@@ -1521,7 +1522,120 @@ List growthDayInner(List internalCommunication, List x, NumericVector meteovec,
 }
 
 
-
+// [[Rcpp::export(".growth_day_inner")]]
+List growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
+                double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
+                bool modifyInput = true) {
+   
+   double tmin = meteovec["MinTemperature"];
+   double tmax = meteovec["MaxTemperature"];
+   if(tmin > tmax) {
+     warning("tmin > tmax. Swapping values.");
+     double swap = tmin;
+     tmin = tmax;
+     tmax = swap;
+   }
+   double rhmin = meteovec["MinRelativeHumidity"];
+   double rhmax = meteovec["MaxRelativeHumidity"];
+   if(NumericVector::is_na(rhmax)) {
+     rhmax = 100.0;
+   }
+   if(NumericVector::is_na(rhmin)) {
+     double vp_tmin = meteoland::utils_saturationVP(tmin);
+     double vp_tmax = meteoland::utils_saturationVP(tmax);
+     rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+   }
+   if(rhmin > rhmax) {
+     warning("rhmin > rhmax. Swapping values.");
+     double swap = rhmin;
+     rhmin = rhmax;
+     rhmax = swap;
+   }
+   double rad = meteovec["Radiation"];
+   double prec = meteovec["Precipitation"];
+   double wind = NA_REAL;
+   if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
+   double Catm = NA_REAL; 
+   if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
+   double Patm = NA_REAL; 
+   if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+   double Rint = NA_REAL; 
+   if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
+   double pfire = 0.0; 
+   if(meteovec.containsElementNamed("FireProbability")) pfire = meteovec["FireProbability"];
+   
+   //Control parameters
+   List control = x["control"];
+   bool verbose = control["verbose"];
+   
+   bool leafPhenology = control["leafPhenology"];
+   String transpirationMode = control["transpirationMode"];
+   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
+   
+   //Will not modify input x 
+   if(!modifyInput) {
+     x = clone(x);
+   }
+   
+   std::string c = as<std::string>(date[0]);
+   int month = std::atoi(c.substr(5,2).c_str());
+   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+   double delta = meteoland::radiation_solarDeclination(J);
+   double solarConstant = meteoland::radiation_solarConstant(J);
+   double latrad = latitude * (M_PI/180.0);
+   if(NumericVector::is_na(aspect)) aspect = 0.0;
+   if(NumericVector::is_na(slope)) slope = 0.0;
+   double asprad = aspect * (M_PI/180.0);
+   double slorad = slope * (M_PI/180.0);
+   double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
+   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+   //Derive doy from date  
+   int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+   int doy = J - J0101+1;
+   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
+   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+   
+   NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+   if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
+   
+   //Update phenology
+   if(leafPhenology) {
+     updatePhenology(x, doy, photoperiod, tday);
+     updateLeaves(x, wind, true);
+   }
+   
+   NumericVector meteovec_inner = NumericVector::create(
+     Named("tday") = tday,
+     Named("tmin") = tmin, 
+     Named("tmax") = tmax,
+     Named("tminPrev") = tmin, 
+     Named("tmaxPrev") = tmax, 
+     Named("tminNext") = tmin, 
+     Named("prec") = prec,
+     Named("rhmin") = rhmin, 
+     Named("rhmax") = rhmax, 
+     Named("rad") = rad, 
+     Named("wind") = wind, 
+     Named("Catm") = Catm,
+     Named("Patm") = Patm,
+     Named("pet") = pet,
+     Named("rint") = Rint,
+     Named("pfire") = pfire);
+   List modelOutputComm = growthDay_private(internalCommunication, x, meteovec_inner, 
+                                         latitude, elevation, slope, aspect,
+                                         solarConstant, delta, 
+                                         runon, lateralFlows, waterTableDepth,
+                                         verbose);
+   List modelOutput;
+   if(transpirationMode=="Granier") {
+     modelOutput = copyBasicGROWTHOutput(modelOutputComm, x);
+   } else {
+     modelOutput = copyAdvancedGROWTHOutput(modelOutputComm, x);
+   }
+   return(modelOutput);
+ }
 
 //' @rdname spwb_day
 // [[Rcpp::export("growth_day")]]
@@ -1529,116 +1643,14 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
                bool modifyInput = true) {
-  
-  double tmin = meteovec["MinTemperature"];
-  double tmax = meteovec["MaxTemperature"];
-  if(tmin > tmax) {
-    warning("tmin > tmax. Swapping values.");
-    double swap = tmin;
-    tmin = tmax;
-    tmax = swap;
-  }
-  double rhmin = meteovec["MinRelativeHumidity"];
-  double rhmax = meteovec["MaxRelativeHumidity"];
-  if(NumericVector::is_na(rhmax)) {
-    rhmax = 100.0;
-  }
-  if(NumericVector::is_na(rhmin)) {
-    double vp_tmin = meteoland::utils_saturationVP(tmin);
-    double vp_tmax = meteoland::utils_saturationVP(tmax);
-    rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
-  }
-  if(rhmin > rhmax) {
-    warning("rhmin > rhmax. Swapping values.");
-    double swap = rhmin;
-    rhmin = rhmax;
-    rhmax = swap;
-  }
-  double rad = meteovec["Radiation"];
-  double prec = meteovec["Precipitation"];
-  double wind = NA_REAL;
-  if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
-  double Catm = NA_REAL; 
-  if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
-  double Patm = NA_REAL; 
-  if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
-  double Rint = NA_REAL; 
-  if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
-  double pfire = 0.0; 
-  if(meteovec.containsElementNamed("FireProbability")) pfire = meteovec["FireProbability"];
-  
-  //Control parameters
-  List control = x["control"];
-  bool verbose = control["verbose"];
-  
-  bool leafPhenology = control["leafPhenology"];
-  String transpirationMode = control["transpirationMode"];
-  if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
-  
-  //Will not modify input x 
-  if(!modifyInput) {
-    x = clone(x);
-  }
-  
-  std::string c = as<std::string>(date[0]);
-  int month = std::atoi(c.substr(5,2).c_str());
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
-  double latrad = latitude * (M_PI/180.0);
-  if(NumericVector::is_na(aspect)) aspect = 0.0;
-  if(NumericVector::is_na(slope)) slope = 0.0;
-  double asprad = aspect * (M_PI/180.0);
-  double slorad = slope * (M_PI/180.0);
-  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
-  //Derive doy from date  
-  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
-  int doy = J - J0101+1;
-  if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
-  if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
-  
-  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
-  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
-  
-  //Update phenology
-  if(leafPhenology) {
-    updatePhenology(x, doy, photoperiod, tday);
-    updateLeaves(x, wind, true);
-  }
-  
   //Instance communication structures
   List internalCommunication = instanceCommunicationStructures(x);
-
-  NumericVector meteovec_inner = NumericVector::create(
-    Named("tday") = tday,
-    Named("tmin") = tmin, 
-    Named("tmax") = tmax,
-    Named("tminPrev") = tmin, 
-    Named("tmaxPrev") = tmax, 
-    Named("tminNext") = tmin, 
-    Named("prec") = prec,
-    Named("rhmin") = rhmin, 
-    Named("rhmax") = rhmax, 
-    Named("rad") = rad, 
-    Named("wind") = wind, 
-    Named("Catm") = Catm,
-    Named("Patm") = Patm,
-    Named("pet") = pet,
-    Named("rint") = Rint,
-    Named("pfire") = pfire);
-  List modelOutputComm = growthDayInner(internalCommunication, x, meteovec_inner, 
-                     latitude, elevation, slope, aspect,
-                     solarConstant, delta, 
-                     runon, lateralFlows, waterTableDepth,
-                     verbose);
-  List modelOutput;
-  if(transpirationMode=="Granier") {
-    modelOutput = copyBasicGROWTHOutput(modelOutputComm, x);
-  } else {
-    modelOutput = copyAdvancedGROWTHOutput(modelOutputComm, x);
-  }
+  
+  
+  List modelOutput = growthDay_inner(internalCommunication, x, date, meteovec,
+                                     latitude, elevation, slope, aspect,
+                                     runon, lateralFlows, waterTableDepth,
+                                     modifyInput);
   return(modelOutput);
 }
 
@@ -1989,7 +2001,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
   if(control["subdailyResults"]) {
     List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
-    subdailyRes[iday] = clone(sDay); //Clones subdaily results because they are communication structures
+    subdailyRes[iday] = copyAdvancedGROWTHOutput(sDay, x); //Clones subdaily results because they are communication structures
   }
   
   List sb = sDay["Soil"];
@@ -2482,7 +2494,7 @@ List growth(List x, DataFrame meteo, double latitude,
       meteovec_inner.push_back(Rint, "rint");
       meteovec_inner.push_back(FireProbability[i], "pfire"); 
       try{
-        s = growthDayInner(internalCommunication, x, meteovec_inner,  
+        s = growthDay_private(internalCommunication, x, meteovec_inner,  
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, R_NilValue, waterTableDepth,
@@ -2518,7 +2530,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("rint") = Rint);
       meteovec.push_back(FireProbability[i], "pfire"); 
       try{
-        s = growthDayInner(internalCommunication, x, meteovec, 
+        s = growthDay_private(internalCommunication, x, meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, R_NilValue, waterTableDepth,

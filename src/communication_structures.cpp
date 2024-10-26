@@ -1051,7 +1051,9 @@ List copyAdvancedSPWBOutput(List aoc, List x) {
   List SunlitInst = copyLeavesInstOutput(as<List>(aoc["SunlitLeavesInst"]), x);
   List ShadeInst = copyLeavesInstOutput(as<List>(aoc["ShadeLeavesInst"]), x);
   
+  Rcout<<"hola";
   List lwrExtinctionListComm = aoc["LWRExtinction"];
+  Rcout<<"perola";
   List lwrExtinctionList(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
     lwrExtinctionList[n] = copyCommunicationLongWaveRadiation(as<List>(lwrExtinctionListComm[n]), ncanlayers);

@@ -1,6 +1,5 @@
 #include <numeric>
 #include <Rcpp.h>
-#include "spwb.h"
 #include "forestutils.h"
 #include "paramutils.h"
 #include "fuelmoisture.h"
