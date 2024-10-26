@@ -988,8 +988,8 @@ List spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' @name spwb_day
- // [[Rcpp::export("spwb_day")]]
- List spwbDay(List x, CharacterVector date, NumericVector meteovec, 
+// [[Rcpp::export("spwb_day")]]
+List spwbDay(List x, CharacterVector date, NumericVector meteovec, 
               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
               bool modifyInput = true) {
