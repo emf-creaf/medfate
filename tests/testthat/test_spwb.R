@@ -6,6 +6,9 @@ data(examplemeteo)
 examplemeteo2 <- examplemeteo
 row.names(examplemeteo2) <- as.character(examplemeteo2$dates)
 examplemeteo2$dates <- NULL
+d <- 100
+meteovec <- unlist(examplemeteo[d,-1])
+date <- as.character(examplemeteo$dates[d])
 
 control_granier <- defaultControl("Granier")
 control_granier$verbose <- FALSE
@@ -84,4 +87,34 @@ test_that("spwb can be run using truncated root systems",{
   expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_sureau), 
                        examplemeteo2[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
+})
+
+test_that("spwb_day gives same result with inner and direct calls",{
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  ic <- medfate:::.instanceCommunicationStructures(x1)
+  s_inner <- medfate:::.spwb_day_inner(ic, x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  s_dir <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  # Second call (after modifying ic)
+  s_inner <- medfate:::.spwb_day_inner(ic, x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  
+  x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  ic <- medfate:::.instanceCommunicationStructures(x2)
+  s_inner <- medfate:::.spwb_day_inner(ic, x2, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  s_dir <- medfate::spwb_day(x2, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  # Second call (after modifying ic)
+  s_inner <- medfate:::.spwb_day_inner(ic, x2, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+
+  x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  ic <- medfate:::.instanceCommunicationStructures(x3)
+  s_inner <- medfate:::.spwb_day_inner(ic, x3, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  s_dir <- medfate::spwb_day(x3, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  # Second call (after modifying ic)
+  s_inner <- medfate:::.spwb_day_inner(ic, x3, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  
 })
