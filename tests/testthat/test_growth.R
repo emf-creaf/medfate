@@ -6,6 +6,9 @@ data(examplemeteo)
 examplemeteo2 <- examplemeteo
 row.names(examplemeteo2) <- as.character(examplemeteo2$dates)
 examplemeteo2$dates <- NULL
+d <- 100
+meteovec <- unlist(examplemeteo[d,-1])
+date <- as.character(examplemeteo$dates[d])
 
 control_granier <- defaultControl("Granier")
 control_granier$verbose <- FALSE
@@ -80,5 +83,35 @@ test_that("growth can be run disabling output",{
   expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control), 
                          examplemeteo[1:10,],
                          latitude = 41.82592, elevation = 100), "growth")
+})
+
+test_that("growth_day gives same result with inner and direct calls",{
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  ic <- medfate:::.instanceCommunicationStructures(x1)
+  s_inner <- medfate:::.growth_day_inner(ic, x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  s_dir <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  # Second call (after modifying ic)
+  s_inner <- medfate:::.growth_day_inner(ic, x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  
+  x2 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  ic <- medfate:::.instanceCommunicationStructures(x2)
+  s_inner <- medfate:::.growth_day_inner(ic, x2, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  s_dir <- medfate::growth_day(x2, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  # Second call (after modifying ic)
+  s_inner <- medfate:::.growth_day_inner(ic, x2, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  
+  x3 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  ic <- medfate:::.instanceCommunicationStructures(x3)
+  s_inner <- medfate:::.growth_day_inner(ic, x3, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  s_dir <- medfate::growth_day(x3, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  # Second call (after modifying ic)
+  s_inner <- medfate:::.growth_day_inner(ic, x3, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(s_inner, s_dir)
+  
 })
 
