@@ -71,10 +71,11 @@ List aspwbInput(double crop_factor, List control, DataFrame soil) {
   return(input);
 }
 
-List aspwb_day_internal(List x, NumericVector meteovec, 
-              double elevation, double slope, double aspect, 
-              double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-              bool verbose = false) {
+// [[Rcpp::export(".aspwb_day_inner")]]
+List aspwb_day_inner(List internalCommunication, List x, NumericVector meteovec, 
+                     double elevation, double slope, double aspect, 
+                     double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                     bool verbose = false) {
   
   double crop_factor = x["crop_factor"];
   List control = x["control"];
@@ -131,7 +132,8 @@ List aspwb_day_internal(List x, NumericVector meteovec,
     if(l ==0) sourceSinkVec[l] -= Esoil;
   }
   
-  DataFrame SWBcommunication = communicationSoilWaterBalance(nlayers);
+  DataFrame SWBcommunication = as<DataFrame>(internalCommunication["SWBcommunication"]);
+  
   //Determine water flows, returning deep drainage
   NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
                                       NetRain, rainfallIntensity, Snowmelt, sourceSinkVec, 
@@ -156,10 +158,12 @@ List aspwb_day_internal(List x, NumericVector meteovec,
                                            _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage, _["CapillarityRise"] = CapillarityRise,
                                            _["SoilEvaporation"] = Esoil, _["Transpiration"] = sum(ExtractionVec));
   
-  DataFrame SB = DataFrame::create(_["Psi"] = psiVec,
-                                   _["PlantExtraction"] = ExtractionVec);
-  List l = List::create(_["WaterBalance"] = DB, 
-                        _["Soil"] = SB);
+  List l = List::create(_["WaterBalance"] = DB);
+  if(control["soilResults"]) {
+    DataFrame SB = DataFrame::create(_["Psi"] = psiVec,
+                                     _["PlantExtraction"] = ExtractionVec);
+    l.push_back(SB, "Soil"); 
+  }
   l.attr("class") = CharacterVector::create("aspwb_day","list");
   return(l);
 }
@@ -213,11 +217,13 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
     Named("rad") = rad, 
     Named("pet") = pet,
     Named("rint") = Rint);
-  
-  return(aspwb_day_internal(x, meteovec_inner,
-                            elevation, slope, aspect, 
-                            runon, lateralFlows, waterTableDepth,
-                            verbose));
+
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  List internalCommunication = List::create(_["SWBcommunication"] = communicationSoilWaterBalance(soil.nrow()));
+  return(aspwb_day_inner(internalCommunication, x, meteovec_inner,
+                         elevation, slope, aspect, 
+                         runon, lateralFlows, waterTableDepth,
+                         verbose));
 }
 
 
@@ -448,6 +454,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
   x = clone(x);
   
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  List internalCommunication = List::create(_["SWBcommunication"] = communicationSoilWaterBalance(soil.nrow()));
   
 
   //Meteorological input    
@@ -599,10 +606,10 @@ List aspwb(List x, DataFrame meteo, double latitude,
       Named("pet") = PET[i],
       Named("rint") = Rint);
     try{
-      s = aspwb_day_internal(x, meteovec, 
-                             elevation, slope, aspect,
-                             0.0, R_NilValue, waterTableDepth, 
-                             verbose);
+      s = aspwb_day_inner(internalCommunication, x, meteovec, 
+                          elevation, slope, aspect,
+                          0.0, R_NilValue, waterTableDepth, 
+                          verbose);
     } catch(std::exception& ex) {
       Rcerr<< "c++ error: "<< ex.what() <<"\n";
       error_occurence = true;

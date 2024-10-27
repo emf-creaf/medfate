@@ -1048,21 +1048,25 @@ List copyBasicSPWBOutput(List boc, List x) {
   NumericVector meteovec_bas = clone(as<NumericVector>(boc["weather"]));
   NumericVector WaterBalance = clone(as<NumericVector>(boc["WaterBalance"]));
   
-  NumericVector Stand = clone(as<NumericVector>(boc["Stand"]));
-  
-  DataFrame Soil = copyDataFrame(as<DataFrame>(boc["Soil"]), nlayers);
-  
-  DataFrame PlantsComm = Rcpp::as<Rcpp::DataFrame>(boc["Plants"]);
-  DataFrame Plants = copyDataFrame(PlantsComm, numCohorts);
-  Plants.attr("row.names") = cohorts.attr("row.names");
-  
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["topography"] = topo,
                         _["weather"] = meteovec_bas,
-                        _["WaterBalance"] = WaterBalance, 
-                        _["Soil"] = Soil,
-                        _["Stand"] = Stand,
-                        _["Plants"] = Plants);
+                        _["WaterBalance"] = WaterBalance);
+
+  if(control["soilResults"]) {
+    DataFrame Soil = copyDataFrame(as<DataFrame>(boc["Soil"]), nlayers);
+    l.push_back(Soil, "Soil");
+  }  
+  if(control["standResults"]) {
+    NumericVector Stand = clone(as<NumericVector>(boc["Stand"]));
+    l.push_back(Stand, "Stand");
+  }
+  if(control["plantResults"]) {
+    DataFrame PlantsComm = Rcpp::as<Rcpp::DataFrame>(boc["Plants"]);
+    DataFrame Plants = copyDataFrame(PlantsComm, numCohorts);
+    Plants.attr("row.names") = cohorts.attr("row.names");
+    l.push_back(Plants, "Plants");
+  }
   if(control["fireHazardResults"]) {
     l.push_back(clone(as<NumericVector>(boc["FireHazard"])), "FireHazard"); 
   }
