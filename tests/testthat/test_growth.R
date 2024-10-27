@@ -83,6 +83,29 @@ test_that("growth can be run disabling output",{
   expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control), 
                          examplemeteo[1:10,],
                          latitude = 41.82592, elevation = 100), "growth")
+  
+  expect_s3_class(medfate::growth_day(growthInput(exampleforest, examplesoil, SpParamsMED, control), 
+                                      date, meteovec, latitude = 41.82592, elevation = 100, 
+                                      slope=0, aspect=0, modifyInput = FALSE), "growth_day")
+  
+  control <- control_sperry
+  control$soilResults <- FALSE
+  control$snowResults <- FALSE
+  control$standResults <- FALSE
+  control$temperatureResults <- FALSE
+  control$leafResults <- FALSE
+  control$plantResults <- FALSE
+  control$plantLabileCarbonBalanceResults  <- FALSE
+  control$plantStructureResults  <- FALSE
+  control$growthMortalityResults  <- FALSE
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control), 
+                         examplemeteo[1:10,],
+                         latitude = 41.82592, elevation = 100), "growth")
+  
+  expect_s3_class(medfate::growth_day(growthInput(exampleforest, examplesoil, SpParamsMED, control), 
+                                      date, meteovec, latitude = 41.82592, elevation = 100, 
+                                      slope=0, aspect=0, modifyInput = FALSE), "growth_day")
+  
 })
 
 test_that("growth_day gives same result with inner and direct calls",{

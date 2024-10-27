@@ -1081,33 +1081,45 @@ List copyBasicGROWTHOutput(List boc, List x) {
   
   List spwbOut = copyBasicSPWBOutput(boc, x);
   
-  DataFrame labileCarbonBalance = copyDataFrame(as<DataFrame>(boc["LabileCarbonBalance"]), numCohorts);
-  labileCarbonBalance.attr("row.names") = above.attr("row.names");
   
   NumericVector standCB = clone(as<NumericVector>(boc["CarbonBalance"]));
     
-  //Final Biomass compartments
-  DataFrame plantStructure = copyDataFrame(as<DataFrame>(boc["PlantStructure"]), numCohorts);
-  plantStructure.attr("row.names") = above.attr("row.names");
-  
-  DataFrame growthMortality  = copyDataFrame(as<DataFrame>(boc["GrowthMortality"]), numCohorts);
-  growthMortality.attr("row.names") = above.attr("row.names");
-  
-  DataFrame plantBiomassBalance = copyDataFrame(as<DataFrame>(boc["PlantBiomassBalance"]), numCohorts);
-  plantBiomassBalance.attr("row.names") = above.attr("row.names");
   
   List l = List::create(_["cohorts"] = spwbOut["cohorts"],
                         _["topography"] = spwbOut["topography"],
                         _["weather"] = spwbOut["weather"],
                         _["WaterBalance"] = spwbOut["WaterBalance"], 
-                        _["CarbonBalance"] = standCB,
-                        _["Soil"] = spwbOut["Soil"], 
-                        _["Stand"] = spwbOut["Stand"], 
-                        _["Plants"] = spwbOut["Plants"],
-                        _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["PlantBiomassBalance"] = plantBiomassBalance,
-                        _["PlantStructure"] = plantStructure,
-                        _["GrowthMortality"] = growthMortality);
+                        _["CarbonBalance"] = standCB);
+  if(control["soilResults"]) {
+    l.push_back(spwbOut["Soil"], "Soil");
+  }
+  if(control["standResults"]) {
+    l.push_back(spwbOut["Stand"], "Stand");
+  }
+  if(control["plantResults"]) {
+    l.push_back(spwbOut["Plants"], "Plants");
+  }
+  if(control["labileCarbonBalanceResults"]) {
+    DataFrame labileCarbonBalance = copyDataFrame(as<DataFrame>(boc["LabileCarbonBalance"]), numCohorts);
+    labileCarbonBalance.attr("row.names") = above.attr("row.names");
+    l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+  }
+  DataFrame plantBiomassBalance = copyDataFrame(as<DataFrame>(boc["PlantBiomassBalance"]), numCohorts);
+  plantBiomassBalance.attr("row.names") = above.attr("row.names");
+  l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+  
+  if(control["plantStructureResults"]) {
+    DataFrame plantStructure = copyDataFrame(as<DataFrame>(boc["PlantStructure"]), numCohorts);
+    plantStructure.attr("row.names") = above.attr("row.names");
+    l.push_back(plantStructure, "PlantStructure");
+  }
+  
+  if(control["growthMortalityResults"]) {
+    DataFrame growthMortality  = copyDataFrame(as<DataFrame>(boc["GrowthMortality"]), numCohorts);
+    growthMortality.attr("row.names") = above.attr("row.names");
+    l.push_back(growthMortality, "GrowthMortality");
+  }
+  
   if(control["fireHazardResults"]) l.push_back(spwbOut["FireHazard"], "FireHazard");
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);

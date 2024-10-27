@@ -89,6 +89,16 @@ test_that("spwb can be run using truncated root systems",{
                        latitude = 41.82592, elevation = 100), "spwb")
 })
 
+test_that("spwb can be run with less output",{
+  control_less <- control_granier
+  control_less$standResults <- FALSE
+  control_less$soilResults <- FALSE
+  control_less$plantResults <- FALSE
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_less), 
+                       examplemeteo[1:2,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+})
+
 test_that("spwb_day gives same result with inner and direct calls",{
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   ic <- medfate:::.instanceCommunicationStructures(x1)
