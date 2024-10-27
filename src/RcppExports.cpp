@@ -50,29 +50,31 @@ RcppExport SEXP _medfate_aspwbInput(SEXP crop_factorSEXP, SEXP controlSEXP, SEXP
     return rcpp_result_gen;
 }
 // aspwb_day_inner
-List aspwb_day_inner(List internalCommunication, List x, NumericVector meteovec, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool verbose);
-static SEXP _medfate_aspwb_day_inner_try(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP meteovecSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP verboseSEXP) {
+List aspwb_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
+static SEXP _medfate_aspwb_day_inner_try(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type internalCommunication(internalCommunicationSEXP);
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type meteovec(meteovecSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< Nullable<NumericVector> >::type lateralFlows(lateralFlowsSEXP);
     Rcpp::traits::input_parameter< double >::type waterTableDepth(waterTableDepthSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(aspwb_day_inner(internalCommunication, x, meteovec, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, verbose));
+    Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
+    rcpp_result_gen = Rcpp::wrap(aspwb_day_inner(internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_aspwb_day_inner(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP meteovecSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_aspwb_day_inner(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_aspwb_day_inner_try(internalCommunicationSEXP, xSEXP, meteovecSEXP, elevationSEXP, slopeSEXP, aspectSEXP, runonSEXP, lateralFlowsSEXP, waterTableDepthSEXP, verboseSEXP));
+        rcpp_result_gen = PROTECT(_medfate_aspwb_day_inner_try(internalCommunicationSEXP, xSEXP, dateSEXP, meteovecSEXP, latitudeSEXP, elevationSEXP, slopeSEXP, aspectSEXP, runonSEXP, lateralFlowsSEXP, waterTableDepthSEXP, modifyInputSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5834,7 +5836,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
     static std::set<std::string> signatures;
     if (signatures.empty()) {
         signatures.insert("List(*aspwbInput)(double,List,DataFrame)");
-        signatures.insert("List(*.aspwb_day_inner)(List,List,NumericVector,double,double,double,double,Nullable<NumericVector>,double,bool)");
+        signatures.insert("List(*.aspwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*aspwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*.defineASPWBDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillASPWBDailyOutput)(List,List,List,int)");
@@ -5977,7 +5979,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
 
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_aspwbInput", (DL_FUNC) &_medfate_aspwbInput, 3},
-    {"_medfate_aspwb_day_inner", (DL_FUNC) &_medfate_aspwb_day_inner, 10},
+    {"_medfate_aspwb_day_inner", (DL_FUNC) &_medfate_aspwb_day_inner, 12},
     {"_medfate_aspwb_day", (DL_FUNC) &_medfate_aspwb_day, 11},
     {"_medfate_defineASPWBDailyOutput", (DL_FUNC) &_medfate_defineASPWBDailyOutput, 6},
     {"_medfate_fillASPWBDailyOutput", (DL_FUNC) &_medfate_fillASPWBDailyOutput, 4},

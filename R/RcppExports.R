@@ -7,8 +7,8 @@ aspwbInput <- function(crop_factor, control, soil) {
     .Call(`_medfate_aspwbInput`, crop_factor, control, soil)
 }
 
-.aspwb_day_inner <- function(internalCommunication, x, meteovec, elevation, slope, aspect, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, verbose = FALSE) {
-    .Call(`_medfate_aspwb_day_inner`, internalCommunication, x, meteovec, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, verbose)
+.aspwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_aspwb_day_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 #' @rdname aspwb
