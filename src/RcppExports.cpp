@@ -465,12 +465,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // generalCommunicationStructures
-List generalCommunicationStructures();
-RcppExport SEXP _medfate_generalCommunicationStructures() {
+List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);
+RcppExport SEXP _medfate_generalCommunicationStructures(SEXP numCohortsSEXP, SEXP nlayersSEXP, SEXP ncanlayersSEXP, SEXP ntimestepsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(generalCommunicationStructures());
+    Rcpp::traits::input_parameter< int >::type numCohorts(numCohortsSEXP);
+    Rcpp::traits::input_parameter< int >::type nlayers(nlayersSEXP);
+    Rcpp::traits::input_parameter< int >::type ncanlayers(ncanlayersSEXP);
+    Rcpp::traits::input_parameter< int >::type ntimesteps(ntimestepsSEXP);
+    rcpp_result_gen = Rcpp::wrap(generalCommunicationStructures(numCohorts, nlayers, ncanlayers, ntimesteps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5951,7 +5955,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 1},
-    {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 0},
+    {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 4},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},

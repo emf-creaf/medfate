@@ -1371,8 +1371,7 @@ List spwb(List x, DataFrame meteo,
   
   //Instance communication structures
   List internalCommunication = instanceCommunicationStructures(x);
-  // List internalCommunication = generalCommunicationStructures();
-  
+
   
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";

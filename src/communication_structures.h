@@ -55,7 +55,7 @@ const int SOILCOM_lateral_flows_step_mm = 46;
 
 
 List instanceCommunicationStructures(List x);
-List generalCommunicationStructures();
+List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);
 List communicationSoilWaterBalance(int nlayers);
 
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers);

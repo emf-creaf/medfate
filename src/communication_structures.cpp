@@ -1,11 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-const int MAX_NUM_SOIL_LAYERS = 10;
-const int MAX_NUM_CANOPY_LAYERS = 100;
-const int MAX_NUM_COHORTS = 100;
-const int MAX_NUM_TIMESTEPS = 100;
-
 const int SOILCOM_dZ_m = 0;
 const int SOILCOM_dZUp = 1;
 const int SOILCOM_dZDown = 2;
@@ -1339,15 +1334,15 @@ List instanceCommunicationStructures(List x) {
 
 // General communication structures for many inputs
 // [[Rcpp::export(".generalCommunicationStructures")]]
-List generalCommunicationStructures() {
-  List basicTranspirationOutput = basicTranspirationCommunicationOutput(MAX_NUM_COHORTS, MAX_NUM_SOIL_LAYERS);
-  List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, MAX_NUM_SOIL_LAYERS);
-  List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, MAX_NUM_COHORTS, MAX_NUM_SOIL_LAYERS);
-  List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(MAX_NUM_COHORTS, MAX_NUM_SOIL_LAYERS, MAX_NUM_CANOPY_LAYERS, MAX_NUM_TIMESTEPS);
-  List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, MAX_NUM_SOIL_LAYERS);
-  List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, MAX_NUM_COHORTS, MAX_NUM_TIMESTEPS);
-  List initialFinalCC = communicationInitialFinalCarbonCompartments(MAX_NUM_COHORTS);
-  List SWBcommunication = communicationSoilWaterBalance(MAX_NUM_SOIL_LAYERS);
+List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps) {
+  List basicTranspirationOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
+  List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, nlayers);
+  List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
+  List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
+  List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, nlayers);
+  List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
+  List initialFinalCC = communicationInitialFinalCarbonCompartments(numCohorts);
+  List SWBcommunication = communicationSoilWaterBalance(nlayers);
   List ic = List::create(_["SWBcommunication"] = SWBcommunication,
                          _["basicTranspirationOutput"] = basicTranspirationOutput,
                          _["basicSPWBOutput"] = basicSPWBOutput,

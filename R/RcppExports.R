@@ -283,8 +283,8 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_instanceCommunicationStructures`, x)
 }
 
-.generalCommunicationStructures <- function() {
-    .Call(`_medfate_generalCommunicationStructures`)
+.generalCommunicationStructures <- function(numCohorts, nlayers, ncanlayers, ntimesteps) {
+    .Call(`_medfate_generalCommunicationStructures`, numCohorts, nlayers, ncanlayers, ntimesteps)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
