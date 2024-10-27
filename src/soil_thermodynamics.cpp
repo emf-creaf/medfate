@@ -188,14 +188,14 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
   NumericVector a(nlayers, 0.0), b(nlayers, 0.0), c(nlayers, 0.0), d(nlayers, 0.0), e(nlayers, 0.0), f(nlayers, 0.0);
 
   //Estimate layer interfaces
-  double* dZ_m = new double[nlayers];
+  NumericVector dZ_m(nlayers);
   for(int l=0;l<nlayers;l++) dZ_m[l] = widths[l]*0.001; //mm to m
   
-  double* dZUp = new double[nlayers];
-  double* dZDown = new double[nlayers];
-  double* Zcent = new double[nlayers];
-  double* Zup = new double[nlayers];
-  double* Zdown = new double[nlayers];
+  NumericVector dZUp(nlayers,0.0);
+  NumericVector dZDown(nlayers,0.0);
+  NumericVector Zcent(nlayers,0.0);
+  NumericVector Zup(nlayers,0.0);
+  NumericVector Zdown(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
     if(l==0) { //first layer
       dZUp[l] = dZ_m[0]/2.0; //Distance from ground to mid-layer
@@ -214,8 +214,8 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       dZDown[l] = dZ_m[l]/2.0;
     }
   }
-  double* k_up = new double[nlayers];
-  double* k_down = new double[nlayers];
+  NumericVector k_up(nlayers,0.0);
+  NumericVector k_down(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
     k_up[l] = 0.0;
     k_down[l] = 0.0;

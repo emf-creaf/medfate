@@ -171,7 +171,7 @@ double lnec(double x) {
 //   chepolsum=a(0)/2.0_r8-r+h*x
 //   ENDIF
 //   END FUNCTION chepolsum
-double chepolsum(double x, double* a, int n) {
+double chepolsum(double x, NumericVector a, int n) {
   if(n==0) {
     return(a[0]/2.0);
   } else if (n==1) {
@@ -220,7 +220,7 @@ double chepolsum(double x, double* a, int n) {
 // ENDIF
 //   END FUNCTION auxgam
 double auxgam(double x) {
-  double dr[18];
+  NumericVector dr(18);
   double auxgamm;
   if(x<0.0) {
     auxgamm = -(1.0+(1.0+x)*(1.0+x)*auxgam(1.0+x))/(1.0-x);
@@ -316,8 +316,8 @@ double lngam1(double x) {
 //   END FUNCTION stirling
 double  stirling(double x) {
   double stirling, z;
-  double a[18];
-  double c[7];
+  NumericVector a(18);
+  NumericVector c(7);
   if(x<dwarf) {
     stirling = giant; 
   } else if(x<1.0) {
@@ -1092,7 +1092,7 @@ double qfraction(double a, double x, double dp){
 //     ENDIF
 //   ENDIF
 //   END SUBROUTINE incgam
-double* incgam(double a, double x) {
+NumericVector incgam(double a, double x) {
   double lnx, p = NA_REAL, q = NA_REAL;
   double dp;
   if(x<dwarf) {
@@ -1139,10 +1139,7 @@ double* incgam(double a, double x) {
       }
     }
   }
-  double* res = new double[2];
-  res[0] = p;
-  res[1] = q;
-  return(res);
+  return(NumericVector::create(p,q));
 }
 
 
@@ -1831,17 +1828,15 @@ double invincgam(double a, double p, double q) {
       } else {
         r=exp(dlnr);
         if(pcase) {
-          double* pq = incgam(a,x);
+          NumericVector pq = incgam(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=-r*(px-p);
-          delete[] pq;
         } else {
-          double* pq = incgam(a,x);
+          NumericVector pq = incgam(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=r*(qx-q);
-          delete[] pq;
         }
         ck[1]=(x-a+1.0)/(2.0*x);
         ck[2]=(2.0*x2-4.0*x*a+4.0*x+2.0*a2-3.0*a+1.0)/(6.0*x2);
@@ -1862,17 +1857,15 @@ double invincgam(double a, double p, double q) {
       fp=-sqrt(a/twopi)*exp(-0.5*a*y*y)/(gamstar(a));
       r=-(1.0/fp)*x;
       if(pcase) {
-        double* pq = incgam(a,x);
+        NumericVector pq = incgam(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=-r*(px-p);
-        delete[] pq;
       } else {
-        double* pq = incgam(a,x);
+        NumericVector pq = incgam(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=r*(qx-q);
-        delete[] pq;
       }
       ck[1]=(x-a+1.0)/(2.0*x);
       ck[2]=(2.0*x2-4.0*x*a+4.0*x+2.0*a2-3.0*a+1.0)/(6.0*x2);
