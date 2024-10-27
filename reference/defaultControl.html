@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,6 @@
 <li><p><code>fireHazardResults [= FALSE]</code>: Boolean flag to force calculation of daily fire hazard.</p></li>
 <li><p><code>fireHazardStandardWind [= NA]</code>: Wind speed (in m/s) for fire-hazard estimation. If missing, actual wind-speed is used.</p></li>
 <li><p><code>fireHazardStandardDFMC [= NA]</code>: Dead fuel moisture content for fire-hazard estimation. If missing, estimation from current weather is used.</p></li>
-<li><p><code>clearCommunications [= TRUE]</code>: Boolean flag to indicate that internal communication structures should be removed at the end of the simulation.</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>):</p><ul><li><p><code>transpirationMode [= "Granier"]</code>: Transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
 <li><p><code>soilFunctions [= "VG"]</code>: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
                  If <code>transpirationMode</code> is 'Sperry' or 'Sureau' then soilFunctions is forced to <code>'VG'</code>.

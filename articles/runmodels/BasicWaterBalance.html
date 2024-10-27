@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-10-23</h4>
+            <h4 data-toc-skip class="date">2024-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="d-none name"><code>BasicWaterBalance.Rmd</code></div>
@@ -217,13 +217,16 @@ parameter values can be inspected by accessing the different elements of
 this object, whose names are.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "control"               "soil"                  "snowpack"             </span></span>
-<span><span class="co">##  [4] "canopy"                "herbLAI"               "herbLAImax"           </span></span>
-<span><span class="co">##  [7] "cohorts"               "above"                 "below"                </span></span>
-<span><span class="co">## [10] "belowLayers"           "paramsPhenology"       "paramsAnatomy"        </span></span>
-<span><span class="co">## [13] "paramsInterception"    "paramsTranspiration"   "paramsWaterStorage"   </span></span>
-<span><span class="co">## [16] "internalPhenology"     "internalWater"         "internalFCCS"         </span></span>
-<span><span class="co">## [19] "internalCommunication"</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] "control"                 "soil"                   </span></span>
+<span><span class="co">##  [3] "snowpack"                "canopy"                 </span></span>
+<span><span class="co">##  [5] "herbLAI"                 "herbLAImax"             </span></span>
+<span><span class="co">##  [7] "cohorts"                 "above"                  </span></span>
+<span><span class="co">##  [9] "below"                   "belowLayers"            </span></span>
+<span><span class="co">## [11] "paramsPhenology"         "paramsAnatomy"          </span></span>
+<span><span class="co">## [13] "paramsInterception"      "paramsTranspiration"    </span></span>
+<span><span class="co">## [15] "paramsWaterStorage"      "internalPhenology"      </span></span>
+<span><span class="co">## [17] "internalWater"           "internalLAIDistribution"</span></span>
+<span><span class="co">## [19] "internalFCCS"</span></span></code></pre>
 <p>Finally, note that users can set cohort-specific parameters for soil
 water balance (instead of using species-level values) by modifying
 manually the parameter values in this object. Since some parameters may
@@ -400,13 +403,16 @@ differently than in <code><a href="../../reference/spwb_day.html">spwb_day()</a>
 input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "control"               "soil"                  "snowpack"             </span></span>
-<span><span class="co">##  [4] "canopy"                "herbLAI"               "herbLAImax"           </span></span>
-<span><span class="co">##  [7] "cohorts"               "above"                 "below"                </span></span>
-<span><span class="co">## [10] "belowLayers"           "paramsPhenology"       "paramsAnatomy"        </span></span>
-<span><span class="co">## [13] "paramsInterception"    "paramsTranspiration"   "paramsWaterStorage"   </span></span>
-<span><span class="co">## [16] "internalPhenology"     "internalWater"         "internalFCCS"         </span></span>
-<span><span class="co">## [19] "internalCommunication"</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] "control"                 "soil"                   </span></span>
+<span><span class="co">##  [3] "snowpack"                "canopy"                 </span></span>
+<span><span class="co">##  [5] "herbLAI"                 "herbLAImax"             </span></span>
+<span><span class="co">##  [7] "cohorts"                 "above"                  </span></span>
+<span><span class="co">##  [9] "below"                   "belowLayers"            </span></span>
+<span><span class="co">## [11] "paramsPhenology"         "paramsAnatomy"          </span></span>
+<span><span class="co">## [13] "paramsInterception"      "paramsTranspiration"    </span></span>
+<span><span class="co">## [15] "paramsWaterStorage"      "internalPhenology"      </span></span>
+<span><span class="co">## [17] "internalWater"           "internalLAIDistribution"</span></span>
+<span><span class="co">## [19] "internalFCCS"</span></span></code></pre>
 <p>As before, <code>WaterBalance</code> contains water balance
 components, but in this case in form of a data frame with days in
 rows:</p>
