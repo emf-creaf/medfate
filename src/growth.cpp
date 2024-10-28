@@ -1515,7 +1515,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
 }
 
 
-// [[Rcpp::export(".growth_day_inner")]]
+//' @rdname communication
+//' @keywords internal
+// [[Rcpp::export("growth_day_inner")]]
 void growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                 double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
@@ -1637,7 +1639,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                                      runon, lateralFlows, waterTableDepth,
                                      modifyInput);
   
-  List modelOutput = copyGROWTHOutput(internalCommunication, x);
+  List modelOutput = copyModelOutput(internalCommunication, x, "growth");
   return(modelOutput);
 }
 

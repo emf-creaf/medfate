@@ -7,7 +7,9 @@ aspwbInput <- function(crop_factor, control, soil) {
     .Call(`_medfate_aspwbInput`, crop_factor, control, soil)
 }
 
-.aspwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+#' @rdname communication
+#' @keywords internal
+aspwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_aspwb_day_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
@@ -283,19 +285,37 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
 
-.copySPWBOutput <- function(internalCommunication, x) {
-    .Call(`_medfate_copySPWBOutput`, internalCommunication, x)
+#' Internal communication
+#'
+#' Functions for internal communication. Not to be called by users.
+#' 
+#' @param internalCommunication List for internal communication.
+#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
+#' @param date Date as string "yyyy-mm-dd".
+#' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
+#' @param latitude Latitude (in degrees).
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
+#' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+#' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
+#' @param model String for model, either "spwb" or "growth".
+#' 
+#' @name communication
+#' @keywords internal
+copy_model_output <- function(internalCommunication, x, model) {
+    .Call(`_medfate_copyModelOutput`, internalCommunication, x, model)
 }
 
-.copyGROWTHOutput <- function(internalCommunication, x) {
-    .Call(`_medfate_copyGROWTHOutput`, internalCommunication, x)
-}
-
-.generalCommunicationStructures <- function(numCohorts, nlayers, ncanlayers, ntimesteps, model) {
+#' @rdname communication
+#' @keywords internal
+general_communication_structures <- function(numCohorts, nlayers, ncanlayers, ntimesteps, model) {
     .Call(`_medfate_generalCommunicationStructures`, numCohorts, nlayers, ncanlayers, ntimesteps, model)
 }
 
-.instanceCommunicationStructures <- function(x, model) {
+#' @rdname communication
+#' @keywords internal
+instance_communication_structures <- function(x, model) {
     .Call(`_medfate_instanceCommunicationStructures`, x, model)
 }
 
@@ -1064,7 +1084,9 @@ mortality_dailyProbability <- function(stressValue, stressThreshold) {
     .Call(`_medfate_dailyMortalityProbability`, stressValue, stressThreshold)
 }
 
-.growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+#' @rdname communication
+#' @keywords internal
+growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     invisible(.Call(`_medfate_growthDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput))
 }
 
@@ -3716,7 +3738,9 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, CO2ByYear)
 }
 
-.spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+#' @rdname communication
+#' @keywords internal
+spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     invisible(.Call(`_medfate_spwbDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput))
 }
 

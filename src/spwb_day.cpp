@@ -717,7 +717,9 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
 
 
 
-// [[Rcpp::export(".spwb_day_inner")]]
+//' @rdname communication
+//' @keywords internal
+// [[Rcpp::export("spwb_day_inner")]]
 void spwbDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
                    double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                    double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
@@ -1005,7 +1007,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
                  runon, lateralFlows, waterTableDepth,
                  modifyInput);
    
-   List modelOutput = copySPWBOutput(internalCommunication, x);
+   List modelOutput = copyModelOutput(internalCommunication, x, "spwb");
    return(modelOutput);
  }
 

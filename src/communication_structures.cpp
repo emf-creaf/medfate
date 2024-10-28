@@ -1,3 +1,4 @@
+// [[Rcpp::interfaces(r,cpp)]]
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -1307,7 +1308,6 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
   return(l);
 }
 
-// [[Rcpp::export(".copySPWBOutput")]]
 List copySPWBOutput(List internalCommunication, List x) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
@@ -1321,7 +1321,6 @@ List copySPWBOutput(List internalCommunication, List x) {
   }
   return(modelOutput);
 }
-// [[Rcpp::export(".copyGROWTHOutput")]]
 List copyGROWTHOutput(List internalCommunication, List x) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
@@ -1335,6 +1334,7 @@ List copyGROWTHOutput(List internalCommunication, List x) {
   }
   return(modelOutput);
 }
+
 DataFrame communicationCarbonCompartments(int numCohorts) {
   DataFrame df = DataFrame::create(
     _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
@@ -1363,8 +1363,39 @@ List communicationInitialFinalCarbonCompartments(int numCohorts) {
   return(l);
 }
 
+//' Internal communication
+//'
+//' Functions for internal communication. Not to be called by users.
+//' 
+//' @param internalCommunication List for internal communication.
+//' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
+//' @param date Date as string "yyyy-mm-dd".
+//' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
+//' @param latitude Latitude (in degrees).
+//' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
+//' @param runon Surface water amount running on the target area from upslope (in mm).
+//' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
+//' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+//' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
+//' @param model String for model, either "spwb" or "growth".
+//' 
+//' @name communication
+//' @keywords internal
+// [[Rcpp::export("copy_model_output")]]
+List copyModelOutput(List internalCommunication, List x, String model) {
+  List out;
+  if(model=="spwb") {
+    out= copySPWBOutput(internalCommunication, x);
+  } else {
+    out= copyGROWTHOutput(internalCommunication, x);
+  }
+  return(out);
+}
+
 // General communication structures for many inputs
-// [[Rcpp::export(".generalCommunicationStructures")]]
+//' @rdname communication
+//' @keywords internal
+// [[Rcpp::export("general_communication_structures")]]
 List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps,
                                     String model) {
   List SWBcommunication = communicationSoilWaterBalance(nlayers);
@@ -1391,8 +1422,10 @@ List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers,
 
 
 
-// Communication structures fitted to the model input
-// [[Rcpp::export(".instanceCommunicationStructures")]]
+// Communication structures fitted to the model input 
+//' @rdname communication
+//' @keywords internal
+// [[Rcpp::export("instance_communication_structures")]]
 List instanceCommunicationStructures(List x, String model) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);

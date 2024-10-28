@@ -67,5 +67,4 @@ List copyBasicSPWBOutput(List boc, List x);
 List copyAdvancedSPWBOutput(List aoc, List x);
 List copyBasicGROWTHOutput(List boc, List x);
 List copyAdvancedGROWTHOutput(List aoc, List x);
-List copySPWBOutput(List internalCommunication, List x);
-List copyGROWTHOutput(List internalCommunication, List x);
+List copyModelOutput(List internalCommunication, List x, String model);

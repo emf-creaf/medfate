@@ -167,7 +167,10 @@ List aspwb_day_private(List internalCommunication, List x, NumericVector meteove
   return(l);
 }
 
-// [[Rcpp::export(".aspwb_day_inner")]]
+
+//' @rdname communication
+//' @keywords internal
+// [[Rcpp::export("aspwb_day_inner")]]
 List aspwb_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
                double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
                double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
