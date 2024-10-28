@@ -170,11 +170,11 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline List _growth_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
+    inline void _growth_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
         typedef SEXP(*Ptr__growth_day_inner)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr__growth_day_inner p__growth_day_inner = NULL;
         if (p__growth_day_inner == NULL) {
-            validateSignature("List(*_growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
+            validateSignature("void(*_growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
             p__growth_day_inner = (Ptr__growth_day_inner)R_GetCCallable("medfate", "_medfate__growth_day_inner");
         }
         RObject rcpp_result_gen;
@@ -188,7 +188,6 @@ namespace medfate {
             throw Rcpp::LongjumpException(rcpp_result_gen);
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
     }
 
     inline List growth_day(List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
@@ -1364,11 +1363,11 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List _spwb_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
+    inline void _spwb_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
         typedef SEXP(*Ptr__spwb_day_inner)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr__spwb_day_inner p__spwb_day_inner = NULL;
         if (p__spwb_day_inner == NULL) {
-            validateSignature("List(*_spwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
+            validateSignature("void(*_spwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
             p__spwb_day_inner = (Ptr__spwb_day_inner)R_GetCCallable("medfate", "_medfate__spwb_day_inner");
         }
         RObject rcpp_result_gen;
@@ -1382,7 +1381,6 @@ namespace medfate {
             throw Rcpp::LongjumpException(rcpp_result_gen);
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
     }
 
     inline List spwb_day(List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {

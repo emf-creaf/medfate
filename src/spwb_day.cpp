@@ -88,25 +88,25 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transpOutput, doub
   NumericVector fireHazard = NumericVector::create(
     _["DFMC [%]"] = fm_dead,
     _["CFMC_understory [%]"] = ActFMC[1],
-                                     _["CFMC_overstory [%]"] = ActFMC[2],
-                                                                     _["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"],
-                                                                                                           _["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"],
-                                                                                                                                                _["t_r_surface [s]"] = surfaceFire["t_r [s]"],
-                                                                                                                                                                                  _["FL_surface [m]"] = surfaceFire["FL [m]"],
-                                                                                                                                                                                                                   _["Ic_ratio"] = crownFire["Ic_ratio"],
-                                                                                                                                                                                                                                            _["ROS_crown [m/min]"] = crownFire["ROS_crown [m/min]"],
-                                                                                                                                                                                                                                                                              _["I_b_crown [kW/m]"] = crownFire["I_b_crown [kW/m]"],
-                                                                                                                                                                                                                                                                                                               _["t_r_crown [s]"] = crownFire["t_r_crown [s]"],
-                                                                                                                                                                                                                                                                                                                                             _["FL_crown [m]"] = crownFire["FL_crown [m]"],
-                                                                                                                                                                                                                                                                                                                                                                          _["SFP"] = firePotentials["SFP"],
-                                                                                                                                                                                                                                                                                                                                                                                                   _["CFP"] = firePotentials["CFP"]
+    _["CFMC_overstory [%]"] = ActFMC[2],
+    _["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"],
+    _["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"],
+    _["t_r_surface [s]"] = surfaceFire["t_r [s]"],
+    _["FL_surface [m]"] = surfaceFire["FL [m]"],
+    _["Ic_ratio"] = crownFire["Ic_ratio"],
+    _["ROS_crown [m/min]"] = crownFire["ROS_crown [m/min]"],
+    _["I_b_crown [kW/m]"] = crownFire["I_b_crown [kW/m]"],
+    _["t_r_crown [s]"] = crownFire["t_r_crown [s]"],
+    _["FL_crown [m]"] = crownFire["FL_crown [m]"],
+    _["SFP"] = firePotentials["SFP"],
+    _["CFP"] = firePotentials["CFP"]
   );
   return(fireHazard);
 }
 
 
 // Soil water balance with simple hydraulic model
-List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec, 
+void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec, 
                    double elevation, double slope, double aspect,
                    double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
                    bool verbose = false) {
@@ -410,12 +410,10 @@ List spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
     HydraulicOutput[l] = soilHydraulicOutput[l];
     PlantExtraction[l] = ExtractionVec[l];
   }
-  
-  return(modelOutputComm);
 }
 
 // Soil water balance with Sperry or Sureau hydraulic and stomatal conductance models
-List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec, 
+void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec, 
                       double latitude, double elevation, double slope, double aspect,
                       double solarConstant, double delta, 
                       double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
@@ -715,14 +713,12 @@ List spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
     HydraulicOutput[l] = soilHydraulicOutput[l];
     PlantExtraction[l] = ExtractionVec[l];
   }
-  
-  return(modelOutputComm);
 }
 
 
 
 // [[Rcpp::export(".spwb_day_inner")]]
-List spwbDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
+void spwbDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
                    double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                    double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                    bool modifyInput = true) {
@@ -830,11 +826,10 @@ List spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
       Named("Patm") = Patm,
       Named("pet") = pet,
       Named("rint") = Rint);
-    List modelOutputComm = spwbDay_basic(internalCommunication, x, meteovec_bas,
-                                         elevation, slope, aspect, 
-                                         runon, lateralFlows, waterTableDepth, 
-                                         verbose);
-    modelOutput = copyBasicSPWBOutput(modelOutputComm, x);
+    spwbDay_basic(internalCommunication, x, meteovec_bas,
+                  elevation, slope, aspect, 
+                  runon, lateralFlows, waterTableDepth, 
+                  verbose);
   } else {
     NumericVector meteovec_adv = NumericVector::create(
       Named("tmin") = tmin, 
@@ -851,15 +846,12 @@ List spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
       Named("Patm") = Patm,
       Named("pet") = pet,
       Named("rint") = Rint);
-    List modelOutputComm = spwbDay_advanced(internalCommunication, x, meteovec_adv,
-                                            latitude, elevation, slope, aspect,
-                                            solarConstant, delta, 
-                                            runon, lateralFlows, waterTableDepth, 
-                                            verbose);
-    modelOutput = copyAdvancedSPWBOutput(modelOutputComm, x);
-    
+    spwbDay_advanced(internalCommunication, x, meteovec_adv,
+                     latitude, elevation, slope, aspect,
+                     solarConstant, delta, 
+                     runon, lateralFlows, waterTableDepth, 
+                     verbose);
   }
-  return(modelOutput);
 }
 
 //' Single-day simulation
@@ -973,9 +965,6 @@ List spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //' sd2 <-spwb_day(x2, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
-//' #Plot plant transpiration (see function 'plot.swb.day()')
-//' plot(sd2)
-//' 
 //' #Simulate water balance for one day only (Sureau mode)
 //' control <- defaultControl("Sureau")
 //' x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
@@ -1009,12 +998,14 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
               bool modifyInput = true) {
    
    //Instance communication structures
-   List internalCommunication = instanceCommunicationStructures(x);
+   List internalCommunication = instanceCommunicationStructures(x, "spwb");
    
-   List modelOutput = spwbDay_inner(internalCommunication, x, date, meteovec,
-                                    latitude, elevation, slope, aspect,
-                                    runon, lateralFlows, waterTableDepth,
-                                    modifyInput);
+   spwbDay_inner(internalCommunication, x, date, meteovec,
+                 latitude, elevation, slope, aspect,
+                 runon, lateralFlows, waterTableDepth,
+                 modifyInput);
+   
+   List modelOutput = copySPWBOutput(internalCommunication, x);
    return(modelOutput);
  }
 

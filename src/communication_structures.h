@@ -54,8 +54,9 @@ const int SOILCOM_drain_below = 45;
 const int SOILCOM_lateral_flows_step_mm = 46;
 
 
-List instanceCommunicationStructures(List x);
-List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);
+List instanceCommunicationStructures(List x, String model);
+List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps,
+                                    String model);
 List communicationSoilWaterBalance(int nlayers);
 
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers);
@@ -66,3 +67,5 @@ List copyBasicSPWBOutput(List boc, List x);
 List copyAdvancedSPWBOutput(List aoc, List x);
 List copyBasicGROWTHOutput(List boc, List x);
 List copyAdvancedGROWTHOutput(List aoc, List x);
+List copySPWBOutput(List internalCommunication, List x);
+List copyGROWTHOutput(List internalCommunication, List x);

@@ -283,12 +283,20 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
 
-.instanceCommunicationStructures <- function(x) {
-    .Call(`_medfate_instanceCommunicationStructures`, x)
+.copySPWBOutput <- function(internalCommunication, x) {
+    .Call(`_medfate_copySPWBOutput`, internalCommunication, x)
 }
 
-.generalCommunicationStructures <- function(numCohorts, nlayers, ncanlayers, ntimesteps) {
-    .Call(`_medfate_generalCommunicationStructures`, numCohorts, nlayers, ncanlayers, ntimesteps)
+.copyGROWTHOutput <- function(internalCommunication, x) {
+    .Call(`_medfate_copyGROWTHOutput`, internalCommunication, x)
+}
+
+.generalCommunicationStructures <- function(numCohorts, nlayers, ncanlayers, ntimesteps, model) {
+    .Call(`_medfate_generalCommunicationStructures`, numCohorts, nlayers, ncanlayers, ntimesteps, model)
+}
+
+.instanceCommunicationStructures <- function(x, model) {
+    .Call(`_medfate_instanceCommunicationStructures`, x, model)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
@@ -1057,7 +1065,7 @@ mortality_dailyProbability <- function(stressValue, stressThreshold) {
 }
 
 .growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_growthDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+    invisible(.Call(`_medfate_growthDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput))
 }
 
 #' @rdname spwb_day
@@ -3709,7 +3717,7 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
 }
 
 .spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_spwbDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+    invisible(.Call(`_medfate_spwbDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput))
 }
 
 #' Single-day simulation
@@ -3822,9 +3830,6 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
 #' x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #' sd2 <-spwb_day(x2, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-#' 
-#' #Plot plant transpiration (see function 'plot.swb.day()')
-#' plot(sd2)
 #' 
 #' #Simulate water balance for one day only (Sureau mode)
 #' control <- defaultControl("Sureau")

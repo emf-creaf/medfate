@@ -498,20 +498,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// instanceCommunicationStructures
-List instanceCommunicationStructures(List x);
-RcppExport SEXP _medfate_instanceCommunicationStructures(SEXP xSEXP) {
+// copySPWBOutput
+List copySPWBOutput(List internalCommunication, List x);
+RcppExport SEXP _medfate_copySPWBOutput(SEXP internalCommunicationSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type internalCommunication(internalCommunicationSEXP);
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(instanceCommunicationStructures(x));
+    rcpp_result_gen = Rcpp::wrap(copySPWBOutput(internalCommunication, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// copyGROWTHOutput
+List copyGROWTHOutput(List internalCommunication, List x);
+RcppExport SEXP _medfate_copyGROWTHOutput(SEXP internalCommunicationSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type internalCommunication(internalCommunicationSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(copyGROWTHOutput(internalCommunication, x));
     return rcpp_result_gen;
 END_RCPP
 }
 // generalCommunicationStructures
-List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);
-RcppExport SEXP _medfate_generalCommunicationStructures(SEXP numCohortsSEXP, SEXP nlayersSEXP, SEXP ncanlayersSEXP, SEXP ntimestepsSEXP) {
+List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps, String model);
+RcppExport SEXP _medfate_generalCommunicationStructures(SEXP numCohortsSEXP, SEXP nlayersSEXP, SEXP ncanlayersSEXP, SEXP ntimestepsSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -519,7 +532,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nlayers(nlayersSEXP);
     Rcpp::traits::input_parameter< int >::type ncanlayers(ncanlayersSEXP);
     Rcpp::traits::input_parameter< int >::type ntimesteps(ntimestepsSEXP);
-    rcpp_result_gen = Rcpp::wrap(generalCommunicationStructures(numCohorts, nlayers, ncanlayers, ntimesteps));
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(generalCommunicationStructures(numCohorts, nlayers, ncanlayers, ntimesteps, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// instanceCommunicationStructures
+List instanceCommunicationStructures(List x, String model);
+RcppExport SEXP _medfate_instanceCommunicationStructures(SEXP xSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(instanceCommunicationStructures(x, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1426,10 +1452,9 @@ RcppExport SEXP _medfate_dailyMortalityProbability(SEXP stressValueSEXP, SEXP st
     return rcpp_result_gen;
 }
 // growthDay_inner
-List growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
+void growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
 static SEXP _medfate_growthDay_inner_try(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type internalCommunication(internalCommunicationSEXP);
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
@@ -1442,8 +1467,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Nullable<NumericVector> >::type lateralFlows(lateralFlowsSEXP);
     Rcpp::traits::input_parameter< double >::type waterTableDepth(waterTableDepthSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthDay_inner(internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput));
-    return rcpp_result_gen;
+    growthDay_inner(internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput);
+    return R_NilValue;
 END_RCPP_RETURN_ERROR
 }
 RcppExport SEXP _medfate_growthDay_inner(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
@@ -5389,10 +5414,9 @@ RcppExport SEXP _medfate_pwb(SEXP xSEXP, SEXP meteoSEXP, SEXP WSEXP, SEXP latitu
     return rcpp_result_gen;
 }
 // spwbDay_inner
-List spwbDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
+void spwbDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
 static SEXP _medfate_spwbDay_inner_try(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type internalCommunication(internalCommunicationSEXP);
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
@@ -5405,8 +5429,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Nullable<NumericVector> >::type lateralFlows(lateralFlowsSEXP);
     Rcpp::traits::input_parameter< double >::type waterTableDepth(waterTableDepthSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbDay_inner(internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput));
-    return rcpp_result_gen;
+    spwbDay_inner(internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput);
+    return R_NilValue;
 END_RCPP_RETURN_ERROR
 }
 RcppExport SEXP _medfate_spwbDay_inner(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
@@ -5842,7 +5866,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("void(*.fillASPWBDailyOutput)(List,List,List,int)");
         signatures.insert("List(*aspwb)(List,DataFrame,double,double,double,double,double)");
         signatures.insert("double(*mortality_dailyProbability)(double,double)");
-        signatures.insert("List(*.growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
+        signatures.insert("void(*.growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*growth_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*.defineGrowthDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillGrowthDailyOutput)(List,List,List,int)");
@@ -5899,7 +5923,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("void(*.fillSPWBDailyOutput)(List,List,List,int)");
         signatures.insert("List(*spwb)(List,DataFrame,double,double,double,double,NumericVector,double)");
         signatures.insert("List(*pwb)(List,DataFrame,NumericMatrix,double,double,double,double,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector)");
-        signatures.insert("List(*.spwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
+        signatures.insert("void(*.spwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*spwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
     }
     return signatures.find(sig) != signatures.end();
@@ -6002,8 +6026,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
-    {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 1},
-    {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 4},
+    {"_medfate_copySPWBOutput", (DL_FUNC) &_medfate_copySPWBOutput, 2},
+    {"_medfate_copyGROWTHOutput", (DL_FUNC) &_medfate_copyGROWTHOutput, 2},
+    {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
+    {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},

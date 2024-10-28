@@ -85,8 +85,13 @@
 #' #Switch to 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
 #' 
-#' #Simulate one day only
+#' #Enable subdaily results for plotting
+#' control["subdailyResults"] <- TRUE
+#' 
+#' #Initialize model inputs
 #' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' 
+#' #Simulate one day only
 #' d <- 100
 #' date <- examplemeteo$dates[d]
 #' meteovec <- unlist(examplemeteo[d,])

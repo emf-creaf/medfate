@@ -138,8 +138,8 @@ test_that("Can produce all advanced spwb plots and summaries",{
 test_that("Can produce all advanced subdaily spwb plots",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
-    control$verbose = FALSE
-    control$subdailyResults = TRUE
+    control$verbose <- FALSE
+    control$subdailyResults <- TRUE
     x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "spwbInput")
     S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -208,7 +208,8 @@ test_that("Can produce all advanced subdaily spwb plots",{
 test_that("Can produce all advanced spwb_day plots",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
-    control$verbose = FALSE
+    control$verbose <- TRUE
+    control$subdailyResults <- TRUE
     x2 = spwbInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "spwbInput")
     d1 = d[1]
@@ -333,9 +334,9 @@ test_that("Can produce all advanced growth plots and summaries",{
 test_that("Can produce all advanced subdaily growth plots",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
-    control$verbose = FALSE
-    control$subdailyResults = TRUE
-    control$subdailyCarbonBalance = TRUE
+    control$verbose <- FALSE
+    control$subdailyResults <- TRUE
+    control$subdailyCarbonBalance <- TRUE
     x2 = growthInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "growthInput")
     G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -370,6 +371,7 @@ test_that("Can produce all advanced growth_day plots",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose <- FALSE
+    control$subdailyResults <- TRUE
     control$subdailyCarbonBalance <- TRUE
     x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "growthInput")

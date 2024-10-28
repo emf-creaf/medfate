@@ -1140,60 +1140,62 @@ List copyAdvancedSPWBOutput(List aoc, List x) {
   NumericVector meteovec_adv = clone(as<NumericVector>(aoc["weather"]));
   
   NumericVector WaterBalance = clone(as<NumericVector>(aoc["WaterBalance"]));
-  
   List EnergyBalance = copyEnergyBalanceOutput(as<List>(aoc["EnergyBalance"]), x);
-  
-  NumericVector Stand = clone(as<NumericVector>(aoc["Stand"]));
-  
-  DataFrame Soil = copyDataFrame(as<DataFrame>(aoc["Soil"]), nlayers);
-  
-  DataFrame Plants = copyDataFrame(as<DataFrame>(aoc["Plants"]), numCohorts);
-  Plants.attr("row.names") = cohorts.attr("row.names");
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["topography"] = topo,
+                        _["weather"] = meteovec_adv,
+                        _["WaterBalance"] = WaterBalance,
+                        _["EnergyBalance"] = EnergyBalance);
 
-  DataFrame Sunlit = copyDataFrame(as<DataFrame>(aoc["SunlitLeaves"]), numCohorts);
-  Sunlit.attr("row.names") = above.attr("row.names");
-  DataFrame Shade = copyDataFrame(as<DataFrame>(aoc["ShadeLeaves"]), numCohorts);
-  Shade.attr("row.names") = above.attr("row.names");
-  
-  
+  if(control["soilResults"]){
+    DataFrame Soil = copyDataFrame(as<DataFrame>(aoc["Soil"]), nlayers);
+    l.push_back(Soil, "Soil");
+  }
+  if(control["standResults"]){
+    NumericVector Stand = clone(as<NumericVector>(aoc["Stand"]));
+    l.push_back(Stand, "Stand");
+  }
+  if(control["plantResults"]){
+    DataFrame Plants = copyDataFrame(as<DataFrame>(aoc["Plants"]), numCohorts);
+    Plants.attr("row.names") = cohorts.attr("row.names");
+    l.push_back(Plants, "Plants"); 
+  }
+  if(control["leafResults"]){
+    DataFrame Sunlit = copyDataFrame(as<DataFrame>(aoc["SunlitLeaves"]), numCohorts);
+    Sunlit.attr("row.names") = above.attr("row.names");
+    DataFrame Shade = copyDataFrame(as<DataFrame>(aoc["ShadeLeaves"]), numCohorts);
+    Shade.attr("row.names") = above.attr("row.names");
+    l.push_back(Sunlit, "SunlitLeaves");
+    l.push_back(Shade, "ShadeLeaves");
+  }
+
   NumericMatrix minPsiRhizoComm = aoc["RhizoPsi"];
   NumericMatrix minPsiRhizo = copyNumericMatrix(minPsiRhizoComm, numCohorts, nlayers);
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  l.push_back(minPsiRhizo, "RhizoPsi");
+
   
-  NumericMatrix soilLayerExtractInstComm = aoc["ExtractionInst"];
-  NumericMatrix soilLayerExtractInst = copyNumericMatrix(soilLayerExtractInstComm, nlayers, ntimesteps);
-  soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
-  
-  List PlantsInst = copyPlantsInstOutput(as<List>(aoc["PlantsInst"]), x);
-  List SunlitInst = copyLeavesInstOutput(as<List>(aoc["SunlitLeavesInst"]), x);
-  List ShadeInst = copyLeavesInstOutput(as<List>(aoc["ShadeLeavesInst"]), x);
-  
+  if(control["subdailyResults"]) {
+    NumericMatrix soilLayerExtractInstComm = aoc["ExtractionInst"];
+    NumericMatrix soilLayerExtractInst = copyNumericMatrix(soilLayerExtractInstComm, nlayers, ntimesteps);
+    soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
+    l.push_back(soilLayerExtractInst, "ExtractionInst");
+    List PlantsInst = copyPlantsInstOutput(as<List>(aoc["PlantsInst"]), x);
+    l.push_back(PlantsInst, "PlantsInst");
+    l.push_back(clone(as<List>(aoc["RadiationInputInst"])), "RadiationInputInst");
+    List SunlitInst = copyLeavesInstOutput(as<List>(aoc["SunlitLeavesInst"]), x);
+    List ShadeInst = copyLeavesInstOutput(as<List>(aoc["ShadeLeavesInst"]), x);
+    l.push_back(SunlitInst, "SunlitLeavesInst");
+    l.push_back(ShadeInst, "ShadeLeavesInst");
+  }
   List lwrExtinctionListComm = aoc["LWRExtinction"];
   List lwrExtinctionList(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
     lwrExtinctionList[n] = copyCommunicationLongWaveRadiation(as<List>(lwrExtinctionListComm[n]), ncanlayers);
   }
-  
-
-  List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["topography"] = topo,
-                        _["weather"] = meteovec_adv,
-                        _["WaterBalance"] = WaterBalance, 
-                        _["EnergyBalance"] = EnergyBalance,
-                        _["Soil"] = Soil, 
-                        _["Stand"] = Stand, 
-                        _["Plants"] = Plants,
-                        _["RhizoPsi"] = minPsiRhizo,
-                        _["SunlitLeaves"] = Sunlit,
-                        _["ShadeLeaves"] = Shade,
-                        _["ExtractionInst"] = soilLayerExtractInst,
-                        _["PlantsInst"] = PlantsInst,
-                        _["RadiationInputInst"] = clone(as<List>(aoc["RadiationInputInst"])),
-                        _["SunlitLeavesInst"] = SunlitInst,
-                        _["ShadeLeavesInst"] = ShadeInst,
-                        _["LightExtinction"] = clone(as<List>(aoc["LightExtinction"])),
-                        _["LWRExtinction"] = lwrExtinctionList,
-                        _["CanopyTurbulence"] = copyDataFrame(as<DataFrame>(aoc["CanopyTurbulence"]), ncanlayers));
+  l.push_back(clone(as<List>(aoc["LightExtinction"])), "LightExtinction");
+  l.push_back(lwrExtinctionList, "LWRExtinction");
+  l.push_back(copyDataFrame(as<DataFrame>(aoc["CanopyTurbulence"]), ncanlayers), "CanopyTurbulence");
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -1207,41 +1209,58 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
   bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
 
   List spwbOut = copyAdvancedSPWBOutput(aoc, x);
-  
-  DataFrame labileCarbonBalance = copyDataFrame(as<DataFrame>(aoc["LabileCarbonBalance"]), numCohorts);
-  labileCarbonBalance.attr("row.names") = above.attr("row.names");
-  
+
   NumericVector standCB = clone(as<NumericVector>(aoc["CarbonBalance"]));
-  
-  DataFrame plantStructure = copyDataFrame(as<DataFrame>(aoc["PlantStructure"]), numCohorts);
-  plantStructure.attr("row.names") = above.attr("row.names");
-  
-  DataFrame growthMortality  = copyDataFrame(as<DataFrame>(aoc["GrowthMortality"]), numCohorts);
-  growthMortality.attr("row.names") = above.attr("row.names");
-  
-  DataFrame plantBiomassBalance = copyDataFrame(as<DataFrame>(aoc["PlantBiomassBalance"]), numCohorts);
-  plantBiomassBalance.attr("row.names") = above.attr("row.names");
   
   List l = List::create(_["cohorts"] = spwbOut["cohorts"],
                         _["topography"] = spwbOut["topography"],
                         _["weather"] = spwbOut["weather"],
                         _["WaterBalance"] = spwbOut["WaterBalance"], 
                         _["EnergyBalance"] = spwbOut["EnergyBalance"],
-                        _["CarbonBalance"] = standCB,
-                        _["Soil"] = spwbOut["Soil"], 
-                        _["Stand"] = spwbOut["Stand"], 
-                        _["Plants"] = spwbOut["Plants"],
-                        _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["PlantBiomassBalance"] = plantBiomassBalance,
-                        _["PlantStructure"] = plantStructure,
-                        _["GrowthMortality"] = growthMortality,
-                        _["RhizoPsi"] = spwbOut["RhizoPsi"],
-                        _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
-                        _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
-                        _["ExtractionInst"] = spwbOut["ExtractionInst"],
-                        _["PlantsInst"] = spwbOut["PlantsInst"],
-                        _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
-                        _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
+                        _["CarbonBalance"] = standCB);
+  
+  if(control["soilResults"]) {
+    l.push_back(spwbOut["Soil"], "Soil");
+  }
+  if(control["standResults"]){
+    l.push_back(spwbOut["Stand"], "Stand");
+  }
+  if(control["plantResults"]){
+    l.push_back(spwbOut["Plants"], "Plants");
+  }
+  if(control["labileCarbonBalanceResults"]) {
+    DataFrame labileCarbonBalance = copyDataFrame(as<DataFrame>(aoc["LabileCarbonBalance"]), numCohorts);
+    labileCarbonBalance.attr("row.names") = above.attr("row.names");
+    l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+  }
+  DataFrame plantBiomassBalance = copyDataFrame(as<DataFrame>(aoc["PlantBiomassBalance"]), numCohorts);
+  plantBiomassBalance.attr("row.names") = above.attr("row.names");
+  l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+  
+  if(control["plantStructureResults"]) {
+    DataFrame plantStructure = copyDataFrame(as<DataFrame>(aoc["PlantStructure"]), numCohorts);
+    plantStructure.attr("row.names") = above.attr("row.names");
+    l.push_back(plantStructure, "PlantStructure");
+  }
+  if(control["growthMortalityResults"]) {
+    DataFrame growthMortality  = copyDataFrame(as<DataFrame>(aoc["GrowthMortality"]), numCohorts);
+    growthMortality.attr("row.names") = above.attr("row.names");
+    l.push_back(growthMortality, "GrowthMortality");
+  }
+  
+  l.push_back(spwbOut["RhizoPsi"], "RhizoPsi");
+  
+  if(control["leafResults"]){
+    l.push_back(spwbOut["SunlitLeaves"], "SunlitLeaves");
+    l.push_back(spwbOut["ShadeLeaves"], "ShadeLeaves");
+  }
+  if(control["subdailyResults"]) {
+    l.push_back(spwbOut["ExtractionInst"], "ExtractionInst");
+    l.push_back(spwbOut["PlantsInst"], "PlantsInst");
+    l.push_back(spwbOut["RadiationInputInst"], "RadiationInputInst");
+    l.push_back(spwbOut["SunlitLeavesInst"], "SunlitLeavesInst");
+    l.push_back(spwbOut["ShadeLeavesInst"], "ShadeLeavesInst");
+  }
   if(subdailyCarbonBalance) {
     List labileCBInstComm = aoc["LabileCarbonBalanceInst"];
     
@@ -1288,6 +1307,34 @@ List copyAdvancedGROWTHOutput(List aoc, List x) {
   return(l);
 }
 
+// [[Rcpp::export(".copySPWBOutput")]]
+List copySPWBOutput(List internalCommunication, List x) {
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  List modelOutput;
+  if(transpirationMode =="Granier") {
+    List modelOutputComm = internalCommunication["basicSPWBOutput"];
+    modelOutput = copyBasicSPWBOutput(modelOutputComm, x);
+  } else {
+    List modelOutputComm = internalCommunication["advancedSPWBOutput"];
+    modelOutput = copyAdvancedSPWBOutput(modelOutputComm, x);
+  }
+  return(modelOutput);
+}
+// [[Rcpp::export(".copyGROWTHOutput")]]
+List copyGROWTHOutput(List internalCommunication, List x) {
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  List modelOutput;
+  if(transpirationMode =="Granier") {
+    List modelOutputComm = internalCommunication["basicGROWTHOutput"];
+    modelOutput = copyBasicGROWTHOutput(modelOutputComm, x);
+  } else {
+    List modelOutputComm = internalCommunication["advancedGROWTHOutput"];
+    modelOutput = copyAdvancedGROWTHOutput(modelOutputComm, x);
+  }
+  return(modelOutput);
+}
 DataFrame communicationCarbonCompartments(int numCohorts) {
   DataFrame df = DataFrame::create(
     _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
@@ -1316,10 +1363,37 @@ List communicationInitialFinalCarbonCompartments(int numCohorts) {
   return(l);
 }
 
+// General communication structures for many inputs
+// [[Rcpp::export(".generalCommunicationStructures")]]
+List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps,
+                                    String model) {
+  List SWBcommunication = communicationSoilWaterBalance(nlayers);
+  List basicTranspirationOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
+  List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
+  List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, nlayers);
+  List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, nlayers);
+  
+  List ic = List::create(_["SWBcommunication"] = SWBcommunication,
+                         _["basicTranspirationOutput"] = basicTranspirationOutput,
+                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
+                         _["basicSPWBOutput"] = basicSPWBOutput,
+                         _["advancedSPWBOutput"] = advancedSPWBOutput);
+  if(model=="growth") {
+    List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
+    List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
+    List initialFinalCC = communicationInitialFinalCarbonCompartments(numCohorts);
+    ic.push_back(basicGROWTHOutput, "basicGROWTHOutput");
+    ic.push_back(advancedGROWTHOutput, "advancedGROWTHOutput");
+    ic.push_back(initialFinalCC, "initialFinalCC");
+  }
+  return(ic);
+}
+
+
 
 // Communication structures fitted to the model input
 // [[Rcpp::export(".instanceCommunicationStructures")]]
-List instanceCommunicationStructures(List x) {
+List instanceCommunicationStructures(List x, String model) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -1329,43 +1403,6 @@ List instanceCommunicationStructures(List x) {
   int nlayers = soil.nrow();
   int numCohorts = cohorts.nrow();
   int ntimesteps = control["ndailysteps"];
-  List SWBcommunication = communicationSoilWaterBalance(nlayers);
-  List basicTranspirationOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
-  List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, nlayers);
-  List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
-  List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
-  List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, nlayers);
-  List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
-  List initialFinalCC = communicationInitialFinalCarbonCompartments(numCohorts);
-  List ic = List::create(_["SWBcommunication"] = SWBcommunication,
-                         _["basicTranspirationOutput"] = basicTranspirationOutput,
-                         _["basicSPWBOutput"] = basicSPWBOutput,
-                         _["basicGROWTHOutput"] = basicGROWTHOutput,
-                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
-                         _["advancedSPWBOutput"] = advancedSPWBOutput,
-                         _["advancedGROWTHOutput"] = advancedGROWTHOutput,
-                         _["initialFinalCC"] = initialFinalCC);
-  return(ic);
+  return(generalCommunicationStructures(numCohorts, nlayers, ncanlayers, ntimesteps, model));
 }
 
-// General communication structures for many inputs
-// [[Rcpp::export(".generalCommunicationStructures")]]
-List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps) {
-  List basicTranspirationOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
-  List basicSPWBOutput = basicSPWBCommunicationOutput(basicTranspirationOutput, nlayers);
-  List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
-  List advancedTranspirationOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
-  List advancedSPWBOutput = advancedSPWBCommunicationOutput(advancedTranspirationOutput, nlayers);
-  List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
-  List initialFinalCC = communicationInitialFinalCarbonCompartments(numCohorts);
-  List SWBcommunication = communicationSoilWaterBalance(nlayers);
-  List ic = List::create(_["SWBcommunication"] = SWBcommunication,
-                         _["basicTranspirationOutput"] = basicTranspirationOutput,
-                         _["basicSPWBOutput"] = basicSPWBOutput,
-                         _["basicGROWTHOutput"] = basicGROWTHOutput,
-                         _["advancedTranspirationOutput"] = advancedTranspirationOutput,
-                         _["advancedSPWBOutput"] = advancedSPWBOutput,
-                         _["advancedGROWTHOutput"] = advancedGROWTHOutput,
-                         _["initialFinalCC"] = initialFinalCC);
-  return(ic);
-}

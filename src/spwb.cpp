@@ -880,7 +880,7 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers
   String transpirationMode = control["transpirationMode"];
-  
+
   DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
   int numDays = DWB.nrow();
   fillWaterBalanceDailyOutput(DWB, sDay, iday, transpirationMode);
@@ -1370,13 +1370,12 @@ List spwb(List x, DataFrame meteo,
   }
   
   //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x);
+  List internalCommunication = instanceCommunicationStructures(x, "spwb");
 
   
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
-  NumericVector Eplanttot(numDays,0.0);
-  List s;
+
   std::string yearString;
   for(int i=0;(i<numDays) && (!error_occurence);i++) {
      std::string c = as<std::string>(dateStrings[i]);
@@ -1511,10 +1510,11 @@ List spwb(List x, DataFrame meteo,
           Named("pet") = PET[i],
           Named("rint") = Rint);
         try{
-          s = spwbDay_basic(internalCommunication, x, meteovec, 
-                            elevation, slope, aspect, 
-                            0.0, R_NilValue, waterTableDepth, 
-                            verbose);
+          spwbDay_basic(internalCommunication, x, meteovec, 
+                        elevation, slope, aspect, 
+                        0.0, R_NilValue, waterTableDepth, 
+                        verbose);
+          fillSPWBDailyOutput(outputList, x, internalCommunication["basicSPWBOutput"],i);
         } catch(std::exception& ex) {
           Rcerr<< "c++ error: "<< ex.what() <<"\n";
           error_occurence = true;
@@ -1545,19 +1545,17 @@ List spwb(List x, DataFrame meteo,
           Named("pet") = PET[i],
           Named("rint") = Rint);
         try{
-          s = spwbDay_advanced(internalCommunication, x, meteovec, 
+          spwbDay_advanced(internalCommunication, x, meteovec, 
                                latitude, elevation, slope, aspect,
                                solarConstant, delta, 
                                0.0, R_NilValue, waterTableDepth, 
                                verbose); 
+          fillSPWBDailyOutput(outputList, x, internalCommunication["advancedSPWBOutput"],i);
         } catch(std::exception& ex) {
           Rcerr<< "c++ error: "<< ex.what() <<"\n";
           error_occurence = true;
         }
       }
-
-      //Fill output list      
-      fillSPWBDailyOutput(outputList, x, s,i);
   }
   if(verbose) Rcout << "\n\n";
   
@@ -1748,14 +1746,13 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
-  NumericVector EplantCohTot(numCohorts, 0.0);
 
   //Fire hazard output variables
   DataFrame fireHazard;
   if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(dateStrings);
     
     
-  List internalCommunication = instanceCommunicationStructures(x);
+  List internalCommunication = instanceCommunicationStructures(x, "spwb");
   List transpOutput;
   if(transpirationMode == "Granier") {
     transpOutput  = internalCommunication["basicTranspirationOutput"];
@@ -1764,7 +1761,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   }
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations ";
-  NumericVector Eplanttot(numDays,0.0);
   List s;
   std::string yearString;
   for(int i=0;i<numDays;i++) {
@@ -1974,9 +1970,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     LAIexpanded[i] = stand["LAIexpanded"];
     LAIdead[i] = stand["LAIdead"];
         
-    EplantCohTot = EplantCohTot + EplantCoh;
-    Eplanttot[i] = sum(EplantCoh);
-    
+
     if(subdailyResults) {
       subdailyRes[i] = copyAdvancedTranspirationOutput(transpOutput, x);
     }

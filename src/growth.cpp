@@ -369,7 +369,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
     x["herbLAI"] = herbLAImax*exp(-0.235*woodyLAI);
   }
 }
-List growthDay_private(List internalCommunication, List x, NumericVector meteovec, 
+void growthDay_private(List internalCommunication, List x, NumericVector meteovec, 
                     double latitude, double elevation, double slope, double aspect,
                     double solarConstant, double delta, 
                     double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
@@ -384,23 +384,25 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   //Control params
   List control = x["control"];  
   String transpirationMode = control["transpirationMode"];
+  List modelOutput;
+  List spwbOutput;
   
   //Soil-plant water balance (this creates communication structures as well)
-  List spwbOut;
-  List modelOutput;
   if(transpirationMode=="Granier") {
+    spwbOutput = internalCommunication["basicSPWBOutput"];
     modelOutput = internalCommunication["basicGROWTHOutput"];
-    spwbOut = spwbDay_basic(internalCommunication, x, meteovec, 
-                       elevation, slope, aspect,
-                       runon, lateralFlows, waterTableDepth,
-                       verbose); 
+    spwbDay_basic(internalCommunication, x, meteovec, 
+                  elevation, slope, aspect,
+                  runon, lateralFlows, waterTableDepth,
+                  verbose); 
   } else {
+    spwbOutput = internalCommunication["advancedSPWBOutput"];
     modelOutput = internalCommunication["advancedGROWTHOutput"];
-    spwbOut = spwbDay_advanced(internalCommunication, x, meteovec, 
-                       latitude, elevation, slope, aspect,
-                       solarConstant, delta, 
-                       runon, lateralFlows, waterTableDepth,
-                       verbose);
+    spwbDay_advanced(internalCommunication, x, meteovec, 
+                     latitude, elevation, slope, aspect,
+                     solarConstant, delta, 
+                     runon, lateralFlows, waterTableDepth,
+                     verbose);
   }
 
   
@@ -435,7 +437,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   bool fireOccurrence = false;
   NumericVector fireBehavior(1,NA_REAL);
   if(R::runif(0.0,1.0) < pfire) {
-    fireBehavior = fccsHazard(x, meteovec, spwbOut, slope);
+    fireBehavior = fccsHazard(x, meteovec, spwbOutput, slope);
     fireOccurrence = true;
   }
   
@@ -537,7 +539,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   LogicalVector budFormation = internalPhenology["budFormation"];
   LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   
-  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOutput["Plants"]);
   List PlantsInst;
   NumericVector Ag = Plants["GrossPhotosynthesis"];
   NumericVector LFMC = Plants["LFMC"];
@@ -545,7 +547,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericMatrix AgStep, AnStep;
   int numSteps = 1;
   if(transpirationMode!="Granier") {
-    PlantsInst = spwbOut["PlantsInst"];
+    PlantsInst = spwbOutput["PlantsInst"];
     AgStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
     AnStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
     numSteps = AgStep.ncol();
@@ -560,7 +562,7 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
     StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
     LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
 
-    eb = spwbOut["EnergyBalance"];  
+    eb = spwbOutput["EnergyBalance"];  
     DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
     NumericVector TcanIN = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
     for(int n=0;n<ntimesteps;n++) Tcan[n] = TcanIN[n];
@@ -1510,12 +1512,11 @@ List growthDay_private(List internalCommunication, List x, NumericVector meteove
   standCB["SynthesisRespiration"] = standSynthesisRespiration;
   standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
 
-  return(modelOutput);
 }
 
 
 // [[Rcpp::export(".growth_day_inner")]]
-List growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
+void growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, 
                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                 double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
                 bool modifyInput = true) {
@@ -1615,18 +1616,11 @@ List growthDay_inner(List internalCommunication, List x, CharacterVector date, N
      Named("pet") = pet,
      Named("rint") = Rint,
      Named("pfire") = pfire);
-   List modelOutputComm = growthDay_private(internalCommunication, x, meteovec_inner, 
-                                         latitude, elevation, slope, aspect,
-                                         solarConstant, delta, 
-                                         runon, lateralFlows, waterTableDepth,
-                                         verbose);
-   List modelOutput;
-   if(transpirationMode=="Granier") {
-     modelOutput = copyBasicGROWTHOutput(modelOutputComm, x);
-   } else {
-     modelOutput = copyAdvancedGROWTHOutput(modelOutputComm, x);
-   }
-   return(modelOutput);
+   growthDay_private(internalCommunication, x, meteovec_inner, 
+                     latitude, elevation, slope, aspect,
+                     solarConstant, delta, 
+                     runon, lateralFlows, waterTableDepth,
+                     verbose);
  }
 
 //' @rdname spwb_day
@@ -1636,13 +1630,14 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
                bool modifyInput = true) {
   //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x);
+  List internalCommunication = instanceCommunicationStructures(x, "growth");
   
-  
-  List modelOutput = growthDay_inner(internalCommunication, x, date, meteovec,
+  growthDay_inner(internalCommunication, x, date, meteovec,
                                      latitude, elevation, slope, aspect,
                                      runon, lateralFlows, waterTableDepth,
                                      modifyInput);
+  
+  List modelOutput = copyGROWTHOutput(internalCommunication, x);
   return(modelOutput);
 }
 
@@ -2416,9 +2411,8 @@ List growth(List x, DataFrame meteo, double latitude,
   }
   
   //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x);
-  // List internalCommunication = instanceCommunicationStructures(x);
-  
+  List internalCommunication = instanceCommunicationStructures(x, "growth");
+
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
@@ -2525,11 +2519,12 @@ List growth(List x, DataFrame meteo, double latitude,
       meteovec_inner.push_back(Rint, "rint");
       meteovec_inner.push_back(FireProbability[i], "pfire"); 
       try{
-        s = growthDay_private(internalCommunication, x, meteovec_inner,  
+        growthDay_private(internalCommunication, x, meteovec_inner,  
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, R_NilValue, waterTableDepth,
                            false); //No Runon in simulations for a single cell
+        fillGrowthDailyOutput(outputList, x, internalCommunication["basicGROWTHOutput"], i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -2561,19 +2556,18 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("rint") = Rint);
       meteovec.push_back(FireProbability[i], "pfire"); 
       try{
-        s = growthDay_private(internalCommunication, x, meteovec, 
+        growthDay_private(internalCommunication, x, meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, R_NilValue, waterTableDepth,
                            verbose);
+        fillGrowthDailyOutput(outputList, x, internalCommunication["advancedGROWTHOutput"], i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
       }
     }    
     
-    //Fills output 
-    fillGrowthDailyOutput(outputList, x, s, i);
     //Add cohort biomass sum
     List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
     NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
