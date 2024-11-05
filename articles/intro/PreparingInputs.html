@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-10-29</h4>
+            <h4 data-toc-skip class="date">2024-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>PreparingInputs.Rmd</code></div>
@@ -410,15 +410,35 @@ of additional parameters and state variables is done using function
 <code class="sourceCode R"><span><span class="va">pobl_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">pobl_soil_props</span><span class="op">)</span></span></code></pre></div>
 <p>We can inspect the soil definition using:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   widths     sand     clay      usda       om nitrogen       bd  rfc     macro</span></span>
-<span><span class="co">#&gt; 1    300 31.06667 26.43333      Loam 4.133333       NA 1.166667 18.0 0.2163613</span></span>
-<span><span class="co">#&gt; 2    700 29.75000 30.40000 Clay loam 0.900000       NA 1.440000 19.2 0.0864700</span></span>
-<span><span class="co">#&gt; 3   1000 29.60000 31.60000 Clay loam 0.610000       NA 1.500000 20.9 0.0582520</span></span>
-<span><span class="co">#&gt;        Ksat VG_alpha     VG_n VG_theta_res VG_theta_sat W Temp</span></span>
-<span><span class="co">#&gt; 1 22640.566 91.26253 1.358526        0.041    0.5167602 1   NA</span></span>
-<span><span class="co">#&gt; 2  3628.900 93.20462 1.311739        0.041    0.4402203 1   NA</span></span>
-<span><span class="co">#&gt; 3  2584.303 89.51572 1.298990        0.041    0.4234211 1   NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Soil depth (mm): 2000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 21 Macroporosity (%): 6 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 152 Vol. FC (mm): 263 Vol. SAT (mm): 347 Vol. current (mm): 263 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Total soil saturated capacity (mm): 723 </span></span>
+<span><span class="co">#&gt; Total soil water holding capacity (mm): 532 </span></span>
+<span><span class="co">#&gt; Total soil extractable water (mm): 280 </span></span>
+<span><span class="co">#&gt; Total soil current Volume (mm): 532 </span></span>
+<span><span class="co">#&gt; Saturated water depth (mm): NA</span></span></code></pre></div>
 <p>It is important to remember that SoilGrids may underestimate the
 amount of rocks in the soil. This is because soil samples (which were
 used to generate the global database) do not normally contain large
@@ -433,15 +453,35 @@ the effect on the soil water holding capacity and soil extractable
 water:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pobl_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">pobl_soil_props</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   widths     sand     clay      usda       om nitrogen       bd  rfc     macro</span></span>
-<span><span class="co">#&gt; 1    300 31.06667 26.43333      Loam 4.133333       NA 1.166667 18.0 0.2163613</span></span>
-<span><span class="co">#&gt; 2    700 29.75000 30.40000 Clay loam 0.900000       NA 1.440000 19.2 0.0864700</span></span>
-<span><span class="co">#&gt; 3   1000 29.60000 31.60000 Clay loam 0.610000       NA 1.500000 80.0 0.0582520</span></span>
-<span><span class="co">#&gt;        Ksat VG_alpha     VG_n VG_theta_res VG_theta_sat W Temp</span></span>
-<span><span class="co">#&gt; 1 22640.566 91.26253 1.358526        0.041    0.5167602 1   NA</span></span>
-<span><span class="co">#&gt; 2  3628.900 93.20462 1.311739        0.041    0.4402203 1   NA</span></span>
-<span><span class="co">#&gt; 3  2584.303 89.51572 1.298990        0.041    0.4234211 1   NA</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Soil depth (mm): 2000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 80 Macroporosity (%): 6 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 38 Vol. FC (mm): 67 Vol. SAT (mm): 88 Vol. current (mm): 67 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Total soil saturated capacity (mm): 463 </span></span>
+<span><span class="co">#&gt; Total soil water holding capacity (mm): 336 </span></span>
+<span><span class="co">#&gt; Total soil extractable water (mm): 179 </span></span>
+<span><span class="co">#&gt; Total soil current Volume (mm): 336 </span></span>
+<span><span class="co">#&gt; Saturated water depth (mm): NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interpolating-weather">Interpolating weather<a class="anchor" aria-label="anchor" href="#interpolating-weather"></a>
