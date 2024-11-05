@@ -13,8 +13,11 @@ output:
 
 
 ```{r setup, include=FALSE}
-params = list(medfate_ver = "4.7.0",# packageVersion('medfate')[[1]],
-              wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/',
+wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/'
+medfate_versions <- list.dirs(file.path(wd, "data", "output"),recursive = FALSE, full.names = FALSE)
+medfate_ver <- sort(medfate_versions, decreasing = TRUE)[1]
+params = list(medfate_ver = medfate_ver,
+              wd = wd,
               model='spwb',
               # names = c("Wombat"),
               # codes = c("WOMBAT"),

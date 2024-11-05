@@ -242,7 +242,7 @@ pobl_soil <- soil(pobl_soil_props)
 We can inspect the soil definition using:
 
 ```{r}
-print(pobl_soil)
+summary(pobl_soil)
 ```
 It is important to remember that SoilGrids may underestimate the amount of rocks in the soil. This is because soil samples (which were used to generate the global database) do not normally contain large stones or blocks. Hence, realistic simulations should reduce the soil water holding capacity by increasing the column `rfc`. For example, here we will assume that the third layer contains 80% of rocks:
 
@@ -254,7 +254,7 @@ If we rebuild the soil object and inspect its properties we will see the effect 
 
 ```{r}
 pobl_soil <- soil(pobl_soil_props)
-print(pobl_soil)
+summary(pobl_soil)
 ```
 
 ## Interpolating weather

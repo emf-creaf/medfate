@@ -61,6 +61,12 @@ control <- defaultControl("Sperry")
 
 To use the advanced water balance model we must change the values of `transpirationMode` to switch from `"Granier"` to either `"Sperry"` or `"Sureau"`. 
 
+Since we will be inspecting subdaily results, we need to set the flag to obtain subdaily output:
+```{r}
+control$subdailyResults <- TRUE
+```
+
+
 ### Water balance input object
 A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground, belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function `spwbInput()`:
 
