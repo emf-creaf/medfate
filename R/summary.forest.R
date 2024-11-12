@@ -80,8 +80,8 @@ summary.forest<-function(object, SpParams, ...) {
   s["SWRground"] <- NA
   
   if(all(!is.na(object$treeData$Height)) && all(!is.na(object$shrubData$Height))) {
-    light_PARground(object, SpParams)
-    light_SWRground(object, SpParams)
+    s["PARground"] <- light_PARground(object, SpParams)
+    s["SWRground"] <- light_SWRground(object, SpParams)
   }
   class(s)<-c("summary.forest","list")
   return(s)
