@@ -13,7 +13,8 @@ List initSperryNetwork(int c,
                        DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector psiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       double sapFluidityDay = 1.0, List control = NULL) {
+                       List control,
+                       double sapFluidityDay = 1.0) {
   
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
@@ -73,8 +74,8 @@ List initSperryNetworks(List x) {
     networks[c] = initSperryNetwork(c, 
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmax(c,_), VGrhizo_kmax(c,_),
-                                    psiSoil, VG_n, VG_alpha, 1.0, 
-                                    control);
+                                    psiSoil, VG_n, VG_alpha, 
+                                    control, 1.0);
   }
   networks.attr("names") = above.attr("row.names");
   return(networks);
