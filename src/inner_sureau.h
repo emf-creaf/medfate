@@ -10,7 +10,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
                        DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       double sapFluidityDay = 1.0, List control = NULL);
+                       List control, double sapFluidityDay = 1.0);
 
 void innerSureau(List x, List input, List output, int n, double tstep, 
                  bool verbose = false);

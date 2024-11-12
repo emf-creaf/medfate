@@ -195,7 +195,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
                        DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       double sapFluidityDay = 1.0, List control = NULL) {
+                       List control, double sapFluidityDay = 1.0) {
   
   String stomatalSubmodel = control["stomatalSubmodel"];
   
@@ -422,7 +422,7 @@ List initSureauNetworks(List x) {
                                      paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),
                                      psiSoil, VG_n, VG_alpha, 
-                                     1.0, control);
+                                     control, 1.0);
   }
   networks.attr("names") = above.attr("row.names");
   return(networks);

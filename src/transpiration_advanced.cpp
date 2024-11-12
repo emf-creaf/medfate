@@ -627,7 +627,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
                                     psic, VG_nc, VG_alphac,
-                                    sapFluidityDay, control);
+                                    control, sapFluidityDay);
         hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
@@ -636,7 +636,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
                                                 psic, VG_nc, VG_alphac,
-                                                sapFluidityDay, control);
+                                                control, sapFluidityDay);
       }
       
     } else {
@@ -696,7 +696,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
                                     psic, VG_nc, VG_alphac,
-                                    sapFluidityDay, control);
+                                    control, sapFluidityDay);
         hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
@@ -705,7 +705,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
                                                 psic, VG_nc, VG_alphac,
-                                                sapFluidityDay, control);
+                                                control, sapFluidityDay);
       }
     }
   }
