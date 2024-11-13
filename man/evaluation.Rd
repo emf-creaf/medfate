@@ -70,7 +70,7 @@ evaluation_metric(
 
 \item{temporalResolution}{A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.}
 
-\item{plotType}{Plot type to draw, either \code{"dynamics"} or \code{"scatter"}.}
+\item{plotType}{Plot type to draw, either \code{"dynamics"}, \code{"pointdynamics"}  or \code{"scatter"}.}
 
 \item{metric}{An evaluation metric:
 \itemize{
@@ -112,7 +112,7 @@ Users should provide the appropriate columns in \code{measuredData}, depending o
   \item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}
   \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
   \item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
-  \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"FCM_"} and continuing with a cohort name (e.g. \code{"FMC_T1_68"}) with fuel moisture content as percent of dry weight.}
+  \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"LFMC_"} and continuing with a cohort name (e.g. \code{"LFMC_T1_68"}) with fuel moisture content as percent of dry weight.}
   \item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
   \item{\code{"BAI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"BAI_"} and continuing with a cohort name (e.g. \code{"BAI_T1_68"}) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.}
   \item{\code{"DI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DI_"} and continuing with a cohort name (e.g. \code{"DI_T1_68"}) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.}

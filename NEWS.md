@@ -1,6 +1,7 @@
 # medfate 4.8.0
 * Code optimization: LAI distribution
 * Communication structures to improve memory usage in medfateland
+* New plot type "pointdynamics" in evaluation
 
 # medfate 4.7.0
 * LAI can be estimated without the competition effect of cohorts of larger size

@@ -24,7 +24,7 @@
 #'     }
 #' @param cohort A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.
 #' @param temporalResolution A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.
-#' @param plotType Plot type to draw, either \code{"dynamics"} or \code{"scatter"}.
+#' @param plotType Plot type to draw, either \code{"dynamics"}, \code{"pointdynamics"}  or \code{"scatter"}.
 #' @param metric An evaluation metric:
 #'     \itemize{
 #'       \item{\code{"MAE"}: Mean absolute error.}
@@ -43,7 +43,7 @@
 #'   \item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}
 #'   \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
 #'   \item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
-#'   \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"FCM_"} and continuing with a cohort name (e.g. \code{"FMC_T1_68"}) with fuel moisture content as percent of dry weight.}
+#'   \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"LFMC_"} and continuing with a cohort name (e.g. \code{"LFMC_T1_68"}) with fuel moisture content as percent of dry weight.}
 #'   \item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
 #'   \item{\code{"BAI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"BAI_"} and continuing with a cohort name (e.g. \code{"BAI_T1_68"}) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.}
 #'   \item{\code{"DI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DI_"} and continuing with a cohort name (e.g. \code{"DI_T1_68"}) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.}
@@ -246,7 +246,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
       df$MD_obs_upper[d %in% rownames(measuredData)] = df$MD_obs[d %in% rownames(measuredData)] + 1.96*measuredData[[mderrcolumn]][seld]
     }
   }
-  else if(type=="FMC") {
+  else if(type=="LFMC") {
     fmc = out$Plants$LFMC
     d = rownames(fmc)
     spnames = modelInput$cohorts$Name
@@ -261,7 +261,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     }
     df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = fmc[,icoh])
     ## Fill observed values
-    obscolumn = paste0("FMC_", cohort)
+    obscolumn = paste0("LFMC_", cohort)
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }
@@ -352,7 +352,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   }  
   if(temporalResolution != "day") {
     d.cut = cut(as.Date(d), breaks=temporalResolution)
-    if(type %in% c("SWC", "REW", "FMC", "DBH", "Height")) {
+    if(type %in% c("SWC", "REW", "LFMC", "DBH", "Height")) {
       df = data.frame(Dates = as.Date(levels(d.cut)),
                       Observed = tapply(df$Observed, d.cut, FUN = mean, na.rm = TRUE),
                       Modelled = tapply(df$Modelled, d.cut, FUN = mean, na.rm = TRUE))
@@ -451,9 +451,27 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     if(!is.null(title)) g<-g+labs(title=title)
     return(g)
   }
-
+  pointdynamicsplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE,
+                              str_obs = "Observed", str_mod = "Modelled") {
+    g<-ggplot(df, aes(x=.data$Dates))
+    g<- g + geom_path(aes(y=.data$Modelled, col="Modelled"))
+    if(err) {
+      g <- g + geom_pointrange(aes(x = .data$Dates, y = .data$Observed, ymin = .data$obs_lower, ymax = .data$obs_upper))
+    } else {
+      g<- g + geom_point(aes(y=.data$Observed, col="Observed"))      
+    }
+    g<-g+       
+      xlab(xlab)+
+      ylab(ylab)+
+      scale_color_manual(name="", 
+                         values=c("Observed"="black", "Modelled"= "red"),
+                         labels =c("Observed"=str_obs, "Modelled"=str_mod))+
+      theme_bw()
+    if(!is.null(title)) g<-g+labs(title=title)
+    return(g)
+  }
   # Check arguments
-  plotType = match.arg(plotType, c("dynamics", "scatter"))
+  plotType = match.arg(plotType, c("pointdynamics", "dynamics", "scatter"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
   } else {
@@ -467,6 +485,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))),
                       err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))),
+                           err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))),
                      ylab = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))), 
@@ -475,7 +496,11 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   } 
   else if(type %in% paste0("RWC", c("", paste0(".", 1:10)))) {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "Relative water content (RWC)")
+      g<-dynamicsplot(df, ylab = "Relative water content (RWC)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "Relative water content (RWC)",
+                           err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = "Modelled relative water content (RWC)",
                      ylab = "Measured relative water content (RWC)", 
@@ -485,7 +510,11 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   }
   else if(type %in% paste0("REW", c("", paste0(".", 1:10)))) {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "Relative extractable soil water (REW)")
+      g<-dynamicsplot(df, ylab = "Relative extractable soil water (REW)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "Relative extractable soil water (REW)",
+                           err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = "Modelled relative extractable soil water (REW)",
                      ylab = "Measured relative extractable soil water (REW)", 
@@ -508,6 +537,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = "Transpiration per leaf area (l/m2/day)", 
                       title=paste0(cohort , " (",spnames[icoh],")"))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "Transpiration per leaf area (l/m2/day)", 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
                      xlab = "Modelled transpiration per leaf area (l/m2/day)",
@@ -515,21 +547,24 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
                      title=paste0(cohort , " (",spnames[icoh],")"))
     }
   }
-  else if(type=="FMC") {
-    allcohnames = row.names(modelInput$cohorts)
-    spnames = modelInput$cohorts$Name
+  else if(type=="LFMC") {
+    allcohnames <- row.names(modelInput$cohorts)
+    spnames <- modelInput$cohorts$Name
     
     if(is.null(cohort)) {
-      icoh = 1
-      cohort = allcohnames[1] 
+      icoh <- 1
+      cohort <- allcohnames[1] 
       message("Choosing first cohort")
     } else {
-      icoh = which(allcohnames==cohort)
+      icoh <- which(allcohnames==cohort)
     }
     
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = "Fuel moisture content (% of dry weight)", 
                       title=paste0(cohort , " (",spnames[icoh],")"))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "Fuel moisture content (% of dry weight)", 
+                           title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
                      xlab = "Modelled fuel moisture content (% of dry weight)",
@@ -551,6 +586,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = paste0("Basal area increment (cm2/", temporalResolution,")"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = paste0("Basal area increment (cm2/", temporalResolution,")"), 
                       title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
@@ -574,6 +612,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = paste0("Diameter increment (cm/", temporalResolution,")"), 
                       title=paste0(cohort , " (",spnames[icoh],")"))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = paste0("Diameter increment (cm/", temporalResolution,")"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
                      xlab = paste0("Modelled diameter increment (cm/", temporalResolution,")"),
@@ -595,6 +636,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = paste0("DBH (cm)"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = paste0("DBH (cm)"), 
                       title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
@@ -618,6 +662,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = paste0("Height (cm)"), 
                       title=paste0(cohort , " (",spnames[icoh],")"))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = paste0("Height (cm)"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
                      xlab = paste0("Modelled height (cm)"),
@@ -627,42 +674,67 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   }
   else if(type=="ETR") {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "ETR (mm)")
+      g<-dynamicsplot(df, ylab = "ETR (mm)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "ETR (mm)",
+                           err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = "Modelled ETR (mm)",
-                         ylab ="Measured ETR (mm)")
+                     ylab ="Measured ETR (mm)",
+                     err = (paste0(type,"_err") %in% names(measuredData)))
     }
   }
   else if(type=="LE") {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "Latent heat (MJ/m2)")
+      g<-dynamicsplot(df, ylab = "Latent heat (MJ/m2)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "Latent heat (MJ/m2)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = "Modelled latent heat (MJ/m2)",
-                     ylab ="Measured latent heat (MJ/m2)")
+                     ylab ="Measured latent heat (MJ/m2)",
+                     err = (paste0(type,"_err") %in% names(measuredData)))
     }
   }
   else if(type=="H") {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "Canpy sensible heat (MJ/m2)")
-    } else {
+      g<-dynamicsplot(df, ylab = "Canpy sensible heat (MJ/m2)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "Canpy sensible heat (MJ/m2)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else{
       g<-scatterplot(df, xlab  = "Modelled sensible heat (MJ/m2)",
-                     ylab ="Measured sensible heat (MJ/m2)")
+                     ylab ="Measured sensible heat (MJ/m2)",
+                     err = (paste0(type,"_err") %in% names(measuredData)))
     }
   }
   else if(type=="SE+TR") {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "ETR or SE+TR (mm)", str_obs = "Observed (ETR)", str_mod = "Modelled (SE+TR)")
-    } else {
+      g<-dynamicsplot(df, ylab = "ETR or SE+TR (mm)", str_obs = "Observed (ETR)", str_mod = "Modelled (SE+TR)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "ETR or SE+TR (mm)", str_obs = "Observed (ETR)", str_mod = "Modelled (SE+TR)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else{
       g<-scatterplot(df, xlab  = "Modelled SE+TR (mm)",
-                     ylab ="Measured ETR (mm)")
+                     ylab ="Measured ETR (mm)",
+                     err = (paste0(type,"_err") %in% names(measuredData)))
     }
   }
   else if(type=="GPP") {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "GPP (gC/m2)")
+      g<-dynamicsplot(df, ylab = "GPP (gC/m2)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
+    } else if(plotType=="pointdynamics") {
+      g<-pointdynamicsplot(df, ylab = "GPP (gC/m2)",
+                      err = (paste0(type,"_err") %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = "Modelled GPP (gC/m2)",
-                     ylab ="Measured GPP (gC/m2)")
+                     ylab ="Measured GPP (gC/m2)",
+                     err = (paste0(type,"_err") %in% names(measuredData)))
     }
   }
   else if(type=="WP"){
@@ -680,7 +752,7 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
       icoh = which(allcohnames==cohort)
     }
     
-    if(plotType=="dynamics"){
+    if(plotType=="dynamics"  || plotType == "pointdynamics"){
       g<-ggplot(df)+
         geom_path(aes(x=.data$Dates, y=.data$PD_mod, col="Predawn", linetype="Predawn"))+
         geom_path(aes(x=.data$Dates, y=.data$MD_mod, col="Midday", linetype="Midday"))+
