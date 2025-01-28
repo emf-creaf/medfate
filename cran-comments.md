@@ -1,6 +1,6 @@
 ## Major change submission
 
-This submission (v4.4.7) incorporates many several features compared to previous versions.
+This submission (v4.8.0) incorporates code optimization.
 
 ## Tested environments
 
@@ -21,4 +21,5 @@ In all CI tests only NOTEs are generated
 
 ## Reverse/Downstream dependencies
 
-`medfate` has a reverse dependency with `medfateland`, under our responsibility.
+`medfate` has a reverse dependency with `medfateland`, under our responsibility. 
+A new submission of `medfateland` will be made upon acceptance of the new `medfate` release on CRAN.
