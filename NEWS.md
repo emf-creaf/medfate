@@ -1,3 +1,6 @@
+# medfate 4.8.1
+* New functions utils_rockOptimization, utils_ldrOptimization and utils_ldrExploration
+
 # medfate 4.8.0
 * Code optimization: LAI distribution
 * Communication structures to improve memory usage in medfateland

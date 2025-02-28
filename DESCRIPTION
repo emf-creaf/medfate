@@ -1,17 +1,18 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 4.8.0
-Date: 2025-01-28
+Version: 4.8.1
+Date: 2025-02-28
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre', 'cph'),
 	email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
 	person('Nicolas', 'Martin-StPaul', role=c('aut'), comment = c(ORCID = "0000-0001-7574-0108")),
 	person('Víctor', 'Granda', role='aut', comment = c(ORCID = "0000-0002-0469-1991")),
 	person('Antoine', 'Cabon', role='aut', comment = c(ORCID = "0000-0001-6426-1726")),
-	person('Jordi', 'Martínez-Vilalta', role='ctb', comment = c(ORCID = "0000-0002-2332-7298")),
+  person('Arsène', 'Druel', role='aut', comment = c(ORCID = "0000-0002-3938-0085")),
+	person('Julien', 'Ruffault', role='aut', comment = c(ORCID = "0000-0003-3647-8172")),
+  person('Jordi', 'Martínez-Vilalta', role='ctb', comment = c(ORCID = "0000-0002-2332-7298")),
 	person('Maurizio', 'Mencuccini', role='ctb', comment = c(ORCID = "0000-0003-0840-1477")),
-	person('Julien', 'Ruffault', role='ctb', comment = c(ORCID = "0000-0003-3647-8172")),
 	person('François', 'Pimont', role='ctb', comment = c(ORCID = "0000-0002-9842-6207")),
 	person('Hervé', 'Cochard', role='ctb', comment = c(ORCID = "0000-0002-2727-7072")),
 	person('Aitor', 'Améztegui', role='ctb', comment = c(ORCID = "0000-0003-2006-1559")),
