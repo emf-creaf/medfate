@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../../apple-touch-icon-60x60.png">
 <script src="../../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Model evaluation in experimental plots">
 <meta name="description" content="Benchmark evaluation at stand-level, using soil moisture, sapflow, leaf water potential and eddy covariance data from instrumentalized forest plots
 ">
@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ Cáceres (CREAF), Víctor Granda (CREAF), Rafael Poyatos (CREAF), Teresa
 Gimeno (CREAF), Nicolas Martin-StPaul (INRAE), Antoine Cabon (WSL),
 Vincenzo Saponaro (U. Tuscia)</h4>
             
-            <h4 data-toc-skip class="date">2024-11-05</h4>
+            <h4 data-toc-skip class="date">2025-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="d-none name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -92,6 +92,7 @@ Vincenzo Saponaro (U. Tuscia)</h4>
 
     
     
+<pre><code><span><span class="co">## Error in readRDS(file_name_output): error reading from connection</span></span></code></pre>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -1187,106 +1188,10 @@ Variables taken: LE_CORR and GPP_NT_VUT_REF
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
-2.597974
-</td>
-<td style="text-align:right;">
-75.18036
-</td>
-<td style="text-align:right;">
-5.016207
-</td>
-<td style="text-align:right;">
-145.1594
-</td>
-<td style="text-align:right;">
-0.5620365
-</td>
-<td style="text-align:right;">
--1.0494475
-</td>
-<td style="text-align:right;">
--0.2252032
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
-2.346976
-</td>
-<td style="text-align:right;">
-67.91696
-</td>
-<td style="text-align:right;">
-4.953513
-</td>
-<td style="text-align:right;">
-143.3451
-</td>
-<td style="text-align:right;">
-0.5449176
-</td>
-<td style="text-align:right;">
--0.9617105
-</td>
-<td style="text-align:right;">
--0.2098902
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-39-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -1294,106 +1199,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
--3.154400
-</td>
-<td style="text-align:right;">
--54.71365
-</td>
-<td style="text-align:right;">
-3.371852
-</td>
-<td style="text-align:right;">
-58.48540
-</td>
-<td style="text-align:right;">
-0.5503761
-</td>
-<td style="text-align:right;">
--0.7472072
-</td>
-<td style="text-align:right;">
--0.3455701
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
--2.880885
-</td>
-<td style="text-align:right;">
--49.96948
-</td>
-<td style="text-align:right;">
-3.096000
-</td>
-<td style="text-align:right;">
-53.70069
-</td>
-<td style="text-align:right;">
-0.6946239
-</td>
-<td style="text-align:right;">
--0.3914902
-</td>
-<td style="text-align:right;">
--0.2354885
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-45-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-46-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -1401,138 +1210,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
--2.4753679
-</td>
-<td style="text-align:right;">
--44.88699
-</td>
-<td style="text-align:right;">
-2.545759
-</td>
-<td style="text-align:right;">
-46.16342
-</td>
-<td style="text-align:right;">
-0.7685158
-</td>
-<td style="text-align:right;">
--0.4230917
-</td>
-<td style="text-align:right;">
--0.2169346
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
--0.8652217
-</td>
-<td style="text-align:right;">
--15.68947
-</td>
-<td style="text-align:right;">
-1.593913
-</td>
-<td style="text-align:right;">
-28.90316
-</td>
-<td style="text-align:right;">
-0.6587277
-</td>
-<td style="text-align:right;">
-0.3153764
-</td>
-<td style="text-align:right;">
-0.2380708
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-730
-</td>
-<td style="text-align:right;">
--0.7142924
-</td>
-<td style="text-align:right;">
--12.95260
-</td>
-<td style="text-align:right;">
-1.386483
-</td>
-<td style="text-align:right;">
-25.14175
-</td>
-<td style="text-align:right;">
-0.7590438
-</td>
-<td style="text-align:right;">
-0.4816857
-</td>
-<td style="text-align:right;">
-0.3372272
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -1540,138 +1221,10 @@ sureau
 <div class="section level4">
 <h4 id="soil-water-content-swc-1">Soil water content (SWC.1)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1035
-</td>
-<td style="text-align:right;">
--0.0815069
-</td>
-<td style="text-align:right;">
--38.80395
-</td>
-<td style="text-align:right;">
-0.0881619
-</td>
-<td style="text-align:right;">
-41.97227
-</td>
-<td style="text-align:right;">
-0.3692311
-</td>
-<td style="text-align:right;">
--1.489967
-</td>
-<td style="text-align:right;">
--0.7220108
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1035
-</td>
-<td style="text-align:right;">
--0.0797167
-</td>
-<td style="text-align:right;">
--37.95169
-</td>
-<td style="text-align:right;">
-0.0872441
-</td>
-<td style="text-align:right;">
-41.53532
-</td>
-<td style="text-align:right;">
-0.3576133
-</td>
-<td style="text-align:right;">
--1.428771
-</td>
-<td style="text-align:right;">
--0.7040839
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WOMBAT
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1035
-</td>
-<td style="text-align:right;">
--0.0811989
-</td>
-<td style="text-align:right;">
--38.65730
-</td>
-<td style="text-align:right;">
-0.0881666
-</td>
-<td style="text-align:right;">
-41.97453
-</td>
-<td style="text-align:right;">
-0.3746033
-</td>
-<td style="text-align:right;">
--1.473219
-</td>
-<td style="text-align:right;">
--0.7221036
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -2474,106 +2027,10 @@ Variables taken: LE_CORR and GPP_NT_VUT_REF
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-1">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
--2.110592
-</td>
-<td style="text-align:right;">
--43.68872
-</td>
-<td style="text-align:right;">
-4.305725
-</td>
-<td style="text-align:right;">
-89.12742
-</td>
-<td style="text-align:right;">
-0.3106459
-</td>
-<td style="text-align:right;">
--1.035460
-</td>
-<td style="text-align:right;">
--0.3672240
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
--2.089665
-</td>
-<td style="text-align:right;">
--43.25555
-</td>
-<td style="text-align:right;">
-4.300248
-</td>
-<td style="text-align:right;">
-89.01405
-</td>
-<td style="text-align:right;">
-0.2662171
-</td>
-<td style="text-align:right;">
--1.046861
-</td>
-<td style="text-align:right;">
--0.3654849
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-99-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-100-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -2581,106 +2038,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-1">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
--2.816318
-</td>
-<td style="text-align:right;">
--50.52309
-</td>
-<td style="text-align:right;">
-2.885080
-</td>
-<td style="text-align:right;">
-51.75664
-</td>
-<td style="text-align:right;">
-0.6093248
-</td>
-<td style="text-align:right;">
--1.700928
-</td>
-<td style="text-align:right;">
--0.9232982
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
--2.844013
-</td>
-<td style="text-align:right;">
--51.01992
-</td>
-<td style="text-align:right;">
-2.930075
-</td>
-<td style="text-align:right;">
-52.56381
-</td>
-<td style="text-align:right;">
-0.5376028
-</td>
-<td style="text-align:right;">
--1.917852
-</td>
-<td style="text-align:right;">
--0.9532929
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-106-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -2688,138 +2049,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-1">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
--0.5951253
-</td>
-<td style="text-align:right;">
--19.59522
-</td>
-<td style="text-align:right;">
-1.013224
-</td>
-<td style="text-align:right;">
-33.36162
-</td>
-<td style="text-align:right;">
-0.2777617
-</td>
-<td style="text-align:right;">
--0.4297773
-</td>
-<td style="text-align:right;">
--0.1752562
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
-2.4767438
-</td>
-<td style="text-align:right;">
-81.54979
-</td>
-<td style="text-align:right;">
-2.562458
-</td>
-<td style="text-align:right;">
-84.37204
-</td>
-<td style="text-align:right;">
-0.3481429
-</td>
-<td style="text-align:right;">
--6.0762564
-</td>
-<td style="text-align:right;">
--1.9722406
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-884
-</td>
-<td style="text-align:right;">
-2.1154199
-</td>
-<td style="text-align:right;">
-69.65276
-</td>
-<td style="text-align:right;">
-2.196938
-</td>
-<td style="text-align:right;">
-72.33684
-</td>
-<td style="text-align:right;">
-0.2693094
-</td>
-<td style="text-align:right;">
--4.7390218
-</td>
-<td style="text-align:right;">
--1.5482670
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-113-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -2827,138 +2060,10 @@ sureau
 <div class="section level4">
 <h4 id="soil-water-content-swc">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-710
-</td>
-<td style="text-align:right;">
--0.0026612
-</td>
-<td style="text-align:right;">
--2.791122
-</td>
-<td style="text-align:right;">
-0.0487478
-</td>
-<td style="text-align:right;">
-51.12754
-</td>
-<td style="text-align:right;">
-0.4689232
-</td>
-<td style="text-align:right;">
-0.1566494
-</td>
-<td style="text-align:right;">
-0.1077908
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-710
-</td>
-<td style="text-align:right;">
--0.0096740
-</td>
-<td style="text-align:right;">
--10.146286
-</td>
-<td style="text-align:right;">
-0.0454911
-</td>
-<td style="text-align:right;">
-47.71190
-</td>
-<td style="text-align:right;">
-0.4798745
-</td>
-<td style="text-align:right;">
-0.1709765
-</td>
-<td style="text-align:right;">
-0.1673959
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-EUCFACE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-710
-</td>
-<td style="text-align:right;">
--0.0107937
-</td>
-<td style="text-align:right;">
--11.320576
-</td>
-<td style="text-align:right;">
-0.0450365
-</td>
-<td style="text-align:right;">
-47.23507
-</td>
-<td style="text-align:right;">
-0.4671562
-</td>
-<td style="text-align:right;">
-0.1657365
-</td>
-<td style="text-align:right;">
-0.1757169
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-120-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-121-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -3116,6 +2221,7 @@ sureau
 <div class="section level4">
 <h4 id="leaf-water-potential">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential"></a>
 </h4>
+<pre><code><span><span class="co">## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -3769,106 +2875,10 @@ Variables H_F_MDS and LE_F_MDS for sensible and latent heat
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-2">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1340
-</td>
-<td style="text-align:right;">
-1789.256
-</td>
-<td style="text-align:right;">
-630153.3
-</td>
-<td style="text-align:right;">
-1789.256
-</td>
-<td style="text-align:right;">
-630153.3
-</td>
-<td style="text-align:right;">
-0.0076334
-</td>
-<td style="text-align:right;">
--1217490
-</td>
-<td style="text-align:right;">
--507.1511
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1340
-</td>
-<td style="text-align:right;">
-1846.929
-</td>
-<td style="text-align:right;">
-650465.1
-</td>
-<td style="text-align:right;">
-1846.929
-</td>
-<td style="text-align:right;">
-650465.1
-</td>
-<td style="text-align:right;">
-0.0055989
-</td>
-<td style="text-align:right;">
--1217768
-</td>
-<td style="text-align:right;">
--523.5304
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-164-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-165-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -3876,106 +2886,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-2">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1340
-</td>
-<td style="text-align:right;">
--0.4040995
-</td>
-<td style="text-align:right;">
--13.20506
-</td>
-<td style="text-align:right;">
-3.626892
-</td>
-<td style="text-align:right;">
-118.5186
-</td>
-<td style="text-align:right;">
-0.2405598
-</td>
-<td style="text-align:right;">
--3.900400e+00
-</td>
-<td style="text-align:right;">
--0.3285975
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1340
-</td>
-<td style="text-align:right;">
-993.8803527
-</td>
-<td style="text-align:right;">
-32477.76401
-</td>
-<td style="text-align:right;">
-999.297279
-</td>
-<td style="text-align:right;">
-32654.7769
-</td>
-<td style="text-align:right;">
-0.0043361
-</td>
-<td style="text-align:right;">
--9.449319e+07
-</td>
-<td style="text-align:right;">
--365.0610577
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-171-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-172-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -3983,138 +2897,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-2">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
--1.240579
-</td>
-<td style="text-align:right;">
--22.64064
-</td>
-<td style="text-align:right;">
-1.715385
-</td>
-<td style="text-align:right;">
-31.30587
-</td>
-<td style="text-align:right;">
-0.9216342
-</td>
-<td style="text-align:right;">
-0.7995165
-</td>
-<td style="text-align:right;">
-0.6633836
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
--5.463839
-</td>
-<td style="text-align:right;">
--99.71539
-</td>
-<td style="text-align:right;">
-5.522001
-</td>
-<td style="text-align:right;">
-100.77685
-</td>
-<td style="text-align:right;">
-0.1688131
-</td>
-<td style="text-align:right;">
--0.8786335
-</td>
-<td style="text-align:right;">
--0.0836030
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
--5.479434
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-5.537596
-</td>
-<td style="text-align:right;">
-101.06146
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--0.8887981
-</td>
-<td style="text-align:right;">
--0.0866632
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-178-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-179-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -4122,138 +2908,10 @@ NA
 <div class="section level4">
 <h4 id="soil-water-content-swc-1-4">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-1-4"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
--0.0600551
-</td>
-<td style="text-align:right;">
--26.37906
-</td>
-<td style="text-align:right;">
-0.0697170
-</td>
-<td style="text-align:right;">
-30.62304
-</td>
-<td style="text-align:right;">
-0.5851206
-</td>
-<td style="text-align:right;">
--0.8851668
-</td>
-<td style="text-align:right;">
--0.5294496
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
--0.1177438
-</td>
-<td style="text-align:right;">
--51.71872
-</td>
-<td style="text-align:right;">
-0.1179598
-</td>
-<td style="text-align:right;">
-51.81357
-</td>
-<td style="text-align:right;">
-0.4820059
-</td>
-<td style="text-align:right;">
--4.2202676
-</td>
-<td style="text-align:right;">
--1.5877981
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOROE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1461
-</td>
-<td style="text-align:right;">
--0.1005969
-</td>
-<td style="text-align:right;">
--44.18696
-</td>
-<td style="text-align:right;">
-0.1027995
-</td>
-<td style="text-align:right;">
-45.15447
-</td>
-<td style="text-align:right;">
-0.3043280
-</td>
-<td style="text-align:right;">
--3.1582651
-</td>
-<td style="text-align:right;">
--1.2552136
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-185-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-186-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -5053,106 +3711,10 @@ Using B. sempervirens as understory
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-3">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
-0.7629244
-</td>
-<td style="text-align:right;">
-21.55239
-</td>
-<td style="text-align:right;">
-4.139073
-</td>
-<td style="text-align:right;">
-116.9276
-</td>
-<td style="text-align:right;">
-0.7038605
-</td>
-<td style="text-align:right;">
--0.0784287
-</td>
-<td style="text-align:right;">
-0.0883349
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
-0.7904366
-</td>
-<td style="text-align:right;">
-22.32960
-</td>
-<td style="text-align:right;">
-3.883777
-</td>
-<td style="text-align:right;">
-109.7156
-</td>
-<td style="text-align:right;">
-0.6728131
-</td>
-<td style="text-align:right;">
-0.0577535
-</td>
-<td style="text-align:right;">
-0.1445660
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-221-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-222-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -5160,106 +3722,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-3">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.6815180
-</td>
-<td style="text-align:right;">
--21.42163
-</td>
-<td style="text-align:right;">
-2.172232
-</td>
-<td style="text-align:right;">
-68.27809
-</td>
-<td style="text-align:right;">
-0.1498762
-</td>
-<td style="text-align:right;">
--0.6410521
-</td>
-<td style="text-align:right;">
--0.1385842
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.7532251
-</td>
-<td style="text-align:right;">
--23.67554
-</td>
-<td style="text-align:right;">
-1.715236
-</td>
-<td style="text-align:right;">
-53.91368
-</td>
-<td style="text-align:right;">
-0.4769537
-</td>
-<td style="text-align:right;">
-0.0652109
-</td>
-<td style="text-align:right;">
-0.1009523
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-228-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-229-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -5267,138 +3733,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-3">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
-0.0077320
-</td>
-<td style="text-align:right;">
-0.2343709
-</td>
-<td style="text-align:right;">
-1.1886508
-</td>
-<td style="text-align:right;">
-36.03030
-</td>
-<td style="text-align:right;">
-0.6764830
-</td>
-<td style="text-align:right;">
-0.3630433
-</td>
-<td style="text-align:right;">
-0.2442900
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.8979928
-</td>
-<td style="text-align:right;">
--27.2198977
-</td>
-<td style="text-align:right;">
-1.5962048
-</td>
-<td style="text-align:right;">
-48.38405
-</td>
-<td style="text-align:right;">
-0.3648492
-</td>
-<td style="text-align:right;">
--0.5934559
-</td>
-<td style="text-align:right;">
--0.0148212
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.0036159
-</td>
-<td style="text-align:right;">
--0.1096040
-</td>
-<td style="text-align:right;">
-0.9059672
-</td>
-<td style="text-align:right;">
-27.46162
-</td>
-<td style="text-align:right;">
-0.7751318
-</td>
-<td style="text-align:right;">
-0.5947624
-</td>
-<td style="text-align:right;">
-0.4240121
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-235-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-236-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -5406,138 +3744,10 @@ sureau
 <div class="section level4">
 <h4 id="soil-water-content-swc-2">Soil water content (SWC.2)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1021
-</td>
-<td style="text-align:right;">
--0.0125500
-</td>
-<td style="text-align:right;">
--7.878635
-</td>
-<td style="text-align:right;">
-0.0259294
-</td>
-<td style="text-align:right;">
-16.27799
-</td>
-<td style="text-align:right;">
-0.7756308
-</td>
-<td style="text-align:right;">
-0.5082935
-</td>
-<td style="text-align:right;">
-0.3240075
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1021
-</td>
-<td style="text-align:right;">
--0.0449413
-</td>
-<td style="text-align:right;">
--28.213312
-</td>
-<td style="text-align:right;">
-0.0483729
-</td>
-<td style="text-align:right;">
-30.36758
-</td>
-<td style="text-align:right;">
-0.8121150
-</td>
-<td style="text-align:right;">
--0.4862966
-</td>
-<td style="text-align:right;">
--0.2611053
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAPUE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1021
-</td>
-<td style="text-align:right;">
--0.0257701
-</td>
-<td style="text-align:right;">
--16.178002
-</td>
-<td style="text-align:right;">
-0.0333007
-</td>
-<td style="text-align:right;">
-20.90556
-</td>
-<td style="text-align:right;">
-0.8187088
-</td>
-<td style="text-align:right;">
-0.2092003
-</td>
-<td style="text-align:right;">
-0.1318336
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-242-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-243-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -5695,6 +3905,7 @@ sureau
 <div class="section level4">
 <h4 id="leaf-water-potential-1">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-1"></a>
 </h4>
+<pre><code><span><span class="co">## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -6413,106 +4624,10 @@ Scaling using species-level Huber value
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-4">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-4"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-286-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-287-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -6520,106 +4635,10 @@ NaN
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-4">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-4"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-293-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-294-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -6628,690 +4647,50 @@ NaN
 <div class="section level4">
 <h4 id="soil-water-content-swc-1-1">Soil water content (SWC.1)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-1-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.1105164
-</td>
-<td style="text-align:right;">
--34.03374
-</td>
-<td style="text-align:right;">
-0.1136523
-</td>
-<td style="text-align:right;">
-34.99944
-</td>
-<td style="text-align:right;">
-0.0883948
-</td>
-<td style="text-align:right;">
--2.811295
-</td>
-<td style="text-align:right;">
--0.9614514
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3247259
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-0.3247259
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--24.023948
-</td>
-<td style="text-align:right;">
--4.6042359
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3247259
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-0.3247259
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--24.023948
-</td>
-<td style="text-align:right;">
--4.6042359
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-301-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-302-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-2-1">Soil water content (SWC.2)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-2-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.0356118
-</td>
-<td style="text-align:right;">
--10.39313
-</td>
-<td style="text-align:right;">
-0.0549559
-</td>
-<td style="text-align:right;">
-16.03859
-</td>
-<td style="text-align:right;">
-0.6179516
-</td>
-<td style="text-align:right;">
--0.038154
-</td>
-<td style="text-align:right;">
--0.0145014
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3426479
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-0.3426479
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--32.032511
-</td>
-<td style="text-align:right;">
--5.3253785
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3426479
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-0.3426479
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--32.032511
-</td>
-<td style="text-align:right;">
--5.3253785
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-307-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-308-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-3">Soil water content (SWC.3)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
-0.0086875
-</td>
-<td style="text-align:right;">
-2.591915
-</td>
-<td style="text-align:right;">
-0.0195121
-</td>
-<td style="text-align:right;">
-5.82144
-</td>
-<td style="text-align:right;">
-0.7563396
-</td>
-<td style="text-align:right;">
-0.4575056
-</td>
-<td style="text-align:right;">
-0.312537
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3351770
-</td>
-<td style="text-align:right;">
--100.000000
-</td>
-<td style="text-align:right;">
-0.3351770
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--110.5202782
-</td>
-<td style="text-align:right;">
--10.809157
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3351770
-</td>
-<td style="text-align:right;">
--100.000000
-</td>
-<td style="text-align:right;">
-0.3351770
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--110.5202782
-</td>
-<td style="text-align:right;">
--10.809157
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-313-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-4">Soil water content (SWC.4)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-4"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.0143662
-</td>
-<td style="text-align:right;">
--4.433267
-</td>
-<td style="text-align:right;">
-0.0287714
-</td>
-<td style="text-align:right;">
-8.878549
-</td>
-<td style="text-align:right;">
-0.698539
-</td>
-<td style="text-align:right;">
--6.57771
-</td>
-<td style="text-align:right;">
--1.901704
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3240551
-</td>
-<td style="text-align:right;">
--100.000000
-</td>
-<td style="text-align:right;">
-0.3240551
-</td>
-<td style="text-align:right;">
-100.000000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--708.70393
-</td>
-<td style="text-align:right;">
--31.682190
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.3240551
-</td>
-<td style="text-align:right;">
--100.000000
-</td>
-<td style="text-align:right;">
-0.3240551
-</td>
-<td style="text-align:right;">
-100.000000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--708.70393
-</td>
-<td style="text-align:right;">
--31.682190
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-319-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-320-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-5">Soil water content (SWC.5)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-5"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.0012446
-</td>
-<td style="text-align:right;">
--0.4206938
-</td>
-<td style="text-align:right;">
-0.0039273
-</td>
-<td style="text-align:right;">
-1.327498
-</td>
-<td style="text-align:right;">
-0.349218
-</td>
-<td style="text-align:right;">
--1.568301
-</td>
-<td style="text-align:right;">
--0.6443625
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.2958430
-</td>
-<td style="text-align:right;">
--100.0000000
-</td>
-<td style="text-align:right;">
-0.2958430
-</td>
-<td style="text-align:right;">
-100.000000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--9696.405863
-</td>
-<td style="text-align:right;">
--122.8692513
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-43
-</td>
-<td style="text-align:right;">
--0.2958430
-</td>
-<td style="text-align:right;">
--100.0000000
-</td>
-<td style="text-align:right;">
-0.2958430
-</td>
-<td style="text-align:right;">
-100.000000
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--9696.405863
-</td>
-<td style="text-align:right;">
--122.8692513
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-325-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-326-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -7968,106 +5347,10 @@ Variables H_F_MDS and LE_F_MDS for sensible and latent heat
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-5">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-5"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-754
-</td>
-<td style="text-align:right;">
-939.7905
-</td>
-<td style="text-align:right;">
-64205.87
-</td>
-<td style="text-align:right;">
-939.7905
-</td>
-<td style="text-align:right;">
-64205.87
-</td>
-<td style="text-align:right;">
-0.0539716
-</td>
-<td style="text-align:right;">
--935801.1
-</td>
-<td style="text-align:right;">
--434.2214
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-754
-</td>
-<td style="text-align:right;">
-997.4045
-</td>
-<td style="text-align:right;">
-68142.03
-</td>
-<td style="text-align:right;">
-997.4045
-</td>
-<td style="text-align:right;">
-68142.03
-</td>
-<td style="text-align:right;">
-0.0479931
-</td>
-<td style="text-align:right;">
--935880.6
-</td>
-<td style="text-align:right;">
--460.9028
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-365-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-366-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -8075,106 +5358,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-5">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-5"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-754
-</td>
-<td style="text-align:right;">
--1.912387
-</td>
-<td style="text-align:right;">
--36.45082
-</td>
-<td style="text-align:right;">
-4.304538
-</td>
-<td style="text-align:right;">
-82.04613
-</td>
-<td style="text-align:right;">
-0.2056467
-</td>
-<td style="text-align:right;">
--3.088231e+00
-</td>
-<td style="text-align:right;">
--0.5885554
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-754
-</td>
-<td style="text-align:right;">
-109.907574
-</td>
-<td style="text-align:right;">
-2094.88022
-</td>
-<td style="text-align:right;">
-2110.965529
-</td>
-<td style="text-align:right;">
-40235.80689
-</td>
-<td style="text-align:right;">
--0.0047298
-</td>
-<td style="text-align:right;">
--1.247758e+08
-</td>
-<td style="text-align:right;">
--778.0350433
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-373-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -8182,138 +5369,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-4">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-4"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
--2.079886
-</td>
-<td style="text-align:right;">
--32.91454
-</td>
-<td style="text-align:right;">
-2.391737
-</td>
-<td style="text-align:right;">
-37.84963
-</td>
-<td style="text-align:right;">
-0.9356227
-</td>
-<td style="text-align:right;">
-0.5835847
-</td>
-<td style="text-align:right;">
-0.4544894
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
--6.304921
-</td>
-<td style="text-align:right;">
--99.77640
-</td>
-<td style="text-align:right;">
-6.361953
-</td>
-<td style="text-align:right;">
-100.67894
-</td>
-<td style="text-align:right;">
-0.0828070
-</td>
-<td style="text-align:right;">
--1.6296085
-</td>
-<td style="text-align:right;">
--0.4510426
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONTAINEBLEAU
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
--6.319050
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-6.375576
-</td>
-<td style="text-align:right;">
-100.89453
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--1.6396490
-</td>
-<td style="text-align:right;">
--0.4541498
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-379-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-380-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -9342,106 +6401,10 @@ Missing values for some dates
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-6">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-6"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1004
-</td>
-<td style="text-align:right;">
--1.0616558
-</td>
-<td style="text-align:right;">
--21.65783
-</td>
-<td style="text-align:right;">
-4.147870
-</td>
-<td style="text-align:right;">
-84.61673
-</td>
-<td style="text-align:right;">
-0.6793295
-</td>
-<td style="text-align:right;">
--0.0124013
-</td>
-<td style="text-align:right;">
-0.1035416
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1004
-</td>
-<td style="text-align:right;">
--0.9806628
-</td>
-<td style="text-align:right;">
--20.00557
-</td>
-<td style="text-align:right;">
-4.119175
-</td>
-<td style="text-align:right;">
-84.03135
-</td>
-<td style="text-align:right;">
-0.6710243
-</td>
-<td style="text-align:right;">
--0.0008416
-</td>
-<td style="text-align:right;">
-0.1097433
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-420-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-421-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -9449,106 +6412,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-6">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-6"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1026
-</td>
-<td style="text-align:right;">
--0.3242220
-</td>
-<td style="text-align:right;">
--11.05798
-</td>
-<td style="text-align:right;">
-1.437712
-</td>
-<td style="text-align:right;">
-49.03491
-</td>
-<td style="text-align:right;">
-0.4942974
-</td>
-<td style="text-align:right;">
--0.0524215
-</td>
-<td style="text-align:right;">
-0.0494996
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1026
-</td>
-<td style="text-align:right;">
--0.4080988
-</td>
-<td style="text-align:right;">
--13.91870
-</td>
-<td style="text-align:right;">
-1.658464
-</td>
-<td style="text-align:right;">
-56.56391
-</td>
-<td style="text-align:right;">
-0.4597542
-</td>
-<td style="text-align:right;">
--0.2840847
-</td>
-<td style="text-align:right;">
--0.0964437
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-427-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-428-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -9557,138 +6424,10 @@ sureau
 <div class="section level4">
 <h4 id="soil-water-content-swc-2-5">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-2-5"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1760
-</td>
-<td style="text-align:right;">
--0.1639520
-</td>
-<td style="text-align:right;">
--36.78755
-</td>
-<td style="text-align:right;">
-0.1640755
-</td>
-<td style="text-align:right;">
-36.81525
-</td>
-<td style="text-align:right;">
-0.8669997
-</td>
-<td style="text-align:right;">
--0.7199534
-</td>
-<td style="text-align:right;">
--0.2836970
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1760
-</td>
-<td style="text-align:right;">
--0.1799850
-</td>
-<td style="text-align:right;">
--40.38501
-</td>
-<td style="text-align:right;">
-0.1800299
-</td>
-<td style="text-align:right;">
-40.39509
-</td>
-<td style="text-align:right;">
-0.9149711
-</td>
-<td style="text-align:right;">
--0.8693968
-</td>
-<td style="text-align:right;">
--0.4085209
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FONBLA
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1760
-</td>
-<td style="text-align:right;">
--0.1804836
-</td>
-<td style="text-align:right;">
--40.49690
-</td>
-<td style="text-align:right;">
-0.1805351
-</td>
-<td style="text-align:right;">
-40.50845
-</td>
-<td style="text-align:right;">
-0.9056619
-</td>
-<td style="text-align:right;">
--0.8783842
-</td>
-<td style="text-align:right;">
--0.4124736
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-435-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-436-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -9951,6 +6690,7 @@ sureau
 <div class="section level4">
 <h4 id="leaf-water-potential-2">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-2"></a>
 </h4>
+<pre><code><span><span class="co">## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -10767,106 +7507,10 @@ Variables H_F_MDS and LE_F_MDS for sensible and latent heat
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-7">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-7"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-972
-</td>
-<td style="text-align:right;">
-1074.14
-</td>
-<td style="text-align:right;">
-36802.44
-</td>
-<td style="text-align:right;">
-1074.14
-</td>
-<td style="text-align:right;">
-36802.44
-</td>
-<td style="text-align:right;">
--0.0287728
-</td>
-<td style="text-align:right;">
--445656.3
-</td>
-<td style="text-align:right;">
--438.5985
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-972
-</td>
-<td style="text-align:right;">
-1099.83
-</td>
-<td style="text-align:right;">
-37682.65
-</td>
-<td style="text-align:right;">
-1099.83
-</td>
-<td style="text-align:right;">
-37682.65
-</td>
-<td style="text-align:right;">
--0.0263084
-</td>
-<td style="text-align:right;">
--446756.3
-</td>
-<td style="text-align:right;">
--449.1124
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-479-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-480-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -10874,106 +7518,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-7">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-7"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-972
-</td>
-<td style="text-align:right;">
--1.175131
-</td>
-<td style="text-align:right;">
--40.40746
-</td>
-<td style="text-align:right;">
-3.58017
-</td>
-<td style="text-align:right;">
-123.1059
-</td>
-<td style="text-align:right;">
-0.1504852
-</td>
-<td style="text-align:right;">
--5.456157e+00
-</td>
-<td style="text-align:right;">
--0.6995425
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-972
-</td>
-<td style="text-align:right;">
-1246.491462
-</td>
-<td style="text-align:right;">
-42861.23128
-</td>
-<td style="text-align:right;">
-1251.74125
-</td>
-<td style="text-align:right;">
-43041.7478
-</td>
-<td style="text-align:right;">
-0.0050278
-</td>
-<td style="text-align:right;">
--1.310853e+08
-</td>
-<td style="text-align:right;">
--593.2140095
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-486-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-487-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -10981,138 +7529,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-5">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-5"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
-0.497462
-</td>
-<td style="text-align:right;">
-12.45384
-</td>
-<td style="text-align:right;">
-1.405854
-</td>
-<td style="text-align:right;">
-35.1952
-</td>
-<td style="text-align:right;">
-0.9260318
-</td>
-<td style="text-align:right;">
-0.7762805
-</td>
-<td style="text-align:right;">
-0.6654012
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--3.994448
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-4.184252
-</td>
-<td style="text-align:right;">
-104.7517
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--0.7499339
-</td>
-<td style="text-align:right;">
-0.0041314
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--3.994448
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-4.184252
-</td>
-<td style="text-align:right;">
-104.7517
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--0.7499339
-</td>
-<td style="text-align:right;">
-0.0041314
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-493-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-494-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -11120,138 +7540,10 @@ NA
 <div class="section level4">
 <h4 id="soil-water-content-swc-3-3">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-3-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.0490052
-</td>
-<td style="text-align:right;">
--15.76829
-</td>
-<td style="text-align:right;">
-0.0551618
-</td>
-<td style="text-align:right;">
-17.74928
-</td>
-<td style="text-align:right;">
-0.7478581
-</td>
-<td style="text-align:right;">
-0.1590442
-</td>
-<td style="text-align:right;">
-0.0993856
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.1275093
-</td>
-<td style="text-align:right;">
--41.02838
-</td>
-<td style="text-align:right;">
-0.1278176
-</td>
-<td style="text-align:right;">
-41.12757
-</td>
-<td style="text-align:right;">
-0.4936398
-</td>
-<td style="text-align:right;">
--2.4202050
-</td>
-<td style="text-align:right;">
--1.0868492
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COLLELONGO
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.1002467
-</td>
-<td style="text-align:right;">
--32.25614
-</td>
-<td style="text-align:right;">
-0.1065192
-</td>
-<td style="text-align:right;">
-34.27445
-</td>
-<td style="text-align:right;">
-0.3796015
-</td>
-<td style="text-align:right;">
--1.4951990
-</td>
-<td style="text-align:right;">
--0.7391161
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-500-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-501-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -12624,138 +8916,10 @@ Sapflow scaling needs to be revised
 <div class="section level4">
 <h4 id="soil-water-content-swc-4-3">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-4-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-ESPRIN
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
--0.0089513
-</td>
-<td style="text-align:right;">
--5.15560
-</td>
-<td style="text-align:right;">
-0.0510049
-</td>
-<td style="text-align:right;">
-29.37669
-</td>
-<td style="text-align:right;">
-0.7109314
-</td>
-<td style="text-align:right;">
-0.3695484
-</td>
-<td style="text-align:right;">
-0.2254681
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ESPRIN
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
--0.0666819
-</td>
-<td style="text-align:right;">
--38.40600
-</td>
-<td style="text-align:right;">
-0.0689631
-</td>
-<td style="text-align:right;">
-39.71986
-</td>
-<td style="text-align:right;">
-0.7554556
-</td>
-<td style="text-align:right;">
--0.4257705
-</td>
-<td style="text-align:right;">
--0.0472349
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ESPRIN
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
--0.0341911
-</td>
-<td style="text-align:right;">
--19.69267
-</td>
-<td style="text-align:right;">
-0.0612281
-</td>
-<td style="text-align:right;">
-35.26480
-</td>
-<td style="text-align:right;">
-0.5013459
-</td>
-<td style="text-align:right;">
--0.0466778
-</td>
-<td style="text-align:right;">
-0.0702250
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-576-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-577-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -12913,6 +9077,7 @@ NA
 <div class="section level4">
 <h4 id="leaf-water-potential-3">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-3"></a>
 </h4>
+<pre><code><span><span class="co">## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -13680,138 +9845,10 @@ Huber values
 <div class="section level4">
 <h4 id="soil-water-content-swc-2-2">Soil water content (SWC.2)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-2-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-QVALLCEBRE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-445
-</td>
-<td style="text-align:right;">
-0.0071639
-</td>
-<td style="text-align:right;">
-2.410777
-</td>
-<td style="text-align:right;">
-0.0352461
-</td>
-<td style="text-align:right;">
-11.86095
-</td>
-<td style="text-align:right;">
-0.3712424
-</td>
-<td style="text-align:right;">
-0.0873526
-</td>
-<td style="text-align:right;">
-0.0230504
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-QVALLCEBRE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-445
-</td>
-<td style="text-align:right;">
--0.0305474
-</td>
-<td style="text-align:right;">
--10.279773
-</td>
-<td style="text-align:right;">
-0.0373753
-</td>
-<td style="text-align:right;">
-12.57747
-</td>
-<td style="text-align:right;">
-0.6909232
-</td>
-<td style="text-align:right;">
--0.0032185
-</td>
-<td style="text-align:right;">
--0.0359675
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-QVALLCEBRE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-445
-</td>
-<td style="text-align:right;">
--0.0127710
-</td>
-<td style="text-align:right;">
--4.297668
-</td>
-<td style="text-align:right;">
-0.0361720
-</td>
-<td style="text-align:right;">
-12.17255
-</td>
-<td style="text-align:right;">
-0.4597082
-</td>
-<td style="text-align:right;">
-0.0693465
-</td>
-<td style="text-align:right;">
--0.0026157
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-623-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-624-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -14518,138 +10555,10 @@ Huber values
 <div class="section level4">
 <h4 id="soil-water-content-swc-2-3">Soil water content (SWC.2)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-2-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-PVALLCEBRE
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-743
-</td>
-<td style="text-align:right;">
--0.0491255
-</td>
-<td style="text-align:right;">
--22.88383
-</td>
-<td style="text-align:right;">
-0.0525982
-</td>
-<td style="text-align:right;">
-24.50150
-</td>
-<td style="text-align:right;">
-0.5980661
-</td>
-<td style="text-align:right;">
--0.4899808
-</td>
-<td style="text-align:right;">
--0.1102805
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PVALLCEBRE
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-743
-</td>
-<td style="text-align:right;">
--0.0543901
-</td>
-<td style="text-align:right;">
--25.33624
-</td>
-<td style="text-align:right;">
-0.0559632
-</td>
-<td style="text-align:right;">
-26.06903
-</td>
-<td style="text-align:right;">
-0.7076433
-</td>
-<td style="text-align:right;">
--0.5396703
-</td>
-<td style="text-align:right;">
--0.1813130
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PVALLCEBRE
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-743
-</td>
-<td style="text-align:right;">
--0.0520534
-</td>
-<td style="text-align:right;">
--24.24774
-</td>
-<td style="text-align:right;">
-0.0540855
-</td>
-<td style="text-align:right;">
-25.19432
-</td>
-<td style="text-align:right;">
-0.6812419
-</td>
-<td style="text-align:right;">
--0.4916521
-</td>
-<td style="text-align:right;">
--0.1416754
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-666-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-667-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -15533,138 +11442,10 @@ No scaling required (already per leaf area)
 <div class="section level4">
 <h4 id="soil-water-content-swc-5-1">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-5-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-PRADES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1219
-</td>
-<td style="text-align:right;">
-0.0126108
-</td>
-<td style="text-align:right;">
-6.618607
-</td>
-<td style="text-align:right;">
-0.0275170
-</td>
-<td style="text-align:right;">
-14.44194
-</td>
-<td style="text-align:right;">
-0.9071828
-</td>
-<td style="text-align:right;">
-0.7670457
-</td>
-<td style="text-align:right;">
-0.5394041
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PRADES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1219
-</td>
-<td style="text-align:right;">
--0.0346035
-</td>
-<td style="text-align:right;">
--18.161224
-</td>
-<td style="text-align:right;">
-0.0394477
-</td>
-<td style="text-align:right;">
-20.70363
-</td>
-<td style="text-align:right;">
-0.8557479
-</td>
-<td style="text-align:right;">
-0.4926613
-</td>
-<td style="text-align:right;">
-0.3397006
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PRADES
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1219
-</td>
-<td style="text-align:right;">
--0.0045140
-</td>
-<td style="text-align:right;">
--2.369119
-</td>
-<td style="text-align:right;">
-0.0208627
-</td>
-<td style="text-align:right;">
-10.94952
-</td>
-<td style="text-align:right;">
-0.9265532
-</td>
-<td style="text-align:right;">
-0.8539015
-</td>
-<td style="text-align:right;">
-0.6507878
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-709-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-710-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -15927,6 +11708,7 @@ sureau
 <div class="section level4">
 <h4 id="leaf-water-potential-4">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-4"></a>
 </h4>
+<pre><code><span><span class="co">## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -17452,138 +13234,10 @@ required
 <div class="section level4">
 <h4 id="soil-water-content-swc-6">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-6"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-676
-</td>
-<td style="text-align:right;">
-0.0503575
-</td>
-<td style="text-align:right;">
-32.04855
-</td>
-<td style="text-align:right;">
-0.0518336
-</td>
-<td style="text-align:right;">
-32.98796
-</td>
-<td style="text-align:right;">
-0.7544916
-</td>
-<td style="text-align:right;">
--0.7916921
-</td>
-<td style="text-align:right;">
--0.4974936
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-676
-</td>
-<td style="text-align:right;">
-0.0157820
-</td>
-<td style="text-align:right;">
-10.04399
-</td>
-<td style="text-align:right;">
-0.0387245
-</td>
-<td style="text-align:right;">
-24.64508
-</td>
-<td style="text-align:right;">
-0.7660182
-</td>
-<td style="text-align:right;">
--0.0820656
-</td>
-<td style="text-align:right;">
--0.1187676
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-676
-</td>
-<td style="text-align:right;">
-0.0363731
-</td>
-<td style="text-align:right;">
-23.14858
-</td>
-<td style="text-align:right;">
-0.0446571
-</td>
-<td style="text-align:right;">
-28.42067
-</td>
-<td style="text-align:right;">
-0.7439537
-</td>
-<td style="text-align:right;">
--0.4616882
-</td>
-<td style="text-align:right;">
--0.2901608
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-756-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-757-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -18885,138 +14539,10 @@ Scaling done using tree density and LAI
 <div class="section level4">
 <h4 id="soil-water-content-swc-7">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-7"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-ESPALTARM
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-715
-</td>
-<td style="text-align:right;">
-0.1458623
-</td>
-<td style="text-align:right;">
-263.5912
-</td>
-<td style="text-align:right;">
-0.1458623
-</td>
-<td style="text-align:right;">
-263.5912
-</td>
-<td style="text-align:right;">
-0.7610420
-</td>
-<td style="text-align:right;">
--15.20970
-</td>
-<td style="text-align:right;">
--3.702906
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ESPALTARM
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-715
-</td>
-<td style="text-align:right;">
-0.1248683
-</td>
-<td style="text-align:right;">
-225.6524
-</td>
-<td style="text-align:right;">
-0.1248683
-</td>
-<td style="text-align:right;">
-225.6524
-</td>
-<td style="text-align:right;">
-0.8690043
-</td>
-<td style="text-align:right;">
--11.19312
-</td>
-<td style="text-align:right;">
--3.026016
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ESPALTARM
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-715
-</td>
-<td style="text-align:right;">
-0.1400022
-</td>
-<td style="text-align:right;">
-253.0013
-</td>
-<td style="text-align:right;">
-0.1400022
-</td>
-<td style="text-align:right;">
-253.0013
-</td>
-<td style="text-align:right;">
-0.7762772
-</td>
-<td style="text-align:right;">
--14.05457
-</td>
-<td style="text-align:right;">
--3.513965
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-799-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-800-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -19384,6 +14910,7 @@ sureau
 <div class="section level4">
 <h4 id="leaf-water-potential-5">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-5"></a>
 </h4>
+<pre><code><span><span class="co">## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -20440,138 +15967,10 @@ Species-level Huber value used for scaling. Revise scaling.
 <div class="section level4">
 <h4 id="soil-water-content-swc-8">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-8"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-RONDA
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-731
-</td>
-<td style="text-align:right;">
--0.0234457
-</td>
-<td style="text-align:right;">
--8.846722
-</td>
-<td style="text-align:right;">
-0.0487172
-</td>
-<td style="text-align:right;">
-18.38233
-</td>
-<td style="text-align:right;">
-0.7585765
-</td>
-<td style="text-align:right;">
-0.3955595
-</td>
-<td style="text-align:right;">
-0.3187736
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RONDA
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-731
-</td>
-<td style="text-align:right;">
--0.0315371
-</td>
-<td style="text-align:right;">
--11.899819
-</td>
-<td style="text-align:right;">
-0.0452340
-</td>
-<td style="text-align:right;">
-17.06805
-</td>
-<td style="text-align:right;">
-0.8171939
-</td>
-<td style="text-align:right;">
-0.4189878
-</td>
-<td style="text-align:right;">
-0.3674791
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RONDA
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-731
-</td>
-<td style="text-align:right;">
--0.0342367
-</td>
-<td style="text-align:right;">
--12.918438
-</td>
-<td style="text-align:right;">
-0.0444269
-</td>
-<td style="text-align:right;">
-16.76348
-</td>
-<td style="text-align:right;">
-0.8356151
-</td>
-<td style="text-align:right;">
-0.4323473
-</td>
-<td style="text-align:right;">
-0.3787660
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-846-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-847-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -21309,106 +16708,10 @@ Species-level Huber value used for scaling
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-8">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-8"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
--0.7652401
-</td>
-<td style="text-align:right;">
--39.38259
-</td>
-<td style="text-align:right;">
-5.586518
-</td>
-<td style="text-align:right;">
-287.5065
-</td>
-<td style="text-align:right;">
--0.0035616
-</td>
-<td style="text-align:right;">
--3.276715
-</td>
-<td style="text-align:right;">
--1.0618996
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
-0.7882995
-</td>
-<td style="text-align:right;">
-40.56932
-</td>
-<td style="text-align:right;">
-5.216037
-</td>
-<td style="text-align:right;">
-268.4400
-</td>
-<td style="text-align:right;">
-0.0741102
-</td>
-<td style="text-align:right;">
--3.031476
-</td>
-<td style="text-align:right;">
--0.9251608
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-886-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-887-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -21416,106 +16719,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-8">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-8"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
--0.683793
-</td>
-<td style="text-align:right;">
--12.31556
-</td>
-<td style="text-align:right;">
-2.338381
-</td>
-<td style="text-align:right;">
-42.11578
-</td>
-<td style="text-align:right;">
-0.6560055
-</td>
-<td style="text-align:right;">
-0.3899996
-</td>
-<td style="text-align:right;">
-0.3282721
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
--2.694620
-</td>
-<td style="text-align:right;">
--48.53188
-</td>
-<td style="text-align:right;">
-3.489108
-</td>
-<td style="text-align:right;">
-62.84112
-</td>
-<td style="text-align:right;">
-0.4945022
-</td>
-<td style="text-align:right;">
--0.2594004
-</td>
-<td style="text-align:right;">
--0.0022877
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-893-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-894-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -21523,138 +16730,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-6">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-6"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
--0.3780281
-</td>
-<td style="text-align:right;">
--10.67326
-</td>
-<td style="text-align:right;">
-1.486606
-</td>
-<td style="text-align:right;">
-41.97289
-</td>
-<td style="text-align:right;">
-0.7570516
-</td>
-<td style="text-align:right;">
-0.5397299
-</td>
-<td style="text-align:right;">
-0.3804543
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
-3.5274660
-</td>
-<td style="text-align:right;">
-99.59462
-</td>
-<td style="text-align:right;">
-3.588447
-</td>
-<td style="text-align:right;">
-101.31636
-</td>
-<td style="text-align:right;">
-0.8296193
-</td>
-<td style="text-align:right;">
--1.1521774
-</td>
-<td style="text-align:right;">
--0.4954918
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
-2.5260120
-</td>
-<td style="text-align:right;">
-71.31952
-</td>
-<td style="text-align:right;">
-2.630958
-</td>
-<td style="text-align:right;">
-74.28256
-</td>
-<td style="text-align:right;">
-0.8418174
-</td>
-<td style="text-align:right;">
--0.1409972
-</td>
-<td style="text-align:right;">
--0.0964563
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-900-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-901-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -21662,276 +16741,20 @@ sureau
 <div class="section level4">
 <h4 id="soil-water-content-swc-1-2">Soil water content (SWC.1)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-1-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-365
-</td>
-<td style="text-align:right;">
--0.0984003
-</td>
-<td style="text-align:right;">
--41.84121
-</td>
-<td style="text-align:right;">
-0.0986415
-</td>
-<td style="text-align:right;">
-41.94377
-</td>
-<td style="text-align:right;">
--0.1637449
-</td>
-<td style="text-align:right;">
--7.247212
-</td>
-<td style="text-align:right;">
--2.332343
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-365
-</td>
-<td style="text-align:right;">
--0.0996369
-</td>
-<td style="text-align:right;">
--42.36704
-</td>
-<td style="text-align:right;">
-0.1000928
-</td>
-<td style="text-align:right;">
-42.56090
-</td>
-<td style="text-align:right;">
-0.3167399
-</td>
-<td style="text-align:right;">
--7.244974
-</td>
-<td style="text-align:right;">
--2.381372
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-365
-</td>
-<td style="text-align:right;">
--0.0718231
-</td>
-<td style="text-align:right;">
--30.54019
-</td>
-<td style="text-align:right;">
-0.0903822
-</td>
-<td style="text-align:right;">
-38.43181
-</td>
-<td style="text-align:right;">
--0.5586292
-</td>
-<td style="text-align:right;">
--5.760019
-</td>
-<td style="text-align:right;">
--2.053325
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-907-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-908-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-3-1">Soil water content (SWC.3)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-3-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-335
-</td>
-<td style="text-align:right;">
--0.0712765
-</td>
-<td style="text-align:right;">
--24.88509
-</td>
-<td style="text-align:right;">
-0.0712765
-</td>
-<td style="text-align:right;">
-24.88509
-</td>
-<td style="text-align:right;">
--0.2536163
-</td>
-<td style="text-align:right;">
--23.58488
-</td>
-<td style="text-align:right;">
--4.645799
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-335
-</td>
-<td style="text-align:right;">
--0.1464177
-</td>
-<td style="text-align:right;">
--51.11947
-</td>
-<td style="text-align:right;">
-0.1464177
-</td>
-<td style="text-align:right;">
-51.11947
-</td>
-<td style="text-align:right;">
-0.4150497
-</td>
-<td style="text-align:right;">
--97.96596
-</td>
-<td style="text-align:right;">
--10.597720
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DAVOS
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-335
-</td>
-<td style="text-align:right;">
--0.0715847
-</td>
-<td style="text-align:right;">
--24.99270
-</td>
-<td style="text-align:right;">
-0.0716572
-</td>
-<td style="text-align:right;">
-25.01800
-</td>
-<td style="text-align:right;">
-0.6016475
-</td>
-<td style="text-align:right;">
--22.34463
-</td>
-<td style="text-align:right;">
--4.675954
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-913-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-914-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -22717,414 +17540,30 @@ Provided by A. Cabon
 <div class="section level4">
 <h4 id="soil-water-content-swc-1-3">Soil water content (SWC.1)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-1-3"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1262
-</td>
-<td style="text-align:right;">
--0.0947364
-</td>
-<td style="text-align:right;">
--57.24074
-</td>
-<td style="text-align:right;">
-0.0947754
-</td>
-<td style="text-align:right;">
-57.26431
-</td>
-<td style="text-align:right;">
-0.3937254
-</td>
-<td style="text-align:right;">
--2.522676
-</td>
-<td style="text-align:right;">
--0.8179004
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1262
-</td>
-<td style="text-align:right;">
--0.1652245
-</td>
-<td style="text-align:right;">
--99.83038
-</td>
-<td style="text-align:right;">
-0.1652245
-</td>
-<td style="text-align:right;">
-99.83038
-</td>
-<td style="text-align:right;">
-0.0978171
-</td>
-<td style="text-align:right;">
--7.676633
-</td>
-<td style="text-align:right;">
--2.1691939
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1262
-</td>
-<td style="text-align:right;">
--0.0946867
-</td>
-<td style="text-align:right;">
--57.21067
-</td>
-<td style="text-align:right;">
-0.0947284
-</td>
-<td style="text-align:right;">
-57.23586
-</td>
-<td style="text-align:right;">
-0.1143426
-</td>
-<td style="text-align:right;">
--2.522835
-</td>
-<td style="text-align:right;">
--0.8169973
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-956-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-957-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-3-2">Soil water content (SWC.3)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-3-2"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1253
-</td>
-<td style="text-align:right;">
--0.0767200
-</td>
-<td style="text-align:right;">
--17.93618
-</td>
-<td style="text-align:right;">
-0.1156756
-</td>
-<td style="text-align:right;">
-27.04350
-</td>
-<td style="text-align:right;">
-0.5243320
-</td>
-<td style="text-align:right;">
--0.2465736
-</td>
-<td style="text-align:right;">
--0.1053357
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1253
-</td>
-<td style="text-align:right;">
--0.4261851
-</td>
-<td style="text-align:right;">
--99.63672
-</td>
-<td style="text-align:right;">
-0.4261851
-</td>
-<td style="text-align:right;">
-99.63672
-</td>
-<td style="text-align:right;">
-0.0679279
-</td>
-<td style="text-align:right;">
--13.2057919
-</td>
-<td style="text-align:right;">
--3.0724029
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1253
-</td>
-<td style="text-align:right;">
--0.0914523
-</td>
-<td style="text-align:right;">
--21.38040
-</td>
-<td style="text-align:right;">
-0.1232141
-</td>
-<td style="text-align:right;">
-28.80592
-</td>
-<td style="text-align:right;">
-0.4059311
-</td>
-<td style="text-align:right;">
--0.4534932
-</td>
-<td style="text-align:right;">
--0.1773701
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-962-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-963-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-4-1">Soil water content (SWC.4)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-4-1"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1262
-</td>
-<td style="text-align:right;">
--0.0302186
-</td>
-<td style="text-align:right;">
--16.21075
-</td>
-<td style="text-align:right;">
-0.0560030
-</td>
-<td style="text-align:right;">
-30.04275
-</td>
-<td style="text-align:right;">
-0.4506353
-</td>
-<td style="text-align:right;">
--0.1372698
-</td>
-<td style="text-align:right;">
--0.0439481
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1262
-</td>
-<td style="text-align:right;">
--0.1856864
-</td>
-<td style="text-align:right;">
--99.61129
-</td>
-<td style="text-align:right;">
-0.1856864
-</td>
-<td style="text-align:right;">
-99.61129
-</td>
-<td style="text-align:right;">
-0.0746297
-</td>
-<td style="text-align:right;">
--9.1348858
-</td>
-<td style="text-align:right;">
--2.4613682
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LOTSCHENTAL
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1262
-</td>
-<td style="text-align:right;">
--0.0352613
-</td>
-<td style="text-align:right;">
--18.91590
-</td>
-<td style="text-align:right;">
-0.0563908
-</td>
-<td style="text-align:right;">
-30.25082
-</td>
-<td style="text-align:right;">
-0.4731090
-</td>
-<td style="text-align:right;">
--0.1893481
-</td>
-<td style="text-align:right;">
--0.0511784
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-968-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-969-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -23987,106 +18426,10 @@ Scaling and tree selection to be revised
 <div class="section level4">
 <h4 id="sensible-heat-turbulent-flux-9">Sensible heat turbulent flux<a class="anchor" aria-label="anchor" href="#sensible-heat-turbulent-flux-9"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1018
-</td>
-<td style="text-align:right;">
-689.6243
-</td>
-<td style="text-align:right;">
-20622.70
-</td>
-<td style="text-align:right;">
-689.6243
-</td>
-<td style="text-align:right;">
-20622.70
-</td>
-<td style="text-align:right;">
-0.0783315
-</td>
-<td style="text-align:right;">
--511198.1
-</td>
-<td style="text-align:right;">
--268.0868
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1018
-</td>
-<td style="text-align:right;">
-723.0930
-</td>
-<td style="text-align:right;">
-21623.55
-</td>
-<td style="text-align:right;">
-723.0930
-</td>
-<td style="text-align:right;">
-21623.55
-</td>
-<td style="text-align:right;">
-0.0763941
-</td>
-<td style="text-align:right;">
--508186.4
-</td>
-<td style="text-align:right;">
--281.1461
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_H' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1008-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1009-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level latent heat turbulent flux -->
@@ -24094,106 +18437,10 @@ sureau
 <div class="section level4">
 <h4 id="latent-heat-turbulent-flux-9">Latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#latent-heat-turbulent-flux-9"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1018
-</td>
-<td style="text-align:right;">
--0.191244
-</td>
-<td style="text-align:right;">
--4.449153
-</td>
-<td style="text-align:right;">
-4.282453
-</td>
-<td style="text-align:right;">
-99.62815
-</td>
-<td style="text-align:right;">
-0.3236876
-</td>
-<td style="text-align:right;">
--9.361611e-01
-</td>
-<td style="text-align:right;">
--0.1304245
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1018
-</td>
-<td style="text-align:right;">
-2514.634072
-</td>
-<td style="text-align:right;">
-58501.127448
-</td>
-<td style="text-align:right;">
-2522.291452
-</td>
-<td style="text-align:right;">
-58679.27080
-</td>
-<td style="text-align:right;">
--0.0314230
-</td>
-<td style="text-align:right;">
--1.886726e+08
-</td>
-<td style="text-align:right;">
--664.8005934
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_LE' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1015-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1016-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Stand-level GPP -->
@@ -24201,138 +18448,10 @@ sureau
 <div class="section level4">
 <h4 id="gross-primary-productivity-7">Gross primary productivity<a class="anchor" aria-label="anchor" href="#gross-primary-productivity-7"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--1.098914
-</td>
-<td style="text-align:right;">
--25.43034
-</td>
-<td style="text-align:right;">
-2.303956
-</td>
-<td style="text-align:right;">
-53.31665
-</td>
-<td style="text-align:right;">
-0.8085252
-</td>
-<td style="text-align:right;">
-0.5433144
-</td>
-<td style="text-align:right;">
-0.4700497
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--4.152464
-</td>
-<td style="text-align:right;">
--96.09361
-</td>
-<td style="text-align:right;">
-4.317050
-</td>
-<td style="text-align:right;">
-99.90233
-</td>
-<td style="text-align:right;">
-0.2666253
-</td>
-<td style="text-align:right;">
--0.7195293
-</td>
-<td style="text-align:right;">
-0.0070031
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--4.321270
-</td>
-<td style="text-align:right;">
--100.00000
-</td>
-<td style="text-align:right;">
-4.464105
-</td>
-<td style="text-align:right;">
-103.30539
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--0.8091056
-</td>
-<td style="text-align:right;">
--0.0268223
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_GPP' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1022-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1023-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil water content -->
@@ -24340,138 +18459,10 @@ NA
 <div class="section level4">
 <h4 id="soil-water-content-swc-9">Soil water content (SWC)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-9"></a>
 </h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
-0.0117556
-</td>
-<td style="text-align:right;">
-3.595821
-</td>
-<td style="text-align:right;">
-0.0534755
-</td>
-<td style="text-align:right;">
-16.35717
-</td>
-<td style="text-align:right;">
-0.7419506
-</td>
-<td style="text-align:right;">
-0.4435864
-</td>
-<td style="text-align:right;">
-0.2241192
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.0839252
-</td>
-<td style="text-align:right;">
--25.671156
-</td>
-<td style="text-align:right;">
-0.0881724
-</td>
-<td style="text-align:right;">
-26.97030
-</td>
-<td style="text-align:right;">
-0.7280788
-</td>
-<td style="text-align:right;">
--0.4150132
-</td>
-<td style="text-align:right;">
--0.2793005
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-USAMORSF
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1096
-</td>
-<td style="text-align:right;">
--0.0301038
-</td>
-<td style="text-align:right;">
--9.208185
-</td>
-<td style="text-align:right;">
-0.0734893
-</td>
-<td style="text-align:right;">
-22.47901
-</td>
-<td style="text-align:right;">
-0.4622520
-</td>
-<td style="text-align:right;">
-0.0654290
-</td>
-<td style="text-align:right;">
--0.0662624
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
+<pre><code><span><span class="co">## Error: object 'df_all_SMC' not found</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1029-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1030-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
@@ -25553,12 +19544,13 @@ Understory not considered
 <div class="section level3">
 <h3 id="microclimate-19">Microclimate<a class="anchor" aria-label="anchor" href="#microclimate-19"></a>
 </h3>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1048-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">## Error in xy.coords(x, y, xlabel, ylabel, log): 'x' and 'y' lengths differ</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="runoff-deep-drainage-19">Runoff &amp; deep drainage<a class="anchor" aria-label="anchor" href="#runoff-deep-drainage-19"></a>
 </h3>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1049-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">## Error in plot.window(...): need finite 'xlim' values</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="evaluation-results-19">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-19"></a>
@@ -25571,6 +19563,7 @@ Understory not considered
 <div class="section level4">
 <h4 id="soil-water-content-swc-2-4">Soil water content (SWC.2)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-2-4"></a>
 </h4>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -25616,16 +19609,16 @@ granier
 2178
 </td>
 <td style="text-align:right;">
-0.0020780
+0.002078
 </td>
 <td style="text-align:right;">
-3.3317101
+3.33171
 </td>
 <td style="text-align:right;">
 0.0212112
 </td>
 <td style="text-align:right;">
-34.00820
+34.0082
 </td>
 <td style="text-align:right;">
 0.5898673
@@ -25648,67 +19641,72 @@ sperry
 2178
 </td>
 <td style="text-align:right;">
--0.0075822
+0.002078
 </td>
 <td style="text-align:right;">
--12.1566840
+3.33171
 </td>
 <td style="text-align:right;">
-0.0185511
+0.0212112
 </td>
 <td style="text-align:right;">
-29.74313
+34.0082
 </td>
 <td style="text-align:right;">
-0.6513898
+0.5898673
 </td>
 <td style="text-align:right;">
-0.3713564
+0.3287251
 </td>
 <td style="text-align:right;">
-0.2998638
+0.1994663
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-SEVILLETA
+NA
 </td>
 <td style="text-align:left;">
-sureau
+NA
 </td>
 <td style="text-align:right;">
 2178
 </td>
 <td style="text-align:right;">
--0.0001586
+0.002078
 </td>
 <td style="text-align:right;">
--0.2543613
+3.33171
 </td>
 <td style="text-align:right;">
-0.0221769
+0.0212112
 </td>
 <td style="text-align:right;">
-35.55652
+34.0082
 </td>
 <td style="text-align:right;">
-0.5386039
+0.5898673
 </td>
 <td style="text-align:right;">
-0.2900371
+0.3287251
 </td>
 <td style="text-align:right;">
-0.1630199
+0.1994663
 </td>
 </tr>
 </tbody>
 </table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1072-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1073-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="soil-water-content-swc-4-2">Soil water content (SWC.4)<a class="anchor" aria-label="anchor" href="#soil-water-content-swc-4-2"></a>
 </h4>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -25760,7 +19758,7 @@ granier
 39.94145
 </td>
 <td style="text-align:right;">
-0.0305840
+0.030584
 </td>
 <td style="text-align:right;">
 50.14622
@@ -25786,62 +19784,66 @@ sperry
 2178
 </td>
 <td style="text-align:right;">
-0.0074223
+0.0243602
 </td>
 <td style="text-align:right;">
-12.16982
+39.94145
 </td>
 <td style="text-align:right;">
-0.0282424
+0.030584
 </td>
 <td style="text-align:right;">
-46.30691
+50.14622
 </td>
 <td style="text-align:right;">
-0.0946156
+0.0750284
 </td>
 <td style="text-align:right;">
--2.261504
+-2.749334
 </td>
 <td style="text-align:right;">
--1.077404
+-1.249642
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-SEVILLETA
+NA
 </td>
 <td style="text-align:left;">
-sureau
+NA
 </td>
 <td style="text-align:right;">
 2178
 </td>
 <td style="text-align:right;">
-0.0247431
+0.0243602
 </td>
 <td style="text-align:right;">
-40.56941
+39.94145
 </td>
 <td style="text-align:right;">
-0.0350568
+0.030584
 </td>
 <td style="text-align:right;">
-57.47998
+50.14622
 </td>
 <td style="text-align:right;">
-0.0170551
+0.0750284
 </td>
 <td style="text-align:right;">
--3.433502
+-2.749334
 </td>
 <td style="text-align:right;">
--1.578647
+-1.249642
 </td>
 </tr>
 </tbody>
 </table>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1078-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1079-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
@@ -25902,7 +19904,7 @@ granier
 0.4943358
 </td>
 <td style="text-align:right;">
-313.976830
+313.9768
 </td>
 <td style="text-align:right;">
 0.4946026
@@ -25925,76 +19927,6 @@ granier
 SEVILLETA
 </td>
 <td style="text-align:left;">
-T1_2222
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1787
-</td>
-<td style="text-align:right;">
--0.0490171
-</td>
-<td style="text-align:right;">
--31.133164
-</td>
-<td style="text-align:right;">
-0.2048782
-</td>
-<td style="text-align:right;">
-130.1282
-</td>
-<td style="text-align:right;">
--0.0212225
-</td>
-<td style="text-align:right;">
--4.038034
-</td>
-<td style="text-align:right;">
--1.367979
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SEVILLETA
-</td>
-<td style="text-align:left;">
-T1_2222
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1787
-</td>
-<td style="text-align:right;">
-0.0126290
-</td>
-<td style="text-align:right;">
-8.021317
-</td>
-<td style="text-align:right;">
-0.2675752
-</td>
-<td style="text-align:right;">
-169.9501
-</td>
-<td style="text-align:right;">
--0.0155234
-</td>
-<td style="text-align:right;">
--10.674317
-</td>
-<td style="text-align:right;">
--2.092629
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SEVILLETA
-</td>
-<td style="text-align:left;">
 T2_1548
 </td>
 <td style="text-align:left;">
@@ -26007,7 +19939,7 @@ granier
 0.2305316
 </td>
 <td style="text-align:right;">
-175.381975
+175.3820
 </td>
 <td style="text-align:right;">
 0.2313366
@@ -26025,79 +19957,9 @@ granier
 -2.179814
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-SEVILLETA
-</td>
-<td style="text-align:left;">
-T2_1548
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-1776
-</td>
-<td style="text-align:right;">
-0.5909771
-</td>
-<td style="text-align:right;">
-449.598880
-</td>
-<td style="text-align:right;">
-0.5911715
-</td>
-<td style="text-align:right;">
-449.7468
-</td>
-<td style="text-align:right;">
-0.6106221
-</td>
-<td style="text-align:right;">
--56.648561
-</td>
-<td style="text-align:right;">
--7.125889
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SEVILLETA
-</td>
-<td style="text-align:left;">
-T2_1548
-</td>
-<td style="text-align:left;">
-sureau
-</td>
-<td style="text-align:right;">
-1776
-</td>
-<td style="text-align:right;">
-0.0389589
-</td>
-<td style="text-align:right;">
-29.638840
-</td>
-<td style="text-align:right;">
-0.2415739
-</td>
-<td style="text-align:right;">
-183.7827
-</td>
-<td style="text-align:right;">
-0.1439230
-</td>
-<td style="text-align:right;">
--15.840348
-</td>
-<td style="text-align:right;">
--2.320530
-</td>
-</tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-4.png" width="864" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = pt[, : arguments imply differing number of rows: 0, 1</span></span></code></pre>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -26109,7 +19971,7 @@ sureau
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
+  <p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon, Arsène Druel, Julien Ruffault.</p>
 </div>
 
 <div class="pkgdown-footer-right">
