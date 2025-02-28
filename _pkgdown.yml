@@ -118,6 +118,8 @@ reference:
   - exampleobs
   - starts_with("evaluation_")
   - starts_with("optimization_")
+  - starts_with("utils_rock")
+  - starts_with("utils_ldr")
 - title: Wildfire
   desc:  Fuel characteristics and fire behaviour
 - contents:
