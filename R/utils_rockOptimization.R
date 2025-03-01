@@ -109,7 +109,11 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
     S_new <- spwb(x = input_new, meteo = meteo, ...)
     # 90% quantile by species of annual maximum PLC
     PLC_new <- 100*apply(summary(S_new, output="StemPLC", FUN = max),2,quantile, prob = PLCquantile)
-    PLC_av_new <- sum(PLC_new*LAI_max_coh, na.rm = TRUE)/LAI_max
+    if(length(PLC_new)>0) {
+      PLC_av_new <- sum(PLC_new*LAI_max_coh, na.rm = TRUE)/LAI_max
+    } else {
+      PLC_av_new <- 0
+    }
     return(PLC_av_new - qPLC_target)
   }
   
