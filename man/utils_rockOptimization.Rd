@@ -42,8 +42,13 @@ utils_rockOptimization(
 \item{...}{Additional parameters to function \code{\link[medfate]{spwb}}.}
 }
 \value{
-Function \code{utils_rockOptimization} returns a list containing the estimated rock fragment content,
-the corresponding soil extractable water and the number of simulation runs performed.
+Function \code{utils_rockOptimization} returns a list containing:
+ \itemize{
+   \item{\code{RFC}: A vector with the estimated rock fragment content for each soil layer.}
+   \item{\code{SEW}: Soil extractable water (mm).}
+   \item{\code{runs}: Number of simulations performed.}
+   \item{\code{message}: Text message indicating whether optimization could be done (OK) or not.}
+ }
 }
 \description{
 Function \code{utils_rockOptimization} finds optimum rock fragment content in the soil

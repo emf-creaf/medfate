@@ -24,8 +24,13 @@
 #' should be close to a target PLC value (by default 12\%).
 #'
 #' @return
-#' Function \code{utils_rockOptimization} returns a list containing the estimated rock fragment content,
-#' the corresponding soil extractable water and the number of simulation runs performed.
+#' Function \code{utils_rockOptimization} returns a list containing:
+#'  \itemize{
+#'    \item{\code{RFC}: A vector with the estimated rock fragment content for each soil layer.}
+#'    \item{\code{SEW}: Soil extractable water (mm).}
+#'    \item{\code{runs}: Number of simulations performed.}
+#'    \item{\code{message}: Text message indicating whether optimization could be done (OK) or not.}
+#'  }
 #'
 #'
 #' @references
@@ -104,7 +109,7 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
     S_new <- spwb(x = input_new, meteo = meteo, ...)
     # 90% quantile by species of annual maximum PLC
     PLC_new <- 100*apply(summary(S_new, output="StemPLC", FUN = max),2,quantile, prob = PLCquantile)
-    PLC_av_new <- sum(PLC_new*LAI_max_coh)/LAI_max
+    PLC_av_new <- sum(PLC_new*LAI_max_coh, na.rm = TRUE)/LAI_max
     return(PLC_av_new - qPLC_target)
   }
   
@@ -115,7 +120,8 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
   runs <- 2
   
   # Normal situation (negative and positive extremes), find root
-  if(PLC_SEW_max < 0.0 && PLC_SEW_min >= 0.0) {
+  message = "OK"
+  if((PLC_SEW_max < 0.0) && (PLC_SEW_min > 0.0)) {
     a <-uniroot(f_PLC_diff, c(SEW_min, SEW_max), tol = qPLC_tol, ...)
     SEW_target <- a$root
     runs <- runs + a$iter
@@ -123,16 +129,19 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
     SEW_target <- SEW_max
   } else if(PLC_SEW_min==0.0) { #Unlikely but possible
     SEW_target <- SEW_min
-  } else if(PLC_SEW_max > 0.0 && PLC_SEW_min > 0.0) {
-    if (verbose)  warning(paste0("PLC larger than target for the whole range of SEW. Returning maximum SEW."))
-    SEW_target <- SEW_max
-  } else if(PLC_SEW_max < 0.0 && PLC_SEW_min < 0.0) {
-    if (verbose)  warning(paste0("PLC lower than target for the whole range of SEW. Returning original SEW."))
+  } else if((PLC_SEW_max > 0.0) && (PLC_SEW_min > 0.0)) {
+    message = paste0("PLC larger than target for the whole range of SEW. Returning original SEW.")
+    SEW_target <- SEW_ori
+  } else if((PLC_SEW_max < 0.0) && (PLC_SEW_min < 0.0)) {
+    message = paste0("PLC lower than target for the whole range of SEW. Returning original SEW.")
     SEW_target <- SEW_ori
   }
   
   f_target <- uniroot(f_sew_diff, c(0,10), SEW_target)
   RFC_target <- pmax(pmin(soil$rfc*f_target$root,max_rocks),0)
-  res <- list(SEW = SEW_target, RFC = RFC_target, runs = runs)
+  res <- list(RFC = RFC_target, 
+              SEW = SEW_target, 
+              runs = runs,
+              message = message)
   return(res)
 }
