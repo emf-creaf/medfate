@@ -56,7 +56,7 @@ Function \code{utils_rockOptimization} returns a list containing:
 \description{
 Function \code{utils_rockOptimization} finds optimum rock fragment content in the soil
 corresponding to given vegetation, weather and target percent loss
-of conductance (PLC), following the method described in Druel et al. (2023).
+of conductance (PLC), following a modification of the method proposed by Druel et al. (2023).
 }
 \details{
 The function performs a model inversion based on an ecohydrological assumption,
@@ -64,6 +64,17 @@ consisting in that forest leaf area index is in equilibrium with a low embolism
 rate under normal conditions. This is translated in that the (by default 90\%) interannual quantile of
 the maximum annual percent loss of conductance (PLC), averaged over plant cohorts,
 should be close to a target PLC value (by default 12\%).
+
+The algorithm first determines the PLC corresponding to the minimum and maximum soil extractable water (SEW). 
+The minimum SEW (SEW_min) is an input parameter, whereas the maximum SEW (SEW_max) corresponds to no rock fragments in the soil. 
+
+Then three situations are distinguished:
+\enumerate{
+  \item{If \code{PLC(SEW_min) < qPLC_target}  and \code{PLC(SEW_max) < qPLC_target}, the function will use \code{\link{uniroot}} to find the root
+of the function \code{f(x) = PLC(x) - qPLC_target}, where \code{x} is SEW, which corresponds to a factor that multiplies the original rock fragment content.}
+  \item{If both \code{PLC(SEW_min) < qPLC_target} and \code{PLC(SEW_max) < qPLC_target}, the function cannot find an optimum, because PLC is always too low, and will return the original rock fragment content}
+  \item{Analogously, if both \code{PLC(SEW_min) > qPLC_target} and \code{PLC(SEW_max) > qPLC_target}, the function cannot find an optimum, because PLC is always too large, and will return the original rock fragment content}
+}
 }
 \examples{
 \donttest{
