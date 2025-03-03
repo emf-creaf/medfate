@@ -13,6 +13,7 @@ utils_rockOptimization(
   PLCquantile = 0.9,
   qPLC_target = 12,
   qPLC_tol = 0.5,
+  sew_min = 30,
   max_rocks = 99,
   verbose = FALSE,
   ...
@@ -34,6 +35,8 @@ utils_rockOptimization(
 \item{qPLC_target}{Target PLC to be achieved (by default 12\%).}
 
 \item{qPLC_tol}{Tolerance of PLC difference to target accepted when finding solution.}
+
+\item{sew_min}{Minimum soil extractable water (mm) for rock exploration.}
 
 \item{max_rocks}{Maximum content in coarse fragments allowed for any soil layer.}
 

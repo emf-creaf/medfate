@@ -12,6 +12,7 @@
 #' @param PLCquantile Maximum PLC quantile to be calculated across years.
 #' @param qPLC_target Target PLC to be achieved (by default 12\%).
 #' @param qPLC_tol Tolerance of PLC difference to target accepted when finding solution.
+#' @param sew_min Minimum soil extractable water (mm) for rock exploration.
 #' @param max_rocks Maximum content in coarse fragments allowed for any soil layer.
 #' @param verbose A logical value. Print the internal messages of the function?
 #' @param ... Additional parameters to function \code{\link[medfate]{spwb}}.
@@ -68,7 +69,7 @@
 #' @export
 utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
                                  PLCquantile = 0.9, qPLC_target = 12, qPLC_tol = 0.5,
-                                 max_rocks = 99, verbose = FALSE, ...){
+                                 sew_min = 30, max_rocks = 99, verbose = FALSE, ...){
   
   control$verbose = FALSE
   control$leafCavitationRecovery = "annual"
@@ -81,15 +82,13 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
   LAI_max_coh <- medfate::plant_LAI(x, SpParams)
   LAI_max <- sum(LAI_max_coh, na.rm = TRUE)
   
-  SEW_ori <- sum(medfate::soil_waterExtractable(soil, model = control$soilFunctions))
+  sew_ori <- sum(medfate::soil_waterExtractable(soil, model = control$soilFunctions))
   
   soil_max <- soil
   soil_max$rfc <- rep(0, nlayers)
-  soil_min <- soil
-  soil_min$rfc <- rep(max_rocks, nlayers)
-  SEW_max <- sum(medfate::soil_waterExtractable(soil_max, model = control$soilFunctions))
-  SEW_min <- sum(medfate::soil_waterExtractable(soil_min, model = control$soilFunctions))
-  
+  sew_max <- sum(medfate::soil_waterExtractable(soil_max, model = control$soilFunctions))
+  if(verbose) cat(paste0("SEW original = ", round(sew_ori), " minimum = ", round(sew_min), " maximum = ", round(sew_max),"\n"))
+
   # Function to be optimized for factor corresponding to sew_target
   f_sew_diff <- function(factor, sew_target) {
     soil_tmp <- soil
@@ -102,7 +101,6 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
     soil_new <- soil
     r <- uniroot(f_sew_diff, c(0,10), sew_target)
     soil_new$rfc <- pmax(pmin(soil_new$rfc*r$root,max_rocks),0)
-    SEW_new <- sum(medfate::soil_waterExtractable(soil_new, model = control$soilFunctions))
     input_new <- medfate::spwbInput(x, soil = soil_new, SpParams = SpParams, control = control)
     
     # Launch simulation
@@ -118,33 +116,34 @@ utils_rockOptimization<- function(x, soil, SpParams, control, meteo,
   }
   
   # Evaluate function at extremes
-  PLC_SEW_min <- f_PLC_diff(SEW_min, ...)
-  PLC_SEW_max <- f_PLC_diff(SEW_max, ...)
+  plc_sew_min <- f_PLC_diff(sew_min, ...)
+  plc_sew_max <- f_PLC_diff(sew_max, ...)
+  if(verbose) cat(paste0("PLC(SEW minimum) = ", round(plc_sew_min + qPLC_target, 2), " PLC(SEW maximum) = ", round(plc_sew_max + qPLC_target),"\n"))
   
   runs <- 2
   
   # Normal situation (negative and positive extremes), find root
   message = "OK"
-  if((PLC_SEW_max < 0.0) && (PLC_SEW_min > 0.0)) {
-    a <-uniroot(f_PLC_diff, c(SEW_min, SEW_max), tol = qPLC_tol, ...)
-    SEW_target <- a$root
+  if((plc_sew_max < 0.0) && (plc_sew_min > 0.0)) {
+    a <-uniroot(f_PLC_diff, c(sew_min, sew_max), tol = qPLC_tol, ...)
+    sew_target <- a$root
     runs <- runs + a$iter
-  } else if(PLC_SEW_max==0.0) { #Unlikely but possible
-    SEW_target <- SEW_max
-  } else if(PLC_SEW_min==0.0) { #Unlikely but possible
-    SEW_target <- SEW_min
-  } else if((PLC_SEW_max > 0.0) && (PLC_SEW_min > 0.0)) {
+  } else if(plc_sew_max==0.0) { #Unlikely but possible
+    sew_target <- sew_max
+  } else if(plc_sew_min==0.0) { #Unlikely but possible
+    sew_target <- sew_min
+  } else if((plc_sew_max > 0.0) && (plc_sew_min > 0.0)) {
     message = paste0("PLC larger than target for the whole range of SEW. Returning original SEW.")
-    SEW_target <- SEW_ori
-  } else if((PLC_SEW_max < 0.0) && (PLC_SEW_min < 0.0)) {
+    sew_target <- sew_ori
+  } else if((plc_sew_max < 0.0) && (plc_sew_min < 0.0)) {
     message = paste0("PLC lower than target for the whole range of SEW. Returning original SEW.")
-    SEW_target <- SEW_ori
+    sew_target <- sew_ori
   }
   
-  f_target <- uniroot(f_sew_diff, c(0,10), SEW_target)
-  RFC_target <- pmax(pmin(soil$rfc*f_target$root,max_rocks),0)
-  res <- list(RFC = RFC_target, 
-              SEW = SEW_target, 
+  f_target <- uniroot(f_sew_diff, c(0,10), sew_target)
+  rfc_target <- pmax(pmin(soil$rfc*f_target$root,max_rocks),0)
+  res <- list(RFC = rfc_target, 
+              SEW = sew_target, 
               runs = runs,
               message = message)
   return(res)
