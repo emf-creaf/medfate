@@ -294,7 +294,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
     double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
     double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-    // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+    double E_gmin_day = E_gmin*LAIphe[c]*(24.0*3600.0*0.018); //L·d-1·m-2 = mm·d-1
     
     //Extraction from soil (can later be modified if there are changes in plant water content)
     if(!plantWaterPools) {
@@ -311,7 +311,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       double sumKunlc = sum(Kunlc);
       double Klcmean = sum(Klc*V(c,_));
       for(int l=0;l<nlayers;l++) {
-        outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin)*(Kunlc[l]/sumKunlc);
+        outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
       }
       rootCrownPsi = averagePsi(psiSoil, V(c,_), Exp_Extract[c], Psi_Extract[c]);
     } else {
@@ -345,7 +345,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       double Klcmean = sum(Klc*RHOPcohV);
       for(int l=0;l<nlayers;l++) {
         for(int j = 0;j<numCohorts;j++) {
-          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin)*(Kunlc(j,l)/sumKunlc);
+          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc(j,l)/sumKunlc);
         }
         outputExtraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
       }
