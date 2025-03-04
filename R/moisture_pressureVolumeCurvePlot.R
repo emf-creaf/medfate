@@ -48,7 +48,7 @@ moisture_pressureVolumeCurvePlot<-function(x, segment="stem",
       } else if(fraction=="apoplastic") {
         rwcleaf = rwcapoleaf
       }
-      if(i==1) rwc = rwcleaf
+      if(i==1) rwc = matrix(rwcleaf, ncol = 1)
       else rwc = cbind(rwc, rwcleaf)
     }
     colnames(rwc) = cohortnames
@@ -70,7 +70,7 @@ moisture_pressureVolumeCurvePlot<-function(x, segment="stem",
       } else if(fraction=="apoplastic") {
         rwcstem = rwcapostem
       }
-      if(i==1) rwc = rwcstem
+      if(i==1) rwc = matrix(rwcstem, ncol = 1)
       else rwc = cbind(rwc, rwcstem)
     }
     colnames(rwc) = cohortnames
