@@ -1,5 +1,6 @@
 # medfate 4.8.1
 * New functions utils_rockOptimization, utils_ldrOptimization and utils_ldrExploration
+* Bug correction: minimum cuticular transpiration in Granier
 
 # medfate 4.8.0
 * Code optimization: LAI distribution
