@@ -376,6 +376,7 @@
   else if(type=="RootPsi") ylab = "Root crown water potential (MPa)"
   else if(type=="LeafPsiAverage") ylab = "Average leaf water potential (MPa)"
   else if(type=="LeafPsi") ylab = "Leaf water potential (MPa)"
+  else if(type=="LeafPsiRange") ylab = "Leaf water potential range (MPa)"
   else if(type=="SoilPlantConductance") ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
   else if(type=="LeafPsiMin") ylab = "Minimum (midday) leaf water potential (MPa)"
   else if(type=="LeafPsiMax") ylab = "Maximum (predawn) leaf water potential (MPa)"

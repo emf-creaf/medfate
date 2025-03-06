@@ -309,6 +309,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
       OM1 = .temporalSummary(OM1, summary.freq, mean, na.rm=TRUE)
       OM2 = .temporalSummary(OM2, summary.freq, mean, na.rm=TRUE)
     }
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_range(as.matrix(OM1), as.matrix(OM2),  xlab = xlab, ylab = ylab, ylim = ylim))
   }
   else if(type=="PlantWUE") {
@@ -530,6 +531,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
         OM1 = .temporalSummary(OM1, summary.freq, mean, na.rm=TRUE)
         OM2 = .temporalSummary(OM2, summary.freq, mean, na.rm=TRUE)
       }
+      if(is.null(ylab)) ylab = .getYLab(type)
       return(.multiple_dynamics_range(as.matrix(OM1), as.matrix(OM2),  xlab = xlab, ylab = ylab, ylim = ylim))
     }
     else if(type %in% c("TranspirationPerLeaf","GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",

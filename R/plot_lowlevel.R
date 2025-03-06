@@ -54,8 +54,9 @@
                   "Date" = as.Date(rownames(x1)),
                   "Cohort" = gl(length(colnames(x1)), nrow(x1), labels=labels))
   g<-ggplot(df, aes(x=.data$Date))+
-    geom_ribbon(aes(ymin = .data$Y2, ymax=.data$Y1,fill=.data$Cohort), alpha = 0.5)+
+    geom_ribbon(aes(ymin = .data$Y2, ymax=.data$Y1, color = .data$Cohort, fill=.data$Cohort), alpha = 0.5)+
     scale_fill_discrete(name="")+
+    guides(color = "none")+
     theme_bw()+
     xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
