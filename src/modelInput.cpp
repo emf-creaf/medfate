@@ -285,6 +285,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
   NumericVector VCroot_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P50", fillMissingSpParams, fillWithGenus);
   NumericVector VCroot_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P88", fillMissingSpParams, fillWithGenus);
   
+  
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Hmed =  paramsAnatomydf["Hmed"];
@@ -294,11 +295,13 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
   NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0), FR_leaf(numCohorts, 0.0), FR_stem(numCohorts, 0.0), FR_root(numCohorts, 0.0);
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
+  NumericVector VCstem_slope(numCohorts, 0.0), VCroot_slope(numCohorts, 0.0), VCleaf_slope(numCohorts, 0.0);
   NumericVector VCleafapo_kmax(numCohorts, NA_REAL);
   NumericVector kleaf_symp(numCohorts, NA_REAL);
   
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
+    
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
     double xylem_root_kmax =maximumStemHydraulicConductance(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]); 
@@ -314,6 +317,9 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
       VCroot_P50[c] = VCstem_P50[c];
       VCroot_P88[c] = VCstem_P88[c];
     }
+    VCleaf_slope[c] = (88.0 - 12.0)/(std::abs(VCleaf_P88[c]) - std::abs(VCleaf_P12[c]));
+    VCstem_slope[c] = (88.0 - 12.0)/(std::abs(VCstem_P88[c]) - std::abs(VCstem_P12[c]));
+    VCroot_slope[c] = (88.0 - 12.0)/(std::abs(VCroot_P88[c]) - std::abs(VCroot_P12[c]));
     
     //Stem Weibull
     NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
@@ -343,13 +349,19 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
   paramsTranspirationdf.push_back(Kmax_rootxylem, "Kmax_rootxylem");
   paramsTranspirationdf.push_back(VCleaf_kmax, "VCleaf_kmax");
   paramsTranspirationdf.push_back(VCleafapo_kmax, "VCleafapo_kmax");
+  paramsTranspirationdf.push_back(VCleaf_slope, "VCleaf_slope");
+  paramsTranspirationdf.push_back(VCleaf_P50, "VCleaf_P50");
   paramsTranspirationdf.push_back(VCleaf_c, "VCleaf_c");
   paramsTranspirationdf.push_back(VCleaf_d, "VCleaf_d");
   paramsTranspirationdf.push_back(kleaf_symp, "kleaf_symp");
   paramsTranspirationdf.push_back(VCstem_kmax, "VCstem_kmax");
+  paramsTranspirationdf.push_back(VCstem_slope, "VCstem_slope");
+  paramsTranspirationdf.push_back(VCstem_P50, "VCstem_P50");
   paramsTranspirationdf.push_back(VCstem_c, "VCstem_c");
   paramsTranspirationdf.push_back(VCstem_d, "VCstem_d");
   paramsTranspirationdf.push_back(VCroottot_kmax, "VCroot_kmax");
+  paramsTranspirationdf.push_back(VCroot_slope, "VCroot_slope");
+  paramsTranspirationdf.push_back(VCroot_P50, "VCroot_P50");
   paramsTranspirationdf.push_back(VCroot_c, "VCroot_c");
   paramsTranspirationdf.push_back(VCroot_d, "VCroot_d");
   paramsTranspirationdf.push_back(VGrhizotot_kmax, "VGrhizo_kmax");
