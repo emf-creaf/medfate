@@ -109,6 +109,7 @@ double G_function1(double leafAngle, double solarElevation) {
   } else {
     double a = sin(solarElevation)*cos(leafAngle)*asin(tan(solarElevation)/tan(leafAngle));
     double b = sqrt(pow(sin(leafAngle), 2.0) - pow(sin(solarElevation), 2.0));
+    if (isnan(b)) b = 0;
     G = (2.0/M_PI)*(a + b);
   }
   return(G);
