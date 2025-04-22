@@ -25,35 +25,35 @@ Useful links:
 \author{
 \strong{Maintainer}: Miquel De Cáceres
 \email{miquelcaceres@gmail.com}
-[\href{https://orcid.org/0000-0001-7132-2080}{ORCID}]
+[ORCID](https://orcid.org/0000-0001-7132-2080)
 
 Authors: \itemize{
 \item{ Nicolas Martin-StPaul
-[\href{https://orcid.org/0000-0001-7574-0108}{ORCID}]}
+[ORCID](https://orcid.org/0000-0001-7574-0108)}
 \item{ Víctor Granda
-[\href{https://orcid.org/0000-0002-0469-1991}{ORCID}]}
+[ORCID](https://orcid.org/0000-0002-0469-1991)}
 \item{ Antoine Cabon
-[\href{https://orcid.org/0000-0001-6426-1726}{ORCID}]}
+[ORCID](https://orcid.org/0000-0001-6426-1726)}
 \item{ Arsène Druel
-[\href{https://orcid.org/0000-0002-3938-0085}{ORCID}]}
+[ORCID](https://orcid.org/0000-0002-3938-0085)}
 \item{ Julien Ruffault
-[\href{https://orcid.org/0000-0003-3647-8172}{ORCID}]}
+[ORCID](https://orcid.org/0000-0003-3647-8172)}
 }
 Contributors: \itemize{
 \item{ Jordi Martínez-Vilalta
-[\href{https://orcid.org/0000-0002-2332-7298}{ORCID}]}
+[ORCID](https://orcid.org/0000-0002-2332-7298)}
 \item{ Maurizio Mencuccini
-[\href{https://orcid.org/0000-0003-0840-1477}{ORCID}]}
+[ORCID](https://orcid.org/0000-0003-0840-1477)}
 \item{ François Pimont
-[\href{https://orcid.org/0000-0002-9842-6207}{ORCID}]}
+[ORCID](https://orcid.org/0000-0002-9842-6207)}
 \item{ Hervé Cochard
-[\href{https://orcid.org/0000-0002-2727-7072}{ORCID}]}
+[ORCID](https://orcid.org/0000-0002-2727-7072)}
 \item{ Aitor Améztegui
-[\href{https://orcid.org/0000-0001-6426-1726}{ORCID}]}
+[ORCID](https://orcid.org/0000-0001-6426-1726)}
 \item{ Léa Veuillen
-[\href{https://orcid.org/0000-0002-2790-3627}{ORCID}]}
+[ORCID](https://orcid.org/0000-0002-2790-3627)}
 \item{ Shengli Huang
-[\href{https://orcid.org/0003-3927-7042}{ORCID}]}
+[ORCID](https://orcid.org/0003-3927-7042)}
 }
 }
 \keyword{internal}
