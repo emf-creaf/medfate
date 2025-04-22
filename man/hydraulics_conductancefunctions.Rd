@@ -88,7 +88,7 @@ hydraulics_vulnerabilityCurvePlot(
 
 \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
 
-\item{relative}{A flag to relativize vulnerability curves to the \link{0-1} interval.}
+\item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
 
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
 

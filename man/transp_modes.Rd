@@ -85,7 +85,7 @@ A list with the following elements:
 \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
 \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
 \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
-\item{\code{"DDS"}: Daily drought stress \link{0-1} (relative whole-plant conductance).}
+\item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
 }
 When using \code{transp_transpirationSperry} or \code{transp_transpirationSureau}, element \code{"Plants"} includes:
 \itemize{
@@ -105,7 +105,7 @@ When using \code{transp_transpirationSperry} or \code{transp_transpirationSureau
 \item{\code{"LeafPsiMin_SH"}: Minimum (predawn) water potential (in MPa) at shade leaves.}
 \item{\code{"LeafPsiMax_SH"}: Maximum (midday) water potential (in MPa) at shade leaves.}
 \item{\code{"dEdP"}: Overall soil-plant conductance (derivative of the supply function).}
-\item{\code{"DDS"}: Daily drought stress \link{0-1} (relative whole-plant conductance).}
+\item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
 \item{\code{"StemRWC"}: Relative water content of stem tissue (including symplasm and apoplasm).}
 \item{\code{"LeafRWC"}: Relative water content of leaf tissue (including symplasm and apoplasm).}
 \item{\code{"LFMC"}: Live fuel moisture content (in percent of dry weight).}
@@ -152,11 +152,11 @@ The remaining items are only given by \code{transp_transpirationSperry} or \code
 \item{\code{"RootPsi"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
 \item{\code{"StemPsi"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
 \item{\code{"LeafPsi"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
-\item{\code{"StemPLC"}: A data frame with the proportion loss of conductance \link{0-1} for each plant cohort during each time step. }
-\item{\code{"StemRWC"}: A data frame with the (average) relative water content of stem tissue \link{0-1} for each plant cohort during each time step. }
-\item{\code{"LeafRWC"}: A data frame with the relative water content of leaf tissue \link{0-1} for each plant cohort during each time step. }
-\item{\code{"StemSympRWC"}: A data frame with the (average) relative water content of symplastic stem tissue \link{0-1} for each plant cohort during each time step. }
-\item{\code{"LeafSympRWC"}: A data frame with the relative water content of symplastic leaf tissue \link{0-1} for each plant cohort during each time step. }
+\item{\code{"StemPLC"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
+\item{\code{"StemRWC"}: A data frame with the (average) relative water content of stem tissue [0-1] for each plant cohort during each time step. }
+\item{\code{"LeafRWC"}: A data frame with the relative water content of leaf tissue [0-1] for each plant cohort during each time step. }
+\item{\code{"StemSympRWC"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
+\item{\code{"LeafSympRWC"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
 \item{\code{"PWB"}: A data frame with plant water balance (extraction - transpiration).}
 }
 }

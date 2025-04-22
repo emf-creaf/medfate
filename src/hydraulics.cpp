@@ -1406,7 +1406,7 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 //' @param psiLeaf Water potential (in MPa) in the leaf.
 //' @param PLCstem Percent loss of conductance (in %) in the stem.
 //' @param L Vector with the length of coarse roots (mm) for each soil layer.
-//' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
+//' @param V Vector with the proportion \[0-1\] of fine roots within each soil layer.
 //' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
 //' @param kleafmax Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
 //' @param kstemmax Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).

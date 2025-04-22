@@ -101,14 +101,14 @@ double criticalFirelineIntensity(double CBH, double M) {
 //'   \item{\code{CrownFire$Ic_ratio}: Crown initiation ratio.}
 //'   \item{\code{CrownFire$`I_b [kW/m]`}: Fireline intensity of the crown fire.}
 //'   \item{\code{CrownFire$`FL [m]`}: Flame length of the crown fire.}
-//'   \item{\code{FirePotentials$RP}: Surface fire reaction potential ([0-9]).}
-//'   \item{\code{FirePotentials$SP}: Surface fire spread rate potential ([0-9]).}
-//'   \item{\code{FirePotentials$FP}: Surface fire flame length potential ([0-9]).}
-//'   \item{\code{FirePotentials$SFP}: Surface fire potential ([0-9]).}
-//'   \item{\code{FirePotentials$IC}: Crown initiation potential ([0-9]).}
-//'   \item{\code{FirePotentials$TC}: Crown-to-crown transmission potential ([0-9]).}
-//'   \item{\code{FirePotentials$RC}: Crown fire spread rate potential ([0-9]).}
-//'   \item{\code{FirePotentials$CFC}: Crown fire potential ([0-9]).}
+//'   \item{\code{FirePotentials$RP}: Surface fire reaction potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$SP}: Surface fire spread rate potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$FP}: Surface fire flame length potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$SFP}: Surface fire potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$IC}: Crown initiation potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$TC}: Crown-to-crown transmission potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$RC}: Crown fire spread rate potential (\[0-9\]).}
+//'   \item{\code{FirePotentials$CFC}: Crown fire potential (\[0-9\]).}
 //' }
 //' 
 //' @references

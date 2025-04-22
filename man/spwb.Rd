@@ -143,13 +143,13 @@ When \code{transpirationMode = "Granier"}, element \code{"Plants"} is a list wit
 \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
 \item{\code{"GrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort. }
 \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa).}
-\item{\code{"LeafPLC"}: A data frame with the average daily proportion of leaf conductance loss of each plant (\link{0-1}).}
-\item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant (\link{0-1}).}
+\item{\code{"LeafPLC"}: A data frame with the average daily proportion of leaf conductance loss of each plant ([0-1]).}
+\item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]).}
 \item{\code{"PlantWaterBalance"}: A data frame with the daily balance between transpiration and soil water extraction for each plant cohort. }
 \item{\code{"LeafRWC"}: A data frame with the average daily leaf relative water content of each plant (in percent).}
 \item{\code{"StemRWC"}: A data frame with the average daily stem relative water content of each plant (in percent). }
 \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
-\item{\code{"PlantStress"}: A data frame with the amount of daily stress \link{0-1} suffered by each plant cohort (relative whole-plant conductance).}
+\item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 }
 If \code{transpirationMode="Sperry"} or \code{transpirationMode="Sureau"}, element \code{"Plants"} is a list with the following subelements:
 \itemize{
@@ -173,11 +173,11 @@ If \code{transpirationMode="Sperry"} or \code{transpirationMode="Sureau"}, eleme
 \item{\code{"StemRWC"}: A data frame with the average daily stem relative water content of each plant (in percent). }
 \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
 \item{\code{"StemPsi"}: A data frame with the minimum daily stem water potential of each plant (in MPa). }
-\item{\code{"LeafPLC"}: A data frame with the average daily proportion of leaf conductance loss of each plant (\link{0-1}).}
-\item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant (\link{0-1}).}
+\item{\code{"LeafPLC"}: A data frame with the average daily proportion of leaf conductance loss of each plant ([0-1]).}
+\item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]).}
 \item{\code{"RootPsi"}: A data frame with the minimum daily root water potential of each plant (in MPa). }
 \item{\code{"RhizoPsi"}: A list of data frames (one per plant cohort) with the minimum daily root water potential of each plant (in MPa).}
-\item{\code{"PlantStress"}: A data frame with the amount of daily stress \link{0-1} suffered by each plant cohort (relative whole-plant conductance).}
+\item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 }
 }
 \description{

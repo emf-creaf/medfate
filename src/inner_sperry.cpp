@@ -199,9 +199,9 @@ List profitMaximization2(List supplyFunction, int initialPos,
 //' @return
 //' Function \code{transp_profitMaximization} returns a list with the following elements:
 //' \itemize{
-//'   \item{\code{Cost}: Cost function [0-1].}
-//'   \item{\code{Gain}: Gain function [0-1].}
-//'   \item{\code{Profit}: Profit function [0-1].}
+//'   \item{\code{Cost}: Cost function \[0-1\].}
+//'   \item{\code{Gain}: Gain function \[0-1\].}
+//'   \item{\code{Profit}: Profit function \[0-1\].}
 //'   \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
 //' }
 //' 

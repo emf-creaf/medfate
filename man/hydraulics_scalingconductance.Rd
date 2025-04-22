@@ -157,7 +157,7 @@ hydraulics_rootxylemConductanceProportions(L, V)
 
 \item{L}{Vector with the length of coarse roots (mm) for each soil layer.}
 
-\item{V}{Vector with the proportion \link{0-1} of fine roots within each soil layer.}
+\item{V}{Vector with the proportion [0-1] of fine roots within each soil layer.}
 }
 \value{
 Values returned for each function are:

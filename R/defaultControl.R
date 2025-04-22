@@ -116,8 +116,8 @@
 #'       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
 #'       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
 #'       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2·MPa-1).}
-#'       \item{\code{fractionLeafSymplasm [= 0.5]}: Fraction of the leaf resistance from leaf apoplasm to leaf symplasm ([0-1]).}
-#'       \item{\code{gs_NightFrac [= 0.05]}: Stomatal conductance at night as fraction of maximum stomatal conductance ([0-1]).}
+#'       \item{\code{fractionLeafSymplasm [= 0.5]}: Fraction of the leaf resistance from leaf apoplasm to leaf symplasm (\[0-1\]).}
+#'       \item{\code{gs_NightFrac [= 0.05]}: Stomatal conductance at night as fraction of maximum stomatal conductance (\[0-1\]).}
 #'       \item{\code{stomatalSubmodel [= "Baldocchi"]}: Stomatal regulation sub-model, either "Jarvis" or "Baldocchi".}
 #'       \item{\code{JarvisPAR [= 0.003]}: Parameter regulating the response of stomatal conductance to light (PAR) in the Jarvis model.}
 #'       \item{\code{fTRBToLeaf [= 0.8]}: Fraction of surface of bark exposed to air per leaf area.}

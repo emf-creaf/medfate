@@ -20,13 +20,13 @@ using namespace Rcpp;
 //' Set of functions used to calculate tissue moisture from water potential and viceversa.
 //' 
 //' @param psiSym,psiApo Symplastic or apoplastic water potential (MPa).
-//' @param RWC Relative water content [0-1].
+//' @param RWC Relative water content \[0-1\].
 //' @param pi0 Full turgor osmotic potential (MPa).
 //' @param epsilon Bulk modulus of elasticity (MPa).
 //' @param c,d Parameters of the xylem vulnerability curve.
 //' @param af Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).
 //' @param L Vector with the length of coarse roots (mm) for each soil layer.
-//' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
+//' @param V Vector with the proportion \[0-1\] of fine roots within each soil layer.
 //' @param Al2As Leaf area to sapwood area (in m2·m-2).
 //' @param height Plant height (in cm).
 //' @param SLA Specific leaf area (mm2·mg-1).
@@ -36,12 +36,12 @@ using namespace Rcpp;
 //' @return
 //' Values returned for each function are:
 //' \itemize{
-//'   \item{\code{moisture_symplasticRWC}: Relative water content [0-1] of the symplastic fraction.}
-//'   \item{\code{moisture_apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
+//'   \item{\code{moisture_symplasticRWC}: Relative water content \[0-1\] of the symplastic fraction.}
+//'   \item{\code{moisture_apoplasticRWC}: Relative water content \[0-1\] of the apoplastic fraction.}
 //'   \item{\code{moisture_symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
 //'   \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
 //'   \item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
-//'   \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
+//'   \item{\code{moisture_segmentRWC}: Segment relative water content \[0-1\].}
 //'   \item{\code{water_plant}: A vector of water content (mm) per plant cohort.}
 //' }
 //' 
