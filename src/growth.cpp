@@ -404,7 +404,6 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
                      runon, lateralFlows, waterTableDepth,
                      verbose);
   }
-
   
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];

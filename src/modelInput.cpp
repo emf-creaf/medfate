@@ -1067,8 +1067,8 @@ List internalLAIDistribution(DataFrame above, DataFrame canopyParams) {
   int numCohorts = above.nrow();
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers
   NumericVector PARcohort(numCohorts,0.0);
-  NumericVector PrevLAIexpanded(numCohorts,0.0);
-  NumericVector PrevLAIdead(numCohorts,0.0);
+  NumericVector PrevLAIexpanded(numCohorts,NA_REAL);
+  NumericVector PrevLAIdead(numCohorts,NA_REAL);
   
   // double h1, h2;
   NumericMatrix LAImx(ncanlayers, numCohorts);

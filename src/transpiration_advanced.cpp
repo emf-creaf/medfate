@@ -428,7 +428,8 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
     LAIcellexpanded +=LAI[c];
     if((canopyHeight<H[c]) && ((LAI[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
-  
+
+  NumericVector lad(ncanlayers,0.0);
   if(numCohorts>0) {
     bool recalc_LAI = false;
     if(NumericVector::is_na(PrevLAIexpanded[0]) || NumericVector::is_na(PrevLAIdead[0])) {
@@ -440,6 +441,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
         if(sum(abs(LAIdead - PrevLAIdead))>0.001) recalc_LAI = true;
       }
     }
+    // Rcout<<recalc_LAI<<"\n";
     if(recalc_LAI) {
       NumericVector z(ncanlayers+1,0.0);
       for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
@@ -457,15 +459,16 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
         LAIpx[i] = sum(LAImx(i,_));
         LAIpe[i] = sum(LAIme(i,_));
         LAIpd[i] = sum(LAImd(i,_));
+        // Rcout<< i << " " << LAIpx[i] << " " << LAIpe[i] <<" "<< LAImx[i]<<"\n";
       }
+    }
+    // Add LAImax to leaf area density to have a wind speed profile in deciduous canopies
+    lad = 100.0*((0.9*LAIpe + 0.1*LAImx) + LAIpd)/verticalLayerSize;
+    for(int i=0; i<numCohorts;i++) {
+      outputFPAR[i] = PARcohort[i];
     }
   }
 
-  NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
-  for(int i=0; i<numCohorts;i++) {
-    outputFPAR[i] = PARcohort[i];
-  }
-  
   ////////////////////////////////////////
   // STEP 2. Determine vertical wind speed profile
   ////////////////////////////////////////
@@ -473,6 +476,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
   wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
   NumericVector zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
   if(canopyHeight>0.0) {
+    // Rcout<<canopyHeight<< " "<< lad[0] <<"\n";
     DataFrame canopyTurbulence = as<DataFrame>(transpOutput["CanopyTurbulence"]);
     windCanopyTurbulence_inner(canopyTurbulence, zmid, lad,  canopyHeight, 
                                wind, windMeasurementHeight);
@@ -748,6 +752,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
     double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum_abs_SWR_soil);
     //Canopy evaporation (mm) in the current step and fraction of dry canopy
     double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum_abs_SWR_can);
+    if(sum_abs_SWR_can==0.0) canEvapStep = 0.0;
     double f_dry = 1.0;
     if(canEvapStep>0.0) {
       f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
