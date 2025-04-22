@@ -132,20 +132,20 @@ Functions to calculate properties of fine/coarse roots within the soil, given ro
 }
 \details{
 \itemize{
-  \item{\code{root_conicDistribution()} assumes a (vertical) conic distribution of fine roots, whereas \code{root_ldrDistribution()} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Return a matrix of fine root proportions in each layer with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.}
-  \item{\code{root_coarseRootLengths()} and \code{root_coarseRootLengthsFromVolume()} estimate the length of coarse roots (mm) for each soil layer, including axial and radial lengths.}
-  \item{\code{root_coarseRootSoilVolume} estimates the soil volume (m3) occupied by coarse roots of an individual.}
-  \item{\code{root_coarseRootSoilVolumeFromConductance} estimates the soil volume (m3) occupied by coarse roots of an individual from root xylem conductance.}
-  \item{\code{root_fineRootHalfDistance()} calculates the half distance (cm) between neighbouring fine roots.}
-  \item{\code{root_fineRootRadius()} calculates the radius of fine roots (cm).}
-  \item{\code{root_fineRootAreaIndex()} estimates the fine root area index for a given soil conductivity and maximum rhizosphere conductance.}
-  \item{\code{root_fineRootBiomass()} estimates the biomass of fine roots (g dry/individual) for a given soil conductivity and maximum rhizosphere conductance.}
-  \item{\code{root_rhizosphereMaximumConductance()} is the inverse of the preceeding function, i.e. it estimates rhizosphere conductance from soil conductivity and fine root biomass.}
-  \item{\code{root_fineRootSoilVolume()} calculates the soil volume (m3) occupied with fine roots.}
-  \item{\code{root_specificRootSurfaceArea()} returns the specific fine root area (cm2/g).}
-  \item{\code{root_individualRootedGroundArea()} calculates the area (m2) covered by roots of an individual, for each soil layer.}
-  \item{\code{root_horizontalProportions()} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer. Returns a list (with as many elements as cohorts) with each element being a matrix.}
-  }
+\item{\code{root_conicDistribution()} assumes a (vertical) conic distribution of fine roots, whereas \code{root_ldrDistribution()} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Return a matrix of fine root proportions in each layer with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.}
+\item{\code{root_coarseRootLengths()} and \code{root_coarseRootLengthsFromVolume()} estimate the length of coarse roots (mm) for each soil layer, including axial and radial lengths.}
+\item{\code{root_coarseRootSoilVolume} estimates the soil volume (m3) occupied by coarse roots of an individual.}
+\item{\code{root_coarseRootSoilVolumeFromConductance} estimates the soil volume (m3) occupied by coarse roots of an individual from root xylem conductance.}
+\item{\code{root_fineRootHalfDistance()} calculates the half distance (cm) between neighbouring fine roots.}
+\item{\code{root_fineRootRadius()} calculates the radius of fine roots (cm).}
+\item{\code{root_fineRootAreaIndex()} estimates the fine root area index for a given soil conductivity and maximum rhizosphere conductance.}
+\item{\code{root_fineRootBiomass()} estimates the biomass of fine roots (g dry/individual) for a given soil conductivity and maximum rhizosphere conductance.}
+\item{\code{root_rhizosphereMaximumConductance()} is the inverse of the preceeding function, i.e. it estimates rhizosphere conductance from soil conductivity and fine root biomass.}
+\item{\code{root_fineRootSoilVolume()} calculates the soil volume (m3) occupied with fine roots.}
+\item{\code{root_specificRootSurfaceArea()} returns the specific fine root area (cm2/g).}
+\item{\code{root_individualRootedGroundArea()} calculates the area (m2) covered by roots of an individual, for each soil layer.}
+\item{\code{root_horizontalProportions()} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer. Returns a list (with as many elements as cohorts) with each element being a matrix.}
+}
 }
 \examples{
 #Load example plot plant data

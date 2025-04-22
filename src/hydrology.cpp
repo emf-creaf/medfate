@@ -228,7 +228,7 @@ double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sa
 //' 
 //' @param I Soil infiltration (in mm of water).
 //' @param widths Width of soil layers (in mm).
-//' @param macro Macroporosity of soil layers (in \%).
+//' @param macro Macroporosity of soil layers (in %).
 //' @param a,b Parameters of the extinction function used for water infiltration.
 //' 
 //' @keywords internal

@@ -10,33 +10,33 @@
 An object of class \code{forest} contains the description of the woody (tree or shrub) cohorts and herb layer of a forest patch.
 It has the following structure (see details):
 \itemize{
-  \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
-      \itemize{
-        \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
-        \item{\code{Height}: Total tree height (in cm).}
-        \item{\code{DBH}: Tree diameter at breast height (in cm).}
-        \item{\code{N}: Density (number of individuals/hectare) that the measured tree represents.}
-        \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
-        \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
-     }
-  }
-  \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
-      \itemize{
-        \item{\code{Species}: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
-        \item{\code{Height}: Average total height of plants (in cm).}
-        \item{\code{Cover}: Percent cover.}
-        \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
-        \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
-      }
-  }
-  \item{\code{herbCover}: Percent cover of the herb layer (optional).}
-  \item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}
-  \item{\code{seedBank}: A data frame containing seed bank information with the following columns:
-      \itemize{
-        \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
-        \item{\code{Percent}: Amount of seeds in relation to full seed bank (in \%).}
-     }
-  }
+\item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
+\itemize{
+\item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+\item{\code{Height}: Total tree height (in cm).}
+\item{\code{DBH}: Tree diameter at breast height (in cm).}
+\item{\code{N}: Density (number of individuals/hectare) that the measured tree represents.}
+\item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+\item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+}
+}
+\item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
+\itemize{
+\item{\code{Species}: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
+\item{\code{Height}: Average total height of plants (in cm).}
+\item{\code{Cover}: Percent cover.}
+\item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+\item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+}
+}
+\item{\code{herbCover}: Percent cover of the herb layer (optional).}
+\item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}
+\item{\code{seedBank}: A data frame containing seed bank information with the following columns:
+\itemize{
+\item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+\item{\code{Percent}: Amount of seeds in relation to full seed bank (in \%).}
+}
+}
 }
 }
 \source{
@@ -46,23 +46,23 @@ DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Di
 \code{exampleforest} is an example of forest stand description, whereas \code{exampleforest2} is an alternative forest description where leaf area index and crown ratio are supplied instead of structural (density, DBH and cover) parameters.
 }
 \details{
-The structure presented above for \code{forest} objects corresponds to the required data elements. 
-A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
+The structure presented above for \code{forest} objects corresponds to the required data elements.
+A \code{forest} object can contain additional information when this is available. Data frames \code{treeData}
 and \code{shrubData} can contain additional columns:
 \itemize{
-  \item{\code{LAI}: Leaf area index (m2/m2)}
-  \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
-  \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
-  \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
-  \item{\code{Z100}: Depth (in mm) corresponding to 100\% of fine roots (to specify a truncated root distribution).}
-  \item{\code{ObsID}: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts through simulations.
-  In \code{\link{fordyn}}, the use of these identifiers can be combined with the control option \code{keepCohortsWithObsID} so that these cohorts are not merged 
-  or removed during simulations.}
+\item{\code{LAI}: Leaf area index (m2/m2).}
+\item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2).}
+\item{\code{FuelLoading}: Fine fuel loading (kg/m2).}
+\item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+\item{\code{Z100}: Depth (in mm) corresponding to 100\% of fine roots (to specify a truncated root distribution).}
+\item{\code{ObsID}: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts through simulations.
+In \code{\link{fordyn}}, the use of these identifiers can be combined with the control option \code{keepCohortsWithObsID} so that these cohorts are not merged
+or removed during simulations.}
 }
 Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
 All these values are used to override allometry-based estimates of those variables when initializing
 inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}. Note that leaf area index, foliar biomass and
-fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
+fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply
 one or the other, and not all of them at the same time.
 }
 \examples{

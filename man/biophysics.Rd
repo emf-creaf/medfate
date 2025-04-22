@@ -76,29 +76,29 @@ biophysics_waterDynamicViscosity(temp)
 \value{
 Values returned for each function are:
 \itemize{
-  \item{\code{biophysics_leafTemperature} and \code{biophysics_leafTemperature2}: leaf temperature (in ºC)}
-  \item{\code{biophysics_leafVapourPressure}: leaf vapour pressure (in kPa)} 
-  \item{\code{biophysics_radiationDiurnalPattern}: the proportion of daily radiation corresponding to the input time in seconds after sunrise.} 
-  \item{\code{biophysics_temperatureDiurnalPattern}: diurnal pattern of temperature.}
-  \item{\code{biophysics_waterDynamicViscosity}: Water dynamic viscosity relative to 20ºC.} 
+\item{\code{biophysics_leafTemperature} and \code{biophysics_leafTemperature2}: leaf temperature (in ºC)}
+\item{\code{biophysics_leafVapourPressure}: leaf vapour pressure (in kPa)}
+\item{\code{biophysics_radiationDiurnalPattern}: the proportion of daily radiation corresponding to the input time in seconds after sunrise.}
+\item{\code{biophysics_temperatureDiurnalPattern}: diurnal pattern of temperature.}
+\item{\code{biophysics_waterDynamicViscosity}: Water dynamic viscosity relative to 20ºC.}
 }
 }
 \description{
 Internal utility functions for the calculation of biophysical variables.
 }
 \details{
-Functions \code{biophysics_leafTemperature} and \code{biophysics_leafTemperature2} calculate leaf temperature according to energy balance equation given in Campbell and Norman (1988). 
+Functions \code{biophysics_leafTemperature} and \code{biophysics_leafTemperature2} calculate leaf temperature according to energy balance equation given in Campbell and Norman (1988).
 
-Function \code{biophysics_radiationDiurnalPattern} follows the equations given in Liu and Jordan (1960). 
+Function \code{biophysics_radiationDiurnalPattern} follows the equations given in Liu and Jordan (1960).
 
-Function \code{biophysics_temperatureDiurnalPattern} determines diurnal temperature pattern assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset and a linear change in temperature between sunset and Tmin of the day after (McMurtrie et al. 1990). 
+Function \code{biophysics_temperatureDiurnalPattern} determines diurnal temperature pattern assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset and a linear change in temperature between sunset and Tmin of the day after (McMurtrie et al. 1990).
 
 Function \code{biophysics_waterDynamicViscosity} calculates water dynamic viscosity following the Vogel (1921) equation.
 }
 \references{
 Campbell, G. S., and J. M. Norman. 1998. An introduction to environmental biophysics: 2nd edition. (eqns. 14.1 & 14.3)
-  
-B. Y. H. Liu and R. C. Jordan, “The interrelationship and characteristic distribution of direct, diffuse and total solar radiation,” Solar Energy, vol. 4, no. 3, pp. 1–19, 1960. 
+
+B. Y. H. Liu and R. C. Jordan, “The interrelationship and characteristic distribution of direct, diffuse and total solar radiation,” Solar Energy, vol. 4, no. 3, pp. 1–19, 1960.
 
 McMurtrie, R. E., D. A. Rook, and F. M. Kelliher. 1990. Modelling the yield of Pinus radiata on a site limited by water and nitrogen. Forest Ecology and Management 30:381–413.
 

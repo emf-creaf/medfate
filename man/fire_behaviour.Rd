@@ -60,54 +60,54 @@ fire_Rothermel(
 \item{aspect}{Aspect (in degrees from north).}
 }
 \value{
-Both functions return list with fire behavior variables. 
+Both functions return list with fire behavior variables.
 
 In the case of \code{fire_FCCS}, the function returns the variables in three blocks (lists \code{SurfaceFire}, \code{CrownFire} and \code{FirePotentials}), and the values are:
 \itemize{
-  \item{\code{SurfaceFire$`midflame_WindSpeed [m/s]`}: Midflame wind speed in the surface fire.}
-  \item{\code{SurfaceFire$phi_wind}: Spread rate modifier due to wind.}
-  \item{\code{SurfaceFire$phi_slope}: Spread rate modifier due to slope.}
-  \item{\code{SurfaceFire$`I_R_surf [kJ/m2/min]`}: Intensity of the surface fire reaction.}
-  \item{\code{SurfaceFire$`I_R_litter [kJ/m2/min]`}: Intensity of the litter fire reaction.}
-  \item{\code{SurfaceFire$`q_surf [kJ/m2]`}: Heat sink of the surface fire.}
-  \item{\code{SurfaceFire$`q_litter [kJ/m2]`}: Heat sink of the litter fire.}
-  \item{\code{SurfaceFire$xi_surf}: Propagating flux ratio of the surface fire.}
-  \item{\code{SurfaceFire$xi_litter}: Propagating flux ratio of the litter fire.}
-  \item{\code{SurfaceFire$`ROS_surf [m/min]`}: Spread rate of the surface fire(without accounting for faster spread in the litter layer).}
-  \item{\code{SurfaceFire$`ROS_litter [m/min]`}: Spread rate of the litter fire.}
-  \item{\code{SurfaceFire$`ROS_windslopecap [m/min]`}: Maximum surface fire spread rate according to wind speed.}
-  \item{\code{SurfaceFire$`ROS [m/min]`}: Final spread rate of the surface fire.}
-  \item{\code{SurfaceFire$`I_b [kW/m]`}: Fireline intensity of the surface fire.}
-  \item{\code{SurfaceFire$`FL [m]`}: Flame length of the surface fire.}
-  \item{\code{CrownFire$`I_R_canopy [kJ/m2/min]`}: Intensity of the canopy fire reaction.}
-  \item{\code{CrownFire$`I_R_crown [kJ/m2/min]`}: Intensity of the crown fire reaction (adding surface and canopy reactions).}
-  \item{\code{CrownFire$`q_canopy [kJ/m2]`}: Heat sink of the canopy fire.}
-  \item{\code{CrownFire$`q_crown [kJ/m2]`}: Heat sink of the crown fire (adding surface and canopy heat sinks).}
-  \item{\code{CrownFire$xi_surf}: Propagating flux ratio of the crown fire.}
-  \item{\code{CrownFire$`canopy_WindSpeed [m/s]`}: Wind speed in the canopy fire (canopy top wind speed).}
-  \item{\code{CrownFire$WAF}: Wind speed adjustment factor for crown fires.}
-  \item{\code{CrownFire$`ROS [m/min]`}: Spread rate of the crown fire.}
-  \item{\code{CrownFire$Ic_ratio}: Crown initiation ratio.}
-  \item{\code{CrownFire$`I_b [kW/m]`}: Fireline intensity of the crown fire.}
-  \item{\code{CrownFire$`FL [m]`}: Flame length of the crown fire.}
-  \item{\code{FirePotentials$RP}: Surface fire reaction potential ([0-9]).}
-  \item{\code{FirePotentials$SP}: Surface fire spread rate potential ([0-9]).}
-  \item{\code{FirePotentials$FP}: Surface fire flame length potential ([0-9]).}
-  \item{\code{FirePotentials$SFP}: Surface fire potential ([0-9]).}
-  \item{\code{FirePotentials$IC}: Crown initiation potential ([0-9]).}
-  \item{\code{FirePotentials$TC}: Crown-to-crown transmission potential ([0-9]).}
-  \item{\code{FirePotentials$RC}: Crown fire spread rate potential ([0-9]).}
-  \item{\code{FirePotentials$CFC}: Crown fire potential ([0-9]).}
+\item{\code{SurfaceFire$`midflame_WindSpeed [m/s]`}: Midflame wind speed in the surface fire.}
+\item{\code{SurfaceFire$phi_wind}: Spread rate modifier due to wind.}
+\item{\code{SurfaceFire$phi_slope}: Spread rate modifier due to slope.}
+\item{\code{SurfaceFire$`I_R_surf [kJ/m2/min]`}: Intensity of the surface fire reaction.}
+\item{\code{SurfaceFire$`I_R_litter [kJ/m2/min]`}: Intensity of the litter fire reaction.}
+\item{\code{SurfaceFire$`q_surf [kJ/m2]`}: Heat sink of the surface fire.}
+\item{\code{SurfaceFire$`q_litter [kJ/m2]`}: Heat sink of the litter fire.}
+\item{\code{SurfaceFire$xi_surf}: Propagating flux ratio of the surface fire.}
+\item{\code{SurfaceFire$xi_litter}: Propagating flux ratio of the litter fire.}
+\item{\code{SurfaceFire$`ROS_surf [m/min]`}: Spread rate of the surface fire(without accounting for faster spread in the litter layer).}
+\item{\code{SurfaceFire$`ROS_litter [m/min]`}: Spread rate of the litter fire.}
+\item{\code{SurfaceFire$`ROS_windslopecap [m/min]`}: Maximum surface fire spread rate according to wind speed.}
+\item{\code{SurfaceFire$`ROS [m/min]`}: Final spread rate of the surface fire.}
+\item{\code{SurfaceFire$`I_b [kW/m]`}: Fireline intensity of the surface fire.}
+\item{\code{SurfaceFire$`FL [m]`}: Flame length of the surface fire.}
+\item{\code{CrownFire$`I_R_canopy [kJ/m2/min]`}: Intensity of the canopy fire reaction.}
+\item{\code{CrownFire$`I_R_crown [kJ/m2/min]`}: Intensity of the crown fire reaction (adding surface and canopy reactions).}
+\item{\code{CrownFire$`q_canopy [kJ/m2]`}: Heat sink of the canopy fire.}
+\item{\code{CrownFire$`q_crown [kJ/m2]`}: Heat sink of the crown fire (adding surface and canopy heat sinks).}
+\item{\code{CrownFire$xi_surf}: Propagating flux ratio of the crown fire.}
+\item{\code{CrownFire$`canopy_WindSpeed [m/s]`}: Wind speed in the canopy fire (canopy top wind speed).}
+\item{\code{CrownFire$WAF}: Wind speed adjustment factor for crown fires.}
+\item{\code{CrownFire$`ROS [m/min]`}: Spread rate of the crown fire.}
+\item{\code{CrownFire$Ic_ratio}: Crown initiation ratio.}
+\item{\code{CrownFire$`I_b [kW/m]`}: Fireline intensity of the crown fire.}
+\item{\code{CrownFire$`FL [m]`}: Flame length of the crown fire.}
+\item{\code{FirePotentials$RP}: Surface fire reaction potential (\link{0-9}).}
+\item{\code{FirePotentials$SP}: Surface fire spread rate potential (\link{0-9}).}
+\item{\code{FirePotentials$FP}: Surface fire flame length potential (\link{0-9}).}
+\item{\code{FirePotentials$SFP}: Surface fire potential (\link{0-9}).}
+\item{\code{FirePotentials$IC}: Crown initiation potential (\link{0-9}).}
+\item{\code{FirePotentials$TC}: Crown-to-crown transmission potential (\link{0-9}).}
+\item{\code{FirePotentials$RC}: Crown fire spread rate potential (\link{0-9}).}
+\item{\code{FirePotentials$CFC}: Crown fire potential (\link{0-9}).}
 }
 }
 \description{
-Function \code{fire_FCCS()} implements a modification of the fire behavior models 
-described for the Fuel Characteristics Classification System (FCCS) in Prichard et al. (2013). 
-Function \code{fire_Rothermel()} implements Rothermel's (1972) fire behaviour 
+Function \code{fire_FCCS()} implements a modification of the fire behavior models
+described for the Fuel Characteristics Classification System (FCCS) in Prichard et al. (2013).
+Function \code{fire_Rothermel()} implements Rothermel's (1972) fire behaviour
 model (modified from package 'Rothermel' (Giorgio Vacchiano, Davide Ascoli)).
 }
 \details{
-Default moisture, slope and windspeed values are benchmark conditions 
+Default moisture, slope and windspeed values are benchmark conditions
 used to calculate fire potentials (Sandberg et al. 2007) and map vulnerability to fire.
 }
 \note{

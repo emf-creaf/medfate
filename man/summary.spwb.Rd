@@ -110,7 +110,7 @@ summary(S1, freq="months",FUN=mean, output="PlantStress",
 
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, 
+\code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}},
 \code{\link{plot.spwb}}, \code{\link{extract}}
 }
 \author{

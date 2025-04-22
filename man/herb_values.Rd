@@ -21,9 +21,9 @@ herb_LAI(x, SpParams)
 \value{
 A single scalar:
 \itemize{
-  \item{\code{herb_foliarBiomass}: Herbaceous biomass of leaves (in kg/m2).}
-  \item{\code{herb_fuelLoading}: Herbaceous fine fuel loading (in kg/m2).}
-  \item{\code{herb_LAI}: Herbaceous leaf area index (m2/m2).}
+\item{\code{herb_foliarBiomass}: Herbaceous biomass of leaves (in kg/m2).}
+\item{\code{herb_fuelLoading}: Herbaceous fine fuel loading (in kg/m2).}
+\item{\code{herb_LAI}: Herbaceous leaf area index (m2/m2).}
 }
 }
 \description{

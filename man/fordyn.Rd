@@ -43,51 +43,51 @@ fordyn(
 \value{
 A list of class 'fordyn' with the following elements:
 \itemize{
-  \item{\code{"StandSummary"}: A data frame with stand-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
-  \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
-  \item{\code{"CohortSummary"}: A data frame with cohort-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
-  \item{\code{"TreeTable"}: A data frame with tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
-  \item{\code{"DeadTreeTable"}: A data frame with dead tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation and after each simulated year.}
-  \item{\code{"CutTreeTable"}: A data frame with cut tree data (species, density, diameter, height, etc.) after each simulated year.}
-  \item{\code{"ShrubTable"}: A data frame with shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation and after each simulated year.}
-  \item{\code{"DeadShrubTable"}: A data frame with dead shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
-  \item{\code{"CutShrubTable"}: A data frame with cut shrub data (species, density, cover, height, etc.) after each simulated year.}
-  \item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
-  \item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
-  \item{\code{"ManagementArgs"}: A list of management arguments to be used in another call to \code{fordyn}.}
-  \item{\code{"NextInputObject"}: An object of class \code{growthInput} to be used in a subsequent simulation.}
-  \item{\code{"NextForestObject"}: An object of class \code{forest} to be used in a subsequent simulation.}
+\item{\code{"StandSummary"}: A data frame with stand-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+\item{\code{"SpeciesSummary"}: A data frame with species-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+\item{\code{"CohortSummary"}: A data frame with cohort-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+\item{\code{"TreeTable"}: A data frame with tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+\item{\code{"DeadTreeTable"}: A data frame with dead tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation and after each simulated year.}
+\item{\code{"CutTreeTable"}: A data frame with cut tree data (species, density, diameter, height, etc.) after each simulated year.}
+\item{\code{"ShrubTable"}: A data frame with shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation and after each simulated year.}
+\item{\code{"DeadShrubTable"}: A data frame with dead shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+\item{\code{"CutShrubTable"}: A data frame with cut shrub data (species, density, cover, height, etc.) after each simulated year.}
+\item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
+\item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
+\item{\code{"ManagementArgs"}: A list of management arguments to be used in another call to \code{fordyn}.}
+\item{\code{"NextInputObject"}: An object of class \code{growthInput} to be used in a subsequent simulation.}
+\item{\code{"NextForestObject"}: An object of class \code{forest} to be used in a subsequent simulation.}
 }
 }
 \description{
-Function \code{fordyn} implements a forest dynamics model that simulates 
-growth, mortality, recruitment and (optionally) management actions in a given forest stand 
+Function \code{fordyn} implements a forest dynamics model that simulates
+growth, mortality, recruitment and (optionally) management actions in a given forest stand
 during a period specified in the input climatic data.
 }
 \details{
 Function \code{fordyn} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:
 \enumerate{
-  \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes and update the forest object.}
-  \item{If required, calls function \code{management_function}, using as parameters the forest object and \code{management_args}, which may result in a density reduction for existing plant cohorts and/or a set of new planted cohorts.}
-  \item{Simulate natural recruitment (for species present in the stand or given in a seed rain input).}
-  \item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
-  \item{Store forest status, management arguments, and summaries.}
+\item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes and update the forest object.}
+\item{If required, calls function \code{management_function}, using as parameters the forest object and \code{management_args}, which may result in a density reduction for existing plant cohorts and/or a set of new planted cohorts.}
+\item{Simulate natural recruitment (for species present in the stand or given in a seed rain input).}
+\item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
+\item{Store forest status, management arguments, and summaries.}
 }
 
 To enable forest management, the user needs to provide a function that implements it, which is passed to \code{fordyn} via its argument \code{management_function}. Such function should have  the following arguments:
-  \itemize{
-    \item{\code{"x"}: the \code{\link{forest}} object representing the stand to be managed.}
-    \item{\code{"args"}: a list of parameters regulating the behavior of the management function.} 
-    \item{\code{"verbose"}: a logical flag to enable console output during the execution of the management function.}
-  }
+\itemize{
+\item{\code{"x"}: the \code{\link{forest}} object representing the stand to be managed.}
+\item{\code{"args"}: a list of parameters regulating the behavior of the management function.}
+\item{\code{"verbose"}: a logical flag to enable console output during the execution of the management function.}
+}
 and return a list with the following elements:
-  \itemize{
-    \item{\code{"action"}: A string identifying the action performed (e.g. "thinning").}
-    \item{\code{"N_tree_cut"}: A vector with the density of trees removed.}
-    \item{\code{"Cover_shrub_cut"}: A vector with the cover of shrubs removed.} 
-    \item{\code{"planted_forest"}: An object of class \code{\link{forest}} with the new plant cohorts resulting from tree/shrub planting.}
-    \item{\code{"management_args"}: A list of management arguments to be used in the next call to the management function.}
-  }
+\itemize{
+\item{\code{"action"}: A string identifying the action performed (e.g. "thinning").}
+\item{\code{"N_tree_cut"}: A vector with the density of trees removed.}
+\item{\code{"Cover_shrub_cut"}: A vector with the cover of shrubs removed.}
+\item{\code{"planted_forest"}: An object of class \code{\link{forest}} with the new plant cohorts resulting from tree/shrub planting.}
+\item{\code{"management_args"}: A list of management arguments to be used in the next call to the management function.}
+}
 
 An example of management function is provided in \code{\link{defaultManagementFunction}}.
 }
@@ -133,9 +133,9 @@ fd$DeadTreeTable
 
 }
 \references{
-De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, 
-Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate 
-Mediterranean forest function and dynamics at regional scales. 
+De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S,
+Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate
+Mediterranean forest function and dynamics at regional scales.
 Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
 }
 \seealso{

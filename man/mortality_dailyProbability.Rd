@@ -7,7 +7,7 @@
 mortality_dailyProbability(stressValue, stressThreshold)
 }
 \arguments{
-\item{stressValue}{Current value of the stress variable (0 to 1, 
+\item{stressValue}{Current value of the stress variable (0 to 1,
 with higher values indicate stronger stress).}
 
 \item{stressThreshold}{Threshold to indicate 50\% annual mortality probability.}
@@ -16,7 +16,7 @@ with higher values indicate stronger stress).}
 Returns a probability (between 0 and 1)
 }
 \description{
-A simple sigmoid function to determine a daily mortality likelihood according 
+A simple sigmoid function to determine a daily mortality likelihood according
 to the value of a stress variable.
 }
 \seealso{

@@ -6,7 +6,7 @@
 #' @param seedBank A data frame with columns 'Species' and 'Percent', describing a seed bank.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
 #' @param refillSpecies A string vector of species names corresponding to seed rain to refill seed bank.
-#' @param refillPercent A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).
+#' @param refillPercent A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100%).
 #' @param minPercent A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' @param minMonthTemp Minimum month temperature.

@@ -81,14 +81,14 @@ hydraulics_vulnerabilityCurvePlot(
 
 \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
 
-\item{type}{Plot type for \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, 
+\item{type}{Plot type for \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"},
 \code{"stem"}, \code{"root"} or \code{"rhizosphere"}).}
 
 \item{vulnerabilityFunction}{String indicating the function used to represent vulnerability in plant segments, either "Weibull" or "Sigmoid".}
 
 \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
 
-\item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
+\item{relative}{A flag to relativize vulnerability curves to the \link{0-1} interval.}
 
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
 
@@ -99,20 +99,20 @@ hydraulics_vulnerabilityCurvePlot(
 \value{
 Values returned for each function are:
 \itemize{
-  \item{\code{hydraulics_psi2K}: Whole-plant relative conductance (0-1).}
-  \item{\code{hydraulics_K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics_psi2K()}).}
-  \item{\code{hydraulics_averagePsi}: The average water potential (in MPa) across soil layers.}
-  \item{\code{hydraulics_vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
-  \item{\code{hydraulics_xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
-  \item{\code{hydraulics_xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
-  \item{\code{hydraulics_psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
+\item{\code{hydraulics_psi2K}: Whole-plant relative conductance (0-1).}
+\item{\code{hydraulics_K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics_psi2K()}).}
+\item{\code{hydraulics_averagePsi}: The average water potential (in MPa) across soil layers.}
+\item{\code{hydraulics_vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
+\item{\code{hydraulics_xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
+\item{\code{hydraulics_xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
+\item{\code{hydraulics_psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
 }
 }
 \description{
 Set of functions used in the calculation of soil and plant hydraulic conductance.
 }
 \details{
-Details of plant hydraulic models are given the medfate book. 
+Details of plant hydraulic models are given the medfate book.
 Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
 }
 \examples{

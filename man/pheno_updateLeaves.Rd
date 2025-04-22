@@ -39,12 +39,12 @@ pheno_updateLeaves(x, wind, fromGrowthModel)
 \item{fromGrowthModel}{Boolean flag to indicate that routine is called from \code{\link{growth}} simulation function.}
 }
 \value{
-Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1, 
-whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values. 
+Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1,
+whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values.
 The other two functions do not return any value (see note).
 }
 \description{
-Function \code{pheno_leafDevelopmentStatus} returns the expanded status (0 to 1) of leaves according to the growth degree days required to start bud burst and leaf unfolding, as dictated by a simple ecodormancy (one-phase) model (Chuine et al. 2013). 
+Function \code{pheno_leafDevelopmentStatus} returns the expanded status (0 to 1) of leaves according to the growth degree days required to start bud burst and leaf unfolding, as dictated by a simple ecodormancy (one-phase) model (Chuine et al. 2013).
 Function \code{pheno_leafSenescenceStatus} returns the 0/1 senescence status of leaves according to the one-phase senescence model of Delpierre et al. (2009) on the basis of photoperiod and temperature.
 Function \code{pheno_updateLeaves} updates the status of expanded leaves and dead leaves of object \code{x} given the photoperiod, temperature and wind of a given day. It applies the development model for 1 < doy < 180 and the senescence model for 181 > doy > 365.
 }

@@ -37,6 +37,7 @@
 #' \item{ Shengli Huang
 #' [ORCID](https://orcid.org/0003-3927-7042)}
 #' }
+#' 
 #' @seealso Useful links: 
 #' \itemize{ 
 #'  \item{\url{https://emf-creaf.github.io/medfate/}} 

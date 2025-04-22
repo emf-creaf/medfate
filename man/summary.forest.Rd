@@ -35,7 +35,7 @@ summary(exampleforest, SpParamsMED)
 
 }
 \seealso{
-\code{\link{forest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},  
+\code{\link{forest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},
 \code{\link{plot.forest}}, \code{\link{tree2forest}}
 }
 \author{

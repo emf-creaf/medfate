@@ -124,9 +124,9 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{Oi}{Oxigen concentration (mmol*mol-1).}
 
-\item{Vmax298, Vmax298SL, Vmax298SH}{Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
+\item{Vmax298, Vmax298SL, Vmax298SH}{Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol\emph{s-1}m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
 
-\item{Jmax298, Jmax298SL, Jmax298SH}{Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
+\item{Jmax298, Jmax298SL, Jmax298SH}{Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol\emph{s-1}m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
 
 \item{Q}{Active photon flux density (micromol * s-1 * m-2).}
 
@@ -134,11 +134,11 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{GT}{CO2 saturation point corrected by temperature (micromol * mol-1).}
 
-\item{Jmax}{Maximum electron transport rate per leaf area (micromol*s-1*m-2).}
+\item{Jmax}{Maximum electron transport rate per leaf area (micromol\emph{s-1}m-2).}
 
 \item{Km}{Km = Kc*(1.0+(Oi/Ko)) - Michaelis-Menten term corrected by temperature (in micromol * mol-1).}
 
-\item{Vmax}{Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).}
+\item{Vmax}{Maximum Rubisco carboxylation rate per leaf area (micromol\emph{s-1}m-2).}
 
 \item{Catm}{CO2 air concentration (micromol * mol-1).}
 
@@ -154,7 +154,7 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{Gsw_AC_intercept}{Intercept of the An/C vs Gsw relationship}
 
-\item{E}{Transpiration flow rate per leaf area (mmol*s-1*m-2).}
+\item{E}{Transpiration flow rate per leaf area (mmol\emph{s-1}m-2).}
 
 \item{psiLeaf}{Leaf water potential (MPa).}
 
@@ -181,41 +181,41 @@ photo_multilayerPhotosynthesisFunction(
 \value{
 Values returned for each function are:
 \itemize{
-  \item{\code{photo_GammaTemp}: CO2 compensation concentration (micromol * mol-1).}
-  \item{\code{photo_KmTemp}: Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1) and Oxigen (mmol * mol-1).}
-  \item{\code{photo_VmaxTemp}: Temperature correction of Vmax298.}
-  \item{\code{photo_JmaxTemp}: Temperature correction of Jmax298.}
-  \item{\code{photo_electronLimitedPhotosynthesis}: Electron-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
-  \item{\code{photo_rubiscoLimitedPhotosynthesis}: Rubisco-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
-  \item{\code{photo_photosynthesis}: Calculates gross photosynthesis (micromol*s-1*m-2) following (Farquhar et al. (1980) and Collatz et al (1991).}
-  \item{\code{photo_leafPhotosynthesisFunction}: Returns a data frame with the following columns:
-    \itemize{
-      \item{\code{LeafTemperature}: Leaf temperature (ºC).}
-      \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
-      \item{\code{LeafCi}: Internal CO2 concentration (micromol * mol-1).}
-      \item{\code{Gsw}: Leaf stomatal conductance to water vapor (mol * s-1 * m-2).}
-      \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
-      \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
-    }
-  }
-  \item{\code{photo_sunshadePhotosynthesisFunction}: Returns a data frame with the following columns:
-    \itemize{
-      \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
-      \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
-      \item{\code{LeafCiSL}: Sunlit leaf internal CO2 concentration (micromol * mol-1).}
-      \item{\code{LeafCiSH}: Shade leaf internal CO2 concentration (micromol * mol-1).}
-      \item{\code{LeafTempSL}: Sunlit leaf temperature (ºC).}
-      \item{\code{LeafTempSH}: Shade leaf temperature (ºC).}
-      \item{\code{LeafVPDSL}: Sunlit leaf vapor pressure deficit (kPa).}
-      \item{\code{LeafVPDSH}: Shade leaf vapor pressure deficit (kPa).}
-    }
-  }
-  \item{\code{photo_multilayerPhotosynthesisFunction}: Return a data frame with the following columns:
-    \itemize{
-      \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
-      \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
-    }
-  }
+\item{\code{photo_GammaTemp}: CO2 compensation concentration (micromol * mol-1).}
+\item{\code{photo_KmTemp}: Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1) and Oxigen (mmol * mol-1).}
+\item{\code{photo_VmaxTemp}: Temperature correction of Vmax298.}
+\item{\code{photo_JmaxTemp}: Temperature correction of Jmax298.}
+\item{\code{photo_electronLimitedPhotosynthesis}: Electron-limited photosynthesis (micromol\emph{s-1}m-2) following Farquhar et al. (1980).}
+\item{\code{photo_rubiscoLimitedPhotosynthesis}: Rubisco-limited photosynthesis (micromol\emph{s-1}m-2) following Farquhar et al. (1980).}
+\item{\code{photo_photosynthesis}: Calculates gross photosynthesis (micromol\emph{s-1}m-2) following (Farquhar et al. (1980) and Collatz et al (1991).}
+\item{\code{photo_leafPhotosynthesisFunction}: Returns a data frame with the following columns:
+\itemize{
+\item{\code{LeafTemperature}: Leaf temperature (ºC).}
+\item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
+\item{\code{LeafCi}: Internal CO2 concentration (micromol * mol-1).}
+\item{\code{Gsw}: Leaf stomatal conductance to water vapor (mol * s-1 * m-2).}
+\item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol\emph{s-1}m-2).}
+\item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol\emph{s-1}m-2).}
+}
+}
+\item{\code{photo_sunshadePhotosynthesisFunction}: Returns a data frame with the following columns:
+\itemize{
+\item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol\emph{s-1}m-2).}
+\item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol\emph{s-1}m-2).}
+\item{\code{LeafCiSL}: Sunlit leaf internal CO2 concentration (micromol * mol-1).}
+\item{\code{LeafCiSH}: Shade leaf internal CO2 concentration (micromol * mol-1).}
+\item{\code{LeafTempSL}: Sunlit leaf temperature (ºC).}
+\item{\code{LeafTempSH}: Shade leaf temperature (ºC).}
+\item{\code{LeafVPDSL}: Sunlit leaf vapor pressure deficit (kPa).}
+\item{\code{LeafVPDSH}: Shade leaf vapor pressure deficit (kPa).}
+}
+}
+\item{\code{photo_multilayerPhotosynthesisFunction}: Return a data frame with the following columns:
+\itemize{
+\item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol\emph{s-1}m-2).}
+\item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol\emph{s-1}m-2).}
+}
+}
 }
 }
 \description{

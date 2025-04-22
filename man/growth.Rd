@@ -31,75 +31,75 @@ growth(
 \value{
 A list of class 'growth' with the following elements:
 \itemize{
-  \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
-  \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
-  \item{\code{"weather"}: A copy of the input weather data frame.}
-  \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
-  \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
-  \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
-  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-  \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
-  \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
-  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-  \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
-  \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
-  \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
-  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-  \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
-  \itemize{
-    \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
-    \item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
-    \item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
-    \item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
-    \item{\code{"LabileCarbonBalance"}: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
-    \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
-    \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
-    \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
-    \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
-    \item{\code{"SugarTransport"}:  Average instantaneous rate of carbon transferred between leaves and stem compartments via floem (mol gluc·s-1).}
-  }
-  \item{\code{"PlantBiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
-  \itemize{
-    \item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · m-2).}
-    \item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · m-2).}
-    \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · m-2).}
-    \item{\code{"MortalityBiomassLoss"}: Biomass loss due to mortality (g dry · m-2).}    
-    \item{\code{"CohortBiomassBalance"}: Daily cohort biomass balance (including mortality) (g dry · m-2).}
-  }
-  \item{\code{"PlantStructure"}: A list of daily area and biomass values for compartments of plant cohorts, with elements:}
-  \itemize{
-    \item{\code{"LeafBiomass"}: Daily amount of leaf structural biomass (in g dry) for an average individual of each plant cohort.}
-    \item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
-    \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
-    \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
-    \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
-    \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
-    \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}
-    \item{\code{"RootAreaLeafArea"}: The ratio of fine root area to (target) leaf area (in m2/m2).}
-    \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
-    \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
-  }
-  \item{\code{"GrowthMortality"}: A list of daily growth and mortality rates for plant cohorts, with elements:}
-  \itemize{
-    \item{\code{"LAgrowth"}: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.}
-    \item{\code{"SAgrowth"}: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.}
-    \item{\code{"FRAgrowth"}: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.}
-    \item{\code{"StarvationRate"}: Daily mortality rate from starvation (ind/d-1).}
-    \item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
-    \item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}
-  }
-  \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+\item{\code{"latitude"}: Latitude (in degrees) given as input.}
+\item{\code{"topography"}: Vector with elevation, slope and aspect given as input.}
+\item{\code{"weather"}: A copy of the input weather data frame.}
+\item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
+\item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
+\item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
+\item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
+\item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
+\item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
+\item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
+\item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
+\item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
+\item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
+\item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
+\item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
+\itemize{
+\item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
+\item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
+\item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
+\item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}
+\item{\code{"LabileCarbonBalance"}: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
+\item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
+\item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
+\item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
+\item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
+\item{\code{"SugarTransport"}:  Average instantaneous rate of carbon transferred between leaves and stem compartments via floem (mol gluc·s-1).}
+}
+\item{\code{"PlantBiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
+\itemize{
+\item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · m-2).}
+\item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · m-2).}
+\item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · m-2).}
+\item{\code{"MortalityBiomassLoss"}: Biomass loss due to mortality (g dry · m-2).}
+\item{\code{"CohortBiomassBalance"}: Daily cohort biomass balance (including mortality) (g dry · m-2).}
+}
+\item{\code{"PlantStructure"}: A list of daily area and biomass values for compartments of plant cohorts, with elements:}
+\itemize{
+\item{\code{"LeafBiomass"}: Daily amount of leaf structural biomass (in g dry) for an average individual of each plant cohort.}
+\item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
+\item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
+\item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
+\item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
+\item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
+\item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}
+\item{\code{"RootAreaLeafArea"}: The ratio of fine root area to (target) leaf area (in m2/m2).}
+\item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
+\item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
+}
+\item{\code{"GrowthMortality"}: A list of daily growth and mortality rates for plant cohorts, with elements:}
+\itemize{
+\item{\code{"LAgrowth"}: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.}
+\item{\code{"SAgrowth"}: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.}
+\item{\code{"FRAgrowth"}: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.}
+\item{\code{"StarvationRate"}: Daily mortality rate from starvation (ind/d-1).}
+\item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
+\item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}
+}
+\item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
 }
 }
 \description{
-Function \code{growth} is a process-based model that performs energy, water and carbon balances; 
-and determines changes in water/carbon pools, functional variables (leaf area, sapwood area, root area) 
-and structural ones (tree diameter, tree height, shrub cover) for woody plant cohorts in a given forest stand 
+Function \code{growth} is a process-based model that performs energy, water and carbon balances;
+and determines changes in water/carbon pools, functional variables (leaf area, sapwood area, root area)
+and structural ones (tree diameter, tree height, shrub cover) for woody plant cohorts in a given forest stand
 during a period specified in the input climatic data.
 }
 \details{
-Detailed model description is available in the medfate book. 
-Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive 
+Detailed model description is available in the medfate book.
+Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive
 than those using the 'Granier' transpiration mode.
 }
 \examples{
@@ -146,9 +146,9 @@ G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
       
 }
 \references{
-De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, 
-Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate 
-Mediterranean forest function and dynamics at regional scales. 
+De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S,
+Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate
+Mediterranean forest function and dynamics at regional scales.
 Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
 }
 \seealso{

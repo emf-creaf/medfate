@@ -112,25 +112,25 @@ optimization_evaluation_multicohort_function(
 \item{otherParNames}{A string vector of parameter names (see examples and naming rules in \code{\link{modifyInputParams}}) for non-vegetation parameters (i.e. control parameters and soil parameters).}
 }
 \value{
-Function \code{multiple_runs} returns a list, whose elements are either the result of calling simulation models 
-or the result of calling \code{summary_function} afterwards. 
+Function \code{multiple_runs} returns a list, whose elements are either the result of calling simulation models
+or the result of calling \code{summary_function} afterwards.
 
-Function \code{optimization_function} returns a function whose parameters are parameter values 
+Function \code{optimization_function} returns a function whose parameters are parameter values
 and whose return is a prediction scalar (e.g. total transpiration).
 
-Function \code{optimization_evaluation_function} returns a function whose parameters are parameter values 
-and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). 
-If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) 
-then the evaluation is performed for each cohort and the metrics are averaged. 
+Function \code{optimization_evaluation_function} returns a function whose parameters are parameter values
+and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions).
+If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates)
+then the evaluation is performed for each cohort and the metrics are averaged.
 
-Function \code{optimization_multicohorts_function} returns a function whose parameters are parameter values 
-and whose return is a prediction scalar (e.g. total transpiration). The difference with \code{optimization_function} 
+Function \code{optimization_multicohorts_function} returns a function whose parameters are parameter values
+and whose return is a prediction scalar (e.g. total transpiration). The difference with \code{optimization_function}
 is that multiple cohorts are set to the same parameter values.
 
-Function \code{optimization_evaluation_multicohort_function} returns a function whose parameters are parameter values 
-and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). 
-If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) 
-then the evaluation is performed for each cohort and the metrics are averaged. The difference with \code{optimization_evaluation_function} 
+Function \code{optimization_evaluation_multicohort_function} returns a function whose parameters are parameter values
+and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions).
+If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates)
+then the evaluation is performed for each cohort and the metrics are averaged. The difference with \code{optimization_evaluation_function}
 is that multiple cohorts are set to the same parameter values.
 }
 \description{
@@ -141,9 +141,9 @@ See \code{\link{evaluation}} for details regarding how to specify measured data.
 
 Functions produced by these function factories should be useful for sensitivity analyses using package 'sensitivity'.
 
-Parameter naming (i.e. \code{parNames}) should follow the rules specified in section details of \code{\link{modifyInputParams}}. 
-The exception to the naming rules applies when multiple cohorts are to be modified to the same values with functions 
-\code{optimization_multicohort_function} and \code{optimization_evaluation_multicohort_function}. 
+Parameter naming (i.e. \code{parNames}) should follow the rules specified in section details of \code{\link{modifyInputParams}}.
+The exception to the naming rules applies when multiple cohorts are to be modified to the same values with functions
+\code{optimization_multicohort_function} and \code{optimization_evaluation_multicohort_function}.
 Then, only a vector of parameter names is supplied for \code{cohortParNames}.
 }
 \examples{

@@ -21,202 +21,202 @@ growthInput(x, soil, SpParams, control)
 }
 \value{
 Function \code{spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
-  \itemize{
-    \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
-    \item{\code{soil}: A data frame with initialized soil parameters (see \code{\link{soil}}).}
-    \item{\code{snowpack}: The amount of snow (in mm) in the snow pack over the soil.}
-    \item{\code{canopy}: A list of stand-level state variables.}
-    \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
-    \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
-    \item{\code{below}: A data frame with columns \code{Z50}, \code{Z95}.  If \code{control$transpirationMode = "Sperry"} additional columns are \code{fineRootBiomass} and \code{coarseRootSoilVolume}.}
-    \item{\code{belowLayers}: A list. If \code{control$transpirationMode = "Granier"} it contains elements: 
-      \itemize{
-        \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
-        \item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
-        \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
-      }
-      If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} there are the following additional elements:
-      \itemize{
-        \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
-        \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
-        \item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
-      }
-    }
-    \item{\code{paramsPhenology}: A data frame with leaf phenology parameters:
-      \itemize{
-        \item{\code{PhenologyType}: Leaf phenology type.}
-        \item{\code{LeafDuration}: Leaf duration (in years).}
-        \item{\code{Sgdd}: Degree days needed for leaf budburst (for winter decideous species).}
-        \item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
-        \item{\code{Ssen}: Degree days corresponding to leaf senescence.}
-        \item{\code{Phsen}: Photoperiod corresponding to start counting senescence degree-days.}
-        \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
-      }
-    }
-    \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort:
-      \itemize{
-        \item{\code{Hmax}: Maximum plant height (cm).}
-        \item{\code{Hmed}: Median plant height (cm).}
-        \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
-        \item{\code{Ar2Al}: Fine root area to leaf area ratio (in m2·m-2).}
-        \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
-        \item{\code{LeafWidth}: Leaf width (in cm).}
-        \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
-        \item{\code{WoodDensity}: Density of wood tissue (dry weight over volume).}
-        \item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
-        \item{\code{SRL}: Specific Root length (cm·g-1).}
-        \item{\code{RLD}: Root length density (cm·cm-3).}
-        \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
-      }
-    }
-    \item{\code{paramsInterception}: A data frame with rain interception and light extinction parameters for each cohort:
-      \itemize{
-        \item{\code{kPAR}: PAR extinction coefficient.}
-        \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
-      }
-    If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} additional columns are:
-      \itemize{
-        \item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
-        \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
-      }
-    }
-    \item{\code{paramsTranspiration}: A data frame with parameters for transpiration and photosynthesis. If \code{control$transpirationMode = "Granier"}, columns are:
-      \itemize{
-        \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-        \item{\code{Tmax_LAI}: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-        \item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-        \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative transpiration (in MPa).}
-        \item{\code{Exp_Extract}: Parameter of the Weibull function regulating transpiration reduction.}
-        \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
-        \item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
-        \item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
-        \item{\code{WUE_co2}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}
-        \item{\code{WUE_vpd}: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.}
-      }
-     If \code{control$transpirationMode = "Sperry"} columns are:
-      \itemize{
-        \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-        \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-        \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
-        \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
-        \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
-        \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
-        \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
-        \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve (Weibull).}
-        \item{\code{VCstem_kmax}: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).}
-        \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
-        \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve (Weibull).}
-        \item{\code{Plant_kmax}: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).}
-        \item{\code{FR_leaf}, \code{FR_stem}, \code{FR_root}: Fraction of whole-plant resistance corresponding to each segment.}
-      }
-      If \code{control$transpirationMode = "Sureau"} columns are:
-      \itemize{
-        \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-        \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-        \item{\code{Gsw_AC_slope}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
-        \item{\code{Gs_P50}, \code{Gs_slope}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
-        \item{\code{Vmax298}: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
-        \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
-        \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
-        \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
-        \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
-        \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve (Weibull).}
-        \item{\code{VCleaf_P50}, \code{VCleaf_slope}: Parameters of the leaf vulnerability curve (sigmoid).}
-        \item{\code{VCstem_kmax}: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).}
-        \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
-        \item{\code{VCstem_P50}, \code{VCstem_slope}: Parameters of the stem xylem vulnerability curve (sigmoid).}
-        \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve (Weibull).}
-        \item{\code{VCroot_P50}, \code{VCroot_slope}: Parameters of the root xylem vulnerability curve (sigmoid).}
-        \item{\code{Plant_kmax}: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).}
-        \item{\code{FR_leaf}, \code{FR_stem}, \code{FR_root}: Fraction of whole-plant resistance corresponding to each segment.}
-      }
-    }
-    \item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort:
-      \itemize{
-        \item{\code{LeafPI0}: Osmotic potential at full turgor of leaves (MPa).}
-        \item{\code{LeafEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).}
-        \item{\code{LeafAF}: Apoplastic fraction (proportion of water outside the living cells) in leaves.}
-        \item{\code{Vleaf}: Storage water capacity in leaves, per leaf area (L/m2).}
-        \item{\code{StemPI0}: Osmotic potential at full turgor of symplastic xylem tissue (MPa).}
-        \item{\code{StemEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).}
-        \item{\code{StemAF}: Apoplastic fraction (proportion of water outside the living cells) in stem xylem.}
-        \item{\code{Vstem}: Storage water capacity in sapwood, per leaf area (L/m2).}
-      }
-    }
-    \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
-    \item{\code{internalFCCS}: A data frame with fuel characteristics, according to \code{\link{fuel_FCCS}} (only if \code{fireHazardResults = TRUE}, in the control list).}
-  }
-  
-Function \code{growthInput()} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
+\itemize{
+\item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
+\item{\code{soil}: A data frame with initialized soil parameters (see \code{\link{soil}}).}
+\item{\code{snowpack}: The amount of snow (in mm) in the snow pack over the soil.}
+\item{\code{canopy}: A list of stand-level state variables.}
+\item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
+\item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
+\item{\code{below}: A data frame with columns \code{Z50}, \code{Z95}.  If \code{control$transpirationMode = "Sperry"} additional columns are \code{fineRootBiomass} and \code{coarseRootSoilVolume}.}
+\item{\code{belowLayers}: A list. If \code{control$transpirationMode = "Granier"} it contains elements:
+\itemize{
+\item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
+\item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
+\item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
+}
+If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} there are the following additional elements:
+\itemize{
+\item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
+\item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
+\item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
+}
+}
+\item{\code{paramsPhenology}: A data frame with leaf phenology parameters:
+\itemize{
+\item{\code{PhenologyType}: Leaf phenology type.}
+\item{\code{LeafDuration}: Leaf duration (in years).}
+\item{\code{Sgdd}: Degree days needed for leaf budburst (for winter decideous species).}
+\item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
+\item{\code{Ssen}: Degree days corresponding to leaf senescence.}
+\item{\code{Phsen}: Photoperiod corresponding to start counting senescence degree-days.}
+\item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
+}
+}
+\item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort:
+\itemize{
+\item{\code{Hmax}: Maximum plant height (cm).}
+\item{\code{Hmed}: Median plant height (cm).}
+\item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
+\item{\code{Ar2Al}: Fine root area to leaf area ratio (in m2·m-2).}
+\item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
+\item{\code{LeafWidth}: Leaf width (in cm).}
+\item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
+\item{\code{WoodDensity}: Density of wood tissue (dry weight over volume).}
+\item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
+\item{\code{SRL}: Specific Root length (cm·g-1).}
+\item{\code{RLD}: Root length density (cm·cm-3).}
+\item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
+}
+}
+\item{\code{paramsInterception}: A data frame with rain interception and light extinction parameters for each cohort:
+\itemize{
+\item{\code{kPAR}: PAR extinction coefficient.}
+\item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
+}
+If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} additional columns are:
+\itemize{
+\item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
+\item{\code{alphaSWR}: Absorbance coefficient for SWR .}
+}
+}
+\item{\code{paramsTranspiration}: A data frame with parameters for transpiration and photosynthesis. If \code{control$transpirationMode = "Granier"}, columns are:
+\itemize{
+\item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+\item{\code{Tmax_LAI}: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.}
+\item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
+\item{\code{Psi_Extract}: Water potential corresponding to 50\% relative transpiration (in MPa).}
+\item{\code{Exp_Extract}: Parameter of the Weibull function regulating transpiration reduction.}
+\item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
+\item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
+\item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
+\item{\code{WUE_co2}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}
+\item{\code{WUE_vpd}: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.}
+}
+If \code{control$transpirationMode = "Sperry"} columns are:
+\itemize{
+\item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+\item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+\item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
+\item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
+\item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
+\item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
+\item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
+\item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve (Weibull).}
+\item{\code{VCstem_kmax}: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).}
+\item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
+\item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve (Weibull).}
+\item{\code{Plant_kmax}: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).}
+\item{\code{FR_leaf}, \code{FR_stem}, \code{FR_root}: Fraction of whole-plant resistance corresponding to each segment.}
+}
+If \code{control$transpirationMode = "Sureau"} columns are:
+\itemize{
+\item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+\item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+\item{\code{Gsw_AC_slope}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
+\item{\code{Gs_P50}, \code{Gs_slope}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
+\item{\code{Vmax298}: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
+\item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
+\item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
+\item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
+\item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
+\item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve (Weibull).}
+\item{\code{VCleaf_P50}, \code{VCleaf_slope}: Parameters of the leaf vulnerability curve (sigmoid).}
+\item{\code{VCstem_kmax}: Maximum stem xylem conductance (in mmol H2O·s-1·m-2·MPa-1).}
+\item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
+\item{\code{VCstem_P50}, \code{VCstem_slope}: Parameters of the stem xylem vulnerability curve (sigmoid).}
+\item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve (Weibull).}
+\item{\code{VCroot_P50}, \code{VCroot_slope}: Parameters of the root xylem vulnerability curve (sigmoid).}
+\item{\code{Plant_kmax}: Maximum whole-plant conductance (in mmol H2O·s-1·m-2·MPa-1).}
+\item{\code{FR_leaf}, \code{FR_stem}, \code{FR_root}: Fraction of whole-plant resistance corresponding to each segment.}
+}
+}
+\item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort:
+\itemize{
+\item{\code{LeafPI0}: Osmotic potential at full turgor of leaves (MPa).}
+\item{\code{LeafEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).}
+\item{\code{LeafAF}: Apoplastic fraction (proportion of water outside the living cells) in leaves.}
+\item{\code{Vleaf}: Storage water capacity in leaves, per leaf area (L/m2).}
+\item{\code{StemPI0}: Osmotic potential at full turgor of symplastic xylem tissue (MPa).}
+\item{\code{StemEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).}
+\item{\code{StemAF}: Apoplastic fraction (proportion of water outside the living cells) in stem xylem.}
+\item{\code{Vstem}: Storage water capacity in sapwood, per leaf area (L/m2).}
+}
+}
+\item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
+\item{\code{internalFCCS}: A data frame with fuel characteristics, according to \code{\link{fuel_FCCS}} (only if \code{fireHazardResults = TRUE}, in the control list).}
+}
+
+Function \code{growthInput()} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information.
 \itemize{
 \item{Element \code{above} includes the following additional columns:
-    \itemize{
-      \item{\code{LA_live}: Live leaf area per individual (m2/ind).}
-      \item{\code{LA_dead}: Dead leaf area per individual (m2/ind).}
-      \item{\code{SA}: Live sapwood area per individual (cm2/ind).} 
-  }
-  }
-  \item{\code{paramsGrowth}: A data frame with growth parameters for each cohort:
-    \itemize{
-      \item{\code{RERleaf}: Maintenance respiration rates (at 20ºC) for leaves (in g gluc·g dry-1·day-1).}
-      \item{\code{RERsapwood}: Maintenance respiration rates (at 20ºC) for sapwood (in g gluc·g dry-1·day-1).}
-      \item{\code{RERfineroot}: Maintenance respiration rates (at 20ºC) for fine roots (in g gluc·g dry-1·day-1).}
-      \item{\code{CCleaf}: Leaf construction costs (in g gluc·g dry-1).}
-      \item{\code{CCsapwood}: Sapwood construction costs (in g gluc·g dry-1).}
-      \item{\code{CCfineroot}: Fine root construction costs (in g gluc·g dry-1).}
-      \item{\code{RGRleafmax}: Maximum leaf relative growth rate (in m2·cm-2·day-1).}
-      \item{\code{RGRsapwoodmax}: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).}
-      \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).}
-      \item{\code{SRsapwood}: Sapwood daily senescence rate (in day-1).}
-      \item{\code{SRfineroot}: Fine root daily senescence rate (in day-1).}
-      \item{\code{RSSG}: Minimum relative starch for sapwood growth (proportion).}
-      \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
-      \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
-      \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
-    }
-  }
-  \item{\code{paramsMortalityRegeneration}: A data frame with mortality/regeneration parameters for each cohort:
-    \itemize{
-      \item{\code{MortalityBaselineRate}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year.}
-      \item{\code{SurvivalModelStep}: Time step in years of the empirical survival model depending on stand basal area (e.g. 10).}
-      \item{\code{SurvivalB0}: Intercept of the logistic baseline survival model depending on stand basal area.}
-      \item{\code{SurvivalB1}: Slope of the logistic baseline survival model depending on stand basal area.}
-      \item{\code{RecrTreeDensity}: Density of tree recruits from seeds.}
-      \item{\code{IngrowthTreeDensity}: Density of trees reaching ingrowth DBH.}
-      \item{\code{RecrTreeDBH}: DBH for tree recruits from seeds or resprouting (e.g. 1 cm).}
-      \item{\code{IngrowthTreeDBH}: Ingrowth DBH for trees (e.g. 7.5 cm).}
-    }
-  }
-  \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
-    \itemize{
-      \item{\code{Aash}: Regression coefficient relating the square of shrub height with shrub area.}
-      \item{\code{Absh}, \code{Bbsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
-      \item{\code{Acr}, \code{B1cr}, \code{B2cr}, \code{B3cr}, \code{C1cr}, \code{C2cr}: Regression coefficients used to calculate crown ratio of trees.}
-      \item{\code{Acw}, \code{Bcw}: Regression coefficients used to calculated crown width of trees.}
-    }
-  }
-  \item {\code{internalAllocation}: A data frame with internal allocation variables for each cohort:
-    \itemize{
-      \item{\code{allocationTarget}: Value of the allocation target variable.}
-      \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
-      \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
-      \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
-      \item{\code{crownBudPercent}: Percentage of the crown with buds.}
-    }
-  }
-  \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-  \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
-  also distinguishing mortality due to starvation or dessication.}
+\itemize{
+\item{\code{LA_live}: Live leaf area per individual (m2/ind).}
+\item{\code{LA_dead}: Dead leaf area per individual (m2/ind).}
+\item{\code{SA}: Live sapwood area per individual (cm2/ind).}
+}
+}
+\item{\code{paramsGrowth}: A data frame with growth parameters for each cohort:
+\itemize{
+\item{\code{RERleaf}: Maintenance respiration rates (at 20ºC) for leaves (in g gluc·g dry-1·day-1).}
+\item{\code{RERsapwood}: Maintenance respiration rates (at 20ºC) for sapwood (in g gluc·g dry-1·day-1).}
+\item{\code{RERfineroot}: Maintenance respiration rates (at 20ºC) for fine roots (in g gluc·g dry-1·day-1).}
+\item{\code{CCleaf}: Leaf construction costs (in g gluc·g dry-1).}
+\item{\code{CCsapwood}: Sapwood construction costs (in g gluc·g dry-1).}
+\item{\code{CCfineroot}: Fine root construction costs (in g gluc·g dry-1).}
+\item{\code{RGRleafmax}: Maximum leaf relative growth rate (in m2·cm-2·day-1).}
+\item{\code{RGRsapwoodmax}: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).}
+\item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).}
+\item{\code{SRsapwood}: Sapwood daily senescence rate (in day-1).}
+\item{\code{SRfineroot}: Fine root daily senescence rate (in day-1).}
+\item{\code{RSSG}: Minimum relative starch for sapwood growth (proportion).}
+\item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
+\item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
+\item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+}
+}
+\item{\code{paramsMortalityRegeneration}: A data frame with mortality/regeneration parameters for each cohort:
+\itemize{
+\item{\code{MortalityBaselineRate}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year.}
+\item{\code{SurvivalModelStep}: Time step in years of the empirical survival model depending on stand basal area (e.g. 10).}
+\item{\code{SurvivalB0}: Intercept of the logistic baseline survival model depending on stand basal area.}
+\item{\code{SurvivalB1}: Slope of the logistic baseline survival model depending on stand basal area.}
+\item{\code{RecrTreeDensity}: Density of tree recruits from seeds.}
+\item{\code{IngrowthTreeDensity}: Density of trees reaching ingrowth DBH.}
+\item{\code{RecrTreeDBH}: DBH for tree recruits from seeds or resprouting (e.g. 1 cm).}
+\item{\code{IngrowthTreeDBH}: Ingrowth DBH for trees (e.g. 7.5 cm).}
+}
+}
+\item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
+\itemize{
+\item{\code{Aash}: Regression coefficient relating the square of shrub height with shrub area.}
+\item{\code{Absh}, \code{Bbsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
+\item{\code{Acr}, \code{B1cr}, \code{B2cr}, \code{B3cr}, \code{C1cr}, \code{C2cr}: Regression coefficients used to calculate crown ratio of trees.}
+\item{\code{Acw}, \code{Bcw}: Regression coefficients used to calculated crown width of trees.}
+}
+}
+\item {\code{internalAllocation}: A data frame with internal allocation variables for each cohort:
+\itemize{
+\item{\code{allocationTarget}: Value of the allocation target variable.}
+\item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
+\item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
+\item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
+\item{\code{crownBudPercent}: Percentage of the crown with buds.}
+}
+}
+\item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
+\item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
+also distinguishing mortality due to starvation or dessication.}
 }
 }
 \description{
-Functions \code{spwbInput()} and \code{growthInput()} take an object of class \code{\link{forest}} 
+Functions \code{spwbInput()} and \code{growthInput()} take an object of class \code{\link{forest}}
 and a soil data input to create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively.
 }
 \details{
 Functions \code{spwbInput()} and \code{growthInput()} initialize inputs differently depending on control parameters.
 
-\emph{IMPORTANT NOTE}: Older function names \code{\link{forest2spwbInput}} and \code{\link{forest2growthInput}} are now deprecated, but 
+\emph{IMPORTANT NOTE}: Older function names \code{\link{forest2spwbInput}} and \code{\link{forest2growthInput}} are now deprecated, but
 they can still be used for back-compatibility.
 }
 \examples{
@@ -255,7 +255,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 
 }
 \seealso{
-\code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  
+\code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},
 \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 }
 \author{

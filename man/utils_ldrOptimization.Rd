@@ -53,11 +53,11 @@ utils_ldrOptimization(y, psi_crit, opt_mode = 1)
 
 \item{opt_mode}{Optimization mode:
 \itemize{
-  \item{\code{opt_mode = 1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018). The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018).}
-  \item{\code{opt_mode = 2} maximizes transpiration among combinations with stress according to \code{psi_crit}).}
-  \item{\code{opt_mode = 3} maximizes photosynthesis among combinations with stress according to \code{psi_crit}).}
-  \item{\code{opt_mode = 4} maximizes transpiration, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
-  \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
+\item{\code{opt_mode = 1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018). The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018).}
+\item{\code{opt_mode = 2} maximizes transpiration among combinations with stress according to \code{psi_crit}).}
+\item{\code{opt_mode = 3} maximizes photosynthesis among combinations with stress according to \code{psi_crit}).}
+\item{\code{opt_mode = 4} maximizes transpiration, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
+\item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
 }}
 }
 \value{

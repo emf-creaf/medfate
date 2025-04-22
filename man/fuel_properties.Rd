@@ -44,51 +44,51 @@ fuel_FCCS(
 
 \item{loadingOffset}{A vector of length five with fine fuel loading values (canopy, shrub, herb, woody and litter) to be added to loading estimations from \code{forest}.}
 
-\item{depthMode}{Specifies how fuel depth (and therefore canopy and understory bulk density) should be estimated: 
+\item{depthMode}{Specifies how fuel depth (and therefore canopy and understory bulk density) should be estimated:
 \itemize{
-  \item{\code{"crownaverage"}: As weighed average of crown lengths using loadings as weights.}
-  \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
-  \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
+\item{\code{"crownaverage"}: As weighed average of crown lengths using loadings as weights.}
+\item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}
+\item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}
 }}
 }
 \value{
-Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  fuel layers: 
+Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  fuel layers:
 \code{canopy}, \code{shrub}, \code{herb}, \code{woody} and \code{litter}. Columns correspond fuel properties:
 \itemize{
-  \item{\code{w}: Fine fuel loading (in kg/m2).}
-  \item{\code{cover}: Percent cover.}
-  \item{\code{hbc}: Height to base of crowns (in m).}
-  \item{\code{htc}: Height to top of crowns (in m).}
-  \item{\code{delta}: Fuel depth (in m).}
-  \item{\code{rhob}: Fuel bulk density (in kg/m3).}
-  \item{\code{rhop}: Fuel particle density (in kg/m3).}
-  \item{\code{PV}: Particle volume (in m3/m2).}
-  \item{\code{beta}: Packing ratio (unitless).}
-  \item{\code{betarel}: Relative packing ratio (unitless).}
-  \item{\code{etabetarel}: Reaction efficiency (unitless).}
-  \item{\code{sigma}: Surface area-to-volume ratio (m2/m3).}
-  \item{\code{pDead}: Proportion of dead fuels.}
-  \item{\code{FAI}: Fuel area index (unitless).}
-  \item{\code{h}: High heat content (in kJ/kg).}
-  \item{\code{RV}: Reactive volume (in m3/m2).}
-  \item{\code{MinFMC}: Minimum fuel moisture content (as percent over dry weight).}
-  \item{\code{MaxFMC}: Maximum fuel moisture content (as percent over dry weight).}
-  \item{\code{ActFMC}: Actual fuel moisture content (as percent over dry weight). These are set to \code{NA} if parameter \code{cohortFMC} is empty.}
+\item{\code{w}: Fine fuel loading (in kg/m2).}
+\item{\code{cover}: Percent cover.}
+\item{\code{hbc}: Height to base of crowns (in m).}
+\item{\code{htc}: Height to top of crowns (in m).}
+\item{\code{delta}: Fuel depth (in m).}
+\item{\code{rhob}: Fuel bulk density (in kg/m3).}
+\item{\code{rhop}: Fuel particle density (in kg/m3).}
+\item{\code{PV}: Particle volume (in m3/m2).}
+\item{\code{beta}: Packing ratio (unitless).}
+\item{\code{betarel}: Relative packing ratio (unitless).}
+\item{\code{etabetarel}: Reaction efficiency (unitless).}
+\item{\code{sigma}: Surface area-to-volume ratio (m2/m3).}
+\item{\code{pDead}: Proportion of dead fuels.}
+\item{\code{FAI}: Fuel area index (unitless).}
+\item{\code{h}: High heat content (in kJ/kg).}
+\item{\code{RV}: Reactive volume (in m3/m2).}
+\item{\code{MinFMC}: Minimum fuel moisture content (as percent over dry weight).}
+\item{\code{MaxFMC}: Maximum fuel moisture content (as percent over dry weight).}
+\item{\code{ActFMC}: Actual fuel moisture content (as percent over dry weight). These are set to \code{NA} if parameter \code{cohortFMC} is empty.}
 }
 
 Function \code{fuel_stratification} returns a list with the following items:
-  \itemize{
-    \item{\code{surfaceLayerBaseHeight}: Base height of crowns of shrubs in the surface layer (in cm).}
-    \item{\code{surfaceLayerTopHeight}: Top height of crowns of shrubs in the surface layer (in cm).}
-    \item{\code{understoryLAI}: Cumulated LAI of the understory layer (i.e. leaf area comprised between surface layer base and top heights).}
-    \item{\code{canopyBaseHeight}: Base height of tree crowns in the canopy (in cm).}
-    \item{\code{canopyTopHeight}: Top height of tree crowns in the canopy (in cm).}
-    \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
-  }
+\itemize{
+\item{\code{surfaceLayerBaseHeight}: Base height of crowns of shrubs in the surface layer (in cm).}
+\item{\code{surfaceLayerTopHeight}: Top height of crowns of shrubs in the surface layer (in cm).}
+\item{\code{understoryLAI}: Cumulated LAI of the understory layer (i.e. leaf area comprised between surface layer base and top heights).}
+\item{\code{canopyBaseHeight}: Base height of tree crowns in the canopy (in cm).}
+\item{\code{canopyTopHeight}: Top height of tree crowns in the canopy (in cm).}
+\item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
+}
 }
 \description{
-Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. 
-Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object 
+Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata.
+Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object
 following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013).
 }
 \examples{

@@ -50,18 +50,18 @@ soil_temperatureChange(
 \item{tstep}{Time step (interval) in seconds.}
 }
 \value{
-Function \code{soil_thermalConductivity} returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer. 
+Function \code{soil_thermalConductivity} returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer.
 
-Function \code{soil_thermalCapacity} returns a vector with values of heat storage capacity (J/m3/ºK) for each soil layer. 
+Function \code{soil_thermalCapacity} returns a vector with values of heat storage capacity (J/m3/ºK) for each soil layer.
 
-Function \code{soil_temperatureGradient} returns a vector with values of temperature gradient between consecutive soil layers. 
+Function \code{soil_temperatureGradient} returns a vector with values of temperature gradient between consecutive soil layers.
 
 Function \code{soil_temperatureChange} returns a vector with values of instantaneous temperature change (ºC/s) for each soil layer.
 }
 \description{
-Functions \code{soil_thermalConductivity} and \code{soil_thermalCapacity} calculate thermal conductivity and thermal capacity 
-for each soil layer, given its texture and water content. Functions \code{soil_temperatureGradient} and \code{soil_temperatureChange} 
-are used to calculate soil temperature gradients (in ºC/m) and temporal temperature change (in ºC/s) 
+Functions \code{soil_thermalConductivity} and \code{soil_thermalCapacity} calculate thermal conductivity and thermal capacity
+for each soil layer, given its texture and water content. Functions \code{soil_temperatureGradient} and \code{soil_temperatureChange}
+are used to calculate soil temperature gradients (in ºC/m) and temporal temperature change (in ºC/s)
 given soil layer texture and water content (and possibly including heat flux from above).
 }
 \examples{

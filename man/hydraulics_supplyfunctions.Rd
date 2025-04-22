@@ -215,7 +215,7 @@ hydraulics_supplyFunctionPlot(
 
 \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
 
-\item{type}{Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, 
+\item{type}{Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"},
 \code{"ERhizo"}, \code{"StemPsi"}, \code{"RootPsi"} or \code{"dEdP"}).}
 
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
@@ -225,28 +225,28 @@ hydraulics_supplyFunctionPlot(
 \value{
 Values returned for each function are:
 \itemize{
-  \item{\code{hydraulics_E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
-  \item{\code{hydraulics_E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
-  \item{\code{hydraulics_E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
-  \item{\code{hydraulics_E2psiNetwork}: The rhizosphere, root crown and plant (leaf water potential (in MPa) corresponding to the input flow, according to the vulnerability curves of rhizosphere, root and stem elements in a network.}
-  \item{\code{hydraulics_Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
-  \item{\code{hydraulics_EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
-  \item{\code{hydraulics_EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
-  \item{\code{hydraulics_supplyFunctionOneXylem}, \code{hydraulics_supplyFunctionTwoElements} and
-    \code{hydraulics_supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
-    \itemize{
-      \item{\code{E}: Flow values (supply values).}
-      \item{\code{FittedE}: Fitted flow values (for \code{hydraulics_supplyFunctionTwoElements}).}
-      \item{\code{Elayers}: Flow values across the roots of each soil layer (only for \code{hydraulics_supplyFunctionNetwork}).}
-      \item{\code{PsiRhizo}: Water potential values at the root surface (only for \code{hydraulics_supplyFunctionNetwork}).}
-      \item{\code{PsiRoot}: Water potential values inside the root crown (not for \code{hydraulics_supplyFunctionOneXylem}).}
-      \item{\code{PsiPlant}: Water potential values at the canopy (leaf).}
-      \item{\code{dEdP}: Derivatives of the supply function.}
-    }
-  }
-  \item{\code{hydraulics_supplyFunctionPlot}: If \code{draw = FALSE} a list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
-  \item{\code{hydraulics_regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
-  \item{\code{hydraulics_regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
+\item{\code{hydraulics_E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
+\item{\code{hydraulics_E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
+\item{\code{hydraulics_E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
+\item{\code{hydraulics_E2psiNetwork}: The rhizosphere, root crown and plant (leaf water potential (in MPa) corresponding to the input flow, according to the vulnerability curves of rhizosphere, root and stem elements in a network.}
+\item{\code{hydraulics_Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
+\item{\code{hydraulics_EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
+\item{\code{hydraulics_EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
+\item{\code{hydraulics_supplyFunctionOneXylem}, \code{hydraulics_supplyFunctionTwoElements} and
+\code{hydraulics_supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
+\itemize{
+\item{\code{E}: Flow values (supply values).}
+\item{\code{FittedE}: Fitted flow values (for \code{hydraulics_supplyFunctionTwoElements}).}
+\item{\code{Elayers}: Flow values across the roots of each soil layer (only for \code{hydraulics_supplyFunctionNetwork}).}
+\item{\code{PsiRhizo}: Water potential values at the root surface (only for \code{hydraulics_supplyFunctionNetwork}).}
+\item{\code{PsiRoot}: Water potential values inside the root crown (not for \code{hydraulics_supplyFunctionOneXylem}).}
+\item{\code{PsiPlant}: Water potential values at the canopy (leaf).}
+\item{\code{dEdP}: Derivatives of the supply function.}
+}
+}
+\item{\code{hydraulics_supplyFunctionPlot}: If \code{draw = FALSE} a list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
+\item{\code{hydraulics_regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
+\item{\code{hydraulics_regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
 }
 }
 \description{

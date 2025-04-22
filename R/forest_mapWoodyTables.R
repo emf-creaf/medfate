@@ -4,21 +4,22 @@
 #'
 #' @param x A data frame with tree records in rows and attributes in columns. Tree records can correspond to individual trees or groups of trees with an associated density.
 #' @param y A data frame with shrub records in rows and attributes in columns. Records can correspond to individual shrubs (with crown dimensions and height) or groups of shrubs with an associated cover estimate.
-#' @param mapping_x A named character vector to specify mappings of columns in \code{x} into attributes of \code{treeData} data frames. Accepted names (and the corresponding specifications for the columns in \code{x} are:
-#' @param mapping_y A named character vector to specify mappings of columns in \code{y} into attributes of \code{shrubData} data frames. Accepted names (and the corresponding specifications for the columns in \code{y}) are:
+#' @param mapping_x A named character vector to specify mappings of columns in \code{x} into attributes of \code{treeData} data frames. Accepted names (and the corresponding specifications for the columns in \code{x}) are:
+#' @param mapping_y A named character vector to specify mappings of columns in \code{y} into attributes of \code{shrubData} data frames. 
+#' Accepted names (and the corresponding specifications for the columns in \code{y}) are:
 #' \itemize{
-#' \item{"Species": Species code (should follow codes in \code{SpParams}).}
-#' \item{"Species.name": Species name. In this case, the species code will be drawn by matching names with species names in \code{SpParams}.}
-#' \item{"N": Tree density (in ind./ha).}
-#' \item{"Cover": Shrub cover (in \%).}
-#' \item{"D1": Shrub largest crown diameter (in cm).}
-#' \item{"D2": Shrub crown diameter orthogonal to the largest one (in cm).}
-#' \item{"plot.size": Plot size (in m2) to which each record refers to. This is used to calculate tree density (stems per hectare) when not supplied or shrub cover when shrub data is given at the individual level.}
-#' \item{"DBH": Diameter at breast height (in cm).}
-#' \item{"Height": Tree or shrub height (in cm).}
-#' \item{"Z50": Depth (in mm) corresponding to 50\% of fine roots.}
-#' \item{"Z95": Depth (in mm) corresponding to 95\% of fine roots.}
-#' }
+#'   \item{\code{Species}: Species code (should follow codes in \code{SpParams}).}
+#'   \item{\code{Species.name}: Species name. In this case, the species code will be drawn by matching names with species names in \code{SpParams}.}
+#'   \item{\code{N}: Tree density (in individuals per ha).}
+#'   \item{\code{Cover}: Shrub cover (in percent).}
+#'   \item{\code{D1}: Shrub largest crown diameter (in cm).}
+#'   \item{\code{D2}: Shrub crown diameter orthogonal to the largest one (in cm).}
+#'   \item{\code{plot.size}: Plot size (in m2) to which each record refers to. This is used to calculate tree density (stems per hectare) when not supplied or shrub cover when shrub data is given at the individual level.}
+#'   \item{\code{DBH}: Diameter at breast height (in cm).}
+#'   \item{\code{Height}: Tree or shrub height (in cm).}
+#'   \item{\code{Z50}: Depth (in mm) corresponding to 50 percent of fine roots.}
+#'   \item{\code{Z95}: Depth (in mm) corresponding to 95 percent of fine roots.}
+#'   }
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}) from which valid species names are drawn.
 #' @param plot_size_x The size of tree plot sampled area (in m2). Alternatively, 'plot_size_x'
 #' can be a column in \code{x} and specified in \code{mapping_x} to indicate that trees

@@ -50,16 +50,16 @@ hydrology_herbaceousTranspiration(
 \item{herbLAI}{Leaf area index of the herbaceous layer.}
 }
 \value{
-Function \code{hydrology_soilEvaporationAmount} returns the amount of water evaporated from the soil. 
+Function \code{hydrology_soilEvaporationAmount} returns the amount of water evaporated from the soil.
 
 Function \code{hydrology_soilEvaporation} returns a vector of water evaporated from each soil layer.
 }
 \description{
 Functions:
 \itemize{
-  \item{Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).}
-  \item{Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil and distributes it among soil layers.}
-  \item{Function \code{hydrology_herbaceousTranspiration} calculates the amount of transpiration due to herbaceous plants.}
+\item{Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).}
+\item{Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil and distributes it among soil layers.}
+\item{Function \code{hydrology_herbaceousTranspiration} calculates the amount of transpiration due to herbaceous plants.}
 }
 }
 \references{

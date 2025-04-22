@@ -49,21 +49,21 @@ evaluation_metric(
 
 \item{type}{A string with the kind of model output to be evaluated. Accepted values are:
 \itemize{
-  \item{\code{"SWC"}: Soil water content (percent volume). See details for specific soil layers.}
-  \item{\code{"RWC"}: Relative water content (relative to field capacity). See details for specific soil layers.}
-  \item{\code{"REW"}: Relative extractable water. See details for specific soil layers.}
-  \item{\code{"ETR"}: Total evapotranspiration.}
-  \item{\code{"SE+TR"}: Modelled soil evaporation + plant transpiration against observed total evapotranspiration}
-  \item{\code{"E"}: Transpiration per leaf area}
-  \item{\code{"LE"}: Latent heat (vaporisation) turbulent flux}
-  \item{\code{"H"}: Canopy sensible heat turbulent flux}
-  \item{\code{"GPP"}: Stand-level gross primary productivity}
-  \item{\code{"LFMC"}: Live fuel moisture content}
-  \item{\code{"WP"}: Plant water potentials}
-  \item{\code{"BAI"}: Basal area increment}
-  \item{\code{"DI"}: Diameter increment}
-  \item{\code{"DBH"}: Diameter at breast height}
-  \item{\code{"Height"}: Plant height}
+\item{\code{"SWC"}: Soil water content (percent volume). See details for specific soil layers.}
+\item{\code{"RWC"}: Relative water content (relative to field capacity). See details for specific soil layers.}
+\item{\code{"REW"}: Relative extractable water. See details for specific soil layers.}
+\item{\code{"ETR"}: Total evapotranspiration.}
+\item{\code{"SE+TR"}: Modelled soil evaporation + plant transpiration against observed total evapotranspiration}
+\item{\code{"E"}: Transpiration per leaf area}
+\item{\code{"LE"}: Latent heat (vaporisation) turbulent flux}
+\item{\code{"H"}: Canopy sensible heat turbulent flux}
+\item{\code{"GPP"}: Stand-level gross primary productivity}
+\item{\code{"LFMC"}: Live fuel moisture content}
+\item{\code{"WP"}: Plant water potentials}
+\item{\code{"BAI"}: Basal area increment}
+\item{\code{"DI"}: Diameter increment}
+\item{\code{"DBH"}: Diameter at breast height}
+\item{\code{"Height"}: Plant height}
 }}
 
 \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
@@ -74,30 +74,30 @@ evaluation_metric(
 
 \item{metric}{An evaluation metric:
 \itemize{
-  \item{\code{"MAE"}: Mean absolute error.}
-  \item{\code{"MAE.rel"}: Mean absolute error in relative terms.}
-  \item{\code{"r"}: Pearson's linear correlation coefficient.}
-  \item{\code{"NSE"}: Nash-Sutcliffe model efficiency coefficient.}
-  \item{\code{"NSE.abs"}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
-  \item{\code{"loglikelihood"}: Logarithm of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.}
+\item{\code{"MAE"}: Mean absolute error.}
+\item{\code{"MAE.rel"}: Mean absolute error in relative terms.}
+\item{\code{"r"}: Pearson's linear correlation coefficient.}
+\item{\code{"NSE"}: Nash-Sutcliffe model efficiency coefficient.}
+\item{\code{"NSE.abs"}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+\item{\code{"loglikelihood"}: Logarithm of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.}
 }}
 }
 \value{
 \itemize{
-  \item{Function \code{evaluation_table} returns a data frame with dates, observed and predicted values.}
-  \item{Function \code{evaluation_stats} returns evaluation statistics (a vector or a data frame depending on \code{type}):
-    \itemize{
-      \item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
-      \item{\code{Bias.rel}: Bias in relative terms (\%).}
-      \item{\code{MAE}: Mean absolute error.}
-      \item{\code{MAE.rel}: Mean absolute error in relative terms (\%).}
-      \item{\code{r}: Pearson's linear correlation coefficient.}
-      \item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
-      \item{\code{NSE.abs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
-    }
-  }
-  \item{Function \code{evaluation_plot} returns a ggplot object.}
-  \item{Function \code{evaluation_metric} returns a scalar with the desired metric.}
+\item{Function \code{evaluation_table} returns a data frame with dates, observed and predicted values.}
+\item{Function \code{evaluation_stats} returns evaluation statistics (a vector or a data frame depending on \code{type}):
+\itemize{
+\item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
+\item{\code{Bias.rel}: Bias in relative terms (\%).}
+\item{\code{MAE}: Mean absolute error.}
+\item{\code{MAE.rel}: Mean absolute error in relative terms (\%).}
+\item{\code{r}: Pearson's linear correlation coefficient.}
+\item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
+\item{\code{NSE.abs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+}
+}
+\item{Function \code{evaluation_plot} returns a ggplot object.}
+\item{Function \code{evaluation_metric} returns a scalar with the desired metric.}
 }
 }
 \description{
@@ -106,21 +106,21 @@ Functions to compare model predictions against observed values.
 \details{
 Users should provide the appropriate columns in \code{measuredData}, depending on the type of output to be evaluated:
 \itemize{
-  \item{\code{"SWC", "RWC", "REW"}: A column with the same name should be present. By default, the first soil layer is compared. Evaluation can be done for specific soil layers, for example using "RWC.2" for the relative water content of the second layer.}
-  \item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
-  \item{\code{"LE"}: A column named \code{"LE"} should be present containing daily latent heat turbulent flux in MJ/m2.}
-  \item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}
-  \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
-  \item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
-  \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"LFMC_"} and continuing with a cohort name (e.g. \code{"LFMC_T1_68"}) with fuel moisture content as percent of dry weight.}
-  \item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
-  \item{\code{"BAI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"BAI_"} and continuing with a cohort name (e.g. \code{"BAI_T1_68"}) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.}
-  \item{\code{"DI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DI_"} and continuing with a cohort name (e.g. \code{"DI_T1_68"}) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.}
-  \item{\code{"DBH"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DBH_"} and continuing with a cohort name (e.g. \code{"DBH_T1_68"}) with DBH values in cm.}
-  \item{\code{"Height"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"Height_"} and continuing with a cohort name (e.g. \code{"Height_T1_68"}) with Height values in cm.}
+\item{\code{"SWC", "RWC", "REW"}: A column with the same name should be present. By default, the first soil layer is compared. Evaluation can be done for specific soil layers, for example using "RWC.2" for the relative water content of the second layer.}
+\item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
+\item{\code{"LE"}: A column named \code{"LE"} should be present containing daily latent heat turbulent flux in MJ/m2.}
+\item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}
+\item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
+\item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
+\item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"LFMC_"} and continuing with a cohort name (e.g. \code{"LFMC_T1_68"}) with fuel moisture content as percent of dry weight.}
+\item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
+\item{\code{"BAI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"BAI_"} and continuing with a cohort name (e.g. \code{"BAI_T1_68"}) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.}
+\item{\code{"DI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DI_"} and continuing with a cohort name (e.g. \code{"DI_T1_68"}) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.}
+\item{\code{"DBH"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DBH_"} and continuing with a cohort name (e.g. \code{"DBH_T1_68"}) with DBH values in cm.}
+\item{\code{"Height"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"Height_"} and continuing with a cohort name (e.g. \code{"Height_T1_68"}) with Height values in cm.}
 }
 Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by \code{"_err"} (e.g. \code{"PD_T1_68_err"}), and are used to draw confidence intervals around observations.
- 
+
 Row names in \code{measuredData} indicate the date of measurement (in the case of days). Alternatively, a column called \code{"dates"} can contain the measurement dates.
 If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).
 }

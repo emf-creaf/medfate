@@ -10,7 +10,7 @@
 #' @param control A list with default control parameters (see \code{\link[medfate]{defaultControl}}).
 #' @param meteo A data frame with daily meteorological data series (see \code{\link[medfate]{spwb}}).
 #' @param PLCquantile Maximum PLC quantile to be calculated across years.
-#' @param qPLC_target Target PLC to be achieved (by default 12\%).
+#' @param qPLC_target Target PLC to be achieved (by default 12%).
 #' @param qPLC_tol Tolerance of PLC difference to target accepted when finding solution.
 #' @param sew_min Minimum soil extractable water (mm) for rock exploration.
 #' @param max_rocks Maximum content in coarse fragments allowed for any soil layer.
@@ -20,9 +20,9 @@
 #' @details
 #' The function performs a model inversion based on an ecohydrological assumption,
 #' consisting in that forest leaf area index is in equilibrium with a low embolism
-#' rate under normal conditions. This is translated in that the (by default 90\%) interannual quantile of
+#' rate under normal conditions. This is translated in that the (by default 90%) interannual quantile of
 #' the maximum annual percent loss of conductance (PLC), averaged over plant cohorts,
-#' should be close to a target PLC value (by default 12\%).
+#' should be close to a target PLC value (by default 12%).
 #' 
 #' The algorithm first determines the PLC corresponding to the minimum and maximum soil extractable water (SEW). 
 #' The minimum SEW (SEW_min) is an input parameter, whereas the maximum SEW (SEW_max) corresponds to no rock fragments in the soil. 

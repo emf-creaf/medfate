@@ -6,20 +6,20 @@
 \title{Example forest inventory data}
 \source{
 \itemize{
-  \item{Data table \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
- }
+\item{Data table \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
+}
 }
 \description{
 Example data to illustrate the creation of forest objects from inventory data,
 coming from a forest inventory survey, used to illustrate the general function \code{\link{forest_mapTreeTable}}:
 \itemize{
- \item \code{poblet_trees} - Data frame with example tree plot data from Poblet, Catalonia (717 observations and 4 variables).
-   \itemize{
-     \item Plot.Code - Plot ID (character)
-     \item Indv.Ref - Tree individual (integer)
-     \item Species - Species name (character)
-     \item Diameter.cm - Tree diameter at breast height (cm)
-   }
+\item \code{poblet_trees} - Data frame with example tree plot data from Poblet, Catalonia (717 observations and 4 variables).
+\itemize{
+\item Plot.Code - Plot ID (character)
+\item Indv.Ref - Tree individual (integer)
+\item Species - Species name (character)
+\item Diameter.cm - Tree diameter at breast height (cm)
+}
 }
 }
 \seealso{

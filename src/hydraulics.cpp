@@ -18,7 +18,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //'
 //' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
 //' @param K Whole-plant relative conductance (0-1).
-//' @param psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative transpiration.
+//' @param psi_extract Soil water potential (in MPa) corresponding to 50% whole-plant relative transpiration.
 //' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
 //' @param v Proportion of fine roots within each soil layer.
 //' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
@@ -27,7 +27,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
 //' @param kxylem Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).
 //' @param pCrit Proportion of maximum conductance considered critical for hydraulic functioning.
-//' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50\%, 88\% and 12\% percent conductance loss.
+//' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50%, 88% and 12% percent conductance loss.
 //' @param temp Temperature (in degrees Celsius).
 //' 
 //' @details Details of plant hydraulic models are given the medfate book. 
@@ -1404,7 +1404,7 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 //' @param psiRhizo Water potential (in MPa) in the rhizosphere (root surface).
 //' @param psiStem Water potential (in MPa) in the stem.
 //' @param psiLeaf Water potential (in MPa) in the leaf.
-//' @param PLCstem Percent loss of conductance (in \%) in the stem.
+//' @param PLCstem Percent loss of conductance (in %) in the stem.
 //' @param L Vector with the length of coarse roots (mm) for each soil layer.
 //' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
 //' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).

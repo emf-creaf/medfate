@@ -46,7 +46,7 @@ moisture_pressureVolumeCurvePlot(
 
 \item{height}{Plant height (in cm).}
 
-\item{V}{Vector with the proportion [0-1] of fine roots within each soil layer.}
+\item{V}{Vector with the proportion \link{0-1} of fine roots within each soil layer.}
 
 \item{L}{Vector with the length of coarse roots (mm) for each soil layer.}
 
@@ -62,7 +62,7 @@ moisture_pressureVolumeCurvePlot(
 
 \item{psiSym, psiApo}{Symplastic or apoplastic water potential (MPa).}
 
-\item{RWC}{Relative water content [0-1].}
+\item{RWC}{Relative water content \link{0-1}.}
 
 \item{c, d}{Parameters of the xylem vulnerability curve.}
 
@@ -82,13 +82,13 @@ moisture_pressureVolumeCurvePlot(
 \value{
 Values returned for each function are:
 \itemize{
-  \item{\code{moisture_symplasticRWC}: Relative water content [0-1] of the symplastic fraction.}
-  \item{\code{moisture_apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
-  \item{\code{moisture_symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
-  \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
-  \item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
-  \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
-  \item{\code{water_plant}: A vector of water content (mm) per plant cohort.}
+\item{\code{moisture_symplasticRWC}: Relative water content \link{0-1} of the symplastic fraction.}
+\item{\code{moisture_apoplasticRWC}: Relative water content \link{0-1} of the apoplastic fraction.}
+\item{\code{moisture_symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
+\item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
+\item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
+\item{\code{moisture_segmentRWC}: Segment relative water content \link{0-1}.}
+\item{\code{water_plant}: A vector of water content (mm) per plant cohort.}
 }
 }
 \description{

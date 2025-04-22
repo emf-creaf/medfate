@@ -132,21 +132,21 @@ light_longwaveRadiationSHAW(
 }
 \value{
 Functions \code{light_layerDirectIrradianceFraction}, \code{light_layerDiffuseIrradianceFraction}
-and \code{light_layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers. 
+and \code{light_layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers.
 
-Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with 
+Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with
 two elements (matrices): \code{I_sunlit} and \code{I_shade}.
 }
 \description{
-Functions \code{light_layerDirectIrradianceFraction} and \code{light_layerDiffuseIrradianceFraction} calculate 
-the fraction of above-canopy direct and diffuse radiation reaching each vegetation layer. 
-Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. 
-Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorbed 
+Functions \code{light_layerDirectIrradianceFraction} and \code{light_layerDiffuseIrradianceFraction} calculate
+the fraction of above-canopy direct and diffuse radiation reaching each vegetation layer.
+Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer.
+Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorbed
 by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 }
 \details{
-Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), 
-whereas long-wave radiation balance follows Flerchinger et al. (2009). 
+Functions for short-wave radiation are adapted from Anten & Bastiaans (2016),
+whereas long-wave radiation balance follows Flerchinger et al. (2009).
 Vegetation layers are assumed to be ordered from bottom to top.
 }
 \examples{

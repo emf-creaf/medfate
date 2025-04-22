@@ -101,9 +101,9 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //' 
 //' Functions to calculate properties of fine/coarse roots within the soil, given root system parameters and soil layer definition.
 //' 
-//' @param Z50 A vector of depths (in mm) corresponding to 50\% of roots.
-//' @param Z95 A vector of depths (in mm) corresponding to 95\% of roots.
-//' @param Z100 A vector of depths (in mm) corresponding to 100\% of roots.
+//' @param Z50 A vector of depths (in mm) corresponding to 50% of roots.
+//' @param Z95 A vector of depths (in mm) corresponding to 95% of roots.
+//' @param Z100 A vector of depths (in mm) corresponding to 100% of roots.
 //' @param Zcone A vector of depths (in mm) corresponding to the root cone tip.
 //' @param d The width (in mm) corresponding to each soil layer.
 //' @param v Vector of proportions of fine roots in each soil layer.

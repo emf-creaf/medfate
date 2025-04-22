@@ -23,7 +23,7 @@ emptyforest(ntree = 2, nshrub = 1)
 
 }
 \seealso{
-\code{\link{forest}}, \code{\link{tree2forest}}, \code{\link{summary.forest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},  
+\code{\link{forest}}, \code{\link{tree2forest}}, \code{\link{summary.forest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},
 \code{\link{plot.forest}}
 }
 \author{

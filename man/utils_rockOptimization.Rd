@@ -46,12 +46,12 @@ utils_rockOptimization(
 }
 \value{
 Function \code{utils_rockOptimization} returns a list containing:
- \itemize{
-   \item{\code{RFC}: A vector with the estimated rock fragment content for each soil layer.}
-   \item{\code{SEW}: Soil extractable water (mm).}
-   \item{\code{runs}: Number of simulations performed.}
-   \item{\code{message}: Text message indicating whether optimization could be done (OK) or not.}
- }
+\itemize{
+\item{\code{RFC}: A vector with the estimated rock fragment content for each soil layer.}
+\item{\code{SEW}: Soil extractable water (mm).}
+\item{\code{runs}: Number of simulations performed.}
+\item{\code{message}: Text message indicating whether optimization could be done (OK) or not.}
+}
 }
 \description{
 Function \code{utils_rockOptimization} finds optimum rock fragment content in the soil
@@ -65,15 +65,15 @@ rate under normal conditions. This is translated in that the (by default 90\%) i
 the maximum annual percent loss of conductance (PLC), averaged over plant cohorts,
 should be close to a target PLC value (by default 12\%).
 
-The algorithm first determines the PLC corresponding to the minimum and maximum soil extractable water (SEW). 
-The minimum SEW (SEW_min) is an input parameter, whereas the maximum SEW (SEW_max) corresponds to no rock fragments in the soil. 
+The algorithm first determines the PLC corresponding to the minimum and maximum soil extractable water (SEW).
+The minimum SEW (SEW_min) is an input parameter, whereas the maximum SEW (SEW_max) corresponds to no rock fragments in the soil.
 
 Then three situations are distinguished:
 \enumerate{
-  \item{If \code{PLC(SEW_min) < qPLC_target}  and \code{PLC(SEW_max) < qPLC_target}, the function will use \code{\link{uniroot}} to find the root
+\item{If \code{PLC(SEW_min) < qPLC_target}  and \code{PLC(SEW_max) < qPLC_target}, the function will use \code{\link{uniroot}} to find the root
 of the function \code{f(x) = PLC(x) - qPLC_target}, where \code{x} is SEW, which corresponds to a factor that multiplies the original rock fragment content.}
-  \item{If both \code{PLC(SEW_min) < qPLC_target} and \code{PLC(SEW_max) < qPLC_target}, the function cannot find an optimum, because PLC is always too low, and will return the original rock fragment content}
-  \item{Analogously, if both \code{PLC(SEW_min) > qPLC_target} and \code{PLC(SEW_max) > qPLC_target}, the function cannot find an optimum, because PLC is always too large, and will return the original rock fragment content}
+\item{If both \code{PLC(SEW_min) < qPLC_target} and \code{PLC(SEW_max) < qPLC_target}, the function cannot find an optimum, because PLC is always too low, and will return the original rock fragment content}
+\item{Analogously, if both \code{PLC(SEW_min) > qPLC_target} and \code{PLC(SEW_max) > qPLC_target}, the function cannot find an optimum, because PLC is always too large, and will return the original rock fragment content}
 }
 }
 \examples{

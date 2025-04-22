@@ -23,27 +23,27 @@ soil(x, VG_PTF = "Toth")
 \value{
 Function \code{soil} returns a data frame of class \code{soil} with the following columns:
 \itemize{
-  \item{\code{widths}: Width of soil layers (in mm).}
-  \item{\code{sand}: Sand percentage for each layer (in percent volume).}
-  \item{\code{clay}: Clay percentage for each layer (in percent volume).}
-  \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
-  \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
-  \item{\code{rfc}: Percentage of rock fragment content for each layer.}
-  \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
-  \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
-  \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
-  \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
-  \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
+\item{\code{widths}: Width of soil layers (in mm).}
+\item{\code{sand}: Sand percentage for each layer (in percent volume).}
+\item{\code{clay}: Clay percentage for each layer (in percent volume).}
+\item{\code{om}: Organic matter percentage for each layer (in percent volume).}
+\item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
+\item{\code{rfc}: Percentage of rock fragment content for each layer.}
+\item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
+\item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
+\item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
+\item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
+\item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
 }
 }
 \description{
 Initializes soil parameters and state variables for its use in simulations.
 }
 \details{
-Function \code{summary} prompts a description of soil characteristics and state variables (water content and temperature) 
-according to a water retention curve (either Saxton's or Van Genuchten's). 
-Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
-Parameter \code{Temp} is initialized as missing for all soil layers. 
+Function \code{summary} prompts a description of soil characteristics and state variables (water content and temperature)
+according to a water retention curve (either Saxton's or Van Genuchten's).
+Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa.
+Parameter \code{Temp} is initialized as missing for all soil layers.
 
 If available, the user can specify columns \code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat} and \code{K_sat},
 to override Van Genuchten parameters an saturated conductivity estimated from pedotransfer functions when calling function \code{soil}.

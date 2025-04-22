@@ -53,48 +53,48 @@ spwb_day(
 \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 }
 \value{
-Function \code{spwb_day()} returns a list of class \code{spwb_day} with the 
+Function \code{spwb_day()} returns a list of class \code{spwb_day} with the
 following elements:
 \itemize{
-  \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
-  \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
-  \item{\code{"weather"}: A vector with the input weather.}
-  \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
-  \item{\code{"Soil"}: A data frame with results for each soil layer:
-    \itemize{
-      \item{\code{"Psi"}: Soil water potential (in MPa) at the end of the day.}
-      \item{\code{"HerbTranspiration"}: Water extracted by herbaceous plants from each soil layer (in mm).}
-      \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant roots (in mm).}
-      \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm).}
-      \item{\code{"PlantExtraction"}: Water extracted by woody plants from each soil layer (in mm).}
-    }
-  }
-  \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
-  \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
+\item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
+\item{\code{"topography"}: Vector with elevation, slope and aspect given as input.}
+\item{\code{"weather"}: A vector with the input weather.}
+\item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
+\item{\code{"Soil"}: A data frame with results for each soil layer:
+\itemize{
+\item{\code{"Psi"}: Soil water potential (in MPa) at the end of the day.}
+\item{\code{"HerbTranspiration"}: Water extracted by herbaceous plants from each soil layer (in mm).}
+\item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant roots (in mm).}
+\item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm).}
+\item{\code{"PlantExtraction"}: Water extracted by woody plants from each soil layer (in mm).}
+}
+}
+\item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
+\item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 }
 The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
 \itemize{
-  \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
-  \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
-  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.}
-  \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
-  \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort (see \code{\link{transp_transpirationSperry}}).}
-  \item{\code{"LightExtinction"}: A list of information regarding radiation balance through the canopy, as returned by function \code{\link{light_instantaneousLightExtinctionAbsortion}}.}
-  \item{\code{"CanopyTurbulence"}: Canopy turbulence (see \code{\link{wind_canopyTurbulence}}).}
+\item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
+\item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
+\item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.}
+\item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
+\item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort (see \code{\link{transp_transpirationSperry}}).}
+\item{\code{"LightExtinction"}: A list of information regarding radiation balance through the canopy, as returned by function \code{\link{light_instantaneousLightExtinctionAbsortion}}.}
+\item{\code{"CanopyTurbulence"}: Canopy turbulence (see \code{\link{wind_canopyTurbulence}}).}
 }
 }
 \description{
-Function \code{spwb_day} performs water balance for a single day and \code{growth_day} 
+Function \code{spwb_day} performs water balance for a single day and \code{growth_day}
 performs water and carbon balance for a single day.
 }
 \details{
 The simulation functions allow using three different sub-models of transpiration and photosynthesis:
 \itemize{
-  \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
-  and implements an approach originally described in Granier et al. (1999).} 
-  \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
-  implements a modelling approach originally described in Sperry et al. (2017).}  
-  \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+\item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
+and implements an approach originally described in Granier et al. (1999).}
+\item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
+implements a modelling approach originally described in Sperry et al. (2017).}
+\item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).}
 }
 
 Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
@@ -162,19 +162,19 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 
 Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
 
-Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022)
 SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
 Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 
 Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 }
 \seealso{
-\code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  
+\code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},
 \code{\link{growthInput}}, \code{\link{growth}},  \code{\link{plot.growth_day}}
 }
 \author{
 \itemize{
-  \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
-  \item{Nicolas Martin-StPaul, URFM-INRAE}
+\item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+\item{Nicolas Martin-StPaul, URFM-INRAE}
 }
 }

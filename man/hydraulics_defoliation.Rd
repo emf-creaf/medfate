@@ -42,7 +42,7 @@ Functions to calculate the proportion of crown defoliation due to hydraulic disc
 }
 \details{
 The functions assume that crowns are made of a population of leaves whose
-hydraulic vulnerability (i.e. the water potential corresponding to 50% loss of conductance) 
+hydraulic vulnerability (i.e. the water potential corresponding to 50\% loss of conductance)
 follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (\code{P50_cv}).
 The slope parameter (or the c exponent in the case of a Weibull function) is considered constant.
 Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (\code{PLC_crit}).

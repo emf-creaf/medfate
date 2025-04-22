@@ -46,13 +46,13 @@ hydrology_interceptionPlot(
 \item{throughfall}{Boolean flag to plot relative throughfall instead of percentage of intercepted rainfall.}
 }
 \value{
-Function \code{hydrology_rainInterception} returns a vector of the same length as \code{Rainfall} containing intercepted rain values. 
+Function \code{hydrology_rainInterception} returns a vector of the same length as \code{Rainfall} containing intercepted rain values.
 
 Function \code{hydrology_rainfallIntensity} returns a scalar with the rainfall intensity.
 }
 \description{
-Function \code{hydrology_rainInterception} calculates the amount of rainfall intercepted daily by the canopy, given a rainfall and canopy characteristics. 
-Two canopy interception models are currently available: the sparse Gash (1995) model and the Liu (2001) model. 
+Function \code{hydrology_rainInterception} calculates the amount of rainfall intercepted daily by the canopy, given a rainfall and canopy characteristics.
+Two canopy interception models are currently available: the sparse Gash (1995) model and the Liu (2001) model.
 In both cases the current implementation assumes no trunk interception.
 }
 \details{
@@ -74,7 +74,7 @@ hydrology_interceptionPlot(exampleforest, SpParamsMED, ER = c(0.05, 0.2))
 \references{
 Liu (2001). Evaluation of the Liu model for predicting rainfall interception in forests world-wide. - Hydrol. Process. 15: 2341-2360.
 
-Gash (1979). An analytical model of rainfall interception by forests. - Quarterly Journal of the Royal Meteorological Society.                                       
+Gash (1979). An analytical model of rainfall interception by forests. - Quarterly Journal of the Royal Meteorological Society.
 
 Gash et al. (1995). Estimating sparse forest rainfall interception with an analytical model. - Journal of Hydrology.
 }

@@ -33,7 +33,7 @@ A matrix with fire behaviour variables (columns) for each simulated day (rows) o
 Estimates potential fire behaviour at each daily step of a simulation
 }
 \details{
-Live fuel moisture of shrub and canopy layers is estimated from plant water status. 
+Live fuel moisture of shrub and canopy layers is estimated from plant water status.
 Dead fuel moisture is estimated following Resco-de-Dios et al. (2015).
 }
 \examples{
@@ -66,8 +66,8 @@ F1 <- fireHazard(S1, SpParamsMED, exampleforest)
 \references{
 Resco de Dios, V., A. W. Fellows, R. H. Nolan, M. M. Boer, R. A. Bradstock, F. Domingo, and M. L. Goulden. 2015. A semi-mechanistic model for predicting the moisture content of fine litter. Agricultural and Forest Meteorology 203:64–73.
 
-Ruffault J, Limousin JM, Pimont F, Dupuy JL, De Cáceres M, Cochard H, Mouillot F, Blackman C, Torres-Ruiz JM, Parsons R, 
-Moreno M, Delzon S, Jansen S, Olioso A, Choat B, Martin-StPaul N. 2023. Plant hydraulic modelling of leaf and canopy fuel moisture content reveals increasing vulnerability of a Mediterranean forest to wildfires under extreme drought. 
+Ruffault J, Limousin JM, Pimont F, Dupuy JL, De Cáceres M, Cochard H, Mouillot F, Blackman C, Torres-Ruiz JM, Parsons R,
+Moreno M, Delzon S, Jansen S, Olioso A, Choat B, Martin-StPaul N. 2023. Plant hydraulic modelling of leaf and canopy fuel moisture content reveals increasing vulnerability of a Mediterranean forest to wildfires under extreme drought.
 New Phytologist. (10.1111/nph.18614).
 }
 \seealso{

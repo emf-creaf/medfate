@@ -55,15 +55,15 @@ Function \code{hydrology_waterInputs} returns a named vector with the following 
 }
 \description{
 High-level functions to define water inputs into the soil of a stand:
- 
+
 \itemize{
-  \item{Function \code{hydrology_waterInputs} performs canopy water interception and snow accumulation/melt.}
-  \item{Function \code{hydrology_snowMelt} estimates snow melt using a simple energy balance, according to Kergoat (1998).}
+\item{Function \code{hydrology_waterInputs} performs canopy water interception and snow accumulation/melt.}
+\item{Function \code{hydrology_snowMelt} estimates snow melt using a simple energy balance, according to Kergoat (1998).}
 }
 }
 \details{
-The function simulates different vertical hydrological processes, which are described separately in other functions. 
-If \code{modifyInput = TRUE} the function will modify the \code{x} object (including both soil moisture and 
+The function simulates different vertical hydrological processes, which are described separately in other functions.
+If \code{modifyInput = TRUE} the function will modify the \code{x} object (including both soil moisture and
 the snowpack on its surface) as a result of simulating hydrological processes.
 }
 \references{

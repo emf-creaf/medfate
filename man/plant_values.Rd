@@ -104,26 +104,26 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE)
 \value{
 A vector with values for each woody plant cohort of the input \code{\link{forest}} object:
 \itemize{
-  \item{\code{plant_basalArea}: Tree basal area (m2/ha).}
-  \item{\code{plant_largerTreeBasalArea}: Basal area (m2/ha) of trees larger (in diameter) than the tree. Half of the trees of the same record are included.}
-  \item{\code{plant_characterParameter}: The parameter values of each plant, as strings.}
-  \item{\code{plant_cover}: Shrub cover (in percent).}
-  \item{\code{plant_crownBaseHeight}: The height corresponding to the start of the crown (in cm).}
-  \item{\code{plant_crownLength}: The difference between crown base height and total height (in cm).}
-  \item{\code{plant_crownRatio}: The ratio between crown length and total height (between 0 and 1).}
-  \item{\code{plant_density}: Plant density (ind/ha). Tree density is directly taken from the forest object, while the shrub density is estimated from cover and height by calculating the area of a single individual.}
-  \item{\code{plant_equilibriumLeafLitter}: Litter biomass of leaves at equilibrium (in kg/m2).}
-  \item{\code{plant_equilibriumSmallBranchLitter}: Litter biomass of small branches (< 6.35 mm diameter) at equilibrium (in kg/m2).}
-  \item{\code{plant_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
-  \item{\code{plant_fuelLoading}: Fine fuel load (in kg/m2).}
-  \item{\code{plant_height}: Total height (in cm).}
-  \item{\code{plant_ID}: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).}
-  \item{\code{plant_LAI}: Leaf area index (m2/m2).}
-  \item{\code{plant_individualArea}: Area (m2) occupied by a shrub individual.}
-  \item{\code{plant_parameter}: The parameter values of each plant, as numeric.}
-  \item{\code{plant_phytovolume}: Shrub phytovolume (m3/m2).}
-  \item{\code{plant_species}: Species identity integer (indices start with 0).}
-  \item{\code{plant_speciesName}: String with species taxonomic name (or a functional group).}
+\item{\code{plant_basalArea}: Tree basal area (m2/ha).}
+\item{\code{plant_largerTreeBasalArea}: Basal area (m2/ha) of trees larger (in diameter) than the tree. Half of the trees of the same record are included.}
+\item{\code{plant_characterParameter}: The parameter values of each plant, as strings.}
+\item{\code{plant_cover}: Shrub cover (in percent).}
+\item{\code{plant_crownBaseHeight}: The height corresponding to the start of the crown (in cm).}
+\item{\code{plant_crownLength}: The difference between crown base height and total height (in cm).}
+\item{\code{plant_crownRatio}: The ratio between crown length and total height (between 0 and 1).}
+\item{\code{plant_density}: Plant density (ind/ha). Tree density is directly taken from the forest object, while the shrub density is estimated from cover and height by calculating the area of a single individual.}
+\item{\code{plant_equilibriumLeafLitter}: Litter biomass of leaves at equilibrium (in kg/m2).}
+\item{\code{plant_equilibriumSmallBranchLitter}: Litter biomass of small branches (< 6.35 mm diameter) at equilibrium (in kg/m2).}
+\item{\code{plant_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
+\item{\code{plant_fuelLoading}: Fine fuel load (in kg/m2).}
+\item{\code{plant_height}: Total height (in cm).}
+\item{\code{plant_ID}: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).}
+\item{\code{plant_LAI}: Leaf area index (m2/m2).}
+\item{\code{plant_individualArea}: Area (m2) occupied by a shrub individual.}
+\item{\code{plant_parameter}: The parameter values of each plant, as numeric.}
+\item{\code{plant_phytovolume}: Shrub phytovolume (m3/m2).}
+\item{\code{plant_species}: Species identity integer (indices start with 0).}
+\item{\code{plant_speciesName}: String with species taxonomic name (or a functional group).}
 }
 }
 \description{

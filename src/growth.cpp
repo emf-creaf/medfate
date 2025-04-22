@@ -29,7 +29,7 @@ using namespace Rcpp;
 //'
 //' @param stressValue Current value of the stress variable (0 to 1, 
 //'                    with higher values indicate stronger stress).
-//' @param stressThreshold Threshold to indicate 50\% annual mortality probability.
+//' @param stressThreshold Threshold to indicate 50% annual mortality probability.
 //' 
 //' @return Returns a probability (between 0 and 1)
 //' 

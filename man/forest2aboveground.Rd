@@ -31,28 +31,28 @@ forest2growthInput(x, soil, SpParams, control)
 \value{
 Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
 \itemize{
-  \item{\code{SP}: Species identity (an integer) (first species is 0).}
-  \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
-  \item{\code{DBH}: Tree diameter at breast height (cm).}
-  \item{\code{H}: Plant total height (cm).}
-  \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
-  \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
-  \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
-  \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
-  \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
+\item{\code{SP}: Species identity (an integer) (first species is 0).}
+\item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
+\item{\code{DBH}: Tree diameter at breast height (cm).}
+\item{\code{H}: Plant total height (cm).}
+\item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
+\item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
+\item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
+\item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+\item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
 }
 }
 \description{
-Functions \code{forest2spwbInput()} and \code{forest2growthInput()} take an object of class \code{\link{forest}} 
-and a soil data input to create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively. 
-Function \code{forest2aboveground()} calculates aboveground variables such as leaf area index. 
+Functions \code{forest2spwbInput()} and \code{forest2growthInput()} take an object of class \code{\link{forest}}
+and a soil data input to create input objects for simulation functions \code{\link{spwb}} (or \code{\link{pwb}}) and \code{\link{growth}}, respectively.
+Function \code{forest2aboveground()} calculates aboveground variables such as leaf area index.
 Function \code{forest2belowground()} calculates belowground variables such as fine root distribution.
 }
 \details{
-Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x}, 
-and calculate leaf area index and crown ratio. 
+Function \code{forest2aboveground()} extracts height and species identity from plant cohorts of \code{x},
+and calculate leaf area index and crown ratio.
 
-\emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now internal and deprecated, but 
+\emph{IMPORTANT NOTE}: Function names \code{forest2spwbInput()} and \code{forest2growthInput()} are now internal and deprecated, but
 they can still be used for back-compatibility. They correspond to functions \code{\link{spwbInput}} and \code{\link{growthInput}}
 }
 \examples{
@@ -79,7 +79,7 @@ forest2belowground(exampleforest, examplesoil, SpParamsMED)
 
 }
 \seealso{
-\code{\link{spwbInput}}, \code{\link{soil}},  
+\code{\link{spwbInput}}, \code{\link{soil}},
 \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 }
 \author{

@@ -50,17 +50,17 @@ transp_stomatalRegulationPlot(
 \value{
 Function \code{transp_profitMaximization} returns a list with the following elements:
 \itemize{
-  \item{\code{Cost}: Cost function [0-1].}
-  \item{\code{Gain}: Gain function [0-1].}
-  \item{\code{Profit}: Profit function [0-1].}
-  \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
+\item{\code{Cost}: Cost function \link{0-1}.}
+\item{\code{Gain}: Gain function \link{0-1}.}
+\item{\code{Profit}: Profit function \link{0-1}.}
+\item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
 }
 }
 \description{
-Set of high-level functions used in the calculation of stomatal conductance and transpiration. 
-Function \code{transp_profitMaximization} calculates gain and cost functions, 
-as well as profit maximization from supply and photosynthesis input functions. 
-Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential 
+Set of high-level functions used in the calculation of stomatal conductance and transpiration.
+Function \code{transp_profitMaximization} calculates gain and cost functions,
+as well as profit maximization from supply and photosynthesis input functions.
+Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential
 and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \examples{

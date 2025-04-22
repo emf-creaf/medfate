@@ -59,9 +59,9 @@ regeneration_resprouting(
 }
 \value{
 \itemize{
-  \item{\code{regeneration_seedproduction} returns a list of species names}
-  \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{data.frame} object with an update seed bank. }
-  \item{\code{regeneration_resprouting} and \code{regeneration_recruitment} return a new object of class \code{\link{forest}} with the new plant cohorts.}
+\item{\code{regeneration_seedproduction} returns a list of species names}
+\item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{data.frame} object with an update seed bank. }
+\item{\code{regeneration_resprouting} and \code{regeneration_recruitment} return a new object of class \code{\link{forest}} with the new plant cohorts.}
 }
 }
 \description{
@@ -69,13 +69,13 @@ Functions to simulate annual plant regeneration from seed recruitment or from re
 }
 \details{
 \itemize{
-  \item{\code{regeneration_seedproduction} evaluates if reproductive individuals (i.e. sufficiently tall individuals) are present.} 
-  \item{\code{regeneration_seedrefill} fills seed bank of input \code{forest} object with seed rain.}
-  \item{\code{regeneration_seedmortality} updates seed bank of input \code{forest} object according to annual seed mortality.}
-  \item{\code{regeneration_recruitment} evaluates recruitment from the seed bank (or local seed production if seed bank is missing). Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
+\item{\code{regeneration_seedproduction} evaluates if reproductive individuals (i.e. sufficiently tall individuals) are present.}
+\item{\code{regeneration_seedrefill} fills seed bank of input \code{forest} object with seed rain.}
+\item{\code{regeneration_seedmortality} updates seed bank of input \code{forest} object according to annual seed mortality.}
+\item{\code{regeneration_recruitment} evaluates recruitment from the seed bank (or local seed production if seed bank is missing). Minimum month temperature and moisture index values are used to determine if recruitment was successful.
 Species also require a minimum amount of light at the ground level.}
-  \item{\code{regeneration_resprouting} evaluates resprouting occurs after “mortality” from die-back (including drought- or pathogen-induced dessication), 
-cutting or burning of the aerial part in a species with resprouting ability, 
+\item{\code{regeneration_resprouting} evaluates resprouting occurs after “mortality” from die-back (including drought- or pathogen-induced dessication),
+cutting or burning of the aerial part in a species with resprouting ability,
 but not after carbon starvation or baseline mortality (unspecific mortality causes).}
 }
 }

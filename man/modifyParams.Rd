@@ -25,7 +25,7 @@ modifyInputParams(x, customParams, verbose = TRUE)
 \item{verbose}{A logical flag to indicate that messages should be printed on the console.}
 }
 \value{
-Function \code{modifySpParams} returns a modified species parameter data frame. 
+Function \code{modifySpParams} returns a modified species parameter data frame.
 
 Functions \code{modifyCohortParams} and \code{modifyInputParams} return a modified \code{\link{spwbInput}} or \code{\link{growthInput}} object. Note that modifications may affect other parameters beyond those indicated in \code{customParams}, as a result of parameter dependencies (see examples).
 }
@@ -33,20 +33,20 @@ Functions \code{modifyCohortParams} and \code{modifyInputParams} return a modifi
 Routines to modify species parameter table or model input objects
 }
 \details{
-When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species 
+When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species
 and as many columns as parameters to modify, plus a column called 'Name' or 'Species' to match species names between the two tables. In both
 cases, the function will match input strings with column 'Name' of \code{x}. Alternatively, \code{customParams} can contain a column 'SpIndex' for
-matching of species indices, but this is deprecated. 
+matching of species indices, but this is deprecated.
 
-When calling \code{modifyCohortParams}, \code{customParams} can be a data frame with as many rows as cohorts 
-and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names 
-given by \code{\link{spwbInput}} or \code{\link{growthInput}}. 
+When calling \code{modifyCohortParams}, \code{customParams} can be a data frame with as many rows as cohorts
+and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names
+given by \code{\link{spwbInput}} or \code{\link{growthInput}}.
 Alternatively, \code{customParams} can be a named list or named numeric vector as for \code{modifyInputParams}.
 
-When calling \code{modifyInputParams}, \code{customParams} must be either a named list or a named numeric vector. 
-Cohort parameters are specified using the syntax "<cohortName>/<paramName>" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176'). 
-Soil layer parameters are specified using the syntax "<paramName>@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1). 
-Control parameters are specified using either "<paramName>" (e.g "phloemConductanceFactor") or "<paramName>$<subParamName>" (e.g "maximumRelativeGrowthRates$leaf"). 
+When calling \code{modifyInputParams}, \code{customParams} must be either a named list or a named numeric vector.
+Cohort parameters are specified using the syntax "\if{html}{\out{<cohortName>}}/\if{html}{\out{<paramName>}}" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176').
+Soil layer parameters are specified using the syntax "\if{html}{\out{<paramName>}}@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1).
+Control parameters are specified using either "\if{html}{\out{<paramName>}}" (e.g "phloemConductanceFactor") or "\if{html}{\out{<paramName>}}$\if{html}{\out{<subParamName>}}" (e.g "maximumRelativeGrowthRates$leaf").
 It may seem unnecessary to modify soil or control parameters via a function, but \code{modifyInputParams} is called from optimization functions (see \code{\link{optimization}}).
 }
 \examples{

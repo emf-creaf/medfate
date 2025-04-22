@@ -8,16 +8,16 @@
 \title{Data tables with species parameter definitions and values}
 \format{
 \itemize{
-  \item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.}
-  \item{Data frames \code{SpParamsMED} has species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.}
+\item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.}
+\item{Data frames \code{SpParamsMED} has species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.}
 }
 }
 \description{
 A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
 }
 \details{
-\code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional 
-species parameter tables for different countries are distributed via package [traits4models](https://emf-creaf.github.io/traits4models/).
+\code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional
+species parameter tables for different countries are distributed via package \href{https://emf-creaf.github.io/traits4models/}{traits4models}.
 }
 \examples{
 data(SpParamsDefinition)

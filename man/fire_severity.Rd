@@ -70,12 +70,12 @@ fire_necrosisHeight(
 }
 \value{
 \itemize{
-  \item{Function \code{fire_plumeTemperature} returns the plume temperature at a given height.}
-  \item{Function \code{fire_barkThermalDiffusivity} returns the bark thermal diffusivity given a bark moisture value.}
-  \item{Function \code{fire_radialBoleNecrosis} returns the depth of radial bole necrosis in cm.}
-  \item{Function \code{fire_leafThermalFactor} returns the thermal factor of leaves as a function of specific leaf area.}
-  \item{Function \code{fire_necrosisCriticalTemperature} returns the (plume) temperature yielding necrosis for a given residence time and tissue thermal factor.}
-  \item{Function \code{fire_necrosisHeight} returns the height (in m) of necrosis for tissues with given thermal factor.}
+\item{Function \code{fire_plumeTemperature} returns the plume temperature at a given height.}
+\item{Function \code{fire_barkThermalDiffusivity} returns the bark thermal diffusivity given a bark moisture value.}
+\item{Function \code{fire_radialBoleNecrosis} returns the depth of radial bole necrosis in cm.}
+\item{Function \code{fire_leafThermalFactor} returns the thermal factor of leaves as a function of specific leaf area.}
+\item{Function \code{fire_necrosisCriticalTemperature} returns the (plume) temperature yielding necrosis for a given residence time and tissue thermal factor.}
+\item{Function \code{fire_necrosisHeight} returns the height (in m) of necrosis for tissues with given thermal factor.}
 }
 }
 \description{
@@ -85,6 +85,6 @@ by Michaletz & Johnson (2008)
 \references{
 Michaletz, S.T., and Johnson, E.A. 2006. A heat transfer model of crown scorch in forest fires. Can. J. For. Res. 36: 2839–2851. doi:10.1139/X06-158.
 
-  Michaletz ST, Johnson EA. 2008. A biophysical process model of tree mortality in surface fires. Canadian Journal of Forest Research 38: 2013–2029.
+Michaletz ST, Johnson EA. 2008. A biophysical process model of tree mortality in surface fires. Canadian Journal of Forest Research 38: 2013–2029.
 }
 \keyword{internal}

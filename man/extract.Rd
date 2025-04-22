@@ -16,7 +16,7 @@ extract(
 \arguments{
 \item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
 
-\item{level}{Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results), 
+\item{level}{Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results),
 "sunlitleaf" or "shadeleaf" (leaf-level results)}
 
 \item{output}{Section of the model output to be explored. See details.}
@@ -30,10 +30,10 @@ extract(
 \value{
 Function \code{extract()} returns a data frame:
 \itemize{
-  \item{If \code{level = "forest"}, columns are "date" and variable names.}
-  \item{If \code{level = "soillayer"}, columns are "date", "soillayer" and variable names.} 
-  \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
-  \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
+\item{If \code{level = "forest"}, columns are "date" and variable names.}
+\item{If \code{level = "soillayer"}, columns are "date", "soillayer" and variable names.}
+\item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.}
+\item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.}
 }
 }
 \description{
@@ -42,14 +42,14 @@ Function \code{extract()} extracts daily or subdaily output and returns it as a 
 \details{
 When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
 example \code{output = "Plants"} will correspond to variables "LAI", "LAIlive", "Transpiration", "StemPLC",... as returned by a call
-\code{names(x$Plants)}. 
+\code{names(x$Plants)}.
 
-Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). 
+Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}).
 When using \code{subdaily = TRUE}, parameter \code{output} is not taken into account, and options for parameter \code{vars} are the following:
 \itemize{
-  \item{Variables for \code{level = "forest"} or \code{level = "soillayer"}: Not allowed. An error is raised.}
-  \item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
-  \item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
+\item{Variables for \code{level = "forest"} or \code{level = "soillayer"}: Not allowed. An error is raised.}
+\item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
+\item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
 }
 }
 \examples{

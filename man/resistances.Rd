@@ -15,7 +15,7 @@ resistances(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}. 
+\item{x}{An object of class \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}.
 The function only works with the result of simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}.}
 
 \item{cohort}{An string indicating the cohort for which resistances are desired.}
@@ -33,11 +33,11 @@ The function only works with the result of simulations with \code{transpirationM
 \value{
 If \code{draw = FALSE}, the function returns list with three items:
 \itemize{
- \item{\code{pathway}: A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). }
- \item{\code{root}: A data frame with dates in rows and root resistances for soil layers in columns.}
- \item{\code{rhizosphere}: A data frame with dates in rows and rhizosphere resistances for soil layers in columns. }
+\item{\code{pathway}: A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). }
+\item{\code{root}: A data frame with dates in rows and root resistances for soil layers in columns.}
+\item{\code{rhizosphere}: A data frame with dates in rows and rhizosphere resistances for soil layers in columns. }
 }
-Values depend on whether \code{relative = TRUE} (percentages) or \code{relative = FALSE} (absolute resistance values). 
+Values depend on whether \code{relative = TRUE} (percentages) or \code{relative = FALSE} (absolute resistance values).
 
 If \code{draw = TRUE}, a plot object is returned showing the time series of pathway resistances.
 }

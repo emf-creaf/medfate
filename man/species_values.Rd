@@ -56,15 +56,15 @@ species_parameter(
 \value{
 A vector with values for each species in \code{SpParams}:
 \itemize{
-  \item{\code{species_basalArea}: Species basal area (m2/ha).}
-  \item{\code{species_cover}: Shrub cover (in percent).}
-  \item{\code{species_density}: Plant density (ind/ha). Tree density is directly taken from the forest object, while the shrub density is estimated from cover and height by calculating the area of a single individual.}
-  \item{\code{species_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
-  \item{\code{species_fuel}: Fine fuel load (in kg/m2).}
-  \item{\code{species_LAI}: Leaf area index (m2/m2).}
-  \item{\code{species_phytovolume}: Shrub phytovolume (m3/m2).}
-  \item{\code{species_parameter}: A numeric vector with the parameter values of each input species.}
-  \item{\code{species_characterParameter}: A character vector with the parameter values of each input species.}
+\item{\code{species_basalArea}: Species basal area (m2/ha).}
+\item{\code{species_cover}: Shrub cover (in percent).}
+\item{\code{species_density}: Plant density (ind/ha). Tree density is directly taken from the forest object, while the shrub density is estimated from cover and height by calculating the area of a single individual.}
+\item{\code{species_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
+\item{\code{species_fuel}: Fine fuel load (in kg/m2).}
+\item{\code{species_LAI}: Leaf area index (m2/m2).}
+\item{\code{species_phytovolume}: Shrub phytovolume (m3/m2).}
+\item{\code{species_parameter}: A numeric vector with the parameter values of each input species.}
+\item{\code{species_characterParameter}: A character vector with the parameter values of each input species.}
 }
 }
 \description{

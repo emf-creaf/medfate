@@ -44,7 +44,7 @@
 
 \item{type}{The information to be plotted (see details).}
 
-\item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant LAI or transpiration) 
+\item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant LAI or transpiration)
 or a LAI-weighted mean (as for plant stress or plant water potential).}
 
 \item{xlim}{Range of values for x.}
@@ -61,58 +61,58 @@ or a LAI-weighted mean (as for plant stress or plant water potential).}
 An ggplot object
 }
 \description{
-Functions to plot the sub-daily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
+Functions to plot the sub-daily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}}
 or the transpiration calculations of \code{\link{transp_transpirationSperry}} or \code{\link{transp_transpirationSureau}}.
 }
 \details{
 The following plots are available for \code{spwb_day} and \code{pwb_day}:
 \itemize{
-  \item{\code{"LeafPsi"}: Leaf water potential (for shade and sunlit leaves).}
-  \item{\code{"LeafPsiAverage"}: Average leaf water potential.}
-  \item{\code{"RootPsi"}: Root crown water potential.}
-  \item{\code{"StemPsi"}: Stem water potential.}
-  \item{\code{"StemPLC"}: (Average) percentage of loss conductance in the stem conduits.}
-  \item{\code{"StemRWC"}: (Average) relative water content in the stem.}
-  \item{\code{"LeafRWC"}: Relative water content in the leaf.}
-  \item{\code{"StemSympRWC"}: (Average) relative water content in the stem symplasm.}
-  \item{\code{"LeafSympRWC"}: Relative water content in the leaf symplasm.}
-  \item{\code{"SoilPlantConductance"}: Overall soil plant conductance (calculated as the derivative of the supply function).}
-  \item{\code{"PlantExtraction"}:  Water extracted from each soil layer.}
-  \item{\code{"PlantTranspiration"}: Plant cohort transpiration per ground area.}
-  \item{\code{"TranspirationPerLeaf"}: Plant cohort transpiration per leaf area.}
-  \item{\code{"PlantGrossPhotosynthesis"}: Plant cohort gross photosynthesis per ground area.}
-  \item{\code{"GrossPhotosynthesisPerLeaf"}: Plant cohort gross photosynthesis per leaf area.}
-  \item{\code{"PlantNetPhotosynthesis"}: Plant cohort net photosynthesis per ground area.}
-  \item{\code{"NetPhotosynthesisPerLeaf"}: Plant cohort net photosynthesis per leaf area.}
-  \item{\code{"LeafTranspiration"}: Instantaneous transpiration per leaf area (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafGrossPhotosynthesis"}: Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafNetPhotosynthesis"}: Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafAbsorbedSWR"}: Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafAbsorbedPAR"}: Absorbed photosynthetically-active radiation per leaf area (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafNetLWR"}: Net long wave radiation per leaf area (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafCi"}: Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafIntrinsicWUE"}: Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafVPD"}: Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafStomatalConductance"}: Leaf stomatal conductance to water vapour (differentiates sunlit and shade leaves).}
-  \item{\code{"LeafTemperature"}: Leaf temperature (differentiates sunlit and shade leaves).}
-  \item{\code{"Temperature"}: Above-canopy, inside-canopy and soil temperature.}
-  \item{\code{"CanopyEnergyBalance"}: Canopy energy balance components.}
-  \item{\code{"SoilEnergyBalance"}: Soil energy balance components.}
-  \item{\code{"PlantWaterBalance"}: Difference between water extraction from the soil and transpired water per ground area.}
-  \item{\code{"WaterBalancePerLeaf"}: Difference between water extraction from the soil and transpired water per leaf area.}
+\item{\code{"LeafPsi"}: Leaf water potential (for shade and sunlit leaves).}
+\item{\code{"LeafPsiAverage"}: Average leaf water potential.}
+\item{\code{"RootPsi"}: Root crown water potential.}
+\item{\code{"StemPsi"}: Stem water potential.}
+\item{\code{"StemPLC"}: (Average) percentage of loss conductance in the stem conduits.}
+\item{\code{"StemRWC"}: (Average) relative water content in the stem.}
+\item{\code{"LeafRWC"}: Relative water content in the leaf.}
+\item{\code{"StemSympRWC"}: (Average) relative water content in the stem symplasm.}
+\item{\code{"LeafSympRWC"}: Relative water content in the leaf symplasm.}
+\item{\code{"SoilPlantConductance"}: Overall soil plant conductance (calculated as the derivative of the supply function).}
+\item{\code{"PlantExtraction"}:  Water extracted from each soil layer.}
+\item{\code{"PlantTranspiration"}: Plant cohort transpiration per ground area.}
+\item{\code{"TranspirationPerLeaf"}: Plant cohort transpiration per leaf area.}
+\item{\code{"PlantGrossPhotosynthesis"}: Plant cohort gross photosynthesis per ground area.}
+\item{\code{"GrossPhotosynthesisPerLeaf"}: Plant cohort gross photosynthesis per leaf area.}
+\item{\code{"PlantNetPhotosynthesis"}: Plant cohort net photosynthesis per ground area.}
+\item{\code{"NetPhotosynthesisPerLeaf"}: Plant cohort net photosynthesis per leaf area.}
+\item{\code{"LeafTranspiration"}: Instantaneous transpiration per leaf area (differentiates sunlit and shade leaves).}
+\item{\code{"LeafGrossPhotosynthesis"}: Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
+\item{\code{"LeafNetPhotosynthesis"}: Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
+\item{\code{"LeafAbsorbedSWR"}: Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
+\item{\code{"LeafAbsorbedPAR"}: Absorbed photosynthetically-active radiation per leaf area (differentiates sunlit and shade leaves).}
+\item{\code{"LeafNetLWR"}: Net long wave radiation per leaf area (differentiates sunlit and shade leaves).}
+\item{\code{"LeafCi"}: Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
+\item{\code{"LeafIntrinsicWUE"}: Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
+\item{\code{"LeafVPD"}: Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
+\item{\code{"LeafStomatalConductance"}: Leaf stomatal conductance to water vapour (differentiates sunlit and shade leaves).}
+\item{\code{"LeafTemperature"}: Leaf temperature (differentiates sunlit and shade leaves).}
+\item{\code{"Temperature"}: Above-canopy, inside-canopy and soil temperature.}
+\item{\code{"CanopyEnergyBalance"}: Canopy energy balance components.}
+\item{\code{"SoilEnergyBalance"}: Soil energy balance components.}
+\item{\code{"PlantWaterBalance"}: Difference between water extraction from the soil and transpired water per ground area.}
+\item{\code{"WaterBalancePerLeaf"}: Difference between water extraction from the soil and transpired water per leaf area.}
 }
 And the following plots are additionally available for \code{growth_day}:
-  \itemize{
-    \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis rate per dry weight.}
-    \item{\code{"MaintenanceRespiration"}: Maintenance respiration cost per dry weight.}
-    \item{\code{"RootExudation"}: Root exudation rate per dry weight.}
-    \item{\code{"LabileCarbonBalance"}: Labile carbon balance per dry weight.}
-    \item{\code{"SugarLeaf"}: Sugar concentration in leaves.}
-    \item{\code{"StarchLeaf"}: Starch concentration in leaves.}
-    \item{\code{"SugarSapwood"}: Sugar concentration in sapwood.}
-    \item{\code{"StarchSapwood"}: Starch concentration in sapwood.}
-    \item{\code{"SugarTransport"}: Phloem sugar transport rate.}
-  }
+\itemize{
+\item{\code{"GrossPhotosynthesis"}: Gross photosynthesis rate per dry weight.}
+\item{\code{"MaintenanceRespiration"}: Maintenance respiration cost per dry weight.}
+\item{\code{"RootExudation"}: Root exudation rate per dry weight.}
+\item{\code{"LabileCarbonBalance"}: Labile carbon balance per dry weight.}
+\item{\code{"SugarLeaf"}: Sugar concentration in leaves.}
+\item{\code{"StarchLeaf"}: Starch concentration in leaves.}
+\item{\code{"SugarSapwood"}: Sugar concentration in sapwood.}
+\item{\code{"StarchSapwood"}: Starch concentration in sapwood.}
+\item{\code{"SugarTransport"}: Phloem sugar transport rate.}
+}
 }
 \note{
 Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.

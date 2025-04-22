@@ -27,7 +27,7 @@ double erfInv(double x){
 //' @param T_necrosis Temperature of tissue necrosis (degrees Celsius).
 //' @param rho_air Air density (kg/m3).
 //' @param rho_bark Bark density (kg/m3).
-//' @param fmc_bark Bark moisture content (\% dry weight).
+//' @param fmc_bark Bark moisture content (% dry weight).
 //' @param z height (m).
 //' @param SLA Specific leaf area (m2/kg).
 //' @param h Heat transfer coefficient

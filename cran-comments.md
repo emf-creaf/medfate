@@ -1,6 +1,6 @@
 ## Major change submission
 
-This submission (v4.8.1) incorporates some new functions and bug correction.
+This submission (v4.8.1) incorporates some new functions and bug corrections.
 
 ## Tested environments
 

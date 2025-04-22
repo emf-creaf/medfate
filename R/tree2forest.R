@@ -11,9 +11,9 @@
 #' @param CrownRatio Crown ratio (fraction of total height)
 #' @param FoliarBiomass Standing dry biomass of leaves (kg/m2)
 #' @param FuelLoading Fine fuel loading (kg/m2)
-#' @param Z50 Depth (in mm) corresponding to 50\% of fine roots.
-#' @param Z95 Depth (in mm) corresponding to 95\% of fine roots.
-#' @param Z100 Depth (in mm) corresponding to 100\% of fine roots.
+#' @param Z50 Depth (in mm) corresponding to 50% of fine roots.
+#' @param Z95 Depth (in mm) corresponding to 95% of fine roots.
+#' @param Z100 Depth (in mm) corresponding to 100% of fine roots.
 #'
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 

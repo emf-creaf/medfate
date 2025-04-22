@@ -27,10 +27,10 @@ semi_implicit_integration(
 
 \item{stemCavitationRecovery, leafCavitationRecovery}{A string indicating how refilling of embolized conduits is done:
 \itemize{
-  \item{"none" - no refilling.}
-  \item{"annual" - every first day of the year.}
-  \item{"rate" - following a rate of new sapwood formation.}
-  \item{"total" - instantaneous complete refilling.}
+\item{"none" - no refilling.}
+\item{"annual" - every first day of the year.}
+\item{"rate" - following a rate of new sapwood formation.}
+\item{"total" - instantaneous complete refilling.}
 }}
 }
 \value{
@@ -42,7 +42,7 @@ Function \code{initSureauNetworks} initializes hydraulic networks for all plant 
 Function \code{semi_implicit_integration} updates water potentials and cavitation across the hydraulic network
 }
 \references{
-Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022)
 SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
 Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 }
@@ -51,8 +51,8 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 }
 \author{
 \itemize{
-  \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
-  \item{Nicolas Martin-StPaul, URFM-INRAE}
+\item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+\item{Nicolas Martin-StPaul, URFM-INRAE}
 }
 }
 \keyword{internal}

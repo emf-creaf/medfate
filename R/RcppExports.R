@@ -440,7 +440,7 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' @param T_necrosis Temperature of tissue necrosis (degrees Celsius).
 #' @param rho_air Air density (kg/m3).
 #' @param rho_bark Bark density (kg/m3).
-#' @param fmc_bark Bark moisture content (\% dry weight).
+#' @param fmc_bark Bark moisture content (% dry weight).
 #' @param z height (m).
 #' @param SLA Specific leaf area (m2/kg).
 #' @param h Heat transfer coefficient
@@ -1071,7 +1071,7 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOff
 #'
 #' @param stressValue Current value of the stress variable (0 to 1, 
 #'                    with higher values indicate stronger stress).
-#' @param stressThreshold Threshold to indicate 50\% annual mortality probability.
+#' @param stressThreshold Threshold to indicate 50% annual mortality probability.
 #' 
 #' @return Returns a probability (between 0 and 1)
 #' 
@@ -1247,7 +1247,7 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #'
 #' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
 #' @param K Whole-plant relative conductance (0-1).
-#' @param psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative transpiration.
+#' @param psi_extract Soil water potential (in MPa) corresponding to 50% whole-plant relative transpiration.
 #' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
 #' @param v Proportion of fine roots within each soil layer.
 #' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
@@ -1256,7 +1256,7 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
 #' @param kxylem Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).
 #' @param pCrit Proportion of maximum conductance considered critical for hydraulic functioning.
-#' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50\%, 88\% and 12\% percent conductance loss.
+#' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50%, 88% and 12% percent conductance loss.
 #' @param temp Temperature (in degrees Celsius).
 #' 
 #' @details Details of plant hydraulic models are given the medfate book. 
@@ -1581,7 +1581,7 @@ hydraulics_regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemm
 #' @param psiRhizo Water potential (in MPa) in the rhizosphere (root surface).
 #' @param psiStem Water potential (in MPa) in the stem.
 #' @param psiLeaf Water potential (in MPa) in the leaf.
-#' @param PLCstem Percent loss of conductance (in \%) in the stem.
+#' @param PLCstem Percent loss of conductance (in %) in the stem.
 #' @param L Vector with the length of coarse roots (mm) for each soil layer.
 #' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
 #' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
@@ -1855,7 +1855,7 @@ hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry
 #' 
 #' @param I Soil infiltration (in mm of water).
 #' @param widths Width of soil layers (in mm).
-#' @param macro Macroporosity of soil layers (in \%).
+#' @param macro Macroporosity of soil layers (in %).
 #' @param a,b Parameters of the extinction function used for water infiltration.
 #' 
 #' @keywords internal
@@ -2459,11 +2459,11 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 #'         \item{\code{Tmax_LAI}: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 #'         \item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-#'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative transpiration (in MPa).}
+#'         \item{\code{Psi_Extract}: Water potential corresponding to 50% relative transpiration (in MPa).}
 #'         \item{\code{Exp_Extract}: Parameter of the Weibull function regulating transpiration reduction.}
 #'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve (Weibull).}
 #'         \item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
-#'         \item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
+#'         \item{\code{WUE_par}: Coefficient regulating the influence of % PAR on gross photosynthesis.}
 #'         \item{\code{WUE_co2}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}
 #'         \item{\code{WUE_vpd}: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.}
 #'       }
@@ -2930,9 +2930,9 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' 
 #' Functions to calculate properties of fine/coarse roots within the soil, given root system parameters and soil layer definition.
 #' 
-#' @param Z50 A vector of depths (in mm) corresponding to 50\% of roots.
-#' @param Z95 A vector of depths (in mm) corresponding to 95\% of roots.
-#' @param Z100 A vector of depths (in mm) corresponding to 100\% of roots.
+#' @param Z50 A vector of depths (in mm) corresponding to 50% of roots.
+#' @param Z95 A vector of depths (in mm) corresponding to 95% of roots.
+#' @param Z100 A vector of depths (in mm) corresponding to 100% of roots.
 #' @param Zcone A vector of depths (in mm) corresponding to the root cone tip.
 #' @param d The width (in mm) corresponding to each soil layer.
 #' @param v Vector of proportions of fine roots in each soil layer.

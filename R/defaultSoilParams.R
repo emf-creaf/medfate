@@ -12,9 +12,9 @@
 #' @return A data frame with layers in rows and the following columns (and default values):
 #' \itemize{
 #'   \item{\code{widths (= c(300,700,1000,2000)}: Width of soil layers (in mm).}
-#'   \item{\code{clay (= 25)}: Clay percentage for each layer (in \%).}
-#'   \item{\code{sand (= 25)}: Sand percentage for each layer (in \%).}
-#'   \item{\code{om (= NA)}: Organic matter percentage for each layer (in \%) (optional).}
+#'   \item{\code{clay (= 25)}: Clay percentage for each layer (in %).}
+#'   \item{\code{sand (= 25)}: Sand percentage for each layer (in %).}
+#'   \item{\code{om (= NA)}: Organic matter percentage for each layer (in %) (optional).}
 #'   \item{\code{nitrogen (= NA)}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg) (optional).}
 #'   \item{\code{bd (= 1.5)}: Bulk density for each layer (in g/cm3).}
 #'   \item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content (volume basis) for each layer.}

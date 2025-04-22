@@ -37,3 +37,4 @@ NeedsCompilation: yes
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
 LazyData: true
+Roxygen: list(markdown = TRUE)

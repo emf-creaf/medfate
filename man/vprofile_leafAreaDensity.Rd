@@ -105,11 +105,11 @@ vprofile_windExtinction(
 \value{
 If \code{draw = FALSE}, the functions return a numeric vector with values measured at each height. Units depend on the profile function:
 \itemize{
-  \item{\code{vprofile_leafAreaDensity}: Cumulative LAI (m2/m2) per height bin.}
-  \item{\code{vprofile_fuelBulkDensity}: Fuel bulk density (kg/m3) per height bin.}
-  \item{\code{vprofile_PARExtinction}: Percent of photosynthetically active radiation (\%) corresponding to each height.}
-  \item{\code{vprofile_SWRExtinction}: Percent of shortwave radiation (\%) corresponding to each height.}
-  \item{\code{vprofile_windExtinction}: Wind speed (m/s) corresponding to each height.}
+\item{\code{vprofile_leafAreaDensity}: Cumulative LAI (m2/m2) per height bin.}
+\item{\code{vprofile_fuelBulkDensity}: Fuel bulk density (kg/m3) per height bin.}
+\item{\code{vprofile_PARExtinction}: Percent of photosynthetically active radiation (\%) corresponding to each height.}
+\item{\code{vprofile_SWRExtinction}: Percent of shortwave radiation (\%) corresponding to each height.}
+\item{\code{vprofile_windExtinction}: Wind speed (m/s) corresponding to each height.}
 }
 
 If \code{draw = TRUE} the functions return a ggplot object, instead.
