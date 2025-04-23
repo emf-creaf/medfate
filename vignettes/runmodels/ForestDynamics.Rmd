@@ -70,8 +70,8 @@ In this vignette we will fake a ten-year weather input by repeating the example 
 meteo <- rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
                     examplemeteo, examplemeteo, examplemeteo, examplemeteo,
                     examplemeteo, examplemeteo)
-meteo$dates = seq(as.Date("2001-01-01"), 
-                  as.Date("2010-12-29"), by="day")
+meteo$dates <- as.character(seq(as.Date("2001-01-01"), 
+                                as.Date("2010-12-29"), by="day"))
 ```
 
 

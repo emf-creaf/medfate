@@ -1,3 +1,6 @@
+# medfate 4.8.2
+* Bug correction detecting date vector objects (Rcpp issue)
+
 # medfate 4.8.1
 * New functions utils_rockOptimization, utils_ldrOptimization and utils_ldrExploration
 * Bug correction: minimum cuticular transpiration in Granier

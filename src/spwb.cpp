@@ -50,6 +50,14 @@ CharacterVector getWeatherDates(DataFrame meteo){
         dS[i] = d.format("%Y-%m-%d");
       }
       dateStrings = dS;
+    } else if(vector.inherits("Date")) {
+      DateVector dateVector = Rcpp::as<Rcpp::DateVector>(vector);
+      CharacterVector dS(dateVector.size(), NA_STRING);
+      for(int i=0;i< dateVector.size();i++) {
+        Date d = dateVector[i];
+        dS[i] = d.format("%Y-%m-%d");
+      }
+      dateStrings = dS;
     } else if(is<DatetimeVector>(vector)) {
       DatetimeVector datetimeVector = Rcpp::as<Rcpp::DatetimeVector>(vector);
       CharacterVector dS(datetimeVector.size(), NA_STRING);
