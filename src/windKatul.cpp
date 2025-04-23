@@ -371,7 +371,7 @@ void windCanopyTurbulence_inner(DataFrame output, NumericVector zmid, NumericVec
 //'   \item{\code{dU1}: dUdz/u*, where dUdz is mean velocity gradient and u* is friction velocity.}
 //'   \item{\code{epsilon1}: epsilon/(u^3/h) where epsilon is the turbulent kinetic dissipation rate, u* is friction velocity and h is canopy height.}
 //'   \item{\code{k1}: k/(u*^2), where k is the turbulent kinetic energy and u* is friction velocity.}
-//'   \item{\code{uw1}: <uw>/(u*^2), where <uw> is the Reynolds stress and u* is friction velocity.}
+//'   \item{\code{uw1}: uw/(u*^2), where uw is the Reynolds stress and u* is friction velocity.}
 //'   \item{\code{Lmix1}: Mixing length.}
 //' }
 //' 

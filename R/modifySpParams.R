@@ -19,9 +19,9 @@
 #' Alternatively, \code{customParams} can be a named list or named numeric vector as for \code{modifyInputParams}.
 #' 
 #' When calling \code{modifyInputParams}, \code{customParams} must be either a named list or a named numeric vector. 
-#' Cohort parameters are specified using the syntax "<cohortName>/<paramName>" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176'). 
-#' Soil layer parameters are specified using the syntax "<paramName>@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1). 
-#' Control parameters are specified using either "<paramName>" (e.g "phloemConductanceFactor") or "<paramName>$<subParamName>" (e.g "maximumRelativeGrowthRates$leaf"). 
+#' Cohort parameters are specified using the syntax "\[cohortName\]/\[paramName\]" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176'). 
+#' Soil layer parameters are specified using the syntax "\[paramName\]@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1). 
+#' Control parameters are specified using either "\[paramName\]" (e.g "phloemConductanceFactor") or "\[paramName\]$\[subParamName\]" (e.g "maximumRelativeGrowthRates$leaf"). 
 #' It may seem unnecessary to modify soil or control parameters via a function, but \code{modifyInputParams} is called from optimization functions (see \code{\link{optimization}}).
 #'  
 #' @return Function \code{modifySpParams} returns a modified species parameter data frame. 
