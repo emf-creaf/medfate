@@ -134,7 +134,7 @@ following elements:</p><ul><li><p><code>"cohorts"</code>: A data frame with coho
 <li><p><code>"weather"</code>: A vector with the input weather.</p></li>
 <li><p><code>"WaterBalance"</code>: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in <code><a href="spwb.html">spwb</a></code>.</p></li>
 <li><p><code>"Soil"</code>: A data frame with results for each soil layer:
-    </p><ul><li><p><code>"Psi"</code>: Soil water potential (in MPa) at the end of the day.</p></li>
+</p><ul><li><p><code>"Psi"</code>: Soil water potential (in MPa) at the end of the day.</p></li>
 <li><p><code>"HerbTranspiration"</code>: Water extracted by herbaceous plants from each soil layer (in mm).</p></li>
 <li><p><code>"HydraulicInput"</code>: Water entering each soil layer from other layers, transported via plant roots (in mm).</p></li>
 <li><p><code>"HydraulicOutput"</code>: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm).</p></li>
@@ -153,9 +153,9 @@ following elements:</p><ul><li><p><code>"cohorts"</code>: A data frame with coho
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The simulation functions allow using three different sub-models of transpiration and photosynthesis:</p><ul><li><p>The sub-model corresponding to 'Granier' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationGranier</a></code> and was described in De Caceres et al. (2015),
-  and implements an approach originally described in Granier et al. (1999).</p></li>
+and implements an approach originally described in Granier et al. (1999).</p></li>
 <li><p>The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationSperry</a></code> and was described in De Caceres et al. (2021), and
-  implements a modelling approach originally described in Sperry et al. (2017).</p></li>
+implements a modelling approach originally described in Sperry et al. (2017).</p></li>
 <li><p>The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationSureau</a></code> and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).</p></li>
 </ul><p>Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.</p>
     </div>

@@ -153,7 +153,7 @@ within plants.</p>
     <p>A list with the following elements:</p><ul><li><p><code>"cohorts"</code>: A data frame with cohort information, copied from <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
 <li><p><code>"Stand"</code>: A vector of stand-level variables.</p></li>
 <li><p><code>"Plants"</code>: A data frame of results for each plant cohort. When using <code>transp_transpirationGranier</code>, element <code>"Plants"</code> includes:
-    </p><ul><li><p><code>"LAI"</code>: Leaf area index of the plant cohort.</p></li>
+</p><ul><li><p><code>"LAI"</code>: Leaf area index of the plant cohort.</p></li>
 <li><p><code>"LAIlive"</code>: Leaf area index of the plant cohort, assuming all leaves are unfolded.</p></li>
 <li><p><code>"AbsorbedSWRFraction"</code>: Fraction of SWR absorbed by each cohort.</p></li>
 <li><p><code>"Transpiration"</code>: Transpirated water (in mm) corresponding to each cohort.</p></li>
@@ -161,8 +161,8 @@ within plants.</p>
 <li><p><code>"psi"</code>: Water potential (in MPa) of the plant cohort (average over soil layers).</p></li>
 <li><p><code>"DDS"</code>: Daily drought stress [0-1] (relative whole-plant conductance).</p></li>
 </ul>
-  When using <code>transp_transpirationSperry</code> or <code>transp_transpirationSureau</code>, element <code>"Plants"</code> includes:
-    <ul><li><p><code>"LAI"</code>: Leaf area index of the plant cohort.</p></li>
+When using <code>transp_transpirationSperry</code> or <code>transp_transpirationSureau</code>, element <code>"Plants"</code> includes:
+<ul><li><p><code>"LAI"</code>: Leaf area index of the plant cohort.</p></li>
 <li><p><code>"LAIlive"</code>: Leaf area index of the plant cohort, assuming all leaves are unfolded.</p></li>
 <li><p><code>"Extraction"</code>: Water extracted from the soil (in mm) for each cohort.</p></li>
 <li><p><code>"Transpiration"</code>: Transpirated water (in mm) corresponding to each cohort.</p></li>
@@ -187,23 +187,23 @@ within plants.</p>
 <li><p><code>"Extraction"</code>: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).</p>
 <p>The remaining items are only given by <code>transp_transpirationSperry</code> or <code>transp_transpirationSureau</code>:</p></li>
 <li><p><code>"EnergyBalance"</code>: A list with the following elements:
-    </p><ul><li><p><code>"Temperature"</code>: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.</p></li>
+</p><ul><li><p><code>"Temperature"</code>: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.</p></li>
 <li><p><code>"CanopyEnergyBalance"</code>: A data frame with the components of the canopy energy balance (in W/m2) for each time step.</p></li>
 <li><p><code>"SoilEnergyBalance"</code>: A data frame with the components of the soil energy balance (in W/m2) for each time step.</p></li>
 </ul></li>
 <li><p><code>"RhizoPsi"</code>: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.</p></li>
 <li><p><code>"Sunlitleaves"</code> and <code>"ShadeLeaves"</code>: Data frames for sunlit leaves and shade leaves and the following columns per cohort:
-    </p><ul><li><p><code>"LAI"</code>: Cumulative leaf area index of sunlit/shade leaves.</p></li>
+</p><ul><li><p><code>"LAI"</code>: Cumulative leaf area index of sunlit/shade leaves.</p></li>
 <li><p><code>"Vmax298"</code>: Average maximum carboxilation rate for sunlit/shade leaves.</p></li>
 <li><p><code>"Jmax298"</code>: Average maximum electron transport rate for sunlit/shade leaves.</p></li>
 </ul></li>
 <li><p><code>"ExtractionInst"</code>: Water extracted by each plant cohort during each time step.</p></li>
 <li><p><code>"PlantsInst"</code>: A list with instantaneous (per time step) results for each plant cohort:
-    </p><ul><li><p><code>"E"</code>: A data frame with the cumulative transpiration (mm) for each plant cohort during each time step.</p></li>
+</p><ul><li><p><code>"E"</code>: A data frame with the cumulative transpiration (mm) for each plant cohort during each time step.</p></li>
 <li><p><code>"Ag"</code>: A data frame with the cumulative gross photosynthesis (gC/m2) for each plant cohort during each time step.</p></li>
 <li><p><code>"An"</code>: A data frame with the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step.</p></li>
 <li><p><code>"Sunlitleaves"</code> and <code>"ShadeLeaves"</code>: Lists with instantaneous (for each time step) results for sunlit leaves and shade leaves and the following items:
-        </p><ul><li><p><code>"Abs_SWR"</code>: A data frame with instantaneous absorbed short-wave radiation (SWR).</p></li>
+</p><ul><li><p><code>"Abs_SWR"</code>: A data frame with instantaneous absorbed short-wave radiation (SWR).</p></li>
 <li><p><code>"Net_LWR"</code>: A data frame with instantaneous net long-wave radiation (LWR).</p></li>
 <li><p><code>"An"</code>: A data frame with instantaneous net photosynthesis (in micromol/m2/s).</p></li>
 <li><p><code>"Ci"</code>: A data frame with instantaneous intercellular CO2 concentration (in ppm).</p></li>
@@ -230,9 +230,9 @@ within plants.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Three sub-models are available:</p><ul><li><p>Sub-model in function <code>transp_transpirationGranier</code> was described in De Cáceres et al. (2015),
-  and implements an approach originally described in Granier et al. (1999).</p></li>
+and implements an approach originally described in Granier et al. (1999).</p></li>
 <li><p>Sub-model in function <code>transp_transpirationSperry</code> was described in De Cáceres et al. (2021), and
-  implements a modelling approach originally described in Sperry et al. (2017).</p></li>
+implements a modelling approach originally described in Sperry et al. (2017).</p></li>
 <li><p>Sub-model in function <code>transp_transpirationSureau</code> was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).</p></li>
 </ul></div>
     <div class="section level2">

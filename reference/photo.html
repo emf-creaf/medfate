@@ -171,11 +171,11 @@
 
 
 <dt id="arg-vmax-vmax-sl-vmax-sh">Vmax298, Vmax298SL, Vmax298SH<a class="anchor" aria-label="anchor" href="#arg-vmax-vmax-sl-vmax-sh"></a></dt>
-<dd><p>Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.</p></dd>
+<dd><p>Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol<em>s-1</em>m-2) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.</p></dd>
 
 
 <dt id="arg-jmax-jmax-sl-jmax-sh">Jmax298, Jmax298SL, Jmax298SH<a class="anchor" aria-label="anchor" href="#arg-jmax-jmax-sl-jmax-sh"></a></dt>
-<dd><p>Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.</p></dd>
+<dd><p>Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol<em>s-1</em>m-2) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.</p></dd>
 
 
 <dt id="arg-q">Q<a class="anchor" aria-label="anchor" href="#arg-q"></a></dt>
@@ -191,7 +191,7 @@
 
 
 <dt id="arg-jmax">Jmax<a class="anchor" aria-label="anchor" href="#arg-jmax"></a></dt>
-<dd><p>Maximum electron transport rate per leaf area (micromol*s-1*m-2).</p></dd>
+<dd><p>Maximum electron transport rate per leaf area (micromol<em>s-1</em>m-2).</p></dd>
 
 
 <dt id="arg-km">Km<a class="anchor" aria-label="anchor" href="#arg-km"></a></dt>
@@ -199,7 +199,7 @@
 
 
 <dt id="arg-vmax">Vmax<a class="anchor" aria-label="anchor" href="#arg-vmax"></a></dt>
-<dd><p>Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).</p></dd>
+<dd><p>Maximum Rubisco carboxylation rate per leaf area (micromol<em>s-1</em>m-2).</p></dd>
 
 
 <dt id="arg-catm">Catm<a class="anchor" aria-label="anchor" href="#arg-catm"></a></dt>
@@ -231,7 +231,7 @@
 
 
 <dt id="arg-e">E<a class="anchor" aria-label="anchor" href="#arg-e"></a></dt>
-<dd><p>Transpiration flow rate per leaf area (mmol*s-1*m-2).</p></dd>
+<dd><p>Transpiration flow rate per leaf area (mmol<em>s-1</em>m-2).</p></dd>
 
 
 <dt id="arg-psileaf">psiLeaf<a class="anchor" aria-label="anchor" href="#arg-psileaf"></a></dt>
@@ -284,20 +284,20 @@
 <li><p><code>photo_KmTemp</code>: Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1) and Oxigen (mmol * mol-1).</p></li>
 <li><p><code>photo_VmaxTemp</code>: Temperature correction of Vmax298.</p></li>
 <li><p><code>photo_JmaxTemp</code>: Temperature correction of Jmax298.</p></li>
-<li><p><code>photo_electronLimitedPhotosynthesis</code>: Electron-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).</p></li>
-<li><p><code>photo_rubiscoLimitedPhotosynthesis</code>: Rubisco-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).</p></li>
-<li><p><code>photo_photosynthesis</code>: Calculates gross photosynthesis (micromol*s-1*m-2) following (Farquhar et al. (1980) and Collatz et al (1991).</p></li>
+<li><p><code>photo_electronLimitedPhotosynthesis</code>: Electron-limited photosynthesis (micromol<em>s-1</em>m-2) following Farquhar et al. (1980).</p></li>
+<li><p><code>photo_rubiscoLimitedPhotosynthesis</code>: Rubisco-limited photosynthesis (micromol<em>s-1</em>m-2) following Farquhar et al. (1980).</p></li>
+<li><p><code>photo_photosynthesis</code>: Calculates gross photosynthesis (micromol<em>s-1</em>m-2) following (Farquhar et al. (1980) and Collatz et al (1991).</p></li>
 <li><p><code>photo_leafPhotosynthesisFunction</code>: Returns a data frame with the following columns:
-    </p><ul><li><p><code>LeafTemperature</code>: Leaf temperature (ºC).</p></li>
+</p><ul><li><p><code>LeafTemperature</code>: Leaf temperature (ºC).</p></li>
 <li><p><code>LeafVPD</code>: Leaf vapor pressure deficit (kPa).</p></li>
 <li><p><code>LeafCi</code>: Internal CO2 concentration (micromol * mol-1).</p></li>
 <li><p><code>Gsw</code>: Leaf stomatal conductance to water vapor (mol * s-1 * m-2).</p></li>
-<li><p><code>GrossPhotosynthesis</code>: Gross photosynthesis (micromol*s-1*m-2).</p></li>
-<li><p><code>NetPhotosynthesis</code>: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).</p></li>
+<li><p><code>GrossPhotosynthesis</code>: Gross photosynthesis (micromol<em>s-1</em>m-2).</p></li>
+<li><p><code>NetPhotosynthesis</code>: Net photosynthesis, after discounting autotrophic respiration (micromol<em>s-1</em>m-2).</p></li>
 </ul></li>
 <li><p><code>photo_sunshadePhotosynthesisFunction</code>: Returns a data frame with the following columns:
-    </p><ul><li><p><code>GrossPhotosynthesis</code>: Gross photosynthesis (micromol*s-1*m-2).</p></li>
-<li><p><code>NetPhotosynthesis</code>: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).</p></li>
+</p><ul><li><p><code>GrossPhotosynthesis</code>: Gross photosynthesis (micromol<em>s-1</em>m-2).</p></li>
+<li><p><code>NetPhotosynthesis</code>: Net photosynthesis, after discounting autotrophic respiration (micromol<em>s-1</em>m-2).</p></li>
 <li><p><code>LeafCiSL</code>: Sunlit leaf internal CO2 concentration (micromol * mol-1).</p></li>
 <li><p><code>LeafCiSH</code>: Shade leaf internal CO2 concentration (micromol * mol-1).</p></li>
 <li><p><code>LeafTempSL</code>: Sunlit leaf temperature (ºC).</p></li>
@@ -306,8 +306,8 @@
 <li><p><code>LeafVPDSH</code>: Shade leaf vapor pressure deficit (kPa).</p></li>
 </ul></li>
 <li><p><code>photo_multilayerPhotosynthesisFunction</code>: Return a data frame with the following columns:
-    </p><ul><li><p><code>GrossPhotosynthesis</code>: Gross photosynthesis (micromol*s-1*m-2).</p></li>
-<li><p><code>NetPhotosynthesis</code>: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).</p></li>
+</p><ul><li><p><code>GrossPhotosynthesis</code>: Gross photosynthesis (micromol<em>s-1</em>m-2).</p></li>
+<li><p><code>NetPhotosynthesis</code>: Net photosynthesis, after discounting autotrophic respiration (micromol<em>s-1</em>m-2).</p></li>
 </ul></li>
 </ul></div>
     <div class="section level2">

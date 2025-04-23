@@ -57,7 +57,7 @@
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
     <p>An object of class <code>forest</code> contains the description of the woody (tree or shrub) cohorts and herb layer of a forest patch.
 It has the following structure (see details):</p><ul><li><p><code>treeData</code>: A data frame of tree cohorts (in rows) and the following columns:
-      </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
+</p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Height</code>: Total tree height (in cm).</p></li>
 <li><p><code>DBH</code>: Tree diameter at breast height (in cm).</p></li>
 <li><p><code>N</code>: Density (number of individuals/hectare) that the measured tree represents.</p></li>
@@ -65,7 +65,7 @@ It has the following structure (see details):</p><ul><li><p><code>treeData</code
 <li><p><code>Z95</code>: Depth (in mm) corresponding to 95% of fine roots.</p></li>
 </ul></li>
 <li><p><code>shrubData</code>: A data frame of shrub cohorts (in rows) and the following columns:
-      </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
+</p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Height</code>: Average total height of plants (in cm).</p></li>
 <li><p><code>Cover</code>: Percent cover.</p></li>
 <li><p><code>Z50</code>: Depth (in mm) corresponding to 50% of fine roots.</p></li>
@@ -74,7 +74,7 @@ It has the following structure (see details):</p><ul><li><p><code>treeData</code
 <li><p><code>herbCover</code>: Percent cover of the herb layer (optional).</p></li>
 <li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer (optional).</p></li>
 <li><p><code>seedBank</code>: A data frame containing seed bank information with the following columns:
-      </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
+</p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Percent</code>: Amount of seeds in relation to full seed bank (in %).</p></li>
 </ul></li>
 </ul></div>
@@ -86,14 +86,14 @@ It has the following structure (see details):</p><ul><li><p><code>treeData</code
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The structure presented above for <code>forest</code> objects corresponds to the required data elements.
 A <code>forest</code> object can contain additional information when this is available. Data frames <code>treeData</code>
-and <code>shrubData</code> can contain additional columns:</p><ul><li><p><code>LAI</code>: Leaf area index (m2/m2)</p></li>
-<li><p><code>FoliarBiomass</code>: Standing dry biomass of leaves (kg/m2)</p></li>
-<li><p><code>FuelLoading</code>: Fine fuel loading (kg/m2)</p></li>
+and <code>shrubData</code> can contain additional columns:</p><ul><li><p><code>LAI</code>: Leaf area index (m2/m2).</p></li>
+<li><p><code>FoliarBiomass</code>: Standing dry biomass of leaves (kg/m2).</p></li>
+<li><p><code>FuelLoading</code>: Fine fuel loading (kg/m2).</p></li>
 <li><p><code>CrownRatio</code>: The ratio between crown length and total height (between 0 and 1)</p></li>
 <li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
 <li><p><code>ObsID</code>: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts through simulations.
-  In <code><a href="fordyn.html">fordyn</a></code>, the use of these identifiers can be combined with the control option <code>keepCohortsWithObsID</code> so that these cohorts are not merged
-  or removed during simulations.</p></li>
+In <code><a href="fordyn.html">fordyn</a></code>, the use of these identifiers can be combined with the control option <code>keepCohortsWithObsID</code> so that these cohorts are not merged
+or removed during simulations.</p></li>
 </ul><p>Similarly, one can define <code>forest</code> list elements <code>herbLAI</code>, <code>herbFoliarBiomass</code> or <code>herbFuelLoading</code>.
 All these values are used to override allometry-based estimates of those variables when initializing
 inputs for functions <code><a href="spwb.html">spwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>. Note that leaf area index, foliar biomass and

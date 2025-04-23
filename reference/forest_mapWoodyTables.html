@@ -78,7 +78,7 @@
 
 
 <dt id="arg-mapping-x">mapping_x<a class="anchor" aria-label="anchor" href="#arg-mapping-x"></a></dt>
-<dd><p>A named character vector to specify mappings of columns in <code>x</code> into attributes of <code>treeData</code> data frames. Accepted names (and the corresponding specifications for the columns in <code>x</code> are:</p></dd>
+<dd><p>A named character vector to specify mappings of columns in <code>x</code> into attributes of <code>treeData</code> data frames. Accepted names (and the corresponding specifications for the columns in <code>x</code>) are:</p></dd>
 
 
 <dt id="arg-spparams">SpParams<a class="anchor" aria-label="anchor" href="#arg-spparams"></a></dt>
@@ -97,17 +97,18 @@ densities per hectare.</p></dd>
 
 
 <dt id="arg-mapping-y">mapping_y<a class="anchor" aria-label="anchor" href="#arg-mapping-y"></a></dt>
-<dd><p>A named character vector to specify mappings of columns in <code>y</code> into attributes of <code>shrubData</code> data frames. Accepted names (and the corresponding specifications for the columns in <code>y</code>) are:</p><ul><li><p>"Species": Species code (should follow codes in <code>SpParams</code>).</p></li>
-<li><p>"Species.name": Species name. In this case, the species code will be drawn by matching names with species names in <code>SpParams</code>.</p></li>
-<li><p>"N": Tree density (in ind./ha).</p></li>
-<li><p>"Cover": Shrub cover (in %).</p></li>
-<li><p>"D1": Shrub largest crown diameter (in cm).</p></li>
-<li><p>"D2": Shrub crown diameter orthogonal to the largest one (in cm).</p></li>
-<li><p>"plot.size": Plot size (in m2) to which each record refers to. This is used to calculate tree density (stems per hectare) when not supplied or shrub cover when shrub data is given at the individual level.</p></li>
-<li><p>"DBH": Diameter at breast height (in cm).</p></li>
-<li><p>"Height": Tree or shrub height (in cm).</p></li>
-<li><p>"Z50": Depth (in mm) corresponding to 50% of fine roots.</p></li>
-<li><p>"Z95": Depth (in mm) corresponding to 95% of fine roots.</p></li>
+<dd><p>A named character vector to specify mappings of columns in <code>y</code> into attributes of <code>shrubData</code> data frames.
+Accepted names (and the corresponding specifications for the columns in <code>y</code>) are:</p><ul><li><p><code>Species</code>: Species code (should follow codes in <code>SpParams</code>).</p></li>
+<li><p><code>Species.name</code>: Species name. In this case, the species code will be drawn by matching names with species names in <code>SpParams</code>.</p></li>
+<li><p><code>N</code>: Tree density (in individuals per ha).</p></li>
+<li><p><code>Cover</code>: Shrub cover (in percent).</p></li>
+<li><p><code>D1</code>: Shrub largest crown diameter (in cm).</p></li>
+<li><p><code>D2</code>: Shrub crown diameter orthogonal to the largest one (in cm).</p></li>
+<li><p><code>plot.size</code>: Plot size (in m2) to which each record refers to. This is used to calculate tree density (stems per hectare) when not supplied or shrub cover when shrub data is given at the individual level.</p></li>
+<li><p><code>DBH</code>: Diameter at breast height (in cm).</p></li>
+<li><p><code>Height</code>: Tree or shrub height (in cm).</p></li>
+<li><p><code>Z50</code>: Depth (in mm) corresponding to 50 percent of fine roots.</p></li>
+<li><p><code>Z95</code>: Depth (in mm) corresponding to 95 percent of fine roots.</p></li>
 </ul></dd>
 
 
