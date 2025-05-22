@@ -1,5 +1,5 @@
 pandoc: '3.2'
-pkgdown: 2.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   runmodels/AdvancedWaterEnergyBalance: runmodels/AdvancedWaterEnergyBalance.html
@@ -16,7 +16,7 @@ articles:
   modelanalysis/SensitivityCalibration: modelanalysis/SensitivityCalibration.html
   evaluation/StandLevelEvaluation: evaluation/StandLevelEvaluation.html
   intro/UnderstandingInputs: intro/UnderstandingInputs.html
-last_built: 2025-04-23T08:38Z
+last_built: 2025-05-22T06:52Z
 urls:
   reference: https://emf-creaf.github.io/medfate/reference
   article: https://emf-creaf.github.io/medfate/articles
