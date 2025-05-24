@@ -268,7 +268,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
     layers <- c(1:length(x$spwbInput$soil$widths), "Overall")
     output <- "Soil"
     out <- data.frame(date = rep(dates, length(layers)),
-                      soillayer = as.character(gl(length(layers), length(dates), labels = layers)))
+                      soillayer = layers[gl(length(layers), length(dates))])
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
@@ -289,8 +289,8 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       for(i in 1:length(output)) output[i] <-match.arg(output[i], plant_level_names)
     }
     out <- data.frame(date = rep(dates, length(cohnames)),
-                      cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
-                      species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
+                      cohort = cohnames[gl(length(cohnames), length(dates))],
+                      species = spnames[gl(length(cohnames), length(dates))])
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
@@ -311,8 +311,8 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       for(i in 1:length(output)) output[i] <-match.arg(output[i], leaf_level_names)
     }
     out <- data.frame(date = rep(dates, length(cohnames)),
-                      cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
-                      species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
+                      cohort = cohnames[gl(length(cohnames), length(dates))],
+                      species = spnames[gl(length(cohnames), length(dates))])
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
@@ -332,8 +332,8 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       for(i in 1:length(output)) output[i] <-match.arg(output[i], leaf_level_names)
     }
     out <- data.frame(date = rep(dates, length(cohnames)),
-                      cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
-                      species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
+                      cohort = cohnames[gl(length(cohnames), length(dates))],
+                      species = spnames[gl(length(cohnames), length(dates))])
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
