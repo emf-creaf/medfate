@@ -786,8 +786,11 @@ List copyBasicTranspirationOutput(List btc, List x) {
   if(plantWaterPools) {
     for(int c=0;c<numCohorts;c++) {
       NumericMatrix ExtractionPoolsCohComm = ExtractionPoolsComm[c];
-      ExtractionPools[c] = copyNumericMatrix(ExtractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
+      NumericMatrix ExtractionPoolsCohComm_c = copyNumericMatrix(ExtractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
+      ExtractionPoolsCohComm_c.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+      ExtractionPools[c] = ExtractionPoolsCohComm_c;
     }
+    ExtractionPools.attr("names") = above.attr("row.names");
   }
   
   NumericVector StandComm = btc["Stand"];
@@ -963,8 +966,11 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
   if(plantWaterPools) {
     for(int c=0;c<numCohorts;c++) {
       NumericMatrix ExtractionPoolsCohComm = ExtractionPoolsComm[c];
-      ExtractionPools[c] = copyNumericMatrix(ExtractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
+      NumericMatrix ExtractionPoolsCohComm_c = copyNumericMatrix(ExtractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
+      ExtractionPoolsCohComm_c.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+      ExtractionPools[c] = ExtractionPoolsCohComm_c;
     }
+    ExtractionPools.attr("names") = above.attr("row.names");
   }
   
   NumericMatrix soilLayerExtractInstComm = atc["ExtractionInst"];

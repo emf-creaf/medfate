@@ -112,7 +112,8 @@ When using \code{transp_transpirationSperry} or \code{transp_transpirationSureau
 \item{\code{"WaterBalance"}: Plant water balance (extraction - transpiration).}
 }
 }
-\item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
+\item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows). The sum of a given row is equal to the total extraction of the corresponding plant cohort.}
+\item{\code{"ExtractionPools"}: A named list with as many elements as plant cohorts, where each element is a matrix data with mm of water extracted from each layer (in columns) of the water pool of each cohort (in rows). The sum of a given matrix is equal to the total extraction of the corresponding plant cohort.}
 
 The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationSureau}:
 \item{\code{"EnergyBalance"}: A list with the following elements:
