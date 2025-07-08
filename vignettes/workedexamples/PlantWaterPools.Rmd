@@ -25,43 +25,62 @@ By default, simulations in **medfate** assume that soil moisture under all plant
 The aim of this vignette is to illustrate the sensitivity of the advanced water balance model (De Cáceres et al. 2021) to the consideration of independent water pools. 
 
 ```{r, echo = FALSE}
-WB_FB_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/fb_sperry_total.rds"))
-WB_FB_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/fb_sperry_partial.rds"))
-WB_FB_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/fb_sperry_none.rds"))
-WB_PR_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/pr_sperry_total.rds"))
-WB_PR_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/pr_sperry_partial.rds"))
-WB_PR_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/pr_sperry_none.rds"))
-WB_PU_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/pu_sperry_total.rds"))
-WB_PU_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/pu_sperry_partial.rds"))
-WB_PU_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/pu_sperry_none.rds"))
-# WB_CB_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/cb_sperry_total.rds"))
-# WB_CB_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/cb_sperry_partial.rds"))
-# WB_CB_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/cb_sperry_none.rds"))
-WB_ES_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/es_sperry_total.rds"))
-WB_ES_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/es_sperry_partial.rds"))
-WB_ES_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/es_sperry_none.rds"))
-# WB_RO_sperry_total = readRDS(paste0(base_pools,"Rdata/Output/ro_sperry_total.rds"))
-# WB_RO_sperry_partial = readRDS(paste0(base_pools,"Rdata/Output/ro_sperry_partial.rds"))
-# WB_RO_sperry_none = readRDS(paste0(base_pools,"Rdata/Output/ro_sperry_none.rds"))
+WB_FB_sperry_total = readRDS(paste0(base_pools,"data/Output/fb_sperry_total.rds"))
+WB_FB_sperry_partial = readRDS(paste0(base_pools,"data/Output/fb_sperry_partial.rds"))
+WB_FB_sperry_none = readRDS(paste0(base_pools,"data/Output/fb_sperry_none.rds"))
+WB_PR_sperry_total = readRDS(paste0(base_pools,"data/Output/pr_sperry_total.rds"))
+WB_PR_sperry_partial = readRDS(paste0(base_pools,"data/Output/pr_sperry_partial.rds"))
+WB_PR_sperry_none = readRDS(paste0(base_pools,"data/Output/pr_sperry_none.rds"))
+WB_PU_sperry_total = readRDS(paste0(base_pools,"data/Output/pu_sperry_total.rds"))
+WB_PU_sperry_partial = readRDS(paste0(base_pools,"data/Output/pu_sperry_partial.rds"))
+WB_PU_sperry_none = readRDS(paste0(base_pools,"data/Output/pu_sperry_none.rds"))
+# WB_CB_sperry_total = readRDS(paste0(base_pools,"data/Output/cb_sperry_total.rds"))
+# WB_CB_sperry_partial = readRDS(paste0(base_pools,"data/Output/cb_sperry_partial.rds"))
+# WB_CB_sperry_none = readRDS(paste0(base_pools,"data/Output/cb_sperry_none.rds"))
+WB_ES_sperry_total = readRDS(paste0(base_pools,"data/Output/es_sperry_total.rds"))
+WB_ES_sperry_partial = readRDS(paste0(base_pools,"data/Output/es_sperry_partial.rds"))
+WB_ES_sperry_none = readRDS(paste0(base_pools,"data/Output/es_sperry_none.rds"))
+# WB_RO_sperry_total = readRDS(paste0(base_pools,"data/Output/ro_sperry_total.rds"))
+# WB_RO_sperry_partial = readRDS(paste0(base_pools,"data/Output/ro_sperry_partial.rds"))
+# WB_RO_sperry_none = readRDS(paste0(base_pools,"data/Output/ro_sperry_none.rds"))
 
-WB_FB_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/fb_sureau_total.rds"))
-WB_FB_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/fb_sureau_partial.rds"))
-WB_FB_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/fb_sureau_none.rds"))
-WB_PR_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/pr_sureau_total.rds"))
-WB_PR_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/pr_sureau_partial.rds"))
-WB_PR_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/pr_sureau_none.rds"))
-WB_PU_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/pu_sureau_total.rds"))
-WB_PU_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/pu_sureau_partial.rds"))
-WB_PU_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/pu_sureau_none.rds"))
-# WB_CB_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/cb_sureau_total.rds"))
-# WB_CB_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/cb_sureau_partial.rds"))
-# WB_CB_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/cb_sureau_none.rds"))
-WB_ES_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/es_sureau_total.rds"))
-WB_ES_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/es_sureau_partial.rds"))
-WB_ES_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/es_sureau_none.rds"))
-# WB_RO_sureau_total = readRDS(paste0(base_pools,"Rdata/Output/ro_sureau_total.rds"))
-# WB_RO_sureau_partial = readRDS(paste0(base_pools,"Rdata/Output/ro_sureau_partial.rds"))
-# WB_RO_sureau_none = readRDS(paste0(base_pools,"Rdata/Output/ro_sureau_none.rds"))
+WB_FB_granier_total = readRDS(paste0(base_pools,"data/Output/fb_granier_total.rds"))
+WB_FB_granier_partial = readRDS(paste0(base_pools,"data/Output/fb_granier_partial.rds"))
+WB_FB_granier_none = readRDS(paste0(base_pools,"data/Output/fb_granier_none.rds"))
+WB_PR_granier_total = readRDS(paste0(base_pools,"data/Output/pr_granier_total.rds"))
+WB_PR_granier_partial = readRDS(paste0(base_pools,"data/Output/pr_granier_partial.rds"))
+WB_PR_granier_none = readRDS(paste0(base_pools,"data/Output/pr_granier_none.rds"))
+WB_PU_granier_total = readRDS(paste0(base_pools,"data/Output/pu_granier_total.rds"))
+WB_PU_granier_partial = readRDS(paste0(base_pools,"data/Output/pu_granier_partial.rds"))
+WB_PU_granier_none = readRDS(paste0(base_pools,"data/Output/pu_granier_none.rds"))
+# WB_CB_granier_total = readRDS(paste0(base_pools,"data/Output/cb_granier_total.rds"))
+# WB_CB_granier_partial = readRDS(paste0(base_pools,"data/Output/cb_granier_partial.rds"))
+# WB_CB_granier_none = readRDS(paste0(base_pools,"data/Output/cb_granier_none.rds"))
+WB_ES_granier_total = readRDS(paste0(base_pools,"data/Output/es_granier_total.rds"))
+WB_ES_granier_partial = readRDS(paste0(base_pools,"data/Output/es_granier_partial.rds"))
+WB_ES_granier_none = readRDS(paste0(base_pools,"data/Output/es_granier_none.rds"))
+# WB_RO_granier_total = readRDS(paste0(base_pools,"data/Output/ro_granier_total.rds"))
+# WB_RO_granier_partial = readRDS(paste0(base_pools,"data/Output/ro_granier_partial.rds"))
+# WB_RO_granier_none = readRDS(paste0(base_pools,"data/Output/ro_granier_none.rds"))
+
+WB_FB_sureau_total = readRDS(paste0(base_pools,"data/Output/fb_sureau_total.rds"))
+WB_FB_sureau_partial = readRDS(paste0(base_pools,"data/Output/fb_sureau_partial.rds"))
+WB_FB_sureau_none = readRDS(paste0(base_pools,"data/Output/fb_sureau_none.rds"))
+WB_PR_sureau_total = readRDS(paste0(base_pools,"data/Output/pr_sureau_total.rds"))
+WB_PR_sureau_partial = readRDS(paste0(base_pools,"data/Output/pr_sureau_partial.rds"))
+WB_PR_sureau_none = readRDS(paste0(base_pools,"data/Output/pr_sureau_none.rds"))
+WB_PU_sureau_total = readRDS(paste0(base_pools,"data/Output/pu_sureau_total.rds"))
+WB_PU_sureau_partial = readRDS(paste0(base_pools,"data/Output/pu_sureau_partial.rds"))
+WB_PU_sureau_none = readRDS(paste0(base_pools,"data/Output/pu_sureau_none.rds"))
+# WB_CB_sureau_total = readRDS(paste0(base_pools,"data/Output/cb_sureau_total.rds"))
+# WB_CB_sureau_partial = readRDS(paste0(base_pools,"data/Output/cb_sureau_partial.rds"))
+# WB_CB_sureau_none = readRDS(paste0(base_pools,"data/Output/cb_sureau_none.rds"))
+WB_ES_sureau_total = readRDS(paste0(base_pools,"data/Output/es_sureau_total.rds"))
+WB_ES_sureau_partial = readRDS(paste0(base_pools,"data/Output/es_sureau_partial.rds"))
+WB_ES_sureau_none = readRDS(paste0(base_pools,"data/Output/es_sureau_none.rds"))
+# WB_RO_sureau_total = readRDS(paste0(base_pools,"data/Output/ro_sureau_total.rds"))
+# WB_RO_sureau_partial = readRDS(paste0(base_pools,"data/Output/ro_sureau_partial.rds"))
+# WB_RO_sureau_none = readRDS(paste0(base_pools,"data/Output/ro_sureau_none.rds"))
 ```
 
 ```{r, echo = FALSE, warning = FALSE}
@@ -79,21 +98,28 @@ plot_grid(g_total,g_partial, g_none, l, nrow=1, rel_widths = c(1,1, 1, 0.5))
 ```
 
 ```{r, echo = FALSE, warning = FALSE}
-plot_several<-function(type, ylim = NULL) {
-fb_sperry_plot = plot_one("FONTBL. - SPERRY", WB_FB_sperry_total, WB_FB_sperry_partial, WB_FB_sperry_none, type, ylim)
-fb_sureau_plot = plot_one("FONTBL. - SUREAU", WB_FB_sureau_total, WB_FB_sureau_partial, WB_FB_sureau_none, type, ylim)
-pr_sperry_plot = plot_one("PRADES - SPERRY", WB_PR_sperry_total, WB_PR_sperry_partial, WB_PR_sperry_none, type, ylim)
-pr_sureau_plot = plot_one("PRADES - SUREAU", WB_PR_sureau_total, WB_PR_sureau_partial, WB_PR_sureau_none, type, ylim)
-pu_sperry_plot = plot_one("PUECHABON - SPERRY", WB_PU_sperry_total, WB_PU_sperry_partial, WB_PU_sperry_none, type, ylim)
-pu_sureau_plot = plot_one("PUECHABON - SUREAU", WB_PU_sureau_total, WB_PU_sureau_partial, WB_PU_sureau_none, type, ylim)
-es_sperry_plot = plot_one("ARMALLON. - SPERRY", WB_ES_sperry_total, WB_ES_sperry_partial, WB_ES_sperry_none, type, ylim)
-es_sureau_plot = plot_one("ARMALLON. - SUREAU", WB_ES_sureau_total, WB_ES_sureau_partial, WB_ES_sureau_none, type, ylim)
-# ro_plot = plot_one("RONDA (2014)", WB_RO_sperry_total, WB_RO_sperry_partial, WB_RO_sperry_none, type, ylim)
-cowplot::plot_grid(fb_sperry_plot, fb_sureau_plot, 
-                   pr_sperry_plot, pr_sureau_plot,
-                   pu_sperry_plot, pu_sureau_plot,
-                   es_sperry_plot, es_sureau_plot,
-                   nrow = 8)
+plot_several<-function(type, transpirationMode, ylim = NULL) {
+  if(transpirationMode == "Sperry") {
+     fb_plot = plot_one("FONTBL. - SPERRY", WB_FB_sperry_total, WB_FB_sperry_partial, WB_FB_sperry_none, type, ylim)
+     pr_plot = plot_one("PRADES - SPERRY", WB_PR_sperry_total, WB_PR_sperry_partial, WB_PR_sperry_none, type, ylim)
+     pu_plot = plot_one("PUECHABON - SPERRY", WB_PU_sperry_total, WB_PU_sperry_partial, WB_PU_sperry_none, type, ylim)
+     es_plot = plot_one("ARMALLON. - SPERRY", WB_ES_sperry_total, WB_ES_sperry_partial, WB_ES_sperry_none, type, ylim)
+  } else if(transpirationMode =="Granier") {
+    fb_plot = plot_one("FONTBL. - GRANIER", WB_FB_granier_total, WB_FB_granier_partial, WB_FB_granier_none, type, ylim)
+    pr_plot = plot_one("PRADES - GRANIER", WB_PR_granier_total, WB_PR_granier_partial, WB_PR_granier_none, type, ylim)
+    pu_plot = plot_one("PUECHABON - GRANIER", WB_PU_granier_total, WB_PU_granier_partial, WB_PU_granier_none, type, ylim)
+    es_plot = plot_one("ARMALLON. - GRANIER", WB_ES_granier_total, WB_ES_granier_partial, WB_ES_granier_none, type, ylim)
+  } else if(transpirationMode =="Sureau") {
+    fb_plot = plot_one("FONTBL. - SUREAU", WB_FB_sureau_total, WB_FB_sureau_partial, WB_FB_sureau_none, type, ylim)
+    pr_plot = plot_one("PRADES - SUREAU", WB_PR_sureau_total, WB_PR_sureau_partial, WB_PR_sureau_none, type, ylim)
+    pu_plot = plot_one("PUECHABON - SUREAU", WB_PU_sureau_total, WB_PU_sureau_partial, WB_PU_sureau_none, type, ylim)
+    es_plot = plot_one("ARMALLON. - SUREAU", WB_ES_sureau_total, WB_ES_sureau_partial, WB_ES_sureau_none, type, ylim)
+  }
+   cowplot::plot_grid(fb_plot,  
+                      pr_plot, 
+                      pu_plot, 
+                      es_plot, 
+                      nrow = 4)
 }
 
 ```
@@ -101,46 +127,98 @@ cowplot::plot_grid(fb_sperry_plot, fb_sureau_plot,
 ## Simulations
 As target forest stands we take five experimental plots whose data was already used when presenting the water balance model in De Cáceres et al. (2021). An evaluation of model performance in these experimental plots is given in [*Stand-level evaluation*](https://emf-creaf.github.io/medfate/articles/evaluation/StandLevelEvaluation.html). 
 
-For each of these plots we performed two simulations with the advanced water balance model (`transpirationMode = "Sperry"`), one using the default assumption of complete rhizosphere overlap (`rhizosphereOverlap = "total"`) and the other assuming complete independence of water pools (`rhizosphereOverlap = "none"`). Recovery from embolism was assumed to depend on soil moisture (`stemCavitationRecovery = "rate"` and `leafCavitationRecovery = "rate"`). We performed a burn-in simulation for the available weather of the forest plot (1 to 3 years, depending on the plot), so that soil moisture, plant water potentials and xylem percent loss conductance (PLC) could be equilibrated. After this burn-in period, we run again the model for one year only, to simplify the examination of the results.
+For each of these plots we performed simulations using combinations of the three different transpiration modes:
+
+  + `transpirationMode = "Granier"`
+  + `transpirationMode = "Sperry"`
+  + `transpirationMode = "Sureau"`
+
+And different assumptions with respect to rhizosphere overlap:
+
+  + Default assumption of complete rhizosphere overlap (`rhizosphereOverlap = "total"`). 
+  + Assuming partial dynamic rhizosphere overlap  (`rhizosphereOverlap = "partial"`). 
+  + Assuming complete independence of water pools (`rhizosphereOverlap = "none"`). 
+  
+Recovery from embolism was assumed to depend on soil moisture (`stemCavitationRecovery = "rate"` and `leafCavitationRecovery = "rate"`). 
 
 
-## Results
-### Transpiration per leaf area unit (l·m-2)
+## Results 
+### Results with Granier
+#### Transpiration per leaf area unit (l·m-2)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "TranspirationPerLeaf", transpirationMode = "Granier", ylim = c(0,3.5))
+```
 
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, warning = FALSE, message = FALSE}
-plot_several(type = "TranspirationPerLeaf", ylim = c(0,3.5))
+#### Soil water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "SoilPsi", transpirationMode = "Granier", ylim = c(-8,0))
+```
+
+#### Plant water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "PlantPsi", transpirationMode = "Granier", ylim = c(-8,0))
+```
+
+#### Stem percent loss conductance (%)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "StemPLC", transpirationMode = "Granier", ylim = c(0,100))
+```
+
+### Results with Sperry
+#### Transpiration per leaf area unit (l·m-2)
+
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "TranspirationPerLeaf", transpirationMode = "Sperry", ylim = c(0,3.5))
+```
+
+#### Soil water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "SoilPsi", transpirationMode = "Sperry", ylim = c(-8,0))
+```
+
+#### Root-crown water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "RootPsi", transpirationMode = "Sperry", ylim = c(-8,0))
+```
+
+#### Range of leaf water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "LeafPsiRange", transpirationMode = "Sperry", ylim = c(-8,0))
+```
+
+#### Stem percent loss conductance (%)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "StemPLC", transpirationMode = "Sperry", ylim = c(0,100))
+```
+
+### Results with Sureau
+#### Transpiration per leaf area unit (l·m-2)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "TranspirationPerLeaf", transpirationMode = "Sureau", ylim = c(0,3.5))
+```
+
+#### Soil water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "SoilPsi", transpirationMode = "Sureau", ylim = c(-8,0))
+```
+
+#### Root-crown water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "RootPsi", transpirationMode = "Sureau", ylim = c(-8,0))
 ```
 
 
-### Soil water potential (MPa)
-
-
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, message = FALSE, warning = FALSE}
-plot_several(type = "SoilPsi", ylim = c(-8,0))
+#### Range of leaf water potential (MPa)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "LeafPsiRange", transpirationMode = "Sureau", ylim = c(-8,0))
 ```
 
 
-### Root-crown water potential (MPa)
 
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, message = FALSE, warning = FALSE}
-plot_several(type = "RootPsi", ylim = c(-8,0))
+#### Stem percent loss conductance (%)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "StemPLC", transpirationMode = "Sureau", ylim = c(0,100))
 ```
-
-
-### Range of leaf water potential (MPa)
-
-
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, warning = FALSE, message = FALSE}
-plot_several(type = "LeafPsiRange", ylim = c(-10,0))
-```
-
-### Stem percent loss conductance (%)
-
-
-```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 15, warning = FALSE, message = FALSE}
-plot_several(type = "StemPLC", ylim = c(0,100))
-```
-
 
 
 ## Bibliography
