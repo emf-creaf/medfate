@@ -4847,21 +4847,22 @@ RcppExport SEXP _medfate_psi(SEXP soilSEXP, SEXP modelSEXP) {
     return rcpp_result_gen;
 }
 // conductivity
-NumericVector conductivity(DataFrame soil, String model);
-static SEXP _medfate_conductivity_try(SEXP soilSEXP, SEXP modelSEXP) {
+NumericVector conductivity(DataFrame soil, String model, bool mmol);
+static SEXP _medfate_conductivity_try(SEXP soilSEXP, SEXP modelSEXP, SEXP mmolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(conductivity(soil, model));
+    Rcpp::traits::input_parameter< bool >::type mmol(mmolSEXP);
+    rcpp_result_gen = Rcpp::wrap(conductivity(soil, model, mmol));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_conductivity(SEXP soilSEXP, SEXP modelSEXP) {
+RcppExport SEXP _medfate_conductivity(SEXP soilSEXP, SEXP modelSEXP, SEXP mmolSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_conductivity_try(soilSEXP, modelSEXP));
+        rcpp_result_gen = PROTECT(_medfate_conductivity_try(soilSEXP, modelSEXP, mmolSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5967,7 +5968,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_water)(DataFrame,String)");
         signatures.insert("double(*soil_rockWeight2Volume)(double,double,double)");
         signatures.insert("NumericVector(*soil_psi)(DataFrame,String)");
-        signatures.insert("NumericVector(*soil_conductivity)(DataFrame,String)");
+        signatures.insert("NumericVector(*soil_conductivity)(DataFrame,String,bool)");
         signatures.insert("NumericVector(*soil_capacitance)(DataFrame,String)");
         signatures.insert("double(*soil_saturatedWaterDepth)(DataFrame,String)");
         signatures.insert("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
@@ -6320,7 +6321,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_water", (DL_FUNC) &_medfate_water, 2},
     {"_medfate_rockWeight2Volume", (DL_FUNC) &_medfate_rockWeight2Volume, 3},
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
-    {"_medfate_conductivity", (DL_FUNC) &_medfate_conductivity, 2},
+    {"_medfate_conductivity", (DL_FUNC) &_medfate_conductivity, 3},
     {"_medfate_capacitance", (DL_FUNC) &_medfate_capacitance, 2},
     {"_medfate_saturatedWaterDepth", (DL_FUNC) &_medfate_saturatedWaterDepth, 2},
     {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},

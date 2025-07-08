@@ -252,8 +252,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   NumericVector PWB(numCohorts,0.0);
   NumericVector Kl, epc, Vl;
   
-  //Calculate unsaturated conductivity
-  NumericVector Kunsat = conductivity(soil);
+  //Calculate unsaturated conductivity (mmolH20·m-1·s-1·MPa-1)
+  NumericVector Kunsat = conductivity(soil, soilFunctions, true);
   //Calculate soil water potential
   NumericVector psiSoil = psi(soil,soilFunctions);
 
@@ -267,8 +267,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     for(int j = 0; j<numCohorts;j++) {
       //Copy values of soil moisture from pool of cohort j
       for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
-      //Calculate unsaturated conductivity
-      KunsatM(j,_) = conductivity(soil_pool);
+      //Calculate unsaturated conductivity (mmolH20·m-1·s-1·MPa-1)
+      KunsatM(j,_) = conductivity(soil_pool, soilFunctions, true);
       //Calculate soil water potential
       psiSoilM(j,_) = psi(soil_pool, soilFunctions);
       // Rcout<< Ws_pool[3]<< " "<< psiSoilM(j,3)<<"\n";

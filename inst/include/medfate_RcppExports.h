@@ -1071,17 +1071,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_conductivity(DataFrame soil, String model = "SX") {
-        typedef SEXP(*Ptr_soil_conductivity)(SEXP,SEXP);
+    inline NumericVector soil_conductivity(DataFrame soil, String model = "SX", bool mmol = true) {
+        typedef SEXP(*Ptr_soil_conductivity)(SEXP,SEXP,SEXP);
         static Ptr_soil_conductivity p_soil_conductivity = NULL;
         if (p_soil_conductivity == NULL) {
-            validateSignature("NumericVector(*soil_conductivity)(DataFrame,String)");
+            validateSignature("NumericVector(*soil_conductivity)(DataFrame,String,bool)");
             p_soil_conductivity = (Ptr_soil_conductivity)R_GetCCallable("medfate", "_medfate_soil_conductivity");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_conductivity(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(model)));
+            rcpp_result_gen = p_soil_conductivity(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(model)), Shield<SEXP>(Rcpp::wrap(mmol)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

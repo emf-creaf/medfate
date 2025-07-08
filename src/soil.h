@@ -35,7 +35,7 @@ NumericVector water(DataFrame soil, String model="SX");
 NumericVector waterPsi(DataFrame soil, double psi, String model="SX");
 NumericVector theta(DataFrame soil, String model="SX");
 NumericVector psi(DataFrame soil, String model="SX");
-NumericVector conductivity(DataFrame soil, String model="SX");
+NumericVector conductivity(DataFrame soil, String model="SX", bool mmol = true);
 NumericVector capacitance(DataFrame soil, String model="SX");
 
 NumericVector psi2thetasoil(DataFrame soil, NumericVector psi, String model="SX");

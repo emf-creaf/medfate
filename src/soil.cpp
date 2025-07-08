@@ -47,7 +47,7 @@ CharacterVector layerNames(int nlayers) {
 //' @param topsoil A boolean flag to indicate topsoil layer.
 //' @param soilType A string indicating the soil type.
 //' @param soil Initialized soil object (returned by function \code{\link{soil}}).
-//' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.
+//' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models.
 //' @param minPsi Minimum water potential (in MPa) to calculate the amount of extractable water.
 //' @param pWeight Percentage of corresponding to rocks, in weight.
 //' @param bulkDensity Bulk density of the soil fraction (g/cm3).
@@ -57,22 +57,21 @@ CharacterVector layerNames(int nlayers) {
 //' \itemize{
 //' \item{\code{soil_psi2thetaSX()} and \code{soil_theta2psiSX()} calculate water potentials (MPa) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
 //' \item{\code{soil_psi2thetaVG()} and \code{soil_theta2psiVG()} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). }
-//' \item{\code{soil_saturatedConductivitySX()} returns the saturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
-//' \item{\code{soil_unsaturatedConductivitySX()} returns the unsaturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
+//' \item{\code{soil_saturatedConductivitySX()} returns the saturated conductivity of the soil (in mmol/m/s/MPa or cm/day), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
+//' \item{\code{soil_unsaturatedConductivitySX()} returns the unsaturated conductivity of the soil (in mmol/m/s/MPa or cm/day), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
 //' \item{\code{soil_USDAType()} returns the USDA type (a string) for a given texture.}
 //' \item{\code{soil_vanGenuchtenParamsCarsel()} gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture type (Leij et al. 1996) }
 //' \item{\code{soil_vanGenuchtenParamsToth()} gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture, organic matter and bulk density (Toth et al. 2015).}
 //' \item{\code{soil_psi()} returns the water potential (MPa) of each soil layer, according to its water retention model.}
 //' \item{\code{soil_theta()} returns the moisture content (as percent of soil volume) of each soil layer, according to its water retention model.}
 //' \item{\code{soil_water()} returns the water volume (mm) of each soil layer, according to its water retention model.}
-//' \item{\code{soil_conductivity()} returns the conductivity of each soil layer (mmol/m/s/MPa), according the Saxton model.}
+//' \item{\code{soil_conductivity()} returns the conductivity of each soil layer (in mmol/m/s/MPa or cm/day).}
 //' \item{\code{soil_waterExtractable()} returns the water volume (mm) extractable from the soil according to its water retention curves and up to a given soil water potential.}
 //' \item{\code{soil_waterFC()} and \code{soil_thetaFC()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.}
 //' \item{\code{soil_waterWP()} and \code{soil_thetaWP()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively. }
 //' \item{\code{soil_waterSAT()}, \code{soil_thetaSATSX()} and \code{soil_thetaSAT()} calculate the saturated water volume (in mm) and moisture content (as percent of soil volume) of each soil layer.}
 //' \item{\code{soil_saturatedWaterDepth()} returns the depth to saturation in mm from surface.}
 //' \item{\code{soil_rockWeight2Volume()} transforms rock percentage from weight to volume basis.}
-//' \item{\code{soil_retentionCurvePlot()} allows ploting the water retention curve of a given soil layer.}
 //' }
 //' 
 //' @return Depends on the function (see details).
@@ -697,7 +696,7 @@ NumericVector psi(DataFrame soil, String model="SX") {
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_conductivity")]]
-NumericVector conductivity(DataFrame soil, String model="SX") {
+NumericVector conductivity(DataFrame soil, String model="SX", bool mmol = true) {
   NumericVector W = soil["W"];
   int nlayers = W.size();
   NumericVector K(nlayers);
@@ -708,7 +707,7 @@ NumericVector conductivity(DataFrame soil, String model="SX") {
     NumericVector bd = soil["bd"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      K[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], bd[l], om[l]);
+      K[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], bd[l], om[l], mmol);
     }
   } else {
     NumericVector psiSoil = psi(soil, model);
@@ -719,6 +718,8 @@ NumericVector conductivity(DataFrame soil, String model="SX") {
       NumericVector theta_res = soil["VG_theta_res"];
       NumericVector theta_sat = soil["VG_theta_sat"];
       K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
+      // mmolH20·m-1·s-1·MPa-1 to cm/day
+      if(!mmol) K[l] = K[l]/cmdTOmmolm2sMPa;
     }
   } 
   return(K);
@@ -879,7 +880,7 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //'   \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
 //'   \item{\code{rfc}: Percentage of rock fragment content for each layer.}
 //'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
-//'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
+//'   \item{\code{Ksat}: Saturated soil conductivity for each layer (in mmol·m-1·s-1·MPa-1, estimated using function \code{\link{soil_saturatedConductivitySX}}.}
 //'   \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
 //'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 //'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
@@ -990,7 +991,7 @@ DataFrame soilInit(DataFrame x, String VG_PTF = "Toth") {
       //Use non-top soil equation for all layers
       vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], false);
       if(NumericVector::is_na(Ksat[l])) {
-        Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]); 
+        Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l], true); 
       }
     } else {
       stop("Wrong value for 'VG_PTF'");

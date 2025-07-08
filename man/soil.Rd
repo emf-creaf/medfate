@@ -30,7 +30,7 @@ Function \code{soil} returns a data frame of class \code{soil} with the followin
 \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
 \item{\code{rfc}: Percentage of rock fragment content for each layer.}
 \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
-\item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
+\item{\code{Ksat}: Saturated soil conductivity for each layer (in mmol·m-1·s-1·MPa-1, estimated using function \code{\link{soil_saturatedConductivitySX}}.}
 \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
 \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
