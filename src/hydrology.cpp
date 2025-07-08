@@ -638,12 +638,12 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
     NumericVector saturated_macropore_correction_m3s(nlayers, 0.0);
     
     
-    NumericVector dZ_m = SWBcommunication[SOILCOM_dZ_m];
+    NumericVector dZ_m = SWBcommunication[SOILWBCOM_dZ_m];
     for(int l=0;l<nlayers;l++) dZ_m[l] = widths[l]*0.001; //mm to m
     
-    NumericVector dZUp = SWBcommunication[SOILCOM_dZUp];
-    NumericVector dZDown = SWBcommunication[SOILCOM_dZDown];
-    NumericVector lambda = SWBcommunication[SOILCOM_lambda];
+    NumericVector dZUp = SWBcommunication[SOILWBCOM_dZUp];
+    NumericVector dZDown = SWBcommunication[SOILWBCOM_dZDown];
+    NumericVector lambda = SWBcommunication[SOILWBCOM_lambda];
     
     //Estimate layer interfaces
     for(int l=0;l<nlayers;l++) {
@@ -695,22 +695,22 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
     NumericVector Theta_FC = thetaFC(soil, "VG");
     
     //Microporosity or single domain
-    NumericVector theta_micro = SWBcommunication[SOILCOM_theta_micro];
-    NumericVector theta_b = SWBcommunication[SOILCOM_theta_b];
-    NumericVector theta_macro = SWBcommunication[SOILCOM_theta_macro];
-    NumericVector theta_sat_fict = SWBcommunication[SOILCOM_theta_sat_fict];
-    NumericVector Ksat_b = SWBcommunication[SOILCOM_Ksat_b];
-    NumericVector Ksat_b_ms = SWBcommunication[SOILCOM_Ksat_b_ms];
-    NumericVector Ksat = SWBcommunication[SOILCOM_Ksat];
-    NumericVector Ksat_ms = SWBcommunication[SOILCOM_Ksat_ms];
-    NumericVector Psi = SWBcommunication[SOILCOM_Psi];
-    NumericVector K = SWBcommunication[SOILCOM_K];
-    NumericVector C = SWBcommunication[SOILCOM_C];
-    NumericVector Psi_m = SWBcommunication[SOILCOM_Psi_m];
-    NumericVector K_ms = SWBcommunication[SOILCOM_K_ms];
-    NumericVector Kbc = SWBcommunication[SOILCOM_Kbc];
-    NumericVector Kbc_ms = SWBcommunication[SOILCOM_Kbc_ms];
-    NumericVector C_m = SWBcommunication[SOILCOM_C_m];
+    NumericVector theta_micro = SWBcommunication[SOILWBCOM_theta_micro];
+    NumericVector theta_b = SWBcommunication[SOILWBCOM_theta_b];
+    NumericVector theta_macro = SWBcommunication[SOILWBCOM_theta_macro];
+    NumericVector theta_sat_fict = SWBcommunication[SOILWBCOM_theta_sat_fict];
+    NumericVector Ksat_b = SWBcommunication[SOILWBCOM_Ksat_b];
+    NumericVector Ksat_b_ms = SWBcommunication[SOILWBCOM_Ksat_b_ms];
+    NumericVector Ksat = SWBcommunication[SOILWBCOM_Ksat];
+    NumericVector Ksat_ms = SWBcommunication[SOILWBCOM_Ksat_ms];
+    NumericVector Psi = SWBcommunication[SOILWBCOM_Psi];
+    NumericVector K = SWBcommunication[SOILWBCOM_K];
+    NumericVector C = SWBcommunication[SOILWBCOM_C];
+    NumericVector Psi_m = SWBcommunication[SOILWBCOM_Psi_m];
+    NumericVector K_ms = SWBcommunication[SOILWBCOM_K_ms];
+    NumericVector Kbc = SWBcommunication[SOILWBCOM_Kbc];
+    NumericVector Kbc_ms = SWBcommunication[SOILWBCOM_Kbc_ms];
+    NumericVector C_m = SWBcommunication[SOILWBCOM_C_m];
     for(int l=0;l<nlayers;l++) {
       theta_micro[l] = 0.0;
       theta_b[l] = 0.0;
@@ -732,9 +732,9 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
     //Macroporosity domain
     NumericVector S_macro, e_macro, Kmacro_ms;
     if(soilDomains=="dual") {
-      S_macro = SWBcommunication[SOILCOM_S_macro];
-      e_macro = SWBcommunication[SOILCOM_e_macro];
-      Kmacro_ms = SWBcommunication[SOILCOM_Kmacro_ms];
+      S_macro = SWBcommunication[SOILWBCOM_S_macro];
+      e_macro = SWBcommunication[SOILWBCOM_e_macro];
+      Kmacro_ms = SWBcommunication[SOILWBCOM_Kmacro_ms];
       for(int l=0;l<nlayers;l++) {
         S_macro[l] = 0.0;
         e_macro[l] = 0.0;
@@ -742,7 +742,7 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
       }
     }
     
-    NumericVector waterFluidity = SWBcommunication[SOILCOM_waterFluidity];
+    NumericVector waterFluidity = SWBcommunication[SOILWBCOM_waterFluidity];
     for(int l=0;l<nlayers;l++) {
       waterFluidity[l] = 1.0;
       if(!NumericVector::is_na(Tsoil[l])) {
@@ -824,25 +824,26 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
     
     double C_step_05, K_step_05;
     
-    NumericVector a = SWBcommunication[SOILCOM_a];
-    NumericVector b = SWBcommunication[SOILCOM_b];
-    NumericVector c = SWBcommunication[SOILCOM_c];
-    NumericVector d = SWBcommunication[SOILCOM_d];
-    NumericVector e = SWBcommunication[SOILCOM_e];
-    NumericVector f = SWBcommunication[SOILCOM_f];
+    NumericVector a = SWBcommunication[SOILWBCOM_a];
+    NumericVector b = SWBcommunication[SOILWBCOM_b];
+    NumericVector c = SWBcommunication[SOILWBCOM_c];
+    NumericVector d = SWBcommunication[SOILWBCOM_d];
+    NumericVector e = SWBcommunication[SOILWBCOM_e];
+    NumericVector f = SWBcommunication[SOILWBCOM_f];
+    NumericVector Psi_step_t1(nlayers), Psi_step_t05(nlayers);
     
-    NumericVector K_step_ms05 = SWBcommunication[SOILCOM_K_step_ms05];
-    NumericVector C_step_m05 = SWBcommunication[SOILCOM_C_step_m05];
-    NumericVector C_step = SWBcommunication[SOILCOM_C_step];
-    NumericVector C_step_m = SWBcommunication[SOILCOM_C_step_m];
-    NumericVector K_step_ms = SWBcommunication[SOILCOM_K_step_ms];
-    NumericVector K_step = SWBcommunication[SOILCOM_K_step];
-    NumericVector Psi_step = SWBcommunication[SOILCOM_Psi_step];
-    NumericVector Psi_step_m = SWBcommunication[SOILCOM_Psi_step_m];
-    NumericVector S_macro_step = SWBcommunication[SOILCOM_S_macro_step];
-    NumericVector Kmacro_step_ms = SWBcommunication[SOILCOM_Kmacro_step_ms];
-    NumericVector theta_macro_step = SWBcommunication[SOILCOM_theta_macro_step];
-    NumericVector theta_micro_step = SWBcommunication[SOILCOM_theta_micro_step];
+    NumericVector K_step_ms05 = SWBcommunication[SOILWBCOM_K_step_ms05];
+    NumericVector C_step_m05 = SWBcommunication[SOILWBCOM_C_step_m05];
+    NumericVector C_step = SWBcommunication[SOILWBCOM_C_step];
+    NumericVector C_step_m = SWBcommunication[SOILWBCOM_C_step_m];
+    NumericVector K_step_ms = SWBcommunication[SOILWBCOM_K_step_ms];
+    NumericVector K_step = SWBcommunication[SOILWBCOM_K_step];
+    NumericVector Psi_step = SWBcommunication[SOILWBCOM_Psi_step];
+    NumericVector Psi_step_m = SWBcommunication[SOILWBCOM_Psi_step_m];
+    NumericVector S_macro_step = SWBcommunication[SOILWBCOM_S_macro_step];
+    NumericVector Kmacro_step_ms = SWBcommunication[SOILWBCOM_Kmacro_step_ms];
+    NumericVector theta_macro_step = SWBcommunication[SOILWBCOM_theta_macro_step];
+    NumericVector theta_micro_step = SWBcommunication[SOILWBCOM_theta_micro_step];
     for(int l=0;l<nlayers;l++) {
       K_step_ms05[l] = 0.0;
       C_step_m05[l] = 0.0;
@@ -857,11 +858,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
       theta_macro_step[l] = 0.0;
       theta_micro_step[l] = 0.0;
     }
-    NumericVector finalSourceSinks_m3s = SWBcommunication[SOILCOM_finalSourceSinks_m3s];
-    NumericVector capill_below = SWBcommunication[SOILCOM_capill_below];
-    NumericVector drain_above = SWBcommunication[SOILCOM_drain_above];
-    NumericVector drain_below = SWBcommunication[SOILCOM_drain_below];
-    NumericVector lateral_flows_step_mm = SWBcommunication[SOILCOM_lateral_flows_step_mm];
+    NumericVector finalSourceSinks_m3s = SWBcommunication[SOILWBCOM_finalSourceSinks_m3s];
+    NumericVector capill_below = SWBcommunication[SOILWBCOM_capill_below];
+    NumericVector drain_above = SWBcommunication[SOILWBCOM_drain_above];
+    NumericVector drain_below = SWBcommunication[SOILWBCOM_drain_below];
+    NumericVector lateral_flows_step_mm = SWBcommunication[SOILWBCOM_lateral_flows_step_mm];
     for(int l=0;l<nlayers;l++) {
       finalSourceSinks_m3s[l] = 0.0;
       capill_below[l] = 0.0;
@@ -1035,7 +1036,6 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             }
           }
           //TRIDIAGONAL SOLVING
-          NumericVector Psi_step_t05(nlayers);
           tridiagonalSolving(a,b,c,d,e,f, Psi_step_t05);
           //MODIFY UNITS OF OUTPUT PSI
           for(int l=0;l<nlayers;l++) Psi_step_t05[l] = Psi_step_t05[l]*mTOMPa; // m to MPa
@@ -1106,7 +1106,6 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             }
           }
           //TRIDIAGONAL SOLVING
-          NumericVector Psi_step_t1(nlayers);
           tridiagonalSolving(a,b,c,d, e, f, Psi_step_t1);
           //MODIFY UNITS OF OUTPUT PSI
           for(int l=0;l<nlayers;l++) Psi_step_t1[l] = Psi_step_t1[l]*mTOMPa; // m to MPa

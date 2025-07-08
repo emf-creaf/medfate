@@ -424,6 +424,7 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   List modelOutputComm = internalCommunication["advancedSPWBOutput"];
   List transpOutput = internalCommunication["advancedTranspirationOutput"];
   List SWBcommunication = internalCommunication["SWBcommunication"];
+  List SEBcommunication = internalCommunication["SEBcommunication"];
   
   NumericVector weather = modelOutputComm["weather"];
   weather["prec"] = meteovec["prec"];
@@ -569,7 +570,7 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   }
   
   //STEPS 4-8 - Energy balance, transpiration, photosynthesis, uptake 
-  transpirationAdvanced(transpOutput, x, meteovec, 
+  transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec, 
                         latitude, elevation, slope, aspect, 
                         solarConstant, delta, 
                         hydroInputs["Interception"], hydroInputs["Snowmelt"], Esoil, sum(EherbVec),

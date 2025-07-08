@@ -3,6 +3,7 @@
 #include <Rcpp.h>
 #include "soil.h"
 #include "numerical_solving.h"
+#include "communication_structures.h"
 using namespace Rcpp;
 
 // sand 1.7-2.9 W·m-1·K-1, clay 0.8-6.3 W·m-1·K-1 [Geiger et al. The Climate near the Ground]
@@ -170,13 +171,10 @@ NumericVector temperatureGradient(NumericVector widths, NumericVector Temp) {
   return(gradTemp);
 }
 
-//' @name soil_thermodynamics
-//' @keywords internal
-// [[Rcpp::export("soil_temperatureChange")]]
-NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
-                                NumericVector sand, NumericVector clay,
-                                NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
-                                double Gdown, double tstep) {
+NumericVector temperatureChange_inner(List SEBcommunication, NumericVector widths, NumericVector Temp,
+                                      NumericVector sand, NumericVector clay,
+                                      NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
+                                      double Gdown, double tstep) {
   NumericVector k = layerThermalConductivity(sand, clay, 
                                              W, Theta_SAT, Theta_FC, 
                                              Temp);
@@ -185,17 +183,25 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
                                           Temp);
   int nlayers = Temp.length();
   
-  NumericVector a(nlayers, 0.0), b(nlayers, 0.0), c(nlayers, 0.0), d(nlayers, 0.0), e(nlayers, 0.0), f(nlayers, 0.0);
-
+  NumericVector a = SEBcommunication[SOILEBCOM_a];
+  NumericVector b = SEBcommunication[SOILEBCOM_b];
+  NumericVector c = SEBcommunication[SOILEBCOM_c];
+  NumericVector d = SEBcommunication[SOILEBCOM_d];
+  NumericVector e = SEBcommunication[SOILEBCOM_e];
+  NumericVector f = SEBcommunication[SOILEBCOM_f];
+  NumericVector dZ_m = SEBcommunication[SOILEBCOM_dZ_m];
+  NumericVector dZUp = SEBcommunication[SOILEBCOM_dZUp];
+  NumericVector dZDown = SEBcommunication[SOILEBCOM_dZDown];
+  NumericVector Zcent = SEBcommunication[SOILEBCOM_Zcent];
+  NumericVector Zup = SEBcommunication[SOILEBCOM_Zup];
+  NumericVector Zdown = SEBcommunication[SOILEBCOM_Zdown];
+  NumericVector k_up = SEBcommunication[SOILEBCOM_k_up];
+  NumericVector k_down = SEBcommunication[SOILEBCOM_k_down];
+  NumericVector tempch = SEBcommunication[SOILEBCOM_tempch];
+  
   //Estimate layer interfaces
-  NumericVector dZ_m(nlayers);
   for(int l=0;l<nlayers;l++) dZ_m[l] = widths[l]*0.001; //mm to m
   
-  NumericVector dZUp(nlayers,0.0);
-  NumericVector dZDown(nlayers,0.0);
-  NumericVector Zcent(nlayers,0.0);
-  NumericVector Zup(nlayers,0.0);
-  NumericVector Zdown(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
     if(l==0) { //first layer
       dZUp[l] = dZ_m[0]/2.0; //Distance from ground to mid-layer
@@ -214,8 +220,6 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       dZDown[l] = dZ_m[l]/2.0;
     }
   }
-  NumericVector k_up(nlayers,0.0);
-  NumericVector k_down(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
     k_up[l] = 0.0;
     k_down[l] = 0.0;
@@ -239,10 +243,22 @@ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
       d[l] = (k_up[l]/dZUp[l])*(Temp[l-1] - Temp[l]);
     }
   }
-  NumericVector tempch(nlayers);
   tridiagonalSolving(a,b,c,d, e,f, tempch);
   return(tempch);
 }
+//' @name soil_thermodynamics
+ //' @keywords internal
+ // [[Rcpp::export("soil_temperatureChange")]]
+ NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
+                                 NumericVector sand, NumericVector clay,
+                                 NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
+                                 double Gdown, double tstep) {
+   List SEBcommunication = communicationSoilEnergyBalance(widths.size());
+   return(temperatureChange_inner(SEBcommunication, widths, Temp,
+                                  sand, clay,
+                                  W, Theta_SAT, Theta_FC,
+                                  Gdown, tstep));
+ }
 // NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
 //                                 NumericVector sand, NumericVector clay,
 //                                 NumericVector W, NumericVector Theta_FC,

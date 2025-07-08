@@ -5,7 +5,6 @@
 \alias{soil_thermalCapacity}
 \alias{soil_thermalConductivity}
 \alias{soil_temperatureGradient}
-\alias{soil_temperatureChange}
 \title{Soil thermodynamic functions}
 \usage{
 soil_thermalCapacity(soil, model = "SX")
@@ -13,18 +12,6 @@ soil_thermalCapacity(soil, model = "SX")
 soil_thermalConductivity(soil, model = "SX")
 
 soil_temperatureGradient(widths, Temp)
-
-soil_temperatureChange(
-  widths,
-  Temp,
-  sand,
-  clay,
-  W,
-  Theta_SAT,
-  Theta_FC,
-  Gdown,
-  tstep
-)
 }
 \arguments{
 \item{soil}{Soil object (returned by function \code{\link{soil}}).}
@@ -35,9 +22,9 @@ soil_temperatureChange(
 
 \item{Temp}{Temperature (in ºC) for each soil layer.}
 
-\item{sand}{Percentage of sand (in percent weight) for each layer.}
-
 \item{clay}{Percentage of clay (in percent weight) for each layer.}
+
+\item{sand}{Percentage of sand (in percent weight) for each layer.}
 
 \item{W}{Soil moisture (in percent of field capacity) for each layer.}
 

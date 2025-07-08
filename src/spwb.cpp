@@ -1813,6 +1813,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     
     
   List internalCommunication = instanceCommunicationStructures(x, "spwb");
+  List SEBcommunication = internalCommunication["SEBcommunication"];
   List transpOutput;
   if(transpirationMode == "Granier") {
     transpOutput  = internalCommunication["basicTranspirationOutput"];
@@ -1979,7 +1980,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("Catm") = Catm,
         Named("Patm") = Patm[i]);
       try{
-        transpirationAdvanced(transpOutput, x, meteovec, 
+        transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec, 
                                 latitude, elevation, slope, aspect,
                                 solarConstant, delta,
                                 canopyEvaporation[i], snowMelt[i], soilEvaporation[i], herbTranspiration[i],

@@ -3418,6 +3418,9 @@ soil <- function(x, VG_PTF = "Toth") {
     invisible(.Call(`_medfate_modifySoilLayerParam`, soil, paramName, layer, newValue, VG_PTF))
 }
 
+#' @name soil_thermodynamics
+NULL
+
 #' Soil thermodynamic functions
 #' 
 #' Functions \code{soil_thermalConductivity} and \code{soil_thermalCapacity} calculate thermal conductivity and thermal capacity 
@@ -3485,8 +3488,6 @@ soil_temperatureGradient <- function(widths, Temp) {
     .Call(`_medfate_temperatureGradient`, widths, Temp)
 }
 
-#' @name soil_thermodynamics
-#' @keywords internal
 soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep) {
     .Call(`_medfate_temperatureChange`, widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
 }

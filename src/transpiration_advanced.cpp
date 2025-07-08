@@ -39,7 +39,7 @@ const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 // STEP 5.2 Leaf energy balance, stomatal conductance and plant hydraulics  (Sperry or Sureau inner functions)
 // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
 // STEP 6. Update plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
-void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec, 
+void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
@@ -1032,7 +1032,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
       }
       
       //Soil temperature changes
-      NumericVector soilTchange = temperatureChange(widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
+      NumericVector soilTchange = temperatureChange_inner(SEBcommunication, widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
       for(int l=0;l<nlayers;l++) {
         Tsoil[l] = Tsoil[l] + std::max(-3.0, std::min(3.0, soilTchange[l])); 
         if(n<(ntimesteps-1)) Tsoil_mat(n+1,l)= Tsoil[l];
@@ -1155,7 +1155,7 @@ void transpirationAdvanced(List transpOutput, List x, NumericVector meteovec,
         Ebalsoil[n] +=Ebalsoils;
         Hcansoil[n] +=Hcansoils;
         //Soil temperature changes
-        NumericVector soilTchange = temperatureChange(widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoils, tsubstep);
+        NumericVector soilTchange = temperatureChange_inner(SEBcommunication, widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoils, tsubstep);
         for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + soilTchange[l];
       }
       Hcansoil[n] = Hcansoil[n]/((double) nsubsteps);
@@ -1334,9 +1334,10 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   int nlayers = soil.nrow();
   int numCohorts = cohorts.nrow();
   int ntimesteps = control["ndailysteps"];
+  List SEBcommunication = communicationSoilEnergyBalance(nlayers);
   List transpOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
   
-  transpirationAdvanced(transpOutput, x, meteovec,
+  transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec,
                         latitude, elevation, slope, aspect,
                         solarConstant, delta,
                         canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
@@ -1433,13 +1434,14 @@ List transpirationSureau(List x, DataFrame meteo, int day,
   int nlayers = soil.nrow();
   int numCohorts = cohorts.nrow();
   int ntimesteps = control["ndailysteps"];
+  List SEBcommunication = communicationSoilEnergyBalance(nlayers);
   List transpOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
-  transpirationAdvanced(transpOutput, x, meteovec,
-                                            latitude, elevation, slope, aspect,
-                                            solarConstant, delta,
-                                            canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
-                                            false, NA_INTEGER, 
-                                            modifyInput);
+  transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec,
+                        latitude, elevation, slope, aspect,
+                        solarConstant, delta,
+                        canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
+                        false, NA_INTEGER, 
+                        modifyInput);
   
   List transpAdvanced = copyAdvancedTranspirationOutput(transpOutput, x);
   
