@@ -474,8 +474,8 @@
                       PET = tapply(df$PET,INDEX=date.factor, FUN=sum, na.rm=TRUE))
     }
     g<-ggplot(df)+
-      geom_area(aes(x=.data$Date, y=.data$Precipitation, fill="Precipitation"))+
-      geom_area(aes(x=.data$Date, y=.data$Snow, fill="Snow"))+
+      geom_bar(aes(x=.data$Date, y=.data$Precipitation, fill="Precipitation"), stat = "identity")+
+      geom_bar(aes(x=.data$Date, y=.data$Snow, fill="Snow"), stat = "identity")+
       geom_path(aes(x=.data$Date, y=.data$PET, col="PET"))+
       scale_fill_manual(name="", values=c("Precipitation"="black", "Snow"="red"))+
       scale_color_manual(name="", values=c("PET"="gray"))+
