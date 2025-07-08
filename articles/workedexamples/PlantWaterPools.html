@@ -117,49 +117,110 @@ was already used when presenting the water balance model in De Cáceres
 et al. (2021). An evaluation of model performance in these experimental
 plots is given in <a href="https://emf-creaf.github.io/medfate/articles/evaluation/StandLevelEvaluation.html"><em>Stand-level
 evaluation</em></a>.</p>
-<p>For each of these plots we performed two simulations with the
-advanced water balance model
-(<code>transpirationMode = "Sperry"</code>), one using the default
-assumption of complete rhizosphere overlap
-(<code>rhizosphereOverlap = "total"</code>) and the other assuming
-complete independence of water pools
-(<code>rhizosphereOverlap = "none"</code>). Recovery from embolism was
-assumed to depend on soil moisture
+<p>For each of these plots we performed simulations using combinations
+of the three different transpiration modes:</p>
+<ul>
+<li><code>transpirationMode = "Granier"</code></li>
+<li><code>transpirationMode = "Sperry"</code></li>
+<li><code>transpirationMode = "Sureau"</code></li>
+</ul>
+<p>And different assumptions with respect to rhizosphere overlap:</p>
+<ul>
+<li>Default assumption of complete rhizosphere overlap
+(<code>rhizosphereOverlap = "total"</code>).</li>
+<li>Assuming partial dynamic rhizosphere overlap
+(<code>rhizosphereOverlap = "partial"</code>).</li>
+<li>Assuming complete independence of water pools
+(<code>rhizosphereOverlap = "none"</code>).</li>
+</ul>
+<p>Recovery from embolism was assumed to depend on soil moisture
 (<code>stemCavitationRecovery = "rate"</code> and
-<code>leafCavitationRecovery = "rate"</code>). We performed a burn-in
-simulation for the available weather of the forest plot (1 to 3 years,
-depending on the plot), so that soil moisture, plant water potentials
-and xylem percent loss conductance (PLC) could be equilibrated. After
-this burn-in period, we run again the model for one year only, to
-simplify the examination of the results.</p>
+<code>leafCavitationRecovery = "rate"</code>).</p>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h2>
 <div class="section level3">
-<h3 id="transpiration-per-leaf-area-unit-lm-2">Transpiration per leaf area unit (l·m-2)<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-unit-lm-2"></a>
+<h3 id="results-with-granier">Results with Granier<a class="anchor" aria-label="anchor" href="#results-with-granier"></a>
 </h3>
+<div class="section level4">
+<h4 id="transpiration-per-leaf-area-unit-lm-2">Transpiration per leaf area unit (l·m-2)<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-unit-lm-2"></a>
+</h4>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="soil-water-potential-mpa">Soil water potential (MPa)<a class="anchor" aria-label="anchor" href="#soil-water-potential-mpa"></a>
-</h3>
+<div class="section level4">
+<h4 id="soil-water-potential-mpa">Soil water potential (MPa)<a class="anchor" aria-label="anchor" href="#soil-water-potential-mpa"></a>
+</h4>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="root-crown-water-potential-mpa">Root-crown water potential (MPa)<a class="anchor" aria-label="anchor" href="#root-crown-water-potential-mpa"></a>
-</h3>
+<div class="section level4">
+<h4 id="plant-water-potential-mpa">Plant water potential (MPa)<a class="anchor" aria-label="anchor" href="#plant-water-potential-mpa"></a>
+</h4>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-6-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="range-of-leaf-water-potential-mpa">Range of leaf water potential (MPa)<a class="anchor" aria-label="anchor" href="#range-of-leaf-water-potential-mpa"></a>
-</h3>
+<div class="section level4">
+<h4 id="stem-percent-loss-conductance">Stem percent loss conductance (%)<a class="anchor" aria-label="anchor" href="#stem-percent-loss-conductance"></a>
+</h4>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-7-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
+</div>
 <div class="section level3">
-<h3 id="stem-percent-loss-conductance">Stem percent loss conductance (%)<a class="anchor" aria-label="anchor" href="#stem-percent-loss-conductance"></a>
+<h3 id="results-with-sperry">Results with Sperry<a class="anchor" aria-label="anchor" href="#results-with-sperry"></a>
 </h3>
+<div class="section level4">
+<h4 id="transpiration-per-leaf-area-unit-lm-2-1">Transpiration per leaf area unit (l·m-2)<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-unit-lm-2-1"></a>
+</h4>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-8-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="soil-water-potential-mpa-1">Soil water potential (MPa)<a class="anchor" aria-label="anchor" href="#soil-water-potential-mpa-1"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="root-crown-water-potential-mpa">Root-crown water potential (MPa)<a class="anchor" aria-label="anchor" href="#root-crown-water-potential-mpa"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="range-of-leaf-water-potential-mpa">Range of leaf water potential (MPa)<a class="anchor" aria-label="anchor" href="#range-of-leaf-water-potential-mpa"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-11-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="stem-percent-loss-conductance-1">Stem percent loss conductance (%)<a class="anchor" aria-label="anchor" href="#stem-percent-loss-conductance-1"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-12-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="results-with-sureau">Results with Sureau<a class="anchor" aria-label="anchor" href="#results-with-sureau"></a>
+</h3>
+<div class="section level4">
+<h4 id="transpiration-per-leaf-area-unit-lm-2-2">Transpiration per leaf area unit (l·m-2)<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-unit-lm-2-2"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-13-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="soil-water-potential-mpa-2">Soil water potential (MPa)<a class="anchor" aria-label="anchor" href="#soil-water-potential-mpa-2"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-14-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="root-crown-water-potential-mpa-1">Root-crown water potential (MPa)<a class="anchor" aria-label="anchor" href="#root-crown-water-potential-mpa-1"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-15-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="range-of-leaf-water-potential-mpa-1">Range of leaf water potential (MPa)<a class="anchor" aria-label="anchor" href="#range-of-leaf-water-potential-mpa-1"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-16-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="stem-percent-loss-conductance-2">Stem percent loss conductance (%)<a class="anchor" aria-label="anchor" href="#stem-percent-loss-conductance-2"></a>
+</h4>
+<p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
 </div>
 </div>
 <div class="section level2">
