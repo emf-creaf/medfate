@@ -20,6 +20,7 @@
 #'       \item{\code{fillMissingWithGenusParams [=TRUE]}: Boolean flag to indicate that initializing functions should provide estimates from genus value, if species-level values are missing in the species parameter table \code{\link{SpParams}} but genus-level ones are not.}
 #'       \item{\code{standResults [= TRUE]}: Boolean flag to keep stand-level results (in a data frame called 'Stand').}
 #'       \item{\code{soilResults [= TRUE]}: Boolean flag to keep soil-level results (in a list called 'Soil').}
+#'       \item{\code{soilPoolResults [= FALSE]}: Boolean flag to keep soil pool-level results (in a list called 'SoilPools'), if \code{rhizosphereOverlap!="total"}.}
 #'       \item{\code{snowResults [= TRUE]}: Boolean flag to keep snow results (in a data frame called 'Snow').}
 #'       \item{\code{plantResults [= TRUE]}: Boolean flag to keep plant-level water/energy/photosynthesis results (in a list called 'Plants').}
 #'       \item{\code{labileCarbonBalanceResults [= TRUE]}: Boolean flag to keep plant-level labile carbon balance results (in a list called 'LabileCarbonBalance').}
@@ -194,6 +195,7 @@ defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets")
     subdailyResults = FALSE,
     standResults = TRUE,
     soilResults = TRUE,
+    soilPoolResults = FALSE,
     snowResults = TRUE,
     plantResults = TRUE,
     plantWaterBalanceResults = TRUE,

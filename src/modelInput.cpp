@@ -1204,6 +1204,8 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
   
   DataFrame paramsCanopydf = paramsCanopy(above, control);
   List ctl = clone(control);
+  //For backward compatibility
+  if(!ctl.containsElementNamed("soilPoolResults")) ctl.push_back(false, "soilPoolResults");
   if(transpirationMode!="Granier") {
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -1346,6 +1348,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   
   DataFrame paramsCanopydf = paramsCanopy(above, control);
   List ctl = clone(control);
+  //For backward compatibility
+  if(!ctl.containsElementNamed("soilPoolResults")) ctl.push_back(false, "soilPoolResults");
   if(transpirationMode!="Granier") {
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 

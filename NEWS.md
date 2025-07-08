@@ -1,3 +1,6 @@
+# medfate 4.8.3
+* Soil pool results (REW and psi) enabled
+
 # medfate 4.8.2
 * Bug correction detecting date vector objects (Rcpp issue)
 * Bug correction in function extract()

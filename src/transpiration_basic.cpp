@@ -262,7 +262,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   NumericMatrix KunsatM(numCohorts, nlayers);
   NumericMatrix psiSoilM(numCohorts, nlayers);
   if(plantWaterPools) {
-    List soil_pool = clone(soil);
+    DataFrame soil_pool = clone(soil);
     NumericVector Ws_pool = soil_pool["W"];
     for(int j = 0; j<numCohorts;j++) {
       //Copy values of soil moisture from pool of cohort j
