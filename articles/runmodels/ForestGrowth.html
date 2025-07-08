@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-05-25</h4>
+            <h4 data-toc-skip class="date">2025-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -333,28 +333,28 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 5256.53</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 188.193</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 188.193</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 5255.9</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 187.565</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 187.565</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 104 Labile balance (g/m2) 92</span></span>
+<span><span class="co">##   Structural balance (g/m2) 103 Labile balance (g/m2) 92</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 196 Mortality loss (g/m2) 8</span></span>
-<span><span class="co">## Final plant water content (mm): 4.73794</span></span>
-<span><span class="co">## Final soil water content (mm): 274.787</span></span>
+<span><span class="co">## Final plant water content (mm): 4.73772</span></span>
+<span><span class="co">## Final soil water content (mm): 274.837</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.00793033</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00116903</span></span>
-<span><span class="co">## Change in soil water content (mm): -16.0878</span></span>
-<span><span class="co">## Soil water balance result (mm): -16.0878</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.00771097</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00124285</span></span>
+<span><span class="co">## Change in soil water content (mm): -16.0379</span></span>
+<span><span class="co">## Soil water balance result (mm): -16.0379</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 92 Net rainfall (mm) 370</span></span>
 <span><span class="co">##   Infiltration (mm) 400 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 248</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 248  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4</span></span>
-<span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 128</span></span></code></pre>
+<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 247</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3</span></span>
+<span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 130</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -501,9 +501,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
-<span><span class="co">##  12.00000000  -0.07781339 -12.01831387   0.07962106  12.29751007   0.99395791 </span></span>
+<span><span class="co">##  12.00000000  -0.08492908 -13.11733629   0.08673338  13.39600989   0.99599738 </span></span>
 <span><span class="co">##          NSE      NSE.abs </span></span>
-<span><span class="co">##   0.95935190   0.83966426</span></span></code></pre>
+<span><span class="co">##   0.95658525   0.82534195</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
@@ -542,7 +542,7 @@ dynamics at regional scales. Geoscientific Model Development 16:
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

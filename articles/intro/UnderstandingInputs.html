@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-05-25</h4>
+            <h4 data-toc-skip class="date">2025-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1693,10 +1693,10 @@ Van Genuchten-Mualem equations need other parameters, which are
 estimated using pedotransfer functions and their names start with
 <code>VG_</code> (two alternative options are provided in function
 <code>soil</code> to estimate Van Genuchten parameters). The following
-code calls function <code><a href="../../reference/soil_texture.html">soil_retentionCurvePlot()</a></code> to illustrate
+code calls function <code><a href="../../reference/soil_retentionCurvePlot.html">soil_retentionCurvePlot()</a></code> to illustrate
 the difference between the two water retention models in this soil:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/soil_texture.html">soil_retentionCurvePlot</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/soil_retentionCurvePlot.html">soil_retentionCurvePlot</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-21-1.png" alt="Soil water retention" width="480" style="display: block; margin: auto;"></p>
 <p>Low-level functions, such as <code><a href="../../reference/soil_texture.html">soil_psi2thetaSX()</a></code> and
 <code><a href="../../reference/soil_texture.html">soil_psi2thetaVG()</a></code> (and their counterparts
@@ -1750,61 +1750,62 @@ parameterization is obtained using function
 <pre><code><span><span class="co">##   [1] "fillMissingRootParams"            "fillMissingSpParams"             </span></span>
 <span><span class="co">##   [3] "fillMissingWithGenusParams"       "verbose"                         </span></span>
 <span><span class="co">##   [5] "subdailyResults"                  "standResults"                    </span></span>
-<span><span class="co">##   [7] "soilResults"                      "snowResults"                     </span></span>
-<span><span class="co">##   [9] "plantResults"                     "plantWaterBalanceResults"        </span></span>
-<span><span class="co">##  [11] "labileCarbonBalanceResults"       "plantStructureResults"           </span></span>
-<span><span class="co">##  [13] "growthMortalityResults"           "leafResults"                     </span></span>
-<span><span class="co">##  [15] "temperatureResults"               "fireHazardResults"               </span></span>
-<span><span class="co">##  [17] "fireHazardStandardWind"           "fireHazardStandardDFMC"          </span></span>
-<span><span class="co">##  [19] "transpirationMode"                "soilFunctions"                   </span></span>
-<span><span class="co">##  [21] "VG_PTF"                           "ndailysteps"                     </span></span>
-<span><span class="co">##  [23] "max_nsubsteps_soil"               "defaultWindSpeed"                </span></span>
-<span><span class="co">##  [25] "defaultCO2"                       "defaultRainfallIntensityPerMonth"</span></span>
-<span><span class="co">##  [27] "leafPhenology"                    "bareSoilEvaporation"             </span></span>
-<span><span class="co">##  [29] "unlimitedSoilWater"               "interceptionMode"                </span></span>
-<span><span class="co">##  [31] "infiltrationMode"                 "infiltrationCorrection"          </span></span>
-<span><span class="co">##  [33] "soilDomains"                      "rhizosphereOverlap"              </span></span>
-<span><span class="co">##  [35] "unfoldingDD"                      "verticalLayerSize"               </span></span>
-<span><span class="co">##  [37] "windMeasurementHeight"            "segmentedXylemVulnerability"     </span></span>
-<span><span class="co">##  [39] "stemCavitationRecovery"           "leafCavitationRecovery"          </span></span>
-<span><span class="co">##  [41] "lfmcComponent"                    "hydraulicRedistributionFraction" </span></span>
-<span><span class="co">##  [43] "nsubsteps_canopy"                 "taper"                           </span></span>
-<span><span class="co">##  [45] "multiLayerBalance"                "sapFluidityVariation"            </span></span>
-<span><span class="co">##  [47] "TPhase_gmin"                      "Q10_1_gmin"                      </span></span>
-<span><span class="co">##  [49] "Q10_2_gmin"                       "rootRadialConductance"           </span></span>
-<span><span class="co">##  [51] "averageFracRhizosphereResistance" "thermalCapacityLAI"              </span></span>
-<span><span class="co">##  [53] "boundaryLayerSize"                "cavitationRecoveryMaximumRate"   </span></span>
-<span><span class="co">##  [55] "sunlitShade"                      "numericParams"                   </span></span>
-<span><span class="co">##  [57] "leafCavitationEffects"            "stemCavitationEffects"           </span></span>
-<span><span class="co">##  [59] "stomatalSubmodel"                 "plantCapacitance"                </span></span>
-<span><span class="co">##  [61] "cavitationFlux"                   "soilDisconnection"               </span></span>
-<span><span class="co">##  [63] "leafCuticularTranspiration"       "stemCuticularTranspiration"      </span></span>
-<span><span class="co">##  [65] "C_SApoInit"                       "C_LApoInit"                      </span></span>
-<span><span class="co">##  [67] "k_SSym"                           "fractionLeafSymplasm"            </span></span>
-<span><span class="co">##  [69] "gs_NightFrac"                     "JarvisPAR"                       </span></span>
-<span><span class="co">##  [71] "fTRBToLeaf"                       "subdailyCarbonBalance"           </span></span>
-<span><span class="co">##  [73] "allowDessication"                 "allowStarvation"                 </span></span>
-<span><span class="co">##  [75] "sinkLimitation"                   "shrubDynamics"                   </span></span>
-<span><span class="co">##  [77] "herbDynamics"                     "allocationStrategy"              </span></span>
-<span><span class="co">##  [79] "phloemConductanceFactor"          "nonSugarConcentration"           </span></span>
-<span><span class="co">##  [81] "equilibriumOsmoticConcentration"  "minimumRelativeStarchForGrowth"  </span></span>
-<span><span class="co">##  [83] "constructionCosts"                "senescenceRates"                 </span></span>
-<span><span class="co">##  [85] "maximumRelativeGrowthRates"       "mortalityMode"                   </span></span>
-<span><span class="co">##  [87] "mortalityBaselineRate"            "mortalityRelativeSugarThreshold" </span></span>
-<span><span class="co">##  [89] "mortalityRWCThreshold"            "recrTreeDBH"                     </span></span>
-<span><span class="co">##  [91] "recrTreeDensity"                  "ingrowthTreeDBH"                 </span></span>
-<span><span class="co">##  [93] "ingrowthTreeDensity"              "allowSeedBankDynamics"           </span></span>
-<span><span class="co">##  [95] "allowRecruitment"                 "allowResprouting"                </span></span>
-<span><span class="co">##  [97] "recruitmentMode"                  "removeEmptyCohorts"              </span></span>
-<span><span class="co">##  [99] "minimumTreeCohortDensity"         "minimumShrubCohortCover"         </span></span>
-<span><span class="co">## [101] "dynamicallyMergeCohorts"          "keepCohortsWithObsID"            </span></span>
-<span><span class="co">## [103] "seedRain"                         "seedProductionTreeHeight"        </span></span>
-<span><span class="co">## [105] "seedProductionShrubHeight"        "probRecr"                        </span></span>
-<span><span class="co">## [107] "minTempRecr"                      "minMoistureRecr"                 </span></span>
-<span><span class="co">## [109] "minFPARRecr"                      "recrTreeHeight"                  </span></span>
-<span><span class="co">## [111] "recrShrubCover"                   "recrShrubHeight"                 </span></span>
-<span><span class="co">## [113] "recrTreeZ50"                      "recrShrubZ50"                    </span></span>
-<span><span class="co">## [115] "recrTreeZ95"                      "recrShrubZ95"</span></span></code></pre>
+<span><span class="co">##   [7] "soilResults"                      "soilPoolResults"                 </span></span>
+<span><span class="co">##   [9] "snowResults"                      "plantResults"                    </span></span>
+<span><span class="co">##  [11] "plantWaterBalanceResults"         "labileCarbonBalanceResults"      </span></span>
+<span><span class="co">##  [13] "plantStructureResults"            "growthMortalityResults"          </span></span>
+<span><span class="co">##  [15] "leafResults"                      "temperatureResults"              </span></span>
+<span><span class="co">##  [17] "fireHazardResults"                "fireHazardStandardWind"          </span></span>
+<span><span class="co">##  [19] "fireHazardStandardDFMC"           "transpirationMode"               </span></span>
+<span><span class="co">##  [21] "soilDomains"                      "rhizosphereOverlap"              </span></span>
+<span><span class="co">##  [23] "soilFunctions"                    "VG_PTF"                          </span></span>
+<span><span class="co">##  [25] "ndailysteps"                      "max_nsubsteps_soil"              </span></span>
+<span><span class="co">##  [27] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
+<span><span class="co">##  [29] "defaultRainfallIntensityPerMonth" "leafPhenology"                   </span></span>
+<span><span class="co">##  [31] "bareSoilEvaporation"              "unlimitedSoilWater"              </span></span>
+<span><span class="co">##  [33] "interceptionMode"                 "infiltrationMode"                </span></span>
+<span><span class="co">##  [35] "infiltrationCorrection"           "unfoldingDD"                     </span></span>
+<span><span class="co">##  [37] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
+<span><span class="co">##  [39] "segmentedXylemVulnerability"      "stemCavitationRecovery"          </span></span>
+<span><span class="co">##  [41] "leafCavitationRecovery"           "lfmcComponent"                   </span></span>
+<span><span class="co">##  [43] "hydraulicRedistributionFraction"  "nsubsteps_canopy"                </span></span>
+<span><span class="co">##  [45] "taper"                            "multiLayerBalance"               </span></span>
+<span><span class="co">##  [47] "sapFluidityVariation"             "TPhase_gmin"                     </span></span>
+<span><span class="co">##  [49] "Q10_1_gmin"                       "Q10_2_gmin"                      </span></span>
+<span><span class="co">##  [51] "rootRadialConductance"            "averageFracRhizosphereResistance"</span></span>
+<span><span class="co">##  [53] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
+<span><span class="co">##  [55] "cavitationRecoveryMaximumRate"    "sunlitShade"                     </span></span>
+<span><span class="co">##  [57] "numericParams"                    "leafCavitationEffects"           </span></span>
+<span><span class="co">##  [59] "stemCavitationEffects"            "stomatalSubmodel"                </span></span>
+<span><span class="co">##  [61] "plantCapacitance"                 "cavitationFlux"                  </span></span>
+<span><span class="co">##  [63] "soilDisconnection"                "leafCuticularTranspiration"      </span></span>
+<span><span class="co">##  [65] "stemCuticularTranspiration"       "C_SApoInit"                      </span></span>
+<span><span class="co">##  [67] "C_LApoInit"                       "k_SSym"                          </span></span>
+<span><span class="co">##  [69] "fractionLeafSymplasm"             "gs_NightFrac"                    </span></span>
+<span><span class="co">##  [71] "JarvisPAR"                        "fTRBToLeaf"                      </span></span>
+<span><span class="co">##  [73] "subdailyCarbonBalance"            "allowDessication"                </span></span>
+<span><span class="co">##  [75] "allowStarvation"                  "sinkLimitation"                  </span></span>
+<span><span class="co">##  [77] "shrubDynamics"                    "herbDynamics"                    </span></span>
+<span><span class="co">##  [79] "allocationStrategy"               "phloemConductanceFactor"         </span></span>
+<span><span class="co">##  [81] "nonSugarConcentration"            "equilibriumOsmoticConcentration" </span></span>
+<span><span class="co">##  [83] "minimumRelativeStarchForGrowth"   "constructionCosts"               </span></span>
+<span><span class="co">##  [85] "senescenceRates"                  "maximumRelativeGrowthRates"      </span></span>
+<span><span class="co">##  [87] "mortalityMode"                    "mortalityBaselineRate"           </span></span>
+<span><span class="co">##  [89] "mortalityRelativeSugarThreshold"  "mortalityRWCThreshold"           </span></span>
+<span><span class="co">##  [91] "recrTreeDBH"                      "recrTreeDensity"                 </span></span>
+<span><span class="co">##  [93] "ingrowthTreeDBH"                  "ingrowthTreeDensity"             </span></span>
+<span><span class="co">##  [95] "allowSeedBankDynamics"            "allowRecruitment"                </span></span>
+<span><span class="co">##  [97] "allowResprouting"                 "recruitmentMode"                 </span></span>
+<span><span class="co">##  [99] "removeEmptyCohorts"               "minimumTreeCohortDensity"        </span></span>
+<span><span class="co">## [101] "minimumShrubCohortCover"          "dynamicallyMergeCohorts"         </span></span>
+<span><span class="co">## [103] "keepCohortsWithObsID"             "seedRain"                        </span></span>
+<span><span class="co">## [105] "seedProductionTreeHeight"         "seedProductionShrubHeight"       </span></span>
+<span><span class="co">## [107] "probRecr"                         "minTempRecr"                     </span></span>
+<span><span class="co">## [109] "minMoistureRecr"                  "minFPARRecr"                     </span></span>
+<span><span class="co">## [111] "recrTreeHeight"                   "recrShrubCover"                  </span></span>
+<span><span class="co">## [113] "recrShrubHeight"                  "recrTreeZ50"                     </span></span>
+<span><span class="co">## [115] "recrShrubZ50"                     "recrTreeZ95"                     </span></span>
+<span><span class="co">## [117] "recrShrubZ95"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>
@@ -1845,7 +1846,7 @@ simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

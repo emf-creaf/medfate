@@ -9,7 +9,7 @@ within plants."><meta property="og:image" content="https://emf-creaf.github.io/m
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -184,7 +184,8 @@ When using <code>transp_transpirationSperry</code> or <code>transp_transpiration
 <li><p><code>"LFMC"</code>: Live fuel moisture content (in percent of dry weight).</p></li>
 <li><p><code>"WaterBalance"</code>: Plant water balance (extraction - transpiration).</p></li>
 </ul></li>
-<li><p><code>"Extraction"</code>: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).</p>
+<li><p><code>"Extraction"</code>: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows). The sum of a given row is equal to the total extraction of the corresponding plant cohort.</p></li>
+<li><p><code>"ExtractionPools"</code>: A named list with as many elements as plant cohorts, where each element is a matrix data with mm of water extracted from each layer (in columns) of the water pool of each cohort (in rows). The sum of a given matrix is equal to the total extraction of the corresponding plant cohort.</p>
 <p>The remaining items are only given by <code>transp_transpirationSperry</code> or <code>transp_transpirationSureau</code>:</p></li>
 <li><p><code>"EnergyBalance"</code>: A list with the following elements:
 </p><ul><li><p><code>"Temperature"</code>: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.</p></li>
@@ -315,7 +316,7 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

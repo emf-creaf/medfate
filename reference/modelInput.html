@@ -9,7 +9,7 @@ and a soil data input to create input objects for simulation functions spwb (or 
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -299,6 +299,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilPoolResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -334,6 +337,12 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$transpirationMode</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Granier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
@@ -373,12 +382,6 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$infiltrationCorrection</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$unfoldingDD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 300</span>
@@ -950,6 +953,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilPoolResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -985,6 +991,12 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$transpirationMode</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sperry"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
@@ -1024,12 +1036,6 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$infiltrationCorrection</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$unfoldingDD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 300</span>
@@ -1639,6 +1645,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilPoolResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1674,6 +1683,12 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$transpirationMode</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sureau"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
@@ -1713,12 +1728,6 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$infiltrationCorrection</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$unfoldingDD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 300</span>
@@ -2333,6 +2342,9 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilPoolResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowResults</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2368,6 +2380,12 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$transpirationMode</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Granier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
@@ -2407,12 +2425,6 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$infiltrationCorrection</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilDomains</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "buckets"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$unfoldingDD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 300</span>
@@ -2970,7 +2982,7 @@ they can still be used for back-compatibility.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

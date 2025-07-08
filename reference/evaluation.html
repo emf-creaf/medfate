@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -219,22 +219,22 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:............</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 4.7285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 274.723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 4.72838</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 274.758</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00151775</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00151775</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -16.1521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -16.1521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00163384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00163384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -16.1173</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -16.1173</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 400 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 249</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 249  Plant water balance (mm) -0 Hydraulic redistribution (mm) 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 21 Deep drainage (mm) 128</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 248  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Runoff (mm) 21 Deep drainage (mm) 130</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -242,13 +242,13 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3.650000e+02 -5.419844e-04 -1.954972e-01  5.002766e-03  1.804529e+00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.002890297  -1.042548187   0.006146537   2.217094600 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9.683900e-01  9.372955e-01  7.378057e-01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.965654827   0.895252736   0.677860877 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#NSE only</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9372955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8952527</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -256,7 +256,7 @@ If measurements refer to months or years, row names should also be in a "year-mo
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 998.5705</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 990.9187</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -270,7 +270,7 @@ If measurements refer to months or years, row names should also be in a "year-mo
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

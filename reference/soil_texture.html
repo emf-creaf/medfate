@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Soil texture and hydraulics</h1>
-      <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a>, <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/soil_retentionCurvePlot.R" class="external-link"><code>R/soil_retentionCurvePlot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a></small>
       <div class="d-none name"><code>soil_texture.Rd</code></div>
     </div>
 
@@ -105,7 +105,7 @@
 <span></span>
 <span><span class="fu">soil_psi</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_capacitance</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
@@ -115,16 +115,7 @@
 <span></span>
 <span><span class="fu">soil_campbellParamsClappHornberger</span><span class="op">(</span><span class="va">soilType</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">om</span>, <span class="va">bd</span>, <span class="va">topsoil</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">soil_retentionCurvePlot</span><span class="op">(</span></span>
-<span>  <span class="va">soil</span>,</span>
-<span>  model <span class="op">=</span> <span class="st">"SX"</span>,</span>
-<span>  layer <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  psi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">6</span>, by <span class="op">=</span> <span class="op">-</span><span class="fl">0.01</span><span class="op">)</span>,</span>
-<span>  relative <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  to <span class="op">=</span> <span class="st">"SAT"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">om</span>, <span class="va">bd</span>, <span class="va">topsoil</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -172,7 +163,7 @@
 
 
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
-<dd><p>Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.</p></dd>
+<dd><p>Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models.</p></dd>
 
 
 <dt id="arg-minpsi">minPsi<a class="anchor" aria-label="anchor" href="#arg-minpsi"></a></dt>
@@ -198,18 +189,6 @@
 <dt id="arg-topsoil">topsoil<a class="anchor" aria-label="anchor" href="#arg-topsoil"></a></dt>
 <dd><p>A boolean flag to indicate topsoil layer.</p></dd>
 
-
-<dt id="arg-layer">layer<a class="anchor" aria-label="anchor" href="#arg-layer"></a></dt>
-<dd><p>Soil layer to be plotted.</p></dd>
-
-
-<dt id="arg-relative">relative<a class="anchor" aria-label="anchor" href="#arg-relative"></a></dt>
-<dd><p>Boolean flag to indicate that retention curve should be relative to field capacity or saturation.</p></dd>
-
-
-<dt id="arg-to">to<a class="anchor" aria-label="anchor" href="#arg-to"></a></dt>
-<dd><p>Either 'SAT' (saturation) or 'FC' (field capacity).</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -220,22 +199,21 @@
 
 <ul><li><p><code>soil_psi2thetaSX()</code> and <code>soil_theta2psiSX()</code> calculate water potentials (MPa) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
 <li><p><code>soil_psi2thetaVG()</code> and <code>soil_theta2psiVG()</code> to the same calculations as before, but using the Van Genuchten - Mualem equations (Wösten &amp; van Genuchten 1988).</p></li>
-<li><p><code>soil_saturatedConductivitySX()</code> returns the saturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
-<li><p><code>soil_unsaturatedConductivitySX()</code> returns the unsaturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
+<li><p><code>soil_saturatedConductivitySX()</code> returns the saturated conductivity of the soil (in mmol/m/s/MPa or cm/day), estimated from formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
+<li><p><code>soil_unsaturatedConductivitySX()</code> returns the unsaturated conductivity of the soil (in mmol/m/s/MPa or cm/day), estimated from formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
 <li><p><code>soil_USDAType()</code> returns the USDA type (a string) for a given texture.</p></li>
 <li><p><code>soil_vanGenuchtenParamsCarsel()</code> gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture type (Leij et al. 1996)</p></li>
 <li><p><code>soil_vanGenuchtenParamsToth()</code> gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture, organic matter and bulk density (Toth et al. 2015).</p></li>
 <li><p><code>soil_psi()</code> returns the water potential (MPa) of each soil layer, according to its water retention model.</p></li>
 <li><p><code>soil_theta()</code> returns the moisture content (as percent of soil volume) of each soil layer, according to its water retention model.</p></li>
 <li><p><code>soil_water()</code> returns the water volume (mm) of each soil layer, according to its water retention model.</p></li>
-<li><p><code>soil_conductivity()</code> returns the conductivity of each soil layer (mmol/m/s/MPa), according the Saxton model.</p></li>
+<li><p><code>soil_conductivity()</code> returns the conductivity of each soil layer (in mmol/m/s/MPa or cm/day).</p></li>
 <li><p><code>soil_waterExtractable()</code> returns the water volume (mm) extractable from the soil according to its water retention curves and up to a given soil water potential.</p></li>
 <li><p><code>soil_waterFC()</code> and <code>soil_thetaFC()</code> calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.</p></li>
 <li><p><code>soil_waterWP()</code> and <code>soil_thetaWP()</code> calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively.</p></li>
 <li><p><code>soil_waterSAT()</code>, <code>soil_thetaSATSX()</code> and <code>soil_thetaSAT()</code> calculate the saturated water volume (in mm) and moisture content (as percent of soil volume) of each soil layer.</p></li>
 <li><p><code>soil_saturatedWaterDepth()</code> returns the depth to saturation in mm from surface.</p></li>
 <li><p><code>soil_rockWeight2Volume()</code> transforms rock percentage from weight to volume basis.</p></li>
-<li><p><code>soil_retentionCurvePlot()</code> allows ploting the water retention curve of a given soil layer.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -280,7 +258,7 @@
 <span class="r-in"><span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="va">soil_df</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot Saxton's and Van Genuchten's water retention curves</span></span></span>
-<span class="r-in"><span><span class="fu">soil_retentionCurvePlot</span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="soil_retentionCurvePlot.html">soil_retentionCurvePlot</a></span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="soil_texture-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -294,7 +272,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
