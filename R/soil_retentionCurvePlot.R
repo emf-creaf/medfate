@@ -117,12 +117,12 @@ soil_conductivityCurvePlot<-function(soil, model="SX", layer = 1,
     ylab=paste0("Conductivity (",toString,")")
   } else {
     if(mmol) {
-      ylab="Conductivity (mmol·m-1·MPa·s-1)"
+      ylab=expression(paste("Conductivity ",(mmol%.%m^{-1}%.%MPa^{-1}%.%s^{-1})))
     } else {
       cmdTOmmolm2sMPa = 655.2934
       y_sx <- y_sx/cmdTOmmolm2sMPa
       y_vg <- y_vg/cmdTOmmolm2sMPa
-      ylab="Conductivity (cm·day-1)"
+      ylab=expression(paste("Conductivity ",(cm%.%d^{-1})))
     }
   }
 
