@@ -2,8 +2,14 @@
 #'
 #' Creates a list control parameters default values for simulations
 #' 
-#' @param transpirationMode Transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.
-#' @param soilDomains Soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.
+#' @param transpirationMode String containing transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.
+#' @param soilDomains String containing soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.
+#' @param rhizosphereOverlap String indicating the assumption with respect to rhizosphere overlap:
+#'   \itemize{
+#'      \item{\code{total}: All plants extract water from the same pools.}
+#'      \item{\code{partial}: Plants partially share water pools, depending on soil moisture.}
+#'      \item{\code{none}: Plants extract water from totally-independent water pools.}
+#'   }
 #' 
 #' @details The function returns a list with default parameters. 
 #' Users can change those defaults that need to be set to other values and use the list as input for model functions. 
@@ -182,10 +188,13 @@
 #' @seealso \code{\link{spwbInput}}, \code{\link{spwb}}, \code{\link{growth}}, \code{\link{fordyn}}
 #' 
 #' @name defaultControl
-defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets") {
+defaultControl<-function(transpirationMode = "Granier", 
+                         soilDomains = "buckets", 
+                         rhizosphereOverlap = "total") {
   transpirationMode <- match.arg(transpirationMode, c("Granier", "Sperry", "Cochard", "Sureau"))
-  soilDomains <- match.arg(soilDomains, c("buckets", "single", "dual"))
   if(transpirationMode=="Cochard") transpirationMode = "Sureau"
+  soilDomains <- match.arg(soilDomains, c("buckets", "single", "dual"))
+  rhizosphereOverlap <- match.arg(rhizosphereOverlap, c("total", "partial", "none"))
   l <- list(
     #For all functions
     fillMissingRootParams = TRUE,
@@ -210,6 +219,8 @@ defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets")
 
     # For water balance
     transpirationMode = transpirationMode,
+    soilDomains = soilDomains,
+    rhizosphereOverlap = rhizosphereOverlap,
     soilFunctions = "VG",
     VG_PTF = "Toth",
     ndailysteps = 24,
@@ -223,8 +234,6 @@ defaultControl<-function(transpirationMode = "Granier", soilDomains = "buckets")
     interceptionMode = "Gash1995",
     infiltrationMode = "GreenAmpt1911",
     infiltrationCorrection = 5.0,
-    soilDomains = soilDomains,
-    rhizosphereOverlap = "total",
     unfoldingDD = 300,
     verticalLayerSize = 100,
     windMeasurementHeight = 200,

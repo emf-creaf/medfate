@@ -4,12 +4,23 @@
 \alias{defaultControl}
 \title{Control parameters for simulation models}
 \usage{
-defaultControl(transpirationMode = "Granier", soilDomains = "buckets")
+defaultControl(
+  transpirationMode = "Granier",
+  soilDomains = "buckets",
+  rhizosphereOverlap = "total"
+)
 }
 \arguments{
-\item{transpirationMode}{Transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.}
+\item{transpirationMode}{String containing transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.}
 
-\item{soilDomains}{Soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.}
+\item{soilDomains}{String containing soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.}
+
+\item{rhizosphereOverlap}{String indicating the assumption with respect to rhizosphere overlap:
+\itemize{
+\item{\code{total}: All plants extract water from the same pools.}
+\item{\code{partial}: Plants partially share water pools, depending on soil moisture.}
+\item{\code{none}: Plants extract water from totally-independent water pools.}
+}}
 }
 \value{
 A list, with the following options (default values in brackets):

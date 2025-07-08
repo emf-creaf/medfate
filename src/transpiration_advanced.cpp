@@ -651,10 +651,10 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       NumericMatrix RHOPcohDyn(numCohorts, nlayers);
       nlayerscon[c] = 0;
       for(int l=0;l<nlayers;l++) {
-        double overlapFactor = Psi2K(psiSoil[l], -1.0, 4.0);
         RHOPcohDyn(c,l) = RHOPcoh(c,l);
         for(int j=0; j<numCohorts;j++) {
           if(j!=c) {
+            double overlapFactor = Psi2K(psiSoilM(j,l), -1.0, 4.0);
             RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
             RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
           } 

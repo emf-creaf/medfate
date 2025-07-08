@@ -2,6 +2,7 @@
 * Soil pool results (REW and psi) enabled
 * Areas changed by bars in PET_Precipitation plots
 * New plotting function soil_conductivityCurvePlot()
+* Rhizosphere overlap is a parameter in function defaultControl()
 
 # medfate 4.8.2
 * Bug correction detecting date vector objects (Rcpp issue)
