@@ -6,10 +6,9 @@ using namespace Rcpp;
 // a,b,c,d are input vectors
 // e,f are vectors used internally
 // sol is the output
-NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector c, NumericVector d,
-                        NumericVector e, NumericVector f, int n) {
-
-  NumericVector sol(n);
+void tridiagonalSolving(NumericVector a, NumericVector b, NumericVector c, NumericVector d,
+                        NumericVector e, NumericVector f, NumericVector sol) {
+  int n = b.size();
   //Forward steps
   double e_prev = 0.0;
   double f_prev = 0.0;
@@ -25,6 +24,5 @@ NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector
   for(int i = (n - 2);i>=0;i--) {
     sol[i] = f[i] - e[i]*sol[i + 1];
   }
-  return(sol);
 }
 

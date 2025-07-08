@@ -1035,7 +1035,8 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             }
           }
           //TRIDIAGONAL SOLVING
-          NumericVector Psi_step_t05 = tridiagonalSolving(a,b,c,d,e,f, nlayers);
+          NumericVector Psi_step_t05(nlayers);
+          tridiagonalSolving(a,b,c,d,e,f, Psi_step_t05);
           //MODIFY UNITS OF OUTPUT PSI
           for(int l=0;l<nlayers;l++) Psi_step_t05[l] = Psi_step_t05[l]*mTOMPa; // m to MPa
           
@@ -1105,7 +1106,8 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             }
           }
           //TRIDIAGONAL SOLVING
-          NumericVector Psi_step_t1 = tridiagonalSolving(a,b,c,d, e, f, nlayers);
+          NumericVector Psi_step_t1(nlayers);
+          tridiagonalSolving(a,b,c,d, e, f, Psi_step_t1);
           //MODIFY UNITS OF OUTPUT PSI
           for(int l=0;l<nlayers;l++) Psi_step_t1[l] = Psi_step_t1[l]*mTOMPa; // m to MPa
           

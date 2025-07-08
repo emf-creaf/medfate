@@ -1500,7 +1500,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     //Update RHOP
     List newRHOP;
     if(rhizosphereOverlap=="none") newRHOP = nonoverlapHorizontalProportions(V);
-    else newRHOP = horizontalProportions(poolProportions, CRSV, N, V, widths, rfc);
+    else newRHOP =equaloverlapHorizontalProportions(poolProportions, V);
+    // else newRHOP = horizontalProportions(poolProportions, CRSV, N, V, widths, rfc);
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
