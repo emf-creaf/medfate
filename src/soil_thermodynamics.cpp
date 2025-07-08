@@ -247,9 +247,9 @@ NumericVector temperatureChange_inner(List SEBcommunication, NumericVector width
   return(tempch);
 }
 //' @name soil_thermodynamics
- //' @keywords internal
- // [[Rcpp::export("soil_temperatureChange")]]
- NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
+//' @keywords internal
+// [[Rcpp::export("soil_temperatureChange")]]
+NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
                                  NumericVector sand, NumericVector clay,
                                  NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
                                  double Gdown, double tstep) {
@@ -258,24 +258,6 @@ NumericVector temperatureChange_inner(List SEBcommunication, NumericVector width
                                   sand, clay,
                                   W, Theta_SAT, Theta_FC,
                                   Gdown, tstep));
- }
-// NumericVector temperatureChange(NumericVector widths, NumericVector Temp,
-//                                 NumericVector sand, NumericVector clay,
-//                                 NumericVector W, NumericVector Theta_FC,
-//                                 double Gdown, double tstep) {
-//   NumericVector lambda = layerThermalConductivity(sand, clay, W, Theta_FC);
-//   NumericVector Ca = layerThermalCapacity(sand, clay, W, Theta_FC);
-//   int nlayers = Temp.length();
-//   NumericVector gradTemp = temperatureGradient(widths, Temp);
-//   NumericVector midZ = midpoints(widths);
-//   double Gup = -Gdown; //Gdown > 0 when net flux is in the direction of soil
-//   double Gi;
-//   NumericVector tempch(nlayers);
-//   for(int l = 0;l<nlayers; l++) {
-//     Gi = lambda[l]*gradTemp[l]; //Gi < 0 when net flux is downward
-//     tempch[l] = (Gi-Gup)/(Ca[l]*0.001*widths[l])*tstep;
-//     Gup = Gi;
-//   }
-//   return(tempch);
-// }
+}
+
 

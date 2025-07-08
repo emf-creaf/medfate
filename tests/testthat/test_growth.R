@@ -69,6 +69,59 @@ test_that("growth can be run using species codes",{
   
 })
 
+test_that("growth can be run using single soilDomains",{
+  control_granier_single <- control_granier
+  control_granier_single$soilDomains <- "single"
+  control_sperry_single <- control_sperry
+  control_sperry_single$soilDomains <- "single"
+  control_sureau_single <- control_sureau
+  control_sureau_single$soilDomains <- "single"
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_granier_single), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry_single), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau_single), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+})
+
+test_that("growth can be run using dual soilDomains",{
+  control_granier_dual <- control_granier
+  control_granier_dual$soilDomains <- "dual"
+  control_sperry_dual <- control_sperry
+  control_sperry_dual$soilDomains <- "dual"
+  control_sureau_dual <- control_sureau
+  control_sureau_dual$soilDomains <- "dual"
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_granier_dual), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry_dual), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau_dual), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+})
+test_that("growth can be run using partial rhizosphere overlap",{
+  control_granier_partial_overlap <- control_granier
+  control_granier_partial_overlap$rhizosphereOverlap <- "partial"
+  control_sperry_partial_overlap <- control_sperry
+  control_sperry_partial_overlap$rhizosphereOverlap <- "partial"
+  control_sureau_partial_overlap <- control_sureau
+  control_sureau_partial_overlap$rhizosphereOverlap <- "partial"
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_granier_partial_overlap), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry_partial_overlap), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau_partial_overlap), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "growth")
+})
+
 test_that("growth can be run disabling output",{
   control <- control_granier
   control$soilResults <- FALSE

@@ -17,6 +17,7 @@ control_sperry$verbose <- FALSE
 control_sureau <- defaultControl("Sureau")
 control_sureau$verbose <- FALSE
 
+
 #Initialize soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
@@ -74,18 +75,56 @@ test_that("spwb can be run using species codes",{
                        latitude = 41.82592, elevation = 100), "spwb")
 })
 
-test_that("spwb can be run using truncated root systems",{
-  f <- exampleforest
-  f$treeData$Z100 <- c(1500, 1900)
-  f$shrubDataZ100 <- 800
-  expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_granier), 
-                       examplemeteo2[1:10,],
+test_that("spwb can be run using single soilDomains",{
+  control_granier_single <- control_granier
+  control_granier_single$soilDomains <- "single"
+  control_sperry_single <- control_sperry
+  control_sperry_single$soilDomains <- "single"
+  control_sureau_single <- control_sureau
+  control_sureau_single$soilDomains <- "single"
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier_single), 
+                       examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
-  expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_sperry), 
-                       examplemeteo2[1:10,],
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry_single), 
+                       examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
-  expect_s3_class(spwb(spwbInput(f, examplesoil, SpParamsMED, control_sureau), 
-                       examplemeteo2[1:10,],
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau_single), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+})
+
+test_that("spwb can be run using dual soilDomains",{
+  control_granier_dual <- control_granier
+  control_granier_dual$soilDomains <- "dual"
+  control_sperry_dual <- control_sperry
+  control_sperry_dual$soilDomains <- "dual"
+  control_sureau_dual <- control_sureau
+  control_sureau_dual$soilDomains <- "dual"
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier_dual), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry_dual), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau_dual), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+})
+test_that("spwb can be run using partial rhizosphere overlap",{
+  control_granier_partial_overlap <- control_granier
+  control_granier_partial_overlap$rhizosphereOverlap <- "partial"
+  control_sperry_partial_overlap <- control_sperry
+  control_sperry_partial_overlap$rhizosphereOverlap <- "partial"
+  control_sureau_partial_overlap <- control_sureau
+  control_sureau_partial_overlap$rhizosphereOverlap <- "partial"
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier_partial_overlap), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry_partial_overlap), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau_partial_overlap), 
+                       examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
 })
 

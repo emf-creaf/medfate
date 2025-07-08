@@ -47,7 +47,28 @@ test_that("fordyn can be run using species codes",{
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
+test_that("fordyn can be run using single soilDomains",{
+  control_single <- control
+  control_single$soilDomains <- "single"
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
+                         SpParamsMED, meteo_01_02, control_single,
+                         latitude = 41.82592, elevation = 100), "fordyn")
+})
 
+test_that("fordyn can be run using dual soilDomains",{
+  control_dual <- control
+  control_dual$soilDomains <- "dual"
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
+                         SpParamsMED, meteo_01_02, control_dual,
+                         latitude = 41.82592, elevation = 100), "fordyn")
+})
+test_that("fordyn can be run using partial rhizosphere overlap",{
+  control_partial_overlap <- control
+  control_partial_overlap$rhizosphereOverlap <- "partial"
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
+                         SpParamsMED, meteo_01_02, control_partial_overlap,
+                         latitude = 41.82592, elevation = 100), "fordyn")
+})
 test_that("fordyn can be run in example and empty forests using management",{
   expect_s3_class(fordyn(exampleforest, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
