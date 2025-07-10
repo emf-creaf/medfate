@@ -69,6 +69,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
+  double fullRhizosphereOverlapConductivity = control["fullRhizosphereOverlapConductivity"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double hydraulicRedistributionFraction = control["hydraulicRedistributionFraction"];
   String lfmcComponent = control["lfmcComponent"];
@@ -323,7 +324,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
         RHOPcohDyn(c,l) = RHOPcoh(c,l);
         for(int j=0; j<numCohorts;j++) {
           if(j!=c) {
-            double overlapFactor = Psi2K(psiSoilM(j,l), -1.0, 4.0);
+            double overlapFactor = std::min(1.0, KunsatM(j,l)/(cmdTOmmolm2sMPa*fullRhizosphereOverlapConductivity));
             RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
             RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
           } 

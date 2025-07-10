@@ -67,6 +67,7 @@
 #'             \item{"total" - total overlap (plants extract from common soil pools).}
 #'           }
 #'       }
+#'       \item{\code{fullRhizosphereOverlapConductivity [= 0.01]}: The minimum soil hydraulic conductivity (in cm/day) allowing a full connectivity of water pools, when \code{rhizosphereOverlap = "partial"}.}
 #'       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
 #'       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
 #'       \item{\code{segmentedXylemVulnerability [= TRUE/FALSE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem. By default, \code{segmentedXylemVulnerability = TRUE} for \code{transpirationMode = "Sperry"} and \code{segmentedXylemVulnerability = FALSE} for \code{transpirationMode = "Sureau"}.}
@@ -221,6 +222,7 @@ defaultControl<-function(transpirationMode = "Granier",
     transpirationMode = transpirationMode,
     soilDomains = soilDomains,
     rhizosphereOverlap = rhizosphereOverlap,
+    fullRhizosphereOverlapConductivity = 0.01,
     soilFunctions = "VG",
     VG_PTF = "Toth",
     ndailysteps = 24,

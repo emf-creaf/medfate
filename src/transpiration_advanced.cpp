@@ -75,6 +75,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   int ntimesteps = control["ndailysteps"];
   int nsubsteps = control["nsubsteps_canopy"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
+  double fullRhizosphereOverlapConductivity = control["fullRhizosphereOverlapConductivity"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double verticalLayerSize = control["verticalLayerSize"];
   double windMeasurementHeight  = control["windMeasurementHeight"];
@@ -254,6 +255,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   ////////////////////////////////////////
   NumericVector psiSoil = psi(soil, soilFunctions); //Get soil water potential
   NumericMatrix psiSoilM(numCohorts, nlayers);
+  NumericMatrix KunsatM(numCohorts, nlayers);
   if(plantWaterPools){
     //Copy soil water potentials from pools
     List soil_pool = clone(soil);
@@ -261,6 +263,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     for(int j = 0; j<numCohorts;j++) {
       //Copy values of soil moisture from pool of cohort j
       for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
+      //Calculate unsaturated conductivity (mmolH20·m-1·s-1·MPa-1)
+      KunsatM(j,_) = conductivity(soil_pool, soilFunctions, true);
       //Calculate soil water potential
       psiSoilM(j,_) = psi(soil_pool, soilFunctions);
     }
@@ -654,7 +658,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         RHOPcohDyn(c,l) = RHOPcoh(c,l);
         for(int j=0; j<numCohorts;j++) {
           if(j!=c) {
-            double overlapFactor = Psi2K(psiSoilM(j,l), -1.0, 4.0);
+            double overlapFactor = std::min(1.0, KunsatM(j,l)/(cmdTOmmolm2sMPa*fullRhizosphereOverlapConductivity));
             RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
             RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
           } 
