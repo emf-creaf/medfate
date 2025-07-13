@@ -591,7 +591,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
   
   //Hydraulics: Define supply functions
-  List hydraulicNetwork(numCohorts);
+  List sureauNetworks(numCohorts);
   List supplyAboveground(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     
@@ -637,10 +637,9 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                     psic, VG_nc, VG_alphac,
                                     control,
                                     sapFluidityDay);
-        hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
-        hydraulicNetwork[c] = initSureauNetwork(c, LAI,
+        sureauNetworks[c] = initSureauNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
@@ -707,10 +706,9 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                     psic, VG_nc, VG_alphac,
                                     control, 
                                     sapFluidityDay);
-        hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
-        hydraulicNetwork[c] = initSureauNetwork(c, LAI,
+        sureauNetworks[c] = initSureauNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
@@ -855,8 +853,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                 _["layerConnected"] = layerConnected,
                                 _["layerConnectedPools"] = layerConnectedPools,
                                 _["psiSoil"] = psiSoil,
-                                _["psiSoilM"] = psiSoilM,
-                                _["networks"] = hydraulicNetwork);
+                                _["psiSoilM"] = psiSoilM);
     }
     
     
@@ -897,8 +894,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions);
     } else if(transpirationMode == "Sureau"){
-      innerSureau(x, innerInput, innerOutput, n, tstep,
-                   verbose);
+      innerSureau(x, sureauNetworks, innerInput, innerOutput, n, tstep,
+                  verbose);
     }
     
     for(int c=0;c<numCohorts;c++) {
