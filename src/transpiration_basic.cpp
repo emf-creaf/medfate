@@ -18,22 +18,36 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+struct ParamsVolume{
+  double leafpi0;
+  double leafeps;
+  double leafaf;
+  double stempi0;
+  double stemeps;
+  double stem_c;
+  double stem_d;
+  double stemaf;
+  double Vsapwood;
+  double Vleaf;
+  double LAI;
+  double LAIlive;
+}; 
 
 //Plant volume in l·m-2 ground = mm
-double plantVol(double plantPsi, NumericVector pars) {
+double plantVol(double plantPsi, ParamsVolume pars) {
   
-  double leafrwc = tissueRelativeWaterContent(plantPsi, pars["leafpi0"], pars["leafeps"], 
-                                              plantPsi, pars["stem_c"], pars["stem_d"], 
-                                              pars["leafaf"]);
-  double stemrwc = tissueRelativeWaterContent(plantPsi, pars["stempi0"], pars["stemeps"], 
-                                              plantPsi, pars["stem_c"], pars["stem_d"], 
-                                              pars["stemaf"]);
-  return(((pars["Vleaf"] * leafrwc)*pars["LAI"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
+  double leafrwc = tissueRelativeWaterContent(plantPsi, pars.leafpi0, pars.leafeps, 
+                                              plantPsi, pars.stem_c, pars.stem_d, 
+                                              pars.leafaf);
+  double stemrwc = tissueRelativeWaterContent(plantPsi, pars.stempi0, pars.stemeps, 
+                                              plantPsi, pars.stem_c, pars.stem_d, 
+                                              pars.stemaf);
+  return((pars.Vleaf * leafrwc * pars.LAI) + (pars.Vsapwood * stemrwc * pars.LAIlive));
 }
 
 
 double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double rootCrownPsi,
-                                NumericVector parsVol){
+                                ParamsVolume parsVol){
   if(plantPsi==rootCrownPsi) return(plantPsi);
   double V = plantVol(plantPsi, parsVol);
   //More negative rootCrownPsi causes increased flow due to water being removed
@@ -278,14 +292,23 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     }
   }
   // for(int i= 0;i<psiSoil.size();i++) Rcout<< "S "<<i<<" "<<psiSoil[i]<<"\n";
-    
+  
+  ParamsVolume parsVol;
+  
   for(int c=0;c<numCohorts;c++) {
     
-    NumericVector parsVol = NumericVector::create(_["stem_c"] = VCstem_c[c], _["stem_d"] = VCstem_d[c],
-                                                  _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
-                                                  _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
-                                                  _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
-                                                  _["LAI"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
+    parsVol.stem_c = VCstem_c[c];
+    parsVol.stem_d = VCstem_d[c];
+    parsVol.leafpi0 = LeafPI0[c];
+    parsVol.leafeps = LeafEPS[c];
+    parsVol.leafaf = LeafAF[c];
+    parsVol.stempi0 = StemPI0[c];
+    parsVol.stemeps = StemEPS[c];
+    parsVol.stemaf = StemAF[c];
+    parsVol.Vsapwood = Vsapwood[c];
+    parsVol.Vleaf = Vleaf[c];
+    parsVol.LAI = LAIphe[c];
+    parsVol.LAIlive = LAIlive[c];
     
     double rootCrownPsi = NA_REAL;
     

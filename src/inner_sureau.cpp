@@ -8,6 +8,39 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+
+struct SureauParams { 
+  double TPhase_gmin;
+  double Q10_1_gmin;
+  double Q10_2_gmin;
+  double Gsw_AC_slope;
+  double fTRBToLeaf;
+  double C_SApoInit;
+  double C_LApoInit;
+  double k_SLApoInit;
+  double k_CSApoInit; 
+  double* k_RCApoInit;
+  double slope_gs;
+  double P50_gs;
+  double Tgs_optim;
+  double Tgs_sens;
+  double JarvisPAR;
+  double gmin20;
+  double gsMax;
+  double gmin_S;
+  double gsNight;
+  double VCleaf_P50;
+  double VCleaf_slope;
+  double VCstem_P50;
+  double VCstem_slope;
+  double VCroot_P50;
+  double VCroot_slope;
+  double PiFullTurgor_Leaf;
+  double epsilonSym_Leaf;
+  double PiFullTurgor_Stem;
+  double epsilonSym_Stem;
+};
+
 double PLC_derivative(double plc, double slope) {
   return(-1.0*slope/25.0 * plc/100 * (1.0 - plc/100));
 }
@@ -128,46 +161,46 @@ double Turgor(double PiFT, double Esymp, double Rstemp) {
 }
 
 //Currently not called for optimization purposes
-double regulFact(double psi, List params, String regulationType = "Sigmoid") {
-  // double stomatalClosure = NA_REAL;
-  double regulFact = NA_REAL;
-  // double regulFactPrime = NA_REAL;
-  
-  if(regulationType == "PiecewiseLinear") {
-    double PsiStartClosing = params["PsiStartClosing"];
-    double PsiClose = params["PsiClose"];
-    if (psi > PsiStartClosing) {
-      // stomatalClosure = 0.0;
-      regulFact = 1.0;
-      // regulFactPrime = 0.0;
-    } else if (psi > PsiClose) {
-      // stomatalClosure = 1.0;
-      regulFact = (psi - PsiClose) / (PsiStartClosing - PsiClose);
-      // regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
-    } else {
-      // stomatalClosure = 2.0;
-      regulFact = 0.0;
-      // regulFactPrime = 0.0;
-    }
-  } else if (regulationType == "Sigmoid") {
-    double slope_gs = params["slope_gs"];
-    double P50_gs = params["P50_gs"];
-    double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
-    regulFact = 1.0 - PL_gs;
-    // double al = slope_gs / 25.0;
-    // regulFactPrime = al * PL_gs * regulFact;
-  } else if (regulationType == "Turgor") {
-    double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
-    double epsilonSym_Leaf = params["epsilonSym_Leaf"];
-    double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
-    double rs = RWC(PiFullTurgor_Leaf, epsilonSym_Leaf, psi);
-    double turgor = Turgor(PiFullTurgor_Leaf, epsilonSym_Leaf, rs);
-    turgorPressureAtGsMax = Turgor(PiFullTurgor_Leaf, epsilonSym_Leaf, 0.0);
-    regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
-    // Rcout<< psi << " "<< turgor<< " "<< regulFact << "\n";
-  }
-  return(regulFact);
-}
+// double regulFact(double psi, List params, String regulationType = "Sigmoid") {
+//   // double stomatalClosure = NA_REAL;
+//   double regulFact = NA_REAL;
+//   // double regulFactPrime = NA_REAL;
+//   
+//   if(regulationType == "PiecewiseLinear") {
+//     double PsiStartClosing = params["PsiStartClosing"];
+//     double PsiClose = params["PsiClose"];
+//     if (psi > PsiStartClosing) {
+//       // stomatalClosure = 0.0;
+//       regulFact = 1.0;
+//       // regulFactPrime = 0.0;
+//     } else if (psi > PsiClose) {
+//       // stomatalClosure = 1.0;
+//       regulFact = (psi - PsiClose) / (PsiStartClosing - PsiClose);
+//       // regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
+//     } else {
+//       // stomatalClosure = 2.0;
+//       regulFact = 0.0;
+//       // regulFactPrime = 0.0;
+//     }
+//   } else if (regulationType == "Sigmoid") {
+//     double slope_gs = params["slope_gs"];
+//     double P50_gs = params["P50_gs"];
+//     double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
+//     regulFact = 1.0 - PL_gs;
+//     // double al = slope_gs / 25.0;
+//     // regulFactPrime = al * PL_gs * regulFact;
+//   } else if (regulationType == "Turgor") {
+//     double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
+//     double epsilonSym_Leaf = params["epsilonSym_Leaf"];
+//     double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
+//     double rs = RWC(PiFullTurgor_Leaf, epsilonSym_Leaf, psi);
+//     double turgor = Turgor(PiFullTurgor_Leaf, epsilonSym_Leaf, rs);
+//     turgorPressureAtGsMax = Turgor(PiFullTurgor_Leaf, epsilonSym_Leaf, 0.0);
+//     regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
+//     // Rcout<< psi << " "<< turgor<< " "<< regulFact << "\n";
+//   }
+//   return(regulFact);
+// }
 
 //# stomatal conductance calculation with Jarvis type formulations
 double gsJarvis(List params, double PAR, double Temp, int option = 1){
@@ -188,6 +221,86 @@ double gsJarvis(List params, double PAR, double Temp, int option = 1){
   double Q = irradianceToPhotonFlux(PAR); //From W m-2 to micromol s-1 m-2
   double gs_bound = gsNight2 + (gsMax2 - gsNight2) * (1.0 - exp(-1.0*JarvisPAR*Q));
   return(gs_bound);
+}
+
+SureauParams initSureauParams(int c,
+                              DataFrame internalWater, 
+                              DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
+                              NumericVector VCroot_kmax, 
+                              List control, double sapFluidityDay = 1.0) {
+  String stomatalSubmodel = control["stomatalSubmodel"];
+  bool soilDisconnection = control["soilDisconnection"];
+  
+  SureauParams sureau_params;
+  sureau_params.TPhase_gmin = control["TPhase_gmin"];
+  sureau_params.Q10_1_gmin = control["Q10_1_gmin"];
+  sureau_params.Q10_2_gmin = control["Q10_2_gmin"];
+  if(stomatalSubmodel=="Jarvis") {
+    NumericVector Gs_Toptim = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Toptim"]);
+    NumericVector Gs_Tsens = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Tsens"]);
+    sureau_params.Tgs_optim = Gs_Toptim[c];
+    sureau_params.Tgs_sens = Gs_Tsens[c];
+    sureau_params.JarvisPAR = control["JarvisPAR"];
+  } else {
+    NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
+    sureau_params.Gsw_AC_slope = Gsw_AC_slope[c];
+  }
+  sureau_params.fTRBToLeaf = control["fTRBToLeaf"];//ratio of bark area to leaf area
+  sureau_params.C_SApoInit = control["C_SApoInit"]; //Maximum capacitance of the stem apoplasm
+  sureau_params.C_LApoInit = control["C_LApoInit"]; //Maximum capacitance of the leaf apoplasm
+  NumericVector VCleafapo_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_kmax"]);
+  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
+  sureau_params.k_SLApoInit = sapFluidityDay*VCleafapo_kmax[c]; //Maximum conductance from trunk apoplasm to leaf apoplasm
+  sureau_params.k_CSApoInit = sapFluidityDay*VCstem_kmax[c]; //Maximum conductance from root crown to stem apoplasm
+  sureau_params.k_RCApoInit = new double [VCroot_kmax.size()];
+  for(int l = 0;l<VCroot_kmax.size();l++) sureau_params.k_RCApoInit[l] = sapFluidityDay*VCroot_kmax[l];
+  NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
+  NumericVector Gs_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_slope"]);
+  sureau_params.slope_gs = Gs_slope[c];
+  sureau_params.P50_gs = Gs_P50[c];
+  
+  //PLANT RELATED PARAMETERS
+  NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmax"]);
+  NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmin"]);
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+  NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+  NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+  NumericVector VCleaf_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_P50"]);
+  NumericVector VCleaf_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_slope"]);
+  NumericVector VCstem_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_P50"]);
+  NumericVector VCstem_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_slope"]);
+  NumericVector VCroot_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_P50"]);
+  NumericVector VCroot_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_slope"]);
+  
+  double gmin20 = Gswmin[c]*1000.0; //Leaf cuticular transpiration
+  bool leafCuticularTranspiration = control["leafCuticularTranspiration"];
+  if(soilDisconnection) gmin20 = gmin20*RWC(LeafPI0[c], LeafEPS[c], LeafSympPsiVEC[c]);
+  if(!leafCuticularTranspiration) gmin20 = 0.0;
+  sureau_params.gmin20 = gmin20; //mol to mmol 
+  sureau_params.gsMax = Gswmax[c]*1000.0; //mol to mmol 
+  bool stemCuticularTranspiration = control["stemCuticularTranspiration"];
+  double gmin_S = Gswmin[c]*1000.0;  // gmin for stem equal to leaf gmin, in mmol
+  if(soilDisconnection) gmin_S = gmin_S*RWC(StemPI0[c], StemEPS[c], StemSympPsiVEC[c]);
+  if(!stemCuticularTranspiration) gmin_S = 0.0;
+  sureau_params.gmin_S = gmin_S;
+  double gs_NightFrac = control["gs_NightFrac"];
+  sureau_params.gsNight = gs_NightFrac*Gswmax[c]*1000.0; 
+  
+  sureau_params.VCleaf_P50 = VCleaf_P50[c]; 
+  sureau_params.VCleaf_slope = VCleaf_slope[c]; 
+  sureau_params.VCstem_P50 = VCstem_P50[c]; 
+  sureau_params.VCstem_slope = VCstem_slope[c]; 
+  sureau_params.VCroot_P50 = VCroot_P50[c]; 
+  sureau_params.VCroot_slope = VCroot_slope[c]; 
+  sureau_params.PiFullTurgor_Leaf = LeafPI0[c]; 
+  sureau_params.epsilonSym_Leaf = LeafEPS[c]; 
+  sureau_params.PiFullTurgor_Stem = StemPI0[c]; 
+  sureau_params.epsilonSym_Stem = StemEPS[c]; 
+  
+  return(sureau_params);
 }
 
 List initSureauNetwork(int c, NumericVector LAIphe,
@@ -296,7 +409,6 @@ List initSureauNetwork(int c, NumericVector LAIphe,
   params.push_back(LeafEPS[c], "epsilonSym_Leaf"); 
   params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
   params.push_back(StemEPS[c], "epsilonSym_Stem"); 
-  
   
   network.push_back(params, "params");
 
@@ -545,6 +657,8 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
   double Emin_S_nph = network["Emin_S"]; //Stem cuticular transpiration
   
   
+
+  
   double VCleaf_slope = params["VCleaf_slope"];
   double VCstem_slope = params["VCstem_slope"];
   double VCleaf_P50 = params["VCleaf_P50"];
@@ -667,10 +781,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                  bool verbose = false) {
   
   // Communication structures
-  NumericVector PB_SL(5, NA_REAL);
-  PB_SL.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
-  NumericVector PB_SH(5, NA_REAL);
-  PB_SH.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
+  BaldocchiPhoto PB_SL, PB_SH;
   
   // Extract hydraulic networks
   List networks = input["networks"];
@@ -977,7 +1088,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                           LeafWidth[c],
                                           Gsw_AC_slope,
                                           gsNight/1000.0);
-            gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol 
+            gs_SL = PB_SL.Gsw*1000.0; //From mmol to mol 
             gs_SL = std::max(gsNight, gs_SL)*regul;
             photosynthesisBaldocchi_inner(PB_SH, 
                                           irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
@@ -989,7 +1100,7 @@ void innerSureau(List x, List input, List output, int n, double tstep,
                                           LeafWidth[c],
                                           Gsw_AC_slope,
                                           gsNight/1000.0);
-            gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol
+            gs_SH = PB_SH.Gsw*1000.0; //From mmol to mol
             gs_SH = std::max(gsNight, gs_SH)*regul;
           }
           if(!sunlitShade) gs_SH = gs_SL;
@@ -1184,3 +1295,4 @@ void innerSureau(List x, List input, List output, int n, double tstep,
     }
   }
 }
+

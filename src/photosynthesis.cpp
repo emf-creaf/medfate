@@ -315,7 +315,10 @@ double gLeafBoundary(double u, double leafWidth, double gBound0 = 0.397){
   return(gBound0*pow(u/(leafWidth*0.0072), 0.5));
 }
 
-void photosynthesisBaldocchi_inner(NumericVector photoOut,
+struct BaldocchiPhoto{
+  double Gsw, Cs, Ci, An, Ag;
+};
+void photosynthesisBaldocchi_inner(BaldocchiPhoto photoOut,
                                    double Q, 
                                    double Catm, 
                                    double Tleaf, 
@@ -378,11 +381,11 @@ void photosynthesisBaldocchi_inner(NumericVector photoOut,
   double Ci = Cs - (An/Gsc);
   //Gross photosynthesis
   double Ag = An + Rd;
-  photoOut[0] = Gsw;
-  photoOut[1] = Cs;
-  photoOut[2] = Ci;
-  photoOut[3] = An;
-  photoOut[4] = Ag;
+  photoOut.Gsw = Gsw;
+  photoOut.Cs = Cs;
+  photoOut.Ci = Ci;
+  photoOut.An = An;
+  photoOut.Ag = Ag;
 }
 
 // From Baldocchi D (1994). An analytical solution for the coupled leaf photosynthesis and stomatal conductance models. Tree Physiology 14: 1069-1079 
@@ -400,9 +403,14 @@ NumericVector photosynthesisBaldocchi(double Q,
                                       double leafWidth,
                                       double Gsw_AC_slope,
                                       double Gsw_AC_intercept) {
-  NumericVector res(5, NA_REAL);
+  BaldocchiPhoto photoOut;
+  photosynthesisBaldocchi_inner(photoOut, Q, Catm, Tleaf, u,Vmax298,Jmax298, leafWidth,Gsw_AC_slope,Gsw_AC_intercept);
+  NumericVector res = {photoOut.Gsw, 
+                       photoOut.Cs,
+                       photoOut.Ci,
+                       photoOut.An,
+                       photoOut.Ag};
   res.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
-  photosynthesisBaldocchi_inner(res, Q, Catm, Tleaf, u,Vmax298,Jmax298, leafWidth,Gsw_AC_slope,Gsw_AC_intercept);
   return(res);
 }
 

@@ -10,7 +10,10 @@ double gCrown(double u, double gCrown0 = 0.150);
 
 NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose=false);
 
-void photosynthesisBaldocchi_inner(NumericVector photoOut,
+struct BaldocchiPhoto{
+  double Gsw, Cs, Ci, An, Ag;
+};
+void photosynthesisBaldocchi_inner(BaldocchiPhoto photoOut,
                                    double Q, 
                                    double Catm, 
                                    double Tleaf, 
