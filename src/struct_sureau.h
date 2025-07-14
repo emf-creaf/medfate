@@ -6,6 +6,7 @@
 using namespace Rcpp;
 
 struct SureauParams { 
+  int npools;
   double TPhase_gmin;
   double Q10_1_gmin;
   double Q10_2_gmin;
