@@ -112,7 +112,7 @@ double Emin(double gmin, double gBL, double gCrown,
 }
 
 // # Update plant conductances
-void update_conductances(SureauNetwork network, int nlayers) {
+void update_conductances(SureauNetwork &network, int nlayers) {
   
   double* k_RCApoInit = network.params.k_RCApoInit;
   double k_CSApoInit = network.params.k_CSApoInit;
@@ -125,11 +125,10 @@ void update_conductances(SureauNetwork network, int nlayers) {
   double*  k_RSApo = network.k_RSApo;
   double*  k_SoilToStem = network.k_SoilToStem;
   double*  k_Soil = network.k_Soil;
-  double  k_RCApo[nlayers];
+  double*  k_RCApo = new double[nlayers];
   
   double k_SLApo = k_SLApoInit * (1.0 - (plc_leaf/100.0)); //Conductance from stem apo to leaf apo
   network.k_SLApo  = k_SLApo;
-    
   double k_CSApo = k_CSApoInit * (1.0 - (plc_stem/100.0)); //conductance from root crown to stem apo
   network.k_CSApo = k_CSApo;
   double sum_k_RCApo = 0.0;
@@ -141,6 +140,7 @@ void update_conductances(SureauNetwork network, int nlayers) {
     k_SoilToStem[i] = 1.0/((1.0/k_Soil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to stem
     sum_k_RCApo += k_RCApo[i];
   }
+  delete[] k_RCApo;
 
   // Compute k_plant (from root to leaf) for diagnostic only
   // Rcout << " PLCstem "<< ((double) network["PLC_Stem"]) << " PLCleaf "<< ((double) network["PLC_Leaf"]) << " "<< sum(k_RSApo) << " Leaf " << k_SLApoInit << "/"<<k_SLApo << " " << k_LSym<<"\n";
@@ -148,20 +148,20 @@ void update_conductances(SureauNetwork network, int nlayers) {
 }
 
 // # update symplasmic plant capacitances for Trunk and leaves
-void update_capacitances(List network) {
-  List params = as<Rcpp::List>(network["params"]);
+void update_capacitances(SureauNetwork &network, int nlayers) {
+  SureauParams params = network.params;
   double dbxmin = 1.0e-100; //# NM minimal double to avoid-INF
   
-  double LAI = network["LAI"];
-  double Psi_SSym = network["Psi_SSym"];
-  double Psi_LSym = network["Psi_LSym"];
-  double Q_LSym_sat_mmol_perLeafArea = network["Q_LSym_sat_mmol_perLeafArea"];
+  double LAI = network.LAI;
+  double Psi_SSym = network.Psi_SSym;
+  double Psi_LSym = network.Psi_LSym;
+  double Q_LSym_sat_mmol_perLeafArea = network.Q_LSym_sat_mmol_perLeafArea;
   // double Q_SSym_sat_mmol_perLeafArea = network["Q_SSym_sat_mmol_perLeafArea"]; //not used
   
-  double epsilonSym_Leaf = params["epsilonSym_Leaf"];
-  double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
-  double epsilonSym_Stem = params["epsilonSym_Stem"];
-  double PiFullTurgor_Stem = params["PiFullTurgor_Stem"];
+  double epsilonSym_Leaf = params.epsilonSym_Leaf;
+  double PiFullTurgor_Leaf = params.PiFullTurgor_Leaf;
+  double epsilonSym_Stem = params.epsilonSym_Stem;
+  double PiFullTurgor_Stem = params.PiFullTurgor_Stem;
   double PsiTLP_Leaf = turgorLossPoint(PiFullTurgor_Leaf, epsilonSym_Leaf);
   double PsiTLP_Stem = turgorLossPoint(PiFullTurgor_Stem, epsilonSym_Stem);
 
@@ -176,9 +176,9 @@ void update_capacitances(List network) {
   }
   //# Compute the leaf capacitance (mmol/MPa/m2_sol)
   if (LAI==0){
-    network["C_LSym"] = 0.0;
+    network.C_LSym = 0.0;
   } else {
-    network["C_LSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_LSym_prime;
+    network.C_LSym = Q_LSym_sat_mmol_perLeafArea * RWC_LSym_prime;
   } //# changed 25/10/2021 by NM
   
   
@@ -193,10 +193,10 @@ void update_capacitances(List network) {
     RWC_SSym_prime = -1.0* PiFullTurgor_Stem / pow(Psi_SSym, 2.0);
   }
   //# Compute the capacitance (mmol/MPa/m2_leaf)
-  network["C_SSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
+  network.C_SSym = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
   // MIQUEL - we could use instead: network["C_SSym"] = Q_SSym_sat_mmol_perLeafArea * RWC_SSym_prime; 
-  network["C_SApo"] = params["C_SApoInit"]; //MIQUEL: Why are these not scaled?
-  network["C_LApo"] = params["C_LApoInit"];
+  network.C_SApo = params.C_SApoInit; //MIQUEL: Why are these not scaled?
+  network.C_LApo = params.C_LApoInit;
 }
 
 double Turgor(double PiFT, double Esymp, double Rstemp) {
@@ -473,15 +473,15 @@ SureauNetwork initSureauNetwork_inner(int c, NumericVector LAIphe,
   
   // Update plant conductances and capacitances according to network status
   update_conductances(network, VGrhizo_kmax.size());
-  // update_capacitances(network);
+  update_capacitances(network, VGrhizo_kmax.size());
   return(network);
 }
 void deleteSureauNetworkPointers(SureauNetwork network) {
-  delete network.params.k_RCApoInit;
-  delete network.k_Soil;
-  delete network.PsiSoil;
-  delete network.k_RSApo;
-  delete network.k_SoilToStem;
+  delete[] network.params.k_RCApoInit;
+  delete[] network.k_Soil;
+  delete[] network.PsiSoil;
+  delete[] network.k_RSApo;
+  delete[] network.k_SoilToStem;
 }
 
 List initSureauNetwork(int c, NumericVector LAIphe,
@@ -1257,8 +1257,8 @@ void innerSureau(List x, List networks, List input, List output, int n, double t
           
           //Effects on water potentials and flows
           semi_implicit_integration(network_n, dt, opt, stemCavitationRecovery, leafCavitationRecovery);
-          update_conductances(network_n);
-          update_capacitances(network_n);
+          // update_conductances(network_n);
+          // update_capacitances(network_n);
           
           // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
           // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
