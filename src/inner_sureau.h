@@ -78,20 +78,14 @@ struct SureauNetwork {
   int Diag_deltaPLCMax;
   int Diag_timeStepInSeconds; 
 };
-SureauNetwork initSureauNetwork_inner(int c, NumericVector LAIphe,
-                                      DataFrame internalWater, 
-                                      DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
-                                      NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
-                                      NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                                      List control, double sapFluidityDay = 1.0);
-void deleteSureauNetworkPointers(SureauNetwork network);
+void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe,
+                             DataFrame internalWater, 
+                             DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
+                             NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
+                             NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
+                             List control, double sapFluidityDay = 1.0);
+void deleteSureauNetworkPointers(SureauNetwork &network);
 
-List initSureauNetwork(int c, NumericVector LAIphe,
-                       DataFrame internalWater, 
-                       DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
-                       NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
-                       NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       List control, double sapFluidityDay = 1.0);
 
-void innerSureau(List x, List networks, List input, List output, int n, double tstep, 
+void innerSureau(List x, SureauNetwork* networks, List input, List output, int n, double tstep, 
                  bool verbose = false);

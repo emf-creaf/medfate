@@ -591,7 +591,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
   
   //Hydraulics: Define supply functions
-  List sureauNetworks(numCohorts);
+  SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
   List supplyAboveground(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     
@@ -639,12 +639,13 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                     sapFluidityDay);
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
-        sureauNetworks[c] = initSureauNetwork(c, LAI,
-                                                internalWater, 
-                                                paramsAnatomy, paramsTranspiration, paramsWaterStorage,
-                                                VCroot_kmaxc, VGrhizo_kmaxc,
-                                                psic, VG_nc, VG_alphac,
-                                                control, sapFluidityDay);
+        initSureauNetwork_inner(sureauNetworks[c], c, LAI,
+                                internalWater, 
+                                paramsAnatomy, paramsTranspiration, paramsWaterStorage,
+                                VCroot_kmaxc, VGrhizo_kmaxc,
+                                psic, VG_nc, VG_alphac,
+                                control, sapFluidityDay);
+        Rcout<<"sn init k_CSApoInit: "<< sureauNetworks[c].params.k_CSApoInit<<"\n";
       }
       
     } else {
@@ -708,12 +709,12 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                     sapFluidityDay);
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
-        sureauNetworks[c] = initSureauNetwork(c, LAI,
-                                                internalWater, 
-                                                paramsAnatomy, paramsTranspiration, paramsWaterStorage,
-                                                VCroot_kmaxc, VGrhizo_kmaxc,
-                                                psic, VG_nc, VG_alphac,
-                                                control, sapFluidityDay);
+        initSureauNetwork_inner(sureauNetworks[c], c, LAI,
+                                internalWater, 
+                                paramsAnatomy, paramsTranspiration, paramsWaterStorage,
+                                VCroot_kmaxc, VGrhizo_kmaxc,
+                                psic, VG_nc, VG_alphac,
+                                control, sapFluidityDay);
       }
     }
   }
@@ -855,8 +856,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                 _["psiSoil"] = psiSoil,
                                 _["psiSoilM"] = psiSoilM);
     }
-    
-    
+
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
@@ -894,6 +894,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions);
     } else if(transpirationMode == "Sureau"){
+      stop("before inner");
       innerSureau(x, sureauNetworks, innerInput, innerOutput, n, tstep,
                   verbose);
     }
@@ -1181,6 +1182,14 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     }
   } //End of timestep loop
 
+  //Delete Sureau Networks
+  if(transpirationMode == "Sureau") {
+    for(int c=0;c<numCohorts;c++) {
+      deleteSureauNetworkPointers(sureauNetworks[c]);
+    }
+  }
+  delete[] sureauNetworks;
+  
   ////////////////////////////////////////
   // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
   ////////////////////////////////////////
