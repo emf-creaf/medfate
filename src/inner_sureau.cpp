@@ -44,6 +44,8 @@ void copyParams(SureauParams params, SureauParams &sinkParams, int nlayers, int 
   sinkParams.VCroot_slope = params.VCroot_slope; 
   sinkParams.PiFullTurgor_Leaf = params.PiFullTurgor_Leaf; 
   sinkParams.epsilonSym_Leaf = params.epsilonSym_Leaf;
+  sinkParams.PiFullTurgor_Stem = params.PiFullTurgor_Stem; 
+  sinkParams.epsilonSym_Stem = params.epsilonSym_Stem;
 }
 
 //Function to copy SureauNetwork object
@@ -218,6 +220,7 @@ void update_capacitances(SureauNetwork &network, int nlayers) {
   }
   //# Compute the capacitance (mmol/MPa/m2_leaf)
   network.C_SSym = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
+  // Rcout << "update "<< Psi_SSym <<  " " << Q_LSym_sat_mmol_perLeafArea << " " << RWC_SSym_prime << " C_SSym: " << network.C_SSym<<"\n";
   // MIQUEL - we could use instead: network["C_SSym"] = Q_SSym_sat_mmol_perLeafArea * RWC_SSym_prime; 
   network.C_SApo = params.C_SApoInit; //MIQUEL: Why are these not scaled?
   network.C_LApo = params.C_LApoInit;
@@ -834,7 +837,7 @@ void semi_implicit_integration_inner(SureauNetwork &network, int nlayers,
     double k_sum = 0.0, kpsi_sum = 0.0;
     for(int l=0;l<nlayers;l++) {
       k_sum +=k_SoilToStem[l];
-      kpsi_sum +=k_SoilToStem[l] * PsiSoil[l];
+      kpsi_sum += (k_SoilToStem[l] * PsiSoil[l]);
     }
     alpha = exp(-1.0*(K_SL+K_SSym + k_sum +delta_S_cav*K_S_Cav)/C_SApo*dt);
     Psi_td = (K_SL*Psi_LApo_n + K_SSym*Psi_SSym_n + kpsi_sum + delta_S_cav*K_S_Cav*Psi_SApo_cav)/(K_SL + K_SSym + k_sum + delta_S_cav*K_S_Cav + dbxmin);// # dbxmin to avoid 0/0
@@ -869,6 +872,7 @@ void semi_implicit_integration_inner(SureauNetwork &network, int nlayers,
   alpha = exp(-1.0*K_SSym/C_SSym*dt);
   Psi_td = (K_SSym*Psi_SApo_n - Emin_S_nph)/(K_SSym + dbxmin); // # dbxmin to avoid 0/0
   Psi_SSym_np1 = alpha * Psi_SSym_n +(1.0 - alpha) * Psi_td;
+  // Rcout<< "integr. "<< Psi_td << " C_SSym:"<< C_SSym<< "  K_SSym: "<< K_SSym<<" alpha: "<<alpha << " "<< Psi_SSym_np1<<"\n";
   
   //#Step 4 : set computed values in network and update Psi_cav, PLC and Psi_AllSoil
   network.Psi_LApo = std::min(-0.00001, Psi_LApo_np1);
