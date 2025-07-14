@@ -2171,7 +2171,7 @@ initSureauNetworks <- function(x) {
 #'           }
 #' @keywords internal
 semi_implicit_integration <- function(network, dt, opt, stemCavitationRecovery = "annual", leafCavitationRecovery = "total") {
-    invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt, stemCavitationRecovery, leafCavitationRecovery))
+    .Call(`_medfate_semi_implicit_integration`, network, dt, opt, stemCavitationRecovery, leafCavitationRecovery)
 }
 
 #' Advanced radiation transfer functions

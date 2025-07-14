@@ -76,16 +76,16 @@ network$Elim <- 0.1
 network$Emin_L <- 0.01
 network$Emin_S <- 0.01
 
-semi_implicit_integration(network, dt, opt)
+network_out <- semi_implicit_integration(network, dt, opt)
 ```
 
-The function modifies the `network` object, whose water potentials are now:
+The function returns a modified `network` object, whose water potentials are now:
 
 ```{r}
-network$Psi_LApo
-network$Psi_LSym
-network$Psi_SApo
-network$Psi_SSym
+network_out$Psi_LApo
+network_out$Psi_LSym
+network_out$Psi_SApo
+network_out$Psi_SSym
 ```
 
 

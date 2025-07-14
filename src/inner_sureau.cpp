@@ -110,6 +110,204 @@ void deleteSureauNetworkPointers(SureauNetwork &network) {
   delete[] network.k_SoilToStem;
 }
 
+List structToList(SureauNetwork snetwork) {
+  
+  List network = List::create();
+  //Params
+  List params = List::create();
+  // CONSTANTS (Control variables)
+  params.push_back(snetwork.params.npools, "npools"); 
+  params.push_back(snetwork.params.TPhase_gmin, "TPhase_gmin"); 
+  params.push_back(snetwork.params.Q10_1_gmin, "Q10_1_gmin"); 
+  params.push_back(snetwork.params.Q10_2_gmin, "Q10_2_gmin"); 
+  params.push_back(snetwork.params.Tgs_optim, "Tgs_optim"); 
+  params.push_back(snetwork.params.Tgs_sens, "Tgs_sens"); 
+  params.push_back(snetwork.params.JarvisPAR, "JarvisPAR"); 
+  params.push_back(snetwork.params.Gsw_AC_slope, "Gsw_AC_slope");
+  params.push_back(snetwork.params.fTRBToLeaf, "fTRBToLeaf");
+  params.push_back(snetwork.params.C_SApoInit, "C_SApoInit");
+  params.push_back(snetwork.params.C_LApoInit, "C_LApoInit");
+  params.push_back(snetwork.params.k_SLApoInit, "k_SLApoInit");
+  params.push_back(snetwork.params.k_CSApoInit, "k_CSApoInit");
+  NumericVector k_RCApoInit(snetwork.params.npools, NA_REAL);
+  for(int l=0;l < snetwork.params.npools; l++) {
+    k_RCApoInit[l] = snetwork.params.k_RCApoInit[l];
+  }
+  params.push_back(k_RCApoInit, "k_RCApoInit"); 
+  params.push_back(snetwork.params.slope_gs, "slope_gs");
+  params.push_back(snetwork.params.P50_gs, "P50_gs");
+  params.push_back(snetwork.params.gmin20, "gmin20"); 
+  params.push_back(snetwork.params.gsMax, "gsMax"); 
+  params.push_back(snetwork.params.gmin_S, "gmin_S");
+  params.push_back(snetwork.params.gsNight, "gsNight"); 
+  params.push_back(snetwork.params.VCleaf_P50, "VCleaf_P50"); 
+  params.push_back(snetwork.params.VCleaf_slope, "VCleaf_slope"); 
+  params.push_back(snetwork.params.VCstem_P50, "VCstem_P50"); 
+  params.push_back(snetwork.params.VCstem_slope, "VCstem_slope"); 
+  params.push_back(snetwork.params.VCroot_P50, "VCroot_P50"); 
+  params.push_back(snetwork.params.VCroot_slope, "VCroot_slope"); 
+  params.push_back(snetwork.params.PiFullTurgor_Leaf, "PiFullTurgor_Leaf"); 
+  params.push_back(snetwork.params.epsilonSym_Leaf, "epsilonSym_Leaf"); 
+  params.push_back(snetwork.params.PiFullTurgor_Stem, "PiFullTurgor_Stem"); 
+  params.push_back(snetwork.params.epsilonSym_Stem, "epsilonSym_Stem"); 
+  
+  network.push_back(params, "params");
+  
+  network.push_back(snetwork.LAI, "LAI");
+  network.push_back(snetwork.Psi_LApo, "Psi_LApo"); 
+  network.push_back(snetwork.Psi_LSym, "Psi_LSym"); 
+  network.push_back(snetwork.Psi_RCApo, "Psi_RCApo");
+  network.push_back(snetwork.Psi_SApo, "Psi_SApo"); 
+  network.push_back(snetwork.Psi_SSym, "Psi_SSym");
+  network.push_back(snetwork.Psi_SApo_cav, "Psi_SApo_cav"); 
+  network.push_back(snetwork.Psi_LApo_cav, "Psi_LApo_cav"); 
+  network.push_back(snetwork.PLC_Stem, "PLC_Stem"); 
+  network.push_back(snetwork.PLC_Leaf, "PLC_Leaf"); 
+  network.push_back(snetwork.C_SApo, "C_SApo"); 
+  network.push_back(snetwork.C_LApo, "C_LApo"); 
+  network.push_back(snetwork.C_SSym, "C_SSym"); 
+  network.push_back(snetwork.C_LSym, "C_LSym");
+  network.push_back(snetwork.k_SLApo, "k_SLApo");
+  network.push_back(snetwork.k_CSApo, "k_CSApo");
+  network.push_back(snetwork.k_SSym, "k_SSym"); 
+  network.push_back(snetwork.k_LSym, "k_LSym"); 
+  
+  NumericVector k_RSApo(snetwork.params.npools, NA_REAL);
+  NumericVector k_SoilToStem(snetwork.params.npools, NA_REAL);
+  NumericVector k_Soil(snetwork.params.npools, NA_REAL);
+  NumericVector PsiSoil(snetwork.params.npools, NA_REAL);
+  for(int l=0;l < snetwork.params.npools; l++) {
+    k_RSApo[l] = snetwork.k_RSApo[l];
+    k_SoilToStem[l] = snetwork.k_SoilToStem[l];
+    k_Soil[l] = snetwork.k_Soil[l];
+    PsiSoil[l] = snetwork.PsiSoil[l];
+  }
+  network.push_back(k_RSApo, "k_RSApo"); 
+  network.push_back(k_SoilToStem, "k_SoilToStem"); 
+  network.push_back(PsiSoil, "PsiSoil");
+  network.push_back(k_Soil, "k_Soil"); 
+  network.push_back(snetwork.k_Plant, "k_Plant"); 
+  network.push_back(snetwork.Q_SApo_sat_mmol_perLeafArea, "Q_SApo_sat_mmol_perLeafArea"); 
+  network.push_back(snetwork.Q_LApo_sat_mmol_perLeafArea, "Q_LApo_sat_mmol_perLeafArea"); 
+  network.push_back(snetwork.Q_SSym_sat_mmol_perLeafArea, "Q_SSym_sat_mmol_perLeafArea"); 
+  network.push_back(snetwork.Q_LSym_sat_mmol_perLeafArea, "Q_LSym_sat_mmol_perLeafArea"); 
+  network.push_back(snetwork.Einst, "Einst"); 
+  network.push_back(snetwork.Einst_SL, "Einst_SL");
+  network.push_back(snetwork.Einst_SH, "Einst_SH"); 
+  network.push_back(snetwork.Elim, "Elim"); 
+  network.push_back(snetwork.Elim_SL, "Elim_SL");
+  network.push_back(snetwork.Elim_SH, "Elim_SH"); 
+  network.push_back(snetwork.Emin_L, "Emin_L"); 
+  network.push_back(snetwork.Emin_L_SL, "Emin_L_SL"); 
+  network.push_back(snetwork.Emin_L_SH, "Emin_L_SH"); 
+  network.push_back(snetwork.Emin_S, "Emin_S"); 
+  
+  //Diagnostics
+  network.push_back(snetwork.Diag_nwhile_cavit, "Diag_nwhile_cavit");
+  network.push_back(snetwork.Diag_deltaRegulMax, "Diag_deltaRegulMax");
+  network.push_back(snetwork.Diag_deltaPLCMax, "Diag_deltaPLCMax");
+  network.push_back(snetwork.Diag_timeStepInSeconds, "Diag_timeStepInSeconds");
+  return(network);
+}
+SureauNetwork listToStruct(List network) {
+  List params = network["params"];
+  //Copy from List to SureauNetwork
+  SureauNetwork snetwork;
+  snetwork.params.npools = params["npools"];
+  snetwork.params.TPhase_gmin = params["TPhase_gmin"];
+  snetwork.params.Q10_1_gmin = params["Q10_1_gmin"]; 
+  snetwork.params.Q10_2_gmin = params["Q10_2_gmin"]; 
+  snetwork.params.Tgs_optim = params["Tgs_optim"];
+  snetwork.params.Tgs_sens = params["Tgs_sens"];
+  snetwork.params.JarvisPAR = params["JarvisPAR"];
+  snetwork.params.Gsw_AC_slope = params["Gsw_AC_slope"];
+  snetwork.params.fTRBToLeaf = params["fTRBToLeaf"];
+  snetwork.params.C_SApoInit = params["C_SApoInit"];
+  snetwork.params.C_LApoInit = params["C_LApoInit"];
+  snetwork.params.k_SLApoInit = params["k_SLApoInit"];
+  snetwork.params.k_CSApoInit = params["k_CSApoInit"];
+  snetwork.params.slope_gs = params["slope_gs"];
+  snetwork.params.P50_gs = params["P50_gs"];
+  snetwork.params.gmin20 = params["gmin20"];
+  snetwork.params.gsMax = params["gsMax"];
+  snetwork.params.gmin_S = params["gmin_S"];
+  snetwork.params.gsNight = params["gsNight"];
+  snetwork.params.VCleaf_P50 = params["VCleaf_P50"];
+  snetwork.params.VCleaf_slope = params["VCleaf_slope"];
+  snetwork.params.VCstem_P50 = params["VCstem_P50"];
+  snetwork.params.VCstem_slope = params["VCstem_slope"];
+  snetwork.params.VCroot_P50 = params["VCroot_P50"];
+  snetwork.params.VCroot_slope = params["VCroot_slope"];
+  snetwork.params.PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
+  snetwork.params.epsilonSym_Leaf = params["epsilonSym_Leaf"];
+  snetwork.params.PiFullTurgor_Stem = params["PiFullTurgor_Stem"];
+  snetwork.params.epsilonSym_Stem = params["epsilonSym_Stem"];
+  NumericVector k_RCApoInit = Rcpp::as<Rcpp::NumericVector>(params["k_RCApoInit"]);
+  snetwork.params.k_RCApoInit = new double[k_RCApoInit.size()];
+  for(int l=0;l < k_RCApoInit.size(); l++) {
+    snetwork.params.k_RCApoInit[l] = k_RCApoInit[l];
+  }
+  
+  snetwork.LAI = network["LAI"];
+  snetwork.Psi_LApo = network["Psi_LApo"];
+  snetwork.Psi_LSym = network["Psi_LSym"];
+  snetwork.Psi_RCApo = network["Psi_RCApo"];
+  snetwork.Psi_SApo = network["Psi_SApo"];
+  snetwork.Psi_SSym = network["Psi_SSym"];
+  snetwork.Psi_SApo_cav = network["Psi_SApo_cav"];
+  snetwork.Psi_LApo_cav = network["Psi_LApo_cav"];
+  snetwork.PLC_Stem = network["PLC_Stem"];
+  snetwork.PLC_Leaf = network["PLC_Leaf"];
+  snetwork.C_SApo = network["C_SApo"];
+  snetwork.C_LApo = network["C_LApo"];
+  snetwork.C_SSym = network["C_SSym"];
+  snetwork.C_LSym = network["C_LSym"];
+  snetwork.k_SLApo = network["k_SLApo"];
+  snetwork.k_CSApo = network["k_CSApo"];
+  snetwork.k_SSym = network["k_SSym"];
+  snetwork.k_LSym = network["k_LSym"];
+
+  NumericVector k_RSApo = Rcpp::as<Rcpp::NumericVector>(network["k_RSApo"]);
+  NumericVector k_SoilToStem = Rcpp::as<Rcpp::NumericVector>(network["k_SoilToStem"]);
+  NumericVector k_Soil = Rcpp::as<Rcpp::NumericVector>(network["k_Soil"]);
+  NumericVector PsiSoil = Rcpp::as<Rcpp::NumericVector>(network["PsiSoil"]);
+  snetwork.k_RSApo = new double[k_RSApo.size()];
+  snetwork.k_SoilToStem = new double[k_RSApo.size()];
+  snetwork.k_Soil = new double[k_RSApo.size()];
+  snetwork.PsiSoil = new double[k_RSApo.size()];
+  for(int l=0;l < snetwork.params.npools; l++) {
+    snetwork.k_RSApo[l] = k_RSApo[l];
+    snetwork.k_SoilToStem[l] = k_SoilToStem[l]; 
+    snetwork.k_Soil[l] = k_Soil[l];
+    snetwork.PsiSoil[l] = PsiSoil[l];
+  }
+  
+  snetwork.k_Plant = network["k_Plant"];
+  snetwork.Q_SApo_sat_mmol_perLeafArea = network["Q_SApo_sat_mmol_perLeafArea"];
+  snetwork.Q_LApo_sat_mmol_perLeafArea = network["Q_LApo_sat_mmol_perLeafArea"];
+  snetwork.Q_SSym_sat_mmol_perLeafArea = network["Q_SSym_sat_mmol_perLeafArea"];
+  snetwork.Q_LSym_sat_mmol_perLeafArea = network["Q_LSym_sat_mmol_perLeafArea"];
+  
+  snetwork.Einst = network["Einst"];
+  snetwork.Einst_SL = network["Einst_SL"];
+  snetwork.Einst_SH = network["Einst_SH"];
+  snetwork.Elim = network["Elim"];
+  snetwork.Elim_SL = network["Elim_SL"];
+  snetwork.Elim_SH = network["Elim_SH"];
+  snetwork.Emin_L = network["Emin_L"];
+  snetwork.Emin_L_SL = network["Emin_L_SL"];
+  snetwork.Emin_L_SH = network["Emin_L_SH"];
+  snetwork.Emin_S = network["Emin_S"];
+
+  //Diagnostics
+  snetwork.Diag_nwhile_cavit = network["Diag_nwhile_cavit"];
+  snetwork.Diag_deltaRegulMax = network["Diag_deltaRegulMax"];
+  snetwork.Diag_deltaPLCMax = network["Diag_deltaPLCMax"];
+  snetwork.Diag_timeStepInSeconds = network["Diag_timeStepInSeconds"];
+
+  return(snetwork);
+}
+
 double PLC_derivative(double plc, double slope) {
   return(-1.0*slope/25.0 * plc/100 * (1.0 - plc/100));
 }
@@ -519,100 +717,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
                           VCroot_kmax, VGrhizo_kmax,
                           PsiSoil, VG_n, VG_alpha,
                           control, sapFluidityDay);
-  
-  List network = List::create();
-  //Params
-  List params = List::create();
-  // CONSTANTS (Control variables)
-  params.push_back(snetwork.params.TPhase_gmin, "TPhase_gmin"); 
-  params.push_back(snetwork.params.Q10_1_gmin, "Q10_1_gmin"); 
-  params.push_back(snetwork.params.Q10_2_gmin, "Q10_2_gmin"); 
-  params.push_back(snetwork.params.Tgs_optim, "Tgs_optim"); 
-  params.push_back(snetwork.params.Tgs_sens, "Tgs_sens"); 
-  params.push_back(snetwork.params.JarvisPAR, "JarvisPAR"); 
-  params.push_back(snetwork.params.Gsw_AC_slope, "Gsw_AC_slope");
-  params.push_back(snetwork.params.fTRBToLeaf, "fTRBToLeaf");
-  params.push_back(snetwork.params.C_SApoInit, "C_SApoInit");
-  params.push_back(snetwork.params.C_LApoInit, "C_LApoInit");
-  params.push_back(snetwork.params.k_SLApoInit, "k_SLApoInit");
-  params.push_back(snetwork.params.k_CSApoInit, "k_CSApoInit");
-  NumericVector k_RCApoInit(snetwork.params.npools, NA_REAL);
-  for(int l=0;l < snetwork.params.npools; l++) {
-    k_RCApoInit[l] = snetwork.params.k_RCApoInit[l];
-  }
-  params.push_back(k_RCApoInit, "k_RCApoInit"); 
-  params.push_back(snetwork.params.slope_gs, "slope_gs");
-  params.push_back(snetwork.params.P50_gs, "P50_gs");
-  params.push_back(snetwork.params.gmin20, "gmin20"); 
-  params.push_back(snetwork.params.gsMax, "gsMax"); 
-  params.push_back(snetwork.params.gmin_S, "gmin_S");
-  params.push_back(snetwork.params.gsNight, "gsNight"); 
-  params.push_back(snetwork.params.VCleaf_P50, "VCleaf_P50"); 
-  params.push_back(snetwork.params.VCleaf_slope, "VCleaf_slope"); 
-  params.push_back(snetwork.params.VCstem_P50, "VCstem_P50"); 
-  params.push_back(snetwork.params.VCstem_slope, "VCstem_slope"); 
-  params.push_back(snetwork.params.VCroot_P50, "VCroot_P50"); 
-  params.push_back(snetwork.params.VCroot_slope, "VCroot_slope"); 
-  params.push_back(snetwork.params.PiFullTurgor_Leaf, "PiFullTurgor_Leaf"); 
-  params.push_back(snetwork.params.epsilonSym_Leaf, "epsilonSym_Leaf"); 
-  params.push_back(snetwork.params.PiFullTurgor_Stem, "PiFullTurgor_Stem"); 
-  params.push_back(snetwork.params.epsilonSym_Stem, "epsilonSym_Stem"); 
-  
-  network.push_back(params, "params");
-
-  network.push_back(snetwork.LAI, "LAI");
-  network.push_back(snetwork.Psi_LApo, "Psi_LApo"); 
-  network.push_back(snetwork.Psi_LSym, "Psi_LSym"); 
-  network.push_back(snetwork.Psi_RCApo, "Psi_RCApo");
-  network.push_back(snetwork.Psi_SApo, "Psi_SApo"); 
-  network.push_back(snetwork.Psi_SSym, "Psi_SSym");
-  network.push_back(snetwork.Psi_SApo_cav, "Psi_SApo_cav"); 
-  network.push_back(snetwork.Psi_LApo_cav, "Psi_LApo_cav"); 
-  network.push_back(snetwork.PLC_Stem, "PLC_Stem"); 
-  network.push_back(snetwork.PLC_Leaf, "PLC_Leaf"); 
-  network.push_back(snetwork.C_SApo, "C_SApo"); 
-  network.push_back(snetwork.C_LApo, "C_LApo"); 
-  network.push_back(snetwork.C_SSym, "C_SSym"); 
-  network.push_back(snetwork.C_LSym, "C_LSym");
-  network.push_back(snetwork.k_SLApo, "k_SLApo");
-  network.push_back(snetwork.k_CSApo, "k_CSApo");
-  network.push_back(snetwork.k_SSym, "k_SSym"); 
-  network.push_back(snetwork.k_LSym, "k_LSym"); 
-  
-  NumericVector k_RSApo(snetwork.params.npools, NA_REAL);
-  NumericVector k_SoilToStem(snetwork.params.npools, NA_REAL);
-  NumericVector k_Soil(snetwork.params.npools, NA_REAL);
-  for(int l=0;l < snetwork.params.npools; l++) {
-    k_RSApo[l] = snetwork.k_RSApo[l];
-    k_SoilToStem[l] = snetwork.k_SoilToStem[l];
-    k_Soil[l] = snetwork.k_Soil[l];
-  }
-  network.push_back(k_RSApo, "k_RSApo"); 
-  network.push_back(k_SoilToStem, "k_SoilToStem"); 
-  network.push_back(PsiSoil, "PsiSoil");
-  network.push_back(k_Soil, "k_Soil"); 
-  network.push_back(snetwork.k_Plant, "k_Plant"); 
-  network.push_back(snetwork.Q_SApo_sat_mmol_perLeafArea, "Q_SApo_sat_mmol_perLeafArea"); 
-  network.push_back(snetwork.Q_LApo_sat_mmol_perLeafArea, "Q_LApo_sat_mmol_perLeafArea"); 
-  network.push_back(snetwork.Q_SSym_sat_mmol_perLeafArea, "Q_SSym_sat_mmol_perLeafArea"); 
-  network.push_back(snetwork.Q_LSym_sat_mmol_perLeafArea, "Q_LSym_sat_mmol_perLeafArea"); 
-  network.push_back(snetwork.Einst, "Einst"); 
-  network.push_back(snetwork.Einst_SL, "Einst_SL");
-  network.push_back(snetwork.Einst_SH, "Einst_SH"); 
-  network.push_back(snetwork.Elim, "Elim"); 
-  network.push_back(snetwork.Elim_SL, "Elim_SL");
-  network.push_back(snetwork.Elim_SH, "Elim_SH"); 
-  network.push_back(snetwork.Emin_L, "Emin_L"); 
-  network.push_back(snetwork.Emin_L_SL, "Emin_L_SL"); 
-  network.push_back(snetwork.Emin_L_SH, "Emin_L_SH"); 
-  network.push_back(snetwork.Emin_S, "Emin_S"); 
-  
-  //Diagnostics
-  network.push_back(snetwork.Diag_nwhile_cavit, "Diag_nwhile_cavit");
-  network.push_back(snetwork.Diag_deltaRegulMax, "Diag_deltaRegulMax");
-  network.push_back(snetwork.Diag_deltaPLCMax, "Diag_deltaPLCMax");
-  network.push_back(snetwork.Diag_timeStepInSeconds, "Diag_timeStepInSeconds");
-  
+  List network = structToList(snetwork);
   deleteSureauNetworkPointers(snetwork);
   return(network);
 }
@@ -1432,8 +1537,20 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
 //'           }
 //' @keywords internal
 // [[Rcpp::export("semi_implicit_integration")]]
-void semi_implicit_integration(List network, double dt, NumericVector opt, 
+List semi_implicit_integration(List network, double dt, NumericVector opt, 
                                String stemCavitationRecovery = "annual", String leafCavitationRecovery = "total") {
-//TO BE DONE
+
+  //Copy values from List to SureauNetwork
+  SureauNetwork snetwork = listToStruct(network);
+  //Integration
+  semi_implicit_integration_inner(snetwork,
+                                  dt, opt, 
+                                  stemCavitationRecovery, 
+                                  leafCavitationRecovery);
+  //Copy back values from SureauNetwork to List
+  network = structToList(snetwork);
+  //Free memory
+  deleteSureauNetworkPointers(snetwork);
+  return(network);
 }
 
