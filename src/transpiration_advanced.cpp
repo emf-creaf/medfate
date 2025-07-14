@@ -645,7 +645,6 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                 VCroot_kmaxc, VGrhizo_kmaxc,
                                 psic, VG_nc, VG_alphac,
                                 control, sapFluidityDay);
-        Rcout<<"sn init k_CSApoInit: "<< sureauNetworks[c].params.k_CSApoInit<<"\n";
       }
       
     } else {
@@ -894,7 +893,6 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions);
     } else if(transpirationMode == "Sureau"){
-      stop("before inner");
       innerSureau(x, sureauNetworks, innerInput, innerOutput, n, tstep,
                   verbose);
     }

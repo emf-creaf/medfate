@@ -1,5 +1,6 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
+#include "struct_sureau.h"
 #include "photosynthesis.h"
 #include "biophysicsutils.h"
 #include "hydraulics.h"
@@ -7,84 +8,6 @@
 #include "tissuemoisture.h"
 #include <meteoland.h>
 using namespace Rcpp;
-
-//Structures
-struct SureauParams { 
-  double TPhase_gmin;
-  double Q10_1_gmin;
-  double Q10_2_gmin;
-  double Gsw_AC_slope;
-  double fTRBToLeaf;
-  double C_SApoInit;
-  double C_LApoInit;
-  double k_SLApoInit;
-  double k_CSApoInit; 
-  double* k_RCApoInit;
-  double slope_gs;
-  double P50_gs;
-  double Tgs_optim;
-  double Tgs_sens;
-  double JarvisPAR;
-  double gmin20;
-  double gsMax;
-  double gmin_S;
-  double gsNight;
-  double VCleaf_P50;
-  double VCleaf_slope;
-  double VCstem_P50;
-  double VCstem_slope;
-  double VCroot_P50;
-  double VCroot_slope;
-  double PiFullTurgor_Leaf;
-  double epsilonSym_Leaf;
-  double PiFullTurgor_Stem;
-  double epsilonSym_Stem;
-};
-
-struct SureauNetwork {
-  SureauParams params;
-  double LAI;
-  double Psi_LApo;
-  double Psi_LSym;
-  double Psi_RCApo;
-  double Psi_SApo;
-  double Psi_SSym;
-  double Psi_SApo_cav;
-  double Psi_LApo_cav;
-  double PLC_Stem;
-  double PLC_Leaf;                   
-  double C_SApo;
-  double C_LApo;
-  double C_SSym;
-  double C_LSym;
-  double k_SLApo;                     
-  double k_CSApo;
-  double k_SSym;
-  double k_LSym;
-  double* PsiSoil;
-  double* k_RSApo;
-  double* k_SoilToStem;
-  double* k_Soil;
-  double k_Plant;
-  double Q_SApo_sat_mmol_perLeafArea;
-  double Q_LApo_sat_mmol_perLeafArea;
-  double Q_SSym_sat_mmol_perLeafArea;
-  double Q_LSym_sat_mmol_perLeafArea;
-  double Einst;
-  double Einst_SL;
-  double Einst_SH;
-  double Elim;
-  double Elim_SL;
-  double Elim_SH;
-  double Emin_L;
-  double Emin_L_SL;
-  double Emin_L_SH;
-  double Emin_S;
-  int Diag_nwhile_cavit;
-  double Diag_deltaRegulMax;
-  double Diag_deltaPLCMax;
-  double Diag_timeStepInSeconds; 
-};
 
 //Function to clone SureauParams object
 void copyParams(SureauParams params, SureauParams &sinkParams, int nlayers, int c) {
@@ -97,10 +20,8 @@ void copyParams(SureauParams params, SureauParams &sinkParams, int nlayers, int 
   sinkParams.C_LApoInit = params.C_LApoInit;
   sinkParams.k_SLApoInit = params.k_SLApoInit;
   sinkParams.k_CSApoInit = params.k_CSApoInit;
-  Rcout << " copy k_CSApoInit: " << params.k_CSApoInit <<"\n";
-  
+
   for(int i=0;i<nlayers;i++) {
-    if((c==1)&& (i==0)) stop("kk_i");
     sinkParams.k_RCApoInit[i] = params.k_RCApoInit[i];
   }
   
@@ -397,7 +318,7 @@ void initSureauParams_inner(SureauParams &params, int c,
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
   params.k_SLApoInit = sapFluidityDay*VCleafapo_kmax[c]; //Maximum conductance from trunk apoplasm to leaf apoplasm
   params.k_CSApoInit = sapFluidityDay*VCstem_kmax[c]; //Maximum conductance from root crown to stem apoplasm
-  Rcout << "par init "<< c<< " VCstem_kmax[c]: "<<VCstem_kmax[c] << " sapfluidity: "<< sapFluidityDay<<" k_CSApoInit: " << params.k_CSApoInit<< "\n";
+  // Rcout << "par init "<< c<< " VCstem_kmax[c]: "<<VCstem_kmax[c] << " sapfluidity: "<< sapFluidityDay<<" k_CSApoInit: " << params.k_CSApoInit<< "\n";
   params.k_RCApoInit = new double [VCroot_kmax.size()];
   for(int l = 0;l<VCroot_kmax.size();l++) params.k_RCApoInit[l] = sapFluidityDay*VCroot_kmax[l];
   NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
@@ -1169,13 +1090,10 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
   NumericVector ElayersVEC(nlayers,0.0); //Instantaneous flow rate
   NumericVector fluxSoilToStem_mm(nlayers, 0.0); //Cummulative flow
 
-  stop("kk");
-  for(int c=0;c<3; c++) Rcout<<networks[c].params.k_CSApoInit<<"\n";
-  
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
     
     if(LAIphe[c]>0.0 && LeafPLCVEC[c] < 0.999) {
-      Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
+      // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
 
       // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
       bool regulationWellComputed = false;
