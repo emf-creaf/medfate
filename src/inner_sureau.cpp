@@ -301,6 +301,7 @@ void initSureauParams_inner(SureauParams &params, int c,
   String stomatalSubmodel = control["stomatalSubmodel"];
   bool soilDisconnection = control["soilDisconnection"];
   
+  //This will change depending on the layers connected
   params.npools = VCroot_kmax.size();
   params.TPhase_gmin = control["TPhase_gmin"];
   params.Q10_1_gmin = control["Q10_1_gmin"];
@@ -1080,21 +1081,21 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
   LogicalMatrix layerConnected = input["layerConnected"];
   List layerConnectedPools = input["layerConnectedPools"];
   
-  //Init temporary variables
-  SureauNetwork network_n;
-  network_n.params.k_RCApoInit = new double[networks[0].params.npools];
-  network_n.k_RSApo = new double[networks[0].params.npools];
-  network_n.k_SoilToStem = new double[networks[0].params.npools];
-  network_n.k_Soil = new double[networks[0].params.npools];
-  network_n.PsiSoil = new double[networks[0].params.npools];
-  NumericVector ElayersVEC(networks[0].params.npools,0.0); //Instantaneous flow rate
-  NumericVector fluxSoilToStem_mm(networks[0].params.npools, 0.0); //Cummulative flow
 
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
     
     if(LAIphe[c]>0.0 && LeafPLCVEC[c] < 0.999) {
       // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
-
+      //Init temporary variables
+      SureauNetwork network_n;
+      network_n.params.k_RCApoInit = new double[networks[c].params.npools];
+      network_n.k_RSApo = new double[networks[c].params.npools];
+      network_n.k_SoilToStem = new double[networks[c].params.npools];
+      network_n.k_Soil = new double[networks[c].params.npools];
+      network_n.PsiSoil = new double[networks[c].params.npools];
+      NumericVector ElayersVEC(networks[c].params.npools,0.0); //Instantaneous flow rate
+      NumericVector fluxSoilToStem_mm(networks[c].params.npools, 0.0); //Cummulative flow
+      
       // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
       bool regulationWellComputed = false;
       bool cavitationWellComputed = false;
@@ -1131,7 +1132,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
         ElimVEC[c] = 0.0;
         Emin_LVEC[c] = 0.0;
         Emin_SVEC[c] = 0.0;
-        for(int i=0;i < networks[0].params.npools;i++) {
+        for(int i=0;i < networks[c].params.npools;i++) {
           ElayersVEC[i] = 0.0;
           fluxSoilToStem_mm[i] = 0.0; 
         }
@@ -1302,7 +1303,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
         } //# end loop small time step
         
         //Divide average fluxes by time steps
-        for(int l=0;l < networks[0].params.npools;l++) ElayersVEC[l] = ElayersVEC[l]/((double) nts);
+        for(int l=0;l < networks[c].params.npools;l++) ElayersVEC[l] = ElayersVEC[l]/((double) nts);
         EinstVEC[c] = EinstVEC[c]/((double) nts);
         ElimVEC[c] = ElimVEC[c]/((double) nts);
         Emin_LVEC[c] = Emin_LVEC[c]/((double) nts);
@@ -1394,6 +1395,8 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           }
         }
       }
+      //Delete pointers
+      deleteSureauNetworkPointers(network_n);
     } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI (or completely embolized)
       E_SL(c,n) = 0.0;
       E_SH(c,n) = 0.0;
@@ -1414,7 +1417,6 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
     }
   }
   
-  deleteSureauNetworkPointers(network_n);
 }
 
 //' @rdname sureau_ecos
