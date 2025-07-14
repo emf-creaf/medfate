@@ -2,6 +2,7 @@
 #include <numeric>
 #include <math.h>
 #include "biophysicsutils.h"
+#include "struct_photosynthesis.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -315,10 +316,7 @@ double gLeafBoundary(double u, double leafWidth, double gBound0 = 0.397){
   return(gBound0*pow(u/(leafWidth*0.0072), 0.5));
 }
 
-struct BaldocchiPhoto{
-  double Gsw, Cs, Ci, An, Ag;
-};
-void photosynthesisBaldocchi_inner(BaldocchiPhoto photoOut,
+void photosynthesisBaldocchi_inner(BaldocchiPhoto &photoOut,
                                    double Q, 
                                    double Catm, 
                                    double Tleaf, 

@@ -1212,7 +1212,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
                                           gsNight/1000.0);
             gs_SL = PB_SL.Gsw*1000.0; //From mmol to mol 
             gs_SL = std::max(gsNight, gs_SL)*regul;
-            Rcout<<c << " "<<n << " "<< gs_SL<<"\n";
+            // Rcout<<c << " "<<n << " Bald gs: "<< PB_SL.Gsw << " regul: "<< regul << " gs_SL: "<< gs_SL<<"\n";
             photosynthesisBaldocchi_inner(PB_SH, 
                                           irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
                                           Cair[iLayerSunlit[c]], 
