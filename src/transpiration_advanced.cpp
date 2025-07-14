@@ -72,10 +72,12 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
 
+  
   int ntimesteps = control["ndailysteps"];
   int nsubsteps = control["nsubsteps_canopy"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
-  double fullRhizosphereOverlapConductivity = control["fullRhizosphereOverlapConductivity"];
+  double fullRhizosphereOverlapConductivity = 0.01; //For backwards compatibility
+  if(control.containsElementNamed("fullRhizosphereOverlapConductivity")) fullRhizosphereOverlapConductivity = control["fullRhizosphereOverlapConductivity"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double verticalLayerSize = control["verticalLayerSize"];
   double windMeasurementHeight  = control["windMeasurementHeight"];

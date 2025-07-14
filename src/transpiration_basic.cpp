@@ -74,7 +74,6 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   NumericMatrix outputExtraction = as<NumericMatrix>(transpOutput["Extraction"]);
   List outputExtractionPools = transpOutput["ExtractionPools"];
 
-  
   //Control parameters
   List control = x["control"];
   String stemCavitationRecovery = control["stemCavitationRecovery"];
@@ -83,7 +82,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
-  double fullRhizosphereOverlapConductivity = control["fullRhizosphereOverlapConductivity"];
+  double fullRhizosphereOverlapConductivity = 0.01; //For backwards compatibility
+  if(control.containsElementNamed("fullRhizosphereOverlapConductivity")) fullRhizosphereOverlapConductivity = control["fullRhizosphereOverlapConductivity"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double hydraulicRedistributionFraction = control["hydraulicRedistributionFraction"];
   String lfmcComponent = control["lfmcComponent"];
