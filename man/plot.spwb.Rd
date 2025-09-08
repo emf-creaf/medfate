@@ -2,6 +2,7 @@
 % Please edit documentation in R/plot.spwb.R
 \name{plot.spwb}
 \alias{plot.spwb}
+\alias{plot.aspwb}
 \alias{plot.pwb}
 \alias{plot.growth}
 \alias{plot.fordyn}
@@ -14,6 +15,18 @@
   bySpecies = FALSE,
   dates = NULL,
   subdaily = FALSE,
+  xlim = NULL,
+  ylim = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  summary.freq = NULL,
+  ...
+)
+
+\method{plot}{aspwb}(
+  x,
+  type = "PET_Precipitation",
+  dates = NULL,
   xlim = NULL,
   ylim = NULL,
   xlab = NULL,

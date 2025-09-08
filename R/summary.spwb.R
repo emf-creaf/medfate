@@ -36,7 +36,9 @@
   date.factor <- cut(dates, breaks=freq)
   
   if("spwbInput" %in% names(object)) input = object$spwbInput
+  else if("aspwbInput" %in% names(object)) input = object$aspwbInput
   else input = object$growthInput
+  
   object_names = names(object)
   output_vec = strsplit(output, "\\$")[[1]]
   if(!(output_vec[1] %in% object_names)) {
@@ -117,7 +119,7 @@
 #' 
 #' Function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 #' 
-#' @param object An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.
+#' @param object An object of class \code{spwb}, \code{aspwb}, \code{pwb}, \code{growth} or \code{fordyn}.
 #' @param freq Frequency of summary statistics (see \code{\link{cut.Date}}).
 #' @param output The data table to be summarized. Accepted values are the path to data tables in \code{object}, such as 'WaterBalance', 'Soil', 'Stand' or 'Plants$LAI'. It is also possible to use strings like 'Transpiration' and the function will interpret it as 'Plants$Transpiration'.
 #' @param FUN The function to summarize results (e.g., \code{sum}, \code{mean}, ...)
@@ -173,6 +175,11 @@
 #' 
 #' @name summary.spwb
 summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, months = NULL, ...){  
+  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, months = months, ...)
+}
+
+#' @name summary.spwb
+summary.aspwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, months = NULL, ...){  
   .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, months = months, ...)
 }
 

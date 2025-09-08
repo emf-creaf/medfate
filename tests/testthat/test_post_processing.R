@@ -57,6 +57,27 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_s3_class(extract(S1, level = "cohort"), "data.frame")
 })
 
+test_that("Can produce all aspwb plots and summaries",{
+  control <- defaultControl("Granier")
+  control$verbose <- FALSE
+  x1 <- aspwbInput(0.75, control, examplesoil)
+  expect_s3_class(x1, "aspwbInput")
+  S1 <- aspwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+  expect_s3_class(S1, "aspwb")
+  expect_s3_class(plot(S1, "PET_Precipitation"), "ggplot")
+  expect_s3_class(plot(S1, "Snow"), "ggplot")
+  expect_s3_class(plot(S1, "Export"), "ggplot")
+  expect_s3_class(plot(S1, "Evapotranspiration"), "ggplot")
+  expect_s3_class(plot(S1, "SoilPsi"), "ggplot")
+  expect_s3_class(plot(S1, "SoilREW"), "ggplot")
+  expect_s3_class(plot(S1, "SoilRWC"), "ggplot")
+  expect_s3_class(plot(S1, "SoilTheta"), "ggplot")
+  expect_s3_class(plot(S1, "SoilVol"), "ggplot")
+  expect_type(summary(S1, output = "WaterBalance"), "double")
+  expect_type(summary(S1, output = "RWC", FUN = "mean"), "double")
+  expect_s3_class(extract(S1, level = "soillayer"), "data.frame")
+})
+
 test_that("Can produce all advanced spwb plots and summaries",{
   for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)

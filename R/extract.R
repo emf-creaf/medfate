@@ -119,7 +119,7 @@
 #' 
 #' Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
 #' 
-#' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.
+#' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{aspwb}}, \code{\link{pwb}} or \code{\link{growth}}.
 #' @param level Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results), 
 #' "sunlitleaf" or "shadeleaf" (leaf-level results)
 #' @param output Section of the model output to be explored. See details.
@@ -189,15 +189,28 @@
 #' @seealso \code{\link{summary.spwb}}
 #' @export
 extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE)  {
-  level <- match.arg(level, c("forest", "soillayer","cohort", "sunlitleaf", "shadeleaf"))
-  
-  if(inherits(x, "spwb") || inherits(x, "pwb")) {
-    cohorts <- x$spwbInput$cohorts
-  } else if(inherits(x, "growth")) {
-    cohorts <- x$growthInput$cohorts
+  if(inherits(x, "aspwb")) {
+    level <- match.arg(level, "soillayer")
+    subdaily <- FALSE
+  } else {
+    level <- match.arg(level, c("forest", "soillayer","cohort", "sunlitleaf", "shadeleaf"))
   }
-  cohnames <- row.names(cohorts)
-  spnames <- cohorts$Name
+  if(inherits(x, "aspwb")) {
+    input <- x$aspwbInput
+    cohorts <- character(0)
+    cohnames <- character(0)
+    spnames <- character(0)
+  } else {
+    if(inherits(x, "spwb") || inherits(x, "pwb")) {
+      input <- x$spwbInput
+      cohorts <- x$spwbInput$cohorts
+    } else if(inherits(x, "growth")) {
+      input <- x$growthInput
+      cohorts <- x$growthInput$cohorts
+    }
+    cohnames <- row.names(cohorts)
+    spnames <- cohorts$Name
+  }  
   
   if(subdaily) {
     if(level %in% c("forest", "soillayer")) stop("Subdaily results are for levels 'cohort', 'sunlitleaf' and 'shadeleaf' only.")
@@ -265,7 +278,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       }
     }
   } else if (level =="soillayer") {
-    layers <- c(1:length(x$spwbInput$soil$widths), "Overall")
+    layers <- c(1:length(input$soil$widths), "Overall")
     output <- "Soil"
     out <- data.frame(date = rep(dates, length(layers)),
                       soillayer = layers[gl(length(layers), length(dates))])

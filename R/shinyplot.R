@@ -68,9 +68,15 @@
 
 .shinyplot_sim<-function(out, measuredData = NULL) {
   if(inherits(out, c("spwb_day", "pwb_day", "growth_day"))) return(.shinyplot_day(out))
-  if(!inherits(out, c("growth", "pwb" , "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
+  if(!inherits(out, c("aspwb","growth", "pwb" , "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
   type_out = class(out)[1] #growth, spwb, fordyn
-  if(type_out=="spwb") {
+  if(type_out=="aspwb") {
+    transpirationMode = NA
+    subdaily_out = FALSE
+    cohorts_out = character(0)
+    cohorts_sp_out = character(0)
+    dates_out = as.Date(row.names(out$WaterBalance))
+  } else if(type_out=="spwb") {
     transpirationMode = out$spwbInput$control$transpirationMode
     subdaily_out = out$spwbInput$control$subdailyResults
     cohorts_out = row.names(out$spwbInput$cohorts)
@@ -113,31 +119,37 @@
   cohort_choices = cohorts_out
   names(cohort_choices) = cohorts_sp_out
   
-  wb_plot_choices = .getWaterBalancePlotTypes()
+  wb_plot_choices = .getWaterBalancePlotTypes(type_out)
   stand_plot_choices = .getStandPlotTypes(type_out)
-  soil_plot_choices = .getSoilPlotTypes(type_out, transpirationMode) 
-  plant_plot_choices = .getPlantPlotTypes(transpirationMode)
-  sunlitshade_plot_choices = .getSunlitShadePlotTypes(transpirationMode)
-  energy_plot_choices = .getEnergyPlotTypes(transpirationMode)
-  labile_plot_choices = .getLabileGROWTHPlotTypes(transpirationMode)
-  plant_balance_plot_choices = .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode)
-  plant_structure_plot_choices = .getStructuralGROWTHPlotTypes(transpirationMode)
-  plant_growthmortality_plot_choices = .getGrowthMortalityGROWTHPlotTypes(transpirationMode)
-  forest_dynamics_plot_choices = .getUniqueFORDYNPlotTypes(transpirationMode)
+  soil_plot_choices = .getSoilPlotTypes(type_out) 
   
-  plot_main_choices = c("Water balance", "Soil", "Stand", "Plants")
-  if(transpirationMode %in% c("Sperry","Sureau")) {
-    plot_main_choices = c(plot_main_choices,"Sunlit/Shade", "Energy balance")
+  if(type_out!="aswpb") {
+    plant_plot_choices = .getPlantPlotTypes(transpirationMode)
+    sunlitshade_plot_choices = .getSunlitShadePlotTypes(transpirationMode)
+    energy_plot_choices = .getEnergyPlotTypes(transpirationMode)
+    labile_plot_choices = .getLabileGROWTHPlotTypes(transpirationMode)
+    plant_balance_plot_choices = .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode)
+    plant_structure_plot_choices = .getStructuralGROWTHPlotTypes(transpirationMode)
+    plant_growthmortality_plot_choices = .getGrowthMortalityGROWTHPlotTypes(transpirationMode)
+    forest_dynamics_plot_choices = .getUniqueFORDYNPlotTypes(transpirationMode)
   }
-  if(type_out %in% c("growth", "fordyn")) {
-    plot_main_choices = c(plot_main_choices, 
-                          "Labile carbon balance",
-                          "Biomass balance",
-                          "Plant structure",
-                          "Growth & mortality")
-  }
-  if(type_out=="fordyn") {
-    plot_main_choices = c(plot_main_choices, "Forest structure & composition")
+  
+  plot_main_choices <- c("Water balance", "Soil")
+  if(type_out!= "aspwb") {
+    plot_main_choices <- c(plot_main_choices, "Stand", "Plants")
+    if(transpirationMode %in% c("Sperry","Sureau")) {
+      plot_main_choices = c(plot_main_choices,"Sunlit/Shade", "Energy balance")
+    }
+    if(type_out %in% c("growth", "fordyn")) {
+      plot_main_choices = c(plot_main_choices, 
+                            "Labile carbon balance",
+                            "Biomass balance",
+                            "Plant structure",
+                            "Growth & mortality")
+    }
+    if(type_out=="fordyn") {
+      plot_main_choices = c(plot_main_choices, "Forest structure & composition")
+    }
   }
   
   subdaily_soil_plot_choices = .getSubdailySoilPlotTypes()
@@ -426,6 +438,12 @@ shinyplot<-function(x, ...) {
 shinyplot.growth<-function(x, measuredData = NULL, ...) {
   .shinyplot_sim(x, measuredData = measuredData)
 }
+
+#' @rdname shinyplot
+shinyplot.aspwb<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
+}
+
 
 #' @rdname shinyplot
 shinyplot.spwb<-function(x, measuredData = NULL, ...) {

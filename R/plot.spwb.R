@@ -186,6 +186,30 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
 }
 
 #' @rdname plot.spwb
+plot.aspwb<-function(x, type="PET_Precipitation", 
+                     dates = NULL,  
+                     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                     summary.freq = NULL, ...) {
+  
+  input = x$aspwbInput
+  TYPES = .getDailyASPWBPlotTypes()  
+  
+  type = match.arg(type,TYPES)  
+  if(is.null(xlab)) xlab = ""
+  if(type %in% c("PET_Precipitation", "Evapotranspiration", "Snow", "Export")) {
+    return(.plot_wb(WaterBalance = x$WaterBalance, Soil = x$Soil, Snow = x$Snow, input_soil = input$soil, 
+                    type = type, dates = dates, 
+                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                    summary.freq = summary.freq, ...))
+  } else {
+    return(.plot_soil(Soil = x$Soil, input_soil = input$soil, input_control = input$control,
+                      type = type, dates = dates, 
+                      xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                      summary.freq = summary.freq, ...))
+  }
+}
+
+#' @rdname plot.spwb
 plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FALSE,
                    dates = NULL, subdaily = FALSE,
                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 

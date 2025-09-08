@@ -14,7 +14,7 @@ extract(
 )
 }
 \arguments{
-\item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
+\item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{aspwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
 
 \item{level}{Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results),
 "sunlitleaf" or "shadeleaf" (leaf-level results)}

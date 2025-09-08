@@ -2,12 +2,23 @@
 % Please edit documentation in R/summary.spwb.R
 \name{summary.spwb}
 \alias{summary.spwb}
+\alias{summary.aspwb}
 \alias{summary.pwb}
 \alias{summary.growth}
 \alias{summary.fordyn}
 \title{Summarize simulation results}
 \usage{
 \method{summary}{spwb}(
+  object,
+  freq = "years",
+  output = "WaterBalance",
+  FUN = sum,
+  bySpecies = FALSE,
+  months = NULL,
+  ...
+)
+
+\method{summary}{aspwb}(
   object,
   freq = "years",
   output = "WaterBalance",
@@ -48,7 +59,7 @@
 )
 }
 \arguments{
-\item{object}{An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
+\item{object}{An object of class \code{spwb}, \code{aspwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
 
 \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
 

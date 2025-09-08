@@ -1,3 +1,6 @@
+# medfate 4.8.4
+* Summary, extract and plot functions enabled for aspwb() simulation results
+
 # medfate 4.8.3
 * Soil pool results (REW and psi) enabled
 * Areas changed by bars in PET_Precipitation plots

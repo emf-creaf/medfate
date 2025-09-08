@@ -926,9 +926,10 @@ void semi_implicit_integration_inner(SureauNetwork &network,
   double k_CSApo = network.k_CSApo;
   double* k_SoilToStem = network.k_SoilToStem;
   
-  double alpha, Psi_td, Psi_RCApo_np1, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
+  double alpha, Psi_td, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
   double psirefL, psirefS;
   
+  double Psi_RCApo_np1 = 0.0;
   int nwhilecomp = 0; // # count the number of step in while loop (if more than 4 no solution and warning)
   while (((!LcavitWellComputed)||(!ScavitWellComputed)) && (nwhilecomp<delta_L_cavs.size())) {
     double delta_L_cav = delta_L_cavs[nwhilecomp];

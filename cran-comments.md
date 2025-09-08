@@ -1,18 +1,18 @@
 ## Major change submission
 
-This submission (v4.8.1) incorporates some new functions and bug corrections.
+This submission (v4.8.3) incorporates some new functions and bug corrections.
 
 ## Tested environments
 
-* local R installation (Arch Linux), R 4.5.0
+* local R installation (Arch Linux), R 4.5.1
 * windows-latest (on github actions), R release
 * macOS-latest (on github actions), R release
 * ubuntu-latest (on github actions), R release
 * ubuntu-latest (on github actions), R devel
 * ubuntu-latest (on github actions), R oldrel-1
 * valgrind (via rhub package), R-devel, Fedora Linux 38
-* clang18 (via rhub package), R-devel, Ubuntu 22.04.4 LTS
-* clang-asan (via rhub package), R-devel, Ubuntu 22.04.4 LTS
+* clang18 (via rhub package), R-devel, Ubuntu 22.04.5 LTS
+* clang-asan (via rhub package), R-devel, Ubuntu 22.04.5 LTS
 
 ## R CMD check results
 

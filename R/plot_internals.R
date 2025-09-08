@@ -1,26 +1,39 @@
-.getWaterBalancePlotTypes<-function() {
-  TYPES = c("PET & Precipitation" = "PET_Precipitation",
-            "PET and Net rain" = "PET_NetRain",
-            "Snow" = "Snow",
-            "Water exported" = "Export",
-            "Evapotranspiration" = "Evapotranspiration")
+.getWaterBalancePlotTypes<-function(model = "pwb") {
+  TYPES <- character(0)
+  if(model == "aspwb") {
+    TYPES = c("PET & Precipitation" = "PET_Precipitation",
+              "Snow" = "Snow",
+              "Water exported" = "Export",
+              "Evapotranspiration" = "Evapotranspiration")
+  } else {
+    TYPES = c("PET & Precipitation" = "PET_Precipitation",
+              "PET and Net rain" = "PET_NetRain",
+              "Snow" = "Snow",
+              "Water exported" = "Export",
+              "Evapotranspiration" = "Evapotranspiration")
+  }
   return(TYPES)
 }
-.getSoilPlotTypes<-function(model = "pwb", transpirationMode = "Granier") {
+.getSoilPlotTypes<-function(model = "pwb") {
   TYPES = c(
     "Soil water potential" = "SoilPsi",
     "Soil relative water content" = "SoilRWC",
     "Soil relative extractable water" = "SoilREW",
     "Soil moisture (m3/m3) content" = "SoilTheta",
     "Soil volume (mm) content" = "SoilVol")
-  TYPES = c(TYPES, 
-            "Plant extraction from soil"= "PlantExtraction",
-            "Hydraulic redistribution" = "HydraulicRedistribution")
+  if(model != "aspwb") {
+    TYPES = c(TYPES, 
+              "Plant extraction from soil"= "PlantExtraction",
+              "Hydraulic redistribution" = "HydraulicRedistribution")
+  }
   return(TYPES)
 }
 .getStandPlotTypes<-function(model = "pwb") {
-  TYPES = c("Stand LAI"="LAI",
-            "Ground-level irradiance" = "GroundIrradiance")
+  TYPES = character(0)
+  if(model !="aspwb") {
+    TYPES = c("Stand LAI"="LAI",
+              "Ground-level irradiance" = "GroundIrradiance")
+  }
   if(model %in% c("growth", "fordyn")) {
     TYPES = c(TYPES, 
               "Carbon balance" = "CarbonBalance",
@@ -159,7 +172,7 @@
 }
 
 .getDailyPWBPlotTypes<-function(transpirationMode = "Granier") {
-  TYPES = c(.getSoilPlotTypes("pwb", transpirationMode),
+  TYPES = c(.getSoilPlotTypes("pwb"),
             .getStandPlotTypes("pwb"),
             .getPlantPlotTypes(transpirationMode),
             .getSunlitShadePlotTypes(transpirationMode),
@@ -167,9 +180,15 @@
   return(TYPES)
 }
 
+.getDailyASPWBPlotTypes<-function(transpirationMode = "Granier") {
+  TYPES = c(.getWaterBalancePlotTypes("aspwb"),
+            .getSoilPlotTypes("aspwb"))
+  return(TYPES)
+}
+
 .getDailySPWBPlotTypes<-function(transpirationMode = "Granier") {
-  TYPES = c(.getWaterBalancePlotTypes(),
-            .getSoilPlotTypes("spwb", transpirationMode),
+  TYPES = c(.getWaterBalancePlotTypes("spwb"),
+            .getSoilPlotTypes("spwb"),
             .getStandPlotTypes("spwb"),
             .getPlantPlotTypes(transpirationMode),
             .getSunlitShadePlotTypes(transpirationMode),
@@ -187,8 +206,8 @@
   return(TYPES)
 }
 .getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c(.getWaterBalancePlotTypes(),
-            .getSoilPlotTypes("growth", transpirationMode),
+  TYPES = c(.getWaterBalancePlotTypes("growth"),
+            .getSoilPlotTypes("growth"),
             .getStandPlotTypes("growth"),
             .getPlantPlotTypes(transpirationMode),
             .getSunlitShadePlotTypes(transpirationMode),

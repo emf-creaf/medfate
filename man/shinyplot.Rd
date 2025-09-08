@@ -3,6 +3,7 @@
 \name{shinyplot}
 \alias{shinyplot}
 \alias{shinyplot.growth}
+\alias{shinyplot.aspwb}
 \alias{shinyplot.spwb}
 \alias{shinyplot.pwb}
 \alias{shinyplot.fordyn}
@@ -14,6 +15,8 @@
 shinyplot(x, ...)
 
 \method{shinyplot}{growth}(x, measuredData = NULL, ...)
+
+\method{shinyplot}{aspwb}(x, measuredData = NULL, ...)
 
 \method{shinyplot}{spwb}(x, measuredData = NULL, ...)
 
