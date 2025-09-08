@@ -128,6 +128,14 @@ test_that("spwb can be run using partial rhizosphere overlap",{
                        latitude = 41.82592, elevation = 100), "spwb")
 })
 
+test_that("spwb can be run with fire hazard results",{
+  control_fh <- control_granier
+  control_fh$fireHazardResults <- TRUE
+  expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_fh), 
+                       examplemeteo[1:2,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+})
+
 test_that("spwb can be run with less output",{
   control_less <- control_granier
   control_less$standResults <- FALSE

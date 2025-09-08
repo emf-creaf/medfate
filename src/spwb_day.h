@@ -5,7 +5,7 @@
 #endif
 using namespace Rcpp;
 
-NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope);
+void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List transpOutput, double slope);
 
 List spwbDay(List x, CharacterVector date, NumericVector meteovec,
              double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  

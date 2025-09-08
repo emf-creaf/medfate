@@ -173,6 +173,24 @@ List communicationSoilEnergyBalance(int nlayers) {
   out.attr("names") = colnames;
   return(out);
 }
+NumericVector communicationFireHazard() {
+  NumericVector fireHazard = NumericVector::create(
+    _["DFMC [%]"] = NA_REAL,
+    _["CFMC_understory [%]"] = NA_REAL,
+    _["CFMC_overstory [%]"] = NA_REAL,
+    _["ROS_surface [m/min]"] = NA_REAL,
+    _["I_b_surface [kW/m]"] = NA_REAL,
+    _["t_r_surface [s]"] = NA_REAL,
+    _["FL_surface [m]"] = NA_REAL,
+    _["Ic_ratio"] = NA_REAL,
+    _["ROS_crown [m/min]"] = NA_REAL,
+    _["I_b_crown [kW/m]"] = NA_REAL,
+    _["t_r_crown [s]"] = NA_REAL,
+    _["FL_crown [m]"] = NA_REAL,
+    _["SFP"] = NA_REAL,
+    _["CFP"] = NA_REAL);
+  return(fireHazard);
+}
 
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers) {
 
@@ -272,7 +290,8 @@ List basicSPWBCommunicationOutput(List outputTransp, int nlayers) {
                         _["Soil"] = Soil,
                         _["Stand"] = Stand,
                         _["Plants"] = outputTransp["Plants"]);
-  l.push_back(List::create(), "FireHazard");
+  
+  l.push_back(communicationFireHazard(), "FireHazard");
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -650,7 +669,7 @@ List advancedSPWBCommunicationOutput(List outputTransp, int nlayers) {
                         _["LightExtinction"] = outputTransp["LightExtinction"],
                         _["LWRExtinction"] = outputTransp["LWRExtinction"],
                         _["CanopyTurbulence"] = outputTransp["CanopyTurbulence"]);
-  l.push_back(List::create(), "FireHazard");
+  l.push_back(communicationFireHazard(), "FireHazard");
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -1115,11 +1134,12 @@ List copyBasicSPWBOutput(List boc, List x) {
     l.push_back(Plants, "Plants");
   }
   if(control["fireHazardResults"]) {
-    l.push_back(clone(as<NumericVector>(boc["FireHazard"])), "FireHazard"); 
+    l.push_back(clone(as<NumericVector>(boc["FireHazard"])), "FireHazard");
   }
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
+
 List copyBasicGROWTHOutput(List boc, List x) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -1127,8 +1147,7 @@ List copyBasicGROWTHOutput(List boc, List x) {
   int numCohorts = cohorts.nrow();
   
   List spwbOut = copyBasicSPWBOutput(boc, x);
-  
-  
+
   NumericVector standCB = clone(as<NumericVector>(boc["CarbonBalance"]));
     
   

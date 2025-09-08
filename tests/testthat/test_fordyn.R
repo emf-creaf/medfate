@@ -81,9 +81,16 @@ test_that("fordyn can be run in example and empty forests using management",{
                          management_function = defaultManagementFunction,
                          management_args = defaultManagementArguments()), "fordyn")
 })
-
-test_that("fordyn can be run using dates as columns",{
+test_that("fordyn can be run with fire hazard results",{
   expect_s3_class(fordyn(exampleforest, examplesoil, 
-                         SpParamsMED, meteo_01_02_B, control,
+                         SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
+test_that("fordyn can be run using dates as columns",{
+  control_fh <- control
+  control_fh$fireHazardResults <- TRUE
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
+                         SpParamsMED, meteo_01_02_B, control_fh,
+                         latitude = 41.82592, elevation = 100), "fordyn")
+})
+

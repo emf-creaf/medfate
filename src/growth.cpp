@@ -386,7 +386,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   String transpirationMode = control["transpirationMode"];
   List modelOutput;
   List spwbOutput;
-  
+
   //Soil-plant water balance (this creates communication structures as well)
   if(transpirationMode=="Granier") {
     spwbOutput = internalCommunication["basicSPWBOutput"];
@@ -404,7 +404,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
                      runon, lateralFlows, waterTableDepth,
                      verbose);
   }
-  
+
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
   int ntimesteps = control["ndailysteps"];
@@ -432,11 +432,11 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   double tmax = meteovec["tmax"];
   double Patm = meteovec["Patm"];
   double pfire = meteovec["pfire"];
-
+  
   bool fireOccurrence = false;
-  NumericVector fireBehavior(1,NA_REAL);
+  NumericVector fireBehavior = communicationFireHazard();
   if(R::runif(0.0,1.0) < pfire) {
-    fireBehavior = fccsHazard(x, meteovec, spwbOutput, slope);
+    fccsHazard(fireBehavior, x, meteovec, spwbOutput, slope);
     fireOccurrence = true;
   }
   
@@ -1633,12 +1633,11 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                bool modifyInput = true) {
   //Instance communication structures
   List internalCommunication = instanceCommunicationStructures(x, "growth");
-  
   growthDay_inner(internalCommunication, x, date, meteovec,
                                      latitude, elevation, slope, aspect,
                                      runon, lateralFlows, waterTableDepth,
                                      modifyInput);
-  
+
   List modelOutput = copyModelOutput(internalCommunication, x, "growth");
   return(modelOutput);
 }

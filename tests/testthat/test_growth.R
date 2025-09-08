@@ -122,6 +122,14 @@ test_that("growth can be run using partial rhizosphere overlap",{
                        latitude = 41.82592, elevation = 100), "growth")
 })
 
+test_that("growth can be run with fire hazard results",{
+  control_fh <- control_granier
+  control_fh$fireHazardResults <- TRUE
+  expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_fh), 
+                       examplemeteo[1:2,],
+                       latitude = 41.82592, elevation = 100), "growth")
+})
+
 test_that("growth can be run disabling output",{
   control <- control_granier
   control$soilResults <- FALSE

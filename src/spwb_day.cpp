@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 
-NumericVector fccsHazard(List x, NumericVector meteovec, List transpOutput, double slope) {
+void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List transpOutput, double slope) {
   List control = x["control"];
   
   double fireHazardStandardWind = control["fireHazardStandardWind"];
@@ -82,26 +82,24 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transpOutput, doub
   } else {
     fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, wind); 
   }
+  //Copy results to fireBehavior vector
   List surfaceFire = fccs["SurfaceFire"];
   List crownFire = fccs["CrownFire"];
   List firePotentials = fccs["FirePotentials"];
-  NumericVector fireHazard = NumericVector::create(
-    _["DFMC [%]"] = fm_dead,
-    _["CFMC_understory [%]"] = ActFMC[1],
-    _["CFMC_overstory [%]"] = ActFMC[2],
-    _["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"],
-    _["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"],
-    _["t_r_surface [s]"] = surfaceFire["t_r [s]"],
-    _["FL_surface [m]"] = surfaceFire["FL [m]"],
-    _["Ic_ratio"] = crownFire["Ic_ratio"],
-    _["ROS_crown [m/min]"] = crownFire["ROS_crown [m/min]"],
-    _["I_b_crown [kW/m]"] = crownFire["I_b_crown [kW/m]"],
-    _["t_r_crown [s]"] = crownFire["t_r_crown [s]"],
-    _["FL_crown [m]"] = crownFire["FL_crown [m]"],
-    _["SFP"] = firePotentials["SFP"],
-    _["CFP"] = firePotentials["CFP"]
-  );
-  return(fireHazard);
+  fireHazard["DFMC [%]"] = fm_dead;
+  fireHazard["CFMC_understory [%]"] = ActFMC[1];
+  fireHazard["CFMC_overstory [%]"] = ActFMC[2];
+  fireHazard["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"];
+  fireHazard["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"];
+  fireHazard["t_r_surface [s]"] = surfaceFire["t_r [s]"];
+  fireHazard["FL_surface [m]"] = surfaceFire["FL [m]"];
+  fireHazard["Ic_ratio"] = crownFire["Ic_ratio"];
+  fireHazard["ROS_crown [m/min]"] = crownFire["ROS_crown [m/min]"];
+  fireHazard["I_b_crown [kW/m]"] = crownFire["I_b_crown [kW/m]"];
+  fireHazard["t_r_crown [s]"] = crownFire["t_r_crown [s]"];
+  fireHazard["FL_crown [m]"] = crownFire["FL_crown [m]"];
+  fireHazard["SFP"] = firePotentials["SFP"];
+  fireHazard["CFP"] = firePotentials["CFP"];
 }
 
 
@@ -360,7 +358,10 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   
   //STEP 6 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) modelOutputComm["FireHazard"] = fccsHazard(x, meteovec, transpOutput, slope);
+  if(fireHazardResults) {
+    NumericVector fireHazard = modelOutputComm["FireHazard"];
+    fccsHazard(fireHazard, x, meteovec, transpOutput, slope);
+  } 
   
   // Arrange output
   NumericVector WaterBalance = modelOutputComm["WaterBalance"];
@@ -667,7 +668,10 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   
   //STEP 11 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
-  if(fireHazardResults) modelOutputComm["FireHazard"] = fccsHazard(x, meteovec, transpOutput, slope);
+  if(fireHazardResults) {
+    NumericVector fireHazard = modelOutputComm["FireHazard"];
+    fccsHazard(fireHazard, x, meteovec, transpOutput, slope);
+  }
   
   // Arrange output
   NumericVector WaterBalance = modelOutputComm["WaterBalance"];
