@@ -526,21 +526,33 @@
   } 
   else if(type=="Evapotranspiration") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
-    df = data.frame(row.names=row.names(WaterBalance))
-    df[["Total evapotranspiration"]] = WaterBalance$Evapotranspiration
-    df[["Interception evaporation"]] = WaterBalance$Interception
-    df[["Woody transpiration"]] = WaterBalance$Transpiration
-    df[["Herbaceous transpiration"]] = WaterBalance$HerbTranspiration
-    df[["Bare soil evaporation"]] = WaterBalance$SoilEvaporation
+    df <- data.frame(row.names=row.names(WaterBalance))
+    df[["Total evapotranspiration"]] <- WaterBalance$Evapotranspiration
+    df[["Interception evaporation"]] <- NA
+    df[["Woody transpiration"]] <- WaterBalance$Transpiration
+    df[["Bare soil evaporation"]] <- WaterBalance$SoilEvaporation
+    df["Herbaceous transpiration"] <- NA
+    if("Interception" %in% names(WaterBalance)) {
+      df[["Interception evaporation"]] <- WaterBalance$Interception
+    }
+    if("HerbTranspiration" %in% names(WaterBalance)) {
+      df[["Herbaceous transpiration"]] <- WaterBalance$HerbTranspiration
+    }
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(!is.null(summary.freq)) {
       date.factor = cut(as.Date(row.names(df)), breaks=summary.freq)
       df = data.frame(row.names = as.Date(as.character(levels(date.factor))),
                       "Total evapotranspiration" = tapply(df[["Total evapotranspiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Interception evaporation" = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Interception evaporation" = NA,
                       "Woody transpiration" = tapply(df[["Woody transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Herbaceous transpiration" = tapply(df[["Herbaceous transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Bare soil evaporation" = tapply(df[["Bare soil evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE))
+                      "Bare soil evaporation" = tapply(df[["Bare soil evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Herbaceous transpiration" = NA)
+      if("Interception" %in% names(WaterBalance))  {
+        df[["Interception evaporation"]] = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
+      }
+      if("HerbTranspiration" %in% names(WaterBalance))  {
+        df[["Herbaceous transpiration"]] = tapply(df[["Herbaceous transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
+      }
     }
     return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
   } 
