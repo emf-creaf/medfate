@@ -175,9 +175,11 @@ List communicationSoilEnergyBalance(int nlayers) {
 }
 NumericVector communicationFireHazard() {
   NumericVector fireHazard = NumericVector::create(
-    _["DFMC [%]"] = NA_REAL,
-    _["CFMC_understory [%]"] = NA_REAL,
+    _["Loading_overstory [kg/m2]"] = NA_REAL,
+    _["Loading_understory [kg/m2]"] = NA_REAL,
     _["CFMC_overstory [%]"] = NA_REAL,
+    _["CFMC_understory [%]"] = NA_REAL,
+    _["DFMC [%]"] = NA_REAL,
     _["ROS_surface [m/min]"] = NA_REAL,
     _["I_b_surface [kW/m]"] = NA_REAL,
     _["t_r_surface [s]"] = NA_REAL,

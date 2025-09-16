@@ -32,23 +32,27 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transpOutput["Plants"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   
-  double tmin = meteovec["tmin"];
-  double tmax = meteovec["tmax"];
-  double rhmin = meteovec["rhmin"];
-  double rhmax = meteovec["rhmax"];
+  
+  double fm_dead = NA_REAL;
+  if(!NumericVector::is_na(fireHazardStandardDFMC)) {
+    fm_dead = fireHazardStandardDFMC;
+  } else {
+    double tmin = meteovec["tmin"];
+    double tmax = meteovec["tmax"];
+    double rhmin = meteovec["rhmin"];
+    double rhmax = meteovec["rhmax"];
+    // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
+    double vp = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+    double D = std::max(0.0, meteoland::utils_saturationVP(tmax) - vp);
+    fm_dead = 5.43 + 52.91*exp(-0.64*D); 
+  }
   double wind = meteovec["wind"];
-  
-  
-  // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
-  double vp = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-  double D = std::max(0.0, meteoland::utils_saturationVP(tmax) - vp);
-  double fm_dead = 5.43 + 52.91*exp(-0.64*D); 
+  if(!NumericVector::is_na(fireHazardStandardWind)) wind = fireHazardStandardWind;
   
   //Calculate cohort canopy moisture to the average of canopy live and dead fuels, considering that a fraction of LAI is dead
   //proportionally to stem PLC (Ruffault et al. 2023)
   NumericVector LFMC = Plants["LFMC"];
   NumericVector PLC = Plants["StemPLC"];
-  NumericVector deadFMC(LFMC.size(), fm_dead);
   NumericVector canopyFMC = (LFMC*(1.0 - PLC) + fm_dead*PLC);
   
   NumericVector cohHeight = above["H"];
@@ -65,30 +69,22 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
   //Average canopy moisture in the crown and surface layers
   NumericVector ActFMC = FCCSprops["ActFMC"];
   NumericVector w = FCCSprops["w"];
-  if(w[1] > 0.0) ActFMC[1] = layerFuelAverageParameter(200.0, 10000.0, canopyFMC, cohLoading, cohHeight, cohCR);
-  else ActFMC[1] = NA_REAL;
-  if(w[2] > 0.0) ActFMC[2] = layerFuelAverageParameter(0.0, 200.0, canopyFMC, cohLoading, cohHeight, cohCR);
-  else ActFMC[1] = NA_REAL;
-  
+  if(w[0] > 0.0) ActFMC[0] = layerFuelAverageParameter(200.0, 10000.0, canopyFMC, cohLoading, cohHeight, cohCR);
+  if(w[1] > 0.0) ActFMC[1] = layerFuelAverageParameter(0.0, 200.0, canopyFMC, cohLoading, cohHeight, cohCR);
+
   NumericVector MdeadSI = NumericVector::create(fm_dead, fm_dead, fm_dead, fm_dead, fm_dead); 
-  if(!NumericVector::is_na(fireHazardStandardDFMC)) {
-    MdeadSI = NumericVector::create(fireHazardStandardDFMC, fireHazardStandardDFMC, 
-                                    fireHazardStandardDFMC, fireHazardStandardDFMC, fireHazardStandardDFMC); 
-  }
-  NumericVector MliveSI = NumericVector::create(90.0, 90.0, 60.0); //Default values (not actually used)
-  List fccs;
-  if(!NumericVector::is_na(fireHazardStandardWind)) {
-    fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, fireHazardStandardWind); 
-  } else {
-    fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, wind); 
-  }
+  NumericVector MliveSI = NumericVector::create(90.0, 90.0, 60.0); //Default values (not actually used if ActFMC is non-missing)
+  List fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, wind); 
+  
   //Copy results to fireBehavior vector
   List surfaceFire = fccs["SurfaceFire"];
   List crownFire = fccs["CrownFire"];
   List firePotentials = fccs["FirePotentials"];
-  fireHazard["DFMC [%]"] = fm_dead;
+  fireHazard["Loading_overstory [kg/m2]"] = w[0];
+  fireHazard["Loading_understory [kg/m2]"] = w[1];
+  fireHazard["CFMC_overstory [%]"] = ActFMC[0];
   fireHazard["CFMC_understory [%]"] = ActFMC[1];
-  fireHazard["CFMC_overstory [%]"] = ActFMC[2];
+  fireHazard["DFMC [%]"] = fm_dead;
   fireHazard["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"];
   fireHazard["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"];
   fireHazard["t_r_surface [s]"] = surfaceFire["t_r [s]"];

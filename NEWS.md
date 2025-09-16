@@ -1,6 +1,7 @@
 # medfate 4.8.4
 * Summary, extract and plot functions enabled for aspwb() simulation results
 * Bug correction: calculation of fire hazard in calls to growth() and fordyn()
+* Fire hazard now returns canopy and understory layer loadings
 
 # medfate 4.8.3
 * Soil pool results (REW and psi) enabled

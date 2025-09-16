@@ -445,13 +445,16 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, D
 DataFrame defineFireHazardOutput(CharacterVector dateStrings){
   int numDays = dateStrings.length();
   
+  NumericVector Loading_overstory(numDays), Loading_understory(numDays);
   NumericVector DFMC(numDays), CFMC_understory(numDays), CFMC_overstory(numDays);
   NumericVector ROS_surface(numDays), I_b_surface(numDays), t_r_surface(numDays),  Ic_ratio(numDays), FL_surface(numDays);
   NumericVector ROS_crown(numDays), I_b_crown(numDays), t_r_crown(numDays), FL_crown(numDays);
   NumericVector SFP(numDays), CFP(numDays);
-  DataFrame df = DataFrame::create(_["DFMC"] = DFMC,
+  DataFrame df = DataFrame::create(_["Loading_overstory"] = Loading_overstory,
+                                   _["Loading_understory"] = Loading_understory,
                                    _["CFMC_understory"] = CFMC_understory,
                                    _["CFMC_overstory"] = CFMC_overstory,
+                                   _["DFMC"] = DFMC,
                                    _["ROS_surface"] = ROS_surface,
                                    _["I_b_surface"] = I_b_surface,
                                    _["t_r_surface"] = t_r_surface,
@@ -892,9 +895,11 @@ void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int id
 
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   NumericVector fhd = sDay["FireHazard"];
-  NumericVector DFMC = fireHazard["DFMC"];
+  NumericVector Loading_understory = fireHazard["Loading_understory"];
+  NumericVector Loading_overstory = fireHazard["Loading_overstory"];
   NumericVector CFMC_understory = fireHazard["CFMC_understory"];
   NumericVector CFMC_overstory = fireHazard["CFMC_overstory"];
+  NumericVector DFMC = fireHazard["DFMC"];
   NumericVector ROS_surface = fireHazard["ROS_surface"];
   NumericVector I_b_surface = fireHazard["I_b_surface"];
   NumericVector t_r_surface = fireHazard["t_r_surface"];
@@ -906,9 +911,11 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   NumericVector FL_crown = fireHazard["FL_crown"];
   NumericVector SFP = fireHazard["SFP"];
   NumericVector CFP = fireHazard["CFP"];
-  DFMC[iday] = fhd["DFMC [%]"];
-  CFMC_understory[iday] = fhd["CFMC_understory [%]"];
+  Loading_overstory[iday] = fhd["Loading_overstory [kg/m2]"];
+  Loading_understory[iday] = fhd["Loading_understory [kg/m2]"];
   CFMC_overstory[iday] = fhd["CFMC_overstory [%]"];
+  CFMC_understory[iday] = fhd["CFMC_understory [%]"];
+  DFMC[iday] = fhd["DFMC [%]"];
   ROS_surface[iday] = fhd["ROS_surface [m/min]"];
   I_b_surface[iday] = fhd["I_b_surface [kW/m]"];
   t_r_surface[iday] = fhd["t_r_surface [s]"];
