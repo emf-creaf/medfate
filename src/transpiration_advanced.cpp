@@ -112,7 +112,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
-  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
   NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
@@ -202,6 +202,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
+  NumericVector maxMCstem = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCstem"]);
+  NumericVector maxMCleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCleaf"]);
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
@@ -428,11 +430,11 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0;
   double canopyHeight = 100.0; //Minimum canopy height of 1 m
   for(int c=0;c<numCohorts;c++) {
-    LAIcell += (LAI[c]+LAIdead[c]);
+    LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
-    LAIcellexpanded +=LAI[c];
-    if((canopyHeight<H[c]) && ((LAI[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
+    LAIcellexpanded +=LAIphe[c];
+    if((canopyHeight<H[c]) && ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
 
   NumericVector lad(ncanlayers,0.0);
@@ -441,7 +443,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     if(NumericVector::is_na(PrevLAIexpanded[0]) || NumericVector::is_na(PrevLAIdead[0])) {
       recalc_LAI = true; 
     } else{
-      if(sum(abs(LAI - PrevLAIexpanded))>0.001) {
+      if(sum(abs(LAIphe - PrevLAIexpanded))>0.001) {
         recalc_LAI = true; 
       } else {
         if(sum(abs(LAIdead - PrevLAIdead))>0.001) recalc_LAI = true;
@@ -452,12 +454,12 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       NumericVector z(ncanlayers+1,0.0);
       for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
       for(int i=0; i<numCohorts;i++) {
-        PARcohort[i] = availableLight(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAI, LAIdead, kPAR, CR);
-        PrevLAIexpanded[i] = LAI[i];
+        PARcohort[i] = availableLight(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, kPAR, CR);
+        PrevLAIexpanded[i] = LAIphe[i];
         PrevLAIdead[i] = LAIdead[i];
       }
       //Update LAI distribution if necessary
-      updateLAIdistributionVectors(LAIme, z, LAI, H, CR);
+      updateLAIdistributionVectors(LAIme, z, LAIphe, H, CR);
       updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR);
       updateLAIdistributionVectors(LAImx, z, LAIlive, H, CR); //Maximum leaf expansion
       //Update LAI profile per layer
@@ -641,7 +643,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                     sapFluidityDay);
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
-        initSureauNetwork_inner(sureauNetworks[c], c, LAI,
+        initSureauNetwork_inner(sureauNetworks[c], c, LAIphe,
                                 internalWater, 
                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                 VCroot_kmaxc, VGrhizo_kmaxc,
@@ -710,7 +712,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                     sapFluidityDay);
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
-        initSureauNetwork_inner(sureauNetworks[c], c, LAI,
+        initSureauNetwork_inner(sureauNetworks[c], c, LAIphe,
                                 internalWater, 
                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                 VCroot_kmaxc, VGrhizo_kmaxc,
@@ -877,7 +879,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       Einst(c,n) = 0.0;
       Aginst(c,n) = 0.0;
       Aninst(c,n) = 0.0;
-      if(LAI[c]>0.0) {
+      if(LAIphe[c]>0.0) {
         PAR_SL(c,n) = absPAR_SL_COH[c];
         PAR_SH(c,n) = absPAR_SH_COH[c];
         SWR_SL(c,n) = absSWR_SL_COH[c];
@@ -1062,7 +1064,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         absSWRlayer[i] = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
         //Radiation balance
         Rnlayer[i] = absSWRlayer[i] + LWRnet_layer[i];
-        NumericVector pLayer = LAIme(i,_)/LAI; //Proportion of each cohort LAI in layer i
+        NumericVector pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
         //Instantaneous layer transpiration
         //from mmolH2O/m2/s to kgH2O/m2/s
         double ElayerInst = 0.001*0.01802*sum(LAIme(i,_)*(E_SL(_,n)*fsunlit[i] + E_SH(_,n)*(1.0-fsunlit[i])));
@@ -1215,11 +1217,14 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     RWCsm[c] = RWCsm[c]/((double) ntimesteps);
     RWClm[c] = RWClm[c]/((double) ntimesteps);
     dEdPm[c] = dEdPm[c]/((double) ntimesteps);
-    if(lfmcComponent=="fine") {
-      LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
-    } else { //leaf
+    // The fraction of leaves will decrease due to phenology or processes leading to defoliation
+    double fleaf = (1.0/r635[c])*(LAIphe[c]/LAIlive[c]);
+    if(lfmcComponent=="fine") { //fine fuel moisture
+      LFMC[c] = maxMCleaf[c]*RWClm[c]*fleaf + maxMCstem[c]*RWCsm[c]*(1.0 - fleaf);
+    } else { //"leaf"
       LFMC[c] = maxFMC[c]*RWClm[c];
     }
+    
     DDS[c] = (1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
     if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") {
       DDS[c] = phi[c]*DDS[c];
@@ -1246,7 +1251,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   NumericVector outputLAI = outputPlants["LAI"];
   NumericVector outputLAIlive = outputPlants["LAIlive"];
   for(int c =0;c<numCohorts;c++) {
-    outputLAI[c] = LAI[c];
+    outputLAI[c] = LAIphe[c];
     outputLAIlive[c] = LAIlive[c];
   }
 }

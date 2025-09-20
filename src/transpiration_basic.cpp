@@ -185,6 +185,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
+  NumericVector maxMCstem = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCstem"]);
+  NumericVector maxMCleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCleaf"]);
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
@@ -425,8 +427,10 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            StemAF[c]);
-    if(lfmcComponent=="fine") {
-      LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
+    // The fraction of leaves will decrease due to phenology or processes leading to defoliation
+    double fleaf = (1.0/r635[c])*(LAIphe[c]/LAIlive[c]);
+    if(lfmcComponent=="fine") { //fine fuel moisture
+      LFMC[c] = maxMCleaf[c]*RWClm[c]*fleaf + maxMCstem[c]*RWCsm[c]*(1.0 - fleaf);
     } else { //"leaf"
       LFMC[c] = maxFMC[c]*RWClm[c];
     }

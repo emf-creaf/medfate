@@ -2,6 +2,8 @@
 * Summary, extract and plot functions enabled for aspwb() simulation results
 * Bug correction: calculation of fire hazard in calls to growth() and fordyn()
 * Fire hazard now returns canopy and understory layer loadings
+* Drought-driven defoliation now occurs in spwb() simulations
+* Revision of LFMC calculation
 
 # medfate 4.8.3
 * Soil pool results (REW and psi) enabled

@@ -174,18 +174,24 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
   NumericVector maxFMC = speciesNumericParameterWithImputation(SP, SpParams, "maxFMC", fillMissingSpParams, fillWithGenus);
   
   NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
+  NumericVector maxMCleaf(numCohorts), maxMCstem(numCohorts);
   
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
-
+  NumericVector r635 = paramsAnatomydf["r635"];
+  
   //Calculate stem and leaf capacity per leaf area (in l·m-2)
   for(int c=0;c<numCohorts;c++){
     Vsapwood[c] = sapwoodWaterCapacity(Al2As[c], H[c], V, L, WoodDensity[c]); 
     Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
+    maxMCstem[c] = 100*((1.0/WoodDensity[c]) - (1.0/1.53)); 
+    maxMCleaf[c] = (maxFMC[c] - maxMCstem[c]*(1.0 - (1.0/r635[c])))*r635[c];
   }
   DataFrame paramsWaterStoragedf = DataFrame::create(_["maxFMC"] = maxFMC,
+                                                     _["maxMCleaf"] = maxMCleaf,
+                                                     _["maxMCstem"] = maxMCstem,
       _["LeafPI0"] = LeafPI0, _["LeafEPS"] = LeafEPS, _["LeafAF"] = LeafAF, _["Vleaf"] = Vleaf,
       _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood);
   paramsWaterStoragedf.attr("row.names") = above.attr("row.names");

@@ -209,6 +209,9 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   NumericVector LAI = above["LAI_expanded"];
   int numCohorts = LAI_live.size();
 
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector LeafPLC = internalWater["LeafPLC"];
+  
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   CharacterVector phenoType = paramsPhenology["PhenologyType"];
   NumericVector leafDuration = paramsPhenology["LeafDuration"];
@@ -224,7 +227,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
     bool leafFall = true;
     if(phenoType[j] == "winter-semideciduous") leafFall = leafUnfolding[j];
     if(leafFall) LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
-    //Leaf unfolding and senescence only dealt with if called from spwb
+    //Leaf unfolding, senescence and defoliation only dealt with if called from spwb
     if(!fromGrowthModel) {
       if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
         if((leafSenescence[j]) && (LAI[j]>0.0)) {
@@ -234,8 +237,14 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
           leafSenescence[j] = false;
         } 
         else if(leafUnfolding[j]) {
-          LAI[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          LAI[j] = LAI_live[j]*(1.0 - LeafPLC[j])*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+        } else {
+          //Apply defoliation effects to deciduous
+          LAI[j] = LAI_live[j]*(1.0 - LeafPLC[j]);
         }
+      } else {
+        //Apply defoliation effects to evergreens
+        LAI[j] = LAI_live[j]*(1.0 - LeafPLC[j]);
       } 
     }
   }    
