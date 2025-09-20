@@ -186,7 +186,7 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
   for(int c=0;c<numCohorts;c++){
     Vsapwood[c] = sapwoodWaterCapacity(Al2As[c], H[c], V, L, WoodDensity[c]); 
     Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
-    maxMCstem[c] = 100*((1.0/WoodDensity[c]) - (1.0/1.53)); 
+    maxMCstem[c] = 100*((1.0/std::max(0.4,WoodDensity[c])) - (1.0/1.53)); // Minimum 0.4 density to avoid overestimation
     maxMCleaf[c] = (maxFMC[c] - maxMCstem[c]*(1.0 - (1.0/r635[c])))*r635[c];
   }
   DataFrame paramsWaterStoragedf = DataFrame::create(_["maxFMC"] = maxFMC,
