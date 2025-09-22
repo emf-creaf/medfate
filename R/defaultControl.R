@@ -45,7 +45,7 @@
 #'       \item{\code{soilFunctions [= "VG"]}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
 #'                  If \code{transpirationMode} is 'Sperry' or 'Sureau' then soilFunctions is forced to \code{'VG'}.
 #'                  Only simulations with 'Granier' are allowed to use Saxton functions.}
-#'       \item{\code{truncateRootDistribution}: Boolean flag to indicate that fine root distribution is to be truncated (i.e. Z100 is estimated from Z95 when not provided).}
+#'       \item{\code{truncateRootDistribution [= FALSE]}: Boolean flag to indicate that fine root distribution is to be truncated (i.e. Z100 is estimated from Z95 when not provided).}
 #'       \item{\code{VG_PTF}: String indicating the pedotransfer functions for van Genuchten parameters (either 'Toth' or 'Carsel').}
 #'       \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of soil water balance, stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
 #'       \item{\code{max_nsubsteps_soil [= 300]}: Maximum number of substeps for soil water balance solving.}
@@ -222,7 +222,7 @@ defaultControl<-function(transpirationMode = "Granier",
     transpirationMode = transpirationMode,
     soilDomains = soilDomains,
     rhizosphereOverlap = rhizosphereOverlap,
-    truncateRootDistribution = TRUE,
+    truncateRootDistribution = FALSE,
     fullRhizosphereOverlapConductivity = 0.01,
     soilFunctions = "VG",
     VG_PTF = "Toth",
