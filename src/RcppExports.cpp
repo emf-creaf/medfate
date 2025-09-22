@@ -3336,15 +3336,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // rootDistributionComplete
-DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootParams);
-RcppExport SEXP _medfate_rootDistributionComplete(SEXP xSEXP, SEXP SpParamsSEXP, SEXP fillMissingRootParamsSEXP) {
+DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootParams, bool truncateRootDistribution);
+RcppExport SEXP _medfate_rootDistributionComplete(SEXP xSEXP, SEXP SpParamsSEXP, SEXP fillMissingRootParamsSEXP, SEXP truncateRootDistributionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< bool >::type fillMissingRootParams(fillMissingRootParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rootDistributionComplete(x, SpParams, fillMissingRootParams));
+    Rcpp::traits::input_parameter< bool >::type truncateRootDistribution(truncateRootDistributionSEXP);
+    rcpp_result_gen = Rcpp::wrap(rootDistributionComplete(x, SpParams, fillMissingRootParams, truncateRootDistribution));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6251,7 +6252,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 8},
     {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 8},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
-    {"_medfate_rootDistributionComplete", (DL_FUNC) &_medfate_rootDistributionComplete, 3},
+    {"_medfate_rootDistributionComplete", (DL_FUNC) &_medfate_rootDistributionComplete, 4},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 4},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 4},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},

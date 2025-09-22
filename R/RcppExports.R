@@ -2373,8 +2373,8 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cloneInput`, input)
 }
 
-.rootDistributionComplete <- function(x, SpParams, fillMissingRootParams) {
-    .Call(`_medfate_rootDistributionComplete`, x, SpParams, fillMissingRootParams)
+.rootDistributionComplete <- function(x, SpParams, fillMissingRootParams, truncateRootDistribution) {
+    .Call(`_medfate_rootDistributionComplete`, x, SpParams, fillMissingRootParams, truncateRootDistribution)
 }
 
 #' Input for simulation models
