@@ -1495,7 +1495,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
       
       
       //Copy transpiration and from connected layers to transpiration from soil layers
-      //And update soil water content (soil water potential will not be updated until next day!)
+      //Soil water potential will not be internally updated until all cohorts are processed (and externally the next day!)
       if(!plantWaterPools) {
         int cl = 0;
         for(int l=0;l<nlayers;l++) {
