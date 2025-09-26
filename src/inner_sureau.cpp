@@ -24,7 +24,7 @@ void copyParams(SureauParams params, SureauParams &sinkParams) {
 
   for(int i=0;i<params.npools;i++) {
     sinkParams.k_RCApoInit[i] = params.k_RCApoInit[i];
-    sinkParams.soil_layer[i] = params.soil_layer[i];
+    sinkParams.VGrhizo_kmax[i] = params.VGrhizo_kmax[i];
   }
   
   sinkParams.slope_gs = params.slope_gs;
@@ -105,7 +105,7 @@ void copyNetwork(SureauNetwork network, SureauNetwork &sinkNetwork) {
 //Function to delete pointers
 void deleteSureauNetworkPointers(SureauNetwork &network) {
   delete[] network.params.k_RCApoInit;
-  delete[] network.params.soil_layer;
+  delete[] network.params.VGrhizo_kmax;
   delete[] network.k_Soil;
   delete[] network.PsiSoil;
   delete[] network.k_RSApo;
@@ -131,14 +131,14 @@ List structToList(SureauNetwork snetwork) {
   params.push_back(snetwork.params.C_LApoInit, "C_LApoInit");
   params.push_back(snetwork.params.k_SLApoInit, "k_SLApoInit");
   params.push_back(snetwork.params.k_CSApoInit, "k_CSApoInit");
-  IntegerVector soil_layer(snetwork.params.npools, NA_REAL);
+  NumericVector VGrhizo_kmax(snetwork.params.npools, NA_REAL);
   NumericVector k_RCApoInit(snetwork.params.npools, NA_REAL);
   for(int l=0;l < snetwork.params.npools; l++) {
     k_RCApoInit[l] = snetwork.params.k_RCApoInit[l];
-    soil_layer[l] = snetwork.params.soil_layer[l];
+    VGrhizo_kmax[l] = snetwork.params.VGrhizo_kmax[l];
   }
   params.push_back(k_RCApoInit, "k_RCApoInit"); 
-  params.push_back(soil_layer, "soil_layer"); 
+  params.push_back(VGrhizo_kmax, "VGrhizo_kmax"); 
   params.push_back(snetwork.params.slope_gs, "slope_gs");
   params.push_back(snetwork.params.P50_gs, "P50_gs");
   params.push_back(snetwork.params.gmin20, "gmin20"); 
@@ -248,12 +248,12 @@ SureauNetwork listToStruct(List network) {
   snetwork.params.PiFullTurgor_Stem = params["PiFullTurgor_Stem"];
   snetwork.params.epsilonSym_Stem = params["epsilonSym_Stem"];
   NumericVector k_RCApoInit = Rcpp::as<Rcpp::NumericVector>(params["k_RCApoInit"]);
-  IntegerVector soil_layer = Rcpp::as<Rcpp::IntegerVector>(params["soil_layer"]);
+  NumericVector VGrhizo_kmax = Rcpp::as<Rcpp::NumericVector>(params["VGrhizo_kmax"]);
   snetwork.params.k_RCApoInit = new double[k_RCApoInit.size()];
-  snetwork.params.soil_layer = new int[soil_layer.size()];
+  snetwork.params.VGrhizo_kmax = new double[VGrhizo_kmax.size()];
   for(int l=0;l < k_RCApoInit.size(); l++) {
     snetwork.params.k_RCApoInit[l] = k_RCApoInit[l];
-    snetwork.params.soil_layer[l] = soil_layer[l];
+    snetwork.params.VGrhizo_kmax[l] = VGrhizo_kmax[l];
   }
   
   snetwork.LAI = network["LAI"];
@@ -502,11 +502,10 @@ double gsJarvis(SureauParams &params, double PAR, double Temp, int option = 1){
 void initSureauParams_inner(SureauParams &params, int c,
                             DataFrame internalWater, 
                             DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
-                            NumericVector VCroot_kmax, IntegerVector soil_layer,
+                            NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                             List control, double sapFluidityDay = 1.0) {
   String stomatalSubmodel = control["stomatalSubmodel"];
-  bool soilDisconnection = control["soilDisconnection"];
-  
+
   //This will change depending on the layers connected
   params.npools = VCroot_kmax.size();
   params.TPhase_gmin = control["TPhase_gmin"];
@@ -531,9 +530,10 @@ void initSureauParams_inner(SureauParams &params, int c,
   params.k_CSApoInit = sapFluidityDay*VCstem_kmax[c]; //Maximum conductance from root crown to stem apoplasm
   // Rcout << "par init "<< c<< " VCstem_kmax[c]: "<<VCstem_kmax[c] << " sapfluidity: "<< sapFluidityDay<<" k_CSApoInit: " << params.k_CSApoInit<< "\n";
   params.k_RCApoInit = new double [params.npools];
+  params.VGrhizo_kmax = new double [params.npools];
   for(int l = 0;l<params.npools;l++)  {
     params.k_RCApoInit[l] = sapFluidityDay*VCroot_kmax[l];
-    params.soil_layer[l] = soil_layer[l];
+    params.VGrhizo_kmax[l] = VGrhizo_kmax[l];
   }
   NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
   NumericVector Gs_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_slope"]);
@@ -558,13 +558,11 @@ void initSureauParams_inner(SureauParams &params, int c,
   
   double gmin20 = Gswmin[c]*1000.0; //Leaf cuticular transpiration
   bool leafCuticularTranspiration = control["leafCuticularTranspiration"];
-  if(soilDisconnection) gmin20 = gmin20*RWC(LeafPI0[c], LeafEPS[c], LeafSympPsiVEC[c]);
   if(!leafCuticularTranspiration) gmin20 = 0.0;
   params.gmin20 = gmin20; //mol to mmol 
   params.gsMax = Gswmax[c]*1000.0; //mol to mmol 
   bool stemCuticularTranspiration = control["stemCuticularTranspiration"];
   double gmin_S = Gswmin[c]*1000.0;  // gmin for stem equal to leaf gmin, in mmol
-  if(soilDisconnection) gmin_S = gmin_S*RWC(StemPI0[c], StemEPS[c], StemSympPsiVEC[c]);
   if(!stemCuticularTranspiration) gmin_S = 0.0;
   params.gmin_S = gmin_S;
   double gs_NightFrac = control["gs_NightFrac"];
@@ -587,7 +585,6 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
                              DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                              NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                              NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                             IntegerVector soil_layer,
                              List control, double sapFluidityDay = 1.0) {
   
   String stomatalSubmodel = control["stomatalSubmodel"];
@@ -633,12 +630,11 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
-  bool soilDisconnection = control["soilDisconnection"];
-  
+
   //Params
   initSureauParams_inner(network.params, c, internalWater, 
                          paramsTranspiration, paramsWaterStorage,
-                         VCroot_kmax, soil_layer,
+                         VCroot_kmax, VGrhizo_kmax,
                          control, sapFluidityDay);
   
   //LAI
@@ -676,11 +672,9 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
     network.PsiSoil[l] = PsiSoil[l];
     network.k_SoilToStem[l] = NA_REAL; //Conductance from soil to trunk apoplasm
     network.k_RSApo[l] = NA_REAL; //Conductance from rhizosphere surface to trunk apoplasm
-    double k_soil_cl = VGrhizo_kmax[l];
-    if(soilDisconnection) k_soil_cl = k_soil_cl*(1.0 - PLC(PsiSoil[l], Gs_slope[c], Gs_P50[c])/100.0);
     network.k_Soil[l] = vanGenuchtenConductance(PsiSoil[l],
-                                        k_soil_cl, 
-                                        VG_n[l], VG_alpha[l]); 
+                                                VGrhizo_kmax[l], 
+                                                VG_n[l], VG_alpha[l]); 
   }
   network.k_Plant = NA_REAL; //Whole-plant conductance  = Plant_kmax
   
@@ -720,7 +714,6 @@ List initSureauNetwork(int c, NumericVector LAIphe,
                        DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       IntegerVector soil_layer,
                        List control, double sapFluidityDay = 1.0) {
   
   SureauNetwork snetwork;
@@ -728,9 +721,11 @@ List initSureauNetwork(int c, NumericVector LAIphe,
                           internalWater, 
                           paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                           VCroot_kmax, VGrhizo_kmax,
-                          PsiSoil, VG_n, VG_alpha, soil_layer,
+                          PsiSoil, VG_n, VG_alpha,
                           control, sapFluidityDay);
+  
   List network = structToList(snetwork);
+
   deleteSureauNetworkPointers(snetwork);
   return(network);
 }
@@ -779,9 +774,7 @@ List initSureauNetworks(List x) {
   NumericVector psiSoil = psi(soil, "VG");
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
-  IntegerVector soil_layer = IntegerVector(psiSoil.size(), NA_INTEGER);
-  for(int l=0;l<psiSoil.size();l++) soil_layer[l] = l;
-  
+
   int numCohorts = internalWater.nrow();
   List networks(numCohorts);
   for(int c = 0;c<numCohorts;c++) {
@@ -789,7 +782,7 @@ List initSureauNetworks(List x) {
                                      internalWater, 
                                      paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),
-                                     psiSoil, VG_n, VG_alpha, soil_layer,
+                                     psiSoil, VG_n, VG_alpha,
                                      control, 1.0);
   }
   networks.attr("names") = above.attr("row.names");
@@ -1067,6 +1060,12 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  NumericVector VG_n = soil["VG_n"];
+  NumericVector VG_alpha = soil["VG_alpha"];
+  NumericVector VG_theta_sat = soil["VG_theta_sat"];
+  NumericVector VG_theta_res = soil["VG_theta_res"];
+  NumericVector widths = soil["widths"];
+  NumericVector rfc = soil["rfc"];
   int nlayers = soil.nrow();
   
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -1201,14 +1200,20 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
   IntegerVector nlayerscon = input["nlayerscon"];
   LogicalMatrix layerConnected = input["layerConnected"];
   List layerConnectedPools = input["layerConnectedPools"];
+  NumericVector psiSoil = input["psiSoil"];
+  NumericVector psiSoilM = input["psiSoilM"];
   
-
+  NumericVector innerSoilExtraction(nlayers, 0.0);
+  NumericMatrix innerSoilPoolExtraction(numCohorts, nlayers);
+  innerSoilPoolExtraction.fill(0.0);
+  
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
     
     if(LAIphe[c]>0.0 && LeafPLCVEC[c] < 0.999) {
       // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
       //Init temporary variables
       SureauNetwork network_n;
+      network_n.params.VGrhizo_kmax = new double[networks[c].params.npools];
       network_n.params.k_RCApoInit = new double[networks[c].params.npools];
       network_n.k_RSApo = new double[networks[c].params.npools];
       network_n.k_SoilToStem = new double[networks[c].params.npools];
@@ -1409,9 +1414,9 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           // # 3. update of soil on small time step (done by FP in version 16)
           double Psi_SApo = network_n.Psi_SApo;
           double* k_SoilToStem = network_n.k_SoilToStem; 
-          double* PsiSoil = network_n.PsiSoil;
+          double* PsiSoilNetwork = network_n.PsiSoil;
           for(int l=0;l < networks[0].params.npools;l++) {
-            double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoil[l] - Psi_SApo);
+            double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoilNetwork[l] - Psi_SApo);
             ElayersVEC[l] += fluxSoilToStem_mmolm2s;
             fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*dt);
           }
@@ -1497,6 +1502,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           if(layerConnected(c,l)) {
             SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
             soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
+            innerSoilExtraction[l] += fluxSoilToStem_mm[cl];
             cl++;
           }
         }
@@ -1511,6 +1517,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
               SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
               soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
               ExtractionPoolsCoh(c,l) += fluxSoilToStem_mm[cl];
+              innerSoilPoolExtraction(c,l) += fluxSoilToStem_mm[cl];
               cl++;
             }
           }
@@ -1538,6 +1545,64 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
     }
   }
   
+  
+  //Update soil internally (only for next subdaily time steps, and does not affect external soil)
+  if(!plantWaterPools) {
+    for(int l=0;l<nlayers;l++) {
+      //Estimate current soil layer volume, subtract cumulative extraction and update psiSoil
+      double theta_l = psi2thetaVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoil[l]);
+      double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
+      // Rcout<< n << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
+      water_l -= innerSoilExtraction[l];
+      theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
+      psiSoil[l] = theta2psiVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
+      // Rcout<< " Psi new " << psiSoil[l] << "\n";
+      //Update psi soil and soil conductivity in networks
+      for(int c=0; c<numCohorts;c++) {
+        int cnt = 0;
+        for(int l=0;l<nlayers;l++) {
+          if(layerConnected(c,l)) {
+            networks[c].PsiSoil[cnt] = psiSoil[l];
+            networks[c].k_Soil[cnt] = vanGenuchtenConductance(psiSoil[l],
+                                                              networks[c].params.VGrhizo_kmax[cnt], 
+                                                              VG_n[l], VG_alpha[l]);
+            cnt++;
+          }
+        }
+      }
+    }
+  } else {
+    //Estimate current pool soil layer volume, subtract cumulative extraction and update psiSoilM
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        double theta_l = psi2thetaVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoilM(c,l));
+        double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
+        // Rcout<< n << ":"<< c << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
+        water_l -= (innerSoilPoolExtraction(c,l)/poolProportions[c]);
+        theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
+        psiSoilM(c,l) = theta2psiVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
+        // Rcout<< " Psi new " << psiSoilM(c,l) << "\n";
+      }
+    }
+    //Update psi soil and soil conductivity in networks
+    for(int c=0;c<numCohorts;c++) {
+      LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
+      int cnt = 0;
+      for(int j = 0;j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          if(layerConnectedCoh(j,l)) {
+            networks[c].PsiSoil[cnt] = psiSoilM(j,l);
+            networks[c].k_Soil[cnt] = vanGenuchtenConductance(psiSoilM(j,l),
+                                                              networks[c].params.VGrhizo_kmax[cnt], 
+                                                              VG_n[l], VG_alpha[l]);
+            // if(c==0) Rcout<< n << ":"<< l << ":"<< cnt << " "<< " psi " <<networks[c].PsiSoil[cnt]<<"\n";
+            cnt++;
+          }
+        }
+      }
+    }
+    
+  }
 }
 
 //' @rdname sureau_ecos

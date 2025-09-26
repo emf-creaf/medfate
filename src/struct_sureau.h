@@ -17,7 +17,7 @@ struct SureauParams {
   double k_SLApoInit;
   double k_CSApoInit; 
   double* k_RCApoInit;
-  int* soil_layer; //Stores the soil layer corresponding to the connected pool (to withdraw parameters)
+  double* VGrhizo_kmax;
   double slope_gs;
   double P50_gs;
   double Tgs_optim;

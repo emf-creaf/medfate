@@ -11,7 +11,6 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
                              DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                              NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                              NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha, 
-                             IntegerVector soil_layer,
                              List control, double sapFluidityDay = 1.0);
 void deleteSureauNetworkPointers(SureauNetwork &network);
 
