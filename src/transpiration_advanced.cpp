@@ -620,6 +620,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       NumericVector psic = NumericVector(nlayerscon[c]);
       NumericVector VG_nc = NumericVector(nlayerscon[c]);
       NumericVector VG_alphac= NumericVector(nlayerscon[c]);
+      IntegerVector soil_layerc = IntegerVector(nlayerscon[c]);
       int cnt=0;
       for(int l=0;l<nlayers;l++) {
         if(layerConnected(c,l)) {
@@ -629,6 +630,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
           psic[cnt] = psiSoil[l];
           VG_nc[cnt] = VG_n[l];
           VG_alphac[cnt] = VG_alpha[l];
+          soil_layerc[cnt] = l;
           cnt++;
         }
       }
@@ -647,7 +649,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                 internalWater, 
                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                 VCroot_kmaxc, VGrhizo_kmaxc,
-                                psic, VG_nc, VG_alphac,
+                                psic, VG_nc, VG_alphac, soil_layerc,
                                 control, sapFluidityDay);
       }
       
@@ -688,6 +690,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       NumericVector psic = NumericVector(nlayerscon[c]);
       NumericVector VG_nc = NumericVector(nlayerscon[c]);
       NumericVector VG_alphac= NumericVector(nlayerscon[c]);
+      IntegerVector soil_layerc = IntegerVector(nlayerscon[c]);
       int cnt=0;
       for(int j=0; j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
@@ -698,6 +701,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
             psic[cnt] = psiSoilM(j,l);
             VG_nc[cnt] = VG_n[l];
             VG_alphac[cnt] = VG_alpha[l];
+            soil_layerc[cnt] = l;
             cnt++;
           }
         }
@@ -716,7 +720,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
                                 internalWater, 
                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                 VCroot_kmaxc, VGrhizo_kmaxc,
-                                psic, VG_nc, VG_alphac,
+                                psic, VG_nc, VG_alphac, soil_layerc,
                                 control, sapFluidityDay);
       }
     }
