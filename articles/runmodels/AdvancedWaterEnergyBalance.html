@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-09-08</h4>
+            <h4 data-toc-skip class="date">2025-09-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="d-none name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -368,14 +368,14 @@ capacity of leaf and stem organs are in
 <code>paramsWaterStorage</code>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></span></code></pre></div>
-<pre><code><span><span class="co">##           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span></span>
-<span><span class="co">## T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span></span>
-<span><span class="co">## T2_168  93.15304 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610</span></span>
-<span><span class="co">## S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span></span>
-<span><span class="co">##           StemAF Vsapwood</span></span>
-<span><span class="co">## T1_148 0.9236406 6.174277</span></span>
-<span><span class="co">## T2_168 0.6238125 1.278142</span></span>
-<span><span class="co">## S1_165 0.6238125 1.064511</span></span></code></pre>
+<pre><code><span><span class="co">##           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf</span></span>
+<span><span class="co">## T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525</span></span>
+<span><span class="co">## T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087</span></span>
+<span><span class="co">## S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968</span></span>
+<span><span class="co">##          StemPI0   StemEPS    StemAF Vsapwood</span></span>
+<span><span class="co">## T1_148 -2.008039 13.256355 0.9236406 6.174277</span></span>
+<span><span class="co">## T2_168 -3.227438 46.420610 0.6238125 1.278142</span></span>
+<span><span class="co">## S1_165 -1.305868  6.297155 0.6238125 1.064511</span></span></code></pre>
 <p>Finally, remember that one can play with plant-specific parameters
 for soil water balance (instead of using species-level values) by
 modifying manually the parameter values in this object.</p>
@@ -611,9 +611,9 @@ Several output variables can be inspected in this element.</p>
 <span><span class="co">## T2_168 2.174009e-04 -1.1346709 -0.04019180 0.5264951 0.05511836 0.9973200</span></span>
 <span><span class="co">## S1_165 1.941646e-04 -0.7151737 -0.04188680 1.0418297 0.02787710 0.9880834</span></span>
 <span><span class="co">##          LeafRWC      LFMC WaterBalance</span></span>
-<span><span class="co">## T1_148 0.9581789 123.17261 4.895173e-17</span></span>
-<span><span class="co">## T2_168 0.9827563  92.15215 7.128629e-18</span></span>
-<span><span class="co">## S1_165 0.9891112  95.42739 1.162129e-18</span></span></code></pre>
+<span><span class="co">## T1_148 0.9581789 122.65887 4.895173e-17</span></span>
+<span><span class="co">## T2_168 0.9827563  91.84342 7.128629e-18</span></span>
+<span><span class="co">## S1_165 0.9891112  95.40533 1.162129e-18</span></span></code></pre>
 <p>While <code>Plants</code> contains one value per cohort and variable
 that summarizes the whole simulated day, information by disaggregated by
 time step can be accessed in <code>PlantsInst</code>. Moreover, we can
