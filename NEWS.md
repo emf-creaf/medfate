@@ -4,9 +4,8 @@
 * Fire hazard now returns canopy and understory layer loadings
 * Drought-driven defoliation now occurs in spwb() simulations
 * Revision of LFMC calculation
-* Fine root distribution is truncated by default, which estimates Z100
+* Fine root distribution can be truncated via a control parameter, leading to Z100 imputation
 * Sureau now updates (internally) soil water potential at subdaily steps
-* Bug correction: truncate root with Sureau
 
 # medfate 4.8.3
 * Soil pool results (REW and psi) enabled
