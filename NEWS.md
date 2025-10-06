@@ -6,6 +6,7 @@
 * Revision of LFMC calculation
 * Fine root distribution is truncated by default, which estimates Z100
 * Sureau now updates (internally) soil water potential at subdaily steps
+* Bug correction: truncate root with Sureau
 
 # medfate 4.8.3
 * Soil pool results (REW and psi) enabled

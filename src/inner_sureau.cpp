@@ -1208,9 +1208,8 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
   innerSoilPoolExtraction.fill(0.0);
   
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-    
+    // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
     if(LAIphe[c]>0.0 && LeafPLCVEC[c] < 0.999) {
-      // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
       //Init temporary variables
       SureauNetwork network_n;
       network_n.params.VGrhizo_kmax = new double[networks[c].params.npools];
@@ -1398,10 +1397,13 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           network_n.Einst_SH = Elim_SH + Emin_L_SH; //For shade photosynthesis/transpiration
           
           //Effects on water potentials and flows
+          // Rcout<< "Entering semi-implicit\n";
           semi_implicit_integration_inner(network_n, 
                                           dt, opt, stemCavitationRecovery, leafCavitationRecovery);
+          // Rcout<< "After semi-implicit\n";
           update_conductances(network_n);
           update_capacitances(network_n);
+          // Rcout<< "After update\n";
           
           // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
           // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
@@ -1415,7 +1417,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           double Psi_SApo = network_n.Psi_SApo;
           double* k_SoilToStem = network_n.k_SoilToStem; 
           double* PsiSoilNetwork = network_n.PsiSoil;
-          for(int l=0;l < networks[0].params.npools;l++) {
+          for(int l=0;l < networks[c].params.npools;l++) {
             double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoilNetwork[l] - Psi_SApo);
             ElayersVEC[l] += fluxSoilToStem_mmolm2s;
             fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*dt);
@@ -1427,7 +1429,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           Emin_SVEC[c] += network_n.Emin_S;
           
         } //# end loop small time step
-        
+
         //Divide average fluxes by time steps
         for(int l=0;l < networks[c].params.npools;l++) ElayersVEC[l] = ElayersVEC[l]/((double) nts);
         EinstVEC[c] = EinstVEC[c]/((double) nts);
@@ -1445,7 +1447,10 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
         network_n.Diag_timeStepInSeconds = dt;
         nwhilecomp = nwhilecomp + 1;
       } //# end while
-
+      // Rcout<<"End while\n";
+      
+      
+      
       // # B. SAVING SOLUTION AT NEXT TIME STEP IN ORIGINAL NETWORK
       copyNetwork(network_n, networks[c]);
       
@@ -1474,7 +1479,6 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
       
       //Scale from instantaneous flow to water volume in the time step
       Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
-      
       
       //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
       calculateRhizoPsi_inner(c, nlayers,
@@ -1523,6 +1527,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           }
         }
       }
+      
       //Delete pointers
       deleteSureauNetworkPointers(network_n);
     } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI (or completely embolized)
@@ -1544,7 +1549,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
       PWBinst(c,n) = 0.0;
     }
   }
-  
+
   
   //Update soil internally (only for next subdaily time steps, and does not affect external soil)
   if(!plantWaterPools) {
