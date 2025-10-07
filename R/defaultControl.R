@@ -153,8 +153,8 @@
 #'       \item{\code{mortalityRWCThreshold [= 0.4]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
 #'       \item{\code{recrTreeDBH [= 1]}: Default DBH (cm) for recruited trees  (when species parameter \code{RecrTreeDBH} is missing).}
 #'       \item{\code{recrTreeDensity [= 3000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
-#'       \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{RecrTreeDBH} is missing).}
-#'       \item{\code{ingrowthTreeDensity [= 127]}: Default density (ind·ha-1) for ingrowth trees  (when species parameter \code{RecrTreeDensity} is missing).}
+#'       \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{IngrowthTreeDBH} is missing).}
+#'       \item{\code{ingrowthTreeDensity [= 127]}: Default density (ind·ha-1) for ingrowth trees  (when species parameter \code{IngrowthTreeDensity} is missing).}
 #'    }
 #'   \bold{Forest dynamics} (function \code{\link{fordyn}}):
 #'    \itemize{
