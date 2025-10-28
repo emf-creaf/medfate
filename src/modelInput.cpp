@@ -1164,13 +1164,38 @@ bool isLowerVersion(List x) {
   return(res[0]==-1);
 }
 
+//Needed for 4.8.3 to 4.8.4
+void update_4_8_3_to_4_8_4(List x) {
+  DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  DataFrame paramsWaterStoragedf = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
+  NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
+  NumericVector r635 = paramsAnatomydf["r635"];
+  NumericVector maxFMC = paramsWaterStoragedf["maxFMC"];
+  
+  int numCohorts = maxFMC.size();
+  NumericVector maxMCleaf(numCohorts), maxMCstem(numCohorts);
+  
+  for(int c=0;c<numCohorts;c++){
+    maxMCstem[c] = 100*((1.0/std::max(0.5,WoodDensity[c])) - (1.0/1.53)); // Minimum 0.4 density to avoid overestimation
+    maxMCleaf[c] = (maxFMC[c] - maxMCstem[c]*(1.0 - (1.0/r635[c])))*r635[c];
+  }
+  if(!paramsWaterStoragedf.containsElementNamed("maxMCstem")) {
+    paramsWaterStoragedf.push_back(maxMCstem,"maxMCstem");
+  }
+  if(!paramsWaterStoragedf.containsElementNamed("maxMCleaf")) {
+    paramsWaterStoragedf.push_back(maxMCleaf,"maxMCleaf");
+  }
+  x["paramsWaterStorage"] = paramsWaterStoragedf;
+} 
+
 void spwbInputVersionUpdate(List x) {
-  Rcout <<"spwbUpdate!";
+  update_4_8_3_to_4_8_4(x);
   
   if(x.containsElementNamed("version")) x["version"] = medfateVersionString();
 }
 void growthInputVersionUpdate(List x) {
-  Rcout <<"growthUpdate!";
+  update_4_8_3_to_4_8_4(x);
   
   if(x.containsElementNamed("version")) x["version"] = medfateVersionString();
 }
