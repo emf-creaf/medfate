@@ -3,22 +3,23 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
-#include "spwb_day.h"
-#include "communication_structures.h"
-#include "lightextinction_basic.h"
-#include "lightextinction_advanced.h"
-#include "windextinction.h"
-#include "hydraulics.h"
-#include "hydrology.h"
 #include "biophysicsutils.h"
-#include "forestutils.h"
-#include "photosynthesis.h"
-#include "phenology.h"
-#include "transpiration.h"
+#include "communication_structures.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
-#include "tissuemoisture.h"
+#include "forestutils.h"
+#include "hydraulics.h"
+#include "hydrology.h"
+#include "lightextinction_basic.h"
+#include "lightextinction_advanced.h"
+#include "modelInput.h"
+#include "photosynthesis.h"
+#include "phenology.h"
 #include "soil.h"
+#include "spwb_day.h"
+#include "transpiration.h"
+#include "tissuemoisture.h"
+#include "windextinction.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -479,6 +480,13 @@ List defineSPWBDailyOutput(double latitude, double elevation, double slope, doub
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
   
   List spwbInput = clone(x);
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+  if(!x.containsElementNamed("version")) {
+    x.push_back(medfateVersionString(), "version");
+  }
+  
+  
   List control = x["control"];
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -1656,10 +1664,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
          NumericVector herbTranspiration = NumericVector(0),
          NumericVector CO2ByYear = NumericVector(0)) {
   
-  //Clone input
-  x = clone(x);
-
-  
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
@@ -1673,6 +1677,12 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   //Store input
   List spwbInput = x; // Store initial object
   x = clone(x); //Ensure a copy will be modified
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+  if(!x.containsElementNamed("version")) {
+    x.push_back("version", medfateVersionString());
+  }
   
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyParams.nrow(); //Number of canopy layers

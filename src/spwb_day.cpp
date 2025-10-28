@@ -11,6 +11,7 @@
 #include "hydrology.h"
 #include "biophysicsutils.h"
 #include "forestutils.h"
+#include "modelInput.h"
 #include "photosynthesis.h"
 #include "phenology.h"
 #include "transpiration.h"
@@ -999,7 +1000,10 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
               bool modifyInput = true) {
-   
+
+   //Check if input version is lower than current medfate version. If so, try to complete fields
+   if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+     
    //Instance communication structures
    List internalCommunication = instanceCommunicationStructures(x, "spwb");
    

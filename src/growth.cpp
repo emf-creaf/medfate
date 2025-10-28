@@ -2,23 +2,24 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
-#include "communication_structures.h"
-#include "lightextinction_basic.h"
-#include "lightextinction_advanced.h"
-#include "phenology.h"
 #include "biophysicsutils.h"
+#include "carbon.h"
+#include "communication_structures.h"
 #include "forestutils.h"
 #include "fireseverity.h"
 #include "firebehaviour.h"
-#include "tissuemoisture.h"
 #include "hydraulics.h"
 #include "hydrology.h"
-#include "carbon.h"
+#include "lightextinction_basic.h"
+#include "lightextinction_advanced.h"
+#include "modelInput.h"
+#include "phenology.h"
 #include "root.h"
-#include "woodformation.h"
 #include "soil.h"
 #include "spwb.h"
 #include "spwb_day.h"
+#include "tissuemoisture.h"
+#include "woodformation.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -1631,6 +1632,10 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
                bool modifyInput = true) {
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) growthInputVersionUpdate(x);
+  
   //Instance communication structures
   List internalCommunication = instanceCommunicationStructures(x, "growth");
   growthDay_inner(internalCommunication, x, date, meteovec,
@@ -1735,6 +1740,14 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
   
   List growthInput = clone(x);
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) growthInputVersionUpdate(x);
+  if(!x.containsElementNamed("version")) {
+    x.push_back(medfateVersionString(), "version");
+  }
+  
+  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   int numCohorts = above.nrow();
   int numDays = dateStrings.size();

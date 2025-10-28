@@ -1130,6 +1130,51 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 }
 
 
+// [[Rcpp::export(".medfateVersionString")]]
+String medfateVersionString() {
+  // Obtain environment containing function
+  Rcpp::Environment utils("package:utils"); 
+  
+  // Make function callable from C++
+  Rcpp::Function packageVersion = utils["packageVersion"];    
+  
+  RObject version = packageVersion("medfate");
+  
+  // Obtain environment containing function
+  Rcpp::Environment base("package:base");
+  
+  // Make function callable from C++
+  Rcpp::Function as_character_numeric_version = base["as.character.numeric_version"];    
+  
+  return(as_character_numeric_version(version));
+}
+
+// [[Rcpp::export(".isLowerVersion")]]
+bool isLowerVersion(List x) {
+  if(!x.containsElementNamed("version")) return(true);
+  String x_ver = Rcpp::as<Rcpp::String>(x["version"]);
+  // Obtain environment containing function
+  Rcpp::Environment utils("package:utils"); 
+  
+  // Make function callable from C++
+  Rcpp::Function compareVersion = utils["compareVersion"];    
+  
+  Rcpp::NumericVector res = compareVersion(_["a"] = x_ver, 
+                                           _["b"] = medfateVersionString());
+  return(res[0]==-1);
+}
+
+void spwbInputVersionUpdate(List x) {
+  Rcout <<"spwbUpdate!";
+  
+  if(x.containsElementNamed("version")) x["version"] = medfateVersionString();
+}
+void growthInputVersionUpdate(List x) {
+  Rcout <<"growthUpdate!";
+  
+  if(x.containsElementNamed("version")) x["version"] = medfateVersionString();
+}
+
 // [[Rcpp::export(".spwbInput")]]
 List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, 
                     DataFrame soil, DataFrame FCCSprops, 
@@ -1238,7 +1283,8 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                             _["internalPhenology"] = internalPhenologyDataFrame(above),
                             _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                             _["internalLAIDistribution"] = internalLAIDistribution(above, paramsCanopydf),
-                            _["internalFCCS"] = FCCSprops);
+                            _["internalFCCS"] = FCCSprops,
+                            _["version"] = medfateVersionString());
 
   input.attr("class") = CharacterVector::create("spwbInput","list");
   return(input);
@@ -1395,6 +1441,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
+  input.push_back(medfateVersionString(), "version");
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);
 }

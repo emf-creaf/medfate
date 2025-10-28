@@ -3288,6 +3288,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// medfateVersionString
+String medfateVersionString();
+RcppExport SEXP _medfate_medfateVersionString() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(medfateVersionString());
+    return rcpp_result_gen;
+END_RCPP
+}
+// isLowerVersion
+bool isLowerVersion(List x);
+RcppExport SEXP _medfate_isLowerVersion(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(isLowerVersion(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // spwbInputInner
 List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_spwbInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
@@ -6249,6 +6270,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
     {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 8},
+    {"_medfate_medfateVersionString", (DL_FUNC) &_medfate_medfateVersionString, 0},
+    {"_medfate_isLowerVersion", (DL_FUNC) &_medfate_isLowerVersion, 1},
     {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 8},
     {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 8},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},

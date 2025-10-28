@@ -2361,6 +2361,14 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_paramsBelow`, above, Z50, Z95, Z100, soil, paramsAnatomydf, paramsTranspirationdf, control)
 }
 
+.medfateVersionString <- function() {
+    .Call(`_medfate_medfateVersionString`)
+}
+
+.isLowerVersion <- function(x) {
+    .Call(`_medfate_isLowerVersion`, x)
+}
+
 .spwbInput <- function(above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control) {
     .Call(`_medfate_spwbInputInner`, above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control)
 }
