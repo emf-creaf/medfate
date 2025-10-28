@@ -18,6 +18,7 @@
 ^vignettes/runmodels/*$
 ^vignettes/workedexamples/*$
 ^vignettes/parametrization/*$
+^initialized_objects/*$
 ^cran-comments\.md$
 ^figures/*$
 ^man/figures/*$
