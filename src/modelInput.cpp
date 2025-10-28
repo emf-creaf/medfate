@@ -1189,11 +1189,13 @@ void update_4_8_3_to_4_8_4(List x) {
   x["paramsWaterStorage"] = paramsWaterStoragedf;
 } 
 
+// [[Rcpp::export(".spwbInputVersionUpdate")]]
 void spwbInputVersionUpdate(List x) {
   update_4_8_3_to_4_8_4(x);
   
   if(x.containsElementNamed("version")) x["version"] = medfateVersionString();
 }
+// [[Rcpp::export(".growthInputVersionUpdate")]]
 void growthInputVersionUpdate(List x) {
   update_4_8_3_to_4_8_4(x);
   

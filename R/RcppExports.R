@@ -2369,6 +2369,14 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_isLowerVersion`, x)
 }
 
+.spwbInputVersionUpdate <- function(x) {
+    invisible(.Call(`_medfate_spwbInputVersionUpdate`, x))
+}
+
+.growthInputVersionUpdate <- function(x) {
+    invisible(.Call(`_medfate_growthInputVersionUpdate`, x))
+}
+
 .spwbInput <- function(above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control) {
     .Call(`_medfate_spwbInputInner`, above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control)
 }

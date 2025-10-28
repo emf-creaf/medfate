@@ -3309,6 +3309,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// spwbInputVersionUpdate
+void spwbInputVersionUpdate(List x);
+RcppExport SEXP _medfate_spwbInputVersionUpdate(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    spwbInputVersionUpdate(x);
+    return R_NilValue;
+END_RCPP
+}
+// growthInputVersionUpdate
+void growthInputVersionUpdate(List x);
+RcppExport SEXP _medfate_growthInputVersionUpdate(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    growthInputVersionUpdate(x);
+    return R_NilValue;
+END_RCPP
+}
 // spwbInputInner
 List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame FCCSprops, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_spwbInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
@@ -6272,6 +6292,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 8},
     {"_medfate_medfateVersionString", (DL_FUNC) &_medfate_medfateVersionString, 0},
     {"_medfate_isLowerVersion", (DL_FUNC) &_medfate_isLowerVersion, 1},
+    {"_medfate_spwbInputVersionUpdate", (DL_FUNC) &_medfate_spwbInputVersionUpdate, 1},
+    {"_medfate_growthInputVersionUpdate", (DL_FUNC) &_medfate_growthInputVersionUpdate, 1},
     {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 8},
     {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 8},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
