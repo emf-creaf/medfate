@@ -281,6 +281,8 @@ NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams
         ffr[i] = 3.260730;
       } else if(leafShape[i]=="Needle" ) {
         ffr[i] = 1.715895;
+      } else if(leafShape[i]=="Spines" ) {
+        ffr[i] = 1.715895;
       } else { //Broad
         if(leafSize[i]=="Small") {
           ffr[i] = 3.025709;
@@ -442,6 +444,8 @@ NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams, bool
       if(leafShape[c]=="Linear") {
         leafwidth[c]= 0.6393182;
       } else if(leafShape[c]=="Needle") {
+        leafwidth[c]= 0.3792844;
+      } else if(leafShape[c]=="Spines") {
         leafwidth[c]= 0.3792844;
       } else if(leafShape[c]=="Broad") {
         if(leafSize[c]=="Small") {

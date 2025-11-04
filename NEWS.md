@@ -2,7 +2,7 @@
 * Store medfate version in initialized objects, to implement backwards compatibility
 * Backwards compatibility of objects initialized with ver. 4.8.3 and 4.8.4
 * Checks missing key weather inputs in spwb_day()
-* SLA imputation for LeafShape 'Spines'
+* SLA, LeafWidth and r635 imputation for LeafShape 'Spines'
 
 # medfate 4.8.4
 * Summary, extract and plot functions enabled for aspwb() simulation results
