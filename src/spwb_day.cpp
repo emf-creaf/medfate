@@ -728,6 +728,10 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
                    bool modifyInput = true) {
   double tmin = meteovec["MinTemperature"];
   double tmax = meteovec["MaxTemperature"];
+  double prec = meteovec["Precipitation"];
+  if(NumericVector::is_na(prec)) stop("Missing precipitation value");
+  if(NumericVector::is_na(tmin)) stop("Missing minimum temperature value");
+  if(NumericVector::is_na(tmax)) stop("Missing maximum temperature value");
   if(tmin > tmax) {
     warning("tmin > tmax. Swapping values.");
     double swap = tmin;
@@ -753,7 +757,6 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
     rhmax = swap;
   }
   double rad = meteovec["Radiation"];
-  double prec = meteovec["Precipitation"];
   double wind = NA_REAL;
   if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
   double Catm = NA_REAL; 

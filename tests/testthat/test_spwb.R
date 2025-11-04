@@ -146,6 +146,33 @@ test_that("spwb can be run with less output",{
                        latitude = 41.82592, elevation = 100), "spwb")
 })
 
+test_that("spwb_day can be run with missing meteo data",{
+  
+  meteovec_mis <- meteovec
+  meteovec_mis[4:7] <- NA
+  
+  expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                    date, meteovec_mis, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
+  expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry), 
+                                    date, meteovec_mis, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
+  expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau), 
+                                    date, meteovec_mis, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
+  
+  meteovec_mis2 <- meteovec_mis
+  meteovec_mis2["MinTemperature"] <- NA
+  expect_error(medfate::spwb_day(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                    date, meteovec_mis2, latitude = 41.82592, elevation = 100, slope=0, aspect=0))
+  meteovec_mis2 <- meteovec_mis
+  meteovec_mis2["MaxTemperature"] <- NA
+  expect_error(medfate::spwb_day(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                 date, meteovec_mis2, latitude = 41.82592, elevation = 100, slope=0, aspect=0))
+  meteovec_mis2 <- meteovec_mis
+  meteovec_mis2["Precipitation"] <- NA
+  expect_error(medfate::spwb_day(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                 date, meteovec_mis2, latitude = 41.82592, elevation = 100, slope=0, aspect=0))
+})
+
+
 test_that("spwb_day gives same result with inner and direct calls",{
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   ic <- medfate:::instance_communication_structures(x1, "spwb")
