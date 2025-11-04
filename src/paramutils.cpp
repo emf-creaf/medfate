@@ -319,6 +319,8 @@ NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParam
           }
         } else if(LeafShape[c]=="Needle") { 
           SLA[c] = 9.024;
+        } else if(LeafShape[c]=="Spines") { 
+          SLA[c] = 9.024;
         } else if(LeafShape[c]=="Scale") { 
           SLA[c] = 4.544;
         }
