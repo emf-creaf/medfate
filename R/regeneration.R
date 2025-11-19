@@ -219,6 +219,12 @@ regeneration_recruitment<-function(forest, SpParams, control,
   recr_forest$treeData <- recr_forest$treeData[recr_forest$treeData$N>0, ,drop=FALSE]
   recr_forest$shrubData <- recr_forest$shrubData[recr_forest$shrubData$Cover>0, ,drop=FALSE]
   
+  # Defines age of recruits (1 year)
+  if(!control$dynamicallyMergeCohorts) {
+    recr_forest$treeData$Age <- rep(1, nrow(recr_forest$treeData))
+    recr_forest$shrubData$Age <- rep(1, nrow(recr_forest$shrubData))
+  }
+  
   if("herbCover" %in% names(recr_forest)) recr_forest$herbCover <- NULL
   if("herbHeight" %in% names(recr_forest)) recr_forest$herbHeight <- NULL
   if("seedBank" %in% names(recr_forest)) recr_forest$seedBank <- NULL

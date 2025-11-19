@@ -54,6 +54,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
       if("ObsID" %in% names(x)) {
         y$ObsID <- rep(as.character(NA), nrow(y)) 
       }
+      if("Age" %in% names(x)) {
+        y$Age <- rep(as.numeric(NA), nrow(y)) 
+      }
       return(y)
     }
     return(x)
@@ -175,6 +178,9 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FAL
       }
       if("ObsID" %in% names(x)) {
         y$ObsID <- rep(as.character(NA), nrow(y)) 
+      }
+      if("Age" %in% names(x)) {
+        y$Age <- rep(as.numeric(NA), nrow(y)) 
       }
       return(y)
     }

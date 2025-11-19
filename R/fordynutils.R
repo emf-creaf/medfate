@@ -131,6 +131,42 @@
     recr_forest$shrubData$ObsID <- rep(as.character(NA), nrow(recr_forest$shrubData))
     resp_forest$shrubData$ObsID <- rep(as.character(NA), nrow(resp_forest$shrubData))
   }
+  
+  # Age is only managed when cohorts are not dynamically merged
+  if(!control$dynamicallyMergeCohorts) {
+    ##Increase age of current forest
+    if(!("Age" %in% names(forest$treeData))) {
+      forest$treeData$Age <- as.numeric(rep(NA, nrow(forest$treeData)))
+    } else {
+      forest$treeData$Age <- forest$treeData$Age + 1
+    }
+    if(!("Age" %in% names(forest$shrubData))) {
+      forest$shrubData$Age <- as.numeric(rep(NA, nrow(forest$shrubData)))
+    } else {
+      forest$shrubData$Age <- forest$shrubData$Age + 1
+    }
+    ## Define age if missing in planted, resprouts or recruits
+    if(!("Age" %in% names(planted_forest$treeData))) {
+      planted_forest$treeData$Age <- as.numeric(rep(NA, nrow(planted_forest$treeData)))
+    }
+    if(!("Age" %in% names(planted_forest$shrubData))) {
+      planted_forest$shrubData$Age <- as.numeric(rep(NA, nrow(planted_forest$shrubData)))
+    }
+    if(!("Age" %in% names(recr_forest$treeData))) {
+      recr_forest$treeData$Age <- as.numeric(rep(NA, nrow(recr_forest$treeData)))
+    }
+    if(!("Age" %in% names(recr_forest$shrubData))) {
+      recr_forest$shrubData$Age <- as.numeric(rep(NA, nrow(recr_forest$shrubData)))
+    }
+    if(!("Age" %in% names(resp_forest$treeData))) {
+      resp_forest$treeData$Age <- as.numeric(rep(NA, nrow(resp_forest$treeData)))
+    }
+    if(!("Age" %in% names(resp_forest$shrubData))) {
+      resp_forest$shrubData$Age <- as.numeric(rep(NA, nrow(resp_forest$shrubData)))
+    }
+  }
+  
+  ## Merge forests
   forest$treeData <- rbind(forest$treeData, planted_forest$treeData, recr_forest$treeData, resp_forest$treeData)
   forest$shrubData <- rbind(forest$shrubData, planted_forest$shrubData, recr_forest$shrubData, resp_forest$shrubData)
   

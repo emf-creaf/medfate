@@ -1136,10 +1136,10 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL,
 
   //Shrub LAI
   if(shrubData.containsElementNamed("LAI")) {
-    // If LAI is already in treeData, only apply phenology
+    // If LAI is already in shrubData, only apply phenology
     NumericVector inputShrubLAI = shrubData["LAI"];
     shLAI = clone(inputShrubLAI);
-  } else if(treeData.containsElementNamed("FoliarBiomass")) {
+  } else if(shrubData.containsElementNamed("FoliarBiomass")) {
     //If FoliarBiomass is already in shrubData, apply phenology and SLA
     NumericVector shFB = shrubData["FoliarBiomass"];
     NumericVector shSLA = speciesNumericParameterWithImputation(shrubSP, SpParams, "SLA", true, true); // m2/kg (=mg/mm2)
