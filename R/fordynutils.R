@@ -347,12 +347,12 @@
   if("Age" %in% names(x$above)) {
     tt$Age <- x$above$Age[range]
   } else {
-    tt$Age <- as.numeric(rep(NA, sum(isShrub)))
+    tt$Age <- as.numeric(rep(NA, sum(isTree)))
   }
   if("ObsID" %in% names(x$above)) {
     tt$ObsID <- x$above$ObsID[range]
   } else {
-    tt$ObsID <- as.character(rep(NA, sum(isShrub)))
+    tt$ObsID <- as.character(rep(NA, sum(isTree)))
   }
   tt = tt[tt$N>0,, drop=FALSE]
   return(tt)
@@ -378,12 +378,12 @@
   if("Age" %in% names(x$above)) {
     dtt$Age <- x$above$Age[range]
   } else {
-    dtt$Age <- as.numeric(rep(NA, sum(isShrub)))
+    dtt$Age <- as.numeric(rep(NA, sum(isTree)))
   }
   if("ObsID" %in% names(x$above)) {
     dtt$ObsID <- x$above$ObsID[range]
   } else {
-    dtt$ObsID <- as.character(rep(NA, sum(isShrub)))
+    dtt$ObsID <- as.character(rep(NA, sum(isTree)))
   }
   dtt = dtt[dtt$N>0,, drop = FALSE]
   return(dtt)
@@ -404,12 +404,12 @@
   if("Age" %in% names(x$above)) {
     ctt$Age <- x$above$Age[range]
   } else {
-    ctt$Age <- as.numeric(rep(NA, sum(isShrub)))
+    ctt$Age <- as.numeric(rep(NA, sum(isTree)))
   }
   if("ObsID" %in% names(x$above)) {
     ctt$ObsID <- x$above$ObsID[range]
   } else {
-    ctt$ObsID <- as.character(rep(NA, sum(isShrub)))
+    ctt$ObsID <- as.character(rep(NA, sum(isTree)))
   }
   ctt = ctt[ctt$N>0,, drop=FALSE]
   return(ctt)
