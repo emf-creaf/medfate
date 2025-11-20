@@ -172,6 +172,9 @@ regeneration_recruitment<-function(forest, SpParams, control,
     recr_forest$treeData$Z50[is.na(recr_forest$treeData$Z50)] <- control$recrTreeZ50
     recr_forest$treeData$Z95 <- species_parameter(treeSpp, SpParams, "RecrZ95")
     recr_forest$treeData$Z95[is.na(recr_forest$treeData$Z95)] <- control$recrTreeZ95
+    if(control$truncateRootDistribution) {
+      recr_forest$treeData$Z100 <- exp(log(recr_forest$treeData$Z95)/0.95);
+    }
     minTemp <- species_parameter(treeSpp, SpParams, "MinTempRecr")
     minMoisture <- species_parameter(treeSpp, SpParams, "MinMoistureRecr")
     minTemp[is.na(minTemp)] <- control$minTempRecr
@@ -194,6 +197,9 @@ regeneration_recruitment<-function(forest, SpParams, control,
     recr_forest$shrubData$Z50[is.na(recr_forest$shrubData$Z50)] <- control$recrShrubZ50
     recr_forest$shrubData$Z95 <- species_parameter(shrubSpp, SpParams, "RecrZ95")
     recr_forest$shrubData$Z95[is.na(recr_forest$shrubData$Z95)] <- control$recrShrubZ95
+    if(control$truncateRootDistribution) {
+      recr_forest$shrubData$Z100 <- exp(log(recr_forest$shrubData$Z95)/0.95);
+    }
     minTemp <- species_parameter(shrubSpp, SpParams, "MinTempRecr")
     minMoisture <- species_parameter(shrubSpp, SpParams, "MinMoistureRecr")
     minTemp[is.na(minTemp)] <- control$minTempRecr

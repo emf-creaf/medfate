@@ -141,9 +141,9 @@
   xi$herbLAI <- xo$herbLAI
   xi$herbLAImax <- xo$herbLAImax
   
-  # 5.2 Replace previous state for surviving cohorts
+  # 5.2 Replace previous state for surviving cohorts (except age)
   xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]
-  xi$above[repl_vec,] <- xo$above[sel_vec,, drop=FALSE]
+  xi$above[repl_vec, (names(xi$above)!="Age")] <- xo$above[sel_vec,(names(xo$above)!="Age"), drop=FALSE]
   xi$below[repl_vec,] <- xo$below[sel_vec,, drop=FALSE]
   xi$belowLayers$V[repl_vec,] <- xo$belowLayers$V[sel_vec,, drop=FALSE]
   xi$belowLayers$L[repl_vec,] <- xo$belowLayers$L[sel_vec,, drop=FALSE]
@@ -342,9 +342,17 @@
                  Height = x$above$H[range],
                  N = x$above$N[range],
                  Z50 = x$below$Z50[range],
-                 Z95 = x$below$Z95[range])
+                 Z95 = x$below$Z95[range],
+                 Z100 = x$below$Z100[range])
+  if("Age" %in% names(x$above)) {
+    tt$Age <- x$above$Age[range]
+  } else {
+    tt$Age <- as.numeric(rep(NA, sum(isShrub)))
+  }
   if("ObsID" %in% names(x$above)) {
     tt$ObsID <- x$above$ObsID[range]
+  } else {
+    tt$ObsID <- as.character(rep(NA, sum(isShrub)))
   }
   tt = tt[tt$N>0,, drop=FALSE]
   return(tt)
@@ -365,9 +373,17 @@
                   N_dessication = x$internalMortality$N_dessication[range],
                   N_burnt = x$internalMortality$N_burnt[range],
                   Z50 = x$below$Z50[range],
-                  Z95 = x$below$Z95[range])
+                  Z95 = x$below$Z95[range],
+                  Z100 = x$below$Z100[range])
+  if("Age" %in% names(x$above)) {
+    dtt$Age <- x$above$Age[range]
+  } else {
+    dtt$Age <- as.numeric(rep(NA, sum(isShrub)))
+  }
   if("ObsID" %in% names(x$above)) {
     dtt$ObsID <- x$above$ObsID[range]
+  } else {
+    dtt$ObsID <- as.character(rep(NA, sum(isShrub)))
   }
   dtt = dtt[dtt$N>0,, drop = FALSE]
   return(dtt)
@@ -383,9 +399,17 @@
                  Height = x$above$H[range],
                  N = N_cut,
                  Z50 = x$below$Z50[range],
-                 Z95 = x$below$Z95[range])
+                 Z95 = x$below$Z95[range],
+                 Z100 = x$below$Z100[range])
+  if("Age" %in% names(x$above)) {
+    ctt$Age <- x$above$Age[range]
+  } else {
+    ctt$Age <- as.numeric(rep(NA, sum(isShrub)))
+  }
   if("ObsID" %in% names(x$above)) {
     ctt$ObsID <- x$above$ObsID[range]
+  } else {
+    ctt$ObsID <- as.character(rep(NA, sum(isShrub)))
   }
   ctt = ctt[ctt$N>0,, drop=FALSE]
   return(ctt)
@@ -403,9 +427,17 @@
                  Cover = x$above$Cover[range],
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
-                 Z95 = x$below$Z95[range])
+                 Z95 = x$below$Z95[range],
+                 Z100 = x$below$Z100[range])
+  if("Age" %in% names(x$above)) {
+    st$Age <- x$above$Age[range]
+  } else {
+    st$Age <- as.numeric(rep(NA, sum(isShrub)))
+  }
   if("ObsID" %in% names(x$above)) {
     st$ObsID <- x$above$ObsID[range]
+  } else {
+    st$ObsID <- as.character(rep(NA, sum(isShrub)))
   }
   st = st[st$Cover>0,, drop = FALSE]
   return(st)
@@ -426,9 +458,17 @@
                   Cover_burnt = x$internalMortality$Cover_burnt[range],
                   Height = x$above$H[range],
                   Z50 = x$below$Z50[range],
-                  Z95 = x$below$Z95[range])
+                  Z95 = x$below$Z95[range],
+                  Z100 = x$below$Z100[range])
+  if("Age" %in% names(x$above)) {
+    dst$Age <- x$above$Age[range]
+  } else {
+    dst$Age <- as.numeric(rep(NA, sum(isShrub)))
+  }
   if("ObsID" %in% names(x$above)) {
     dst$ObsID <- x$above$ObsID[range]
+  } else {
+    dst$ObsID <- as.character(rep(NA, sum(isShrub)))
   }
   dst = dst[dst$Cover>0,,drop=FALSE]
   return(dst)
@@ -446,9 +486,17 @@
                  Cover = Cover_cut,
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
-                 Z95 = x$below$Z95[range])
+                 Z95 = x$below$Z95[range],
+                 Z100 = x$below$Z100[range])
+  if("Age" %in% names(x$above)) {
+    cst$Age <- x$above$Age[range]
+  } else {
+    cst$Age <- as.numeric(rep(NA, sum(isShrub)))
+  }
   if("ObsID" %in% names(x$above)) {
     cst$ObsID <- x$above$ObsID[range]
+  } else {
+    cst$ObsID <- as.character(rep(NA, sum(isShrub)))
   }
   cst = cst[cst$Cover>0,, drop = FALSE]
   return(cst)

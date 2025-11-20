@@ -1222,7 +1222,9 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
   NumericVector H = above["H"];
   NumericVector DBH = above["DBH"];
   NumericVector CR = above["CR"];
-  CharacterVector ObsID = (SP.size(), NA_STRING);
+  NumericVector Age(SP.size(), NA_REAL);
+  if(above.containsElementNamed("Age")) Age = above["Age"];
+  CharacterVector ObsID(SP.size(), NA_STRING);
   if(above.containsElementNamed("ObsID")) ObsID = above["ObsID"];
   
   String transpirationMode = control["transpirationMode"];
@@ -1250,6 +1252,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead,
+                                         _["Age"] = Age,
                                          _["ObsID"] = ObsID);
   if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
   plantsdf.attr("row.names") = above.attr("row.names");
@@ -1343,7 +1346,9 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   NumericVector Loading = above["Loading"];
-  CharacterVector ObsID = (SP.size(), NA_STRING);
+  NumericVector Age(SP.size(), NA_REAL);
+  if(above.containsElementNamed("Age")) Age = above["Age"];
+  CharacterVector ObsID(SP.size(), NA_STRING);
   if(above.containsElementNamed("ObsID")) ObsID = above["ObsID"];
   
   String transpirationMode = control["transpirationMode"];
@@ -1407,6 +1412,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                          _["LAI_dead"] = LAI_dead,
                                          _["LAI_nocomp"] = LAI_nocomp,
                                          _["Loading"] = Loading,
+                                         _["Age"] = Age,
                                          _["ObsID"] = ObsID);
   plantsdf.attr("row.names") = above.attr("row.names");
   
@@ -1564,8 +1570,8 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     \item{\code{snowpack}: The amount of snow (in mm) in the snow pack over the soil.}
 //'     \item{\code{canopy}: A list of stand-level state variables.}
 //'     \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
-//'     \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
-//'     \item{\code{below}: A data frame with columns \code{Z50}, \code{Z95}.  If \code{control$transpirationMode = "Sperry"} additional columns are \code{fineRootBiomass} and \code{coarseRootSoilVolume}.}
+//'     \item{\code{above}: A data frame with columns such as \code{H}, \code{CR} and \code{LAI_live} (see function \code{forest2aboveground}).}
+//'     \item{\code{below}: A data frame with columns \code{Z50}, \code{Z95} and \code{Z100}.}
 //'     \item{\code{belowLayers}: A list. If \code{control$transpirationMode = "Granier"} it contains elements: 
 //'       \itemize{
 //'         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}

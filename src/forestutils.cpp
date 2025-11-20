@@ -1569,7 +1569,10 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
 //'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
 //'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
 //'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+//'   \item{\code{LAI_nocomp}: Leaf area index (m2/m2) (one-side leaf area relative to plot area) assuming no aboveground competition.}
 //'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
+//'   \item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
+//'   \item{\code{ObsID}: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts in simulations with \code{\link{fordyn}}.}
 //' }
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -1637,6 +1640,10 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   NumericVector treeDBH = treeData["DBH"];
   NumericVector shrubH = shrubData["Height"];  
   NumericVector shrubCover = shrubData["Cover"];  
+  NumericVector treeAge(ntree, NA_REAL);
+  NumericVector shrubAge(nshrub, NA_REAL);
+  if(treeData.containsElementNamed("Age")) treeAge = treeData["Age"];
+  if(shrubData.containsElementNamed("Age")) shrubAge = shrubData["Age"];
   CharacterVector treeObsID(ntree, NA_STRING);
   CharacterVector shrubObsID(nshrub, NA_STRING);
   if(treeData.containsElementNamed("ObsID")) treeObsID = treeData["ObsID"];
@@ -1646,6 +1653,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   NumericVector LAI_dead(ntree+nshrub, 0.0);
   NumericVector DBH(ntree+nshrub, NA_REAL);
   NumericVector Cover(ntree+nshrub, NA_REAL);
+  NumericVector Age(ntree+nshrub, NA_REAL);
   CharacterVector ObsID(ntree+nshrub, NA_STRING);
   
   for(int i=0;i<ntree;i++) {
@@ -1654,6 +1662,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
     DBH[i] = treeDBH[i];
     LAI_dead[i] = 0.0;
     Cover[i] = NA_REAL;
+    Age[i] = treeAge[i];
     ObsID[i] = treeObsID[i];
   }
   for(int i=0;i<nshrub;i++) {
@@ -1661,12 +1670,13 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
     H[ntree+i] = shrubH[i];
     DBH[ntree+i] = NA_REAL;
     LAI_dead[i] = 0.0;
-    ObsID[ntree+i] = shrubObsID[i];
     Cover[ntree+i] = shrubCover[i];
+    Age[ntree+i] = shrubAge[i];
+    ObsID[ntree+i] = shrubObsID[i];
   }
   DataFrame above = DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
                     _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead, 
-                    _["LAI_nocomp"] = LAI_nocomp, _["ObsID"] = ObsID);
+                    _["LAI_nocomp"] = LAI_nocomp, _["Age"] = Age, _["ObsID"] = ObsID);
   if(loading) {
     NumericVector cohLoading = cohortFuelLoading(x, SpParams, gdd, true);
     above.push_back(cohLoading, "Loading");

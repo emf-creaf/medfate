@@ -42,6 +42,14 @@ data(exampleforest)
 exampleforest
 ```
 
+We can keep track of cohort age if we define a column called `Age` in tree or shrub data, for example let us assume we know the age of the two tree cohorts:
+
+```{r}
+exampleforest$treeData$Age <- c(40, 24)
+```
+
+
+
 Importantly, a data frame with daily weather for the period to be simulated is required. Here we use the default data frame included with the package: 
 ```{r}
 data(examplemeteo)

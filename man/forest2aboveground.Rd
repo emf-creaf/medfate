@@ -39,7 +39,10 @@ Function \code{forest2aboveground()} returns a data frame with the following col
 \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
 \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
 \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+\item{\code{LAI_nocomp}: Leaf area index (m2/m2) (one-side leaf area relative to plot area) assuming no aboveground competition.}
 \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
+\item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
+\item{\code{ObsID}: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts in simulations with \code{\link{fordyn}}.}
 }
 }
 \description{
