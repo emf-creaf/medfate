@@ -120,13 +120,6 @@
   sel_vec <- c(rep(TRUE, nrow(forest$treeData)),
                rep(control$shrubDynamics, nrow(forest$shrubData)))
   
-  # 4.1 Increase age of current forest 
-  if("Age" %in% names(forest$treeData)) {
-    forest$treeData$Age <- forest$treeData$Age + 1
-  }
-  if("Age" %in% names(forest$shrubData)) {
-    forest$shrubData$Age <- forest$shrubData$Age + 1
-  }
   
   # 4.2 Merge cohorts in forest object
   forest$treeData <- rbind(forest$treeData, planted_forest$treeData, recr_forest$treeData, resp_forest$treeData)

@@ -225,7 +225,6 @@ fordyn<-function(forest, soil, SpParams,
     # 1.3 Retrieve modified growth output
     xo <- Gi$growthOutput
 
-    # print(xo$above)
     # 2.2 Update dead tree/shrub tables
     deadTreeTableYear <- .createDeadTreeTable(iYear, year, xo)
     deadShrubTableYear <- .createDeadShrubTable(iYear, year, xo)
@@ -244,6 +243,12 @@ fordyn<-function(forest, soil, SpParams,
       forest$shrubData$Z50  <- xo$below$Z50[!isTree]
       forest$shrubData$Z95  <- xo$below$Z95[!isTree]
       forest$shrubData$Z100  <- xo$below$Z100[!isTree]
+    }
+    if("Age" %in% names(forest$treeData)) {
+      forest$treeData$Age <- forest$treeData$Age + 1
+    }
+    if("Age" %in% names(forest$shrubData)) {
+      forest$shrubData$Age <- forest$shrubData$Age + 1
     }
     
     # 2.3 Call management function if required
