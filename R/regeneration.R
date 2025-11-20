@@ -154,7 +154,8 @@ regeneration_recruitment<-function(forest, SpParams, control,
     shrubSpp <- character(0)
     shrubPercent <- numeric(0)
   }
-  recr_forest <- emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
+  recr_forest <- emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp),
+                             addcolumns = c("Z100", "Age", "ObsID"))
   ## Determine if species can recruit 
   tree_recr_selection <- logical(0)
   tree_minFPAR <- numeric(0)
@@ -220,10 +221,8 @@ regeneration_recruitment<-function(forest, SpParams, control,
   recr_forest$shrubData <- recr_forest$shrubData[recr_forest$shrubData$Cover>0, ,drop=FALSE]
   
   # Defines age of recruits (1 year)
-  if(!control$dynamicallyMergeCohorts) {
-    recr_forest$treeData$Age <- rep(1, nrow(recr_forest$treeData))
-    recr_forest$shrubData$Age <- rep(1, nrow(recr_forest$shrubData))
-  }
+  recr_forest$treeData$Age <- rep(1, nrow(recr_forest$treeData))
+  recr_forest$shrubData$Age <- rep(1, nrow(recr_forest$shrubData))
   
   if("herbCover" %in% names(recr_forest)) recr_forest$herbCover <- NULL
   if("herbHeight" %in% names(recr_forest)) recr_forest$herbHeight <- NULL
@@ -239,7 +238,7 @@ regeneration_recruitment<-function(forest, SpParams, control,
 #' @param management_results The result of calling a management function (see \code{\link{defaultManagementFunction}}).
 #' @keywords internal
 regeneration_resprouting <- function(forest, internalMortality, SpParams, control, 
-                        management_results = NULL) {
+                                     management_results = NULL) {
   n_trees <- nrow(forest$treeData)
   n_shrubs <- nrow(forest$shrubData)
   

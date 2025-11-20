@@ -3,6 +3,7 @@
 * Backwards compatibility of objects initialized with ver. 4.8.3 and 4.8.4
 * Checks missing key weather inputs in spwb_day()
 * SLA, LeafWidth and r635 imputation for LeafShape 'Spines'
+* Age of cohorts is now allowed in forest objects and incremented in fordyn() simulations
 
 # medfate 4.8.4
 * Summary, extract and plot functions enabled for aspwb() simulation results

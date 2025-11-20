@@ -20,7 +20,7 @@ fordyn(
 )
 }
 \arguments{
-\item{forest}{An object of class \code{\link{forest}}. Alternatively, the output of a previous run, if continuing a previous simulation.}
+\item{forest}{An object of class \code{\link{forest}}. Alternatively, the output of a previous run (an object of class \code{fordyn}), if continuing a previous simulation.}
 
 \item{soil}{An object of class \code{\link{data.frame}} or \code{\link{soil}}.}
 
@@ -41,7 +41,7 @@ fordyn(
 \item{management_args}{A list of additional arguments to be passed to the \code{management_function}.}
 }
 \value{
-A list of class 'fordyn' with the following elements:
+A list of class \code{fordyn} with the following elements:
 \itemize{
 \item{\code{"StandSummary"}: A data frame with stand-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
 \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}

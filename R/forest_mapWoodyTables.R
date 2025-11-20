@@ -19,6 +19,7 @@
 #'   \item{\code{Height}: Tree or shrub height (in cm).}
 #'   \item{\code{Z50}: Depth (in mm) corresponding to 50 percent of fine roots.}
 #'   \item{\code{Z95}: Depth (in mm) corresponding to 95 percent of fine roots.}
+#'   \item{\code{Z100}: Depth (in mm) corresponding to 100 percent of fine roots.}
 #'   }
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}) from which valid species names are drawn.
 #' @param plot_size_x The size of tree plot sampled area (in m2). Alternatively, 'plot_size_x'
@@ -92,6 +93,9 @@
 #'                            plot_size_x = sampled_area, plot_size_y = 4)
 #' summary(f, SpParamsMED)
 forest_mapTreeTable<-function(x, mapping_x, SpParams, plot_size_x = NULL) {
+  if(!inherits(x, "data.frame")) stop("Object `x` should be of class `data.frame`")
+  if(!inherits(SpParams, "data.frame")) stop("Object `SpParams` should be of class `data.frame`")
+  
   n = nrow(x)
   treeData = data.frame(
     Species = rep(NA, n),
@@ -120,6 +124,9 @@ forest_mapTreeTable<-function(x, mapping_x, SpParams, plot_size_x = NULL) {
   }
   if("Z95" %in% names(mapping_x)) {
     treeData$Z95 = x[[mapping_x[["Z95"]]]]
+  }
+  if("Z100" %in% names(mapping_x)) {
+    treeData$Z100 = x[[mapping_x[["Z100"]]]]
   }
   if("Species" %in% names(mapping_x)) {
     treeData$Species = x[[mapping_x[["Species"]]]]
@@ -151,6 +158,9 @@ forest_mapTreeTable<-function(x, mapping_x, SpParams, plot_size_x = NULL) {
 #' @rdname forest_mapWoodyTables
 #' @export
 forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
+  if(!inherits(y, "data.frame")) stop("Object `y` should be of class `data.frame`")
+  if(!inherits(SpParams, "data.frame")) stop("Object `SpParams` should be of class `data.frame`")
+  
   n = nrow(y)
   shrubData = data.frame(
     Species = rep(NA, n),
@@ -186,6 +196,9 @@ forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
   if("Z95" %in% names(mapping_y)) {
     shrubData$Z95 = y[[mapping_y[["Z95"]]]]
   }
+  if("Z100" %in% names(mapping_y)) {
+    shrubData$Z100 = y[[mapping_y[["Z100"]]]]
+  }
   if("Species" %in% names(mapping_y)) {
     shrubData$Species = y[[mapping_y[["Species"]]]]
   }
@@ -210,6 +223,9 @@ forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
 #' @rdname forest_mapWoodyTables
 #' @export
 forest_mapWoodyTables<-function(x = NULL, y = NULL, mapping_x = NULL, mapping_y = NULL, SpParams, plot_size_x=NULL, plot_size_y = NULL) {
+  if(!inherits(x, "data.frame")) stop("Object `x` should be of class `data.frame`")
+  if(!inherits(y, "data.frame")) stop("Object `y` should be of class `data.frame`")
+  if(!inherits(SpParams, "data.frame")) stop("Object `SpParams` should be of class `data.frame`")
   f = emptyforest()
   if(!is.null(x)) {
     if(is.null(mapping_x)) stop("You need to specify a mapping for 'x'")

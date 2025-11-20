@@ -30,8 +30,12 @@ control$verbose <- FALSE
 #Initialize soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("fordyn can be run in example and empty forests",{
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+test_that("fordyn can be run and continued in example and empty forests",{
+  fd <- fordyn(exampleforest, examplesoil, 
+               SpParamsMED, meteo_01_02, control,
+               latitude = 41.82592, elevation = 100)
+  expect_s3_class(fd, "fordyn")
+  expect_s3_class(fordyn(fd, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
   expect_s3_class(fordyn(emptyforest(), examplesoil, 

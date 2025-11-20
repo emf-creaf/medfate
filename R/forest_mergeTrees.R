@@ -33,6 +33,7 @@
 #' stand_LAI(exampleforest, SpParamsMED)
 #' stand_LAI(reduced, SpParamsMED)
 forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) {
+  if(!inherits(x, "forest")) stop("`x` should be of class `forest`")
   mergeTreesSize<-function(x) {
     ntree <- nrow(x)
     if(ntree>0) {
@@ -51,11 +52,20 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
       if("Z100" %in% names(x)) {
         y$Z100 <- as.numeric(tapply(x$Z100*BA, x$Species, FUN = sum)/BAsp)
       }
-      if("ObsID" %in% names(x)) {
-        y$ObsID <- rep(as.character(NA), nrow(y)) 
+      if("LAI" %in% names(x)) {
+        y$LAI <- as.numeric(tapply(x$LAI, x$Species, FUN = sum))
+      }
+      if("FoliarBiomass" %in% names(x)) {
+        y$FoliarBiomass <- as.numeric(tapply(x$FoliarBiomass, x$Species, FUN = sum))
+      }
+      if("FuelLoading" %in% names(x)) {
+        y$FuelLoading <- as.numeric(tapply(x$FuelLoading, x$Species, FUN = sum))
       }
       if("Age" %in% names(x)) {
-        y$Age <- rep(as.numeric(NA), nrow(y)) 
+        y$Age <- as.numeric(tapply(x$Age*BA, x$Species, FUN = sum)/BAsp)
+      }
+      if("ObsID" %in% names(x)) {
+        y$ObsID <- rep(as.character(NA), nrow(y)) 
       }
       return(y)
     }
@@ -159,6 +169,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
 #' @param byHeightclass Boolean flag to indicate that 10-cm shrub height classes should be kept separated.
 #' 
 forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE) {
+  if(!inherits(x, "forest")) stop("`x` should be of class `forest`")
   mergeShrubsSize<-function(x) {
     nshrub = nrow(x)
     if(nshrub>0) {
@@ -179,8 +190,17 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FAL
       if("ObsID" %in% names(x)) {
         y$ObsID <- rep(as.character(NA), nrow(y)) 
       }
+      if("LAI" %in% names(x)) {
+        y$LAI <- as.numeric(tapply(x$LAI, x$Species, FUN = sum))
+      }
+      if("FoliarBiomass" %in% names(x)) {
+        y$FoliarBiomass <- as.numeric(tapply(x$FoliarBiomass, x$Species, FUN = sum))
+      }
+      if("FuelLoading" %in% names(x)) {
+        y$FuelLoading <- as.numeric(tapply(x$FuelLoading, x$Species, FUN = sum))
+      }
       if("Age" %in% names(x)) {
-        y$Age <- rep(as.numeric(NA), nrow(y)) 
+        y$Age <- as.numeric(tapply(x$Age*x$Cover, x$Species, FUN = sum)/Coversp)
       }
       return(y)
     }
@@ -265,6 +285,8 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FAL
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
 #' 
 forest_reduceToDominant <- function(x, SpParams) {
+  if(!inherits(x, "forest")) stop("`x` should be of class `forest`")
+  if(!inherits(SpParams, "data.frame")) stop("Object `SpParams` should be of class `data.frame`")
   ntree <- nrow(x$treeData)
   nshrub <- nrow(x$shrubData)
   if(sum(ntree+nshrub)>0) {

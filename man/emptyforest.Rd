@@ -4,12 +4,23 @@
 \alias{emptyforest}
 \title{Creation of an empty forest}
 \usage{
-emptyforest(ntree = 0, nshrub = 0, nseed = 0)
+emptyforest(ntree = 0, nshrub = 0, nseed = 0, addcolumns = NULL)
 }
 \arguments{
 \item{ntree, nshrub}{Number of tree and shrub cohorts, respectively.}
 
 \item{nseed}{Number of species in the seed bank.}
+
+\item{addcolumns}{A character vector with additional columns. Currently allowed are:
+\itemize{
+\item{\code{Z100}: A numeric vector with maximum rooting depth in mm.}
+\item{\code{LAI}: Leaf area index (m2/m2).}
+\item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2).}
+\item{\code{FuelLoading}: Fine fuel loading (kg/m2).}
+\item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+\item{\code{Age}: A numeric vector indicating age of cohorts in years.}
+\item{\code{ObsID} A character vector to label specific cohorts in simulations of forest dynamics.}
+}}
 }
 \value{
 An empty \code{\link{forest}} object.
@@ -20,6 +31,9 @@ Creates an empty \code{\link{forest}} object.
 \examples{
 # Initializes forest with 2 tree cohorts and 1 shrub cohort
 emptyforest(ntree = 2, nshrub = 1)
+
+# Initializes with extra column for leaf area index (LAI)
+emptyforest(ntree = 2, nshrub = 1, addcolumns = "LAI")
 
 }
 \seealso{

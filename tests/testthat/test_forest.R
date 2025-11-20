@@ -6,6 +6,9 @@ data(poblet_trees)
 
 test_that("Empty forests can be created",{
   expect_s3_class(emptyforest(), "forest")
+  expect_s3_class(emptyforest(addcolumns = "LAI"), "forest")
+  expect_s3_class(emptyforest(addcolumns = c("LAI", "Age")), "forest")
+  expect_error(emptyforest(addcolumns = "kk"))
 })
 
 test_that("Forest object can be build from data frames",{
@@ -48,9 +51,11 @@ test_that("Test forest simplification",{
   expect_s3_class(forest_reduceToDominant(f, SpParamsMED), "forest")
   expect_s3_class(forest_mergeTrees(exampleforest), "forest")
   expect_s3_class(forest_mergeTrees(emptyforest()), "forest")
+  expect_s3_class(forest_mergeTrees(emptyforest(addcolumns = "LAI")), "forest")
   expect_s3_class(forest_mergeTrees(f), "forest")
   expect_s3_class(forest_mergeShrubs(exampleforest), "forest")
   expect_s3_class(forest_mergeShrubs(emptyforest()), "forest")
+  expect_s3_class(forest_mergeShrubs(emptyforest(addcolumns = "LAI")), "forest")
   expect_s3_class(forest_mergeShrubs(f), "forest")
   f2 <- exampleforest
   f2$shrubData <- rbind(f2$shrubData, f2$shrubData, f2$shrubData)

@@ -48,6 +48,7 @@ Accepted names (and the corresponding specifications for the columns in \code{y}
 \item{\code{Height}: Tree or shrub height (in cm).}
 \item{\code{Z50}: Depth (in mm) corresponding to 50 percent of fine roots.}
 \item{\code{Z95}: Depth (in mm) corresponding to 95 percent of fine roots.}
+\item{\code{Z100}: Depth (in mm) corresponding to 100 percent of fine roots.}
 }}
 
 \item{plot_size_y}{The size of shrub plot sampled area (in m2). Alternatively, 'plot_size_y'

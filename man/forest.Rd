@@ -55,6 +55,7 @@ and \code{shrubData} can contain additional columns:
 \item{\code{FuelLoading}: Fine fuel loading (kg/m2).}
 \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
 \item{\code{Z100}: Depth (in mm) corresponding to 100\% of fine roots (to specify a truncated root distribution).}
+\item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
 \item{\code{ObsID}: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts through simulations.
 In \code{\link{fordyn}}, the use of these identifiers can be combined with the control option \code{keepCohortsWithObsID} so that these cohorts are not merged
 or removed during simulations.}
