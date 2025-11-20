@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2025-10-28</h4>
+            <h4 data-toc-skip class="date">2025-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/Metamodelling.Rmd" class="external-link"><code>vignettes/parametrization/Metamodelling.Rmd</code></a></small>
       <div class="d-none name"><code>Metamodelling.Rmd</code></div>
@@ -538,7 +538,7 @@ of the target species, but not others.</p>
 <p>We used forest plot data from the third edition of the Spanish
 National Forest Inventory (IFN3). Forest plots were located in Catalonia
 and with a minimum basal area of 5
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>m</mi><mn>2</mn></msup><mo>·</mo><mi>h</mi><msup><mi>a</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">m^2·ha^{-1}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>m</mi><mn>2</mn></msup><mo>·</mo><mi>h</mi><msup><mi>a</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">m^2·ha^{-1}</annotation></semantics></math>.
 For each target species we randomly selected up to 50 forest plots where
 the species was dominant (&gt; 50% in basal area). Plant records
 corresponding to species different than the target species were
@@ -589,7 +589,7 @@ Granier’s equation (or in other words, to scale its parameters).</p>
 estimates obtained using the basic and advanced models, where we use the
 percentage of PAR of the plant cohort in the x-axis to show whether the
 relationship changes between sunlit or shade cohorts:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="700"></p>
 It is evident that there are differences in the average ratio across
 species and apparently this ratio does not change with the vertical
 position of the cohort within the canopy. We can estimate
@@ -911,7 +911,7 @@ fitting the Weibull function to the ratio of transpiration values
 obtained in simulations with vs without soil drought limitations (under
 Sperry’s transpiration mode) as a function of soil water potential. This
 is illustrated in the figure below for the different species:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="water-use-efficiency-co2-386">Water use efficiency ([CO2] = 386)<a class="anchor" aria-label="anchor" href="#water-use-efficiency-co2-386"></a>
@@ -936,25 +936,25 @@ corresponding to plots/species where at least 90% of PAR was available
 for at least one cohort of the species in the plot.</p>
 <p>Using this selection, we then draw the relationship between PAR and
 WUEg:
-<img src="Metamodelling_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<img src="Metamodelling_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="700"></p>
 <p>where we see that the relationship is species-specific. WUE is known
 to decrease for parts of the canopy receiving less light (e.g. Medrano
 et al. 2012). We can now plot relative WUE in relationship to FPAR:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="700"></p>
 <p>Note that the relationship between relative WUE and PAR is less noisy
 than the relationship between absolute WUE and FPAR. For each species,
 we fit a non-linear model where relative WUE is a power function of
 FPAR:</p>
 <p>We now draw again the previous plot with the species-specific fitted
 relationships, i.e. relative WUEg as a function of FPAR:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" width="700"></p>
 <p>Note that there are substantial differences in the decay coefficients
 among species.</p>
 </div>
 <div class="section level3">
 <h3 id="relationship-between-wue-and-vpd">Relationship between WUE and VPD<a class="anchor" aria-label="anchor" href="#relationship-between-wue-and-vpd"></a>
 </h3>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -967,7 +967,7 @@ function on the ratio of photosynthesis under a given
 value over the photosynthesis at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>386</mn></mrow><annotation encoding="application/x-tex">[CO_2] = 386</annotation></semantics></math>
 ppm:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="meta-modelling-parameters">Meta-modelling parameters<a class="anchor" aria-label="anchor" href="#meta-modelling-parameters"></a>
@@ -1366,7 +1366,7 @@ water balance model on all the forest plots but using the estimated
 parameters instead of the default values.</p>
 <p>The following plots show the effect of the new parameters on annual E
 and annual Ag for plant cohorts of the plots included in the study:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-20-1.png" width="960"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" width="960"></p>
 </div>
 <div class="section level2">
 <h2 id="meta-modelling-results-for-other-datasets">Meta-modelling results for other datasets<a class="anchor" aria-label="anchor" href="#meta-modelling-results-for-other-datasets"></a>
@@ -1903,7 +1903,7 @@ grapevine. Agricultural Water Management 114:4–10.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -1,0 +1,256 @@
+# Package overview
+
+## Introduction
+
+Being able to anticipate the impact of global change on forest
+ecosystems is one of the major environmental challenges in contemporary
+societies. However, uncertainties in how forests function and practical
+constraints in how to integrate available information prevent the
+development of robust and reliable predictive models. Despite the amount
+of knowledge accumulated about the functioning and dynamics of
+Mediterranean forests, scientists should make coordinate their efforts
+to address the challenge of integrating the different global change
+drivers in a modelling framework useful for research and applications.
+
+The R package `medfate` has been designed to study the characteristics
+and simulate the functioning and structural dynamics of forest
+ecosystems. Climatic conditions are the main environmental drivers, with
+a particular focus on drought and fire impacts under Mediterranean
+conditions. Representation of vegetation accounts for structural and
+compositional variation but is not spatially-explicit (i.e. trees or
+shrubs do not have explicit coordinates within forest stands). This
+representation is chosen so that package functions can be easily applied
+to forest plot data from national forest inventories. Since the package
+intends to facilitate predictions of not only forest functioning but
+also forest structural and compositional dynamics, the taxonomic
+identity of plants is stored, and parameter values need to be provided
+for each taxonomic entity (but the package could be used with functional
+groups).
+
+Currently, the distributed R package does not include any vignette, but
+the package [website](https://emf-creaf.github.io/medfate/) includes
+articles covering model simulation examples, sensitivity analysis,
+parameter specification, model evaluation and applications. In addition,
+complete documentation on the design and formulation of the simulation
+models can be found at the [medfate reference
+book](https://emf-creaf.github.io/medfatebook/index.html).
+
+## Dynamic simulation functions
+
+Three main kinds of simulations can be done in medfate, each model
+building on the previous ones.
+
+### Water/energy balance
+
+Eco-hydrological processes are fundamental for the simulation models
+included in the `medfate` package. In particular, the package allows the
+simulation of water balance of soils and plants within forest stands.
+Processes affecting soil water content include rainfall, canopy
+interception, infiltration and runoff, percolation and deep drainage,
+soil evaporation and plant transpiration. In `medfate`, the soil water
+balance of a forest is primarily used to predict drought stress for
+living plants in it. Soil/plant water balance can be studied for a given
+forest stand using function
+[`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md).
+Function
+[`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) can be
+run using a different level of complexity. The *basic* approach focuses
+on soil water balance and strongly simplifies processes underlying plant
+transpiration. In contrast, the *advanced* approach is computationally
+more demanding but provides an explicit simulation of processes
+regulating stomatal behaviour and water transport through the plant,
+which also requires an explicit energy balance.
+
+Examples of simulation with
+[`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) under
+the two approaches are provided in articles [*Basic water
+balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html)
+and [*Advanced water and energy
+balance*](https://emf-creaf.github.io/medfate/articles/runmodels/AdvancedWaterEnergyBalance.html),
+respectively.
+
+### Carbon balance, growth and mortality
+
+Changes in leaf area and plant growth are key to evaluate the influence
+of climatic conditions on forest structure and function. Processes
+affecting changes leaf area and plant size are those involved in water,
+energy and carbon balances, as well as those directly affecting
+meristematic activity (e.g. phenology or other sink limitations). Carbon
+balance arises from the interplay between carbon assimilation via
+photosynthesis and the respiration costs required for the maintenance of
+existing cells and the formation of new tissue. Water and carbon
+balances are coupled through the regulation of gas exchange done by leaf
+stomata. Plant growth is affected by the availability of carbon (source
+limitation), but also by temperature and water status (sink limitation).
+In addition, water and carbon status of cohort plants can increase the
+likelihood of mortality, resulting in a decrease of the number of
+individuals in the cohort.
+
+Package `medfate` allows simulating daily water/carbon balances, growth
+and mortality of a set of cohorts (competing for light and water) in a
+single forest stand using function
+[`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md),
+which adds carbon balance, growth and mortality processes to those
+simulated by function
+[`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md). As
+before, function
+[`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
+can be run using two levels of complexity which match the two
+transpiration modes of function
+[`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md).
+
+An example of simulation with
+[`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md) is
+provided in article [*Forest
+growth*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html).
+
+### Forest dynamics
+
+Changes in forest structure and composition result from the interplay of
+demographic processes (growth, mortality and recruitment) and may
+include disturbances such as forest management. The package includes
+function
+[`fordyn()`](https://emf-creaf.github.io/medfate/reference/fordyn.md),
+which allows simulating these processes at yearly time steps on a given
+forest stand. Function
+[`fordyn()`](https://emf-creaf.github.io/medfate/reference/fordyn.md)
+builds on the previous two simulation functions and incorporates
+recruitment and forest management to the set of simulated processes.
+
+An example of simulation with
+[`fordyn()`](https://emf-creaf.github.io/medfate/reference/fordyn.md) is
+provided in article [*Forest
+dynamics*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestDynamics.html).
+
+## Plots, summaries and post-processing
+
+Simulation models produce multiple outputs and it is important to learn
+how to visualize them and extract information for further analysis. Each
+simulation function returns an output object whose S3 class has the same
+name as the simulation function
+(e.g. [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md)
+returns an object of class `spwb`).
+
+- Implementations of [`summary()`](https://rdrr.io/r/base/summary.html)
+  and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) are
+  available for simulation output objects, which facilitates displaying
+  and summarizing information.
+- A generic function
+  [`shinyplot()`](https://emf-creaf.github.io/medfate/reference/shinyplot.md)
+  (as well as its implementation for different output objects) allows an
+  interactive exploration of simulation results.
+- Model outputs can be extracted to simple `data.frame` objects through
+  function
+  [`extract()`](https://emf-creaf.github.io/medfate/reference/extract.md).
+
+Additional package function are meant to be used on simulation results
+and produce time series of additional (derived) properties:
+
+- [`droughtStress()`](https://emf-creaf.github.io/medfate/reference/droughtStress.md)
+  : Plant/stand drought stress indices
+- [`waterUseEfficiency()`](https://emf-creaf.github.io/medfate/reference/waterUseEfficiency.md)
+  : Water use efficiency metrics
+- [`resistances()`](https://emf-creaf.github.io/medfate/reference/resistances.md)
+  : Hydraulic resistances to water transport
+- [`fireHazard()`](https://emf-creaf.github.io/medfate/reference/fireHazard.md)
+  : Potential fire behaviour (see below)
+
+## Fuel properties and fire hazard
+
+Vegetation functioning and dynamics have strong, but complex, effects on
+fire hazard. On one hand, growth and death of organs and individuals
+changes the amount of standing live and dead fuels, as well as downed
+dead fuels. On the other, day-to-day changes in soil and plant water
+content changes the physical properties of fuel, notably fuel moisture
+content.
+
+Package `medfate` provides functions to estimate fuel properties and
+potential fire behaviour in forest inventory plots. Specifically,
+function
+[`fuel_stratification()`](https://emf-creaf.github.io/medfate/reference/fuel_properties.md)
+estimates the division of live fuels in the stand between understory and
+canopy strata; and
+[`fuel_FCCS()`](https://emf-creaf.github.io/medfate/reference/fuel_properties.md)
+calculates fuel characteristics from a `forest` object following an
+adaptation of the protocols described for the Fuel Characteristics
+Classification System (Prichard et al. 2013). In FCCS, fuelbed is
+divided into six strata, including canopy, shrub, herbaceous vegetation,
+dead woody materials, leaf litter and ground fuels. All except ground
+fuels are considered here. The intensity of burning depends on several
+factors, including topography, wind conditions, fuel structure and its
+moisture content, which is determined from antecedent and current
+meteorological conditions. A modification of the Rothermel’s (1972)
+model is used in function
+[`fire_FCCS()`](https://emf-creaf.github.io/medfate/reference/fire_behaviour.md)
+to calculate the intensity of surface fire reaction and the rate of fire
+spread of surface fires assuming a steady-state fire. Both quantities
+are dependent on fuel characteristics, windspeed and direction, and
+topographic slope and aspect.
+
+## Internal package functions
+
+Package **medfate** contains many more functions than those visible in
+reference lists. Since **v.4.3.2** multiple functions are labelled as
+*internal*, meaning that they are accessible and documented, but they
+are not visible in reference list, so that the sheer number of functions
+does not overwhelm users.
+
+### Plant, species and stand attributes
+
+The package includes a number of functions to examine properties of the
+plants conforming the `forest` object, summary functions at the stand
+level or vertical profiles of several physical properties:
+
+- `plant_*`: Cohort-level information (species name, id, leaf area
+  index, height…).
+- `species_*`: Species-level attributes (e.g. basal area, leaf area
+  index).
+- `stand_*`: Stand-level attributes (e.g. basal area).
+- `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area
+  density).
+
+### Sub-model functions
+
+Many of the functions included in **medfate** are internally called by
+simulation functions. Some of them are made available to the user to
+facilitate a deeper understanding the different sub-models and a more
+creative use of the package, but most users can ignore them.
+
+Sub-model functions are grouped by *subject*, which is included in the
+name of the function. The different sub-model functions are (by
+subject):
+
+- `biophysics_*`: Physical and biophysical utility functions.
+- `carbon_*`: Carbon balance.
+- `fire_*`: Fire severity.
+- `fuel_*`: Fuel properties.
+- `hydraulics_*`: Plant hydraulics.
+- `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil
+  evaporation, soil infiltration).
+- `light_*`: Radiation extinction and absorption.
+- `moisture_*`: Live tissue moisture.
+- `pheno_*`: Leaf phenology.
+- `photo_*`: Leaf photosynthesis.
+- `root_*`: Root distribution and conductance calculations.
+- `soil_*`: Soil hydraulics and thermodynamics.
+- `transp_*`: Stomatal regulation and resulting
+  transpiration/photosynthesis.
+- `wind_*`: Canopy turbulence.
+
+## Companion packages
+
+During the development of **medfate** some functions have been
+originally placed there and then moved to more specialized packages
+which evolve together with **medfate**:
+
+- Package [**meteoland**](https://emf-creaf.github.io/meteoland) allows
+  generating daily weather input for simulation models in **medfate**.
+- Package [**medfateland**](https://emf-creaf.github.io/medfateland)
+  extends **medfate** by allowing simulations to be performed in a
+  spatially explicit context.
+- Package [**traits4models**](https://emf-creaf.github.io/traits4models)
+  provides functions to help creating species parameter inputs for
+  **medfate** and **medfateland** simulation functions.
+
+The set of R packages are developed and maintained by the [*Ecosystem
+Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).

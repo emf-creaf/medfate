@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-10-28</h4>
+            <h4 data-toc-skip class="date">2025-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="d-none name"><code>SensitivityCalibration.Rmd</code></div>
@@ -481,7 +481,7 @@ and the water potentials corresponding to whole-plant conductance
 reduction (i.e. <code>Psi_Extract</code>).</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sa_transp</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">150</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-22-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" width="480" style="display: block; margin: auto;"></p>
 <p>We can run the same sensitivity analysis but focusing on the input
 factors relevant for predicted plant drought stress (i.e. using
 <code>of_stress</code> as model output function):</p>
@@ -515,7 +515,7 @@ more relevant than parameters of fine root distribution
 (<code>Z50</code>) and rock fragment content (<code>rfc</code>).</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sa_stress</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">300</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-26-1.png" class="r-plt" width="480" style="display: block; margin: auto;"></p>
 <p>Finally, we can study the contribution of input factors to model
 performance in terms of soil water content dynamics (i.e. using
 <code>of_eval</code> as model output function):</p>
@@ -549,7 +549,7 @@ potentials corresponding to whole-plant conductance reduction
 (i.e. <code>Psi_Extract</code>).</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sa_eval</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-30-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-30-1.png" class="r-plt" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -717,7 +717,7 @@ accepted because the multivariate potential scale reduction factor was ≤
 distribution of parameters that they generate using:</p>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-42-1.png" width="633.6">
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-42-1.png" class="r-plt" width="633.6">
 We can also plot the marginal prior and posterior density distributions
 for each parameter. In this case, we see a similar <code>Z50</code>
 distribution for the two trees, which is more informative than the prior
@@ -728,12 +728,12 @@ has small influence on soil water dynamics regardless of its root
 distribution.</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/marginalPlot.html" class="external-link">marginalPlot</a></span><span class="op">(</span><span class="va">mcmc_out</span>, prior <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-43-1.png" width="633.6"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-43-1.png" class="r-plt" width="633.6"></p>
 <p>Plots can also be produced to display the correlation between
 parameter values.</p>
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/correlationPlot.html" class="external-link">correlationPlot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-44-1.png" width="633.6">
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-44-1.png" class="r-plt" width="633.6">
 Here it can be observed the large correlation between <code>Z50</code>
 of the two tree cohorts. Since their LAI values are similar, a similar
 effect on soil water depletion can be obtained to some extent by
@@ -767,12 +767,12 @@ example total transpiration:</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_transp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Posterior transpiration"</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Total transpiration (mm)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-47-1.png" width="480"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-47-1.png" class="r-plt" width="480"></p>
 <p>or average plant drought stress:</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>, main<span class="op">=</span><span class="st">"Posterior stress"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png" width="480"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png" class="r-plt" width="480"></p>
 <p>Finally, we can use object <code>prior</code> to generate another
 sample under the prior parameter distribution, perform simulations:</p>
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
@@ -789,14 +789,14 @@ prediction uncertainty for the same output variables:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_transp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Prior"</span>, <span class="st">"Posterior"</span><span class="op">)</span>, </span>
 <span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">1</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-50-1.png" width="480"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-50-1.png" class="r-plt" width="480"></p>
 <div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS_prior</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Plant stress"</span>, </span>
 <span>     xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>,</span>
 <span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Prior"</span>, <span class="st">"Posterior"</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">1</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-51-1.png" width="480"></p>
+<p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-51-1.png" class="r-plt" width="480"></p>
 </div>
 </div>
 <div class="section level2">
@@ -837,7 +837,7 @@ Analysis. The Primer. Wiley.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -89,8 +89,8 @@ and a soil data input to create input objects for simulation functions <code><a 
 <li><p><code>snowpack</code>: The amount of snow (in mm) in the snow pack over the soil.</p></li>
 <li><p><code>canopy</code>: A list of stand-level state variables.</p></li>
 <li><p><code>cohorts</code>: A data frame with cohort information, with columns <code>SP</code> and <code>Name</code>.</p></li>
-<li><p><code>above</code>: A data frame with columns  <code>H</code>, <code>CR</code> and <code>LAI</code> (see function <code>forest2aboveground</code>).</p></li>
-<li><p><code>below</code>: A data frame with columns <code>Z50</code>, <code>Z95</code>.  If <code>control$transpirationMode = "Sperry"</code> additional columns are <code>fineRootBiomass</code> and <code>coarseRootSoilVolume</code>.</p></li>
+<li><p><code>above</code>: A data frame with columns such as <code>H</code>, <code>CR</code> and <code>LAI_live</code> (see function <code>forest2aboveground</code>).</p></li>
+<li><p><code>below</code>: A data frame with columns <code>Z50</code>, <code>Z95</code> and <code>Z100</code>.</p></li>
 <li><p><code>belowLayers</code>: A list. If <code>control$transpirationMode = "Granier"</code> it contains elements:
 </p><ul><li><p><code>V</code>: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).</p></li>
 <li><p><code>L</code>: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).</p></li>
@@ -729,10 +729,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead Age ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -1386,10 +1386,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead Age ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -2081,10 +2081,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead Age ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -2781,10 +2781,10 @@ they can still be used for back-compatibility.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H   CR LAI_live LAI_expanded LAI_dead ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.66     0.80         0.80        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.60     0.50         0.50        0  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.80     0.03         0.03        0  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H   CR LAI_live LAI_expanded LAI_dead Age ObsID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.66     0.80         0.80        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.60     0.50         0.50        0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.80     0.03         0.03        0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100</span>
@@ -2994,7 +2994,7 @@ they can still be used for back-compatibility.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

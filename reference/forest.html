@@ -91,6 +91,7 @@ and <code>shrubData</code> can contain additional columns:</p><ul><li><p><code>L
 <li><p><code>FuelLoading</code>: Fine fuel loading (kg/m2).</p></li>
 <li><p><code>CrownRatio</code>: The ratio between crown length and total height (between 0 and 1)</p></li>
 <li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
+<li><p><code>Age</code>: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with <code><a href="fordyn.html">fordyn</a></code>.</p></li>
 <li><p><code>ObsID</code>: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts through simulations.
 In <code><a href="fordyn.html">fordyn</a></code>, the use of these identifiers can be combined with the control option <code>keepCohortsWithObsID</code> so that these cohorts are not merged
 or removed during simulations.</p></li>
@@ -121,7 +122,7 @@ one or the other, and not all of them at the same time.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
