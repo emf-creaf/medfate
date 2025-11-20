@@ -1,7 +1,26 @@
+.checkForestColumns <-function(forest) {
+  ntree <- nrow(forest$treeData)
+  if(!("Z100" %in% names(forest$treeData))) forest$treeData$Z100 <- as.numeric(rep(NA, ntree))
+  if(!("Age" %in% names(forest$treeData))) forest$treeData$Age <- as.numeric(rep(NA, ntree))
+  if(!("ObsID" %in% names(forest$treeData))) forest$treeData$ObsID <- as.character(rep(NA, ntree))
+  forest$treeData <- forest$treeData[,c("Species", "N", "DBH", "Height", "Z50", "Z95","Z100", "Age", "ObsID")]
+  nshrub <- nrow(forest$shrubData)
+  if(!("Z100" %in% names(forest$shrubData))) forest$shrubData$Z100 <- as.numeric(rep(NA, nshrub))
+  if(!("Age" %in% names(forest$shrubData))) forest$shrubData$Age <- as.numeric(rep(NA, nshrub))
+  if(!("ObsID" %in% names(forest$shrubData))) forest$shrubData$ObsID <- as.character(rep(NA, nshrub))
+  forest$shrubData <- forest$shrubData[,c("Species", "Cover", "Height", "Z50", "Z95","Z100", "Age", "ObsID")]
+  return(forest)
+}
 .nextYearForest<-function(forest, xo, SpParams, control,
                           planted_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID")),
                           recr_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID")),
                           resp_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID"))) {
+  
+  #Check completeness of columns in forest objects
+  forest <- .checkForestColumns(forest)
+  planted_forest <- .checkForestColumns(planted_forest)
+  recr_forest <- .checkForestColumns(recr_forest)
+  resp_forest <- .checkForestColumns(resp_forest)
   
   #Determine offsets
   treeOffset <- 0
@@ -120,6 +139,10 @@
   sel_vec <- c(rep(TRUE, nrow(forest$treeData)),
                rep(control$shrubDynamics, nrow(forest$shrubData)))
   
+  
+  # 4.1 Increase forest age for existing cohorts
+  forest$treeData$Age <- forest$treeData$Age + 1
+  forest$shrubData$Age <- forest$shrubData$Age + 1
   
   # 4.2 Merge cohorts in forest object
   forest$treeData <- rbind(forest$treeData, planted_forest$treeData, recr_forest$treeData, resp_forest$treeData)
@@ -389,7 +412,8 @@
   return(dtt)
 }
 .createCutTreeTable<-function(step, year, x, N_cut) {
-  range = numeric(0)
+  range <- numeric(0)
+  isTree <- !is.na(x$above$DBH)
   if(length(N_cut)>0) range = 1:length(N_cut)
   ctt<-data.frame(Step = rep(step, length(N_cut)), 
                  Year = rep(year, length(N_cut)),

@@ -97,6 +97,12 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
                sel4a | sel4b | sel5a | sel5b | sel6a | sel6b | sel7a | sel7b | 
                sel8a | sel8b | sel9a | sel9b | sel10)
     y <- x[nosel, c("Species", "DBH", "Height","N","Z50", "Z95"), drop = FALSE]
+    if("Z100" %in% names(x)) y$Z100 <- x$Z100[nosel]
+    if("LAI" %in% names(x)) y$LAI <- x$LAI[nosel]
+    if("FoliarBiomass" %in% names(x)) y$FoliarBiomass <- x$FoliarBiomass[nosel]
+    if("FuelLoading" %in% names(x)) y$FuelLoading <- x$FuelLoading[nosel]
+    if("Age" %in% names(x)) y$Age <- x$Age[nosel]
+    if("ObsID" %in% names(x)) y$ObsID <- x$ObsID[nosel]
     if(sum(sel0a)>0) y <- rbind(y, mergeTreesSize(x[sel0a,, drop = FALSE]))
     if(sum(sel0b)>0) y <- rbind(y, mergeTreesSize(x[sel0b,, drop = FALSE]))
     if(sum(sel1a)>0) y <- rbind(y, mergeTreesSize(x[sel1a,, drop = FALSE]))
@@ -232,6 +238,12 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FAL
                  sel4a | sel4b | sel5a | sel5b | sel6a | sel6b | sel7a | sel7b | 
                  sel8a | sel8b | sel9a | sel9b | sel10)
     y = x[nosel,c("Species", "Height", "Cover", "Z50", "Z95"), drop = FALSE]
+    if("Z100" %in% names(x)) y$Z100 <- x$Z100[nosel]
+    if("LAI" %in% names(x)) y$LAI <- x$LAI[nosel]
+    if("FoliarBiomass" %in% names(x)) y$FoliarBiomass <- x$FoliarBiomass[nosel]
+    if("FuelLoading" %in% names(x)) y$FuelLoading <- x$FuelLoading[nosel]
+    if("Age" %in% names(x)) y$Age <- x$Age[nosel]
+    if("ObsID" %in% names(x)) y$ObsID <- x$ObsID[nosel]
     if(sum(sel0a)>0) y <- rbind(y, mergeShrubsSize(x[sel0a,, drop = FALSE]))
     if(sum(sel0b)>0) y <- rbind(y, mergeShrubsSize(x[sel0b,, drop = FALSE]))
     if(sum(sel1a)>0) y <- rbind(y, mergeShrubsSize(x[sel1a,, drop = FALSE]))

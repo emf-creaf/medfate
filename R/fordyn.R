@@ -162,17 +162,8 @@ fordyn<-function(forest, soil, SpParams,
     }
     
     #Ensure columns relevant for fordyn (in case there are other)
-    ntree <- nrow(forest$treeData)
-    if(!("Z100" %in% names(forest$treeData))) forest$treeData$Z100 <- as.numeric(rep(NA, ntree))
-    if(!("Age" %in% names(forest$treeData))) forest$treeData$Age <- as.numeric(rep(NA, ntree))
-    if(!("ObsID" %in% names(forest$treeData))) forest$treeData$ObsID <- as.character(rep(NA, ntree))
-    forest$treeData <- forest$treeData[,c("Species", "N", "DBH", "Height", "Z50", "Z95","Z100", "Age", "ObsID")]
-    nshrub <- nrow(forest$shrubData)
-    if(!("Z100" %in% names(forest$shrubData))) forest$shrubData$Z100 <- as.numeric(rep(NA, nshrub))
-    if(!("Age" %in% names(forest$shrubData))) forest$shrubData$Age <- as.numeric(rep(NA, nshrub))
-    if(!("ObsID" %in% names(forest$shrubData))) forest$shrubData$ObsID <- as.character(rep(NA, nshrub))
-    forest$shrubData <- forest$shrubData[,c("Species", "Cover", "Height", "Z50", "Z95","Z100", "Age", "ObsID")]
-    
+    forest <- .checkForestColumns(forest)
+
     #Fill missing root params
     if(control$fillMissingRootParams) {
       treeSPZ95 <- species_parameter(forest$treeData$Species, SpParams, "Z95")
@@ -244,12 +235,6 @@ fordyn<-function(forest, soil, SpParams,
       forest$shrubData$Z95  <- xo$below$Z95[!isTree]
       forest$shrubData$Z100  <- xo$below$Z100[!isTree]
     }
-    if("Age" %in% names(forest$treeData)) {
-      forest$treeData$Age <- forest$treeData$Age + 1
-    }
-    if("Age" %in% names(forest$shrubData)) {
-      forest$shrubData$Age <- forest$shrubData$Age + 1
-    }
     
     # 2.3 Call management function if required
     cutTreeTableYear <- NULL
@@ -270,6 +255,9 @@ fordyn<-function(forest, soil, SpParams,
       # Retrieve plantation information
       planted_forest <- management_result$planted_forest
       ntree_planted <- nrow(planted_forest$treeData)
+      if(!("Z100" %in% names(planted_forest$treeData))) planted_forest$treeData$Z100 <- as.numeric(rep(NA, ntree_planted))
+      if(!("Age" %in% names(planted_forest$treeData))) planted_forest$treeData$Age <- as.numeric(rep(NA, ntree_planted))
+      if(!("ObsID" %in% names(planted_forest$treeData))) planted_forest$treeData$ObsID <- as.character(rep(NA, ntree_planted))
       if(ntree_planted>0) {
         for(i in 1:ntree_planted) {
           if(length(grep("[a-z]", planted_forest$treeData$Species[i]))==0) planted_forest$treeData$Species[i] <- SpParams$Name[SpParams$SpIndex == planted_forest$treeData$Species[i]]
@@ -277,12 +265,12 @@ fordyn<-function(forest, soil, SpParams,
           planted_forest$treeData$Z95[i] <- species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
           if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] <- 250
           if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] <- 500
-          if(!("Z100" %in% names(planted_forest$treeData))) planted_forest$treeData$Z100 <- as.numeric(rep(NA, ntree_planted))
-          if(!("Age" %in% names(planted_forest$treeData))) planted_forest$treeData$Age <- as.numeric(rep(NA, ntree_planted))
-          if(!("ObsID" %in% names(planted_forest$treeData))) planted_forest$treeData$ObsID <- as.character(rep(NA, ntree_planted))
         }
       }
       nshrub_planted <- nrow(planted_forest$shrubData)
+      if(!("Z100" %in% names(planted_forest$shrubData))) planted_forest$shrubData$Z100 <- as.numeric(rep(NA, nshrub_planted))
+      if(!("Age" %in% names(planted_forest$shrubData))) planted_forest$shrubData$Age <- as.numeric(rep(NA, nshrub_planted))
+      if(!("ObsID" %in% names(planted_forest$shrubData))) planted_forest$shrubData$ObsID <- as.character(rep(NA, nshrub_planted))
       if(nshrub_planted>0) {
         for(i in 1:nrow(planted_forest$shrubData)) {
           if(length(grep("[a-z]", planted_forest$shrubData$Species[i]))==0) planted_forest$shrubData$Species[i] <- SpParams$Name[SpParams$SpIndex == planted_forest$shrubData$Species[i]]
@@ -290,9 +278,6 @@ fordyn<-function(forest, soil, SpParams,
           planted_forest$shrubData$Z95[i] <- species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ95")
           if(is.na(planted_forest$shrubData$Z50[i])) planted_forest$shrubData$Z50[i] <- 100
           if(is.na(planted_forest$shrubData$Z95[i])) planted_forest$shrubData$Z95[i] <- 300
-          if(!("Z100" %in% names(planted_forest$shrubData))) planted_forest$shrubData$Z100 <- as.numeric(rep(NA, nshrub_planted))
-          if(!("Age" %in% names(planted_forest$shrubData))) planted_forest$shrubData$Age <- as.numeric(rep(NA, nshrub_planted))
-          if(!("ObsID" %in% names(planted_forest$shrubData))) planted_forest$shrubData$ObsID <- as.character(rep(NA, nshrub_planted))
         }
       }
       
