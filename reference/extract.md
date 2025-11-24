@@ -54,7 +54,7 @@ extract(
 - addunits:
 
   A flag to indicate that variable units should be added whenever
-  possible (currently only available for daily output).
+  possible.
 
 ## Value
 
