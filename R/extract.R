@@ -115,7 +115,7 @@
   return(m)
 }
 
-.getOutputUnit<-function(level, output, variable) {
+.getDailyOutputUnit<-function(level, output, variable) {
   u <- NULL 
   if(level=="forest") {
     if(output=="WaterBalance") {
@@ -168,14 +168,18 @@
     else if(variable %in% c("LAgrowth", "FRAgrowth")) u <- "m2/day"
     else if(variable %in% c("SAgrowth")) u <- "cm2/day"
     else if(variable %in% c("StarvationRate", "DessicationRate", "MortalityRate")) u <- "day-1"
+  } else if(level=="sunlitleaf" || level=="shadeleaf") {
+    if(variable %in% c("LeafPsiMin", "LeafPsiMax")) u <- "MPa" 
+    else if(variable %in% c("TempMin", "TempMax")) u <- "celsius" 
+    else if(variable %in% c("GSWMin", "GSWMax")) u <- "mol m-2 s-1" 
   }
   return(u)
 }
-.addOutputUnits<-function(x, level, output) {
+.addDailyOutputUnits<-function(x, level, output) {
   cnames <- colnames(x)
   cnames <- cnames[!(cnames %in% c("date", "soillayer", "cohort", "species", "sunlitleaf", "shadeleaf"))]
   for(i in 1:ncol(x)) {
-    u <- .getOutputUnit(level, output, cnames[i])
+    u <- .getDailyOutputUnit(level, output, cnames[i])
     if(!is.null(u)) {
       x[[cnames[i]]] <- units::set_units(x[[cnames[i]]], u, mode = "standard")
     }
@@ -269,7 +273,7 @@
         if(ncol(M)>0) {
           row.names(M) <- NULL
           M <- as.data.frame(M)
-          if(addunits) M <- .addOutputUnits(M, level, n)
+          if(addunits) M <- .addDailyOutputUnits(M, level, n)
           out <- cbind(out, M)
         }
       }
@@ -292,7 +296,7 @@
         }
       }
     }
-    if(addunits) out <- .addOutputUnits(out, level, "")
+    if(addunits) out <- .addDailyOutputUnits(out, level, "")
   } else if (level =="cohort") {
     plant_level_names <-c("Plants", "LabileCarbonBalance","PlantBiomassBalance", 
                           "PlantStructure", "GrowthMortality")
@@ -318,7 +322,7 @@
         }
       }
     }
-    if(addunits) out <- .addOutputUnits(out, level, "")
+    if(addunits) out <- .addDailyOutputUnits(out, level, "")
   } else if (level =="sunlitleaf") {
     leaf_level_names <-c("SunlitLeaves")
     if(is.null(output)) {
@@ -328,7 +332,9 @@
     }
     out <- data.frame(date = rep(dates, length(cohnames)),
                       cohort = cohnames[gl(length(cohnames), length(dates))],
-                      species = spnames[gl(length(cohnames), length(dates))])
+                      species = spnames[gl(length(cohnames), length(dates))],
+                      leaftype = "sunlit")
+    if(addunits) out$date <- as.Date(out$date)
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
@@ -340,6 +346,7 @@
         }
       }
     }
+    if(addunits) out <- .addDailyOutputUnits(out, level, "")
   } else if (level =="shadeleaf") {
     leaf_level_names <-c("ShadeLeaves")
     if(is.null(output)) {
@@ -349,7 +356,9 @@
     }
     out <- data.frame(date = rep(dates, length(cohnames)),
                       cohort = cohnames[gl(length(cohnames), length(dates))],
-                      species = spnames[gl(length(cohnames), length(dates))])
+                      species = spnames[gl(length(cohnames), length(dates))],
+                      leaftype = "shade")
+    if(addunits) out$date <- as.Date(out$date)
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
@@ -361,6 +370,7 @@
         }
       }
     }
+    if(addunits) out <- .addDailyOutputUnits(out, level, "")
   }
   return(out)
 }
