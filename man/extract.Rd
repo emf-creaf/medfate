@@ -15,7 +15,7 @@ extract(
 )
 }
 \arguments{
-\item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{aspwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
+\item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{aspwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}.}
 
 \item{level}{Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results),
 "sunlitleaf" or "shadeleaf" (leaf-level results)}
@@ -78,13 +78,13 @@ x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
 
 #Extracts daily forest-level output as a data frame
-extract(S1, level = "forest")
+extract(S1, level = "forest", addunits = TRUE)
 
 #Extracts daily soil layer-level output as a data frame
-extract(S1, level = "soillayer")
+extract(S1, level = "soillayer", addunits = TRUE)
 
 #Extracts daily cohort-level output as a data frame
-extract(S1, level = "cohort")
+extract(S1, level = "cohort", addunits = TRUE)
 
 #Select the output tables/variables to be extracted
 extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))

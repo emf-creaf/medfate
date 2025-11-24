@@ -484,5 +484,8 @@ test_that("Can produce all fordyn plots",{
   expect_s3_class(plot(fd, "DominantTreeDiameter"), "ggplot")
   expect_s3_class(plot(fd, "QuadraticMeanTreeDiameter"), "ggplot")
   expect_s3_class(plot(fd, "HartBeckingIndex"), "ggplot")
+  expect_s3_class(extract(fd, level = "forest"), "data.frame")
+  expect_s3_class(extract(fd, level = "soillayer"), "data.frame")
+  expect_s3_class(extract(fd, level = "cohort"), "data.frame")
 })
 

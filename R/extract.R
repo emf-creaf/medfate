@@ -182,82 +182,7 @@
   }
   return(x)
 }
-
-#' Extracts model outputs
-#' 
-#' Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
-#' 
-#' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{aspwb}}, \code{\link{pwb}} or \code{\link{growth}}.
-#' @param level Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results), 
-#' "sunlitleaf" or "shadeleaf" (leaf-level results)
-#' @param output Section of the model output to be explored. See details.
-#' @param vars Variables to be extracted (by default, all of them).
-#' @param dates A date vector indicating the subset of simulated days for which output is desired.
-#' @param subdaily A flag to indicate that subdaily values are desired (see details).
-#' @param addunits A flag to indicate that variable units should be added whenever possible (currently only available for daily output).
-#' 
-#' @details 
-#' When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
-#' example \code{output = "Plants"} will correspond to variables "LAI", "LAIlive", "Transpiration", "StemPLC",... as returned by a call
-#' \code{names(x$Plants)}. 
-#' 
-#' Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). 
-#' When using \code{subdaily = TRUE}, parameter \code{output} is not taken into account, and options for parameter \code{vars} are the following:
-#' \itemize{
-#'   \item{Variables for \code{level = "forest"} or \code{level = "soillayer"}: Not allowed. An error is raised.}
-#'   \item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
-#'   \item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
-#' }
-#' 
-#' @return 
-#' Function \code{extract()} returns a data frame:
-#' \itemize{
-#'   \item{If \code{level = "forest"}, columns are "date" and variable names.}
-#'   \item{If \code{level = "soillayer"}, columns are "date", "soillayer" and variable names.} 
-#'   \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
-#'   \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
-#' }
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' @name extract
-#' @examples
-#' #Load example daily meteorological data
-#' data(examplemeteo)
-#' 
-#' #Load example plot plant data
-#' data(exampleforest)
-#' 
-#' #Default species parameterization
-#' data(SpParamsMED)
-#' 
-#' #Define soil with default soil params (4 layers)
-#' examplesoil <- defaultSoilParams(4)
-#' 
-#' #Initialize control parameters
-#' control <- defaultControl("Granier")
-#' 
-#' #Initialize input
-#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function (ten days)
-#' S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
-#' 
-#' #Extracts daily forest-level output as a data frame
-#' extract(S1, level = "forest")
-#'
-#' #Extracts daily soil layer-level output as a data frame
-#' extract(S1, level = "soillayer")
-#' 
-#' #Extracts daily cohort-level output as a data frame
-#' extract(S1, level = "cohort")
-#' 
-#' #Select the output tables/variables to be extracted
-#' extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))
-#' 
-#' @seealso \code{\link{summary.spwb}}
-#' @export
-extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE, addunits = FALSE)  {
+.extractInner<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE, addunits = FALSE)  {
   if(inherits(x, "aspwb")) {
     level <- match.arg(level, "soillayer")
     subdaily <- FALSE
@@ -285,8 +210,8 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
     if(level %in% c("forest", "soillayer")) stop("Subdaily results are for levels 'cohort', 'sunlitleaf' and 'shadeleaf' only.")
     if(level=="cohort") {
       cohort_types = c("E","Ag","An","dEdP","RootPsi",
-                   "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
-                   "LeafSympPsi", "StemSympPsi","PWB")
+                       "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
+                       "LeafSympPsi", "StemSympPsi","PWB")
       if(is.null(vars)) {
         vars <- cohort_types
       } else {
@@ -323,7 +248,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
   else {
     if(!all(dates %in% row.names(x$WaterBalance))) stop("Some dates are outside the range in 'x'")
   }
-
+  
   
   if(level=="forest") {
     stand_level_names <-c("WaterBalance", "Stand", "Snow",
@@ -438,4 +363,92 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
     }
   }
   return(out)
+}
+
+#' Extracts model outputs
+#' 
+#' Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
+#' 
+#' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{aspwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}.
+#' @param level Level of simulation output, either "forest" (stand-level results), "soillayer" (soil layer-level results), "cohort" (cohort-level results), 
+#' "sunlitleaf" or "shadeleaf" (leaf-level results)
+#' @param output Section of the model output to be explored. See details.
+#' @param vars Variables to be extracted (by default, all of them).
+#' @param dates A date vector indicating the subset of simulated days for which output is desired.
+#' @param subdaily A flag to indicate that subdaily values are desired (see details).
+#' @param addunits A flag to indicate that variable units should be added whenever possible (currently only available for daily output).
+#' 
+#' @details 
+#' When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
+#' example \code{output = "Plants"} will correspond to variables "LAI", "LAIlive", "Transpiration", "StemPLC",... as returned by a call
+#' \code{names(x$Plants)}. 
+#' 
+#' Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). 
+#' When using \code{subdaily = TRUE}, parameter \code{output} is not taken into account, and options for parameter \code{vars} are the following:
+#' \itemize{
+#'   \item{Variables for \code{level = "forest"} or \code{level = "soillayer"}: Not allowed. An error is raised.}
+#'   \item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
+#'   \item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
+#' }
+#' 
+#' @return 
+#' Function \code{extract()} returns a data frame:
+#' \itemize{
+#'   \item{If \code{level = "forest"}, columns are "date" and variable names.}
+#'   \item{If \code{level = "soillayer"}, columns are "date", "soillayer" and variable names.} 
+#'   \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
+#'   \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @name extract
+#' @examples
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforest)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Define soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
+#' 
+#' #Initialize control parameters
+#' control <- defaultControl("Granier")
+#' 
+#' #Initialize input
+#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function (ten days)
+#' S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
+#' 
+#' #Extracts daily forest-level output as a data frame
+#' extract(S1, level = "forest", addunits = TRUE)
+#'
+#' #Extracts daily soil layer-level output as a data frame
+#' extract(S1, level = "soillayer", addunits = TRUE)
+#' 
+#' #Extracts daily cohort-level output as a data frame
+#' extract(S1, level = "cohort", addunits = TRUE)
+#' 
+#' #Select the output tables/variables to be extracted
+#' extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))
+#' 
+#' @seealso \code{\link{summary.spwb}}
+#' @export
+extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE, addunits = FALSE)  {
+  if(inherits(x, "aspwb") || inherits(x, "pwb") || inherits(x, "spwb")|| inherits(x, "growth"))  {
+    return(.extractInner(x, level, output, vars, dates, subdaily, addunits))
+  } else if (inherits(x, "fordyn")) {
+    n <- length(x$GrowthResults)
+    out <- data.frame()
+    for(i in 1:n) {
+      out <- rbind(out, .extractInner(x$GrowthResults[[i]], level, output, vars, dates, subdaily, addunits))
+    }
+    return(out)
+  }
+  stop("Wrong class for 'x'. Should be one of 'aswpb', 'pwb', 'spwb', 'growth' or 'fordyn'")
 }

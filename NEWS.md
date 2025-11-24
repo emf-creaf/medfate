@@ -5,6 +5,7 @@
 * SLA, LeafWidth and r635 imputation for LeafShape 'Spines'
 * Age of cohorts is now allowed in forest objects and incremented in fordyn() simulations
 * Flag 'addunits' in function extract() allows retrieving physical units for daily output variables 
+* Function extract() can now process fordyn() simulations
 
 # medfate 4.8.4
 * Summary, extract and plot functions enabled for aspwb() simulation results

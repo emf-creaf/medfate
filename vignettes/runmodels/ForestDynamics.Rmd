@@ -136,9 +136,15 @@ Instead of examining year by year, it is possible to plot the whole series of re
 plot(fd, "LeafArea")
 ```
 
-Finally, we can create interactive plots for particular steps using function `shinyplot()`, e.g.:
+We can also create interactive plots for particular steps using function `shinyplot()`, e.g.:
 ```{r, eval = FALSE}
 shinyplot(fd$GrowthResults[[1]])
+```
+
+Finally, calling function `extract()` will extract and bind outputs for all the internal calls to function `growth()`:
+```{r}
+extract(fd, "forest", addunits = TRUE) |>
+  tibble::as_tibble()
 ```
 
 ## Forest dynamics including management
