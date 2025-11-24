@@ -76,20 +76,20 @@ important parameters in the advanced water balance model (parameters of
 the hydraulic vulnerability curve are omitted as they should not be
 relevant in simulations without soil water deficit):
 
-| Name              |       SLA |    Al2As | VCleaf_kmax | Kmax_stemxylem |    Gswmax |  Vmax298 |   Jmax298 |
-|:------------------|----------:|---------:|------------:|---------------:|----------:|---------:|----------:|
-| Abies alba        |  7.768174 | 7194.245 |           6 |      1.3000000 | 0.2300000 | 58.08712 | 103.28235 |
-| Castanea sativa   | 13.862317 | 5000.000 |           8 |      1.0000000 | 0.3500000 | 51.34505 |  93.03424 |
-| Fagus sylvatica   | 18.320000 | 2076.120 |           8 |      0.9000000 | 0.3350000 | 94.50000 | 159.90000 |
-| Pinus halepensis  |  5.140523 | 1317.523 |           4 |      0.1500000 | 0.2850000 | 72.19617 | 124.16865 |
-| Pinus nigra       |  4.569508 | 1272.265 |           5 |      0.4100000 | 0.2366667 | 68.50296 | 118.76713 |
-| Pinus pinea       |  4.207291 | 1615.509 |           4 |      0.2500000 | 0.2366667 | 72.42173 | 124.49715 |
-| Pinus sylvestris  |  4.897943 | 1598.180 |           5 |      0.4500000 | 0.2366667 | 83.00000 | 143.00000 |
-| Pinus uncinata    |  3.804390 | 1608.774 |           5 |      0.6895376 | 0.2366667 | 73.41275 | 125.93862 |
-| Quercus pubescens | 11.800000 | 6031.582 |           6 |      0.7000000 | 0.2787500 | 57.33919 | 102.15484 |
-| Quercus ilex      |  6.340000 | 3908.823 |           4 |      0.4000000 | 0.2007222 | 68.51600 | 118.78628 |
-| Quercus faginea   |  8.328895 | 4189.325 |           6 |      0.7000000 | 0.2787500 | 71.21535 | 122.73836 |
-| Quercus suber     |  8.656130 | 4189.325 |           4 |      0.4000000 | 0.2862500 | 70.27833 | 121.36913 |
+| Name | SLA | Al2As | VCleaf_kmax | Kmax_stemxylem | Gswmax | Vmax298 | Jmax298 |
+|:---|---:|---:|---:|---:|---:|---:|---:|
+| Abies alba | 7.768174 | 7194.245 | 6 | 1.3000000 | 0.2300000 | 58.08712 | 103.28235 |
+| Castanea sativa | 13.862317 | 5000.000 | 8 | 1.0000000 | 0.3500000 | 51.34505 | 93.03424 |
+| Fagus sylvatica | 18.320000 | 2076.120 | 8 | 0.9000000 | 0.3350000 | 94.50000 | 159.90000 |
+| Pinus halepensis | 5.140523 | 1317.523 | 4 | 0.1500000 | 0.2850000 | 72.19617 | 124.16865 |
+| Pinus nigra | 4.569508 | 1272.265 | 5 | 0.4100000 | 0.2366667 | 68.50296 | 118.76713 |
+| Pinus pinea | 4.207291 | 1615.509 | 4 | 0.2500000 | 0.2366667 | 72.42173 | 124.49715 |
+| Pinus sylvestris | 4.897943 | 1598.180 | 5 | 0.4500000 | 0.2366667 | 83.00000 | 143.00000 |
+| Pinus uncinata | 3.804390 | 1608.774 | 5 | 0.6895376 | 0.2366667 | 73.41275 | 125.93862 |
+| Quercus pubescens | 11.800000 | 6031.582 | 6 | 0.7000000 | 0.2787500 | 57.33919 | 102.15484 |
+| Quercus ilex | 6.340000 | 3908.823 | 4 | 0.4000000 | 0.2007222 | 68.51600 | 118.78628 |
+| Quercus faginea | 8.328895 | 4189.325 | 6 | 0.7000000 | 0.2787500 | 71.21535 | 122.73836 |
+| Quercus suber | 8.656130 | 4189.325 | 4 | 0.4000000 | 0.2862500 | 70.27833 | 121.36913 |
 
 Ideally, the transpiration and photosynthesis predictions of the
 advanced water balance model should be evaluated with these
@@ -105,10 +105,10 @@ of the target species, but not others.
 
 We used forest plot data from the third edition of the Spanish National
 Forest Inventory (IFN3). Forest plots were located in Catalonia and with
-a minimum basal area of 5 $m^{2} \cdot ha^{- 1}$. For each target
-species we randomly selected up to 50 forest plots where the species was
-dominant (\> 50% in basal area). Plant records corresponding to species
-different than the target species were excluded.
+a minimum basal area of 5 $`m^2·ha^{-1}`$. For each target species we
+randomly selected up to 50 forest plots where the species was dominant
+(\> 50% in basal area). Plant records corresponding to species different
+than the target species were excluded.
 
 Like in other simulation exercises with IFN data, soil data was obtained
 from SoilGrids from plot coordinates, with rock fragment contents
@@ -130,12 +130,11 @@ the percentage of PAR available to the plant cohort, the annual
 transpiration and annual photosynthesis produced by each model.
 
 Additional simulations with increasing carbon dioxide concentration were
-conducted using the Sperry transpiration mode and
-$\left\lbrack CO_{2} \right\rbrack$ values increasing from 350 ppm to
-900 ppm. We also avoided soil water limitations using
-`control$unlimitedSoilWater = TRUE`. For each plot we recorded the
-annual gross photosynthesis per leaf area averaged across plant cohorts
-using their LAI as weights.
+conducted using the Sperry transpiration mode and $`[CO_2]`$ values
+increasing from 350 ppm to 900 ppm. We also avoided soil water
+limitations using `control$unlimitedSoilWater = TRUE`. For each plot we
+recorded the annual gross photosynthesis per leaf area averaged across
+plant cohorts using their LAI as weights.
 
 ## Transpiration ratio
 
@@ -243,9 +242,8 @@ among species.
 
 The parameter `WUE_co2`, which specifies the dependency of WUE on air
 CO2 concentration is estimated by fitting a non-linear function on the
-ratio of photosynthesis under a given
-$\left\lbrack CO_{2} \right\rbrack$ value over the photosynthesis at
-$\left\lbrack CO_{2} \right\rbrack = 386$ ppm:
+ratio of photosynthesis under a given $`[CO_2]`$ value over the
+photosynthesis at $`[CO_2] = 386`$ ppm:
 
 ![](Metamodelling_files/figure-html/unnamed-chunk-16-1.png)
 
@@ -254,20 +252,20 @@ $\left\lbrack CO_{2} \right\rbrack = 386$ ppm:
 The table containing the five parameters estimated via meta-modelling is
 the following:
 
-| Name              |  Tmax_LAI | Tmax_LAIsq | Psi_Extract | Exp_Extract |      WUE |   WUE_par |   WUE_co2 |    WUE_vpd |
-|:------------------|----------:|-----------:|------------:|------------:|---------:|----------:|----------:|-----------:|
-| Abies alba        | 0.0887223 | -0.0039726 |  -1.7470147 |    1.479139 | 8.536401 | 0.1540396 | 0.0043216 | -0.3781743 |
-| Castanea sativa   | 0.1144474 | -0.0051245 |  -0.7786090 |    1.398753 | 8.215770 | 0.1070242 | 0.0024625 | -0.4673612 |
-| Fagus sylvatica   | 0.1549985 | -0.0069402 |  -0.7291183 |    1.404854 | 9.420308 | 0.1542946 | 0.0021851 | -0.4061310 |
-| Pinus halepensis  | 0.1869849 | -0.0083725 |  -0.9218219 |    1.504542 | 8.525550 | 0.5239136 | 0.0025863 | -0.2647169 |
-| Pinus nigra       | 0.1566687 | -0.0070150 |  -1.2504241 |    1.299411 | 7.924382 | 0.1553481 | 0.0028494 | -0.4368847 |
-| Pinus sylvestris  | 0.1573649 | -0.0070462 |  -1.1850580 |    1.325987 | 8.678368 | 0.1708214 | 0.0030029 | -0.4128647 |
-| Pinus pinea       | 0.2285281 | -0.0102326 |  -0.9649847 |    1.491201 | 7.156091 | 0.5190786 | 0.0028180 | -0.3578795 |
-| Pinus uncinata    | 0.1485975 | -0.0066536 |  -1.1278875 |    1.247934 | 6.725716 | 0.1355138 | 0.0039610 | -0.2947655 |
-| Quercus faginea   | 0.1789344 | -0.0080120 |  -0.7696372 |    1.390459 | 8.570752 | 0.1549808 | 0.0018383 | -0.5006765 |
-| Quercus ilex      | 0.1251027 | -0.0056016 |  -1.9726871 |    1.149052 | 8.968208 | 0.1412266 | 0.0024131 | -0.5664879 |
-| Quercus pubescens | 0.1562280 | -0.0069953 |  -0.8145007 |    1.422054 | 8.787211 | 0.1491588 | 0.0018327 | -0.5140889 |
-| Quercus suber     | 0.1563288 | -0.0069998 |  -1.7650814 |    1.607616 | 9.659193 | 0.1498707 | 0.0019227 | -0.6104881 |
+| Name | Tmax_LAI | Tmax_LAIsq | Psi_Extract | Exp_Extract | WUE | WUE_par | WUE_co2 | WUE_vpd |
+|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Abies alba | 0.0887223 | -0.0039726 | -1.7470147 | 1.479139 | 8.536401 | 0.1540396 | 0.0043216 | -0.3781743 |
+| Castanea sativa | 0.1144474 | -0.0051245 | -0.7786090 | 1.398753 | 8.215770 | 0.1070242 | 0.0024625 | -0.4673612 |
+| Fagus sylvatica | 0.1549985 | -0.0069402 | -0.7291183 | 1.404854 | 9.420308 | 0.1542946 | 0.0021851 | -0.4061310 |
+| Pinus halepensis | 0.1869849 | -0.0083725 | -0.9218219 | 1.504542 | 8.525550 | 0.5239136 | 0.0025863 | -0.2647169 |
+| Pinus nigra | 0.1566687 | -0.0070150 | -1.2504241 | 1.299411 | 7.924382 | 0.1553481 | 0.0028494 | -0.4368847 |
+| Pinus sylvestris | 0.1573649 | -0.0070462 | -1.1850580 | 1.325987 | 8.678368 | 0.1708214 | 0.0030029 | -0.4128647 |
+| Pinus pinea | 0.2285281 | -0.0102326 | -0.9649847 | 1.491201 | 7.156091 | 0.5190786 | 0.0028180 | -0.3578795 |
+| Pinus uncinata | 0.1485975 | -0.0066536 | -1.1278875 | 1.247934 | 6.725716 | 0.1355138 | 0.0039610 | -0.2947655 |
+| Quercus faginea | 0.1789344 | -0.0080120 | -0.7696372 | 1.390459 | 8.570752 | 0.1549808 | 0.0018383 | -0.5006765 |
+| Quercus ilex | 0.1251027 | -0.0056016 | -1.9726871 | 1.149052 | 8.968208 | 0.1412266 | 0.0024131 | -0.5664879 |
+| Quercus pubescens | 0.1562280 | -0.0069953 | -0.8145007 | 1.422054 | 8.787211 | 0.1491588 | 0.0018327 | -0.5140889 |
+| Quercus suber | 0.1563288 | -0.0069998 | -1.7650814 | 1.607616 | 9.659193 | 0.1498707 | 0.0019227 | -0.6104881 |
 
 ## Evaluation of the effect of the new parameters
 
@@ -292,24 +290,24 @@ because they are often found in Spain but only seldom in Catalonia. The
 table containing the five parameters estimated via meta-modelling for
 `SpParamsES` is the following:
 
-| Name                           |  Tmax_LAI | Tmax_LAIsq | Psi_Extract | Exp_Extract |       WUE |   WUE_par |   WUE_co2 |    WUE_vpd |
-|:-------------------------------|----------:|-----------:|------------:|------------:|----------:|----------:|----------:|-----------:|
-| Abies alba                     | 0.0684435 | -0.0030646 |  -2.4117055 |    2.461163 | 10.647473 | 0.0811000 | 0.0028847 | -0.2621558 |
-| Castanea sativa                | 0.2299171 | -0.0102948 |  -1.9151784 |    1.349133 |  3.965938 | 0.0467476 | 0.0025497 | -0.4813172 |
-| Eucalyptus globulus            | 0.0659329 | -0.0029522 |  -1.4106981 |    1.735249 | 12.834954 | 0.0549993 | 0.0024851 | -0.6650331 |
-| Fagus sylvatica                | 0.1144470 | -0.0051245 |  -1.5738184 |    1.531656 |  8.818881 | 0.1841914 | 0.0026525 | -0.1814368 |
-| Pinus halepensis               | 0.1295697 | -0.0058016 |  -0.7735734 |   15.117308 | 10.317889 | 0.2443110 | 0.0021391 | -0.5279217 |
-| Pinus nigra                    | 0.1459258 | -0.0065340 |  -1.6659657 |    1.508367 |  7.668740 | 0.1291524 | 0.0030264 | -0.5033021 |
-| Pinus radiata                  | 0.1069460 | -0.0047886 |  -2.1503247 |    2.210450 |  8.540821 | 0.1262097 | 0.0036643 | -0.4628498 |
-| Pinus sylvestris               | 0.1111574 | -0.0049772 |  -1.5467955 |    2.732215 |  9.214660 | 0.1591069 | 0.0029310 | -0.4333924 |
-| Pinus pinaster                 | 0.1666719 | -0.0074629 |  -2.0637003 |    2.105126 |  6.748020 | 0.0912319 | 0.0021488 | -0.5235613 |
-| Pinus pinea                    | 0.1546601 | -0.0069251 |  -0.9565976 |    4.622511 |  9.290184 | 0.2249189 | 0.0021377 | -0.5952773 |
-| Pinus uncinata                 | 0.1288259 | -0.0057683 |  -2.0344815 |    1.786279 |  7.495838 | 0.1162167 | 0.0036965 | -0.1908863 |
-| Quercus faginea                | 0.2115261 | -0.0094713 |  -1.4969646 |    1.870994 |  5.837077 | 0.0612326 | 0.0017731 | -0.4780129 |
-| Quercus ilex ssp. ballota      | 0.2364658 | -0.0105880 |  -2.4340139 |    1.436129 |  4.857045 | 0.0586140 | 0.0020683 | -0.5387930 |
-| Quercus robur                  | 0.2503725 | -0.0112107 |  -1.6676263 |    2.611057 |  6.057327 | 0.0981019 | 0.0021505 | -0.5196672 |
-| Quercus pubescens (Q. humilis) | 0.3373001 | -0.0151030 |  -1.7699035 |    2.541723 |  5.071709 | 0.0369368 | 0.0014863 | -0.3892295 |
-| Quercus suber                  | 0.3953411 | -0.0177018 |  -2.7236054 |    2.564987 |  4.399153 | 0.1167523 | 0.0017575 | -0.5164312 |
+| Name | Tmax_LAI | Tmax_LAIsq | Psi_Extract | Exp_Extract | WUE | WUE_par | WUE_co2 | WUE_vpd |
+|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Abies alba | 0.0684435 | -0.0030646 | -2.4117055 | 2.461163 | 10.647473 | 0.0811000 | 0.0028847 | -0.2621558 |
+| Castanea sativa | 0.2299171 | -0.0102948 | -1.9151784 | 1.349133 | 3.965938 | 0.0467476 | 0.0025497 | -0.4813172 |
+| Eucalyptus globulus | 0.0659329 | -0.0029522 | -1.4106981 | 1.735249 | 12.834954 | 0.0549993 | 0.0024851 | -0.6650331 |
+| Fagus sylvatica | 0.1144470 | -0.0051245 | -1.5738184 | 1.531656 | 8.818881 | 0.1841914 | 0.0026525 | -0.1814368 |
+| Pinus halepensis | 0.1295697 | -0.0058016 | -0.7735734 | 15.117308 | 10.317889 | 0.2443110 | 0.0021391 | -0.5279217 |
+| Pinus nigra | 0.1459258 | -0.0065340 | -1.6659657 | 1.508367 | 7.668740 | 0.1291524 | 0.0030264 | -0.5033021 |
+| Pinus radiata | 0.1069460 | -0.0047886 | -2.1503247 | 2.210450 | 8.540821 | 0.1262097 | 0.0036643 | -0.4628498 |
+| Pinus sylvestris | 0.1111574 | -0.0049772 | -1.5467955 | 2.732215 | 9.214660 | 0.1591069 | 0.0029310 | -0.4333924 |
+| Pinus pinaster | 0.1666719 | -0.0074629 | -2.0637003 | 2.105126 | 6.748020 | 0.0912319 | 0.0021488 | -0.5235613 |
+| Pinus pinea | 0.1546601 | -0.0069251 | -0.9565976 | 4.622511 | 9.290184 | 0.2249189 | 0.0021377 | -0.5952773 |
+| Pinus uncinata | 0.1288259 | -0.0057683 | -2.0344815 | 1.786279 | 7.495838 | 0.1162167 | 0.0036965 | -0.1908863 |
+| Quercus faginea | 0.2115261 | -0.0094713 | -1.4969646 | 1.870994 | 5.837077 | 0.0612326 | 0.0017731 | -0.4780129 |
+| Quercus ilex ssp. ballota | 0.2364658 | -0.0105880 | -2.4340139 | 1.436129 | 4.857045 | 0.0586140 | 0.0020683 | -0.5387930 |
+| Quercus robur | 0.2503725 | -0.0112107 | -1.6676263 | 2.611057 | 6.057327 | 0.0981019 | 0.0021505 | -0.5196672 |
+| Quercus pubescens (Q. humilis) | 0.3373001 | -0.0151030 | -1.7699035 | 2.541723 | 5.071709 | 0.0369368 | 0.0014863 | -0.3892295 |
+| Quercus suber | 0.3953411 | -0.0177018 | -2.7236054 | 2.564987 | 4.399153 | 0.1167523 | 0.0017575 | -0.5164312 |
 
 ## References
 

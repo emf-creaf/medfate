@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-11-20</h4>
+            <h4 data-toc-skip class="date">2025-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -396,23 +396,28 @@ mortality rates).</p>
 <p>Function <code><a href="../../reference/extract.html">extract()</a></code> allow extracting model outputs in
 form of data frame:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"forest"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "date"                    "PET"                    </span></span>
-<span><span class="co">##  [3] "Precipitation"           "Rain"                   </span></span>
-<span><span class="co">##  [5] "Snow"                    "NetRain"                </span></span>
-<span><span class="co">##  [7] "Snowmelt"                "Infiltration"           </span></span>
-<span><span class="co">##  [9] "InfiltrationExcess"      "SaturationExcess"       </span></span>
-<span><span class="co">## [11] "Runoff"                  "DeepDrainage"           </span></span>
-<span><span class="co">## [13] "CapillarityRise"         "Evapotranspiration"     </span></span>
-<span><span class="co">## [15] "Interception"            "SoilEvaporation"        </span></span>
-<span><span class="co">## [17] "HerbTranspiration"       "PlantExtraction"        </span></span>
-<span><span class="co">## [19] "Transpiration"           "HydraulicRedistribution"</span></span>
-<span><span class="co">## [21] "LAI"                     "LAIherb"                </span></span>
-<span><span class="co">## [23] "LAIlive"                 "LAIexpanded"            </span></span>
-<span><span class="co">## [25] "LAIdead"                 "Cm"                     </span></span>
-<span><span class="co">## [27] "LgroundPAR"              "LgroundSWR"             </span></span>
-<span><span class="co">## [29] "SWE"</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"forest"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 365 × 38</span></span></span>
+<span><span class="co">##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494;">[L/m^2]</span>       <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^</span>… <span style="color: #949494;">[L/m^2]</span>  <span style="color: #949494;">[L/m^2]</span>      <span style="color: #949494;">[L/m^2]</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01   0.883          4.87    4.87   0      3.42      0           3.42 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2001-01-02   1.64           2.50    2.50   0      1.07      0           1.07 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 2001-01-03   1.30           0       0      0      0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2001-01-04   0.569          5.80    5.80   0      4.36      0           4.36 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2001-01-05   1.68           1.88    1.88   0      0.754     0           0.754</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2001-01-06   1.21          13.4    13.4    0     11.7       0          11.7  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 2001-01-07   0.637          5.38    0      5.38   0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 2001-01-08   0.832          0       0      0      0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09   1.98           0       0      0      0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10   0.829          5.12    5.12   0      3.67      5.38        9.05 </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 355 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 30 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …</span></span></span></code></pre>
 <p>These data frames are easy handle in R or can be written into text
 files for post-processing with other programs.</p>
 </div>

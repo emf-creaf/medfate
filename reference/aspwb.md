@@ -123,12 +123,10 @@ date <- as.character(examplemeteo$dates[d])
 #Call simulation function for a single days
 sd <- aspwb_day(x, date, meteovec,  
                latitude = 41.82592, elevation = 100) 
-#> Error in aspwb_day(x, date, meteovec, latitude = 41.82592, elevation = 100): Index out of bounds: [index='MinTemperature'].
 
 #Call simulation function for multiple days
 S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Package 'meteoland' [ver. 2.2.4]
-#> Initial soil water content (mm): 290.875
+#> Initial soil water content (mm): 287.448
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
@@ -136,8 +134,8 @@ S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #> Final soil water content (mm): 244.902
 #> Final snowpack content (mm): 0
-#> Change in soil water content (mm): -45.9727
-#> Soil water balance result (mm): -45.9727
+#> Change in soil water content (mm): -42.5459
+#> Soil water balance result (mm): -42.5459
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): 0
 #> Water balance components:
@@ -145,5 +143,5 @@ S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #>   Rain (mm) 462 Snow (mm) 51
 #>   Infiltration (mm) 507 Infiltration excess (mm) 6 Saturation excess (mm) 0 Capillarity rise (mm) 0
 #>   Soil evaporation (mm) 4 Transpiration (mm) 446
-#>   Runoff (mm) 6 Deep drainage (mm) 103
+#>   Runoff (mm) 6 Deep drainage (mm) 100
 ```

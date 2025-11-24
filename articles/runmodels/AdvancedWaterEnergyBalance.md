@@ -211,7 +211,7 @@ x$canopy
     ## 27 2600 2650 2700      NA          NA      NA   NA   NA    NA
     ## 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
 
-Canopy temperature, water vapour pressure and $CO_{2}$ concentration are
+Canopy temperature, water vapour pressure and $`CO_2`$ concentration are
 state variables needed for canopy energy balance. If the canopy energy
 balance assumes a single canopy layer, the same values will be assumed
 through the canopy. Variation of within-canopy state variables is
@@ -660,8 +660,8 @@ summarizes the whole simulated day, information by disaggregated by time
 step can be accessed in `PlantsInst`. Moreover, we can use function
 [`plot.spwb_day()`](https://emf-creaf.github.io/medfate/reference/plot.spwb_day.md)
 to draw plots of sub-daily variation per species of plant transpiration
-per ground area (L·m$^{- 2}$), transpiration per leaf area (also in
-L·m$^{- 2}$), plant net photosynthesis (in g C·m$^{- 2}$), and plant
+per ground area (L·m$`^{-2}`$), transpiration per leaf area (also in
+L·m$`^{-2}`$), plant net photosynthesis (in g C·m$`^{-2}`$), and plant
 water potential (in MPa):
 
 ``` r

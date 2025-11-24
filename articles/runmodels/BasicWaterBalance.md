@@ -526,85 +526,59 @@ shinyplot(S)
 Simulation outputs in form of lists have a nested structure that is not
 easy to handle. Functions are provided to extract model outputs as
 `data.frame` objects. The following code extracts daily series of
-stand-level variables:
+stand-level variables, including their units:
 
 ``` r
-df <- extract(S, "forest")
-head(df)
+extract(S, "forest", addunits = TRUE) |>
+  tibble::as_tibble()
 ```
 
-    ##         date       PET Precipitation      Rain Snow    NetRain Snowmelt
-    ## 1 2001-01-01 0.8828475      4.869109  4.869109    0  3.4241795        0
-    ## 2 2001-01-02 1.6375337      2.498292  2.498292    0  1.0728002        0
-    ## 3 2001-01-03 1.3017026      0.000000  0.000000    0  0.0000000        0
-    ## 4 2001-01-04 0.5690790      5.796973  5.796973    0  4.3636213        0
-    ## 5 2001-01-05 1.6760567      1.884401  1.884401    0  0.7547843        0
-    ## 6 2001-01-06 1.2077028     13.359801 13.359801    0 11.7252817        0
-    ##   Infiltration InfiltrationExcess SaturationExcess Runoff DeepDrainage
-    ## 1    3.4241795                  0                0      0    2.7617207
-    ## 2    1.0728002                  0                0      0    0.1899867
-    ## 3    0.0000000                  0                0      0    0.0000000
-    ## 4    4.3636213                  0                0      0    3.2495151
-    ## 5    0.7547843                  0                0      0    0.1001772
-    ## 6   11.7252817                  0                0      0    4.1214138
-    ##   CapillarityRise Evapotranspiration Interception SoilEvaporation
-    ## 1               0          2.1073881     1.444929       0.4478948
-    ## 2               0          2.3231089     1.425491       0.5000000
-    ## 3               0          0.8014863     0.000000       0.4854151
-    ## 4               0          1.7311676     1.433352       0.1596697
-    ## 5               0          2.0365726     1.129617       0.5000000
-    ## 6               0          2.2354533     1.634519       0.3077228
-    ##   HerbTranspiration PlantExtraction Transpiration HydraulicRedistribution
-    ## 1       0.011023432       0.2035406     0.2035406                       0
-    ## 2       0.020463709       0.3771538     0.3771538                       0
-    ## 3       0.016266929       0.2998042     0.2998042                       0
-    ## 4       0.007111348       0.1310349     0.1310349                       0
-    ## 5       0.020945746       0.3860097     0.3860097                       0
-    ## 6       0.015092529       0.2781190     0.2781190                       0
-    ##        LAI   LAIherb  LAIlive LAIexpanded LAIdead       Cm LgroundPAR
-    ## 1 1.758585 0.1736369 1.584948    1.584948       0 1.390485   40.00754
-    ## 2 1.756533 0.1736369 1.584948    1.582896       0 1.389459   40.05271
-    ## 3 1.756533 0.1736369 1.584948    1.582896       0 1.389459   40.05271
-    ## 4 1.756532 0.1736369 1.584948    1.582895       0 1.389458   40.05274
-    ## 5 1.756459 0.1736369 1.584948    1.582823       0 1.389422   40.05433
-    ## 6 1.756459 0.1736369 1.584948    1.582823       0 1.389422   40.05433
-    ##   LgroundSWR SWE
-    ## 1   50.73297   0
-    ## 2   50.77539   0
-    ## 3   50.77539   0
-    ## 4   50.77541   0
-    ## 5   50.77691   0
-    ## 6   50.77691   0
+    ## # A tibble: 365 × 29
+    ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
+    ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
+    ##  1 2001-01-01   0.883          4.87    4.87   0      3.42      0           3.42 
+    ##  2 2001-01-02   1.64           2.50    2.50   0      1.07      0           1.07 
+    ##  3 2001-01-03   1.30           0       0      0      0         0           0    
+    ##  4 2001-01-04   0.569          5.80    5.80   0      4.36      0           4.36 
+    ##  5 2001-01-05   1.68           1.88    1.88   0      0.755     0           0.755
+    ##  6 2001-01-06   1.21          13.4    13.4    0     11.7       0          11.7  
+    ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
+    ##  8 2001-01-08   0.832          0       0      0      0         0           0    
+    ##  9 2001-01-09   1.98           0       0      0      0         0           0    
+    ## 10 2001-01-10   0.829          5.12    5.12   0      3.67      5.38        9.05 
+    ## # ℹ 355 more rows
+    ## # ℹ 21 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
+    ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
+    ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
+    ## #   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],
+    ## #   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …
 
 And a similar code can be used to daily series of cohort-level
 variables:
 
 ``` r
-df <- extract(S, "cohort")
-head(df)
+extract(S, "cohort", addunits = TRUE) |>
+  tibble::as_tibble()
 ```
 
-    ##         date cohort          species       LAI   LAIlive     FPAR
-    ## 1 2001-01-01 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285
-    ## 2 2001-01-02 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285
-    ## 3 2001-01-03 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285
-    ## 4 2001-01-04 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285
-    ## 5 2001-01-05 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285
-    ## 6 2001-01-06 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285
-    ##   AbsorbedSWRFraction Transpiration GrossPhotosynthesis    PlantPsi LeafPLC
-    ## 1            35.07634    0.12501386            1.213416 -0.03300000       0
-    ## 2            35.08269    0.23181486            2.103487 -0.03300000       0
-    ## 3            35.08269    0.18427233            1.773967 -0.03302923       0
-    ## 4            35.08269    0.08053601            0.813088 -0.03443797       0
-    ## 5            35.08269    0.23725811            2.183562 -0.03300000       0
-    ## 6            35.08269    0.17094100            1.790601 -0.03350265       0
-    ##   StemPLC PlantWaterBalance   LeafRWC   StemRWC     LFMC PlantStress
-    ## 1       0      0.000000e+00 0.9979679 0.9998350 125.8654 0.004613739
-    ## 2       0      0.000000e+00 0.9979679 0.9998350 125.8654 0.004613739
-    ## 3       0     -1.319457e-06 0.9979661 0.9998348 125.8653 0.004619875
-    ## 4       0     -6.358830e-05 0.9978794 0.9998278 125.8582 0.004918765
-    ## 5       0      6.490775e-05 0.9979679 0.9998350 125.8654 0.004613739
-    ## 6       0     -2.268898e-05 0.9979370 0.9998325 125.8629 0.004719625
+    ## # A tibble: 1,095 × 17
+    ##    date       cohort species               LAI LAIlive FPAR AbsorbedSWRFraction
+    ##    <date>     <chr>  <chr>            [m^2/m^… [m^2/m…  [%]               <dbl>
+    ##  1 2001-01-01 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  2 2001-01-02 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  3 2001-01-03 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  4 2001-01-04 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  5 2001-01-05 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  6 2001-01-06 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  7 2001-01-07 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  8 2001-01-08 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ##  9 2001-01-09 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ## 10 2001-01-10 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
+    ## # ℹ 1,085 more rows
+    ## # ℹ 10 more variables: Transpiration [L/m^2], GrossPhotosynthesis [L/m^2],
+    ## #   PlantPsi [MPa], LeafPLC <dbl>, StemPLC <dbl>, PlantWaterBalance <dbl>,
+    ## #   LeafRWC [%], StemRWC [%], LFMC [%], PlantStress <dbl>
 
 ### Temporal summaries
 

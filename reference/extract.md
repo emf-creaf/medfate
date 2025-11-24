@@ -12,7 +12,8 @@ extract(
   output = NULL,
   vars = NULL,
   dates = NULL,
-  subdaily = FALSE
+  subdaily = FALSE,
+  addunits = FALSE
 )
 ```
 
@@ -48,6 +49,11 @@ extract(
 - subdaily:
 
   A flag to indicate that subdaily values are desired (see details).
+
+- addunits:
+
+  A flag to indicate that variable units should be added whenever
+  possible (currently only available for daily output).
 
 ## Value
 

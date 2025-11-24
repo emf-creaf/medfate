@@ -254,9 +254,13 @@ sf_stress(S1)
 
 Sensitivity analysis requires model output functions whose parameters
 are the input factors to be studied.
-$$y = g(\mathbf{x}) = g\left( x_{1},x_{2},\ldots,x_{n} \right)$$ where
-$y$ is the output, $g$ is the output function and
-$\mathbf{x} = \{ x_{1},x_{2},\ldots,x_{n}\}$ is the vector of parameter
+``` math
+\begin{equation}
+y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
+\end{equation}
+```
+where $`y`$ is the output, $`g`$ is the output function and
+$`\mathbf{x} = \{x_1, x_2, \dots, x_n\}`$ is the vector of parameter
 input factors. Functions `of_transp` and `of_stress` take simulation
 results as input, not values of input factors. Instead, we need to
 define functions that take soil and plant trait values as input, run the
@@ -464,14 +468,14 @@ print(sa_transp)
     ## rfc@1              -10.0489723  10.0489723 17.5544947
     ## rfc@2              -16.0083538  16.0112776 33.9905052
 
-`mu.star` values inform about the mean of elementary effects of each $i$
-factor and can be used to rank all the input factors, whereas `sigma`
-inform about the degree of interaction of the $i$-th factor with others.
-According to the result of this sensitivity analysis, leaf area index
-(`LAI_live`) parameters are the most relevant to determine total
-transpiration, much more than fine root distribution (`Z50`), the rock
-fragment content in the soil and the water potentials corresponding to
-whole-plant conductance reduction (i.e. `Psi_Extract`).
+`mu.star` values inform about the mean of elementary effects of each
+$`i`$ factor and can be used to rank all the input factors, whereas
+`sigma` inform about the degree of interaction of the $`i`$-th factor
+with others. According to the result of this sensitivity analysis, leaf
+area index (`LAI_live`) parameters are the most relevant to determine
+total transpiration, much more than fine root distribution (`Z50`), the
+rock fragment content in the soil and the water potentials corresponding
+to whole-plant conductance reduction (i.e. `Psi_Extract`).
 
 ``` r
 plot(sa_transp, xlim=c(0,150))

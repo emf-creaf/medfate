@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-11-20</h4>
+            <h4 data-toc-skip class="date">2025-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1413,7 +1413,7 @@ where vegetation is described using a single cohort. Functions
 defining single-cohort forests from attributes. For example a holm oak
 (<em>Quercus ilex</em>) forest of 4-m height and having a leaf area
 index of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mspace width="0.167em"></mspace><msup><mi>m</mi><mn>2</mn></msup><mo>⋅</mo><msup><mi>m</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">2\, m^2\cdot m^{-2}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mspace width="0.167em"></mspace><msup><mi>m</mi><mn>2</mn></msup><mo>⋅</mo><msup><mi>m</mi><mrow><mi>−</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">2\, m^2\cdot m^{-2}</annotation></semantics></math>
 can be defined using:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oak_forest</span> <span class="op">&lt;-</span><span class="fu"><a href="../../reference/tree2forest.html">tree2forest</a></span><span class="op">(</span><span class="st">"Quercus ilex"</span>, Height<span class="op">=</span> <span class="fl">400</span>, LAI <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
@@ -1542,7 +1542,7 @@ to default values, for a given number of layers, using function
 <code>clay</code> and <code>sand</code> are the percentage of clay and
 sand, in percent of dry weight, <code>om</code> stands for organic
 matter, <code>bd</code> is bulk density (in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>⋅</mo><mi>c</mi><msup><mi>m</mi><mrow><mo>−</mo><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">g \cdot cm^{-3}</annotation></semantics></math>)
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>⋅</mo><mi>c</mi><msup><mi>m</mi><mrow><mi>−</mi><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">g \cdot cm^{-3}</annotation></semantics></math>)
 and <code>rfc</code> the percentage of rock fragments. Because soil
 properties vary strongly at fine spatial scales, ideally soil physical
 attributes should be measured on samples taken at the forest stand to be

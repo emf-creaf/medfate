@@ -122,14 +122,14 @@ used in the calibration procedure):
 The following table shows mean error and parameter values by species and
 overall means:
 
-|                   | value_cal | RERsapwood_cal | RGRcambiummax_cal | SRsapwood_cal |  rfc_cal |
-|:------------------|----------:|---------------:|------------------:|--------------:|---------:|
-| Fagus sylvatica   |  44.58113 |       5.16e-05 |         0.0030927 |     0.0001391 | 67.64601 |
-| Pinus halepensis  |  50.12844 |       3.76e-05 |         0.0012879 |     0.0001432 | 72.04303 |
-| Pinus nigra       |  41.60647 |       5.45e-05 |         0.0013369 |     0.0001019 | 68.78204 |
-| Pinus sylvestris  |  46.40091 |       5.44e-05 |         0.0020224 |     0.0001305 | 65.11412 |
-| Quercus pubescens |  38.80396 |       5.11e-05 |         0.0014198 |     0.0001173 | 61.55416 |
-| All               |  44.30418 |       4.98e-05 |         0.0018319 |     0.0001264 | 67.02787 |
+|  | value_cal | RERsapwood_cal | RGRcambiummax_cal | SRsapwood_cal | rfc_cal |
+|:---|---:|---:|---:|---:|---:|
+| Fagus sylvatica | 44.58113 | 5.16e-05 | 0.0030927 | 0.0001391 | 67.64601 |
+| Pinus halepensis | 50.12844 | 3.76e-05 | 0.0012879 | 0.0001432 | 72.04303 |
+| Pinus nigra | 41.60647 | 5.45e-05 | 0.0013369 | 0.0001019 | 68.78204 |
+| Pinus sylvestris | 46.40091 | 5.44e-05 | 0.0020224 | 0.0001305 | 65.11412 |
+| Quercus pubescens | 38.80396 | 5.11e-05 | 0.0014198 | 0.0001173 | 61.55416 |
+| All | 44.30418 | 4.98e-05 | 0.0018319 | 0.0001264 | 67.02787 |
 
 Statistically significant differences can be observed between species
 for `RERsapwood` and `RGRcambiummax`, as shown in the following ANOVA
