@@ -137,8 +137,8 @@ Users can extract, summarize or inspect the output of `growth()` simulations as 
 
 Function `extract()` allow extracting model outputs in form of data frame:
 ```{r}
-df <- extract(G1, "forest")
-names(df)
+extract(G1, "forest", addunits = TRUE) |>
+  tibble::as_tibble()
 ```
 These data frames are easy handle in R or can be written into text files for post-processing with other programs.
 

@@ -179,18 +179,18 @@ shinyplot(S)
 
 ### Extracting output
 
-Simulation outputs in form of lists have a nested structure that is not easy to handle. Functions are provided to extract model outputs as `data.frame` objects. The following code extracts daily series of stand-level variables:
+Simulation outputs in form of lists have a nested structure that is not easy to handle. Functions are provided to extract model outputs as `data.frame` objects. The following code extracts daily series of stand-level variables, including their units:
 
 ```{r}
-df <- extract(S, "forest")
-head(df)
+extract(S, "forest", addunits = TRUE) |>
+  tibble::as_tibble()
 ```
 
 And a similar code can be used to daily series of cohort-level variables:
 
 ```{r}
-df <- extract(S, "cohort")
-head(df)
+extract(S, "cohort", addunits = TRUE) |>
+  tibble::as_tibble()
 ```
 
 

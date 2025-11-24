@@ -115,6 +115,74 @@
   return(m)
 }
 
+.getOutputUnit<-function(level, output, variable) {
+  u <- NULL 
+  if(level=="forest") {
+    if(output=="WaterBalance") {
+      u <- "l/m2"
+    } else if(output=="Snow") {
+      u <- "l/m2"
+    } else if(output=="Stand") {
+      if(variable %in% c("LAI", "LAIherb", "LAIlive", "LAIexpanded", "LAIdead")) u <- "m2/m2"
+      else if(variable %in% c("Cm")) u <- "l/m2"
+      else if(variable %in% c("LgroundPAR", "LgroundSWR")) u <- "%"
+    } else if(output=="EnergyBalance") {
+      if(variable %in% c("SWRcan", "LWRcan", "LEVcan", "LEFsnow", "Hcan", "Ebalcan", "Hcansoil", "SWRsoil", "LWRsoil", "LEVsoil", "Ebalsoil")) u <- "W/m2"
+    } else if(output=="Temperature") {
+      if(variable %in% c("Tatm_mean", "Tatm_min", "Tatm_max", "Tcan_mean", "Tcan_min", "Tcan_max", "Tsoil_mean", "Tsoil_min", "Tsoil_max")) u <- "celsius"
+    } else if(output=="CarbonBalance") {
+      u <- "g/m2"
+    } else if(output=="BiomassBalance") {
+      u <- "g/m2"
+    } else if(output=="FireHazard") {
+      if(variable %in% c("Loading_overstory", "Loading_understory")) u <- "kg/m2"
+      else if(variable %in% c("CFMC_understory", "CFMC_overstory", "DFMC")) u <- "%"
+      else if(variable %in% c("ROS_surface", "ROS_crown")) u <- "m/min"
+      else if(variable %in% c("I_b_surface", "I_b_crown")) u <- "kW/m"
+      else if(variable %in% c("FL_surface", "FL_crown")) u <- "m"
+      else if(variable %in% c("t_r_surface","t_r_crown")) u <- "s"
+    }
+  } else if(level=="soillayer") {
+    if(variable %in% c("ML")) u <- "l/m2"
+    else if(variable %in% c("PlantExt", "HydraulicInput")) u <- "l/m2"
+    else if(variable %in% c("Psi")) u <- "MPa"
+  } else if(level=="cohort") {
+    if(variable %in% c("LAI", "LAIlive")) u <- "m2/m2"
+    else if(variable %in% c("FPAR", "AbsorbedSWR")) u <- "%"
+    else if(variable %in% c("NetLWR")) u <- "W/m2"
+    else if(variable %in% c("Transpiration", "PlantWaterBalance")) u <- "l/m2"
+    else if(variable %in% c("GrossPhotosynthesis", "NetPhotosynthesis")) u <- "l/m2"
+    else if(variable %in% c("PlantPsi", "LeafPsiMin", "LeafPsiMax", "StemPsi", "RootPsi")) u <- "MPa"
+    else if(variable %in% c("LFMC", "LeafRWC", "StemRWC")) u <- "%"
+    else if(variable %in% c("dEdP")) u <- "mmol / s /m2 /MPa"
+    else if(variable %in% c("GrowthCosts", "RootExudation", "LabileCarbonBalance")) u <- "g/g"
+    else if(variable %in% c("SugarLeaf", "StarchLeaf", "SugarSapwood", "StarchSapwood")) u <- "mol/l"
+    else if(variable %in% c("SugarTransport")) u <- "mol/s"
+    else if(variable %in% c("StructuralBiomassBalance", "LabileBiomassBalance", "PlantBiomassBalance", "MortalityBiomassLoss", "CohortBiomassBalance")) u <- "g/m2"
+    else if(variable %in% c("LeafBiomass", "SapwoodBiomass", "FineRootBiomass")) u <- "g"
+    else if(variable %in% c("LeafArea", "FineRootArea")) u <- "m2"
+    else if(variable %in% c("SapwoodArea")) u <- "cm2"
+    else if(variable %in% c("HuberValue")) u <- "cm2/m2"
+    else if(variable %in% c("RootAreaLeafArea")) u <- "m2/m2"
+    else if(variable %in% c("DBH", "Height")) u <- "cm"
+    else if(variable %in% c("LAgrowth", "FRAgrowth")) u <- "m2/day"
+    else if(variable %in% c("SAgrowth")) u <- "cm2/day"
+    else if(variable %in% c("StarvationRate", "DessicationRate", "MortalityRate")) u <- "day-1"
+  }
+  return(u)
+}
+.addOutputUnits<-function(x, level, output) {
+  cnames <- colnames(x)
+  cnames <- cnames[!(cnames %in% c("date", "soillayer", "cohort", "species", "sunlitleaf", "shadeleaf"))]
+  for(i in 1:ncol(x)) {
+    u <- .getOutputUnit(level, output, cnames[i])
+    if(!is.null(u)) {
+      x[[cnames[i]]] <- units::set_units(x[[cnames[i]]], u, mode = "standard")
+    }
+  }
+  return(x)
+}
+
 #' Extracts model outputs
 #' 
 #' Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
@@ -126,6 +194,7 @@
 #' @param vars Variables to be extracted (by default, all of them).
 #' @param dates A date vector indicating the subset of simulated days for which output is desired.
 #' @param subdaily A flag to indicate that subdaily values are desired (see details).
+#' @param addunits A flag to indicate that variable units should be added whenever possible (currently only available for daily output).
 #' 
 #' @details 
 #' When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
@@ -188,7 +257,7 @@
 #' 
 #' @seealso \code{\link{summary.spwb}}
 #' @export
-extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE)  {
+extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE, addunits = FALSE)  {
   if(inherits(x, "aspwb")) {
     level <- match.arg(level, "soillayer")
     subdaily <- FALSE
@@ -265,14 +334,17 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
       for(i in 1:length(output)) output[i] <-match.arg(output[i], stand_level_names)
     }
     out <- data.frame(date = dates)
+    if(addunits) out$date <- as.Date(out$date)
     for(n in output) {
       if(n %in% names(x)) {
         M <- x[[n]]
-        varnames <- names(M)
+        varnames <- colnames(M)
         M <- M[rownames(M) %in% dates, varnames, drop = FALSE]
         if(!is.null(vars)) M <- M[,colnames(M) %in% vars, drop = FALSE]
         if(ncol(M)>0) {
           row.names(M) <- NULL
+          M <- as.data.frame(M)
+          if(addunits) M <- .addOutputUnits(M, level, n)
           out <- cbind(out, M)
         }
       }
@@ -282,17 +354,20 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
     output <- "Soil"
     out <- data.frame(date = rep(dates, length(layers)),
                       soillayer = layers[gl(length(layers), length(dates))])
+    if(addunits) out$date <- as.Date(out$date)
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
-        if(is.null(vars)) vars <- names(P)
-        for(v in vars) {
+        vars_n <- vars
+        if(is.null(vars_n)) vars_n <- names(P)
+        for(v in vars_n) {
           M <- P[[v]]
           M <- M[rownames(M) %in% dates, , drop = FALSE]
           out[[v]] <- as.vector(M)
         }
       }
     }
+    if(addunits) out <- .addOutputUnits(out, level, "")
   } else if (level =="cohort") {
     plant_level_names <-c("Plants", "LabileCarbonBalance","PlantBiomassBalance", 
                           "PlantStructure", "GrowthMortality")
@@ -304,18 +379,21 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL,
     out <- data.frame(date = rep(dates, length(cohnames)),
                       cohort = cohnames[gl(length(cohnames), length(dates))],
                       species = spnames[gl(length(cohnames), length(dates))])
+    if(addunits) out$date <- as.Date(out$date)
     for(n in output) {
       if(n %in% names(x)) {
-        P = x[[n]]
-        if(is.null(vars)) vars <- names(P)
-        vars <- vars[vars!="RhizoPsi"]
-        for(v in vars) {
+        P <- x[[n]]
+        vars_n <- vars
+        if(is.null(vars_n)) vars_n <- names(P)
+        vars_n <- vars_n[vars_n!="RhizoPsi"]
+        for(v in vars_n) {
           M <- P[[v]]
           M <- M[rownames(M) %in% dates, , drop = FALSE]
           out[[v]] <- as.vector(M)
         }
       }
     }
+    if(addunits) out <- .addOutputUnits(out, level, "")
   } else if (level =="sunlitleaf") {
     leaf_level_names <-c("SunlitLeaves")
     if(is.null(output)) {

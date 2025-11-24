@@ -10,7 +10,8 @@ extract(
   output = NULL,
   vars = NULL,
   dates = NULL,
-  subdaily = FALSE
+  subdaily = FALSE,
+  addunits = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ extract(
 \item{dates}{A date vector indicating the subset of simulated days for which output is desired.}
 
 \item{subdaily}{A flag to indicate that subdaily values are desired (see details).}
+
+\item{addunits}{A flag to indicate that variable units should be added whenever possible (currently only available for daily output).}
 }
 \value{
 Function \code{extract()} returns a data frame:

@@ -2,7 +2,7 @@ Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
 Version: 4.8.5
-Date: 2025-11-20
+Date: 2025-11-24
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre', 'cph'),
 	email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
@@ -26,7 +26,7 @@ URL: https://emf-creaf.github.io/medfate/, https://github.com/emf-creaf/medfate
 BugReports: https://github.com/emf-creaf/medfate/issues
 LazyLoad: yes
 Depends: R (>= 3.5.0)
-Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.0.0), Rcpp (>= 1.0.6), shiny
+Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.0.0), Rcpp (>= 1.0.6), shiny, units
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
