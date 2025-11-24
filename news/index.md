@@ -12,6 +12,7 @@
   fordyn() simulations
 - Flag ‘addunits’ in function extract() allows retrieving physical units
   for daily output variables
+- Function extract() can now process fordyn() simulations
 
 ## medfate 4.8.4
 

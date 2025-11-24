@@ -577,7 +577,7 @@ extract(S, "cohort", addunits = TRUE) |>
     ## 10 2001-01-10 T1_148 Pinus halepensis    0.849   0.849 92.2                35.1
     ## # ℹ 1,085 more rows
     ## # ℹ 10 more variables: Transpiration [L/m^2], GrossPhotosynthesis [L/m^2],
-    ## #   PlantPsi [MPa], LeafPLC <dbl>, StemPLC <dbl>, PlantWaterBalance <dbl>,
+    ## #   PlantPsi [MPa], LeafPLC <dbl>, StemPLC <dbl>, PlantWaterBalance [L/m^2],
     ## #   LeafRWC [%], StemRWC [%], LFMC [%], PlantStress <dbl>
 
 ### Temporal summaries

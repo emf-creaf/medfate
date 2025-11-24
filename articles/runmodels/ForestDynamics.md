@@ -484,14 +484,44 @@ plot(fd, "LeafArea")
 ![Leaf area variation for multiple
 years](ForestDynamics_files/figure-html/unnamed-chunk-15-1.png)
 
-Finally, we can create interactive plots for particular steps using
-function
+We can also create interactive plots for particular steps using function
 [`shinyplot()`](https://emf-creaf.github.io/medfate/reference/shinyplot.md),
 e.g.:
 
 ``` r
 shinyplot(fd$GrowthResults[[1]])
 ```
+
+Finally, calling function
+[`extract()`](https://emf-creaf.github.io/medfate/reference/extract.md)
+will extract and bind outputs for all the internal calls to function
+[`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md):
+
+``` r
+extract(fd, "forest", addunits = TRUE) |>
+  tibble::as_tibble()
+```
+
+    ## # A tibble: 3,650 × 38
+    ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
+    ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
+    ##  1 2001-01-01   0.883          4.87    4.87   0      3.42      0           3.42 
+    ##  2 2001-01-02   1.64           2.50    2.50   0      1.07      0           1.07 
+    ##  3 2001-01-03   1.30           0       0      0      0         0           0    
+    ##  4 2001-01-04   0.569          5.80    5.80   0      4.36      0           4.36 
+    ##  5 2001-01-05   1.68           1.88    1.88   0      0.754     0           0.754
+    ##  6 2001-01-06   1.21          13.4    13.4    0     11.7       0          11.7  
+    ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
+    ##  8 2001-01-08   0.832          0       0      0      0         0           0    
+    ##  9 2001-01-09   1.98           0       0      0      0         0           0    
+    ## 10 2001-01-10   0.829          5.12    5.12   0      3.67      5.38        9.05 
+    ## # ℹ 3,640 more rows
+    ## # ℹ 30 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
+    ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
+    ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
+    ## #   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],
+    ## #   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …
 
 ## Forest dynamics including management
 

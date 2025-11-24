@@ -501,10 +501,36 @@ series of results by passing a <code>fordyn</code> object to the
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="Leaf area variation for multiple years" width="672"></p>
-<p>Finally, we can create interactive plots for particular steps using
+<p>We can also create interactive plots for particular steps using
 function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p>Finally, calling function <code><a href="../../reference/extract.html">extract()</a></code> will extract and
+bind outputs for all the internal calls to function
+<code><a href="../../reference/growth.html">growth()</a></code>:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"forest"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3,650 × 38</span></span></span>
+<span><span class="co">##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494;">[L/m^2]</span>       <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^</span>… <span style="color: #949494;">[L/m^2]</span>  <span style="color: #949494;">[L/m^2]</span>      <span style="color: #949494;">[L/m^2]</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01   0.883          4.87    4.87   0      3.42      0           3.42 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2001-01-02   1.64           2.50    2.50   0      1.07      0           1.07 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 2001-01-03   1.30           0       0      0      0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2001-01-04   0.569          5.80    5.80   0      4.36      0           4.36 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2001-01-05   1.68           1.88    1.88   0      0.754     0           0.754</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2001-01-06   1.21          13.4    13.4    0     11.7       0          11.7  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 2001-01-07   0.637          5.38    0      5.38   0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 2001-01-08   0.832          0       0      0      0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09   1.98           0       0      0      0         0           0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10   0.829          5.12    5.12   0      3.67      5.38        9.05 </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 3,640 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 30 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …</span></span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -520,7 +546,7 @@ with a flexible parameterization, a list with defaults provided by
 function <code><a href="../../reference/defaultManagementFunction.html">defaultManagementArguments()</a></code>.</p>
 <p>Here we provide an example of simulations including forest
 management:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Default arguments</span></span>
 <span><span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultManagementFunction.html">defaultManagementArguments</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Here one can modify defaults before calling fordyn()</span></span>
@@ -542,7 +568,7 @@ management:</p>
 <span><span class="co">## Simulating year 2010 (10/10):  (a) Growth/mortality &amp; management [none], (b) Regeneration nT = 2 nS = 2</span></span></code></pre>
 <p>When management is included in simulations, two additional tables are
 produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">CutTreeTable</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Step Year Cohort          Species      DBH   Height          N Z50  Z95 Z100</span></span>
 <span><span class="co">## 1    1 2001 T1_148 Pinus halepensis 37.66427 806.1349   9.336019 100  600   NA</span></span>
@@ -553,16 +579,16 @@ produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
 <p>Management parameters were those of an irregular model with thinning
 interventions from ‘below’, indicating that smaller trees were to be cut
 earlier:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">args</span><span class="op">$</span><span class="va">type</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "irregular"</span></span></code></pre>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">args</span><span class="op">$</span><span class="va">thinning</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "below"</span></span></code></pre>
 <p>Note that in this example, there is resprouting of <em>Quercus
 ilex</em> after the thinning intervention, evidenced by the new cohort
 (T3_168) appearing in year 2001:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span></code></pre></div>
 <pre><code><span><span class="co">##    Step Year Cohort          Species       DBH    Height         N      Z50</span></span>
 <span><span class="co">## 1     0   NA T1_148 Pinus halepensis 37.550000 800.00000  168.0000 100.0000</span></span>
