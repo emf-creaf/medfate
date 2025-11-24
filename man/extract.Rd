@@ -28,7 +28,7 @@ extract(
 
 \item{subdaily}{A flag to indicate that subdaily values are desired (see details).}
 
-\item{addunits}{A flag to indicate that variable units should be added whenever possible (currently only available for daily output).}
+\item{addunits}{A flag to indicate that variable units should be added whenever possible.}
 }
 \value{
 Function \code{extract()} returns a data frame:

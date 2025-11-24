@@ -115,6 +115,40 @@
   return(m)
 }
 
+.getSubdailyOutputUnit<-function(level, variable) {
+  u <- NULL
+  if(level=="cohort") {
+    if(variable %in% c("E", "PWB")) u <- "l/m2"
+    else if(variable %in% c("Ag", "An")) u <- "g/m2"
+    else if(variable %in% c("dEdP")) u <- "mmol/m2/s/MPa"
+    else if(variable %in% c("RootPsi", "StemPsi", "LeafPsi", "LeafSympPsi", "StemSympPsi")) u <- "MPa"
+    
+  } else if(level %in% c("sunlitleaf", "shadeleaf")){
+    if(variable %in% c("LAI")) u <- "m2/m2"
+    else if(variable %in% c("Abs_PAR", "Abs_SWR","Net_LWR")) u <- "W/m2"
+    else if(variable %in% c("Ag", "An")) u <- "micromol/m2/s"
+    else if(variable %in% c("E")) u <- "mmol/m2/s"
+    else if(variable %in% c("Ci")) u <- "ppm"
+    else if(variable %in% c("Gsw")) u <- "mol/m2/s"
+    else if(variable %in% c("VPD")) u <- "kPa"
+    else if(variable %in% c("Temp")) u <- "celsius"
+    else if(variable %in% c("Psi")) u <- "MPa"
+    else if(variable %in% c("iWUE")) u <- "micromol/mol"
+  }
+  return(u)
+}
+.addSubdailyOutputUnits<-function(x, level) {
+  cnames <- colnames(x)
+  cnames <- cnames[!(cnames %in% c("datetime", "cohort", "species", "sunlitleaf", "shadeleaf"))]
+  for(i in 1:ncol(x)) {
+    u <- .getSubdailyOutputUnit(level, cnames[i])
+    if(!is.null(u)) {
+      x[[cnames[i]]] <- units::set_units(x[[cnames[i]]], u, mode = "standard")
+    }
+  }
+  return(x)
+}
+
 .getDailyOutputUnit<-function(level, output, variable) {
   u <- NULL 
   if(level=="forest") {
@@ -245,6 +279,9 @@
         df_var <- .extractSubdaily(x, output = outputSubdaily, dates = dates, long_format = TRUE)
         df[[var_name]] <- df_var[,3]
       }
+    }
+    if(addunits) {
+      df <- .addSubdailyOutputUnits(df, level)
     }
     return(df)
   }
@@ -386,7 +423,7 @@
 #' @param vars Variables to be extracted (by default, all of them).
 #' @param dates A date vector indicating the subset of simulated days for which output is desired.
 #' @param subdaily A flag to indicate that subdaily values are desired (see details).
-#' @param addunits A flag to indicate that variable units should be added whenever possible (currently only available for daily output).
+#' @param addunits A flag to indicate that variable units should be added whenever possible.
 #' 
 #' @details 
 #' When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
