@@ -123,7 +123,6 @@ date <- as.character(examplemeteo$dates[d])
 #Call simulation function for a single days
 sd <- aspwb_day(x, date, meteovec,  
                latitude = 41.82592, elevation = 100) 
-#> Package 'meteoland' [ver. 2.2.4]
 
 #Call simulation function for multiple days
 S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)

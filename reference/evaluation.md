@@ -47,7 +47,7 @@ evaluation_metric(
   An object of class
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
   [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md) or
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md).
 
 - measuredData:
 

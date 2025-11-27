@@ -24,7 +24,7 @@ extract(
   An object returned by simulation functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
   [`aspwb`](https://emf-creaf.github.io/medfate/reference/aspwb.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
   [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md) or
   [`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md).
 

@@ -22,7 +22,7 @@ fireHazard(
   An object of class
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
   [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
   [`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
   or

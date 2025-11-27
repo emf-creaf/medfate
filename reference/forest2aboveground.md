@@ -5,7 +5,7 @@ of class
 [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md) and
 a soil data input to create input objects for simulation functions
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) (or
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)) and
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md)) and
 [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
 respectively. Function `forest2aboveground()` calculates aboveground
 variables such as leaf area index. Function `forest2belowground()`

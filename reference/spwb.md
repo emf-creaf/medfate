@@ -3,12 +3,9 @@
 Function `spwb()` is a water balance model that determines changes in
 soil moisture, soil water potentials, plant transpiration and drought
 stress at daily steps for a given forest stand during a period specified
-in the input climatic data. Function `pwb()` performs plant water
-balance only (i.e. soil moisture dynamics is an input) at daily steps
-for a given forest stand during a period specified in the input climatic
-data. On both simulation functions plant transpiration and
-photosynthesis processes are conducted with different level of detail
-depending on the transpiration mode.
+in the input climatic data. Plant transpiration and photosynthesis
+processes are conducted with different level of detail depending on the
+transpiration mode.
 
 ## Usage
 
@@ -22,21 +19,6 @@ spwb(
   aspect = NA_real_,
   CO2ByYear = numeric(0),
   waterTableDepth = NA_real_
-)
-
-pwb(
-  x,
-  meteo,
-  W,
-  latitude,
-  elevation,
-  slope = NA_real_,
-  aspect = NA_real_,
-  canopyEvaporation = numeric(0),
-  snowMelt = numeric(0),
-  soilEvaporation = numeric(0),
-  herbTranspiration = numeric(0),
-  CO2ByYear = numeric(0)
 )
 ```
 
@@ -109,37 +91,14 @@ pwb(
   Water table depth (in mm). When not missing, capillarity rise will be
   allowed if lower than total soil depth.
 
-- W:
-
-  A matrix with the same number of rows as `meteo` and as many columns
-  as soil layers, containing the soil moisture of each layer as
-  proportion of field capacity.
-
-- canopyEvaporation:
-
-  A vector of daily canopy evaporation (from interception) values (mm).
-  The length should match the number of rows in `meteo`.
-
-- snowMelt:
-
-  A vector of daily snow melt values (mm). The length should match the
-  number of rows in `meteo`.
-
-- soilEvaporation:
-
-  A vector of daily bare soil evaporation values (mm). The length should
-  match the number of rows in `meteo`.
-
-- herbTranspiration:
-
-  A vector of daily herbaceous transpiration values (mm). The length
-  should match the number of rows in `meteo`.
-
 ## Value
 
-Function `spwb` returns a list of class 'spwb' whereas function `pwb`
-returns a list of class 'pwb'. There are many elements in common in
-these lists, so they are listed here together:
+Function `spwb` returns a list of class 'spwb'. Since lists are
+difficult to handle, we recommend using function
+[`extract`](https://emf-creaf.github.io/medfate/reference/extract.md) to
+reshape simulation results (including their units) from those objects.
+
+List elements are as follows:
 
 - `"latitude"`: Latitude (in degrees) given as input.
 
@@ -266,6 +225,14 @@ these lists, so they are listed here together:
 
 - `"Plants"`: A list of daily results for plant cohorts (see below).
 
+- `"SunlitLeaves"`: A list of daily results for sunlit leaves of plant
+  cohorts (only for `transpirationMode = "Sperry"` or
+  `transpirationMode = "Sureau"`; see below).
+
+- `"ShadeLeaves"`: A list of daily results for sunlit leaves of plant
+  cohorts (only for `transpirationMode = "Sperry"` or
+  `transpirationMode = "Sureau"`; see below).
+
 - `"subdaily"`: A list of objects of class
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
   one per day simulated (only if required in `control` parameters, see
@@ -322,6 +289,12 @@ If `transpirationMode="Sperry"` or `transpirationMode="Sureau"`, element
 - `"LAI"`: A data frame with the daily leaf area index for each plant
   cohort.
 
+- `"LAIlive"`: A data frame with the daily leaf area index for each
+  plant cohort, assuming all leaves are unfolded (in m2/m2).
+
+- `"FPAR"`: A data frame with the fraction of PAR at the canopy level of
+  each plant cohort.
+
 - `"AbsorbedSWR"`: A data frame with the daily SWR absorbed by each
   plant cohort.
 
@@ -341,15 +314,6 @@ If `transpirationMode="Sperry"` or `transpirationMode="Sureau"`, element
 
 - `"PlantWaterBalance"`: A data frame with the daily balance between
   transpiration and soil water extraction for each plant cohort.
-
-- `"SunlitLeaves"` and `"ShadeLeaves"`: A list with daily results for
-  sunlit and shade leaves:
-
-  - `"PsiMin"`: A data frame with the minimum (midday) daily sunlit or
-    shade leaf water potential (in MPa).
-
-  - `"PsiMax"`: A data frame with the maximum (predawn) daily sunlit or
-    shade leaf water potential (in MPa).
 
 - `"LeafPsiMin"`: A data frame with the minimum (midday) daily (average)
   leaf water potential of each plant (in MPa).
@@ -381,8 +345,33 @@ If `transpirationMode="Sperry"` or `transpirationMode="Sureau"`, element
 - `"RhizoPsi"`: A list of data frames (one per plant cohort) with the
   minimum daily root water potential of each plant (in MPa).
 
+- `"LFMC"`: A data frame with the daily live fuel moisture content (in
+  percent of dry weight).
+
 - `"PlantStress"`: A data frame with the amount of daily stress \[0-1\]
   suffered by each plant cohort (relative whole-plant conductance).
+
+If `transpirationMode="Sperry"` or `transpirationMode="Sureau"`, then
+elements `"SunlitLeaves"` and `"ShadeLeaves"` are list with daily
+results for sunlit and shade leaves:
+
+- `"PsiMin"`: A data frame with the minimum (midday) daily sunlit or
+  shade leaf water potential (in MPa).
+
+- `"PsiMax"`: A data frame with the maximum (predawn) daily sunlit or
+  shade leaf water potential (in MPa).
+
+- `"TempMin"`: A data frame with the minimum daily sunlit or shade leaf
+  temperature (in Celsius).
+
+- `"TempMax"`: A data frame with the maximum daily sunlit or shade leaf
+  temperature (in Celsius).
+
+- `"GSWMin"`: A data frame with the minimum daily sunlit or shade leaf
+  stomatal conductance (in mol·m-2·s-1).
+
+- `"GSWMax"`: A data frame with the maximum daily sunlit or shade leaf
+  stomatal conductance (in mol·m-2·s-1).
 
 ## Details
 
@@ -408,7 +397,9 @@ transpiration and photosynthesis:
   (2022).
 
 Simulations using the 'Sperry' or 'Sureau' transpiration mode are
-computationally much more expensive than 'Granier'.
+computationally much more expensive than 'Granier' because they include
+explicit plant hydraulics and canopy/soil energy balance at subdaily
+time steps.
 
 ## References
 
@@ -449,6 +440,7 @@ hydraulic cost. Plant Cell and Environment 40, 816-830 (doi:
 [`extract`](https://emf-creaf.github.io/medfate/reference/extract.md),
 [`summary.spwb`](https://emf-creaf.github.io/medfate/reference/summary.spwb.md),
 [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md),
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
 [`aspwb`](https://emf-creaf.github.io/medfate/reference/aspwb.md)
 
 ## Author

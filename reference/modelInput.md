@@ -4,7 +4,7 @@ Functions `spwbInput()` and `growthInput()` take an object of class
 [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md) and
 a soil data input to create input objects for simulation functions
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) (or
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)) and
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md)) and
 [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
 respectively.
 
@@ -63,7 +63,7 @@ function
   `Name`.
 
 - `above`: A data frame with columns such as `H`, `CR` and `LAI_live`
-  (see function `forest2aboveground`).
+  (see internal function `forest2aboveground`).
 
 - `below`: A data frame with columns `Z50`, `Z95` and `Z100`.
 

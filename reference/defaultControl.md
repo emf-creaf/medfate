@@ -118,7 +118,7 @@ A list, with the following options (default values in brackets):
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) or
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) or
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)):
 
   - `transpirationMode [= "Granier"]`: Transpiration model (either
@@ -239,7 +239,7 @@ A list, with the following options (default values in brackets):
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) or
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) or
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
   when `traspirationMode = "Granier"` only):
 
@@ -248,7 +248,7 @@ A list, with the following options (default values in brackets):
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) or
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) or
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
   when `traspirationMode = "Sperry"` or `traspirationMode = "Sureau"`):
 
@@ -289,7 +289,7 @@ A list, with the following options (default values in brackets):
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) or
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) or
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
   when `traspirationMode = "Sperry"` only):
 
@@ -306,7 +306,7 @@ A list, with the following options (default values in brackets):
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-  [`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) or
+  [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) or
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
   when `traspirationMode = "Sureau"` only):
 

@@ -115,7 +115,7 @@ resolution (i.e. using `freq = "days"`.
 ## See also
 
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
 [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
 [`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md),
 [`plot.spwb`](https://emf-creaf.github.io/medfate/reference/plot.spwb.md),

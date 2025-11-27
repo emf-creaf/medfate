@@ -4,7 +4,7 @@ Function `plot` plots time series of the results of the soil plant water
 balance model (see
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)), plant
 water balance model (see
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)), the
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md)), the
 forest growth model (see
 [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md)) or
 the forest dynamics model (see
@@ -160,7 +160,7 @@ An ggplot object
 The following plots are currently available for
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) (most of
 them also for
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)):
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md)):
 
 - `"PET_Precipitation"`: Potential evapotranspiration and Precipitation.
 
@@ -212,7 +212,7 @@ them also for
 
 The following plots are available for
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) and
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) *only if*
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) *only if*
 `transpirationMode = "Granier"`:
 
 - `"PlantPsi"`: Plant cohort water potential.
@@ -224,7 +224,7 @@ The following plots are available for
 
 The following plots are available for
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) and
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) *only if*
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) *only if*
 `transpirationMode = "Sperry"`:
 
 - `"SoilPlantConductance"`: Average instantaneous overall soil plant
@@ -387,7 +387,7 @@ simulation results:
 ## See also
 
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-[`pwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
+[`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
 [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
 [`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md),
 [`summary.spwb`](https://emf-creaf.github.io/medfate/reference/summary.spwb.md)
