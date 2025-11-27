@@ -84,7 +84,7 @@ Since density and diameter have not been provided, simulations in this case will
 
 We can use some functions to inspect how above-ground and below-ground information is represented in `medfate`. 
 
-For example, we can use function `forest2aboveground()` on the object `exampleforest` to show how medfate completes above-ground information:
+For example, we can use internal function `forest2aboveground()` on the object `exampleforest` to show how medfate completes above-ground information:
 ```{r}
 above <- forest2aboveground(exampleforest, SpParamsMED)
 above

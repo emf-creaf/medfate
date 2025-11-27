@@ -85,7 +85,6 @@ reference:
   desc:  Simulation control and input objects
 - contents:
   - spwbInput
-  - forest2aboveground
   - starts_with("defaultControl")
   - starts_with("defaultManagement")
   - starts_with("resetInputs")

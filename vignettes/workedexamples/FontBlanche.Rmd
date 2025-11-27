@@ -110,7 +110,7 @@ fb_forest$treeData <- fb$treeData
 fb_forest
 ```
 
-Because the forest plot format is rather specific, `medfate` also allows starting in an alternative way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height*, *leaf area index* (LAI) and *crown ratio*. While users can build their input data themselves, we use function `forest2aboveground()` on the object `fb_forest` to show how should the data look like:
+Because the forest plot format is rather specific, `medfate` also allows starting in an alternative way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height*, *leaf area index* (LAI) and *crown ratio*. While users can build their input data themselves, we use internal function `forest2aboveground()` on the object `fb_forest` to show how should the data look like:
 ```{r}
 fb_above <- forest2aboveground(fb_forest, SpParamsFB)
 fb_above
@@ -123,7 +123,7 @@ We see that at Font-Blanche holm oaks (code 68) represent most of the total leaf
 vprofile_leafAreaDensity(fb_forest, SpParamsFB, byCohorts = T, bySpecies = T)
 ```
 
-Regarding **belowground** information, the usuer should supply a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `fb_forest` to show how should the data look like:
+Regarding **belowground** information, the usuer should supply a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use internal function `forest2belowground()` on the object `fb_forest` to show how should the data look like:
 ```{r}
 fb_below <- forest2belowground(fb_forest, fb_soil, SpParamsFB)
 fb_below
