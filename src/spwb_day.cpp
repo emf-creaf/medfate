@@ -861,10 +861,9 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   }
 }
 
-//' Single-day simulation
+//' Single-day soil-plant water balance
 //'
-//' Function \code{spwb_day} performs water balance for a single day and \code{growth_day} 
-//' performs water and carbon balance for a single day.
+//' Function \code{spwb_day} performs water balance for a single day.
 //' 
 //' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 //' @param date Date as string "yyyy-mm-dd".
@@ -896,6 +895,7 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //'   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
 //'   \item{\code{"weather"}: A vector with the input weather.}
 //'   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
+//'   \item{\code{"EnergyBalance"}: Energy balance of the stand (only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}; see \code{\link{transp_transpirationSperry}}).}
 //'   \item{\code{"Soil"}: A data frame with results for each soil layer:
 //'     \itemize{
 //'       \item{\code{"Psi"}: Soil water potential (in MPa) at the end of the day.}
@@ -908,9 +908,9 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //'   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
 //'   \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 //' }
-//' The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
+//' 
+//' The following additional items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
 //' \itemize{
-//'   \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
 //'   \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
 //'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.}
 //'   \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
@@ -940,7 +940,7 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //' 
 //' @seealso
 //' \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  
-//' \code{\link{growthInput}}, \code{\link{growth}},  \code{\link{plot.growth_day}}  
+//' \code{\link{growth_day}}  
 //' 
 //' @examples
 //' #Load example daily meteorological data
@@ -978,24 +978,6 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //' sd3 <-spwb_day(x3, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
-//' 
-//' #Simulate water and carbon balance for one day only (Granier mode)
-//' control <- defaultControl("Granier")
-//' x4  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-//' sd4 <- growth_day(x4, date, meteovec,
-//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-//' 
-//' #Simulate water and carbon balance for one day only (Sperry mode)
-//' control <- defaultControl("Sperry")
-//' x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-//' sd5 <- growth_day(x5, date, meteovec,
-//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-//' 
-//' #Simulate water and carbon balance for one day only (Sureau mode)
-//' control <- defaultControl("Sureau")
-//' x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-//' sd6 <- growth_day(x6, date, meteovec,
-//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' @name spwb_day
 // [[Rcpp::export("spwb_day")]]

@@ -1276,7 +1276,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' @seealso 
 //' \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
 //' \code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}}, 
-//' \code{\link{pwb}}, \code{\link{aspwb}}
+//' \code{\link{pwb}}, \code{\link{growth}}, \code{\link{aspwb}}
 //' 
 //' @examples
 //' \donttest{
@@ -1704,6 +1704,7 @@ List spwb(List x, DataFrame meteo,
 //' \code{\link{forest}}, \code{\link{spwb}}, \code{\link{aspwb}}
 //' 
 //' @name pwb
+//' @keywords internal
 // [[Rcpp::export("pwb")]]
 List pwb(List x, DataFrame meteo, NumericMatrix W,
          double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, 

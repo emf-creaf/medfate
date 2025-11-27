@@ -1093,7 +1093,141 @@ growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude,
     invisible(.Call(`_medfate_growthDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput))
 }
 
-#' @rdname spwb_day
+#' Single-day forest growth
+#'
+#' Function \code{growth_day} performs water and carbon balance for a single day.
+#' 
+#' @param x An object of class \code{\link{growthInput}}.
+#' @param date Date as string "yyyy-mm-dd".
+#' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
+#' @param latitude Latitude (in degrees).
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
+#' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+#' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
+#' 
+#' @details
+#' The simulation function allows using three different sub-models of transpiration and photosynthesis:
+#' \itemize{
+#'   \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
+#'   and implements an approach originally described in Granier et al. (1999).} 
+#'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
+#'   implements a modelling approach originally described in Sperry et al. (2017).}  
+#'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+#' }
+#' 
+#' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
+#' 
+#' @return
+#' Function \code{growth_day()} returns a list of class \code{growth_day} with the 
+#' same elements as \code{\link{spwb_day}} and the following:
+#' \itemize{
+#'   \item{\code{"LabileCarbonBalance"}: A data frame with labile carbon balance results for plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
+#'     \item{\code{"LabileCarbonBalance"}: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
+#'     \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
+#'     \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
+#'     \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
+#'     \item{\code{"SugarTransport"}:  Average instantaneous rate of carbon transferred between leaves and stem compartments via floem (mol gluc·s-1).}
+#'   }
+#'   \item{\code{"PlantBiomassBalance"}: A data frame with plant biomass balance results for plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · m-2).}
+#'     \item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · m-2).}
+#'     \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · m-2).}
+#'     \item{\code{"MortalityBiomassLoss"}: Biomass loss due to mortality (g dry · m-2).}    
+#'     \item{\code{"CohortBiomassBalance"}: Daily cohort biomass balance (including mortality) (g dry · m-2).}
+#'   }
+#'   \item{\code{"PlantStructure"}: A data frame with area and biomass values for compartments of plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"LeafBiomass"}: Leaf structural biomass (in g dry) for an average individual of each plant cohort.}
+#'     \item{\code{"SapwoodBiomass"}: Sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
+#'     \item{\code{"FineRootBiomass"}: Fine root biomass (in g dry) for an average individual of each plant cohort.}
+#'     \item{\code{"LeafArea"}: Leaf area (in m2) for an average individual of each plant cohort.}
+#'     \item{\code{"SapwoodArea"}: Sapwood area (in cm2) for an average individual of each plant cohort.}
+#'     \item{\code{"FineRootArea"}: Fine root area (in m2) for an average individual of each plant cohort.}
+#'     \item{\code{"HuberValue"}: Sapwood area to (target) leaf area (in cm2/m2).}
+#'     \item{\code{"RootAreaLeafArea"}: The ratio of fine root area to (target) leaf area (in m2/m2).}
+#'     \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
+#'     \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
+#'   }
+#'   \item{\code{"GrowthMortality"}: A data frame with growth and mortality rates for plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"LAgrowth"}: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.}
+#'     \item{\code{"SAgrowth"}: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.}
+#'     \item{\code{"FRAgrowth"}: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.}
+#'     \item{\code{"StarvationRate"}: Mortality rate from starvation (ind/d-1).}
+#'     \item{\code{"DessicationRate"}: Mortality rate from dessication (ind/d-1).}
+#'     \item{\code{"MortalityRate"}: Mortality rate (any cause) (ind/d-1).}
+#'   }
+#' }
+#'   
+#' @references
+#' De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
+#' 
+#' De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+#' 
+#' Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
+#' 
+#' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+#' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
+#' 
+#' Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
+#' 
+#' @author
+#' \itemize{
+#'   \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+#'   \item{Nicolas Martin-StPaul, URFM-INRAE}
+#' }
+#' 
+#' @seealso
+#' \code{\link{spwb_day}}, \code{\link{growthInput}}, \code{\link{growth}},
+#' \code{\link{plot.growth_day}}  
+#' 
+#' @examples
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforest)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Define soil parameters
+#' examplesoil <- defaultSoilParams(4)
+#' 
+#' # Day to be simulated
+#' d <- 100
+#' meteovec <- unlist(examplemeteo[d,-1])
+#' date <- as.character(examplemeteo$dates[d])
+#' 
+#' #Simulate water and carbon balance for one day only (Granier mode)
+#' control <- defaultControl("Granier")
+#' x4  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' sd4 <- growth_day(x4, date, meteovec,
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+#' 
+#' #Simulate water and carbon balance for one day only (Sperry mode)
+#' control <- defaultControl("Sperry")
+#' x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' sd5 <- growth_day(x5, date, meteovec,
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+#' 
+#' #Simulate water and carbon balance for one day only (Sureau mode)
+#' control <- defaultControl("Sureau")
+#' x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' sd6 <- growth_day(x6, date, meteovec,
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+#' 
+#' @name growth_day
 growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
@@ -3706,7 +3840,7 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
 #' @seealso 
 #' \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
 #' \code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}}, 
-#' \code{\link{pwb}}, \code{\link{aspwb}}
+#' \code{\link{pwb}}, \code{\link{growth}}, \code{\link{aspwb}}
 #' 
 #' @examples
 #' \donttest{
@@ -3801,6 +3935,7 @@ spwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_re
 #' \code{\link{forest}}, \code{\link{spwb}}, \code{\link{aspwb}}
 #' 
 #' @name pwb
+#' @keywords internal
 pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), herbTranspiration = numeric(0), CO2ByYear = numeric(0)) {
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, CO2ByYear)
 }
@@ -3811,10 +3946,9 @@ spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, e
     invisible(.Call(`_medfate_spwbDay_inner`, internalCommunication, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput))
 }
 
-#' Single-day simulation
+#' Single-day soil-plant water balance
 #'
-#' Function \code{spwb_day} performs water balance for a single day and \code{growth_day} 
-#' performs water and carbon balance for a single day.
+#' Function \code{spwb_day} performs water balance for a single day.
 #' 
 #' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 #' @param date Date as string "yyyy-mm-dd".
@@ -3846,6 +3980,7 @@ spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, e
 #'   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
 #'   \item{\code{"weather"}: A vector with the input weather.}
 #'   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
+#'   \item{\code{"EnergyBalance"}: Energy balance of the stand (only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}; see \code{\link{transp_transpirationSperry}}).}
 #'   \item{\code{"Soil"}: A data frame with results for each soil layer:
 #'     \itemize{
 #'       \item{\code{"Psi"}: Soil water potential (in MPa) at the end of the day.}
@@ -3858,9 +3993,9 @@ spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, e
 #'   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
 #'   \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 #' }
-#' The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
+#' 
+#' The following additional items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
 #' \itemize{
-#'   \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
 #'   \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
 #'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.}
 #'   \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
@@ -3890,7 +4025,7 @@ spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, e
 #' 
 #' @seealso
 #' \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  
-#' \code{\link{growthInput}}, \code{\link{growth}},  \code{\link{plot.growth_day}}  
+#' \code{\link{growth_day}}  
 #' 
 #' @examples
 #' #Load example daily meteorological data
@@ -3928,24 +4063,6 @@ spwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, e
 #' sd3 <-spwb_day(x3, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
-#' 
-#' #Simulate water and carbon balance for one day only (Granier mode)
-#' control <- defaultControl("Granier")
-#' x4  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-#' sd4 <- growth_day(x4, date, meteovec,
-#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-#' 
-#' #Simulate water and carbon balance for one day only (Sperry mode)
-#' control <- defaultControl("Sperry")
-#' x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-#' sd5 <- growth_day(x5, date, meteovec,
-#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-#' 
-#' #Simulate water and carbon balance for one day only (Sureau mode)
-#' control <- defaultControl("Sureau")
-#' x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-#' sd6 <- growth_day(x6, date, meteovec,
-#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' @name spwb_day
 spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {

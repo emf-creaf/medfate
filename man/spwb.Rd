@@ -242,7 +242,7 @@ Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}},
 \code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}},
-\code{\link{pwb}}, \code{\link{aspwb}}
+\code{\link{pwb}}, \code{\link{growth}}, \code{\link{aspwb}}
 }
 \author{
 \itemize{
