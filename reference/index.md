@@ -79,11 +79,6 @@ Simulation control and input objects
 - [`spwbInput()`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
   [`growthInput()`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
   : Input for simulation models
-- [`forest2aboveground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
-  [`forest2belowground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
-  [`forest2spwbInput()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
-  [`forest2growthInput()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
-  : Input for simulation models (deprecated)
 - [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)
   : Control parameters for simulation models
 - [`defaultManagementFunction()`](https://emf-creaf.github.io/medfate/reference/defaultManagementFunction.md)

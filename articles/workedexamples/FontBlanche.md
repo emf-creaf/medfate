@@ -368,7 +368,7 @@ the other with **belowground** information (i.e. root distribution). The
 aboveground data frame does not distinguish between trees and shrubs. It
 includes, for each plant cohort to be considered in rows, its *species
 identity*, *height*, *leaf area index* (LAI) and *crown ratio*. While
-users can build their input data themselves, we use function
+users can build their input data themselves, we use internal function
 [`forest2aboveground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
 on the object `fb_forest` to show how should the data look like:
 
@@ -414,7 +414,7 @@ vprofile_leafAreaDensity(fb_forest, SpParamsFB, byCohorts = T, bySpecies = T)
 
 Regarding **belowground** information, the usuer should supply a matrix
 describing for each plant cohort, the proportion of fine roots in each
-soil layer. As before, we use function
+soil layer. As before, we use internal function
 [`forest2belowground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
 on the object `fb_forest` to show how should the data look like:
 

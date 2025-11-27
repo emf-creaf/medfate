@@ -342,7 +342,7 @@ functionally distinct plants are neglected.
 We can use some functions to inspect how above-ground and below-ground
 information is represented in `medfate`.
 
-For example, we can use function
+For example, we can use internal function
 [`forest2aboveground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
 on the object `exampleforest` to show how medfate completes above-ground
 information:

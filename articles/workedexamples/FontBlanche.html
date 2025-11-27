@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2025-11-24</h4>
+            <h4 data-toc-skip class="date">2025-11-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="d-none name"><code>FontBlanche.Rmd</code></div>
@@ -427,8 +427,9 @@ aboveground data frame does not distinguish between trees and shrubs. It
 includes, for each plant cohort to be considered in rows, its
 <em>species identity</em>, <em>height</em>, <em>leaf area index</em>
 (LAI) and <em>crown ratio</em>. While users can build their input data
-themselves, we use function <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code> on the
-object <code>fb_forest</code> to show how should the data look like:</p>
+themselves, we use internal function <code><a href="../../reference/forest2aboveground.html">forest2aboveground()</a></code>
+on the object <code>fb_forest</code> to show how should the data look
+like:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fb_above</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest2aboveground.html">forest2aboveground</a></span><span class="op">(</span><span class="va">fb_forest</span>, <span class="va">SpParamsFB</span><span class="op">)</span></span>
 <span><span class="va">fb_above</span></span></code></pre></div>
@@ -465,7 +466,7 @@ can be easily inspected using function
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" width="480" style="display: block; margin: auto;"></p>
 <p>Regarding <strong>belowground</strong> information, the usuer should
 supply a matrix describing for each plant cohort, the proportion of fine
-roots in each soil layer. As before, we use function
+roots in each soil layer. As before, we use internal function
 <code><a href="../../reference/forest2aboveground.html">forest2belowground()</a></code> on the object <code>fb_forest</code>
 to show how should the data look like:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
