@@ -93,13 +93,12 @@ Simulation model functions
 
 - [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) :
   Soil-plant water balance
-- [`growth_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
-  [`spwb_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
-  : Single-day simulation
-- [`pwb()`](https://emf-creaf.github.io/medfate/reference/pwb.md) :
-  Plant water balance
+- [`spwb_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
+  : Single-day soil-plant water balance
 - [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
   : Forest growth
+- [`growth_day()`](https://emf-creaf.github.io/medfate/reference/growth_day.md)
+  : Single-day forest growth
 - [`fordyn()`](https://emf-creaf.github.io/medfate/reference/fordyn.md)
   : Forest dynamics
 

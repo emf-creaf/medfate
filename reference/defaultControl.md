@@ -349,7 +349,7 @@ A list, with the following options (default values in brackets):
 
   **Forest growth** (functions
   [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md) or
-  [`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)):
+  [`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md)):
 
   - `subdailyCarbonBalance [= FALSE]`: Boolean flag to indicate that
     labile carbon balance should be conducted at sub-daily steps

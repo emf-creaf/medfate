@@ -2,7 +2,7 @@
 
 Functions to plot the sub-daily simulation results of
 [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
-[`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
+[`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md)
 or the transpiration calculations of
 [`transp_transpirationSperry`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
 or
@@ -214,7 +214,7 @@ control option `subdailyResults` is set to `TRUE`. See also option
 ## See also
 
 [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
-[`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
+[`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md),
 [`plot.spwb`](https://emf-creaf.github.io/medfate/reference/plot.spwb.md)
 
 ## Author

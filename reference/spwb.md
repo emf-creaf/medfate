@@ -441,6 +441,7 @@ hydraulic cost. Plant Cell and Environment 40, 816-830 (doi:
 [`summary.spwb`](https://emf-creaf.github.io/medfate/reference/summary.spwb.md),
 [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md),
 [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
+[`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
 [`aspwb`](https://emf-creaf.github.io/medfate/reference/aspwb.md)
 
 ## Author

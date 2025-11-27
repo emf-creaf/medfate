@@ -210,7 +210,7 @@ A list of class 'growth' with the following elements:
   - `"MortalityRate"`: Daily mortality rate (any cause) (ind/d-1).
 
 - `"subdaily"`: A list of objects of class
-  [`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
+  [`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md),
   one per day simulated (only if required in `control` parameters, see
   [`defaultControl`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)).
 
@@ -232,7 +232,7 @@ scales. Geoscientific Model Development 16: 3165-3201
 ## See also
 
 [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md),
-[`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
+[`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md),
 [`plot.growth`](https://emf-creaf.github.io/medfate/reference/plot.spwb.md)
 
 ## Author

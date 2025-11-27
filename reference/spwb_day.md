@@ -1,25 +1,10 @@
-# Single-day simulation
+# Single-day soil-plant water balance
 
-Function `spwb_day` performs water balance for a single day and
-`growth_day` performs water and carbon balance for a single day.
+Function `spwb_day` performs water balance for a single day.
 
 ## Usage
 
 ``` r
-growth_day(
-  x,
-  date,
-  meteovec,
-  latitude,
-  elevation,
-  slope = NA_real_,
-  aspect = NA_real_,
-  runon = 0,
-  lateralFlows = NULL,
-  waterTableDepth = NA_real_,
-  modifyInput = TRUE
-)
-
 spwb_day(
   x,
   date,
@@ -100,6 +85,10 @@ following elements:
   row of 'WaterBalance' object given in
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
 
+- `"EnergyBalance"`: Energy balance of the stand (only returned when
+  `transpirationMode = "Sperry"` or `transpirationMode = "Sureau"`; see
+  [`transp_transpirationSperry`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)).
+
 - `"Soil"`: A data frame with results for each soil layer:
 
   - `"Psi"`: Soil water potential (in MPa) at the end of the day.
@@ -125,11 +114,8 @@ following elements:
   or
   [`transp_transpirationSperry`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)).
 
-The following items are only returned when
+The following additional items are only returned when
 `transpirationMode = "Sperry"` or `transpirationMode = "Sureau"`:
-
-- `"EnergyBalance"`: Energy balance of the stand (see
-  [`transp_transpirationSperry`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)).
 
 - `"RhizoPsi"`: Minimum water potential (in MPa) inside roots, after
   crossing rhizosphere, per cohort and soil layer.
@@ -214,9 +200,7 @@ hydraulic cost. Plant Cell and Environment 40, 816-830 (doi:
 [`spwbInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md),
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
 [`plot.spwb_day`](https://emf-creaf.github.io/medfate/reference/plot.spwb_day.md),
-[`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md),
-[`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
-[`plot.growth_day`](https://emf-creaf.github.io/medfate/reference/plot.spwb_day.md)
+[`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md)
 
 ## Author
 
@@ -262,22 +246,4 @@ x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 sd3 <-spwb_day(x3, date, meteovec,
               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 
-
-#Simulate water and carbon balance for one day only (Granier mode)
-control <- defaultControl("Granier")
-x4  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-sd4 <- growth_day(x4, date, meteovec,
-                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-
-#Simulate water and carbon balance for one day only (Sperry mode)
-control <- defaultControl("Sperry")
-x5  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-sd5 <- growth_day(x5, date, meteovec,
-                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-
-#Simulate water and carbon balance for one day only (Sureau mode)
-control <- defaultControl("Sureau")
-x6  <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-sd6 <- growth_day(x6, date, meteovec,
-                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 ```

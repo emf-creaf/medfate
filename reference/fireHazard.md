@@ -24,7 +24,7 @@ fireHazard(
   [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
   [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md),
   [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
-  [`growth_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
+  [`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md)
   or
   [`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md).
 
