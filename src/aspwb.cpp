@@ -134,17 +134,26 @@ List aspwb_day_private(List internalCommunication, List x, NumericVector meteove
   DataFrame SWBcommunication = as<DataFrame>(internalCommunication["SWBcommunication"]);
   
   //Determine water flows, returning deep drainage
-  NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
-                                      NetRain, rainfallIntensity, Snowmelt, sourceSinkVec, 
-                                      runon, lateralFlows, waterTableDepth,
-                                      infiltrationMode, infiltrationCorrection, soilDomains, 
-                                      ndailysteps, max_nsubsteps_soil, true);
-  double Infiltration = sf["Infiltration"];
-  double DeepDrainage = sf["DeepDrainage"];
-  double Runoff = sf["Runoff"];
-  double InfiltrationExcess = sf["InfiltrationExcess"];
-  double SaturationExcess = sf["SaturationExcess"];
-  double CapillarityRise = sf["CapillarityRise"];
+  double DeepDrainage = 0.0;
+  double Infiltration = 0.0;
+  double Runoff = 0.0;
+  double InfiltrationExcess = 0.0;
+  double SaturationExcess = 0.0;
+  double CapillarityRise = 0.0;
+  if(soilDomains != "none") {
+    NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
+                                              NetRain, rainfallIntensity, Snowmelt, sourceSinkVec, 
+                                              runon, lateralFlows, waterTableDepth,
+                                              infiltrationMode, infiltrationCorrection, soilDomains, 
+                                              ndailysteps, max_nsubsteps_soil, true);
+    
+    Infiltration = sf["Infiltration"];
+    DeepDrainage = sf["DeepDrainage"];
+    Runoff = sf["Runoff"];
+    InfiltrationExcess = sf["InfiltrationExcess"];
+    SaturationExcess = sf["SaturationExcess"];
+    CapillarityRise = sf["CapillarityRise"];
+  }
   
   //Recalculate current soil water potential for output
   psiVec = psi(soil, soilFunctions); 

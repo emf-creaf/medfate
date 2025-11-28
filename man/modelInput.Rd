@@ -215,9 +215,6 @@ and a soil data input to create input objects for simulation functions \code{\li
 }
 \details{
 Functions \code{spwbInput()} and \code{growthInput()} initialize inputs differently depending on control parameters.
-
-\emph{IMPORTANT NOTE}: Older function names \code{\link{forest2spwbInput}} and \code{\link{forest2growthInput}} are now deprecated, but
-they can still be used for back-compatibility.
 }
 \examples{
 #Load example plot plant data

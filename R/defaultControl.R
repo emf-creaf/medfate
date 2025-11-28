@@ -3,7 +3,7 @@
 #' Creates a list control parameters default values for simulations
 #' 
 #' @param transpirationMode String containing transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.
-#' @param soilDomains String containing soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.
+#' @param soilDomains String containing soil hydrology model (either 'buckets', 'single', 'dual' or 'none'). Option 'none' is meant to be used when flows in the bulk soil are dealt with externally. For the remaining options, see \code{\link{hydrology_soilWaterBalance}}.
 #' @param rhizosphereOverlap String indicating the assumption with respect to rhizosphere overlap:
 #'   \itemize{
 #'      \item{\code{total}: All plants extract water from the same pools.}
@@ -194,7 +194,7 @@ defaultControl<-function(transpirationMode = "Granier",
                          rhizosphereOverlap = "total") {
   transpirationMode <- match.arg(transpirationMode, c("Granier", "Sperry", "Cochard", "Sureau"))
   if(transpirationMode=="Cochard") transpirationMode = "Sureau"
-  soilDomains <- match.arg(soilDomains, c("buckets", "single", "dual"))
+  soilDomains <- match.arg(soilDomains, c("buckets", "single", "dual", "none"))
   rhizosphereOverlap <- match.arg(rhizosphereOverlap, c("total", "partial", "none"))
   l <- list(
     #For all functions

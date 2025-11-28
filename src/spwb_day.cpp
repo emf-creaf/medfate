@@ -285,69 +285,71 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
     if(l ==0) sourceSinkVec[l] -= Esoil;
   }
   
-  if(!plantWaterPools) {
-    // determine water flows (no mass conservation)
-    NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
-                                        RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
-                                        runon, lateralFlows, waterTableDepth,
-                                        infiltrationMode, infiltrationCorrection, soilDomains, 
-                                        ndailysteps, max_nsubsteps_soil, true);
-    DeepDrainage = sf["DeepDrainage"];
-    Infiltration = sf["Infiltration"];
-    Runoff = sf["Runoff"];
-    InfiltrationExcess = sf["InfiltrationExcess"];
-    SaturationExcess = sf["SaturationExcess"];
-    CapillarityRise = sf["CapillarityRise"];
-  } else { //Apply soil flows to water pools
-    NumericVector poolProportions = belowdf["poolProportions"];
-    List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
-    // NumericVector sourceSinkCheck(nlayers, 0.0);
-    //Set Wsoil to zero
-    for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
-    NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
-    ExtractionPoolMat.fill(0.0);
-    for(int c=0;c<numCohorts;c++) {
-      //this is used to store extraction of a SINGLE plant cohort from all pools
-      NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
-      for(int l=0;l<nlayers;l++) {
-        for(int c2=0;c2<numCohorts;c2++) {
-          ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+  if(soilDomains != "none") {
+    if(!plantWaterPools) {
+      // determine water flows (no mass conservation)
+      NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
+                                                RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
+                                                runon, lateralFlows, waterTableDepth,
+                                                infiltrationMode, infiltrationCorrection, soilDomains, 
+                                                ndailysteps, max_nsubsteps_soil, true);
+      DeepDrainage = sf["DeepDrainage"];
+      Infiltration = sf["Infiltration"];
+      Runoff = sf["Runoff"];
+      InfiltrationExcess = sf["InfiltrationExcess"];
+      SaturationExcess = sf["SaturationExcess"];
+      CapillarityRise = sf["CapillarityRise"];
+    } else { //Apply soil flows to water pools
+      NumericVector poolProportions = belowdf["poolProportions"];
+      List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
+      // NumericVector sourceSinkCheck(nlayers, 0.0);
+      //Set Wsoil to zero
+      for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
+      NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
+      ExtractionPoolMat.fill(0.0);
+      for(int c=0;c<numCohorts;c++) {
+        //this is used to store extraction of a SINGLE plant cohort from all pools
+        NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
+        for(int l=0;l<nlayers;l++) {
+          for(int c2=0;c2<numCohorts;c2++) {
+            ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+          }
         }
       }
-    }
-    for(int c=0;c<numCohorts;c++) {
-      List soil_c = soilPools[c];
-      NumericVector sourceSinkPoolVec(nlayers, 0.0);
-      for(int l=0;l<nlayers;l++) {
-        sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
-        if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
+      for(int c=0;c<numCohorts;c++) {
+        List soil_c = soilPools[c];
+        NumericVector sourceSinkPoolVec(nlayers, 0.0);
+        for(int l=0;l<nlayers;l++) {
+          sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
+          if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
+        }
+        NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
+                                                    RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
+                                                    runon, lateralFlows, waterTableDepth,
+                                                    infiltrationMode, infiltrationCorrection, soilDomains, 
+                                                    ndailysteps, max_nsubsteps_soil, true);
+        double DeepDrainage_c = sf_c["DeepDrainage"];
+        double Infiltration_c = sf_c["Infiltration"];
+        double InfiltrationExcess_c = sf_c["InfiltrationExcess"];
+        double Runoff_c = sf_c["Runoff"];
+        double SaturationExcess_c = sf_c["SaturationExcess"];
+        double CapillarityRise_c = sf_c["CapillarityRise"];
+        DeepDrainage += DeepDrainage_c*poolProportions[c]; 
+        Runoff += Runoff_c*poolProportions[c]; 
+        Infiltration += Infiltration_c*poolProportions[c]; 
+        SaturationExcess += SaturationExcess_c*poolProportions[c]; 
+        InfiltrationExcess += InfiltrationExcess_c*poolProportions[c];
+        CapillarityRise += CapillarityRise_c*poolProportions[c];
+        
+        //copy to Wpool and update Wsoil
+        NumericVector W_c = soil_c["W"];
+        for(int l=0;l<nlayers;l++) {
+          Wpool(c,l) = W_c[l];
+          Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
+        }
       }
-      NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
-                                            RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
-                                            runon, lateralFlows, waterTableDepth,
-                                            infiltrationMode, infiltrationCorrection, soilDomains, 
-                                            ndailysteps, max_nsubsteps_soil, true);
-      double DeepDrainage_c = sf_c["DeepDrainage"];
-      double Infiltration_c = sf_c["Infiltration"];
-      double InfiltrationExcess_c = sf_c["InfiltrationExcess"];
-      double Runoff_c = sf_c["Runoff"];
-      double SaturationExcess_c = sf_c["SaturationExcess"];
-      double CapillarityRise_c = sf_c["CapillarityRise"];
-      DeepDrainage += DeepDrainage_c*poolProportions[c]; 
-      Runoff += Runoff_c*poolProportions[c]; 
-      Infiltration += Infiltration_c*poolProportions[c]; 
-      SaturationExcess += SaturationExcess_c*poolProportions[c]; 
-      InfiltrationExcess += InfiltrationExcess_c*poolProportions[c];
-      CapillarityRise += CapillarityRise_c*poolProportions[c];
-      
-      //copy to Wpool and update Wsoil
-      NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) {
-        Wpool(c,l) = W_c[l];
-        Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
-      }
+      // for(int l=0; l<nlayers;l++) Rcout<< sourceSinkCheck[l] << " " << sourceSinkVec[l]<<"\n";
     }
-    // for(int l=0; l<nlayers;l++) Rcout<< sourceSinkCheck[l] << " " << sourceSinkVec[l]<<"\n";
   }
   
   //Calculate current soil water potential for output
@@ -598,68 +600,71 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
     sourceSinkVec[l] -= (ExtractionVec[l] + EherbVec[l]);
     if(l ==0) sourceSinkVec[l] -= Esoil;
   }
-  if(!plantWaterPools) {
-    // determine water flows (no mass conservation)
-    NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
-                                        RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
-                                        runon, lateralFlows, waterTableDepth,
-                                        infiltrationMode, infiltrationCorrection, soilDomains, 
-                                        ndailysteps, max_nsubsteps_soil, true);
-    DeepDrainage = sf["DeepDrainage"];
-    Infiltration = sf["Infiltration"];
-    Runoff = sf["Runoff"];
-    InfiltrationExcess = sf["InfiltrationExcess"];
-    SaturationExcess = sf["SaturationExcess"];
-    CapillarityRise = sf["CapillarityRise"]; 
-  } else {
-    NumericVector poolProportions = belowdf["poolProportions"];
-    List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
-    //Set Wsoil to zero
-    for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
-    NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
-    ExtractionPoolMat.fill(0.0);
-    for(int c=0;c<numCohorts;c++) {
-      //this is used to store extraction of a SINGLE plant cohort from all pools
-      NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
-      for(int l=0;l<nlayers;l++) {
-        for(int c2=0;c2<numCohorts;c2++) {
-          ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+  if(soilDomains != "none") {
+    if(!plantWaterPools) {
+      // determine water flows (no mass conservation)
+      NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
+                                                RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
+                                                runon, lateralFlows, waterTableDepth,
+                                                infiltrationMode, infiltrationCorrection, soilDomains, 
+                                                ndailysteps, max_nsubsteps_soil, true);
+      DeepDrainage = sf["DeepDrainage"];
+      Infiltration = sf["Infiltration"];
+      Runoff = sf["Runoff"];
+      InfiltrationExcess = sf["InfiltrationExcess"];
+      SaturationExcess = sf["SaturationExcess"];
+      CapillarityRise = sf["CapillarityRise"]; 
+    } else {
+      NumericVector poolProportions = belowdf["poolProportions"];
+      List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
+      //Set Wsoil to zero
+      for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
+      NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
+      ExtractionPoolMat.fill(0.0);
+      for(int c=0;c<numCohorts;c++) {
+        //this is used to store extraction of a SINGLE plant cohort from all pools
+        NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
+        for(int l=0;l<nlayers;l++) {
+          for(int c2=0;c2<numCohorts;c2++) {
+            ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+          }
+        }
+      }
+      for(int c=0;c<numCohorts;c++) {
+        List soil_c = soilPools[c];
+        NumericVector sourceSinkPoolVec(nlayers, 0.0);
+        for(int l=0;l<nlayers;l++) {
+          sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
+          if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
+        }
+        NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
+                                                    RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
+                                                    runon, lateralFlows, waterTableDepth,
+                                                    infiltrationMode, infiltrationCorrection, soilDomains, 
+                                                    ndailysteps, max_nsubsteps_soil, true);
+        double DeepDrainage_c = sf_c["DeepDrainage"];
+        double Infiltration_c = sf_c["Infiltration"];
+        double Runoff_c = sf_c["Runoff"];
+        double InfiltrationExcess_c = sf_c["InfiltrationExcess"];
+        double SaturationExcess_c = sf_c["SaturationExcess"];
+        double CapillarityRise_c = sf_c["CapillarityRise"]; 
+        DeepDrainage += DeepDrainage_c*poolProportions[c]; 
+        Runoff += Runoff_c*poolProportions[c]; 
+        Infiltration += Infiltration_c*poolProportions[c]; 
+        InfiltrationExcess += InfiltrationExcess_c*poolProportions[c]; 
+        SaturationExcess += SaturationExcess_c*poolProportions[c]; 
+        CapillarityRise += CapillarityRise_c*poolProportions[c]; 
+        
+        //copy to Wpool and update Wsoil
+        NumericVector W_c = soil_c["W"];
+        for(int l=0;l<nlayers;l++) {
+          Wpool(c,l) = W_c[l];
+          Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
         }
       }
     }
-    for(int c=0;c<numCohorts;c++) {
-      List soil_c = soilPools[c];
-      NumericVector sourceSinkPoolVec(nlayers, 0.0);
-      for(int l=0;l<nlayers;l++) {
-        sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
-        if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
-      }
-      NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
-                                            RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
-                                            runon, lateralFlows, waterTableDepth,
-                                            infiltrationMode, infiltrationCorrection, soilDomains, 
-                                            ndailysteps, max_nsubsteps_soil, true);
-      double DeepDrainage_c = sf_c["DeepDrainage"];
-      double Infiltration_c = sf_c["Infiltration"];
-      double Runoff_c = sf_c["Runoff"];
-      double InfiltrationExcess_c = sf_c["InfiltrationExcess"];
-      double SaturationExcess_c = sf_c["SaturationExcess"];
-      double CapillarityRise_c = sf_c["CapillarityRise"]; 
-      DeepDrainage += DeepDrainage_c*poolProportions[c]; 
-      Runoff += Runoff_c*poolProportions[c]; 
-      Infiltration += Infiltration_c*poolProportions[c]; 
-      InfiltrationExcess += InfiltrationExcess_c*poolProportions[c]; 
-      SaturationExcess += SaturationExcess_c*poolProportions[c]; 
-      CapillarityRise += CapillarityRise_c*poolProportions[c]; 
-      
-      //copy to Wpool and update Wsoil
-      NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) {
-        Wpool(c,l) = W_c[l];
-        Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
-      }
-    }
   }
+
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   

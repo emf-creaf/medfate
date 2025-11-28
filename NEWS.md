@@ -6,6 +6,7 @@
 * Age of cohorts is now allowed in forest objects and incremented in fordyn() simulations
 * Flag 'addunits' in function extract() allows retrieving physical units for daily/subdaily output variables 
 * Function extract() can now process fordyn() simulations
+* Option 'soilDomains = "none"' added for external simulation of bulk soil water flows
 
 # medfate 4.8.4
 * Summary, extract and plot functions enabled for aspwb() simulation results

@@ -2536,9 +2536,6 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' @details
 #' Functions \code{spwbInput()} and \code{growthInput()} initialize inputs differently depending on control parameters.
 #' 
-#' \emph{IMPORTANT NOTE}: Older function names \code{\link{forest2spwbInput}} and \code{\link{forest2growthInput}} are now deprecated, but 
-#' they can still be used for back-compatibility.
-#' 
 #' @return 
 #' Function \code{spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 #'   \itemize{

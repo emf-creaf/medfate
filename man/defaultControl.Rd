@@ -13,7 +13,7 @@ defaultControl(
 \arguments{
 \item{transpirationMode}{String containing transpiration model (either 'Granier', 'Sperry' or 'Sureau'). See \code{\link{spwbInput}}.}
 
-\item{soilDomains}{String containing soil hydrology model (either 'buckets', 'single' or 'dual'). See \code{\link{hydrology_soilWaterBalance}}.}
+\item{soilDomains}{String containing soil hydrology model (either 'buckets', 'single', 'dual' or 'none'). Option 'none' is meant to be used when flows in the bulk soil are dealt with externally. For the remaining options, see \code{\link{hydrology_soilWaterBalance}}.}
 
 \item{rhizosphereOverlap}{String indicating the assumption with respect to rhizosphere overlap:
 \itemize{
