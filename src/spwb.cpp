@@ -1126,16 +1126,27 @@ void printWaterBalanceResult(List outputList, List x,
 //' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //' 
 //' @details 
-//' The simulation functions allow using three different sub-models of transpiration and photosynthesis:
+//' Detailed model description is available in the medfate book. 
+//' 
+//' Soil-plant water balance simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis: 
+//' 
+//' (1) Sub-models of transpiration and photosynthesis (control parameter \code{transpirationMode}):
 //' \itemize{
-//'   \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
+//'   \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by internal function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
 //'   and implements an approach originally described in Granier et al. (1999).} 
-//'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
+//'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by internal function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
 //'   implements a modelling approach originally described in Sperry et al. (2017).}  
-//'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+//'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by internal function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 //' }
 //' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier' because they
 //' include explicit plant hydraulics and canopy/soil energy balance at subdaily time steps.
+//' 
+//' (2) Sub-models of bulk soil water flows (control parameter \code{soilDomains}; see internal function \code{\link{hydrology_soilWaterBalance}}):
+//'  \itemize{
+//'    \item{The submodel corresponding to 'buckets' is a multi-bucket model adds/substracts water to each layer and if content is above field capacity the excess percolates to the layer below.}
+//'    \item{The submodel corresponding to 'single' is a single-domain solving 1D Richards equation (Bonan et al. 2019).}
+//'    \item{The submodel corresponding to 'dual' is a dual-permeability model from MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005)}
+//'  }
 //' 
 //' @return
 //' Function \code{spwb} returns a list of class 'spwb'. Since lists are difficult to handle, we recommend using
@@ -1255,9 +1266,15 @@ void printWaterBalanceResult(List outputList, List x,
 //'   }
 //'   
 //' @references
+//' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+//' 
 //' De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 //' 
 //' De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+//' 
+//' Jarvis, N.J., Jansson, P‐E., Dik, P.E. & Messing, I. (1991). Modelling water and solute transport in macroporous soil. I. Model description and sensitivity analysis. Journal of Soil Science, 42, 59–70.
+//' 
+//' Larsbo, M., Roulier, S., Stenemo, F., Kasteel, R. & Jarvis, N. (2005). An Improved Dual‐Permeability Model of Water Flow and Solute Transport in the Vadose Zone. Vadose Zone Journal, 4, 398–406.
 //' 
 //' Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
 //' 
@@ -1675,6 +1692,8 @@ List spwb(List x, DataFrame meteo,
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 //' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
+//' 
+//' @details See details in \code{\link{spwb}}.
 //' 
 //' @returns 
 //' A list of class 'pwb' with the same elements as explained in \code{\link{spwb}}.

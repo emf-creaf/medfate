@@ -99,8 +99,8 @@ during a period specified in the input climatic data.
 }
 \details{
 Detailed model description is available in the medfate book.
-Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive
-than those using the 'Granier' transpiration mode.
+
+Forest growth simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis (see details in \code{\link{spwb}}).
 }
 \examples{
 \donttest{

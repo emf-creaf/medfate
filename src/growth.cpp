@@ -1641,16 +1641,9 @@ void growthDay_inner(List internalCommunication, List x, CharacterVector date, N
 //' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 //' 
 //' @details
-//' The simulation function allows using three different sub-models of transpiration and photosynthesis:
-//' \itemize{
-//'   \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
-//'   and implements an approach originally described in Granier et al. (1999).} 
-//'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
-//'   implements a modelling approach originally described in Sperry et al. (2017).}  
-//'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
-//' }
+//' Detailed model description is available in the medfate book. 
 //' 
-//' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
+//' Forest growth simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis (see details in \code{\link{spwb_day}}). 
 //' 
 //' @return
 //' Function \code{growth_day()} returns a list of class \code{growth_day} with the 
@@ -2292,8 +2285,8 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' 
 //' @details
 //' Detailed model description is available in the medfate book. 
-//' Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive 
-//' than those using the 'Granier' transpiration mode. 
+//' 
+//' Forest growth simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis (see details in \code{\link{spwb}}). 
 //' 
 //' @return
 //' A list of class 'growth' with the following elements:

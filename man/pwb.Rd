@@ -49,6 +49,9 @@ only (i.e. soil moisture dynamics is an input) at daily steps for a given forest
 during a period specified in the input climatic data. It works much as \code{\link{spwb}} but imposing soil moisture dynamics. Plant transpiration
 and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
+\details{
+See details in \code{\link{spwb}}.
+}
 \references{
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 
