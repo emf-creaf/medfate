@@ -22,8 +22,9 @@ defaultControl(
 
 - soilDomains:
 
-  String containing soil hydrology model (either 'buckets', 'single' or
-  'dual'). See
+  String containing soil hydrology model (either 'buckets', 'single',
+  'dual' or 'none'). Option 'none' is meant to be used when flows in the
+  bulk soil are dealt with externally. For the remaining options, see
   [`hydrology_soilWaterBalance`](https://emf-creaf.github.io/medfate/reference/hydrology_soilWaterBalance.md).
 
 - rhizosphereOverlap:

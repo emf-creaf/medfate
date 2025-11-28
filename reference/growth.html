@@ -105,7 +105,9 @@ during a period specified in the input climatic data.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of class 'growth' with the following elements:</p><ul><li><p><code>"latitude"</code>: Latitude (in degrees) given as input.</p></li>
+    <p>Function <code>growth</code> returns a list of class 'growth'. Since lists are difficult to handle, we recommend using
+function <code><a href="extract.html">extract</a></code> to reshape simulation results (including their units) from those objects.</p>
+<p>List elements are as follows:</p><ul><li><p><code>"latitude"</code>: Latitude (in degrees) given as input.</p></li>
 <li><p><code>"topography"</code>: Vector with elevation, slope and aspect given as input.</p></li>
 <li><p><code>"weather"</code>: A copy of the input weather data frame.</p></li>
 <li><p><code>"growthInput"</code>: A copy of the object <code>x</code> of class <code><a href="modelInput.html">growthInput</a></code> given as input.</p></li>

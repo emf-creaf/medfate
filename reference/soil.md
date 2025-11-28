@@ -119,16 +119,16 @@ df_soil <- defaultSoilParams()
 # Initializes soil
 s = soil(df_soil)
 s
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
-#>       VG_n VG_theta_res VG_theta_sat W Temp
-#> 1 1.303861        0.041     0.423715 1   NA
-#> 2 1.303861        0.041     0.423715 1   NA
-#> 3 1.303861        0.041     0.423715 1   NA
-#> 4 1.303861        0.041     0.423715 1   NA
+#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n VG_theta_res
+#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861        0.041
+#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861        0.041
+#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861        0.041
+#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861        0.041
+#>   VG_theta_sat W Temp
+#> 1     0.423715 1   NA
+#> 2     0.423715 1   NA
+#> 3     0.423715 1   NA
+#> 4     0.423715 1   NA
 
 # Prints soil characteristics according to Saxton's water retention curve
 summary(s, model="SX")
@@ -215,16 +215,16 @@ df_soil$VG_theta_res <- 0.040
 # Reinitialize soil (should override estimations)
 s2 = soil(df_soil)
 s2
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
-#>       VG_n VG_theta_res VG_theta_sat W Temp
-#> 1 1.303861         0.04          0.4 1   NA
-#> 2 1.303861         0.04          0.4 1   NA
-#> 3 1.303861         0.04          0.4 1   NA
-#> 4 1.303861         0.04          0.4 1   NA
+#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n VG_theta_res
+#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861         0.04
+#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861         0.04
+#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861         0.04
+#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861         0.04
+#>   VG_theta_sat W Temp
+#> 1          0.4 1   NA
+#> 2          0.4 1   NA
+#> 3          0.4 1   NA
+#> 4          0.4 1   NA
 summary(s2, model="VG")
 #> Soil depth (mm): 4000 
 #> 

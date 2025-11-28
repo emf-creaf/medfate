@@ -13,6 +13,8 @@
 - Flag ‘addunits’ in function extract() allows retrieving physical units
   for daily/subdaily output variables
 - Function extract() can now process fordyn() simulations
+- Option ‘soilDomains = “none”’ added for external simulation of bulk
+  soil water flows
 
 ## medfate 4.8.4
 

@@ -57,7 +57,12 @@ growth(
 
 ## Value
 
-A list of class 'growth' with the following elements:
+Function `growth` returns a list of class 'growth'. Since lists are
+difficult to handle, we recommend using function
+[`extract`](https://emf-creaf.github.io/medfate/reference/extract.md) to
+reshape simulation results (including their units) from those objects.
+
+List elements are as follows:
 
 - `"latitude"`: Latitude (in degrees) given as input.
 

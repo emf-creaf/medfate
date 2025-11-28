@@ -175,8 +175,8 @@ S1<-spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Queries the tables in 'Soil'
 names(S1$Soil)
-#> [1] "SWC"            "RWC"            "REW"            "ML"            
-#> [5] "Psi"            "PlantExt"       "HydraulicInput"
+#> [1] "SWC"            "RWC"            "REW"            "ML"             "Psi"           
+#> [6] "PlantExt"       "HydraulicInput"
 
 #Monthly summary (averages) of soil relative water content
 summary(S1, freq="months",FUN=mean, output="RWC")
@@ -196,10 +196,9 @@ summary(S1, freq="months",FUN=mean, output="RWC")
 
 #Queries the tables in 'Plants'
 names(S1$Plants)
-#>  [1] "LAI"                 "LAIlive"             "FPAR"               
-#>  [4] "AbsorbedSWRFraction" "Transpiration"       "GrossPhotosynthesis"
-#>  [7] "PlantPsi"            "LeafPLC"             "StemPLC"            
-#> [10] "PlantWaterBalance"   "LeafRWC"             "StemRWC"            
+#>  [1] "LAI"                 "LAIlive"             "FPAR"                "AbsorbedSWRFraction"
+#>  [5] "Transpiration"       "GrossPhotosynthesis" "PlantPsi"            "LeafPLC"            
+#>  [9] "StemPLC"             "PlantWaterBalance"   "LeafRWC"             "StemRWC"            
 #> [13] "LFMC"                "PlantStress"        
 
 #Monthly summary (averages) of plant stress
