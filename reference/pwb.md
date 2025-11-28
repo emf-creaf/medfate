@@ -86,6 +86,11 @@ pwb(
 A list of class 'pwb' with the same elements as explained in
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
 
+## Details
+
+See details in
+[`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
+
 ## References
 
 De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos

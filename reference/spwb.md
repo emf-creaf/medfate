@@ -375,23 +375,29 @@ results for sunlit and shade leaves:
 
 ## Details
 
-The simulation functions allow using three different sub-models of
-transpiration and photosynthesis:
+Detailed model description is available in the medfate book.
+
+Soil-plant water balance simulations allow using different sub-models
+for bulk soil water flows and different sub-models of transpiration and
+photosynthesis:
+
+\(1\) Sub-models of transpiration and photosynthesis (control parameter
+`transpirationMode`):
 
 - The sub-model corresponding to 'Granier' transpiration mode is
-  illustrated by function
+  illustrated by internal function
   [`transp_transpirationGranier`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
   and was described in De Caceres et al. (2015), and implements an
   approach originally described in Granier et al. (1999).
 
 - The sub-model corresponding to 'Sperry' transpiration mode is
-  illustrated by function
+  illustrated by internal function
   [`transp_transpirationSperry`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
   and was described in De Caceres et al. (2021), and implements a
   modelling approach originally described in Sperry et al. (2017).
 
 - The sub-model corresponding to 'Sureau' transpiration mode is
-  illustrated by function
+  illustrated by internal function
   [`transp_transpirationSureau`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
   and was described for model SurEau-Ecos v2.0 in Ruffault et al.
   (2022).
@@ -401,7 +407,24 @@ computationally much more expensive than 'Granier' because they include
 explicit plant hydraulics and canopy/soil energy balance at subdaily
 time steps.
 
+\(2\) Sub-models of bulk soil water flows (control parameter
+`soilDomains`; see internal function
+[`hydrology_soilWaterBalance`](https://emf-creaf.github.io/medfate/reference/hydrology_soilWaterBalance.md)):
+
+- The submodel corresponding to 'buckets' is a multi-bucket model
+  adds/substracts water to each layer and if content is above field
+  capacity the excess percolates to the layer below.
+
+- The submodel corresponding to 'single' is a single-domain solving 1D
+  Richards equation (Bonan et al. 2019).
+
+- The submodel corresponding to 'dual' is a dual-permeability model from
+  MACRO 5.0 (Jarvis et al. 1991; Larsbo et al. 2005)
+
 ## References
+
+Bonan, G. (2019). Climate change and terrestrial ecosystem modeling.
+Cambridge University Press, Cambridge, UK.
 
 De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos
 R, Pausas JG, Brotons L. (2015) Coupling a water balance model with
@@ -414,6 +437,14 @@ Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martínez-Vilalta J
 (2021) Unravelling the effect of species mixing on water use and drought
 stress in holm oak forests: a modelling approach. Agricultural and
 Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+
+Jarvis, N.J., Jansson, P‐E., Dik, P.E. & Messing, I. (1991). Modelling
+water and solute transport in macroporous soil. I. Model description and
+sensitivity analysis. Journal of Soil Science, 42, 59–70.
+
+Larsbo, M., Roulier, S., Stenemo, F., Kasteel, R. & Jarvis, N. (2005).
+An Improved Dual‐Permeability Model of Water Flow and Solute Transport
+in the Vadose Zone. Vadose Zone Journal, 4, 398–406.
 
 Granier A, Bréda N, Biron P, Villette S (1999) A lumped water balance
 model to evaluate duration and intensity of drought constraints in

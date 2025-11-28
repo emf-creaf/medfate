@@ -173,29 +173,12 @@ and the following:
 
 ## Details
 
-The simulation function allows using three different sub-models of
-transpiration and photosynthesis:
+Detailed model description is available in the medfate book.
 
-- The sub-model corresponding to 'Granier' transpiration mode is
-  illustrated by function
-  [`transp_transpirationGranier`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
-  and was described in De Caceres et al. (2015), and implements an
-  approach originally described in Granier et al. (1999).
-
-- The sub-model corresponding to 'Sperry' transpiration mode is
-  illustrated by function
-  [`transp_transpirationSperry`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
-  and was described in De Caceres et al. (2021), and implements a
-  modelling approach originally described in Sperry et al. (2017).
-
-- The sub-model corresponding to 'Sureau' transpiration mode is
-  illustrated by function
-  [`transp_transpirationSureau`](https://emf-creaf.github.io/medfate/reference/transp_modes.md)
-  and was described for model SurEau-Ecos v2.0 in Ruffault et al.
-  (2022).
-
-Simulations using the 'Sperry' or 'Sureau' transpiration mode are
-computationally much more expensive than 'Granier'.
+Forest growth simulations allow using different sub-models for bulk soil
+water flows and different sub-models of transpiration and photosynthesis
+(see details in
+[`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)).
 
 ## References
 

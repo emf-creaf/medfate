@@ -216,9 +216,12 @@ A list of class 'growth' with the following elements:
 
 ## Details
 
-Detailed model description is available in the medfate book. Simulations
-using the 'Sperry' or 'Sureau' transpiration modes are computationally
-much more expensive than those using the 'Granier' transpiration mode.
+Detailed model description is available in the medfate book.
+
+Forest growth simulations allow using different sub-models for bulk soil
+water flows and different sub-models of transpiration and photosynthesis
+(see details in
+[`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)).
 
 ## References
 
