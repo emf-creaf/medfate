@@ -29,7 +29,10 @@ growth(
 \item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
 }
 \value{
-A list of class 'growth' with the following elements:
+Function \code{growth} returns a list of class 'growth'. Since lists are difficult to handle, we recommend using
+function \code{\link{extract}} to reshape simulation results (including their units) from those objects.
+
+List elements are as follows:
 \itemize{
 \item{\code{"latitude"}: Latitude (in degrees) given as input.}
 \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.}

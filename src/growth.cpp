@@ -2289,7 +2289,10 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //' Forest growth simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis (see details in \code{\link{spwb}}). 
 //' 
 //' @return
-//' A list of class 'growth' with the following elements:
+//' Function \code{growth} returns a list of class 'growth'. Since lists are difficult to handle, we recommend using
+//' function \code{\link{extract}} to reshape simulation results (including their units) from those objects. 
+//' 
+//' List elements are as follows:
 //' \itemize{
 //'   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
 //'   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
