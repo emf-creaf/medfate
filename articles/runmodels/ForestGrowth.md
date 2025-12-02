@@ -55,19 +55,23 @@ exampleforest
 ```
 
     ## $treeData
-    ##            Species   N   DBH Height Z50  Z95
-    ## 1 Pinus halepensis 168 37.55    800 100  600
-    ## 2     Quercus ilex 384 14.60    660 300 1000
+    ##            Species   DBH Height   N Z50  Z95
+    ## 1 Pinus halepensis 37.55    800 168 100  300
+    ## 2     Quercus ilex 14.60    660 384 300 1000
     ## 
     ## $shrubData
-    ##             Species Cover Height Z50  Z95
-    ## 1 Quercus coccifera  3.75     80 200 1000
+    ##             Species Height Cover Z50  Z95
+    ## 1 Quercus coccifera     80  3.75 200 1000
     ## 
     ## $herbCover
     ## [1] 10
     ## 
     ## $herbHeight
     ## [1] 20
+    ## 
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95    
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent
@@ -253,7 +257,7 @@ x$internalCarbon
 ```
 
     ##        sugarLeaf starchLeaf sugarSapwood starchSapwood
-    ## T1_148 0.4029239 0.00925123    0.5738487      3.201897
+    ## T1_148 0.4029239 0.00925123    0.5738487      3.227198
     ## T2_168 0.3585751 0.00925123    1.0741383      3.100817
     ## S1_165 0.7223526 0.00925123    0.2857655      2.654773
 
@@ -289,36 +293,36 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
     ## Package 'meteoland' [ver. 2.2.4]
 
-    ## Initial plant cohort biomass (g/m2): 5068.34
-    ## Initial plant water content (mm): 4.73001
+    ## Initial plant cohort biomass (g/m2): 5041.87
+    ## Initial plant water content (mm): 4.69853
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
     ## Performing daily simulations
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant biomass (g/m2): 5256.04
-    ## Change in plant biomass (g/m2): 187.703
-    ## Plant biomass balance result (g/m2): 187.703
+    ## Final plant biomass (g/m2): 5210.88
+    ## Change in plant biomass (g/m2): 169.011
+    ## Plant biomass balance result (g/m2): 169.011
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 104 Labile balance (g/m2) 92
-    ##   Plant individual balance (g/m2) 196 Mortality loss (g/m2) 8
-    ## Final plant water content (mm): 4.73772
-    ## Final soil water content (mm): 274.838
+    ##   Structural balance (g/m2) 87 Labile balance (g/m2) 89
+    ##   Plant individual balance (g/m2) 177 Mortality loss (g/m2) 8
+    ## Final plant water content (mm): 4.70575
+    ## Final soil water content (mm): 274.834
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00771124
-    ## Plant water balance result (mm): -0.00124258
-    ## Change in soil water content (mm): -16.0372
-    ## Soil water balance result (mm): -16.0372
+    ## Change in plant water content (mm): 0.00721591
+    ## Plant water balance result (mm): -0.00147226
+    ## Change in soil water content (mm): -16.0407
+    ## Soil water balance result (mm): -16.0407
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): 7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 92 Net rainfall (mm) 370
-    ##   Infiltration (mm) 400 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 247
-    ##   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-    ##   Runoff (mm) 21 Deep drainage (mm) 130
+    ##   Infiltration (mm) 401 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 246
+    ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
+    ##   Runoff (mm) 20 Deep drainage (mm) 133
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -527,10 +531,10 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
                  temporalResolution = "month")
 ```
 
-    ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
-    ##  12.00000000  -0.08492907 -13.11733354   0.08673336  13.39600715   0.99599738 
-    ##          NSE      NSE.abs 
-    ##   0.95658526   0.82534198
+    ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
+    ##  12.0000000  -0.1287477 -18.9520586   0.1287477  18.9520586   0.9899478 
+    ##         NSE     NSE.abs 
+    ##   0.9022472   0.7557718
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

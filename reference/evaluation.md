@@ -271,29 +271,29 @@ x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 4.73001
+#> Initial plant water content (mm): 4.69853
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.72839
-#> Final soil water content (mm): 274.93
+#> Final plant water content (mm): 4.69659
+#> Final soil water content (mm): 275.04
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00162134
-#> Plant water balance result (mm): -0.00163359
-#> Change in soil water content (mm): -15.9454
-#> Soil water balance result (mm): -15.9454
+#> Change in plant water content (mm): -0.00193896
+#> Plant water balance result (mm): -0.00196771
+#> Change in soil water content (mm): -15.8347
+#> Soil water balance result (mm): -15.8347
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 0
+#> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 92 Net rainfall (mm) 370
-#>   Infiltration (mm) 401 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 247
-#>   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-#>   Runoff (mm) 21 Deep drainage (mm) 131
+#>   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 245
+#>   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
+#>   Runoff (mm) 20 Deep drainage (mm) 136
 
 #Load observed data (in this case the same simulation results with some added error)  
 data(exampleobs)
@@ -301,13 +301,13 @@ data(exampleobs)
 #Evaluation statistics for soil water content
 evaluation_stats(S1, exampleobs)
 #>             n          Bias      Bias.rel           MAE       MAE.rel 
-#> 365.000000000  -0.002748204  -0.991294614   0.006075612   2.191511519 
+#> 365.000000000  -0.001283669  -0.471167442   0.006771142   2.485330518 
 #>             r           NSE       NSE.abs 
-#>   0.965886177   0.897597813   0.681578044 
+#>   0.965566134   0.930431349   0.708410268 
 
 #NSE only
 evaluation_metric(S1, exampleobs, metric="NSE")
-#> [1] 0.8975978
+#> [1] 0.9304313
 
 #Comparison of temporal dynamics
 evaluation_plot(S1, exampleobs)
@@ -315,6 +315,6 @@ evaluation_plot(S1, exampleobs)
 
 #Loglikelihood value
 evaluation_metric(S1, exampleobs)
-#> [1] 991.3455
+#> [1] 906.9535
 # }
 ```

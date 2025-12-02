@@ -92,7 +92,7 @@ pobl_ctl
 #> [1] NA
 #> 
 #> $seedlingBank
-#> [1] Species Percent Age     Z50     Z95     Z100   
+#> [1] Species Percent Age     Z50     Z95    
 #> <0 rows> (or 0-length row.names)
 #> 
 #> $seedBank

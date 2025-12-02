@@ -218,19 +218,23 @@ exampleforest
 ```
 
     ## $treeData
-    ##            Species   N   DBH Height Z50  Z95
-    ## 1 Pinus halepensis 168 37.55    800 100  600
-    ## 2     Quercus ilex 384 14.60    660 300 1000
+    ##            Species   DBH Height   N Z50  Z95
+    ## 1 Pinus halepensis 37.55    800 168 100  300
+    ## 2     Quercus ilex 14.60    660 384 300 1000
     ## 
     ## $shrubData
-    ##             Species Cover Height Z50  Z95
-    ## 1 Quercus coccifera  3.75     80 200 1000
+    ##             Species Height Cover Z50  Z95
+    ## 1 Quercus coccifera     80  3.75 200 1000
     ## 
     ## $herbCover
     ## [1] 10
     ## 
     ## $herbHeight
     ## [1] 20
+    ## 
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95    
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent
@@ -259,13 +263,13 @@ exampleforest2
 ```
 
     ## $treeData
-    ##            Species  N DBH Height Z50  Z95 LAI CrownRatio
-    ## 1 Pinus halepensis NA  NA    800 100  600 0.8       0.66
-    ## 2     Quercus ilex NA  NA    660 300 1000 0.5       0.60
+    ##            Species DBH Height  N Z50  Z95 LAI CrownRatio
+    ## 1 Pinus halepensis  NA    800 NA 100  300 0.8       0.66
+    ## 2     Quercus ilex  NA    660 NA 300 1000 0.5       0.60
     ## 
     ## $shrubData
-    ##             Species Cover Height Z50  Z95  LAI CrownRatio
-    ## 1 Quercus coccifera    NA     80 200 1000 0.03        0.8
+    ##             Species Height Cover Z50  Z95  LAI CrownRatio
+    ## 1 Quercus coccifera     80    NA 200 1000 0.03        0.8
     ## 
     ## $herbCover
     ## [1] NA
@@ -273,12 +277,16 @@ exampleforest2
     ## $herbHeight
     ## [1] 20
     ## 
-    ## $herbLAI
-    ## [1] 0.25
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95    
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent
     ## <0 rows> (or 0-length row.names)
+    ## 
+    ## $herbLAI
+    ## [1] 0.25
     ## 
     ## attr(,"class")
     ## [1] "forest" "list"
@@ -324,7 +332,7 @@ oak_forest
     ## [1] NA
     ## 
     ## $seedlingBank
-    ## [1] Species Percent Age     Z50     Z95     Z100   
+    ## [1] Species Percent Age     Z50     Z95    
     ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank

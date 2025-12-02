@@ -34,19 +34,23 @@ exampleforest
 ```
 
     ## $treeData
-    ##            Species   N   DBH Height Z50  Z95
-    ## 1 Pinus halepensis 168 37.55    800 100  600
-    ## 2     Quercus ilex 384 14.60    660 300 1000
+    ##            Species   DBH Height   N Z50  Z95
+    ## 1 Pinus halepensis 37.55    800 168 100  300
+    ## 2     Quercus ilex 14.60    660 384 300 1000
     ## 
     ## $shrubData
-    ##             Species Cover Height Z50  Z95
-    ## 1 Quercus coccifera  3.75     80 200 1000
+    ##             Species Height Cover Z50  Z95
+    ## 1 Quercus coccifera     80  3.75 200 1000
     ## 
     ## $herbCover
     ## [1] 10
     ## 
     ## $herbHeight
     ## [1] 20
+    ## 
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95    
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent
@@ -97,29 +101,29 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
     ## Package 'meteoland' [ver. 2.2.4]
 
-    ## Initial plant water content (mm): 4.73001
+    ## Initial plant water content (mm): 4.69853
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
     ## Performing daily simulations
     ## 
     ##  [Year 2001]:............
     ## 
-    ## Final plant water content (mm): 4.72839
-    ## Final soil water content (mm): 274.93
+    ## Final plant water content (mm): 4.69659
+    ## Final soil water content (mm): 275.04
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.00162134
-    ## Plant water balance result (mm): -0.00163359
-    ## Change in soil water content (mm): -15.9454
-    ## Soil water balance result (mm): -15.9454
+    ## Change in plant water content (mm): -0.00193896
+    ## Plant water balance result (mm): -0.00196771
+    ## Change in soil water content (mm): -15.8347
+    ## Soil water balance result (mm): -15.8347
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 92 Net rainfall (mm) 370
-    ##   Infiltration (mm) 401 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 247
-    ##   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-    ##   Runoff (mm) 21 Deep drainage (mm) 131
+    ##   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 245
+    ##   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
+    ##   Runoff (mm) 20 Deep drainage (mm) 136
 
 Function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) will
@@ -233,7 +237,7 @@ sf_transp<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 sf_transp(S1)
 ```
 
-    ## [1] 246.6043
+    ## [1] 244.545
 
 Another prediction function can focus on plant drought stress. We define
 a function that, given a simulation result, calculates the average
@@ -250,7 +254,7 @@ sf_stress<-function(x) {
 sf_stress(S1)
 ```
 
-    ## [1] 2.765089
+    ## [1] 3.604585
 
 Sensitivity analysis requires model output functions whose parameters
 are the input factors to be studied.
@@ -290,13 +294,13 @@ input:
 of_transp(parMin)
 ```
 
-    ## [1] 47.52151
+    ## [1] 47.52213
 
 ``` r
 of_transp(parMax)
 ```
 
-    ## [1] 285.3506
+    ## [1] 2.634629
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -325,13 +329,13 @@ of_stress<-optimization_function(parNames = parNames,
 of_stress(parMin)
 ```
 
-    ## [1] 0.8575949
+    ## [1] 0.9193394
 
 ``` r
 of_stress(parMax)
 ```
 
-    ## [1] 50.45407
+    ## [1] 4131.864
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -344,20 +348,20 @@ data(exampleobs)
 head(exampleobs)
 ```
 
-    ##        dates       SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168
-    ## 1 2001-01-01 0.3007733 2.2436218 0.09187857 0.14142950   125.9071   93.07915
-    ## 2 2001-01-02 0.3091627 2.3236565 0.26480973 0.19095008   125.9137   93.07863
-    ## 3 2001-01-03 0.2996498 0.7409083 0.15345643 0.17546363   125.8760   93.10512
-    ## 4 2001-01-04 0.3042764 1.7173522 0.23470647 0.04643454   125.8643   93.07022
-    ## 5 2001-01-05 0.3054886 2.0002562 0.37687792 0.10623552   125.8493   93.08487
-    ## 6 2001-01-06 0.3062005 2.0722706 0.16342360 0.05550329   125.9367   93.07343
+    ##        dates       SWC       ETR  E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168
+    ## 1 2001-01-01 0.2962333 1.9268816 0.1116097 0.11753707   125.7854   92.37503
+    ## 2 2001-01-02 0.3159541 2.2816835 0.3249353 0.13893958   125.8402   92.48357
+    ## 3 2001-01-03 0.3003183 0.8314027 0.2478905 0.15491876   125.6325   93.22082
+    ## 4 2001-01-04 0.3071126 1.7637425 0.1188838 0.03248267   125.8408   94.41697
+    ## 5 2001-01-05 0.3011500 2.0395763 0.3029751 0.17022440   125.8633   92.67986
+    ## 6 2001-01-06 0.3218914 2.3144055 0.2238069 0.16316259   125.9310   92.75314
     ##     BAI_T1_148 BAI_T2_168    DI_T1_148 DI_T2_168
-    ## 1 6.222625e-06          0 9.948881e-08         0
-    ## 2 3.091274e-10          0 1.071090e-11         0
-    ## 3 1.298482e-13          0 0.000000e+00         0
-    ## 4 2.886195e-11          0 5.552753e-13         0
-    ## 5 1.287020e-03          0 1.367289e-05         0
-    ## 6 1.471202e-03          0 1.000411e-05         0
+    ## 1 5.400075e-06          0 2.237862e-07         0
+    ## 2 7.635458e-10          0 3.318207e-11         0
+    ## 3 9.234631e-14          0 0.000000e+00         0
+    ## 4 5.206642e-11          0 2.706335e-13         0
+    ## 5 2.574299e-03          0 2.450483e-05         0
+    ## 6 1.798663e-03          0 3.173236e-05         0
 
 where soil water content dynamics is in column `SWC`. The model fit to
 observed data can be measured using the Nash-Sutcliffe coefficient,
@@ -369,7 +373,7 @@ evaluation_metric(S1, measuredData = exampleobs, type = "SWC",
                   metric = "NSE")
 ```
 
-    ## [1] 0.8975978
+    ## [1] 0.9304313
 
 A call to
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md)
@@ -395,13 +399,13 @@ results, so that we only need to provide values for the input factors:
 of_eval(parMin)
 ```
 
-    ## [1] 0.5774314
+    ## [1] 0.4902714
 
 ``` r
 of_eval(parMax)
 ```
 
-    ## [1] -2.210326
+    ## [1] -55.23106
 
 ### Global sensitivity analyses
 
@@ -846,6 +850,13 @@ plot(density(unlist(lapply(MS, sf_stress))),
      xlab = "Average plant stress", main="Posterior stress")
 ```
 
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+
 ![](SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png)
 
 Finally, we can use object `prior` to generate another sample under the
@@ -876,7 +887,26 @@ legend("topleft", legend = c("Prior", "Posterior"),
 plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress", 
      xlab = "Average plant stress",
      xlim = c(0,30), ylim = c(0,2))
+```
+
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+
+``` r
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
+```
+
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+
+``` r
 legend("topleft", legend = c("Prior", "Posterior"), col = c("black", "red"), lty=1, bty="n")
 ```
 

@@ -505,29 +505,29 @@ x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 4.73001
+#> Initial plant water content (mm): 4.69853
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.72839
-#> Final soil water content (mm): 274.93
+#> Final plant water content (mm): 4.69659
+#> Final soil water content (mm): 275.04
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00162134
-#> Plant water balance result (mm): -0.00163359
-#> Change in soil water content (mm): -15.9454
-#> Soil water balance result (mm): -15.9454
+#> Change in plant water content (mm): -0.00193896
+#> Plant water balance result (mm): -0.00196771
+#> Change in soil water content (mm): -15.8347
+#> Soil water balance result (mm): -15.8347
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 0
+#> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 92 Net rainfall (mm) 370
-#>   Infiltration (mm) 401 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 247
-#>   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-#>   Runoff (mm) 21 Deep drainage (mm) 131
+#>   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 245
+#>   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
+#>   Runoff (mm) 20 Deep drainage (mm) 136
 
 #Switch to 'Sperry' transpiration mode
 control <- defaultControl("Sperry")
@@ -537,29 +537,29 @@ x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 6.78662
+#> Initial plant water content (mm): 6.71035
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 6.78165
-#> Final soil water content (mm): 273.985
+#> Final plant water content (mm): 6.70462
+#> Final soil water content (mm): 273.934
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00497469
-#> Plant water balance result (mm): 2.04696e-16
-#> Change in soil water content (mm): -16.8895
-#> Soil water balance result (mm): -16.8895
+#> Change in plant water content (mm): -0.0057351
+#> Plant water balance result (mm): -9.14378e-16
+#> Change in soil water content (mm): -16.9407
+#> Soil water balance result (mm): -16.9407
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 92 Net rainfall (mm) 370
-#>   Infiltration (mm) 402 Infiltration excess (mm) 19 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 22  Herbaceous transpiration (mm) 13 Woody plant transpiration (mm) 242
-#>   Plant extraction from soil (mm) 242  Plant water balance (mm) 0 Hydraulic redistribution (mm) 4
-#>   Runoff (mm) 19 Deep drainage (mm) 142
+#>   Infiltration (mm) 403 Infiltration excess (mm) 18 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 20  Herbaceous transpiration (mm) 13 Woody plant transpiration (mm) 241
+#>   Plant extraction from soil (mm) 241  Plant water balance (mm) -0 Hydraulic redistribution (mm) 5
+#>   Runoff (mm) 18 Deep drainage (mm) 146
 
 #Switch to 'Sureau' transpiration mode
 control <- defaultControl("Sureau")
@@ -569,29 +569,29 @@ x3 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 6.78662
+#> Initial plant water content (mm): 6.71035
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 6.76076
-#> Final soil water content (mm): 278.244
+#> Final plant water content (mm): 6.68333
+#> Final soil water content (mm): 278.312
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.0258564
-#> Plant water balance result (mm): -0.111014
-#> Change in soil water content (mm): -12.631
-#> Soil water balance result (mm): -12.631
+#> Change in plant water content (mm): -0.0270252
+#> Plant water balance result (mm): -0.128909
+#> Change in soil water content (mm): -12.5628
+#> Soil water balance result (mm): -12.5628
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): -7.10543e-15
+#> Snowpack water balance result (mm): 7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 92 Net rainfall (mm) 371
-#>   Infiltration (mm) 401 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 30  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187
-#>   Plant extraction from soil (mm) 187  Plant water balance (mm) -0 Hydraulic redistribution (mm) 0
-#>   Runoff (mm) 21 Deep drainage (mm) 183
+#>   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 29  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 186
+#>   Plant extraction from soil (mm) 186  Plant water balance (mm) -0 Hydraulic redistribution (mm) 0
+#>   Runoff (mm) 20 Deep drainage (mm) 186
 # }
                 
 ```

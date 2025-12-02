@@ -149,29 +149,29 @@ x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1<-spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 4.73001
+#> Initial plant water content (mm): 4.69853
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.72839
-#> Final soil water content (mm): 274.93
+#> Final plant water content (mm): 4.69659
+#> Final soil water content (mm): 275.04
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00162134
-#> Plant water balance result (mm): -0.00163359
-#> Change in soil water content (mm): -15.9454
-#> Soil water balance result (mm): -15.9454
+#> Change in plant water content (mm): -0.00193896
+#> Plant water balance result (mm): -0.00196771
+#> Change in soil water content (mm): -15.8347
+#> Soil water balance result (mm): -15.8347
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 0
+#> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 92 Net rainfall (mm) 370
-#>   Infiltration (mm) 401 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 247
-#>   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-#>   Runoff (mm) 21 Deep drainage (mm) 131
+#>   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 245
+#>   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
+#>   Runoff (mm) 20 Deep drainage (mm) 136
 
 #Queries the tables in 'Soil'
 names(S1$Soil)
@@ -181,18 +181,18 @@ names(S1$Soil)
 #Monthly summary (averages) of soil relative water content
 summary(S1, freq="months",FUN=mean, output="RWC")
 #>                    1         2         3         4   Overall
-#> 2001-01-01 0.9937121 0.9994108 0.9997816 1.0244415 1.0007791
-#> 2001-02-01 0.9406420 0.9870166 0.9946293 0.9916723 0.9786150
-#> 2001-03-01 0.9575952 0.9921181 1.0001649 1.0447712 0.9916070
-#> 2001-04-01 0.8691697 0.9568931 0.9798945 0.9704885 0.9437391
-#> 2001-05-01 0.8954893 0.9699323 0.9764303 0.9598696 0.9531287
-#> 2001-06-01 0.6735878 0.8567177 0.9321367 0.9132172 0.8393223
-#> 2001-07-01 0.9006140 0.9195416 0.8981414 0.8760523 0.9050023
-#> 2001-08-01 0.9128670 0.9708158 0.9368690 0.9315899 0.9443077
-#> 2001-09-01 0.9251964 0.9790296 0.9894022 0.9839707 0.9696283
-#> 2001-10-01 0.9535367 0.9876684 0.9867276 0.9973065 0.9804278
-#> 2001-11-01 0.9497432 0.9887678 1.0016620 1.0866380 0.9931741
-#> 2001-12-01 0.8954726 0.9764038 0.9922932 0.9885181 0.9628353
+#> 2001-01-01 0.9933229 0.9995287 0.9998170 1.0245305 1.0007536
+#> 2001-02-01 0.9356686 0.9893121 0.9953523 0.9923279 0.9786265
+#> 2001-03-01 0.9536151 0.9937073 1.0006835 1.0457591 0.9915495
+#> 2001-04-01 0.8486464 0.9652030 0.9840110 0.9744356 0.9437447
+#> 2001-05-01 0.8866067 0.9741910 0.9776506 0.9647627 0.9535823
+#> 2001-06-01 0.6340446 0.8731299 0.9442963 0.9259298 0.8411272
+#> 2001-07-01 0.8801459 0.9300465 0.9214577 0.8980834 0.9127849
+#> 2001-08-01 0.9060927 0.9765833 0.9556000 0.9452654 0.9513354
+#> 2001-09-01 0.9159341 0.9834925 0.9915814 0.9859966 0.9700258
+#> 2001-10-01 0.9495742 0.9905925 0.9895699 1.0014769 0.9818463
+#> 2001-11-01 0.9445896 0.9913419 1.0034212 1.0885972 0.9936607
+#> 2001-12-01 0.8872943 0.9803752 0.9937536 0.9899409 0.9630398
 
 #Queries the tables in 'Plants'
 names(S1$Plants)
@@ -206,17 +206,17 @@ names(S1$Plants)
 summary(S1, freq="months",FUN=mean, output="PlantStress", 
         bySpecies = TRUE)
 #>            Pinus halepensis Quercus coccifera Quercus ilex
-#> 2001-01-01      0.004773662       0.003160351  0.006381252
-#> 2001-02-01      0.006785896       0.004089571  0.007678385
-#> 2001-03-01      0.006289085       0.003851156  0.007334555
-#> 2001-04-01      0.011384560       0.006125331  0.010487139
-#> 2001-05-01      0.010089242       0.005515647  0.009590412
-#> 2001-06-01      0.055799936       0.022439959  0.029519026
-#> 2001-07-01      0.018312570       0.008788778  0.014056669
-#> 2001-08-01      0.008964251       0.005109164  0.009146389
-#> 2001-09-01      0.007960909       0.004620249  0.008426610
-#> 2001-10-01      0.006222902       0.003854981  0.007389951
-#> 2001-11-01      0.006657749       0.004018635  0.007573598
-#> 2001-12-01      0.009156016       0.005132602  0.009078819
+#> 2001-01-01      0.004802950       0.003164506  0.006385834
+#> 2001-02-01      0.007239412       0.004179872  0.007769254
+#> 2001-03-01      0.006670538       0.003929707  0.007416149
+#> 2001-04-01      0.013859818       0.006761170  0.011142126
+#> 2001-05-01      0.011572852       0.005847889  0.009924219
+#> 2001-06-01      0.090837952       0.031064334  0.037361358
+#> 2001-07-01      0.028534409       0.011392976  0.016305436
+#> 2001-08-01      0.009790152       0.005243674  0.009227532
+#> 2001-09-01      0.008852733       0.004824900  0.008629474
+#> 2001-10-01      0.006527921       0.003908823  0.007428933
+#> 2001-11-01      0.007135652       0.004116428  0.007668880
+#> 2001-12-01      0.010149324       0.005330473  0.009277930
 # }
 ```
