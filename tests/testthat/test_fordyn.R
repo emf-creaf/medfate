@@ -66,6 +66,7 @@ test_that("fordyn can be run using dual soilDomains",{
                          SpParamsMED, meteo_01_02, control_dual,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
+
 test_that("fordyn can be run using partial rhizosphere overlap",{
   control_partial_overlap <- control
   control_partial_overlap$rhizosphereOverlap <- "partial"
@@ -73,6 +74,17 @@ test_that("fordyn can be run using partial rhizosphere overlap",{
                          SpParamsMED, meteo_01_02, control_partial_overlap,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
+
+test_that("fordyn can be run using different recruitment modes",{
+  control_recr <- control
+  for(mode in c("annual/stochastic", "annual/deterministic", "daily/stochastic", "daily/deterministic")) {
+    control_recr$recruitmentMode <- mode
+    expect_s3_class(fordyn(exampleforest, examplesoil, 
+                           SpParamsMED, meteo_01_02, control_recr,
+                           latitude = 41.82592, elevation = 100), "fordyn")
+  }
+})
+
 test_that("fordyn can be run in example and empty forests using management",{
   expect_s3_class(fordyn(exampleforest, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
