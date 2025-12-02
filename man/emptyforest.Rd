@@ -4,10 +4,12 @@
 \alias{emptyforest}
 \title{Creation of an empty forest}
 \usage{
-emptyforest(ntree = 0, nshrub = 0, nseed = 0, addcolumns = NULL)
+emptyforest(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0, addcolumns = NULL)
 }
 \arguments{
 \item{ntree, nshrub}{Number of tree and shrub cohorts, respectively.}
+
+\item{nseedling}{Number of species in the seedling bank.}
 
 \item{nseed}{Number of species in the seed bank.}
 

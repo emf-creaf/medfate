@@ -174,6 +174,7 @@
 #'      \item{\code{minTempRecr [= 0]}: Default threshold of minimum average temperature of the coldest month necessary for recruiting from seeds (when species parameter \code{MinTempRecr} is missing).} 
 #'      \item{\code{minMoistureRecr [= 0.3]}: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for seed-recruiting (when species parameter \code{MinMoistureRecr} is missing).} 
 #'      \item{\code{minFPARRecr [= 10]}: Default threshold of minimum fraction of PAR (in %)  reaching the ground necessary for recruiting (when species parameter \code{MinFPARRecr} is missing).} 
+#'      \item{\code{recrAge [= 5]}: Default recruitment age (in yrs).}
 #'      \item{\code{recrTreeHeight [= 620]}: Default height (cm) for recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
 #'      \item{\code{recrShrubCover [= 1]}: Default cover (%) for shrubs recruited from seed  (when species parameter \code{RecrShrubCover} is missing).}
 #'      \item{\code{recrShrubHeight [= 25]}: Default height (cm) for recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
@@ -328,6 +329,7 @@ defaultControl<-function(transpirationMode = "Granier",
     minTempRecr	= 0,
     minMoistureRecr	= 0.3,
     minFPARRecr = 10,
+    recrAge = 5,
     recrTreeHeight = 620,
     recrShrubCover = 1,
     recrShrubHeight = 25,

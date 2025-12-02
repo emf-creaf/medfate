@@ -5,6 +5,7 @@
 \alias{regeneration_seedproduction}
 \alias{regeneration_seedrefill}
 \alias{regeneration_seedmortality}
+\alias{regeneration_seedlings}
 \alias{regeneration_recruitment}
 \alias{regeneration_resprouting}
 \title{Plant regeneration}
@@ -14,6 +15,15 @@ regeneration_seedproduction(forest, SpParams, control)
 regeneration_seedrefill(seedBank, refillSpecies, refillPercent = NULL)
 
 regeneration_seedmortality(seedBank, SpParams, minPercent = 1)
+
+regeneration_seedlings(
+  forest,
+  SpParams,
+  control,
+  minMonthTemp,
+  moistureIndex,
+  verbose = FALSE
+)
 
 regeneration_recruitment(
   forest,

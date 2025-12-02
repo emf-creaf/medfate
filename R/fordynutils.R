@@ -150,6 +150,11 @@
   forest$shrubData <- rbind(forest$shrubData, planted_forest$shrubData, recr_forest$shrubData, resp_forest$shrubData)
   row.names(forest$shrubData) <- NULL
   
+  # 4.3 Copy seedling bank from recr_forest
+  if(!is.null(recr_forest$seedlingBank)) {
+    forest$seedlingBank <- recr_forest$seedlingBank
+  }
+
   # 5.1 Prepare growth input for next year
   FCCSprops = fuel_FCCS(forest, SpParams);
   treeZ100 <- rep(NA, nrow(forest$treeData))

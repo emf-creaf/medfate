@@ -22,8 +22,8 @@ usethis::use_data(SpParamsDefinition, overwrite = T)
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
                                               sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/"
-harmonized_allometry_path <- "~/OneDrive/EMF_datasets/AllometryDatabases/Products/harmonized"
-harmonized_trait_path <- "~/OneDrive/EMF_datasets/PlantTraitDatabases/Products/harmonized"
+harmonized_allometry_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_allometry_sources/"
+harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources/"
 
 # Revised hydraulic/photosynthesis parameters
 source(paste0(MFWdir, "Metamodelling_TR_WUE/R/utils.R"))

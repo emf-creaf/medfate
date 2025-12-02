@@ -3,6 +3,7 @@
 #' Creates an empty \code{\link{forest}} object.
 #' 
 #' @param ntree,nshrub Number of tree and shrub cohorts, respectively.
+#' @param nseedling Number of species in the seedling bank.
 #' @param nseed Number of species in the seed bank.
 #' @param addcolumns A character vector with additional columns. Currently allowed are:
 #' \itemize{
@@ -30,7 +31,7 @@
 #' emptyforest(ntree = 2, nshrub = 1, addcolumns = "LAI")
 #' 
 #' @name emptyforest
-emptyforest <- function(ntree = 0, nshrub = 0, nseed = 0,
+emptyforest <- function(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0, 
                         addcolumns = NULL) {
   l <- list()
   l$treeData <- data.frame(Species=as.character(rep(NA, ntree)),
@@ -78,6 +79,12 @@ emptyforest <- function(ntree = 0, nshrub = 0, nseed = 0,
   }
   l$herbCover <- NA
   l$herbHeight <- NA
+  l$seedlingBank <- data.frame(Species = as.character(rep(NA, nseedling)),
+                               Percent = as.numeric(rep(NA, nseedling)),
+                               Age = as.numeric(rep(NA, nseedling)),
+                               Z50 = as.numeric(rep(NA, nseedling)),
+                               Z95 = as.numeric(rep(NA, nseedling)),
+                               Z100 = as.numeric(rep(NA, nseedling)))
   l$seedBank <- data.frame(Species = as.character(rep(NA, nseed)),
                            Percent = as.numeric(rep(NA, nseed)))
   class(l)<-c("forest","list")
