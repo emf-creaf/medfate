@@ -1,6 +1,6 @@
 # medfate 4.9.0
 * Forest objects can now have a seedling bank
-* Recruitment from seeds reformulated
+* Recruitment from seeds with daily/annual environmental filters
 
 # medfate 4.8.5
 * Store medfate version in initialized objects, to implement backwards compatibility

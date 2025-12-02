@@ -5,6 +5,7 @@
 \alias{regeneration_seedproduction}
 \alias{regeneration_seedrefill}
 \alias{regeneration_seedmortality}
+\alias{regeneration_germination}
 \alias{regeneration_seedlings_daily}
 \alias{regeneration_seedlings}
 \alias{regeneration_recruitment}
@@ -17,6 +18,8 @@ regeneration_seedproduction(forest, SpParams, control)
 regeneration_seedrefill(seedBank, refillSpecies, refillPercent = NULL)
 
 regeneration_seedmortality(seedBank, SpParams, minPercent = 1)
+
+regeneration_germination(forest, SpParams, control)
 
 regeneration_seedlings_daily(
   forest,
@@ -74,6 +77,8 @@ regeneration_resprouting(
 \item{refillPercent}{A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).}
 
 \item{minPercent}{A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.}
+
+\item{growthResult}{An object of class 'growth'.}
 
 \item{verbose}{Boolean flag to indicate console output during calculations.}
 

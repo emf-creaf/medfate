@@ -125,6 +125,8 @@ regeneration_seedmortality <- function(seedBank, SpParams, minPercent = 1) {
   return(seedBank)
 }
 
+#' @rdname regeneration
+#' @keywords internal
 regeneration_germination <- function(forest, SpParams, control) {
   # If seed bank is defined take seeds from it. Otherwise, use local seed production
   if("seedBank" %in% names(forest)) {
@@ -382,6 +384,7 @@ regeneration_recruitment<-function(forest, SpParams, control,
 }
 
 #' @rdname regeneration
+#' @param growthResult An object of class 'growth'.
 #' @keywords internal
 regeneration_recruitment_daily<-function(forest, SpParams, control,
                                          growthResult, verbose = FALSE) {
