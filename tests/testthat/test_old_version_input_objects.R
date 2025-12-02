@@ -8,7 +8,7 @@ meteovec <- unlist(examplemeteo[d,-1])
 date <- as.character(examplemeteo$dates[d])
 
 current_version <- as.character(packageVersion("medfate"))
-older_versions <- c("4.8.3","4.8.4")
+older_versions <- c("4.8.3","4.8.4", "4.8.5")
 
 test_that("spwb(_day) and growth(_day) can be run from stored inputs coming from older versions",{
   testthat::skip_on_cran()

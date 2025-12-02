@@ -3,6 +3,37 @@
 # usethis::use_data(MEGANParams, overwrite = T)
 # rm(MEGANParams)
 
+# Build example forest
+exampleforest <- emptyforest(ntree = 2, nshrub = 1)
+exampleforest$treeData$Species <- c("Pinus halepensis", "Quercus ilex")
+exampleforest$treeData$N <- c(168, 384)
+exampleforest$treeData$DBH <- c(37.55, 14.60)
+exampleforest$treeData$Height <- c(800, 660)
+exampleforest$treeData$Z50 <- c(100, 300)
+exampleforest$treeData$Z95 <- c(300, 1000)
+exampleforest$shrubData$Species <- c("Quercus coccifera")
+exampleforest$shrubData$Cover <- 3.75
+exampleforest$shrubData$Height <- 80
+exampleforest$shrubData$Z50 <- 200
+exampleforest$shrubData$Z95 <- 1000
+exampleforest$herbCover <- 10
+exampleforest$herbHeight <- 20
+usethis::use_data(exampleforest, overwrite = T)
+
+exampleforest2 <- exampleforest
+exampleforest2$treeData$N <- c(NA, NA)
+exampleforest2$treeData$DBH <- c(NA, NA)
+exampleforest2$treeData$LAI <- c(0.8, 0.5)
+exampleforest2$treeData$CrownRatio <- c(0.66, 0.60)
+exampleforest2$shrubData$Cover <- NA
+exampleforest2$shrubData$LAI <- 0.03
+exampleforest2$shrubData$CrownRatio <- 0.8
+exampleforest2$herbCover <- NA
+exampleforest2$herbLAI <- 0.25
+usethis::use_data(exampleforest2, overwrite = T)
+
+
+
 # Poblet tree data
 poblet_trees <- openxlsx::read.xlsx("data-raw/PobletData.xlsx", sheet="TreeData")
 usethis::use_data(poblet_trees, overwrite = T)
