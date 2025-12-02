@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -193,7 +193,7 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 </ul><p><b>Forest dynamics</b> (function <code><a href="fordyn.html">fordyn</a></code>):</p><ul><li><p><code>allowSeedBankDynamics [= TRUE]</code>: Boolean flag to indicate that seed production and seed bank dynamics is simulated.</p></li>
 <li><p><code>allowRecruitment [= TRUE]</code>: Boolean flag to indicate that recruitment from seeds is allowed.</p></li>
 <li><p><code>allowResprouting [= TRUE]</code>: Boolean flag to indicate that resprouting is allowed.</p></li>
-<li><p><code>recruitmentMode [= "stochastic"]</code>: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".</p></li>
+<li><p><code>recruitmentMode [= "annual/stochastic"]</code>: String describing how recruitment from seeds is applied. Current accepted values are "annual/deterministic", "annual/stochastic", "daily/deterministic" or "daily/stochastic".</p></li>
 <li><p><code>removeEmptyCohorts [= TRUE]</code>: Boolean flag to indicate the removal of cohorts whose density is too low.</p></li>
 <li><p><code>minimumTreeCohortDensity [= 1]</code>: Threshold of tree density resulting in cohort removal.</p></li>
 <li><p><code>minimumShrubCohortCover [= 0.01]</code>: Threshold of shrub cover resulting in cohort removal.</p></li>
@@ -206,13 +206,10 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 <li><p><code>minTempRecr [= 0]</code>: Default threshold of minimum average temperature of the coldest month necessary for recruiting from seeds (when species parameter <code>MinTempRecr</code> is missing).</p></li>
 <li><p><code>minMoistureRecr [= 0.3]</code>: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for seed-recruiting (when species parameter <code>MinMoistureRecr</code> is missing).</p></li>
 <li><p><code>minFPARRecr [= 10]</code>: Default threshold of minimum fraction of PAR (in %)  reaching the ground necessary for recruiting (when species parameter <code>MinFPARRecr</code> is missing).</p></li>
+<li><p><code>recrAge [= 5]</code>: Default recruitment age (in yrs).</p></li>
 <li><p><code>recrTreeHeight [= 620]</code>: Default height (cm) for recruited trees  (when species parameter <code>RecrTreeHeight</code> is missing).</p></li>
 <li><p><code>recrShrubCover [= 1]</code>: Default cover (%) for shrubs recruited from seed  (when species parameter <code>RecrShrubCover</code> is missing).</p></li>
 <li><p><code>recrShrubHeight [= 25]</code>: Default height (cm) for recruited shrubs  (when species parameter <code>RecrShrubHeight</code> is missing).</p></li>
-<li><p><code>recrTreeZ50 [= 100]</code>: Default value for Z50 (mm) in seed-recruited trees  (when species parameter <code>RecrZ50</code> is missing).</p></li>
-<li><p><code>recrShrubZ50 [= 50]</code>: Default value for Z50 (mm) in seed-recruited shrubs  (when species parameter <code>RecrZ50</code> is missing).</p></li>
-<li><p><code>recrTreeZ95 [= 1000]</code>: Default value for Z95 (mm) in seed-recruited trees  (when species parameter <code>RecrZ50</code> is missing).</p></li>
-<li><p><code>recrShrubZ50 [= 500]</code>: Default value for Z95 (mm) in seed-recruited shrubs  (when species parameter <code>RecrZ50</code> is missing).</p></li>
 </ul></li>
 </ul></div>
     <div class="section level2">

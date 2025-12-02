@@ -808,7 +808,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$recruitmentMode
-#> [1] "stochastic"
+#> [1] "annual/stochastic"
 #> 
 #> $control$removeEmptyCohorts
 #> [1] TRUE
@@ -846,6 +846,9 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $control$minFPARRecr
 #> [1] 10
 #> 
+#> $control$recrAge
+#> [1] 5
+#> 
 #> $control$recrTreeHeight
 #> [1] 620
 #> 
@@ -855,30 +858,18 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $control$recrShrubHeight
 #> [1] 25
 #> 
-#> $control$recrTreeZ50
-#> [1] 100
-#> 
-#> $control$recrShrubZ50
-#> [1] 50
-#> 
-#> $control$recrTreeZ95
-#> [1] 1000
-#> 
-#> $control$recrShrubZ95
-#> [1] 500
-#> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n VG_theta_res
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861        0.041
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861        0.041
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861        0.041
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861        0.041
-#>   VG_theta_sat W Temp
-#> 1     0.423715 1   NA
-#> 2     0.423715 1   NA
-#> 3     0.423715 1   NA
-#> 4     0.423715 1   NA
+#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>       VG_n VG_theta_res VG_theta_sat W Temp
+#> 1 1.303861        0.041     0.423715 1   NA
+#> 2 1.303861        0.041     0.423715 1   NA
+#> 3 1.303861        0.041     0.423715 1   NA
+#> 4 1.303861        0.041     0.423715 1   NA
 #> 
 #> $snowpack
 #> [1] 0
@@ -959,16 +950,24 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen
-#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2
-#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2
-#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2    2
+#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen
+#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2
+#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2
+#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2
+#>        ysen
+#> T1_148    2
+#> T2_168    2
+#> S1_165    2
 #> 
 #> $paramsAnatomy
-#>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity      SRL RLD     r635
-#> T1_148 1317.523     1 5.140523   0.2982842   0.6077016       0.2982842 3172.572  10 1.964226
-#> T2_168 3908.823     1 6.340000   0.4893392   0.9008264       0.4893392 4398.812  10 1.805872
-#> S1_165 4189.325     1 4.980084   0.3709679   0.4389106       0.3709679 4398.812  10 2.289452
+#>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity      SRL
+#> T1_148 1317.523     1 5.140523   0.2982842   0.6077016       0.2982842 3172.572
+#> T2_168 3908.823     1 6.340000   0.4893392   0.9008264       0.4893392 4398.812
+#> S1_165 4189.325     1 4.980084   0.3709679   0.4389106       0.3709679 4398.812
+#>        RLD     r635
+#> T1_148  10 1.964226
+#> T2_168  10 1.805872
+#> S1_165  10 2.289452
 #> 
 #> $paramsInterception
 #>        kPAR      kSWR   g
@@ -977,24 +976,24 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> S1_165 0.55 0.4074074 0.5
 #> 
 #> $paramsTranspiration
-#>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCleaf_c  VCleaf_d  VCstem_c
-#> T1_148 0.003086667 0.1869849 -0.008372458  -0.9218219    1.504542 11.137050 -2.380849 12.709999
-#> T2_168 0.004473333 0.1251027 -0.005601615  -1.9726871    1.149052  1.339370 -2.582279  3.560000
-#> S1_165 0.010455247 0.1340000 -0.006000000  -2.1210726    1.300000  2.254991 -3.133381  3.095442
-#>         VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
-#> T1_148 -5.290000 8.525550 0.5239136 0.002586327 -0.2647169
-#> T2_168 -7.720000 8.968208 0.1412266 0.002413091 -0.5664879
-#> S1_165 -7.857378 7.900000 0.3643000 0.002757000 -0.4636000
+#>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCleaf_c
+#> T1_148 0.003086667 0.1869849 -0.008372458  -0.9218219    1.504542 11.137050
+#> T2_168 0.004473333 0.1251027 -0.005601615  -1.9726871    1.149052  1.339370
+#> S1_165 0.010455247 0.1340000 -0.006000000  -2.1210726    1.300000  2.254991
+#>         VCleaf_d  VCstem_c  VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
+#> T1_148 -2.380849 12.709999 -5.290000 8.525550 0.5239136 0.002586327 -0.2647169
+#> T2_168 -2.582279  3.560000 -7.720000 8.968208 0.1412266 0.002413091 -0.5664879
+#> S1_165 -3.133381  3.095442 -7.857378 7.900000 0.3643000 0.002757000 -0.4636000
 #> 
 #> $paramsWaterStorage
-#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS
-#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355
-#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610
-#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155
-#>           StemAF  Vsapwood
-#> T1_148 0.9236406 4.1638559
-#> T2_168 0.6238125 0.8135590
-#> S1_165 0.6238125 0.3177724
+#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf
+#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525
+#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087
+#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968
+#>          StemPI0   StemEPS    StemAF  Vsapwood
+#> T1_148 -2.008039 13.256355 0.9236406 4.1638559
+#> T2_168 -3.227438 46.420610 0.6238125 0.8135590
+#> S1_165 -1.305868  6.297155 0.6238125 0.3177724
 #> 
 #> $internalPhenology
 #>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
@@ -1116,7 +1115,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.8.5"
+#> [1] "4.9.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -1457,7 +1456,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$recruitmentMode
-#> [1] "stochastic"
+#> [1] "annual/stochastic"
 #> 
 #> $control$removeEmptyCohorts
 #> [1] TRUE
@@ -1495,6 +1494,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$minFPARRecr
 #> [1] 10
 #> 
+#> $control$recrAge
+#> [1] 5
+#> 
 #> $control$recrTreeHeight
 #> [1] 620
 #> 
@@ -1504,30 +1506,18 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$recrShrubHeight
 #> [1] 25
 #> 
-#> $control$recrTreeZ50
-#> [1] 100
-#> 
-#> $control$recrShrubZ50
-#> [1] 50
-#> 
-#> $control$recrTreeZ95
-#> [1] 1000
-#> 
-#> $control$recrShrubZ95
-#> [1] 500
-#> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n VG_theta_res
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861        0.041
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861        0.041
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861        0.041
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861        0.041
-#>   VG_theta_sat W Temp
-#> 1     0.423715 1   NA
-#> 2     0.423715 1   NA
-#> 3     0.423715 1   NA
-#> 4     0.423715 1   NA
+#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>       VG_n VG_theta_res VG_theta_sat W Temp
+#> 1 1.303861        0.041     0.423715 1   NA
+#> 2 1.303861        0.041     0.423715 1   NA
+#> 3 1.303861        0.041     0.423715 1   NA
+#> 4 1.303861        0.041     0.423715 1   NA
 #> 
 #> $snowpack
 #> [1] 0
@@ -1626,54 +1616,66 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen
-#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2
-#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2
-#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2    2
+#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen
+#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2
+#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2
+#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2
+#>        ysen
+#> T1_148    2
+#> T2_168    2
+#> S1_165    2
 #> 
 #> $paramsAnatomy
-#>        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity conduit2sapwood
-#> T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842       0.9236406
-#> T2_168  500 3908.823 6.340000 1.7674359   0.4893392   0.9008264       0.4893392       0.6238125
-#> S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679       0.6238125
-#>             SRL RLD     r635
-#> T1_148 3172.572  10 1.964226
-#> T2_168 4398.812  10 1.805872
-#> S1_165 4398.812  10 2.289452
+#>        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity
+#> T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842
+#> T2_168  500 3908.823 6.340000 1.7674359   0.4893392   0.9008264       0.4893392
+#> S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679
+#>        conduit2sapwood      SRL RLD     r635
+#> T1_148       0.9236406 3172.572  10 1.964226
+#> T2_168       0.6238125 4398.812  10 1.805872
+#> S1_165       0.6238125 4398.812  10 2.289452
 #> 
 #> $paramsInterception
-#>        LeafAngle LeafAngleSD   Beta_p   Beta_q ClumpingIndex kPAR alphaSWR gammaSWR   g
-#> T1_148      53.7       21.55 1.907817 1.289641          0.75 0.50      0.7     0.14 1.0
-#> T2_168      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7     0.18 0.5
-#> S1_165      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7     0.18 0.5
+#>        LeafAngle LeafAngleSD   Beta_p   Beta_q ClumpingIndex kPAR alphaSWR
+#> T1_148      53.7       21.55 1.907817 1.289641          0.75 0.50      0.7
+#> T2_168      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7
+#> S1_165      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7
+#>        gammaSWR   g
+#> T1_148     0.14 1.0
+#> T2_168     0.18 0.5
+#> S1_165     0.18 0.5
 #> 
 #> $paramsTranspiration
-#>             Gswmin    Gswmax  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem VCleaf_kmax
-#> T1_148 0.003086667 0.2850000 72.19617 124.1687           0.15           0.60    4.000000
-#> T2_168 0.004473333 0.2007222 68.51600 118.7863           0.40           1.60    4.000000
-#> S1_165 0.010455247 0.2830167 62.78100 118.4486           0.29           1.16    9.579077
-#>        VCleafapo_kmax VCleaf_slope VCleaf_P50  VCleaf_c  VCleaf_d kleaf_symp VCstem_kmax VCstem_slope
-#> T1_148        8.00000    133.86620  -2.303772 11.137050 -2.380849    8.00000    1.339563     68.30291
-#> T2_168        8.00000     19.14428  -1.964085  1.339370 -2.582279    8.00000    1.620936     14.60786
-#> S1_165       19.15815     25.47382  -2.663333  2.254991 -3.133381   19.15815    4.599269     12.31134
-#>        VCstem_P50  VCstem_c  VCstem_d VCroot_kmax VCroot_slope VCroot_P50  VCroot_c  VCroot_d
-#> T1_148  -5.139633 12.709999 -5.290000    2.916127    103.96607  -2.966325 11.137050 -3.065569
-#> T2_168  -6.964747  3.560000 -7.720000    2.896748     22.32794  -1.684034  1.339370 -2.214081
-#> S1_165  -6.980000  3.095442 -7.857378    3.242501     31.37100  -1.173000  1.402489 -1.523324
-#>        VGrhizo_kmax Plant_kmax   FR_leaf   FR_stem   FR_root
-#> T1_148     13339632  0.7465846 0.1866462 0.5573346 0.2560193
-#> T2_168     72113368  0.8249857 0.2062464 0.5089563 0.2847972
-#> S1_165     16090667  1.5867376 0.1656462 0.3449978 0.4893561
+#>             Gswmin    Gswmax  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem
+#> T1_148 0.003086667 0.2850000 72.19617 124.1687           0.15           0.60
+#> T2_168 0.004473333 0.2007222 68.51600 118.7863           0.40           1.60
+#> S1_165 0.010455247 0.2830167 62.78100 118.4486           0.29           1.16
+#>        VCleaf_kmax VCleafapo_kmax VCleaf_slope VCleaf_P50  VCleaf_c  VCleaf_d
+#> T1_148    4.000000        8.00000    133.86620  -2.303772 11.137050 -2.380849
+#> T2_168    4.000000        8.00000     19.14428  -1.964085  1.339370 -2.582279
+#> S1_165    9.579077       19.15815     25.47382  -2.663333  2.254991 -3.133381
+#>        kleaf_symp VCstem_kmax VCstem_slope VCstem_P50  VCstem_c  VCstem_d
+#> T1_148    8.00000    1.339563     68.30291  -5.139633 12.709999 -5.290000
+#> T2_168    8.00000    1.620936     14.60786  -6.964747  3.560000 -7.720000
+#> S1_165   19.15815    4.599269     12.31134  -6.980000  3.095442 -7.857378
+#>        VCroot_kmax VCroot_slope VCroot_P50  VCroot_c  VCroot_d VGrhizo_kmax
+#> T1_148    2.916127    103.96607  -2.966325 11.137050 -3.065569     13339632
+#> T2_168    2.896748     22.32794  -1.684034  1.339370 -2.214081     72113368
+#> S1_165    3.242501     31.37100  -1.173000  1.402489 -1.523324     16090667
+#>        Plant_kmax   FR_leaf   FR_stem   FR_root
+#> T1_148  0.7465846 0.1866462 0.5573346 0.2560193
+#> T2_168  0.8249857 0.2062464 0.5089563 0.2847972
+#> S1_165  1.5867376 0.1656462 0.3449978 0.4893561
 #> 
 #> $paramsWaterStorage
-#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS
-#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355
-#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610
-#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155
-#>           StemAF Vsapwood
-#> T1_148 0.9236406 6.174277
-#> T2_168 0.6238125 1.278142
-#> S1_165 0.6238125 1.064511
+#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf
+#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525
+#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087
+#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968
+#>          StemPI0   StemEPS    StemAF Vsapwood
+#> T1_148 -2.008039 13.256355 0.9236406 6.174277
+#> T2_168 -3.227438 46.420610 0.6238125 1.278142
+#> S1_165 -1.305868  6.297155 0.6238125 1.064511
 #> 
 #> $internalPhenology
 #>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
@@ -1682,10 +1684,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165   0   0        FALSE         FALSE          FALSE        FALSE   0
 #> 
 #> $internalWater
-#>        Einst RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC StemPLC
-#> T1_148     0       -0.033  -0.033  -0.033      -0.033      -0.033       0       0
-#> T2_168     0       -0.033  -0.033  -0.033      -0.033      -0.033       0       0
-#> S1_165     0       -0.033  -0.033  -0.033      -0.033      -0.033       0       0
+#>        Einst RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC
+#> T1_148     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
+#> T2_168     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
+#> S1_165     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
+#>        StemPLC
+#> T1_148       0
+#> T2_168       0
+#> S1_165       0
 #> 
 #> $internalLAIDistribution
 #> $internalLAIDistribution$PrevLAIexpanded
@@ -1795,7 +1801,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.8.5"
+#> [1] "4.9.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2136,7 +2142,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$recruitmentMode
-#> [1] "stochastic"
+#> [1] "annual/stochastic"
 #> 
 #> $control$removeEmptyCohorts
 #> [1] TRUE
@@ -2174,6 +2180,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$minFPARRecr
 #> [1] 10
 #> 
+#> $control$recrAge
+#> [1] 5
+#> 
 #> $control$recrTreeHeight
 #> [1] 620
 #> 
@@ -2183,30 +2192,18 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$recrShrubHeight
 #> [1] 25
 #> 
-#> $control$recrTreeZ50
-#> [1] 100
-#> 
-#> $control$recrShrubZ50
-#> [1] 50
-#> 
-#> $control$recrTreeZ95
-#> [1] 1000
-#> 
-#> $control$recrShrubZ95
-#> [1] 500
-#> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n VG_theta_res
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861        0.041
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861        0.041
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861        0.041
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861        0.041
-#>   VG_theta_sat W Temp
-#> 1     0.423715 1   NA
-#> 2     0.423715 1   NA
-#> 3     0.423715 1   NA
-#> 4     0.423715 1   NA
+#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>       VG_n VG_theta_res VG_theta_sat W Temp
+#> 1 1.303861        0.041     0.423715 1   NA
+#> 2 1.303861        0.041     0.423715 1   NA
+#> 3 1.303861        0.041     0.423715 1   NA
+#> 4 1.303861        0.041     0.423715 1   NA
 #> 
 #> $snowpack
 #> [1] 0
@@ -2305,58 +2302,70 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen
-#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2
-#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2
-#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2    2
+#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen
+#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2
+#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2
+#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2
+#>        ysen
+#> T1_148    2
+#> T2_168    2
+#> S1_165    2
 #> 
 #> $paramsAnatomy
-#>        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity conduit2sapwood
-#> T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842       0.9236406
-#> T2_168  500 3908.823 6.340000 1.7674359   0.4893392   0.9008264       0.4893392       0.6238125
-#> S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679       0.6238125
-#>             SRL RLD     r635
-#> T1_148 3172.572  10 1.964226
-#> T2_168 4398.812  10 1.805872
-#> S1_165 4398.812  10 2.289452
+#>        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity
+#> T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842
+#> T2_168  500 3908.823 6.340000 1.7674359   0.4893392   0.9008264       0.4893392
+#> S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679
+#>        conduit2sapwood      SRL RLD     r635
+#> T1_148       0.9236406 3172.572  10 1.964226
+#> T2_168       0.6238125 4398.812  10 1.805872
+#> S1_165       0.6238125 4398.812  10 2.289452
 #> 
 #> $paramsInterception
-#>        LeafAngle LeafAngleSD   Beta_p   Beta_q ClumpingIndex kPAR alphaSWR gammaSWR   g
-#> T1_148      53.7       21.55 1.907817 1.289641          0.75 0.50      0.7     0.14 1.0
-#> T2_168      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7     0.18 0.5
-#> S1_165      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7     0.18 0.5
+#>        LeafAngle LeafAngleSD   Beta_p   Beta_q ClumpingIndex kPAR alphaSWR
+#> T1_148      53.7       21.55 1.907817 1.289641          0.75 0.50      0.7
+#> T2_168      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7
+#> S1_165      53.7       21.55 1.907817 1.289641          0.75 0.55      0.7
+#>        gammaSWR   g
+#> T1_148     0.14 1.0
+#> T2_168     0.18 0.5
+#> S1_165     0.18 0.5
 #> 
 #> $paramsTranspiration
-#>             Gswmin    Gswmax Gsw_AC_slope    Gs_P50 Gs_slope  Vmax298  Jmax298 Kmax_stemxylem
-#> T1_148 0.003086667 0.2850000     6.238912 -2.303772       30 72.19617 124.1687           0.15
-#> T2_168 0.004473333 0.2007222     4.957957 -1.964085       30 68.51600 118.7863           0.40
-#> S1_165 0.010455247 0.2830167     6.590920 -2.663333       30 62.78100 118.4486           0.29
-#>        Kmax_rootxylem VCleaf_kmax VCleafapo_kmax VCleaf_slope VCleaf_P50  VCleaf_c  VCleaf_d
-#> T1_148           0.60    4.000000        8.00000     68.30291  -5.139633 12.709999 -5.290000
-#> T2_168           1.60    4.000000        8.00000     14.60786  -6.964747  3.560000 -7.720000
-#> S1_165           1.16    9.579077       19.15815     12.52202  -6.980000  3.095442 -7.857378
-#>        kleaf_symp VCstem_kmax VCstem_slope VCstem_P50  VCstem_c  VCstem_d kstem_symp VCroot_kmax
-#> T1_148    8.00000    1.339563     68.30291  -5.139633 12.709999 -5.290000       0.26    2.916127
-#> T2_168    8.00000    1.620936     14.60786  -6.964747  3.560000 -7.720000       0.26    2.896748
-#> S1_165   19.15815    4.599269     12.52202  -6.980000  3.095442 -7.857378       0.26    3.242501
-#>        VCroot_slope VCroot_P50  VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax   FR_leaf   FR_stem
-#> T1_148     68.30291  -5.139633 12.709999 -5.290000    323189695  0.7465846 0.1866462 0.5573346
-#> T2_168     14.60786  -6.964747  3.560000 -7.720000    812498804  0.8249857 0.2062464 0.5089563
-#> S1_165     12.52202  -6.980000  3.095442 -7.857378   1641292700  1.5867376 0.1656462 0.3449978
-#>          FR_root
-#> T1_148 0.2560193
-#> T2_168 0.2847972
-#> S1_165 0.4893561
+#>             Gswmin    Gswmax Gsw_AC_slope    Gs_P50 Gs_slope  Vmax298  Jmax298
+#> T1_148 0.003086667 0.2850000     6.238912 -2.303772       30 72.19617 124.1687
+#> T2_168 0.004473333 0.2007222     4.957957 -1.964085       30 68.51600 118.7863
+#> S1_165 0.010455247 0.2830167     6.590920 -2.663333       30 62.78100 118.4486
+#>        Kmax_stemxylem Kmax_rootxylem VCleaf_kmax VCleafapo_kmax VCleaf_slope
+#> T1_148           0.15           0.60    4.000000        8.00000     68.30291
+#> T2_168           0.40           1.60    4.000000        8.00000     14.60786
+#> S1_165           0.29           1.16    9.579077       19.15815     12.52202
+#>        VCleaf_P50  VCleaf_c  VCleaf_d kleaf_symp VCstem_kmax VCstem_slope
+#> T1_148  -5.139633 12.709999 -5.290000    8.00000    1.339563     68.30291
+#> T2_168  -6.964747  3.560000 -7.720000    8.00000    1.620936     14.60786
+#> S1_165  -6.980000  3.095442 -7.857378   19.15815    4.599269     12.52202
+#>        VCstem_P50  VCstem_c  VCstem_d kstem_symp VCroot_kmax VCroot_slope
+#> T1_148  -5.139633 12.709999 -5.290000       0.26    2.916127     68.30291
+#> T2_168  -6.964747  3.560000 -7.720000       0.26    2.896748     14.60786
+#> S1_165  -6.980000  3.095442 -7.857378       0.26    3.242501     12.52202
+#>        VCroot_P50  VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax   FR_leaf
+#> T1_148  -5.139633 12.709999 -5.290000    323189695  0.7465846 0.1866462
+#> T2_168  -6.964747  3.560000 -7.720000    812498804  0.8249857 0.2062464
+#> S1_165  -6.980000  3.095442 -7.857378   1641292700  1.5867376 0.1656462
+#>          FR_stem   FR_root
+#> T1_148 0.5573346 0.2560193
+#> T2_168 0.5089563 0.2847972
+#> S1_165 0.3449978 0.4893561
 #> 
 #> $paramsWaterStorage
-#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS
-#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355
-#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610
-#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155
-#>           StemAF Vsapwood
-#> T1_148 0.9236406 6.174277
-#> T2_168 0.6238125 1.278142
-#> S1_165 0.6238125 1.064511
+#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf
+#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525
+#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087
+#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968
+#>          StemPI0   StemEPS    StemAF Vsapwood
+#> T1_148 -2.008039 13.256355 0.9236406 6.174277
+#> T2_168 -3.227438 46.420610 0.6238125 1.278142
+#> S1_165 -1.305868  6.297155 0.6238125 1.064511
 #> 
 #> $internalPhenology
 #>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
@@ -2365,10 +2374,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165   0   0        FALSE         FALSE          FALSE        FALSE   0
 #> 
 #> $internalWater
-#>        Einst Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC StemPLC
-#> T1_148     0    0      0      0       -0.033  -0.033  -0.033      -0.033      -0.033       0       0
-#> T2_168     0    0      0      0       -0.033  -0.033  -0.033      -0.033      -0.033       0       0
-#> S1_165     0    0      0      0       -0.033  -0.033  -0.033      -0.033      -0.033       0       0
+#>        Einst Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi
+#> T1_148     0    0      0      0       -0.033  -0.033  -0.033      -0.033
+#> T2_168     0    0      0      0       -0.033  -0.033  -0.033      -0.033
+#> S1_165     0    0      0      0       -0.033  -0.033  -0.033      -0.033
+#>        StemSympPsi LeafPLC StemPLC
+#> T1_148      -0.033       0       0
+#> T2_168      -0.033       0       0
+#> S1_165      -0.033       0       0
 #> 
 #> $internalLAIDistribution
 #> $internalLAIDistribution$PrevLAIexpanded
@@ -2478,7 +2491,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.8.5"
+#> [1] "4.9.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2820,7 +2833,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$recruitmentMode
-#> [1] "stochastic"
+#> [1] "annual/stochastic"
 #> 
 #> $control$removeEmptyCohorts
 #> [1] TRUE
@@ -2858,6 +2871,9 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$minFPARRecr
 #> [1] 10
 #> 
+#> $control$recrAge
+#> [1] 5
+#> 
 #> $control$recrTreeHeight
 #> [1] 620
 #> 
@@ -2867,30 +2883,18 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$recrShrubHeight
 #> [1] 25
 #> 
-#> $control$recrTreeZ50
-#> [1] 100
-#> 
-#> $control$recrShrubZ50
-#> [1] 50
-#> 
-#> $control$recrTreeZ95
-#> [1] 1000
-#> 
-#> $control$recrShrubZ95
-#> [1] 500
-#> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha     VG_n VG_theta_res
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112 1.303861        0.041
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112 1.303861        0.041
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112 1.303861        0.041
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112 1.303861        0.041
-#>   VG_theta_sat W Temp
-#> 1     0.423715 1   NA
-#> 2     0.423715 1   NA
-#> 3     0.423715 1   NA
-#> 4     0.423715 1   NA
+#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>       VG_n VG_theta_res VG_theta_sat W Temp
+#> 1 1.303861        0.041     0.423715 1   NA
+#> 2 1.303861        0.041     0.423715 1   NA
+#> 3 1.303861        0.041     0.423715 1   NA
+#> 4 1.303861        0.041     0.423715 1   NA
 #> 
 #> $snowpack
 #> [1] 0
@@ -2971,16 +2975,24 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen
-#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2
-#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2
-#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2    2
+#>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen
+#> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2
+#> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2
+#> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2
+#>        ysen
+#> T1_148    2
+#> T2_168    2
+#> S1_165    2
 #> 
 #> $paramsAnatomy
-#>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity      SRL RLD     r635
-#> T1_148 1317.523     1 5.140523   0.2982842   0.6077016       0.2982842 3172.572  10 1.964226
-#> T2_168 3908.823     1 6.340000   0.4893392   0.9008264       0.4893392 4398.812  10 1.805872
-#> S1_165 4189.325     1 4.980084   0.3709679   0.4389106       0.3709679 4398.812  10 2.289452
+#>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity      SRL
+#> T1_148 1317.523     1 5.140523   0.2982842   0.6077016       0.2982842 3172.572
+#> T2_168 3908.823     1 6.340000   0.4893392   0.9008264       0.4893392 4398.812
+#> S1_165 4189.325     1 4.980084   0.3709679   0.4389106       0.3709679 4398.812
+#>        RLD     r635
+#> T1_148  10 1.964226
+#> T2_168  10 1.805872
+#> S1_165  10 2.289452
 #> 
 #> $paramsInterception
 #>        kPAR      kSWR   g
@@ -2989,24 +3001,24 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> S1_165 0.55 0.4074074 0.5
 #> 
 #> $paramsTranspiration
-#>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCleaf_c  VCleaf_d  VCstem_c
-#> T1_148 0.003086667 0.1869849 -0.008372458  -0.9218219    1.504542 11.137050 -2.380849 12.709999
-#> T2_168 0.004473333 0.1251027 -0.005601615  -1.9726871    1.149052  1.339370 -2.582279  3.560000
-#> S1_165 0.010455247 0.1340000 -0.006000000  -2.1210726    1.300000  2.254991 -3.133381  3.095442
-#>         VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
-#> T1_148 -5.290000 8.525550 0.5239136 0.002586327 -0.2647169
-#> T2_168 -7.720000 8.968208 0.1412266 0.002413091 -0.5664879
-#> S1_165 -7.857378 7.900000 0.3643000 0.002757000 -0.4636000
+#>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCleaf_c
+#> T1_148 0.003086667 0.1869849 -0.008372458  -0.9218219    1.504542 11.137050
+#> T2_168 0.004473333 0.1251027 -0.005601615  -1.9726871    1.149052  1.339370
+#> S1_165 0.010455247 0.1340000 -0.006000000  -2.1210726    1.300000  2.254991
+#>         VCleaf_d  VCstem_c  VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
+#> T1_148 -2.380849 12.709999 -5.290000 8.525550 0.5239136 0.002586327 -0.2647169
+#> T2_168 -2.582279  3.560000 -7.720000 8.968208 0.1412266 0.002413091 -0.5664879
+#> S1_165 -3.133381  3.095442 -7.857378 7.900000 0.3643000 0.002757000 -0.4636000
 #> 
 #> $paramsWaterStorage
-#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS
-#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355
-#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610
-#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155
-#>           StemAF  Vsapwood
-#> T1_148 0.9236406 4.1638559
-#> T2_168 0.6238125 0.8135590
-#> S1_165 0.6238125 0.3177724
+#>           maxFMC maxMCleaf maxMCstem   LeafPI0   LeafEPS LeafAF     Vleaf
+#> T1_148 126.03063  151.9063  99.19498 -1.591429  8.918571 0.3525 0.5258525
+#> T2_168  93.15304  131.4346  45.64970 -1.483333 19.260000 0.1700 0.2199087
+#> S1_165  96.53441   47.3984 134.64052 -2.370000 17.230000 0.2400 0.4108968
+#>          StemPI0   StemEPS    StemAF  Vsapwood
+#> T1_148 -2.008039 13.256355 0.9236406 4.1638559
+#> T2_168 -3.227438 46.420610 0.6238125 0.8135590
+#> S1_165 -1.305868  6.297155 0.6238125 0.3177724
 #> 
 #> $internalPhenology
 #>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
@@ -3128,7 +3140,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.8.5"
+#> [1] "4.9.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     

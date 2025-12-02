@@ -457,9 +457,10 @@ A list, with the following options (default values in brackets):
   - `allowResprouting [= TRUE]`: Boolean flag to indicate that
     resprouting is allowed.
 
-  - `recruitmentMode [= "stochastic"]`: String describing how
+  - `recruitmentMode [= "annual/stochastic"]`: String describing how
     recruitment from seeds is applied. Current accepted values are
-    "deterministic" or "stochastic".
+    "annual/deterministic", "annual/stochastic", "daily/deterministic"
+    or "daily/stochastic".
 
   - `removeEmptyCohorts [= TRUE]`: Boolean flag to indicate the removal
     of cohorts whose density is too low.
@@ -506,6 +507,8 @@ A list, with the following options (default values in brackets):
     (in %) reaching the ground necessary for recruiting (when species
     parameter `MinFPARRecr` is missing).
 
+  - `recrAge [= 5]`: Default recruitment age (in yrs).
+
   - `recrTreeHeight [= 620]`: Default height (cm) for recruited trees
     (when species parameter `RecrTreeHeight` is missing).
 
@@ -514,18 +517,6 @@ A list, with the following options (default values in brackets):
 
   - `recrShrubHeight [= 25]`: Default height (cm) for recruited shrubs
     (when species parameter `RecrShrubHeight` is missing).
-
-  - `recrTreeZ50 [= 100]`: Default value for Z50 (mm) in seed-recruited
-    trees (when species parameter `RecrZ50` is missing).
-
-  - `recrShrubZ50 [= 50]`: Default value for Z50 (mm) in seed-recruited
-    shrubs (when species parameter `RecrZ50` is missing).
-
-  - `recrTreeZ95 [= 1000]`: Default value for Z95 (mm) in seed-recruited
-    trees (when species parameter `RecrZ50` is missing).
-
-  - `recrShrubZ50 [= 500]`: Default value for Z95 (mm) in seed-recruited
-    shrubs (when species parameter `RecrZ50` is missing).
 
 ## Details
 

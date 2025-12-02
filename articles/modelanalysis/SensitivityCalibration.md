@@ -26,7 +26,7 @@ package and the example forest data:
 library(medfate)
 ```
 
-    ## Package 'medfate' [ver. 4.8.5]
+    ## Package 'medfate' [ver. 4.9.0]
 
 ``` r
 data(exampleforest)

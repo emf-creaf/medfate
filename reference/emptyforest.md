@@ -7,7 +7,7 @@ object.
 ## Usage
 
 ``` r
-emptyforest(ntree = 0, nshrub = 0, nseed = 0, addcolumns = NULL)
+emptyforest(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0, addcolumns = NULL)
 ```
 
 ## Arguments
@@ -15,6 +15,10 @@ emptyforest(ntree = 0, nshrub = 0, nseed = 0, addcolumns = NULL)
 - ntree, nshrub:
 
   Number of tree and shrub cohorts, respectively.
+
+- nseedling:
+
+  Number of species in the seedling bank.
 
 - nseed:
 
@@ -79,6 +83,10 @@ emptyforest(ntree = 2, nshrub = 1)
 #> $herbHeight
 #> [1] NA
 #> 
+#> $seedlingBank
+#> [1] Species Percent Age     Z50     Z95     Z100   
+#> <0 rows> (or 0-length row.names)
+#> 
 #> $seedBank
 #> [1] Species Percent
 #> <0 rows> (or 0-length row.names)
@@ -102,6 +110,10 @@ emptyforest(ntree = 2, nshrub = 1, addcolumns = "LAI")
 #> 
 #> $herbHeight
 #> [1] NA
+#> 
+#> $seedlingBank
+#> [1] Species Percent Age     Z50     Z95     Z100   
+#> <0 rows> (or 0-length row.names)
 #> 
 #> $seedBank
 #> [1] Species Percent

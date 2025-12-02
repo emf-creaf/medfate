@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2025-11-28</h4>
+            <h4 data-toc-skip class="date">2025-12-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="d-none name"><code>FontBlanche.Rmd</code></div>
@@ -314,14 +314,14 @@ unaltered:</p>
 <span><span class="co">## 143                NA             NA 0.04459023   -2.570181      0.05070956</span></span>
 <span><span class="co">## 149                NA             NA 0.02473379    1.083300      0.10154153</span></span>
 <span><span class="co">## 169                NA             NA 0.03005748   -3.744526      0.09657161</span></span>
-<span><span class="co">##     MinFPARRecr RecrTreeDBH RecrTreeHeight RecrShrubHeight RecrTreeDensity</span></span>
-<span><span class="co">## 143   0.4943654          NA       52.54367              NA              NA</span></span>
-<span><span class="co">## 149   4.5625766          NA       56.93647              NA              NA</span></span>
-<span><span class="co">## 169   0.1307250          NA       47.23629              NA              NA</span></span>
-<span><span class="co">##     RecrShrubCover RecrZ50 RecrZ95 RespFire RespDist RespClip</span></span>
-<span><span class="co">## 143             NA      NA      NA      0.9     0.95     0.96</span></span>
-<span><span class="co">## 149             NA      NA      NA       NA       NA       NA</span></span>
-<span><span class="co">## 169             NA      NA      NA      0.9     0.95     0.96</span></span>
+<span><span class="co">##     MinFPARRecr RecrAge RecrTreeDBH RecrTreeHeight RecrShrubHeight</span></span>
+<span><span class="co">## 143   0.4943654      NA          NA       52.54367              NA</span></span>
+<span><span class="co">## 149   4.5625766      NA          NA       56.93647              NA</span></span>
+<span><span class="co">## 169   0.1307250      NA          NA       47.23629              NA</span></span>
+<span><span class="co">##     RecrTreeDensity RecrShrubCover RespFire RespDist RespClip</span></span>
+<span><span class="co">## 143              NA             NA      0.9     0.95     0.96</span></span>
+<span><span class="co">## 149              NA             NA       NA       NA       NA</span></span>
+<span><span class="co">## 169              NA             NA      0.9     0.95     0.96</span></span>
 <span><span class="co">##     IngrowthTreeDensity IngrowthTreeDBH</span></span>
 <span><span class="co">## 143            235.1347              NA</span></span>
 <span><span class="co">## 149            246.2793              NA</span></span>
@@ -362,6 +362,10 @@ shrubs:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbHeight</span></span>
 <span><span class="co">## [1] NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $seedlingBank</span></span>
+<span><span class="co">## [1] Species Percent Age     Z50     Z95     Z100   </span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $seedBank</span></span>
 <span><span class="co">## [1] Species Percent</span></span>
@@ -411,6 +415,10 @@ to trees into the forest object that we created before:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbHeight</span></span>
 <span><span class="co">## [1] NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $seedlingBank</span></span>
+<span><span class="co">## [1] Species Percent Age     Z50     Z95     Z100   </span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $seedBank</span></span>
 <span><span class="co">## [1] Species Percent</span></span>

@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-11-28</h4>
+            <h4 data-toc-skip class="date">2025-12-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1223,11 +1223,11 @@ successful recruitment</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
-<td align="left">RecrTreeDBH</td>
-<td align="left">Recruitment tree dbh (typically 1 cm)</td>
+<td align="left">RecrAge</td>
+<td align="left">Age of recruiment</td>
 <td align="left">Numeric</td>
-<td align="left">cm</td>
-<td align="left">FALSE</td>
+<td align="left">yr</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RecrTreeHeight</td>
@@ -1255,22 +1255,6 @@ successful recruitment</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="even">
-<td align="left">RecrZ50</td>
-<td align="left">Recruitment depth corresponding to 50% of fine
-roots</td>
-<td align="left">Numeric</td>
-<td align="left">mm</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="odd">
-<td align="left">RecrZ95</td>
-<td align="left">Recruitment depth corresponding to 95% of fine
-roots</td>
-<td align="left">Numeric</td>
-<td align="left">mm</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
@@ -1434,6 +1418,10 @@ attributes are empty:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbHeight</span></span>
 <span><span class="co">## [1] NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $seedlingBank</span></span>
+<span><span class="co">## [1] Species Percent Age     Z50     Z95     Z100   </span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $seedBank</span></span>
 <span><span class="co">## [1] Species Percent</span></span>
@@ -1803,10 +1791,8 @@ parameterization is obtained using function
 <span><span class="co">## [105] "seedProductionTreeHeight"           "seedProductionShrubHeight"         </span></span>
 <span><span class="co">## [107] "probRecr"                           "minTempRecr"                       </span></span>
 <span><span class="co">## [109] "minMoistureRecr"                    "minFPARRecr"                       </span></span>
-<span><span class="co">## [111] "recrTreeHeight"                     "recrShrubCover"                    </span></span>
-<span><span class="co">## [113] "recrShrubHeight"                    "recrTreeZ50"                       </span></span>
-<span><span class="co">## [115] "recrShrubZ50"                       "recrTreeZ95"                       </span></span>
-<span><span class="co">## [117] "recrShrubZ95"</span></span></code></pre>
+<span><span class="co">## [111] "recrAge"                            "recrTreeHeight"                    </span></span>
+<span><span class="co">## [113] "recrShrubCover"                     "recrShrubHeight"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

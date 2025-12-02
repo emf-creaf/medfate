@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -209,8 +209,8 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Queries the tables in 'Soil'</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S1</span><span class="op">$</span><span class="va">Soil</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SWC"            "RWC"            "REW"            "ML"             "Psi"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "PlantExt"       "HydraulicInput"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SWC"            "RWC"            "REW"            "ML"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Psi"            "PlantExt"       "HydraulicInput"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Monthly summary (averages) of soil relative water content</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S1</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"RWC"</span><span class="op">)</span></span></span>
@@ -230,9 +230,10 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Queries the tables in 'Plants'</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S1</span><span class="op">$</span><span class="va">Plants</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LAI"                 "LAIlive"             "FPAR"                "AbsorbedSWRFraction"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Transpiration"       "GrossPhotosynthesis" "PlantPsi"            "LeafPLC"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "StemPLC"             "PlantWaterBalance"   "LeafRWC"             "StemRWC"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LAI"                 "LAIlive"             "FPAR"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "AbsorbedSWRFraction" "Transpiration"       "GrossPhotosynthesis"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "PlantPsi"            "LeafPLC"             "StemPLC"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "PlantWaterBalance"   "LeafRWC"             "StemRWC"            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] "LFMC"                "PlantStress"        </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Monthly summary (averages) of plant stress</span></span></span>

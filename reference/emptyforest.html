@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.8.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">0</span>, nshrub <span class="op">=</span> <span class="fl">0</span>, nseed <span class="op">=</span> <span class="fl">0</span>, addcolumns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">0</span>, nshrub <span class="op">=</span> <span class="fl">0</span>, nseedling <span class="op">=</span> <span class="fl">0</span>, nseed <span class="op">=</span> <span class="fl">0</span>, addcolumns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -63,6 +63,10 @@
 
 <dl><dt id="arg-ntree-nshrub">ntree, nshrub<a class="anchor" aria-label="anchor" href="#arg-ntree-nshrub"></a></dt>
 <dd><p>Number of tree and shrub cohorts, respectively.</p></dd>
+
+
+<dt id="arg-nseedling">nseedling<a class="anchor" aria-label="anchor" href="#arg-nseedling"></a></dt>
+<dd><p>Number of species in the seedling bank.</p></dd>
 
 
 <dt id="arg-nseed">nseed<a class="anchor" aria-label="anchor" href="#arg-nseed"></a></dt>
@@ -113,6 +117,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $seedlingBank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent Age     Z50     Z95     Z100   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $seedBank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
@@ -136,6 +144,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $seedlingBank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent Age     Z50     Z95     Z100   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $seedBank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent</span>

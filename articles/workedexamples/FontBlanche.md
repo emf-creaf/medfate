@@ -247,14 +247,14 @@ SpParamsFB
     ## 143                NA             NA 0.04459023   -2.570181      0.05070956
     ## 149                NA             NA 0.02473379    1.083300      0.10154153
     ## 169                NA             NA 0.03005748   -3.744526      0.09657161
-    ##     MinFPARRecr RecrTreeDBH RecrTreeHeight RecrShrubHeight RecrTreeDensity
-    ## 143   0.4943654          NA       52.54367              NA              NA
-    ## 149   4.5625766          NA       56.93647              NA              NA
-    ## 169   0.1307250          NA       47.23629              NA              NA
-    ##     RecrShrubCover RecrZ50 RecrZ95 RespFire RespDist RespClip
-    ## 143             NA      NA      NA      0.9     0.95     0.96
-    ## 149             NA      NA      NA       NA       NA       NA
-    ## 169             NA      NA      NA      0.9     0.95     0.96
+    ##     MinFPARRecr RecrAge RecrTreeDBH RecrTreeHeight RecrShrubHeight
+    ## 143   0.4943654      NA          NA       52.54367              NA
+    ## 149   4.5625766      NA          NA       56.93647              NA
+    ## 169   0.1307250      NA          NA       47.23629              NA
+    ##     RecrTreeDensity RecrShrubCover RespFire RespDist RespClip
+    ## 143              NA             NA      0.9     0.95     0.96
+    ## 149              NA             NA       NA       NA       NA
+    ## 169              NA             NA      0.9     0.95     0.96
     ##     IngrowthTreeDensity IngrowthTreeDBH
     ## 143            235.1347              NA
     ## 149            246.2793              NA
@@ -297,6 +297,10 @@ fb_forest
     ## 
     ## $herbHeight
     ## [1] NA
+    ## 
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95     Z100   
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent
@@ -353,6 +357,10 @@ fb_forest
     ## 
     ## $herbHeight
     ## [1] NA
+    ## 
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95     Z100   
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent

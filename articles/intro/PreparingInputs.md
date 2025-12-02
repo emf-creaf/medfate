@@ -16,7 +16,7 @@ We begin by loading packages **medfate** and **meteoland**:
 
 ``` r
 library(medfate)
-#> Package 'medfate' [ver. 4.8.5]
+#> Package 'medfate' [ver. 4.9.0]
 library(meteoland)
 #> Package 'meteoland' [ver. 2.2.4]
 ```
@@ -90,6 +90,10 @@ pobl_ctl
 #> 
 #> $herbHeight
 #> [1] NA
+#> 
+#> $seedlingBank
+#> [1] Species Percent Age     Z50     Z95     Z100   
+#> <0 rows> (or 0-length row.names)
 #> 
 #> $seedBank
 #> [1] Species Percent

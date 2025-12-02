@@ -12,12 +12,39 @@ regeneration_seedrefill(seedBank, refillSpecies, refillPercent = NULL)
 
 regeneration_seedmortality(seedBank, SpParams, minPercent = 1)
 
+regeneration_germination(forest, SpParams, control)
+
+regeneration_seedlings_daily(
+  forest,
+  SpParams,
+  control,
+  growthResult,
+  verbose = FALSE
+)
+
+regeneration_seedlings(
+  forest,
+  SpParams,
+  control,
+  minMonthTemp,
+  moistureIndex,
+  verbose = FALSE
+)
+
 regeneration_recruitment(
   forest,
   SpParams,
   control,
   minMonthTemp,
   moistureIndex,
+  verbose = FALSE
+)
+
+regeneration_recruitment_daily(
+  forest,
+  SpParams,
+  control,
+  growthResult,
   verbose = FALSE
 )
 
@@ -69,6 +96,14 @@ regeneration_resprouting(
   A minimum percent of seed bank to retain entry in `seedBank` element
   of `forest`.
 
+- growthResult:
+
+  An object of class 'growth'.
+
+- verbose:
+
+  Boolean flag to indicate console output during calculations.
+
 - minMonthTemp:
 
   Minimum month temperature.
@@ -77,10 +112,6 @@ regeneration_resprouting(
 
   Moisture index (annual precipitation over annual potential
   evapotranspiration).
-
-- verbose:
-
-  Boolean flag to indicate console output during calculations.
 
 - internalMortality:
 
@@ -145,7 +176,7 @@ data(SpParamsMED)
 
 #Initialize control parameters
 control <- defaultControl("Granier")
-control$recruitmentMode = "deterministic" 
+control$recruitmentMode = "annual/deterministic" 
 
 #Recruitment limits
 plant_parameter(exampleforest, SpParamsMED, "MinTempRecr")
@@ -165,6 +196,10 @@ regeneration_recruitment(exampleforest, SpParamsMED, control, 0, 0.25)
 #> [1] Species Height  Cover   Z50     Z95     Z100    Age     ObsID  
 #> <0 rows> (or 0-length row.names)
 #> 
+#> $seedlingBank
+#> [1] Species Percent Age     Z50     Z95     Z100   
+#> <0 rows> (or 0-length row.names)
+#> 
 #> attr(,"class")
 #> [1] "forest" "list"  
 regeneration_recruitment(exampleforest, SpParamsMED, control, 3, 0.25)
@@ -174,6 +209,10 @@ regeneration_recruitment(exampleforest, SpParamsMED, control, 3, 0.25)
 #> 
 #> $shrubData
 #> [1] Species Height  Cover   Z50     Z95     Z100    Age     ObsID  
+#> <0 rows> (or 0-length row.names)
+#> 
+#> $seedlingBank
+#> [1] Species Percent Age     Z50     Z95     Z100   
 #> <0 rows> (or 0-length row.names)
 #> 
 #> attr(,"class")

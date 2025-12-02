@@ -178,13 +178,11 @@ below:
 | MinTempRecr | Minimum average temperature of the coldest month for successful recruitment | Numeric | Degrees C | FALSE |
 | MinMoistureRecr | Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment | Numeric | unitless | FALSE |
 | MinFPARRecr | Minimum percentage of PAR at the ground level for successful recruitment | Numeric | % | FALSE |
-| RecrTreeDBH | Recruitment tree dbh (typically 1 cm) | Numeric | cm | FALSE |
+| RecrAge | Age of recruiment | Numeric | yr | NA |
 | RecrTreeHeight | Recruitment tree (sapling) height | Numeric | cm | FALSE |
 | RecrShrubHeight | Recruitment shrub height | Numeric | cm | FALSE |
 | RecrTreeDensity | Recruitment tree (sapling) density | Numeric | ind/ha | FALSE |
 | RecrShrubCover | Recruitment shrub cover | Numeric | % | FALSE |
-| RecrZ50 | Recruitment depth corresponding to 50% of fine roots | Numeric | mm | FALSE |
-| RecrZ95 | Recruitment depth corresponding to 95% of fine roots | Numeric | mm | FALSE |
 | RespFire | Probability of resprouting after fire disturbance | Numeric | \[0-1\] | FALSE |
 | RespDist | Probability of resprouting after undefined disturbance (typically desiccation) | Numeric | \[0-1\] | FALSE |
 | RespClip | Probability of resprouting after clipping | Numeric | \[0-1\] | FALSE |
@@ -324,6 +322,10 @@ oak_forest
     ## 
     ## $herbHeight
     ## [1] NA
+    ## 
+    ## $seedlingBank
+    ## [1] Species Percent Age     Z50     Z95     Z100   
+    ## <0 rows> (or 0-length row.names)
     ## 
     ## $seedBank
     ## [1] Species Percent
@@ -754,10 +756,8 @@ names(control)
     ## [105] "seedProductionTreeHeight"           "seedProductionShrubHeight"         
     ## [107] "probRecr"                           "minTempRecr"                       
     ## [109] "minMoistureRecr"                    "minFPARRecr"                       
-    ## [111] "recrTreeHeight"                     "recrShrubCover"                    
-    ## [113] "recrShrubHeight"                    "recrTreeZ50"                       
-    ## [115] "recrShrubZ50"                       "recrTreeZ95"                       
-    ## [117] "recrShrubZ95"
+    ## [111] "recrAge"                            "recrTreeHeight"                    
+    ## [113] "recrShrubCover"                     "recrShrubHeight"
 
 Control parameters should normally be left to their default value until
 their effect on simulations is fully understood.

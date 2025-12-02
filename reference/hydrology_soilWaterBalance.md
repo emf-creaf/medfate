@@ -231,40 +231,52 @@ examplesoil <- soil(spar)
 # Water balance in a multi-bucket model
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
                            soilDomains = "buckets", modifySoil = FALSE)
-#>   Local source/sinks Lateral source/sinks         Infiltration   InfiltrationExcess 
-#>            -4.000000             0.000000            10.000000             0.000000 
-#>     SaturationExcess               Runoff         DeepDrainage      CapillarityRise 
-#>             0.000000             0.000000             4.121414             0.000000 
+#>   Local source/sinks Lateral source/sinks         Infiltration 
+#>            -4.000000             0.000000            10.000000 
+#>   InfiltrationExcess     SaturationExcess               Runoff 
+#>             0.000000             0.000000             0.000000 
+#>         DeepDrainage      CapillarityRise 
+#>             4.121414             0.000000 
                            
 # Water balance in a single-domain model (Richards equation)
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
                            soilDomains = "single", modifySoil = FALSE)
-#>   Local source/sinks Lateral source/sinks         Infiltration   InfiltrationExcess 
-#>         -4.000000000          0.000000000         10.000000000          0.000000000 
-#>     SaturationExcess               Runoff         DeepDrainage      CapillarityRise 
-#>          0.000000000          0.000000000          0.005785380          0.000000000 
-#>           Correction         VolumeChange             Substeps 
-#>         -0.001286961          5.994214620         24.000000000 
+#>   Local source/sinks Lateral source/sinks         Infiltration 
+#>         -4.000000000          0.000000000         10.000000000 
+#>   InfiltrationExcess     SaturationExcess               Runoff 
+#>          0.000000000          0.000000000          0.000000000 
+#>         DeepDrainage      CapillarityRise           Correction 
+#>          0.005785380          0.000000000         -0.001286961 
+#>         VolumeChange             Substeps 
+#>          5.994214620         24.000000000 
                     
 # Water balance in a dual-permeability model (MACRO)
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
                            soilDomains = "dual", modifySoil = FALSE)
-#>           Local source/sinks         Lateral source/sinks        Matrix-macropore flow 
-#>                -4.000000e+00                 0.000000e+00                 4.836043e+00 
-#>           InfiltrationMatrix       InfiltrationMacropores     InfiltrationExcessMatrix 
-#>                 4.481027e+00                 5.518973e+00                 0.000000e+00 
-#> InfiltrationExcessMacropores       SaturationExcessMatrix   SaturationExcessMacropores 
-#>                 0.000000e+00                 0.000000e+00                 0.000000e+00 
-#>               DrainageMatrix           DrainageMacropores            CapillarityMatrix 
-#>                 2.379449e-02                 3.889382e-06                 0.000000e+00 
-#>        CapillarityMacropores             CorrectionMatrix         CorrectionMacropores 
-#>                 0.000000e+00                -4.573672e-03                 3.889382e-06 
-#>           MatrixVolumeChange        MacroporeVolumeChange                 Infiltration 
-#>                 5.293276e+00                 6.829261e-01                 1.000000e+01 
-#>           InfiltrationExcess             SaturationExcess                       Runoff 
-#>                 0.000000e+00                 0.000000e+00                 0.000000e+00 
-#>                 DeepDrainage              CapillarityRise                   Correction 
-#>                 2.379838e-02                 0.000000e+00                -4.569782e-03 
+#>           Local source/sinks         Lateral source/sinks 
+#>                -4.000000e+00                 0.000000e+00 
+#>        Matrix-macropore flow           InfiltrationMatrix 
+#>                 4.836043e+00                 4.481027e+00 
+#>       InfiltrationMacropores     InfiltrationExcessMatrix 
+#>                 5.518973e+00                 0.000000e+00 
+#> InfiltrationExcessMacropores       SaturationExcessMatrix 
+#>                 0.000000e+00                 0.000000e+00 
+#>   SaturationExcessMacropores               DrainageMatrix 
+#>                 0.000000e+00                 2.379449e-02 
+#>           DrainageMacropores            CapillarityMatrix 
+#>                 3.889382e-06                 0.000000e+00 
+#>        CapillarityMacropores             CorrectionMatrix 
+#>                 0.000000e+00                -4.573672e-03 
+#>         CorrectionMacropores           MatrixVolumeChange 
+#>                 3.889382e-06                 5.293276e+00 
+#>        MacroporeVolumeChange                 Infiltration 
+#>                 6.829261e-01                 1.000000e+01 
+#>           InfiltrationExcess             SaturationExcess 
+#>                 0.000000e+00                 0.000000e+00 
+#>                       Runoff                 DeepDrainage 
+#>                 0.000000e+00                 2.379838e-02 
+#>              CapillarityRise                   Correction 
+#>                 0.000000e+00                -4.569782e-03 
 #>                 VolumeChange                     Substeps 
 #>                 5.976202e+00                 2.400000e+01 
   
