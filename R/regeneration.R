@@ -125,17 +125,7 @@ regeneration_seedmortality <- function(seedBank, SpParams, minPercent = 1) {
   return(seedBank)
 }
 
-#' @rdname regeneration
-#' @keywords internal
-regeneration_seedlings <- function(forest, SpParams, control,
-                                   minMonthTemp, moistureIndex, verbose = FALSE) {
-  if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
-    PARperc <- light_PARground(forest, SpParams)
-  } else {
-    PARperc <- 100
-  } 
-  if(verbose) cat(paste0(" [Cold (C): ", round(minMonthTemp,2), " / Moist: ", round(moistureIndex,2), " / FPAR (%): ", round(PARperc,1), "]"))
-  
+regeneration_germination <- function(forest, SpParams, control) {
   # If seed bank is defined take seeds from it. Otherwise, use local seed production
   if("seedBank" %in% names(forest)) {
     seedSpp <- forest$seedBank$Species 
@@ -170,12 +160,105 @@ regeneration_seedlings <- function(forest, SpParams, control,
   seedlingBank <- data.frame(Species = c(treeSpp, shrubSpp),
                              Percent = c(treePercent, shrubPercent),
                              Age = as.numeric(rep(0, nseedling)),
-                             Z50 = as.numeric(rep(NA, nseedling)),
-                             Z95 = as.numeric(rep(NA, nseedling)),
+                             Z50 = as.numeric(rep(0, nseedling)),
+                             Z95 = as.numeric(rep(0, nseedling)),
                              Z100 = as.numeric(rep(NA, nseedling)))
+  return(seedlingBank)
+}
+
+#' @rdname regeneration
+#' @keywords internal
+regeneration_seedlings_daily <- function(forest, SpParams, control,
+                                         growthResult, verbose = FALSE) {
+
+  
+  newSeedlingBank <- regeneration_germination(forest, SpParams, control)
+  
   # If exists, merge with existing forest seedling bank 
   if(!is.null(forest$seedlingBank)) {
-    seedlingBank <- rbind(seedlingBank, forest$seedlingBank)
+    seedlingBank <- rbind(newSeedlingBank, forest$seedlingBank)
+  } else {
+    seedlingBank <- newSeedlingBank
+  }
+  
+  if(nrow(seedlingBank)>0) {
+    # Determine thresholds
+    minFPAR <- species_parameter(seedlingBank$Species, SpParams, "MinFPARRecr")
+    minTemp <- species_parameter(seedlingBank$Species, SpParams, "MinTempRecr")
+    minFPAR[is.na(minFPAR)] <- control$minFPARRecr
+    minTemp[is.na(minTemp)] <- control$minTempRecr
+    
+    StemPI0 <-  species_parameter(seedlingBank$Species, SpParams, "StemPI0", TRUE, TRUE)
+    StemEPS <-  species_parameter(seedlingBank$Species, SpParams, "StemEPS", TRUE, TRUE)
+    Psi_Extract <- species_parameter(seedlingBank$Species, SpParams, "Psi_Extract", TRUE, TRUE);
+    Exp_Extract <- species_parameter(seedlingBank$Species, SpParams, "Exp_Extract", TRUE, TRUE);
+    Z95adult <- species_parameter(seedlingBank$Species, SpParams, "Z95")
+    if("RecrAge" %in% names(SpParams)) RecrAge <- species_parameter(seedlingBank$Species, SpParams, "RecrTreeDensity")
+    if("recrAge" %in% names(control)) {
+      RecrAge[is.na(RecrAge)] <- control$recrAge
+    } else {
+      RecrAge[is.na(RecrAge)] <- 5
+    }
+    
+    # Daily increment in root depth
+    incrZ95 <- Z95adult/(RecrAge*365.26)
+
+    # Retrieve environmental_cues
+    soil_widths <- growthResult$growthInput$soil$widths
+    soilPsi <- growthResult$Soil$Psi[, 1:length(soil_widths)]
+    LgroundPAR <- growthResult$Stand$LgroundPAR
+    months <- as.numeric(format(as.Date(growthResult$weather$dates), "%m"))
+    monthlyMinTemp <- tapply(growthResult$weather$MinTemperature, months, FUN="mean", na.rm=TRUE)
+    monthlyMaxTemp <- tapply(growthResult$weather$MaxTemperature, months, FUN="mean", na.rm=TRUE)
+    monthlyTemp <- 0.606*monthlyMaxTemp + 0.394*monthlyMinTemp
+    minMonthTemp <- min(monthlyTemp, na.rm=TRUE)
+    
+    # Daily root growth and seedling mortality
+    for(i in 1:length(LgroundPAR)) {
+      #root growth
+      seedlingBank$Z95 <- seedlingBank$Z95 + incrZ95
+      seedlingBank$Z50 <- exp(log(seedlingBank$Z95)/1.4)
+      if(control$truncateRootDistribution) {
+        seedlingBank$Z100 <- exp(log(seedlingBank$Z95)/0.95);
+      }
+      seedling_v <- root_ldrDistribution(seedlingBank$Z50, seedlingBank$Z95, seedlingBank$Z100, 
+                                         soil_widths)
+      #mortality
+      for(j in 1:nrow(seedlingBank)) {
+        seedling_psi <- hydraulics_averagePsi(soilPsi[i, ], seedling_v[j, ], exp_extract = Exp_Extract[j], psi_extract = Psi_Extract[j])
+        stem_rwc <- moisture_symplasticRWC(seedling_psi, StemPI0[j], StemEPS[j]);
+        m_light <- mortality_dailyProbability(LgroundPAR[i]/100, minFPAR[j]/100)
+        m_dry <- mortality_dailyProbability(stem_rwc, 0.4) 
+        seedlingBank$Percent[j] <- seedlingBank$Percent[j]*(1 - max(m_light, m_dry)) 
+      }
+    }
+    # Minimum temperature filter 
+    recr_selection <- (minMonthTemp > minTemp)
+    
+    # Remove rows
+    recr_selection[seedlingBank$Percent == 0] <- FALSE
+    seedlingBank <- seedlingBank[recr_selection, , drop = FALSE]
+    row.names(seedlingBank) <- NULL
+    
+    # Increment seedling age
+    seedlingBank$Age <- seedlingBank$Age + 1 
+  }
+  
+  return(seedlingBank)
+}
+
+#' @rdname regeneration
+#' @keywords internal
+regeneration_seedlings <- function(forest, SpParams, control,
+                                   minMonthTemp, moistureIndex, verbose = FALSE) {
+  
+  newSeedlingBank <- regeneration_germination(forest, SpParams, control)
+  
+  # If exists, merge with existing forest seedling bank 
+  if(!is.null(forest$seedlingBank)) {
+    seedlingBank <- rbind(newSeedlingBank, forest$seedlingBank)
+  } else {
+    seedlingBank <- newSeedlingBank
   }
   # Determine thresholds
   minFPAR <- species_parameter(seedlingBank$Species, SpParams, "MinFPARRecr")

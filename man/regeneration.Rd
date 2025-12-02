@@ -5,6 +5,7 @@
 \alias{regeneration_seedproduction}
 \alias{regeneration_seedrefill}
 \alias{regeneration_seedmortality}
+\alias{regeneration_seedlings_daily}
 \alias{regeneration_seedlings}
 \alias{regeneration_recruitment}
 \alias{regeneration_resprouting}
@@ -15,6 +16,14 @@ regeneration_seedproduction(forest, SpParams, control)
 regeneration_seedrefill(seedBank, refillSpecies, refillPercent = NULL)
 
 regeneration_seedmortality(seedBank, SpParams, minPercent = 1)
+
+regeneration_seedlings_daily(
+  forest,
+  SpParams,
+  control,
+  growthResult,
+  verbose = FALSE
+)
 
 regeneration_seedlings(
   forest,
@@ -57,11 +66,11 @@ regeneration_resprouting(
 
 \item{minPercent}{A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.}
 
+\item{verbose}{Boolean flag to indicate console output during calculations.}
+
 \item{minMonthTemp}{Minimum month temperature.}
 
 \item{moistureIndex}{Moisture index (annual precipitation over annual potential evapotranspiration).}
-
-\item{verbose}{Boolean flag to indicate console output during calculations.}
 
 \item{internalMortality}{A data frame with mortality occurred in the last year of simulation.}
 
