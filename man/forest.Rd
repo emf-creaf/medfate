@@ -81,7 +81,10 @@ one or the other, and not all of them at the same time.
 }
 \examples{
 data(exampleforest)
+exampleforest
+
 data(exampleforest2)
+exampleforest2
 }
 \seealso{
 \code{\link{forest}}, \code{\link{spwb}}, \code{\link{spwbInput}}

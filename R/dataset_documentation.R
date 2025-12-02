@@ -76,7 +76,10 @@
 #' @seealso \code{\link{summary.forest}}, \code{\link{emptyforest}}, \code{\link{plot.forest}}
 #' @examples
 #' data(exampleforest)
+#' exampleforest
+#' 
 #' data(exampleforest2)
+#' exampleforest2
 #' @keywords data
 NULL
 
