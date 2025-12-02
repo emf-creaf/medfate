@@ -126,6 +126,8 @@ fordyn<-function(forest, soil, SpParams,
   control$verbose <- FALSE
   control$subdailyResults <- FALSE
   
+  control$recruitmentMode <- match.arg(control$recruitmentMode, c("stochastic", "deterministic","annual/stochastic", "annual/deterministic", "daily/stochastic", "daily/deterministic"))
+  
   # Back-compatibility of control parameters
   if(!("keepCohortsWithObsID" %in% names(control))) control$keepCohortsWithObsID = FALSE
   if(!("removeEmptyCohorts" %in% names(control))) control$removeEmptyCohorts = TRUE
@@ -299,14 +301,18 @@ fordyn<-function(forest, soil, SpParams,
       forest$seedBank <- regeneration_seedrefill(forest$seedBank, seed)
     }
     if(control$allowRecruitment) {
-      # Seed recruitment
-      monthlyMinTemp <- tapply(Gi$weather$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
-      monthlyMaxTemp <- tapply(Gi$weather$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
-      monthlyTemp <- 0.606*monthlyMaxTemp + 0.394*monthlyMinTemp
-      minMonthTemp <- min(monthlyTemp, na.rm=TRUE)
-      moistureIndex <- sum(Gi$WaterBalance$Precipitation, na.rm=TRUE)/sum(Gi$WaterBalance$PET, na.rm=TRUE)
-      recr_forest <- regeneration_recruitment(forest, SpParams, control, minMonthTemp, moistureIndex, verbose = FALSE)
-      
+      if(control$recruitmentMode %in% c("daily/deterministic", "daily/stochastic")) {
+        recr_forest <- regeneration_recruitment_daily(forest, SpParams, control, 
+                                                      Gi, verbose = FALSE)
+      } else {
+        monthlyMinTemp <- tapply(Gi$weather$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+        monthlyMaxTemp <- tapply(Gi$weather$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+        monthlyTemp <- 0.606*monthlyMaxTemp + 0.394*monthlyMinTemp
+        minMonthTemp <- min(monthlyTemp, na.rm=TRUE)
+        moistureIndex <- sum(Gi$WaterBalance$Precipitation, na.rm=TRUE)/sum(Gi$WaterBalance$PET, na.rm=TRUE)
+        recr_forest <- regeneration_recruitment(forest, SpParams, control, 
+                                                minMonthTemp, moistureIndex, verbose = FALSE)
+      }
     } else {
       recr_forest <- emptyforest(addcolumns = c("Z100", "Age", "ObsID"))
     }

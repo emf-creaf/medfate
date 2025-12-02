@@ -161,7 +161,7 @@
 #'      \item{\code{allowSeedBankDynamics [= TRUE]}: Boolean flag to indicate that seed production and seed bank dynamics is simulated.}
 #'      \item{\code{allowRecruitment [= TRUE]}: Boolean flag to indicate that recruitment from seeds is allowed.}
 #'      \item{\code{allowResprouting [= TRUE]}: Boolean flag to indicate that resprouting is allowed.}
-#'      \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".}
+#'      \item{\code{recruitmentMode [= "annual/stochastic"]}: String describing how recruitment from seeds is applied. Current accepted values are "annual/deterministic", "annual/stochastic", "daily/deterministic" or "daily/stochastic".}
 #'      \item{\code{removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
 #'      \item{\code{minimumTreeCohortDensity [= 1]}: Threshold of tree density resulting in cohort removal.}
 #'      \item{\code{minimumShrubCohortCover [= 0.01]}: Threshold of shrub cover resulting in cohort removal.}
@@ -312,7 +312,7 @@ defaultControl<-function(transpirationMode = "Granier",
     allowSeedBankDynamics = TRUE,
     allowRecruitment = TRUE,
     allowResprouting = TRUE,
-    recruitmentMode = "stochastic",
+    recruitmentMode = "annual/stochastic",
     removeEmptyCohorts=TRUE,
     minimumTreeCohortDensity = 1,
     minimumShrubCohortCover = 0.01,

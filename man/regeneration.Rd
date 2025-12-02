@@ -8,6 +8,7 @@
 \alias{regeneration_seedlings_daily}
 \alias{regeneration_seedlings}
 \alias{regeneration_recruitment}
+\alias{regeneration_recruitment_daily}
 \alias{regeneration_resprouting}
 \title{Plant regeneration}
 \usage{
@@ -40,6 +41,14 @@ regeneration_recruitment(
   control,
   minMonthTemp,
   moistureIndex,
+  verbose = FALSE
+)
+
+regeneration_recruitment_daily(
+  forest,
+  SpParams,
+  control,
+  growthResult,
   verbose = FALSE
 )
 
@@ -107,7 +116,7 @@ data(SpParamsMED)
 
 #Initialize control parameters
 control <- defaultControl("Granier")
-control$recruitmentMode = "deterministic" 
+control$recruitmentMode = "annual/deterministic" 
 
 #Recruitment limits
 plant_parameter(exampleforest, SpParamsMED, "MinTempRecr")
