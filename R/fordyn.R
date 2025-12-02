@@ -261,10 +261,8 @@ fordyn<-function(forest, soil, SpParams,
       if(ntree_planted>0) {
         for(i in 1:ntree_planted) {
           if(length(grep("[a-z]", planted_forest$treeData$Species[i]))==0) planted_forest$treeData$Species[i] <- SpParams$Name[SpParams$SpIndex == planted_forest$treeData$Species[i]]
-          planted_forest$treeData$Z50[i] <- species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
-          planted_forest$treeData$Z95[i] <- species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
-          if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] <- 250
-          if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] <- 500
+          planted_forest$treeData$Z95[i] <- species_parameter(planted_forest$treeData$Species[i], SpParams,"Z95")
+          planted_forest$treeData$Z50[i] <- exp(log(planted_forest$treeData$Z95[i])/1.4)
         }
       }
       nshrub_planted <- nrow(planted_forest$shrubData)
@@ -274,8 +272,8 @@ fordyn<-function(forest, soil, SpParams,
       if(nshrub_planted>0) {
         for(i in 1:nrow(planted_forest$shrubData)) {
           if(length(grep("[a-z]", planted_forest$shrubData$Species[i]))==0) planted_forest$shrubData$Species[i] <- SpParams$Name[SpParams$SpIndex == planted_forest$shrubData$Species[i]]
-          planted_forest$shrubData$Z50[i] <- species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ50")
-          planted_forest$shrubData$Z95[i] <- species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ95")
+          planted_forest$shrubData$Z50[i] <- species_parameter(planted_forest$shrubData$Species[i], SpParams,"Z95")
+          planted_forest$shrubData$Z95[i] <- exp(log(planted_forest$shrubData$Z95[i])/1.4)
           if(is.na(planted_forest$shrubData$Z50[i])) planted_forest$shrubData$Z50[i] <- 100
           if(is.na(planted_forest$shrubData$Z95[i])) planted_forest$shrubData$Z95[i] <- 300
         }

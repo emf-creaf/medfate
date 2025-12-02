@@ -178,10 +178,6 @@
 #'      \item{\code{recrTreeHeight [= 620]}: Default height (cm) for recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
 #'      \item{\code{recrShrubCover [= 1]}: Default cover (%) for shrubs recruited from seed  (when species parameter \code{RecrShrubCover} is missing).}
 #'      \item{\code{recrShrubHeight [= 25]}: Default height (cm) for recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
-#'      \item{\code{recrTreeZ50 [= 100]}: Default value for Z50 (mm) in seed-recruited trees  (when species parameter \code{RecrZ50} is missing).}
-#'      \item{\code{recrShrubZ50 [= 50]}: Default value for Z50 (mm) in seed-recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
-#'      \item{\code{recrTreeZ95 [= 1000]}: Default value for Z95 (mm) in seed-recruited trees  (when species parameter \code{RecrZ50} is missing).}
-#'      \item{\code{recrShrubZ50 [= 500]}: Default value for Z95 (mm) in seed-recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
 #'   }
 #' }
 #' 
@@ -332,11 +328,7 @@ defaultControl<-function(transpirationMode = "Granier",
     recrAge = 5,
     recrTreeHeight = 620,
     recrShrubCover = 1,
-    recrShrubHeight = 25,
-    recrTreeZ50 = 100,
-    recrShrubZ50 = 50,
-    recrTreeZ95 = 1000,
-    recrShrubZ95 = 500
+    recrShrubHeight = 25
   )
   if(transpirationMode=="Sureau") l$segmentedXylemVulnerability = FALSE
   return(l)
