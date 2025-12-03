@@ -13,7 +13,9 @@ package so that the user can understand them. A companion article
 [*Preparing model
 inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html)
 provides a practical example to illustrate how to create model inputs
-and some common problems encountered.
+and some common problems encountered. A more in-depth presentation of
+input can be found in the
+[**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html).
 
 ## Species parameter tables
 
@@ -305,101 +307,43 @@ case will be restricted to water balance. Moreover, note that when
 defining single-cohort forests all possible interactions with
 functionally distinct plants are neglected.
 
-### Aboveground and belowground data
+### Summaries and vertical profiles
 
-We can use some functions to inspect how above-ground and below-ground
-information is represented in `medfate`.
-
-For example, we can use internal function
-[`forest2aboveground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
-on the object `exampleforest` to show how medfate completes above-ground
-information:
+We can obtain a summary of the forest object using function
+[`summary()`](https://rdrr.io/r/base/summary.html), which requires the
+table of species parameters:
 
 ``` r
-above <- forest2aboveground(exampleforest, SpParamsMED)
-above
+summary(exampleforest, SpParamsMED)
 ```
 
-    ##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead
-    ## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0
-    ## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0
-    ## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03062604   0.03062604        0
-    ##        LAI_nocomp Age ObsID
-    ## T1_148 1.29720268  NA  <NA>
-    ## T2_168 1.01943205  NA  <NA>
-    ## S1_165 0.04412896  NA  <NA>
+    ## Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 
+    ## Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 
+    ## Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 
+    ## LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0 
+    ## Fuel loading (kg/m2) total: 0.5395798  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0 
+    ## PAR ground (%): 43.6361701  SWR ground (%): 54.1027977
 
-Note that the call to
-[`forest2aboveground()`](https://emf-creaf.github.io/medfate/reference/forest2aboveground.md)
-included the species parameter table, because species-specific
-allometric coefficients are needed to calculate leaf area from tree size
-or shrub percent cover and height. Moreover, note that the plant cohorts
-were given unique codes that tell us whether they correspond to trees
-(‘T’) or shrubs (‘S’).
-
-Columns `N`, `DBH` and `Cover` describe forest structure and are
-required for simulating growth, but not for soil water balance, which
-only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio),
-`LAI_live`, `LAI_expanded` and `LAI_dead`. Therefore, one could use
-alternative forest description as starting point, i.e.:
+Function [`plot()`](https://rdrr.io/r/graphics/plot.default.html) for
+`forest` objects allows displaying vertical profiles of several forest
+properties. For example, leaf area distribution can be examined using:
 
 ``` r
-above2 <- forest2aboveground(exampleforest2, SpParamsMED)
-above2
-```
-
-    ##         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead LAI_nocomp Age
-    ## T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0       0.80  NA
-    ## T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0       0.50  NA
-    ## S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0       0.03  NA
-    ##        ObsID
-    ## T1_148  <NA>
-    ## T2_168  <NA>
-    ## S1_165  <NA>
-
-Of course, the resulting data frame has missing values, whereas the
-other values are directly copied from `forest`.
-
-Aboveground leaf area distribution (with or without distinguishing among
-cohorts) can be examined by calling function
-[`vprofile_leafAreaDensity()`](https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.md):
-
-``` r
-vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = F)
+plot(exampleforest, SpParamsMED, type = "LeafAreaDensity", 
+     byCohorts = FALSE)
 ```
 
 ![Leaf area density
-plot](UnderstandingInputs_files/figure-html/unnamed-chunk-10-1.png)
+plot](UnderstandingInputs_files/figure-html/unnamed-chunk-9-1.png)
+Similarly, we can visually inspect the distribution of fine roots for
+each cohort of a`forest` object using:
 
 ``` r
-vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = T)
-```
-
-![Leaf area density plot by
-species](UnderstandingInputs_files/figure-html/unnamed-chunk-11-1.png)
-
-### Belowground data
-
-Regarding **belowground** information, we need vectors with depths
-corresponding to 50% and 95% of fine roots, which we simply concatenate
-from our forest data:
-
-``` r
-Z50 <- c(exampleforest$treeData$Z50, exampleforest$shrubData$Z50)
-Z95 <- c(exampleforest$treeData$Z95, exampleforest$shrubData$Z95)
-```
-
-These parameters specify a continuous distribution of fine roots. Users
-can visually inspect the distribution of fine roots of `forest` objects
-by calling function
-[`vprofile_rootDistribution()`](https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.md):
-
-``` r
-vprofile_rootDistribution(exampleforest, SpParamsMED)
+plot(exampleforest, SpParamsMED, type = "RootDistribution")
 ```
 
 ![Fine root
-distribution](UnderstandingInputs_files/figure-html/unnamed-chunk-13-1.png)
+distribution](UnderstandingInputs_files/figure-html/unnamed-chunk-10-1.png)
 
 ## Soils
 
@@ -597,16 +541,15 @@ Genuchten-Mualem equations need other parameters, which are estimated
 using pedotransfer functions and their names start with `VG_` (two
 alternative options are provided in function `soil` to estimate Van
 Genuchten parameters). The following code calls function
-[`soil_retentionCurvePlot()`](https://emf-creaf.github.io/medfate/reference/soil_retentionCurvePlot.md)
-to illustrate the difference between the two water retention models in
-this soil:
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to illustrate
+the difference between the two water retention models in this soil:
 
 ``` r
-soil_retentionCurvePlot(examplesoil, model="both")
+plot(examplesoil, model="both")
 ```
 
 ![Soil water
-retention](UnderstandingInputs_files/figure-html/unnamed-chunk-21-1.png)
+retention](UnderstandingInputs_files/figure-html/unnamed-chunk-18-1.png)
 
 Low-level functions, such as
 [`soil_psi2thetaSX()`](https://emf-creaf.github.io/medfate/reference/soil_texture.md)
@@ -625,9 +568,12 @@ parameters below).
 
 All simulations in the package require daily weather inputs. The minimum
 weather variables that are required are minimum/maximum temperature,
-minimum/maximum relative humidity, precipitation and radiation. Other
-variables like wind speed are recommended but not required. Here we show
-an example of meteorological forcing data.
+minimum/maximum relative humidity, precipitation and radiation. Among
+them, minimum/maximum temperature and precipitation cannot contain
+missing values, whereas the package can handle missing values in
+radiation and minimum/maximum relative humidity. Other variables like
+wind speed, atmospheric pressure or CO2 concentration are optional. Here
+we show an example of meteorological forcing data.
 
 ``` r
 data(examplemeteo)

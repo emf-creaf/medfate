@@ -1,6 +1,7 @@
 # Soil water retention and conductivity plots
 
-Functions to display water retention curves and conductivity curves.
+Internal functions to display water retention curves and conductivity
+curves.
 
 ## Usage
 

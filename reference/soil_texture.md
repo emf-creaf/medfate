@@ -271,6 +271,6 @@ soil_df
 s = soil(soil_df)
 
 # Plot Saxton's and Van Genuchten's water retention curves
-soil_retentionCurvePlot(s, model="both")
+plot(s, model="both")
 
 ```

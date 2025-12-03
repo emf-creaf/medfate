@@ -59,7 +59,7 @@ Meteorological forcing
 
 ## Soil
 
-Soil initialization
+Soil initialization and attributes
 
 - [`defaultSoilParams()`](https://emf-creaf.github.io/medfate/reference/defaultSoilParams.md)
   : Default soil parameters
@@ -68,9 +68,8 @@ Soil initialization
   : Soil initialization
 - [`soil_redefineLayers()`](https://emf-creaf.github.io/medfate/reference/soil_redefineLayers.md)
   : Redefine soil layer widths
-- [`soil_retentionCurvePlot()`](https://emf-creaf.github.io/medfate/reference/soil_retentionCurvePlot.md)
-  [`soil_conductivityCurvePlot()`](https://emf-creaf.github.io/medfate/reference/soil_retentionCurvePlot.md)
-  : Soil water retention and conductivity plots
+- [`plot(`*`<soil>`*`)`](https://emf-creaf.github.io/medfate/reference/plot.soil.md)
+  : Soil water curves
 
 ## Simulation inputs
 

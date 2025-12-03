@@ -1,7 +1,6 @@
 # Plot forest attributes
 
-Convenient wrappers for vertical forest profiles (see
-[`vprofile_leafAreaDensity`](https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.md)).
+Function for plotting vertical forest profiles.
 
 ## Usage
 
@@ -58,6 +57,11 @@ shinyplot(x, SpParams, ...)
 ## Value
 
 A ggplot or a shiny application, depending on the function.
+
+## Details
+
+The function is a common wrapper to specialized internal functions (see
+[`vprofile_leafAreaDensity`](https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.md)).
 
 ## See also
 

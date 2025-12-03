@@ -229,8 +229,10 @@ subject):
   evaporation, soil infiltration).
 - `light_*`: Radiation extinction and absorption.
 - `moisture_*`: Live tissue moisture.
+- `mortality_*`: Plant mortality.
 - `pheno_*`: Leaf phenology.
 - `photo_*`: Leaf photosynthesis.
+- `regeneration_*`: Regeneration from seed and resprouting.
 - `root_*`: Root distribution and conductance calculations.
 - `soil_*`: Soil hydraulics and thermodynamics.
 - `transp_*`: Stomatal regulation and resulting

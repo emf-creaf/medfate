@@ -100,6 +100,7 @@ content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
 
 ## See also
 
+[`plot.soil`](https://emf-creaf.github.io/medfate/reference/plot.soil.md),
 [`soil_redefineLayers`](https://emf-creaf.github.io/medfate/reference/soil_redefineLayers.md),
 [`soil_psi2thetaSX`](https://emf-creaf.github.io/medfate/reference/soil_texture.md),
 [`soil_psi2thetaVG`](https://emf-creaf.github.io/medfate/reference/soil_texture.md),
