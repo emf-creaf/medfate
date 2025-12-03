@@ -1394,9 +1394,9 @@ List spwb(List x, DataFrame meteo,
   if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
   Radiation = meteo["Radiation"];
   
-  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation'");
-  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature'");
-  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
+  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation' are not allowed");
+  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature' are not allowed");
+  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature' are not allowed");
   if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
   if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
   if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");

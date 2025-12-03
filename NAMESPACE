@@ -22,6 +22,7 @@ S3method(plot,growth)
 S3method(plot,growth_day)
 S3method(plot,fordyn)
 S3method(plot,forest)
+S3method(plot,soil)
 
 S3method(shinyplot,pwb)
 S3method(shinyplot,pwb_day)

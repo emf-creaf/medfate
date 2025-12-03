@@ -5,7 +5,7 @@
 
 #' Plot forest attributes
 #'
-#' Convenient wrappers for vertical forest profiles (see \code{\link{vprofile_leafAreaDensity}}).
+#' Function for plotting vertical forest profiles.
 #'
 #' @param x An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -18,6 +18,9 @@
 #' @return A ggplot or a shiny application, depending on the function.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @details
+#' The function is a common wrapper to specialized internal functions (see \code{\link{vprofile_leafAreaDensity}}).
 #' 
 #' @seealso \code{\link{forest}}, \code{\link{summary.forest}}, \code{\link{vprofile_leafAreaDensity}}
 #' 

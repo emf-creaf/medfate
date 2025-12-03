@@ -76,11 +76,12 @@ reference:
 - contents:
   - examplemeteo
 - title: Soil
-  desc:  Soil initialization
+  desc:  Soil initialization and attributes
 - contents:
   - starts_with("defaultSoil")
   - soil
-  - starts_with("soil_")
+  - soil_redefineSoilLayers
+  - starts_with("plot.soil")
 - title: Simulation inputs
   desc:  Simulation control and input objects
 - contents:

@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this article
 
-Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. Finally, **simulation control parameters** may need to be changed, depending on the goals of the simulation. This article explains data structures required as input to run simulations using the package so that the user can understand them. A companion article [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html) provides a practical example to illustrate how to create model inputs and some common problems encountered.
+Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. Finally, **simulation control parameters** may need to be changed, depending on the goals of the simulation. This article explains data structures required as input to run simulations using the package so that the user can understand them. A companion article [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html) provides a practical example to illustrate how to create model inputs and some common problems encountered. A more in-depth presentation of input can be found in the [**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html).
 
 
 ## Species parameter tables
@@ -79,46 +79,24 @@ oak_forest
 
 Since density and diameter have not been provided, simulations in this case will be restricted to water balance. Moreover, note that when defining single-cohort forests all possible interactions with functionally distinct plants are neglected.
 
+### Summaries and vertical profiles
 
-### Aboveground and belowground data
+We can obtain a summary of the forest object using function `summary()`, which requires the table of species parameters:
 
-We can use some functions to inspect how above-ground and below-ground information is represented in `medfate`. 
-
-For example, we can use internal function `forest2aboveground()` on the object `exampleforest` to show how medfate completes above-ground information:
 ```{r}
-above <- forest2aboveground(exampleforest, SpParamsMED)
-above
-```
-Note that the call to `forest2aboveground()` included the species parameter table, because species-specific allometric coefficients are needed to calculate leaf area from tree size or shrub percent cover and height. Moreover, note that the plant cohorts were given unique codes that tell us whether they correspond to trees ('T') or shrubs ('S'). 
-
-Columns `N`, `DBH` and `Cover` describe forest structure and are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Therefore, one could use alternative forest description as starting point, i.e.:
-```{r}
-above2 <- forest2aboveground(exampleforest2, SpParamsMED)
-above2
+summary(exampleforest, SpParamsMED)
 ```
 
-Of course, the resulting data frame has missing values, whereas the other values are directly copied from `forest`.
-
-Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
+Function `plot()` for `forest` objects allows displaying vertical profiles of several forest properties. For example, leaf area distribution can be examined using:
 
 ```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Leaf area density plot"}
-vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = F)
+plot(exampleforest, SpParamsMED, type = "LeafAreaDensity", 
+     byCohorts = FALSE)
 ```
-```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Leaf area density plot by species"}
-vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = T)
-```
-
-### Belowground data
-
-Regarding **belowground** information, we need vectors with depths corresponding to 50% and 95% of fine roots, which we simply concatenate from our forest data:
-```{r}
-Z50 <- c(exampleforest$treeData$Z50, exampleforest$shrubData$Z50)
-Z95 <- c(exampleforest$treeData$Z95, exampleforest$shrubData$Z95)
-```
-These parameters specify a continuous distribution of fine roots. Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
+Similarly, we can visually inspect the distribution of fine roots for each cohort of a`forest` object using:
 
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Fine root distribution"}
-vprofile_rootDistribution(exampleforest, SpParamsMED)
+plot(exampleforest, SpParamsMED, type = "RootDistribution")
 ```
 
 
@@ -174,10 +152,10 @@ The modelled moisture content of the soil depends on the **water retention curve
 ```{r}
 summary(examplesoil, model="VG")
 ```
-While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `soil_retentionCurvePlot()` to illustrate the difference between the two water retention models in this soil:
+While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `plot()` to illustrate the difference between the two water retention models in this soil:
 
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE, fig.alt="Soil water retention"}
-soil_retentionCurvePlot(examplesoil, model="both")
+plot(examplesoil, model="both")
 ```
 
 Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts `soil_theta2psiSX()` and `soil_theta2psiVG()`), can be used to calculate volumetric soil moisture from the water potential (and viceversa) using the two models. When simulating soil water balance, the user can choose among the two models (see `control` parameters below).
@@ -185,7 +163,7 @@ Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and 
 
 ## Meteorological forcing
 
-All simulations in the package require daily weather inputs. The minimum weather variables that are required are minimum/maximum temperature, minimum/maximum relative humidity, precipitation and radiation. Other variables like wind speed are recommended but not required. Here we show an example of meteorological forcing data. 
+All simulations in the package require daily weather inputs. The minimum weather variables that are required are minimum/maximum temperature, minimum/maximum relative humidity, precipitation and radiation. Among them, minimum/maximum temperature and precipitation cannot contain missing values, whereas the package can handle missing values in radiation and minimum/maximum relative humidity. Other variables like wind speed, atmospheric pressure or CO2 concentration are optional. Here we show an example of meteorological forcing data. 
 ```{r}
 data(examplemeteo)
 head(examplemeteo)

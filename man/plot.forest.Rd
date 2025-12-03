@@ -36,7 +36,10 @@
 A ggplot or a shiny application, depending on the function.
 }
 \description{
-Convenient wrappers for vertical forest profiles (see \code{\link{vprofile_leafAreaDensity}}).
+Function for plotting vertical forest profiles.
+}
+\details{
+The function is a common wrapper to specialized internal functions (see \code{\link{vprofile_leafAreaDensity}}).
 }
 \examples{
 data(exampleforest)

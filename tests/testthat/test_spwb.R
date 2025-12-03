@@ -57,6 +57,24 @@ test_that("pwb can be run in example and empty forests",{
   expect_s3_class(pwb(x1, examplemeteo[1:10,], W = as.matrix(S1$Soil$SWC[,1:4]), 
                        latitude = 41.82592, elevation = 100), "pwb")
 })
+
+test_that("spwb can be run with missing values columns",{
+  examplemeteo_missing <- examplemeteo[1:2, ]
+  examplemeteo_missing$Radiation <- NA
+  expect_s3_class(suppressWarnings(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                        examplemeteo_missing,
+                                        latitude = 41.82592, elevation = 100)), "spwb")
+  examplemeteo_missing$MinRelativeHumidity <- NA
+  examplemeteo_missing$MaxRelativeHumidity <- NA
+  expect_s3_class(suppressWarnings(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                        examplemeteo_missing,
+                                        latitude = 41.82592, elevation = 100)), "spwb")
+  examplemeteo_missing$MaxTemperature <- NA
+  expect_error(suppressWarnings(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
+                                        examplemeteo_missing,
+                                        latitude = 41.82592, elevation = 100)))
+})
+
 test_that("spwb can be run using dates as columns",{
   expect_s3_class(spwb(spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
                        examplemeteo2[1:10,],

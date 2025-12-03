@@ -1,6 +1,10 @@
+.soil_plot_choices<-function(){
+  c("RetentionCurve", "ConductivityCurve")
+}
+
 #' Soil water retention and conductivity plots
 #' 
-#' Functions to display water retention curves and conductivity curves.
+#' Internal functions to display water retention curves and conductivity curves.
 #' 
 #' @param layer Soil layer to be plotted.
 #' @param relative Boolean flag to indicate that retention curve should be relative to field capacity or saturation.
@@ -20,6 +24,7 @@
 #' 
 #' @seealso  \code{\link{soil_texture}}
 #' @name soil_retentionCurvePlot
+#' @keywords internal
 soil_retentionCurvePlot<-function(soil, model="SX", layer = 1, 
                                   psi = seq(0, -6.0, by=-0.01),
                                   relative = TRUE, to = "SAT") {
@@ -79,6 +84,7 @@ soil_retentionCurvePlot<-function(soil, model="SX", layer = 1,
 #' @rdname soil_retentionCurvePlot
 #' @param mmol Boolean flag to indicate that saturated conductivity units should be returned in mmol/m/s/MPa. If \code{mmol = FALSE} then units are cm/day.
 #' @param log Boolean to display the y-axis in logarithm units
+#' @keywords internal
 soil_conductivityCurvePlot<-function(soil, model="SX", layer = 1, 
                                 psi = seq(0, -6.0, by=-0.01),
                                 relative = TRUE, to = "SAT", log = TRUE, mmol = TRUE) {
@@ -148,4 +154,39 @@ soil_conductivityCurvePlot<-function(soil, model="SX", layer = 1,
     ylab(ylab)+ xlab(xlab)+
     theme_bw()
   return(g)  
+}
+
+
+#' Soil water curves
+#'
+#' Function for plotting water retention or conductivity curves for soil layers.
+#'
+#' @param x Initialized soil object (returned by function \code{\link{soil}}).
+#' @param type A string of the plot type: "RetentionCurve" or "ConductivityCurve". 
+#' @param model model Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.
+#' @param layer Soil layer to be plotted.
+#' @param relative Boolean flag to indicate that retention curve should be relative to field capacity or saturation.
+#' @param to Either 'SAT' (saturation) or 'FC' (field capacity).
+#' @param \dots Additional parameters to specific functions
+#' 
+#' @return An object of class ggplot.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @details
+#' The function is a common wrapper to specialized internal functions (see \code{\link{soil_retentionCurvePlot}}).
+#' 
+#' @seealso \code{\link{soil}}, \code{\link{summary.soil}}, \code{\link{soil_retentionCurvePlot}}
+#' 
+#' @examples
+#' # Initializes soil
+#' s = soil(defaultSoilParams())
+#' plot(s)
+#' 
+#' @name plot.soil
+plot.soil<-function(x, type = "RetentionCurve", model="SX",  layer = 1, 
+                    relative = TRUE, to = "SAT", ...) {
+  type = match.arg(type, .soil_plot_choices())
+  if(type=="RetentionCurve") return(soil_retentionCurvePlot(soil = x, model = model, layer = layer, relative = relative, to = to, ... ))
+  else if(type=="ConductivityCurve") return(soil_conductivityCurvePlot(soil = x, model = model, layer = layer, relative = relative, to = to, ...))
 }
