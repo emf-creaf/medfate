@@ -792,8 +792,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortIDs
-CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset, int shrubOffset);
-RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP, SEXP SpParamsSEXP, SEXP treeOffsetSEXP, SEXP shrubOffsetSEXP) {
+CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset, int shrubOffset, int herbOffset);
+RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP, SEXP SpParamsSEXP, SEXP treeOffsetSEXP, SEXP shrubOffsetSEXP, SEXP herbOffsetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -801,7 +801,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< int >::type treeOffset(treeOffsetSEXP);
     Rcpp::traits::input_parameter< int >::type shrubOffset(shrubOffsetSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortIDs(x, SpParams, treeOffset, shrubOffset));
+    Rcpp::traits::input_parameter< int >::type herbOffset(herbOffsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortIDs(x, SpParams, treeOffset, shrubOffset, herbOffset));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6150,7 +6151,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shrubCrownRatioAllometric", (DL_FUNC) &_medfate_shrubCrownRatioAllometric, 2},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
     {"_medfate_shrubPhytovolumeAllometric", (DL_FUNC) &_medfate_shrubPhytovolumeAllometric, 4},
-    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 4},
+    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 5},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 3},
     {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 2},

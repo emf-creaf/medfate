@@ -8,7 +8,8 @@ using namespace Rcpp;
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, bool loading = false);
 NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams);
 
-CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int shrubOffset = 0);
+CharacterVector cohortIDs(List x, DataFrame SpParams, 
+                          int treeOffset = 0, int shrubOffset = 0, int herbOffset = 0);
 
 
 double leafAreaProportion(double z1, double z2, double zmin, double zmax);

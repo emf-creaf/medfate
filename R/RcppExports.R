@@ -527,7 +527,7 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 #' @param AET Actual annual evapotranspiration (in mm).
 #' @param smallBranchDecompositionRate Decomposition rate of small branches.
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
-#' @param treeOffset,shrubOffset Integers to offset cohort IDs.
+#' @param treeOffset,shrubOffset,herbOffset Integers to offset cohort IDs.
 #' @param fillMissing A boolean flag to try imputation on missing values.
 #' @param fillWithGenus A boolean flag to try imputation of missing values using genus values.
 #' @param self_proportion Proportion of the target cohort included in the assessment
@@ -586,8 +586,8 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 #'       
 #' @name plant_values
 #' @keywords internal
-plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L) {
-    .Call(`_medfate_cohortIDs`, x, SpParams, treeOffset, shrubOffset)
+plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L, herbOffset = 0L) {
+    .Call(`_medfate_cohortIDs`, x, SpParams, treeOffset, shrubOffset, herbOffset)
 }
 
 #' @rdname plant_values

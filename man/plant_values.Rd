@@ -24,7 +24,7 @@
 \alias{plant_parameter}
 \title{Woody plant cohort description functions}
 \usage{
-plant_ID(x, SpParams, treeOffset = 0L, shrubOffset = 0L)
+plant_ID(x, SpParams, treeOffset = 0L, shrubOffset = 0L, herbOffset = 0L)
 
 plant_basalArea(x, SpParams)
 
@@ -79,7 +79,7 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE)
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
-\item{treeOffset, shrubOffset}{Integers to offset cohort IDs.}
+\item{treeOffset, shrubOffset, herbOffset}{Integers to offset cohort IDs.}
 
 \item{self_proportion}{Proportion of the target cohort included in the assessment}
 

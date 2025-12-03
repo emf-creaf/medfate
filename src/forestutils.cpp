@@ -462,7 +462,7 @@ NumericVector shrubLAIAllometric(IntegerVector SP, NumericVector Cover, NumericV
 //' @param AET Actual annual evapotranspiration (in mm).
 //' @param smallBranchDecompositionRate Decomposition rate of small branches.
 //' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
-//' @param treeOffset,shrubOffset Integers to offset cohort IDs.
+//' @param treeOffset,shrubOffset,herbOffset Integers to offset cohort IDs.
 //' @param fillMissing A boolean flag to try imputation on missing values.
 //' @param fillWithGenus A boolean flag to try imputation of missing values using genus values.
 //' @param self_proportion Proportion of the target cohort included in the assessment
@@ -522,13 +522,15 @@ NumericVector shrubLAIAllometric(IntegerVector SP, NumericVector Cover, NumericV
 //' @name plant_values
 //' @keywords internal
 // [[Rcpp::export("plant_ID")]]
-CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int shrubOffset = 0) {
+CharacterVector cohortIDs(List x, DataFrame SpParams, 
+                          int treeOffset = 0, int shrubOffset = 0, int herbOffset = 0) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
+  DataFrame herbData;
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
-  int numCohorts  = ntree+nshrub;
-  IntegerVector treeSP, shrubSP;
+  int nherb = 0;
+  IntegerVector treeSP, shrubSP, herbSP;
   if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
     treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
   } else {
@@ -541,6 +543,17 @@ CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int sh
     CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
     shrubSP = speciesIndex(sspecies, SpParams);
   }
+  if(x.containsElementNamed("herbData")) {
+    herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      herbSP = speciesIndex(hspecies, SpParams);
+    }
+  }
+  int numCohorts  = ntree+nshrub+nherb;
   CharacterVector IDs(numCohorts);
   for(int i=0;i<ntree;i++) {
     String s("T");
@@ -555,6 +568,13 @@ CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int sh
     s += "_";
     s += shrubSP[i];
     IDs[ntree+i] =s;
+  }
+  for(int i=0;i<nherb;i++) {
+    String s("H");
+    s += (i+herbOffset+1);
+    s += "_";
+    s += herbSP[i];
+    IDs[ntree+nshrub+i] =s;
   }
   return(IDs);
 }
@@ -1232,11 +1252,14 @@ double herbFoliarBiomass(List x, DataFrame SpParams){
      double herbLAI = x["herbLAI"];
      herbFB = herbLAI/9.0; //assume SLA = 9
    }
-   cohortLAI(x, SpParams);
    if(NumericVector::is_na(herbFB)) {
-     NumericVector LAIlive = cohortLAI(x, SpParams);
-     double woodyLAI = sum(LAIlive);
-     herbFB = herbFoliarBiomassAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+     if(x.containsElementNamed("herbCover") && x.containsElementNamed("herbHeight")) {
+       NumericVector LAIlive = cohortLAI(x, SpParams);
+       double woodyLAI = sum(LAIlive);
+       herbFB = herbFoliarBiomassAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+     } else {
+       herbFB = 0.0;
+     }
    }
    return(herbFB);
  }
@@ -1257,9 +1280,13 @@ double herbLAI(List x, DataFrame SpParams){
     herbLAI = x["herbLAI"];
   } 
   if(NumericVector::is_na(herbLAI)) {
-    NumericVector LAIlive = cohortLAI(x, SpParams);
-    double woodyLAI = sum(LAIlive);
-    herbLAI = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+    if(x.containsElementNamed("herbCover") && x.containsElementNamed("herbHeight")) {
+      NumericVector LAIlive = cohortLAI(x, SpParams);
+      double woodyLAI = sum(LAIlive);
+      herbLAI = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+    } else {
+      herbLAI = 0.0;
+    }
   }
   return(herbLAI);
 }
