@@ -56,7 +56,7 @@
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
     <p>An object of class <code>forest</code> contains the description of the woody (tree or shrub) cohorts of a forest patch.
-It has the following structure (see details):</p><ul><li><p><code>treeData</code>: A data frame of tree cohorts (in rows) and the following columns:
+It has the following structure (see additional columns in details):</p><ul><li><p><code>treeData</code>: A data frame of tree cohorts (in rows) and the following columns:
 </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Height</code>: Total tree height (in cm).</p></li>
 <li><p><code>DBH</code>: Tree diameter at breast height (in cm).</p></li>
@@ -71,8 +71,11 @@ It has the following structure (see details):</p><ul><li><p><code>treeData</code
 <li><p><code>Z50</code>: Depth (in mm) corresponding to 50% of fine roots.</p></li>
 <li><p><code>Z95</code>: Depth (in mm) corresponding to 95% of fine roots.</p></li>
 </ul></li>
-</ul><p>Optionally, it can also contain information about the herb layer, seedling layer and seed bank:</p><ul><li><p><code>herbCover</code>: Percent cover of the herb layer (optional).</p></li>
-<li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer (optional).</p></li>
+</ul><p>Additionally, it can contain information about the herb layer, seedling layer and seed bank:</p><ul><li><p><code>herbCover</code>: Percent cover of the herb layer.</p></li>
+<li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer.</p></li>
+<li><p><code>herbLAI</code>: Leaf area index (m2/m2) of the herb layer.</p></li>
+<li><p><code>herbFoliarBiomass</code>: Dry biomass (kg/m2) of the herb layer.</p></li>
+<li><p><code>herbFuelLoading</code>: Fine fuel loading (kg/m2) of the herb layer.</p></li>
 <li><p><code>seedlingBank</code>: An optional data frame containing seedling/sapling information with the following columns:
 </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Percent</code>: Amount of seedling in relation to full seedling bank (in %).</p></li>
@@ -93,7 +96,7 @@ It has the following structure (see details):</p><ul><li><p><code>treeData</code
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The structure presented above for <code>forest</code> objects corresponds to the main (required and optional) data elements and their required columns.
 A <code>forest</code> object can contain additional information when this is available. Data frames <code>treeData</code>
-and <code>shrubData</code> can contain additional columns:</p><ul><li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
+and <code>shrubData</code> can contain additional columns (<code>Z100</code> is also commonly used for data frame <code>seedlingBank</code>):</p><ul><li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
 <li><p><code>Age</code>: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with <code><a href="fordyn.html">fordyn</a></code>.</p></li>
 <li><p><code>LAI</code>: Leaf area index (m2/m2).</p></li>
 <li><p><code>FoliarBiomass</code>: Standing dry biomass of leaves (kg/m2).</p></li>
@@ -102,9 +105,8 @@ and <code>shrubData</code> can contain additional columns:</p><ul><li><p><code>Z
 <li><p><code>ObsID</code>: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts through simulations.
 In <code><a href="fordyn.html">fordyn</a></code>, the use of these identifiers can be combined with the control option <code>keepCohortsWithObsID</code> so that these cohorts are not merged
 or removed during simulations.</p></li>
-</ul><p>Column <code>Z100</code> is also commonly used for data frame <code>seedlingBank</code>. Similarly, one can define <code>forest</code> list elements <code>herbLAI</code>, <code>herbFoliarBiomass</code> or <code>herbFuelLoading</code>.</p>
-<p><code>LAI</code>, <code>FoliarBiomass</code>, <code>FuelLoading</code> and <code>CrownRatio</code> are used to override allometry-based estimates of those variables when initializing
-inputs for functions <code><a href="spwb.html">spwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>, but they will have no effect in simulations of <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>.
+</ul><p>Leaf area index (<code>LAI</code>), foliar biomass (<code>FoliarBiomass</code>), fuel loading (<code>FuelLoading</code>) and <code>CrownRatio</code> are used to override allometry-based estimates of those variables
+when initializing inputs for functions <code><a href="spwb.html">spwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>, but they will have no effect in simulations of <code><a href="growth.html">growth</a></code>, <code><a href="growth_day.html">growth_day</a></code> or <code><a href="fordyn.html">fordyn</a></code>.
 Note that leaf area index, foliar biomass and fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply
 one or the other, and not all of them at the same time.</p>
     </div>
@@ -127,20 +129,6 @@ one or the other, and not all of them at the same time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Species Height Cover Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Quercus coccifera     80  3.75 200 1000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbCover</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $seedlingBank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent Age     Z50     Z95    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $seedBank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
 <span class="r-in"><span></span></span>
@@ -154,20 +142,6 @@ one or the other, and not all of them at the same time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $shrubData</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Species Height Cover Z50  Z95  LAI CrownRatio</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Quercus coccifera     80    NA 200 1000 0.03        0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbCover</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $seedlingBank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent Age     Z50     Z95    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $seedBank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.25</span>

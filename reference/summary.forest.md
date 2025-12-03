@@ -63,12 +63,19 @@ Miquel De Cáceres Ainsa, CREAF
 ## Examples
 
 ``` r
-# Summary of example forest
+# Summary of example forests
 summary(exampleforest, SpParamsMED)
 #> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 
 #> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 
-#> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 
-#> LAI (m2/m2) total: 1.7585845  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0.1736369 
-#> Fuel loading (kg/m2) total: 0.5588728  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0.019293 
-#> PAR ground (%): 40.0075402  SWR ground (%): 50.7329667 
+#> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 
+#> LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0 
+#> Fuel loading (kg/m2) total: 0.5395798  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0 
+#> PAR ground (%): 43.6361701  SWR ground (%): 54.1027977 
+summary(exampleforest2, SpParamsMED)
+#> Tree BA (m2/ha): 0  adult trees: 0  saplings: 0 
+#> Density (ind/ha) adult trees: 0  saplings: 0  shrubs (estimated): 0 
+#> Cover (%) adult trees: 0  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 1.58  adult trees: 0  saplings: 0  shrubs: 0.03  herbs: 0.25 
+#> Fuel loading (kg/m2) total: 0.4898633  adult trees: 0  saplings: 0  shrubs: 0.0137916  herbs: 0.0277778 
+#> PAR ground (%): 50.0824269  SWR ground (%): 59.9162626 
 ```

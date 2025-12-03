@@ -63,20 +63,6 @@ exampleforest
     ##             Species Height Cover Z50  Z95
     ## 1 Quercus coccifera     80  3.75 200 1000
     ## 
-    ## $herbCover
-    ## [1] 10
-    ## 
-    ## $herbHeight
-    ## [1] 20
-    ## 
-    ## $seedlingBank
-    ## [1] Species Percent Age     Z50     Z95    
-    ## <0 rows> (or 0-length row.names)
-    ## 
-    ## $seedBank
-    ## [1] Species Percent
-    ## <0 rows> (or 0-length row.names)
-    ## 
     ## attr(,"class")
     ## [1] "forest" "list"
 
@@ -301,28 +287,28 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant biomass (g/m2): 5210.88
-    ## Change in plant biomass (g/m2): 169.011
-    ## Plant biomass balance result (g/m2): 169.011
+    ## Final plant biomass (g/m2): 5210.49
+    ## Change in plant biomass (g/m2): 168.622
+    ## Plant biomass balance result (g/m2): 168.622
     ## Plant biomass balance components:
     ##   Structural balance (g/m2) 87 Labile balance (g/m2) 89
-    ##   Plant individual balance (g/m2) 177 Mortality loss (g/m2) 8
-    ## Final plant water content (mm): 4.70575
-    ## Final soil water content (mm): 274.834
+    ##   Plant individual balance (g/m2) 176 Mortality loss (g/m2) 8
+    ## Final plant water content (mm): 4.706
+    ## Final soil water content (mm): 275.66
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00721591
-    ## Plant water balance result (mm): -0.00147226
-    ## Change in soil water content (mm): -16.0407
-    ## Soil water balance result (mm): -16.0407
+    ## Change in plant water content (mm): 0.00746396
+    ## Plant water balance result (mm): -0.00136322
+    ## Change in soil water content (mm): -15.2151
+    ## Soil water balance result (mm): -15.2151
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 7.10543e-15
+    ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 92 Net rainfall (mm) 370
-    ##   Infiltration (mm) 401 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 246
-    ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-    ##   Runoff (mm) 20 Deep drainage (mm) 133
+    ##   Interception (mm) 83 Net rainfall (mm) 379
+    ##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 247
+    ##   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
+    ##   Runoff (mm) 21 Deep drainage (mm) 151
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -387,16 +373,16 @@ extract(G1, "forest", addunits = TRUE) |>
     ## # A tibble: 365 × 38
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
-    ##  1 2001-01-01   0.883          4.87    4.87   0      3.42      0           3.42 
-    ##  2 2001-01-02   1.64           2.50    2.50   0      1.07      0           1.07 
+    ##  1 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 
+    ##  2 2001-01-02   1.64           2.50    2.50   0      1.25      0           1.25 
     ##  3 2001-01-03   1.30           0       0      0      0         0           0    
-    ##  4 2001-01-04   0.569          5.80    5.80   0      4.36      0           4.36 
-    ##  5 2001-01-05   1.68           1.88    1.88   0      0.754     0           0.754
-    ##  6 2001-01-06   1.21          13.4    13.4    0     11.7       0          11.7  
+    ##  4 2001-01-04   0.569          5.80    5.80   0      4.54      0           4.54 
+    ##  5 2001-01-05   1.68           1.88    1.88   0      0.822     0           0.822
+    ##  6 2001-01-06   1.21          13.4    13.4    0     11.9       0          11.9  
     ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
     ##  8 2001-01-08   0.832          0       0      0      0         0           0    
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
-    ## 10 2001-01-10   0.829          5.12    5.12   0      3.67      5.38        9.05 
+    ## 10 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 
     ## # ℹ 355 more rows
     ## # ℹ 30 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
@@ -532,9 +518,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1287477 -18.9520586   0.1287477  18.9520586   0.9899478 
+    ##  12.0000000  -0.1213048 -17.8564462   0.1213048  17.8564462   0.9926801 
     ##         NSE     NSE.abs 
-    ##   0.9022472   0.7557718
+    ##   0.9159164   0.7698905
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

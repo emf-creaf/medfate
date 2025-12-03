@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, treeOffset <span class="op">=</span> <span class="fl">0L</span>, shrubOffset <span class="op">=</span> <span class="fl">0L</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, treeOffset <span class="op">=</span> <span class="fl">0L</span>, shrubOffset <span class="op">=</span> <span class="fl">0L</span>, herbOffset <span class="op">=</span> <span class="fl">0L</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
@@ -117,7 +117,7 @@
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
 
 
-<dt id="arg-treeoffset-shruboffset">treeOffset, shrubOffset<a class="anchor" aria-label="anchor" href="#arg-treeoffset-shruboffset"></a></dt>
+<dt id="arg-treeoffset-shruboffset-herboffset">treeOffset, shrubOffset, herbOffset<a class="anchor" aria-label="anchor" href="#arg-treeoffset-shruboffset-herboffset"></a></dt>
 <dd><p>Integers to offset cohort IDs.</p></dd>
 
 
@@ -217,10 +217,10 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.7585845  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0.1736369 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel loading (kg/m2) total: 0.5588728  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0.019293 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 40.0075402  SWR ground (%): 50.7329667 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel loading (kg/m2) total: 0.5395798  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 43.6361701  SWR ground (%): 54.1027977 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Cohort IDs in the models</span></span></span>
 <span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>

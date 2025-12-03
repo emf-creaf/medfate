@@ -42,20 +42,6 @@ exampleforest
     ##             Species Height Cover Z50  Z95
     ## 1 Quercus coccifera     80  3.75 200 1000
     ## 
-    ## $herbCover
-    ## [1] 10
-    ## 
-    ## $herbHeight
-    ## [1] 20
-    ## 
-    ## $seedlingBank
-    ## [1] Species Percent Age     Z50     Z95    
-    ## <0 rows> (or 0-length row.names)
-    ## 
-    ## $seedBank
-    ## [1] Species Percent
-    ## <0 rows> (or 0-length row.names)
-    ## 
     ## attr(,"class")
     ## [1] "forest" "list"
 
@@ -108,22 +94,22 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  [Year 2001]:............
     ## 
-    ## Final plant water content (mm): 4.69659
-    ## Final soil water content (mm): 275.04
+    ## Final plant water content (mm): 4.69674
+    ## Final soil water content (mm): 275.757
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.00193896
-    ## Plant water balance result (mm): -0.00196771
-    ## Change in soil water content (mm): -15.8347
-    ## Soil water balance result (mm): -15.8347
+    ## Change in plant water content (mm): -0.00178912
+    ## Plant water balance result (mm): -0.00180604
+    ## Change in soil water content (mm): -15.1184
+    ## Soil water balance result (mm): -15.1184
     ## Change in snowpack water content (mm): 0
     ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 92 Net rainfall (mm) 370
-    ##   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 245
-    ##   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-    ##   Runoff (mm) 20 Deep drainage (mm) 136
+    ##   Interception (mm) 83 Net rainfall (mm) 380
+    ##   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+    ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
+    ##   Runoff (mm) 21 Deep drainage (mm) 154
 
 Function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) will
@@ -237,7 +223,7 @@ sf_transp<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 sf_transp(S1)
 ```
 
-    ## [1] 244.545
+    ## [1] 245.8917
 
 Another prediction function can focus on plant drought stress. We define
 a function that, given a simulation result, calculates the average
@@ -254,7 +240,7 @@ sf_stress<-function(x) {
 sf_stress(S1)
 ```
 
-    ## [1] 3.604585
+    ## [1] 3.014939
 
 Sensitivity analysis requires model output functions whose parameters
 are the input factors to be studied.
@@ -294,13 +280,13 @@ input:
 of_transp(parMin)
 ```
 
-    ## [1] 47.52213
+    ## [1] 47.55251
 
 ``` r
 of_transp(parMax)
 ```
 
-    ## [1] 2.634629
+    ## [1] 47.54563
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -329,13 +315,13 @@ of_stress<-optimization_function(parNames = parNames,
 of_stress(parMin)
 ```
 
-    ## [1] 0.9193394
+    ## [1] 0.6596808
 
 ``` r
 of_stress(parMax)
 ```
 
-    ## [1] 4131.864
+    ## [1] 4061.592
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -373,7 +359,7 @@ evaluation_metric(S1, measuredData = exampleobs, type = "SWC",
                   metric = "NSE")
 ```
 
-    ## [1] 0.9304313
+    ## [1] 0.9264716
 
 A call to
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md)
@@ -399,13 +385,13 @@ results, so that we only need to provide values for the input factors:
 of_eval(parMin)
 ```
 
-    ## [1] 0.4902714
+    ## [1] 0.3322987
 
 ``` r
 of_eval(parMax)
 ```
 
-    ## [1] -55.23106
+    ## [1] -54.59197
 
 ### Global sensitivity analyses
 

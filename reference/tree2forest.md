@@ -113,20 +113,6 @@ oak_forest
 #> [1] Species Height  Cover   Z50     Z95    
 #> <0 rows> (or 0-length row.names)
 #> 
-#> $herbCover
-#> [1] NA
-#> 
-#> $herbHeight
-#> [1] NA
-#> 
-#> $seedlingBank
-#> [1] Species Percent Age     Z50     Z95    
-#> <0 rows> (or 0-length row.names)
-#> 
-#> $seedBank
-#> [1] Species Percent
-#> <0 rows> (or 0-length row.names)
-#> 
 #> attr(,"class")
 #> [1] "forest" "list"  
 ```

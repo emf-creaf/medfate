@@ -906,10 +906,10 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
 #> 
 #> $herbLAI
-#> [1] 0.1736369
+#> [1] 0
 #> 
 #> $herbLAImax
-#> [1] 0.252
+#> [1] 0
 #> 
 #> $cohorts
 #>         SP              Name
@@ -1554,10 +1554,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
 #> 
 #> $herbLAI
-#> [1] 0.1736369
+#> [1] 0
 #> 
 #> $herbLAImax
-#> [1] 0.252
+#> [1] 0
 #> 
 #> $cohorts
 #>         SP              Name
@@ -2240,10 +2240,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
 #> 
 #> $herbLAI
-#> [1] 0.1736369
+#> [1] 0
 #> 
 #> $herbLAImax
-#> [1] 0.252
+#> [1] 0
 #> 
 #> $cohorts
 #>         SP              Name

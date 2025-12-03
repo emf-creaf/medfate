@@ -427,22 +427,22 @@ S1 <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.69659
-#> Final soil water content (mm): 275.04
+#> Final plant water content (mm): 4.69674
+#> Final soil water content (mm): 275.757
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00193896
-#> Plant water balance result (mm): -0.00196771
-#> Change in soil water content (mm): -15.8347
-#> Soil water balance result (mm): -15.8347
+#> Change in plant water content (mm): -0.00178912
+#> Plant water balance result (mm): -0.00180604
+#> Change in soil water content (mm): -15.1184
+#> Soil water balance result (mm): -15.1184
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 92 Net rainfall (mm) 370
-#>   Infiltration (mm) 402 Infiltration excess (mm) 20 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 245
-#>   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-#>   Runoff (mm) 20 Deep drainage (mm) 136
+#>   Interception (mm) 83 Net rainfall (mm) 380
+#>   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+#>   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
+#>   Runoff (mm) 21 Deep drainage (mm) 154
 
 #Plot results
 plot(S1)

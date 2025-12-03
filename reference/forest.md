@@ -9,7 +9,7 @@ and cover) parameters.
 
 An object of class `forest` contains the description of the woody (tree
 or shrub) cohorts of a forest patch. It has the following structure (see
-details):
+additional columns in details):
 
 - `treeData`: A data frame of tree cohorts (in rows) and the following
   columns:
@@ -44,12 +44,18 @@ details):
 
   - `Z95`: Depth (in mm) corresponding to 95% of fine roots.
 
-Optionally, it can also contain information about the herb layer,
-seedling layer and seed bank:
+Additionally, it can contain information about the herb layer, seedling
+layer and seed bank:
 
-- `herbCover`: Percent cover of the herb layer (optional).
+- `herbCover`: Percent cover of the herb layer.
 
-- `herbHeight`: Mean height (in cm) of the herb layer (optional).
+- `herbHeight`: Mean height (in cm) of the herb layer.
+
+- `herbLAI`: Leaf area index (m2/m2) of the herb layer.
+
+- `herbFoliarBiomass`: Dry biomass (kg/m2) of the herb layer.
+
+- `herbFuelLoading`: Fine fuel loading (kg/m2) of the herb layer.
 
 - `seedlingBank`: An optional data frame containing seedling/sapling
   information with the following columns:
@@ -89,7 +95,7 @@ The structure presented above for `forest` objects corresponds to the
 main (required and optional) data elements and their required columns. A
 `forest` object can contain additional information when this is
 available. Data frames `treeData` and `shrubData` can contain additional
-columns:
+columns (`Z100` is also commonly used for data frame `seedlingBank`):
 
 - `Z100`: Depth (in mm) corresponding to 100% of fine roots (to specify
   a truncated root distribution).
@@ -115,18 +121,15 @@ columns:
   `keepCohortsWithObsID` so that these cohorts are not merged or removed
   during simulations.
 
-Column `Z100` is also commonly used for data frame `seedlingBank`.
-Similarly, one can define `forest` list elements `herbLAI`,
-`herbFoliarBiomass` or `herbFuelLoading`.
-
-`LAI`, `FoliarBiomass`, `FuelLoading` and `CrownRatio` are used to
-override allometry-based estimates of those variables when initializing
-inputs for functions
+Leaf area index (`LAI`), foliar biomass (`FoliarBiomass`), fuel loading
+(`FuelLoading`) and `CrownRatio` are used to override allometry-based
+estimates of those variables when initializing inputs for functions
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) or
 [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md),
 but they will have no effect in simulations of
-[`growth`](https://emf-creaf.github.io/medfate/reference/growth.md) or
-[`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md).
+[`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
+[`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md)
+or [`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md).
 Note that leaf area index, foliar biomass and fuel loading are related
 entities, and they are treated as such in medfate. Therefore, users are
 expected to supply one or the other, and not all of them at the same
@@ -156,20 +159,6 @@ exampleforest
 #>             Species Height Cover Z50  Z95
 #> 1 Quercus coccifera     80  3.75 200 1000
 #> 
-#> $herbCover
-#> [1] 10
-#> 
-#> $herbHeight
-#> [1] 20
-#> 
-#> $seedlingBank
-#> [1] Species Percent Age     Z50     Z95    
-#> <0 rows> (or 0-length row.names)
-#> 
-#> $seedBank
-#> [1] Species Percent
-#> <0 rows> (or 0-length row.names)
-#> 
 #> attr(,"class")
 #> [1] "forest" "list"  
 
@@ -183,20 +172,6 @@ exampleforest2
 #> $shrubData
 #>             Species Height Cover Z50  Z95  LAI CrownRatio
 #> 1 Quercus coccifera     80    NA 200 1000 0.03        0.8
-#> 
-#> $herbCover
-#> [1] NA
-#> 
-#> $herbHeight
-#> [1] 20
-#> 
-#> $seedlingBank
-#> [1] Species Percent Age     Z50     Z95    
-#> <0 rows> (or 0-length row.names)
-#> 
-#> $seedBank
-#> [1] Species Percent
-#> <0 rows> (or 0-length row.names)
 #> 
 #> $herbLAI
 #> [1] 0.25

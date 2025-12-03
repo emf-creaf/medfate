@@ -7,7 +7,7 @@ object.
 ## Usage
 
 ``` r
-plant_ID(x, SpParams, treeOffset = 0L, shrubOffset = 0L)
+plant_ID(x, SpParams, treeOffset = 0L, shrubOffset = 0L, herbOffset = 0L)
 
 plant_basalArea(x, SpParams)
 
@@ -70,7 +70,7 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE)
   A data frame with species parameters (see
   [`SpParamsMED`](https://emf-creaf.github.io/medfate/reference/SpParams.md)).
 
-- treeOffset, shrubOffset:
+- treeOffset, shrubOffset, herbOffset:
 
   Integers to offset cohort IDs.
 
@@ -210,10 +210,10 @@ sum(plant_fuelLoading(exampleforest, SpParamsMED))
 summary(exampleforest, SpParamsMED)
 #> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 
 #> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 
-#> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 
-#> LAI (m2/m2) total: 1.7585845  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0.1736369 
-#> Fuel loading (kg/m2) total: 0.5588728  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0.019293 
-#> PAR ground (%): 40.0075402  SWR ground (%): 50.7329667 
+#> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 
+#> LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0 
+#> Fuel loading (kg/m2) total: 0.5395798  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0 
+#> PAR ground (%): 43.6361701  SWR ground (%): 54.1027977 
 
 #Cohort IDs in the models
 plant_ID(exampleforest, SpParamsMED)

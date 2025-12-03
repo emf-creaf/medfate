@@ -226,20 +226,6 @@ exampleforest
     ##             Species Height Cover Z50  Z95
     ## 1 Quercus coccifera     80  3.75 200 1000
     ## 
-    ## $herbCover
-    ## [1] 10
-    ## 
-    ## $herbHeight
-    ## [1] 20
-    ## 
-    ## $seedlingBank
-    ## [1] Species Percent Age     Z50     Z95    
-    ## <0 rows> (or 0-length row.names)
-    ## 
-    ## $seedBank
-    ## [1] Species Percent
-    ## <0 rows> (or 0-length row.names)
-    ## 
     ## attr(,"class")
     ## [1] "forest" "list"
 
@@ -270,20 +256,6 @@ exampleforest2
     ## $shrubData
     ##             Species Height Cover Z50  Z95  LAI CrownRatio
     ## 1 Quercus coccifera     80    NA 200 1000 0.03        0.8
-    ## 
-    ## $herbCover
-    ## [1] NA
-    ## 
-    ## $herbHeight
-    ## [1] 20
-    ## 
-    ## $seedlingBank
-    ## [1] Species Percent Age     Z50     Z95    
-    ## <0 rows> (or 0-length row.names)
-    ## 
-    ## $seedBank
-    ## [1] Species Percent
-    ## <0 rows> (or 0-length row.names)
     ## 
     ## $herbLAI
     ## [1] 0.25
@@ -323,20 +295,6 @@ oak_forest
     ## 
     ## $shrubData
     ## [1] Species Height  Cover   Z50     Z95    
-    ## <0 rows> (or 0-length row.names)
-    ## 
-    ## $herbCover
-    ## [1] NA
-    ## 
-    ## $herbHeight
-    ## [1] NA
-    ## 
-    ## $seedlingBank
-    ## [1] Species Percent Age     Z50     Z95    
-    ## <0 rows> (or 0-length row.names)
-    ## 
-    ## $seedBank
-    ## [1] Species Percent
     ## <0 rows> (or 0-length row.names)
     ## 
     ## attr(,"class")
