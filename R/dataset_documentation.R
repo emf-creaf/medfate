@@ -31,7 +31,7 @@
 #'       }
 #'   }
 #' }
-#' Optionally, it can also contain information about the herb layer, seedling layer and seed bank:
+#' Additionally, it can contain information about the herb layer, seedling layer and seed bank:
 #' \itemize{
 #'   \item{\code{herbCover}: Percent cover of the herb layer (optional).}
 #'   \item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}

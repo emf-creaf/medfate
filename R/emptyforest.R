@@ -45,15 +45,19 @@ emptyforest <- function(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0,
                             Cover = as.numeric(rep(NA, nshrub)), 
                             Z50 = as.numeric(rep(NA, nshrub)), 
                             Z95=as.numeric(rep(NA, nshrub)))
-  l$herbCover <- NA
-  l$herbHeight <- NA
-  l$seedlingBank <- data.frame(Species = as.character(rep(NA, nseedling)),
-                               Percent = as.numeric(rep(NA, nseedling)),
-                               Age = as.numeric(rep(NA, nseedling)),
-                               Z50 = as.numeric(rep(NA, nseedling)),
-                               Z95 = as.numeric(rep(NA, nseedling)))
-  l$seedBank <- data.frame(Species = as.character(rep(NA, nseed)),
-                           Percent = as.numeric(rep(NA, nseed)))
+  # l$herbCover <- NA
+  # l$herbHeight <- NA
+  if(nseedling > 0) {
+    l$seedlingBank <- data.frame(Species = as.character(rep(NA, nseedling)),
+                                 Percent = as.numeric(rep(NA, nseedling)),
+                                 Age = as.numeric(rep(NA, nseedling)),
+                                 Z50 = as.numeric(rep(NA, nseedling)),
+                                 Z95 = as.numeric(rep(NA, nseedling)))
+  }
+  if(nseed > 0 ) {
+    l$seedBank <- data.frame(Species = as.character(rep(NA, nseed)),
+                             Percent = as.numeric(rep(NA, nseed)))
+  }
   
   if(!is.null(addcolumns)) {
     if(!is.character(addcolumns)) stop("`addcolumns` should be a character vector")
@@ -61,7 +65,7 @@ emptyforest <- function(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0,
     if("Z100" %in% addcolumns) {
       l$treeData$Z100 <- as.numeric(rep(NA, ntree))
       l$shrubData$Z100 <- as.numeric(rep(NA, nshrub))
-      l$seedlingBank$Z100 <- as.numeric(rep(NA, nshrub))
+      if(nseedling>0) l$seedlingBank$Z100 <- as.numeric(rep(NA, nseedling))
     }
     if("Age" %in% addcolumns) {
       l$treeData$Age <- as.numeric(rep(NA, ntree))

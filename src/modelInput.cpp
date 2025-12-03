@@ -1801,8 +1801,12 @@ List spwbInput(List x, DataFrame soil, DataFrame SpParams, List control) {
   if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
   List s = spwbInputInner(above, rdc["Z50"], rdc["Z95"], rdc["Z100"], 
                           soil, FCCSprops, SpParams, control);
-  s["herbLAImax"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], 0.0);
-  s["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+  s["herbLAImax"] = 0.0;
+  s["herbLAI"] = 0.0;
+  if(x.containsElementNamed("herbCover") && x.containsElementNamed("herbHeight")) {
+    s["herbLAImax"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], 0.0);
+    s["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+  }
   return(s);
 }
 
@@ -1817,8 +1821,12 @@ List growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
    DataFrame FCCSprops = FCCSproperties(x, SpParams);
    List g = growthInputInner(above,  rdc["Z50"], rdc["Z95"], rdc["Z100"],
                              soil, FCCSprops, SpParams, control);
-   g["herbLAImax"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], 0.0);
-   g["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+   g["herbLAImax"] = 0.0;
+   g["herbLAI"] = 0.0;
+   if(x.containsElementNamed("herbCover") && x.containsElementNamed("herbHeight")) {
+     g["herbLAImax"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], 0.0);
+     g["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
+   }
    return(g);
 }
 

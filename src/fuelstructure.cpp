@@ -435,9 +435,13 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   NumericVector cohShrubLoading = layerCohortFuelLoading(0.0, 200.0, cohLoading, cohHeight, cohCR);
   double shrubLoading = loadingOffset[1] + std::accumulate(cohShrubLoading.begin(),cohShrubLoading.end(),0.0);
   //Herb limits and loading  
-  double herbCover = object["herbCover"];
+  double herbCover = 0.0;
+  double herbHeight = 0.0;
+  if(object.containsElementNamed("herbCover") && object.containsElementNamed("herbHeight")) {
+    herbCover = object["herbCover"];
+    herbHeight = object["herbHeight"];
+  }
   if(NumericVector::is_na(herbCover)) herbCover = 0.0;
-  double herbHeight = object["herbHeight"];
   if(NumericVector::is_na(herbHeight)) herbHeight = 0.0;
   double herbDepth = herbHeight/100.0; //in cm
   NumericVector LAIlive = cohortLAI(object, SpParams, NA_REAL, true, true);//Without correction
