@@ -30,8 +30,9 @@ Displays a summary of forest structure
 Function \code{summary.forest} can be used to summarize a \code{forest} object in the console.
 }
 \examples{
-# Summary of example forest
+# Summary of example forests
 summary(exampleforest, SpParamsMED)
+summary(exampleforest2, SpParamsMED)
 
 }
 \seealso{

@@ -9,7 +9,7 @@
 #' @source DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Dirección}{Direccion} General de \enc{Conservación}{Conservacion} de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 #' @seealso \code{\link{forest}}, \code{\link{spwb}}, \code{\link{spwbInput}}
 #' @format  An object of class \code{forest} contains the description of the woody (tree or shrub) cohorts of a forest patch.
-#' It has the following structure (see details):
+#' It has the following structure (see additional columns in details):
 #' \itemize{
 #'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
 #'       \itemize{
@@ -33,8 +33,11 @@
 #' }
 #' Additionally, it can contain information about the herb layer, seedling layer and seed bank:
 #' \itemize{
-#'   \item{\code{herbCover}: Percent cover of the herb layer (optional).}
-#'   \item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}
+#'   \item{\code{herbCover}: Percent cover of the herb layer.}
+#'   \item{\code{herbHeight}: Mean height (in cm) of the herb layer.}
+#'   \item{\code{herbLAI}: Leaf area index (m2/m2) of the herb layer.}
+#'   \item{\code{herbFoliarBiomass}: Dry biomass (kg/m2) of the herb layer.}
+#'   \item{\code{herbFuelLoading}: Fine fuel loading (kg/m2) of the herb layer.}
 #'   \item{\code{seedlingBank}: An optional data frame containing seedling/sapling information with the following columns:
 #'       \itemize{
 #'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
@@ -54,7 +57,7 @@
 #' @details
 #' The structure presented above for \code{forest} objects corresponds to the main (required and optional) data elements and their required columns. 
 #' A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
-#' and \code{shrubData} can contain additional columns:
+#' and \code{shrubData} can contain additional columns (\code{Z100} is also commonly used for data frame \code{seedlingBank}):
 #' \itemize{
 #'   \item{\code{Z100}: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).}
 #'   \item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
@@ -66,10 +69,9 @@
 #'   In \code{\link{fordyn}}, the use of these identifiers can be combined with the control option \code{keepCohortsWithObsID} so that these cohorts are not merged 
 #'   or removed during simulations.}
 #' }
-#' Column \code{Z100} is also commonly used for data frame \code{seedlingBank}. Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
 #' 
-#' \code{LAI}, \code{FoliarBiomass}, \code{FuelLoading} and \code{CrownRatio} are used to override allometry-based estimates of those variables when initializing
-#' inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}, but they will have no effect in simulations of \code{\link{growth}} or \code{\link{fordyn}}. 
+#' Leaf area index (\code{LAI}), foliar biomass (\code{FoliarBiomass}), fuel loading (\code{FuelLoading}) and \code{CrownRatio} are used to override allometry-based estimates of those variables 
+#' when initializing inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}, but they will have no effect in simulations of \code{\link{growth}}, \code{\link{growth_day}} or \code{\link{fordyn}}. 
 #' Note that leaf area index, foliar biomass and fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
 #' one or the other, and not all of them at the same time.
 #' 

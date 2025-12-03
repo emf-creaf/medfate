@@ -5,6 +5,7 @@ data(SpParamsMED)
 data(poblet_trees)
 
 exampleforest_minimal <- exampleforest
+exampleforest_minimal$shrubData <- exampleforest_minimal$shrubData[numeric(0),,drop = FALSE]
 exampleforest_minimal$herbCover <- NULL
 exampleforest_minimal$herbHeight <- NULL
 exampleforest_minimal$seedBank <- NULL
@@ -37,13 +38,22 @@ test_that("Forest object can be build from data frames",{
                              plot_size_x = sampled_area, plot_size_y = 4),"forest")
 })
 
-test_that("Can produce all vertical profiles",{
+test_that("Can produce all vertical profiles with exampleforest",{
   expect_s3_class(vprofile_rootDistribution(exampleforest, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_fuelBulkDensity(exampleforest, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_leafAreaDensity(exampleforest, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_PARExtinction(exampleforest, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_SWRExtinction(exampleforest, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_windExtinction(exampleforest, SpParamsMED), "ggplot")
+})
+
+test_that("Can produce all vertical profiles with exampleforest2",{
+  expect_s3_class(vprofile_rootDistribution(exampleforest2, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_fuelBulkDensity(exampleforest2, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_leafAreaDensity(exampleforest2, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_PARExtinction(exampleforest2, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_SWRExtinction(exampleforest2, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_windExtinction(exampleforest2, SpParamsMED), "ggplot")
 })
 
 test_that("Can produce all vertical profiles with minimal forest",{
@@ -66,6 +76,7 @@ test_that("Can produce all vertical profiles with minimal forest",{
 
 test_that("Test forest summary",{
   expect_s3_class(summary(exampleforest, SpParamsMED), "summary.forest")
+  expect_s3_class(summary(exampleforest2, SpParamsMED), "summary.forest")
   expect_s3_class(summary(exampleforest_minimal, SpParamsMED), "summary.forest")
   expect_s3_class(summary(emptyforest, SpParamsMED), "summary.forest")
 })
@@ -75,15 +86,18 @@ test_that("Test forest simplification",{
   f$treeData$Z100 <- c(1500, 1900)
   f$shrubDataZ100 <- 800
   expect_s3_class(forest_reduceToDominant(exampleforest, SpParamsMED), "forest")
+  expect_s3_class(forest_reduceToDominant(exampleforest2, SpParamsMED), "forest")
   expect_s3_class(forest_reduceToDominant(exampleforest_minimal, SpParamsMED), "forest")
   expect_s3_class(forest_reduceToDominant(emptyforest(), SpParamsMED), "forest")
   expect_s3_class(forest_reduceToDominant(f, SpParamsMED), "forest")
   expect_s3_class(forest_mergeTrees(exampleforest), "forest")
+  expect_error(forest_mergeTrees(exampleforest2)) # Missing values
   expect_s3_class(forest_mergeTrees(exampleforest_minimal), "forest")
   expect_s3_class(forest_mergeTrees(emptyforest()), "forest")
   expect_s3_class(forest_mergeTrees(emptyforest(addcolumns = "LAI")), "forest")
   expect_s3_class(forest_mergeTrees(f), "forest")
   expect_s3_class(forest_mergeShrubs(exampleforest), "forest")
+  expect_error(forest_mergeShrubs(exampleforest2)) # Missing values
   expect_s3_class(forest_mergeShrubs(exampleforest_minimal), "forest")
   expect_s3_class(forest_mergeShrubs(emptyforest()), "forest")
   expect_s3_class(forest_mergeShrubs(emptyforest(addcolumns = "LAI")), "forest")
@@ -98,7 +112,7 @@ test_that("Test forest simplification",{
   expect_s3_class(forest_mergeShrubs(f2, keepCohortsWithObsID = TRUE), "forest")
 })
 
-test_that("Test stand metrics",{
+test_that("Test stand metrics with exampleforest",{
   expect_type(stand_basalArea(exampleforest), "double")
   expect_type(stand_foliarBiomass(exampleforest, SpParamsMED), "double")
   expect_type(stand_fuelLoading(exampleforest, SpParamsMED), "double")
@@ -112,6 +126,22 @@ test_that("Test stand metrics",{
   expect_type(stand_dominantTreeHeight(exampleforest), "double")
   expect_type(stand_hartBeckingIndex(exampleforest), "double")
   expect_type(stand_quadraticMeanTreeDiameter(exampleforest), "double")
+})
+
+test_that("Test stand metrics with exampleforest2",{
+  expect_type(stand_basalArea(exampleforest2), "double")
+  expect_type(stand_foliarBiomass(exampleforest2, SpParamsMED), "double")
+  expect_type(stand_fuelLoading(exampleforest2, SpParamsMED), "double")
+  expect_type(stand_foliarBiomass(exampleforest2, SpParamsMED), "double")
+  expect_type(stand_LAI(exampleforest2, SpParamsMED), "double")
+  expect_type(stand_shrubVolume(exampleforest2, SpParamsMED), "double")
+  expect_error(stand_dominantTreeDiameter(exampleforest2)) # Missing values
+  expect_type(stand_dominantTreeSpecies(exampleforest2, SpParamsMED), "character")
+  expect_error(stand_treeDensity(exampleforest2)) # Missing values
+  expect_error(stand_meanTreeHeight(exampleforest2)) # Missing values
+  expect_error(stand_dominantTreeHeight(exampleforest2)) # Missing values
+  expect_error(stand_hartBeckingIndex(exampleforest2)) # Missing values
+  expect_error(stand_quadraticMeanTreeDiameter(exampleforest2)) # Missing values
 })
 
 test_that("Test stand metrics with empty forest",{

@@ -92,6 +92,8 @@
 #' @keywords internal
 stand_dominantTreeDiameter<-function(x, minDBH = 7.5) {
   if(nrow(x$treeData)>0) {
+    if(any(is.na(x$treeData$N))) stop("Missing values in N")
+    if(any(is.na(x$treeData$DBH))) stop("Missing values in DBH")
     return(.dominantTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = minDBH))
   }
   return(as.numeric(NA))
@@ -101,7 +103,11 @@ stand_dominantTreeDiameter<-function(x, minDBH = 7.5) {
 #' @keywords internal
 stand_treeDensity<-function(x, minDBH = 7.5) {
   N <- as.numeric(NA)
-  if(nrow(x$treeData)>0) N <- sum(x$treeData$N[x$treeData$DBH>minDBH])
+  if(nrow(x$treeData)>0) {
+    if(any(is.na(x$treeData$N))) stop("Missing values in N")
+    if(any(is.na(x$treeData$DBH))) stop("Missing values in DBH")
+    N <- sum(x$treeData$N[x$treeData$DBH>minDBH])
+  }
   return(N)
 }
 
@@ -110,6 +116,9 @@ stand_treeDensity<-function(x, minDBH = 7.5) {
 stand_meanTreeHeight<-function(x, minDBH = 7.5) {
   MTH <- as.numeric(NA)
   if(nrow(x$treeData)>0) {
+    if(any(is.na(x$treeData$N))) stop("Missing values in N")
+    if(any(is.na(x$treeData$DBH))) stop("Missing values in DBH")
+    if(any(is.na(x$treeData$Height))) stop("Missing values in Height")
     h = x$treeData$Height[x$treeData$DBH>minDBH]
     n = x$treeData$N[x$treeData$DBH>minDBH]
     if(length(h)>0) {
@@ -123,6 +132,9 @@ stand_meanTreeHeight<-function(x, minDBH = 7.5) {
 #' @keywords internal
 stand_dominantTreeHeight<-function(x, minDBH = 7.5) {
   if(nrow(x$treeData)>0) {
+    if(any(is.na(x$treeData$N))) stop("Missing values in N")
+    if(any(is.na(x$treeData$DBH))) stop("Missing values in DBH")
+    if(any(is.na(x$treeData$Height))) stop("Missing values in Height")
     return(.dominantTreeHeight(n = x$treeData$N, h = x$treeData$Height, dbh = x$treeData$DBH, minDBH = minDBH))
   }
   return( as.numeric(NA))
@@ -132,6 +144,9 @@ stand_dominantTreeHeight<-function(x, minDBH = 7.5) {
 #' @keywords internal
 stand_hartBeckingIndex<-function(x, minDBH = 7.5) {
   if(nrow(x$treeData)>0) {
+    if(any(is.na(x$treeData$N))) stop("Missing values in N")
+    if(any(is.na(x$treeData$DBH))) stop("Missing values in DBH")
+    if(any(is.na(x$treeData$Height))) stop("Missing values in Height")
     return(.hartBeckingIndex(n = x$treeData$N, h = x$treeData$Height, dbh = x$treeData$DBH, minDBH = minDBH))
   }
   return( as.numeric(NA))
@@ -141,6 +156,8 @@ stand_hartBeckingIndex<-function(x, minDBH = 7.5) {
 #' @keywords internal
 stand_quadraticMeanTreeDiameter<-function(x, minDBH = 7.5) {
   if(nrow(x$treeData)>0) {
+    if(any(is.na(x$treeData$N))) stop("Missing values in N")
+    if(any(is.na(x$treeData$DBH))) stop("Missing values in DBH")
     return(.quadraticMeanTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = 7.5))
   }
   return( as.numeric(NA))

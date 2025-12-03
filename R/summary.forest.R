@@ -18,8 +18,9 @@
 #' \code{\link{plot.forest}}, \code{\link{tree2forest}}
 #' 
 #' @examples 
-#' # Summary of example forest
+#' # Summary of example forests
 #' summary(exampleforest, SpParamsMED)
+#' summary(exampleforest2, SpParamsMED)
 #' 
 #' @name summary.forest
 summary.forest<-function(object, SpParams, ...) {

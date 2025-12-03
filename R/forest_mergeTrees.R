@@ -137,6 +137,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
   ntree <- nrow(td)
   x2 <- x
   if(ntree>0) {
+    if(any(is.na(td$DBH))) stop("Missing values in DBH")
+    if(any(is.na(td$N))) stop("Missing values in N")
+    if(any(is.na(td$Species))) stop("Missing values in Species")
     if(byDBHclass) {
       td_merged <- mergeTreesBySizeClass(td)
     } else {
@@ -278,6 +281,9 @@ forest_mergeShrubs<-function(x, byHeightclass = TRUE, keepCohortsWithObsID = FAL
   nshrub <- nrow(sd)
   x2 <- x
   if(nshrub>0) {
+    if(any(is.na(sd$Cover))) stop("Missing values in Cover")
+    if(any(is.na(sd$Height))) stop("Missing values in Height")
+    if(any(is.na(sd$Species))) stop("Missing values in Species")
     if(byHeightclass) {
       sd_merged <- mergeShrubsBySizeClass(sd)
     } else {
