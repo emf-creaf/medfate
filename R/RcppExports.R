@@ -3320,7 +3320,7 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
 #' s = soil(soil_df)
 #' 
 #' # Plot Saxton's and Van Genuchten's water retention curves
-#' soil_retentionCurvePlot(s, model="both")
+#' plot(s, model="both")
 #' 
 #' @name soil_texture
 #' @keywords internal
@@ -3530,7 +3530,7 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #' 
 #' Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
 #' 
-#' @seealso   \code{\link{soil_redefineLayers}}, \code{\link{soil_psi2thetaSX}}, \code{\link{soil_psi2thetaVG}}, \code{\link{spwb}}, \code{\link{defaultSoilParams}}
+#' @seealso \code{\link{plot.soil}}, \code{\link{soil_redefineLayers}}, \code{\link{soil_psi2thetaSX}}, \code{\link{soil_psi2thetaVG}}, \code{\link{spwb}}, \code{\link{defaultSoilParams}}
 #' 
 #' @examples
 #' # Default parameters

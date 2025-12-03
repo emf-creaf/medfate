@@ -79,7 +79,7 @@ Carsel, R.F., and Parrish, R.S. 1988. Developing joint probability distributions
 Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
 }
 \seealso{
-\code{\link{soil_redefineLayers}}, \code{\link{soil_psi2thetaSX}}, \code{\link{soil_psi2thetaVG}}, \code{\link{spwb}}, \code{\link{defaultSoilParams}}
+\code{\link{plot.soil}}, \code{\link{soil_redefineLayers}}, \code{\link{soil_psi2thetaSX}}, \code{\link{soil_psi2thetaVG}}, \code{\link{spwb}}, \code{\link{defaultSoilParams}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
