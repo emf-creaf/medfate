@@ -67,7 +67,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
     spnames <- x$SP
   }
   cohortnames <- row.names(x)
-  
+  if(nrow(x)==0) stop("The forest object does not contain plant cohorts")
   if(is.null(z)) z <- seq(0, ceiling(max(x$H)/100)*100 +10, by=1)
   w <- z[2:length(z)]- z[1:(length(z)-1)]
   
@@ -123,7 +123,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
 vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, 
                                     draw = TRUE, xlim = NULL) {
   if(is.null(d)){
-    zmax <- 0
+    zmax <- 100
     if(nrow(x$shrubData)>0) zmax <- max(zmax, ceiling(max(x$shrubData$Z95)/100)*100)
     if(nrow(x$treeData)>0) zmax <- max(zmax, ceiling(max(x$treeData$Z95)/100)*100)
     d <- rep(10,1+(zmax/10))
@@ -137,6 +137,7 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE,
   cohortnames <- plant_ID(x, SpParams)
   rd <- .rootDistribution(d,x)
   rownames(rd) <- cohortnames
+  if(nrow(rd)==0) stop("The forest object does not contain plant cohorts")
   if(bySpecies) {
     spnames <- plant_speciesName(x, SpParams)
     rd <- apply(rd,2, tapply, spnames, mean, na.rm=T)
@@ -151,7 +152,9 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE,
 #' @keywords internal
 vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
                                    draw = TRUE, xlim = NULL) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=1)
+  h <- plant_height(x, SpParams)
+  if(length(h)==0) stop("The forest object does not contain plant cohorts")
+  if(is.null(z)) z <- seq(0, ceiling(max(h)/100)*100 +10, by=1)
   wfp <- .woodyFuelProfile(z,x, SpParams, gdd)
   df <- data.frame("BD" = c(0,wfp), "Z" = z)
   if(draw) {
@@ -170,7 +173,9 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
 #' @keywords internal
 vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs = FALSE, 
                                  draw = TRUE, xlim = c(0,100)) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams), na.rm = TRUE)/100)*100 +10, by=1)
+  h <- plant_height(x, SpParams)
+  if(length(h)==0) stop("The forest object does not contain plant cohorts")
+  if(is.null(z)) z <- seq(0, ceiling(max(h, na.rm = TRUE)/100)*100 +10, by=1)
   pep <- .parExtinctionProfile(z,x, SpParams, gdd, includeHerbs)
   df <- data.frame("PEP" = pep, "Z" = z)
   if(draw) {
@@ -189,7 +194,9 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs =
 #' @keywords internal
 vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs = FALSE, 
                                  draw = TRUE, xlim = c(0,100)) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=1)
+  h <- plant_height(x, SpParams)
+  if(length(h)==0) stop("The forest object does not contain plant cohorts")
+  if(is.null(z)) z <- seq(0, ceiling(max(h)/100)*100 +10, by=1)
   swr <- .swrExtinctionProfile(z,x, SpParams, gdd, includeHerbs)
   df <- data.frame("SWR" = swr, "Z" = z)
   if(draw) {
@@ -210,7 +217,9 @@ vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 20
                                   boundaryLayerSize = 2000, target = "windspeed",
                                   z = NULL, gdd = NA, includeHerbs = FALSE,
                                   draw = TRUE, xlim = NULL) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +boundaryLayerSize, by=1)
+  h <- plant_height(x, SpParams)
+  if(length(h)==0) stop("The forest object does not contain plant cohorts")
+  if(is.null(z)) z <- seq(0, ceiling(max(h)/100)*100 +boundaryLayerSize, by=1)
   lad <- vprofile_leafAreaDensity(x=x, SpParams = SpParams, z = z, gdd = gdd,
                                   byCohorts = FALSE, bySpecies = FALSE, includeHerbs = includeHerbs,
                                   draw = FALSE, xlim = xlim)

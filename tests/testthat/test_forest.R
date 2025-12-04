@@ -71,14 +71,14 @@ test_that("Can produce all vertical profiles with minimal forest",{
   expect_s3_class(vprofile_windExtinction(exampleforest_minimal, SpParamsMED), "ggplot")
 })
 
-# test_that("Can produce all vertical profiles with empty forest",{
-#   expect_s3_class(vprofile_rootDistribution(emptyforest, SpParamsMED), "ggplot")
-#   expect_s3_class(vprofile_fuelBulkDensity(emptyforest, SpParamsMED), "ggplot")
-#   expect_s3_class(vprofile_leafAreaDensity(emptyforest, SpParamsMED), "ggplot")
-#   expect_s3_class(vprofile_PARExtinction(emptyforest, SpParamsMED), "ggplot")
-#   expect_s3_class(vprofile_SWRExtinction(emptyforest, SpParamsMED), "ggplot")
-#   expect_s3_class(vprofile_windExtinction(emptyforest, SpParamsMED), "ggplot")
-# })
+test_that("Cannot produce vertical profiles with empty forest",{
+  expect_error(vprofile_rootDistribution(emptyforest, SpParamsMED))
+  expect_error(vprofile_fuelBulkDensity(emptyforest, SpParamsMED))
+  expect_error(vprofile_leafAreaDensity(emptyforest, SpParamsMED))
+  expect_error(vprofile_PARExtinction(emptyforest, SpParamsMED))
+  expect_error(vprofile_SWRExtinction(emptyforest, SpParamsMED))
+  expect_error(vprofile_windExtinction(emptyforest, SpParamsMED))
+})
 
 test_that("Test forest summary",{
   expect_s3_class(summary(exampleforest, SpParamsMED), "summary.forest")
