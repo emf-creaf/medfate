@@ -80,7 +80,7 @@ reference:
 - contents:
   - starts_with("defaultSoil")
   - soil
-  - soil_redefineSoilLayers
+  - soil_redefineLayers
   - starts_with("plot.soil")
 - title: Simulation inputs
   desc:  Simulation control and input objects

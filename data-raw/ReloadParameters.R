@@ -16,8 +16,6 @@ exampleforest$shrubData$Cover <- 3.75
 exampleforest$shrubData$Height <- 80
 exampleforest$shrubData$Z50 <- 200
 exampleforest$shrubData$Z95 <- 1000
-# exampleforest$herbCover <- 10
-# exampleforest$herbHeight <- 20
 usethis::use_data(exampleforest, overwrite = T)
 
 exampleforest2 <- exampleforest
@@ -28,7 +26,7 @@ exampleforest2$treeData$CrownRatio <- c(0.66, 0.60)
 exampleforest2$shrubData$Cover <- NA
 exampleforest2$shrubData$LAI <- 0.03
 exampleforest2$shrubData$CrownRatio <- 0.8
-# exampleforest$herbCover <- NA
+exampleforest$herbHeight <- 20
 exampleforest2$herbLAI <- 0.25
 usethis::use_data(exampleforest2, overwrite = T)
 
