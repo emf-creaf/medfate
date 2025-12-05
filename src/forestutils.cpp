@@ -629,7 +629,8 @@ NumericVector cohortLargerTreeBasalArea(List x, DataFrame SpParams, double self_
 NumericVector cohortCover(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericVector cov(treeData.nrows()+shrubData.nrows(), NA_REAL);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
   NumericVector tcover;
   IntegerVector treeSP;
   if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
@@ -640,12 +641,24 @@ NumericVector cohortCover(List x, DataFrame SpParams) {
   }
   tcover = treeCoverAllometric(treeSP, treeData["N"], treeData["DBH"],
                                SpParams);
-  for(int i=0;i<tcover.size();i++) {
+  NumericVector shcover = shrubData["Cover"];
+  NumericVector hcover;
+  int nherb = 0;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    hcover = herbData["Cover"];
+  }
+  
+  NumericVector cov(ntree+nshrub+nherb, NA_REAL);
+  for(int i=0;i<ntree;i++) {
     cov[i] = tcover[i];
   }
-  NumericVector shcover = shrubData["Cover"];
-  for(int i=0;i<shcover.size();i++) {
-    cov[i+treeData.nrows()] = shcover[i];
+  for(int i=0;i<nshrub;i++) {
+    cov[i+ntree] = shcover[i];
+  }
+  for(int i=0;i<nherb;i++) {
+    cov[i+ntree+nshrub] = hcover[i];
   }
   cov.attr("names") = cohortIDs(x, SpParams);
   return(cov);
@@ -714,8 +727,9 @@ NumericVector cohortDensity(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
-  int nshrub = shrubData.nrows();
   NumericVector treeN = treeData["N"];
+  
+  int nshrub = shrubData.nrows();
   IntegerVector shrubSP;
   if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
     shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
@@ -723,17 +737,36 @@ NumericVector cohortDensity(List x, DataFrame SpParams) {
     CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
     shrubSP = speciesIndex(sspecies, SpParams);
   }
-
   NumericVector shrubHeight = shrubData["Height"];
-  int numCohorts  = ntree+nshrub;
+  NumericVector shrubCover = shrubData["Cover"];
+  NumericVector shrubArea = shrubIndividualAreaAllometric(shrubSP,shrubCover, shrubHeight, SpParams); 
+  
+  int nherb = 0;
+  IntegerVector herbSP;
+  NumericVector herbHeight, herbCover, herbArea;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      herbSP = speciesIndex(hspecies, SpParams);
+    }
+    herbHeight = herbData["Height"];
+    herbCover = shrubData["Cover"];
+    herbArea = shrubIndividualAreaAllometric(herbSP,herbCover, herbHeight, SpParams); 
+  }
+  int numCohorts  = ntree+nshrub+nherb;
   NumericVector N(numCohorts);
   for(int i=0;i<ntree;i++) {
     N[i] = treeN[i];
   }
-  NumericVector shrubCover = shrubData["Cover"];
-  NumericVector shrubArea = shrubIndividualAreaAllometric(shrubSP,shrubCover, shrubHeight, SpParams); 
   for(int i=0;i<nshrub;i++) {
     N[ntree+i] = 10000.0*(shrubCover[i]/(100.0*shrubArea[i]));
+  }
+  for(int i=0;i<nherb;i++) {
+    N[ntree+nshrub+i] = 10000.0*(herbCover[i]/(100.0*herbArea[i]));
   }
   N.attr("names") = cohortIDs(x, SpParams);
   return(N);
