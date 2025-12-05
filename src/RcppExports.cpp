@@ -777,6 +777,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// herbCover
+double herbCover(List x, double excludeMinHeight);
+RcppExport SEXP _medfate_herbCover(SEXP xSEXP, SEXP excludeMinHeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type excludeMinHeight(excludeMinHeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbCover(x, excludeMinHeight));
+    return rcpp_result_gen;
+END_RCPP
+}
 // shrubPhytovolumeAllometric
 NumericVector shrubPhytovolumeAllometric(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams);
 RcppExport SEXP _medfate_shrubPhytovolumeAllometric(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP SpParamsSEXP) {
@@ -6150,6 +6162,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
     {"_medfate_shrubCrownRatioAllometric", (DL_FUNC) &_medfate_shrubCrownRatioAllometric, 2},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
+    {"_medfate_herbCover", (DL_FUNC) &_medfate_herbCover, 2},
     {"_medfate_shrubPhytovolumeAllometric", (DL_FUNC) &_medfate_shrubPhytovolumeAllometric, 4},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 5},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 2},

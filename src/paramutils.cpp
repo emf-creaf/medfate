@@ -168,8 +168,9 @@ NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName)
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  CharacterVector par(treeData.nrow()+shrubData.nrow());
-  CharacterVector parTrees, parShrubs;
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  CharacterVector parTrees, parShrubs, parHerbs;
   if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
     IntegerVector tSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
     parTrees = speciesCharacterParameterFromIndex(tSP, SpParams, parName);
@@ -184,11 +185,28 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
     CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
     parShrubs = speciesCharacterParameter(sspecies, SpParams, parName);
   }
-  for(int i=0;i<treeData.nrow();i++) {
+  int nherb = 0;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      IntegerVector hSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);
+      parHerbs = speciesCharacterParameterFromIndex(hSP, SpParams, parName);
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      parHerbs = speciesCharacterParameter(hspecies, SpParams, parName);
+    }
+  }
+  
+  CharacterVector par(ntree+nshrub+nherb);
+  for(int i=0;i<ntree;i++) {
     par[i] = parTrees[i];
   }
-  for(int i=0;i<shrubData.nrow();i++) {
-    par[i + treeData.nrow()] = parShrubs[i];
+  for(int i=0;i<nshrub;i++) {
+    par[i + ntree] = parShrubs[i];
+  }
+  for(int i=0;i<nherb;i++) {
+    par[i + ntree+nshrub] = parHerbs[i];
   }
   par.attr("names") = cohortIDs(x, SpParams);
   return(par);

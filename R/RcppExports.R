@@ -512,6 +512,10 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
 }
 
+.herbCover <- function(x, excludeMinHeight = 0.0) {
+    .Call(`_medfate_herbCover`, x, excludeMinHeight)
+}
+
 .shrubPhytovolume <- function(SP, Cover, H, SpParams) {
     .Call(`_medfate_shrubPhytovolumeAllometric`, SP, Cover, H, SpParams)
 }
