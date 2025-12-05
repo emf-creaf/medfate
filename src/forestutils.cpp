@@ -600,8 +600,15 @@ NumericVector cohortBasalArea(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector tba = treeBasalArea(treeData["N"], treeData["DBH"]);
-  NumericVector ba(tba.size()+shrubData.nrows(), NA_REAL);
-  for(int i=0;i<tba.size();i++) {
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  int nherb = 0;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+  }
+  NumericVector ba(ntree + nshrub + nherb, NA_REAL);
+  for(int i=0;i<ntree;i++) {
     ba[i] = tba[i];
   }
   ba.attr("names") = cohortIDs(x, SpParams);
@@ -615,7 +622,14 @@ NumericVector cohortLargerTreeBasalArea(List x, DataFrame SpParams, double self_
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector tba = largerTreeBasalArea(treeData["N"], treeData["DBH"], self_proportion);
-  NumericVector ba(tba.size()+shrubData.nrows(), NA_REAL);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  int nherb = 0;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+  }
+  NumericVector ba(ntree+nshrub+nherb, NA_REAL);
   for(int i=0;i<tba.size();i++) {
     ba[i] = tba[i];
   }
@@ -822,12 +836,32 @@ NumericVector cohortIndividualArea(List x, DataFrame SpParams){
     shrubSP = speciesIndex(sspecies, SpParams);
   }
   NumericVector shrubHeight = shrubData["Height"];
-  int numCohorts  = ntree+nshrub;
-  NumericVector indArea(numCohorts, NA_REAL);
   NumericVector shrubCover = shrubData["Cover"];
   NumericVector shrubArea = shrubIndividualAreaAllometric(shrubSP,shrubCover, shrubHeight, SpParams); 
+  
+  IntegerVector herbSP;
+  NumericVector herbArea;
+  int nherb = 0;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      herbSP = speciesIndex(hspecies, SpParams);
+    }
+    NumericVector herbHeight = herbData["Height"];
+    NumericVector herbCover = shrubData["Cover"];
+    herbArea = shrubIndividualAreaAllometric(herbSP,herbCover, herbHeight, SpParams); 
+  }
+  
+  NumericVector indArea(ntree+nshrub+nherb, NA_REAL);
   for(int i=0;i<nshrub;i++) {
     indArea[ntree+i] = shrubArea[i];
+  }
+  for(int i=0;i<nherb;i++) {
+    indArea[ntree+nshrub+i] = herbArea[i];
   }
   indArea.attr("names") = cohortIDs(x, SpParams);
   return(indArea);
@@ -843,7 +877,7 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
   int nshrub = shrubData.nrows();
   NumericVector treeCR(ntree, NA_REAL), shrubCR(nshrub, NA_REAL);
   
-  IntegerVector treeSP, shrubSP;
+  IntegerVector treeSP, shrubSP, herbSP;
   if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
     treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
   } else {
@@ -864,6 +898,7 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
   for(int i=0;i<ntree;i++) {
     if(NumericVector::is_na(treeCR[i])) treeCR[i] = treeCRAllom[i];
   }
+  
   if(shrubData.containsElementNamed("CrownRatio")) {
     shrubCR = shrubData["CrownRatio"];
   } 
@@ -872,13 +907,38 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
     if(NumericVector::is_na(shrubCR[i])) shrubCR[i] = shrubCRAllom[i];
   }
   
-  int numCohorts  = ntree+nshrub;
+  int nherb = 0;
+  NumericVector herbCR;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      herbSP = speciesIndex(hspecies, SpParams);
+    }
+    if(herbData.containsElementNamed("CrownRatio")) {
+      herbCR = herbData["CrownRatio"];
+    } else {
+      herbCR = NumericVector(nherb, NA_REAL);
+    }
+    NumericVector herbCRAllom = shrubCrownRatioAllometric(herbSP, SpParams);
+    for(int i=0;i<nshrub;i++) {
+      if(NumericVector::is_na(herbCR[i])) herbCR[i] = herbCRAllom[i];
+    }
+  }
+  
+  int numCohorts  = ntree+nshrub+nherb;
   NumericVector CR(numCohorts);
   for(int i=0;i<ntree;i++) {
     CR[i] = treeCR[i];
   }
   for(int i=0;i<nshrub;i++) {
     CR[ntree+i] = shrubCR[i];
+  }
+  for(int i=0;i<nherb;i++) {
+    CR[ntree+nshrub+i] = herbCR[i];
   }
   CR.attr("names") = cohortIDs(x, SpParams);
   return(CR);
@@ -1162,18 +1222,38 @@ NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, dou
 NumericVector cohortPhytovolume(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  IntegerVector shrubSP;
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  
+  IntegerVector shrubSP, herbSP;
   if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
     shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
   } else {
     CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
     shrubSP = speciesIndex(sspecies, SpParams);
   }
-  
   NumericVector shvol = shrubPhytovolumeAllometric(shrubSP, shrubData["Cover"], shrubData["Height"], SpParams);
-  NumericVector vol(treeData.nrows()+shrubData.nrows(), NA_REAL);
-  for(int i=0;i<shvol.size();i++) {
-    vol[i+treeData.nrows()] = shvol[i];
+
+  int nherb = 0;
+  NumericVector hvol;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      herbSP = speciesIndex(hspecies, SpParams);
+    }
+    hvol = shrubPhytovolumeAllometric(herbSP, herbData["Cover"], herbData["Height"], SpParams);
+  }
+  
+  NumericVector vol(ntree+nshrub+nherb, NA_REAL);
+  for(int i=0;i<nshrub;i++) {
+    vol[i+ntree] = shvol[i];
+  }
+  for(int i=0;i<nherb;i++) {
+    vol[i+ntree+nshrub] = hvol[i];
   }
   vol.attr("names") = cohortIDs(x, SpParams);
   return(vol);
