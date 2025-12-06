@@ -74,6 +74,16 @@ test_that("Can produce all vertical profiles with minimal forest",{
   expect_s3_class(vprofile_windExtinction(exampleforest_minimal, SpParamsMED), "ggplot")
 })
 
+test_that("Can produce all vertical profiles with herb forest",{
+  # expect_s3_class(vprofile_rootDistribution(forest_herbs, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_fuelBulkDensity(forest_herbs, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_leafAreaDensity(forest_herbs, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_leafAreaDensity(forest_herbs, SpParamsMED, byCohorts = TRUE), "ggplot")
+  expect_s3_class(vprofile_leafAreaDensity(forest_herbs, SpParamsMED, byCohorts = TRUE, includeHerbs = TRUE), "ggplot")
+  expect_s3_class(vprofile_PARExtinction(forest_herbs, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_SWRExtinction(forest_herbs, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_windExtinction(forest_herbs, SpParamsMED), "ggplot")
+})
 test_that("Cannot produce vertical profiles with empty forest",{
   expect_error(vprofile_rootDistribution(emptyforest, SpParamsMED))
   expect_error(vprofile_fuelBulkDensity(emptyforest, SpParamsMED))

@@ -10,9 +10,9 @@ NumericVector ldrRS_one(double Z50, double Z95, double Z100, NumericVector d);
 NumericVector conicRS_one(double Z, NumericVector d);
 NumericMatrix conicDistribution(NumericVector Z, NumericVector d);
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector Z100, NumericVector d);
-NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50,
-                              NumericVector treeZ95, NumericVector shrubZ95, 
-                              NumericVector treeZ100, NumericVector shrubZ100,
+NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, NumericVector herbZ50, 
+                              NumericVector treeZ95, NumericVector shrubZ95, NumericVector herbZ95, 
+                              NumericVector treeZ100, NumericVector shrubZ100, NumericVector herbZ100, 
                               NumericVector d);
 
 double fineRootRadius(double specificRootLength, double rootTissueDensity);

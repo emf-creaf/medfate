@@ -206,19 +206,23 @@ NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVecto
   }
   return(P);
 }
-NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, 
-                              NumericVector treeZ95, NumericVector shrubZ95,
-                              NumericVector treeZ100, NumericVector shrubZ100,
+NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, NumericVector herbZ50, 
+                              NumericVector treeZ95, NumericVector shrubZ95, NumericVector herbZ95, 
+                              NumericVector treeZ100, NumericVector shrubZ100, NumericVector herbZ100, 
                               NumericVector d) {
   int ntree = treeZ50.size();
   int nshrub = shrubZ50.size();
+  int nherb = herbZ50.size();
   int nlayers = d.size();
-  NumericMatrix V(ntree+nshrub,nlayers);
+  NumericMatrix V(ntree+nshrub+nherb,nlayers);
   for(int i=0;i<ntree;i++) {
     V(i,_) = ldrRS_one(treeZ50[i], treeZ95[i], treeZ100[i], d);
   }
   for(int i=0;i<nshrub;i++) {
     V(ntree+i,_) = ldrRS_one(shrubZ50[i], shrubZ95[i], shrubZ100[i], d);
+  }
+  for(int i=0;i<nherb;i++) {
+    V(ntree+nshrub+i,_) = ldrRS_one(herbZ50[i], herbZ95[i], herbZ100[i], d);
   }
   return(V);
 }

@@ -31,12 +31,15 @@ summary.forest<-function(object, SpParams, ...) {
   
   ntree <- nrow(object$treeData)
   nshrub <- nrow(object$shrubData)
+  nherb <- 0
+  if(!is.null(object$herbData)) nherb <- nrow(object$herbData)
   
-  selTree <- c(rep(TRUE, ntree), rep(FALSE, nshrub))
-  selAdult <- c(object$treeData$DBH > 5.0, rep(FALSE, nshrub))
-  selSapling <- c(object$treeData$DBH <= 5.0, rep(FALSE, nshrub))
-  selShrub <- c(rep(FALSE, ntree), rep(TRUE, nshrub))
-
+  selTree <- c(rep(TRUE, ntree), rep(FALSE, nshrub), rep(FALSE, nherb))
+  selAdult <- c(object$treeData$DBH > 5.0, rep(FALSE, nshrub), rep(FALSE, nherb))
+  selSapling <- c(object$treeData$DBH <= 5.0, rep(FALSE, nshrub), rep(FALSE, nherb))
+  selShrub <- c(rep(FALSE, ntree), rep(TRUE, nshrub), rep(FALSE, nherb))
+  selHerb <- c(rep(FALSE, ntree), rep(FALSE, nshrub), rep(TRUE, nherb))
+  
   coh_N <- plant_density(object, SpParams)
   coh_cov <- plant_cover(object, SpParams)
   coh_lai <- plant_LAI(object, SpParams)
@@ -45,44 +48,50 @@ summary.forest<-function(object, SpParams, ...) {
   coh_ba <- plant_basalArea(object, SpParams)
   
   s <- list()
-  s["Tree_BA"] <- sum(coh_ba[selTree], na.rm=TRUE)
-  s["Adult_BA"] <- sum(coh_ba[selAdult], na.rm=TRUE)
-  s["Sapling_BA"] <- sum(coh_ba[selSapling], na.rm=TRUE)
+  s[["Tree_BA"]] <- sum(coh_ba[selTree], na.rm=TRUE)
+  s[["Adult_BA"]] <- sum(coh_ba[selAdult], na.rm=TRUE)
+  s[["Sapling_BA"]] <- sum(coh_ba[selSapling], na.rm=TRUE)
   
-  s["Tree_density"] <- sum(coh_N[selTree], na.rm=TRUE)
-  s["Adult_density"] <- sum(coh_N[selAdult], na.rm=TRUE)
-  s["Sapling_density"] <- sum(coh_N[selSapling], na.rm=TRUE)
-  s["Shrub_density"] <- sum(coh_N[selShrub], na.rm=TRUE)
+  s[["Tree_density"]] <- sum(coh_N[selTree], na.rm=TRUE)
+  s[["Adult_density"]] <- sum(coh_N[selAdult], na.rm=TRUE)
+  s[["Sapling_density"]] <- sum(coh_N[selSapling], na.rm=TRUE)
+  s[["Shrub_density"]] <- sum(coh_N[selShrub], na.rm=TRUE)
+  s[["Herb_density"]] <- sum(coh_N[selHerb], na.rm=TRUE)
+  
 
+  s[["Tree_cover"]] <- pmin(100,sum(coh_cov[selTree], na.rm=TRUE))
+  s[["Adult_cover"]] <- pmin(100,sum(coh_cov[selAdult], na.rm=TRUE))
+  s[["Sapling_cover"]] <- pmin(100,sum(coh_cov[selSapling], na.rm=TRUE))
+  s[["Shrub_cover"]] <- pmin(100,sum(coh_cov[selShrub], na.rm=TRUE))
+  s[["Herb_cover"]] <- pmin(100,sum(coh_cov[selHerb], na.rm=TRUE))
+  if(!is.null(object$herbCover)) {
+    hc <- object$herbCover
+    if(is.na(hc)) hc <- 0
+    s[["Herb_cover"]] <- s[["Herb_cover"]] + hc
+  }
 
-  s["Tree_cover"] <- pmin(100,sum(coh_cov[selTree], na.rm=TRUE))
-  s["Adult_cover"] <- pmin(100,sum(coh_cov[selAdult], na.rm=TRUE))
-  s["Sapling_cover"] <- pmin(100,sum(coh_cov[selSapling], na.rm=TRUE))
-  s["Shrub_cover"] <- pmin(100,sum(coh_cov[selShrub], na.rm=TRUE))
-  hc <- object$herbCover
-  if(is.na(hc)) hc <- 0
-  s["Herb_cover"] <- hc
-
-  s["Tree_lai"] <- sum(coh_lai[selTree], na.rm=TRUE)
-  s["Adult_lai"] <- sum(coh_lai[selAdult], na.rm=TRUE)
-  s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
-  s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
-  s["Herb_lai"] <- herb_LAI(object, SpParams)
+  s[["Tree_lai"]] <- sum(coh_lai[selTree], na.rm=TRUE)
+  s[["Adult_lai"]] <- sum(coh_lai[selAdult], na.rm=TRUE)
+  s[["Sapling_lai"]] <- sum(coh_lai[selSapling], na.rm=TRUE)
+  s[["Shrub_lai"]] <- sum(coh_lai[selShrub], na.rm=TRUE)
+  s[["Herb_lai"]] <- sum(coh_lai[selHerb], na.rm=TRUE)
+  s[["Herb_lai"]] <- s[["Herb_lai"]] + herb_LAI(object, SpParams)
   s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]]
   
-  s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
-  s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
-  s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
-  s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
-  s["Herb_fuel"] <- herb_fuelLoading(object, SpParams)
-  s["Total_fuel"] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
+  s[["Tree_fuel"]] <- sum(coh_fuel[selTree], na.rm=TRUE)
+  s[["Adult_fuel"]] <- sum(coh_fuel[selAdult], na.rm=TRUE)
+  s[["Sapling_fuel"]] <- sum(coh_fuel[selSapling], na.rm=TRUE)
+  s[["Shrub_fuel"]] <- sum(coh_fuel[selShrub], na.rm=TRUE)
+  s[["Herb_fuel"]] <- sum(coh_fuel[selHerb], na.rm=TRUE)
+  s[["Herb_fuel"]] <- s[["Herb_fuel"]] + herb_fuelLoading(object, SpParams)
+  s[["Total_fuel"]] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
   
-  s["PARground"] <- NA
-  s["SWRground"] <- NA
+  s[["PARground"]] <- NA
+  s[["SWRground"]] <- NA
   
   if(all(!is.na(object$treeData$Height)) && all(!is.na(object$shrubData$Height))) {
-    s["PARground"] <- light_PARground(object, SpParams)
-    s["SWRground"] <- light_SWRground(object, SpParams)
+    s[["PARground"]] <- light_PARground(object, SpParams)
+    s[["SWRground"]] <- light_SWRground(object, SpParams)
   }
   class(s)<-c("summary.forest","list")
   return(s)

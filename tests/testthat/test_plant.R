@@ -145,3 +145,11 @@ test_that("Aboveground data frame can be build",{
   expect_s3_class(forest2aboveground(emptyforest, SpParamsMED), "data.frame")
   expect_s3_class(forest2aboveground(forest_herbs, SpParamsMED), "data.frame")
 })
+
+test_that("belowground data frame can be build",{
+  s = soil(defaultSoilParams())
+  expect_type(forest2belowground(exampleforest, s, SpParamsMED), "double")
+  expect_type(forest2belowground(exampleforest_minimal, s, SpParamsMED), "double")
+  expect_type(forest2belowground(emptyforest, s, SpParamsMED), "double")
+  expect_type(forest2belowground(forest_herbs, s, SpParamsMED), "double")
+})

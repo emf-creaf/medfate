@@ -1780,40 +1780,8 @@ NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, Numeric
 // [[Rcpp::export(".LAIdistribution")]]
 NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, 
                               bool bounded = true) {
-  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
-  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  int ntree = treeData.nrows();
-  int nshrub = shrubData.nrows();
-  
-  IntegerVector treeSP, shrubSP;
-  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
-    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
-  } else {
-    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
-    treeSP = speciesIndex(tspecies, SpParams);
-  }
-  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
-    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
-  } else {
-    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
-    shrubSP = speciesIndex(sspecies, SpParams);
-  }
-  
-  NumericVector treeH = treeData["Height"];
-  NumericVector shrubH = shrubData["Height"];  
-  
   NumericVector LAI = cohortLAI(x, SpParams, gdd, bounded);
-  int numCohorts  = ntree+nshrub;
-  NumericVector H(numCohorts);
-  IntegerVector SP(numCohorts);
-  for(int i=0;i<ntree;i++) {
-    SP[i] = (int) treeSP[i];
-    H[i] = treeH[i];
-  }
-  for(int i=0;i<nshrub;i++) {
-    SP[ntree+i] = (int) shrubSP[i];
-    H[ntree+i] = shrubH[i];
-  }
+  NumericVector H = cohortHeight(x, SpParams);
   NumericVector CR = cohortCrownRatio(x, SpParams);
   
   return(LAIdistributionVectors(z, LAI, H, CR));
@@ -1838,29 +1806,9 @@ NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVecto
 // [[Rcpp::export(".LAIprofile")]]
 NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, 
                          bool bounded = true) {
-  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
-  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  int ntree = treeData.nrows();
-  int nshrub = shrubData.nrows();
-  
-  IntegerVector treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
-  NumericVector treeH = treeData["Height"];
-  IntegerVector shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);
-  NumericVector shrubH = shrubData["Height"];  
-  
+  NumericVector H = cohortHeight(x, SpParams);
   NumericVector CR = cohortCrownRatio(x, SpParams);
   NumericVector LAI = cohortLAI(x, SpParams, gdd, bounded);
-  int numCohorts  = ntree+nshrub;
-  NumericVector H(numCohorts);
-  IntegerVector SP(numCohorts);
-  for(int i=0;i<ntree;i++) {
-    SP[i] = (int) treeSP[i];
-    H[i] = treeH[i];
-  }
-  for(int i=0;i<nshrub;i++) {
-    SP[ntree+i] = (int) shrubSP[i];
-    H[ntree+i] = shrubH[i];
-  }
   return(LAIprofileVectors(z, LAI, H, CR));
 }
 
@@ -2040,9 +1988,19 @@ NumericMatrix forest2belowground(List x, DataFrame soil, DataFrame SpParams) {
   NumericVector shrubZ100(shrubData.size(), NA_REAL);
   if(shrubData.containsElementNamed("Z100")) shrubZ100 = Rcpp::as<Rcpp::NumericVector>(shrubData["Z100"]);
   
-  NumericMatrix V = ldrDistribution(treeZ50, shrubZ50, 
-                                    treeZ95, shrubZ95, 
-                                    treeZ100, shrubZ100, 
+  NumericVector herbZ50(0, NA_REAL);
+  NumericVector herbZ95(0, NA_REAL);
+  NumericVector herbZ100(0, NA_REAL);
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    herbZ50 = herbData["Z50"];
+    herbZ95 = herbData["Z95"];
+    herbZ100 = NumericVector(herbData.size(), NA_REAL);
+    if(herbData.containsElementNamed("Z100")) herbZ100 = Rcpp::as<Rcpp::NumericVector>(herbData["Z100"]);
+  }
+  NumericMatrix V = ldrDistribution(treeZ50, shrubZ50, herbZ50,
+                                    treeZ95, shrubZ95, herbZ95,
+                                    treeZ100, shrubZ100, herbZ100,
                                     widths);
   V.attr("dimnames") = List::create(cohortIDs(x, SpParams), layerNames(nlayers));
   return(V);
