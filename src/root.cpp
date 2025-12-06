@@ -242,14 +242,31 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
   NumericVector shrubZ95 =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z95"]);
   NumericVector shrubZ100(nshrub, NA_REAL);
   if(shrubData.containsElementNamed("Z100")) shrubZ100 = Rcpp::as<Rcpp::NumericVector>(shrubData["Z100"]);
+
   NumericMatrix rdtree = ldrDistribution(treeZ50, treeZ95, treeZ100, z);
   NumericMatrix rdshrub = ldrDistribution(shrubZ50, shrubZ95, shrubZ100, z);
-  NumericMatrix rd = NumericMatrix(ntree+nshrub, z.length());
+  
+  int nherb = 0;
+  NumericMatrix rdherb;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    NumericVector herbZ50 = herbData["Z50"];
+    NumericVector herbZ95 = herbData["Z95"];
+    NumericVector herbZ100(nherb, NA_REAL);
+    if(herbData.containsElementNamed("Z100")) herbZ100 = Rcpp::as<Rcpp::NumericVector>(herbData["Z100"]);
+    rdherb = ldrDistribution(herbZ50, herbZ95, herbZ100, z);
+  }
+  
+  NumericMatrix rd = NumericMatrix(ntree+nshrub+nherb, z.length());
   for(int i=0;i<ntree;i++) {
     rd(i,_) = rdtree(i,_);
   }
   for(int i=0;i<nshrub;i++) {
     rd(ntree+i,_) = rdshrub(i,_);
+  }
+  for(int i=0;i<nherb;i++) {
+    rd(ntree+nshrub+i,_) = rdherb(i,_);
   }
   return(rd);
 }

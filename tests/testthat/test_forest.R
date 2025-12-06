@@ -75,7 +75,7 @@ test_that("Can produce all vertical profiles with minimal forest",{
 })
 
 test_that("Can produce all vertical profiles with herb forest",{
-  # expect_s3_class(vprofile_rootDistribution(forest_herbs, SpParamsMED), "ggplot")
+  expect_s3_class(vprofile_rootDistribution(forest_herbs, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_fuelBulkDensity(forest_herbs, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_leafAreaDensity(forest_herbs, SpParamsMED), "ggplot")
   expect_s3_class(vprofile_leafAreaDensity(forest_herbs, SpParamsMED, byCohorts = TRUE), "ggplot")
@@ -196,6 +196,21 @@ test_that("Test stand metrics with minimal data",{
   expect_type(stand_quadraticMeanTreeDiameter(exampleforest_minimal), "double")
 })
 
+test_that("Test stand metrics with herb forest",{
+  expect_type(stand_basalArea(forest_herbs), "double")
+  expect_type(stand_foliarBiomass(forest_herbs, SpParamsMED), "double")
+  expect_type(stand_fuelLoading(forest_herbs, SpParamsMED), "double")
+  expect_type(stand_foliarBiomass(forest_herbs, SpParamsMED), "double")
+  expect_type(stand_LAI(forest_herbs, SpParamsMED), "double")
+  expect_type(stand_shrubVolume(forest_herbs, SpParamsMED), "double")
+  expect_type(stand_dominantTreeDiameter(forest_herbs), "double")
+  expect_type(stand_dominantTreeSpecies(forest_herbs, SpParamsMED), "character")
+  expect_type(stand_treeDensity(forest_herbs), "double")
+  expect_type(stand_meanTreeHeight(forest_herbs), "double")
+  expect_type(stand_dominantTreeHeight(forest_herbs), "double")
+  expect_type(stand_hartBeckingIndex(forest_herbs), "double")
+  expect_type(stand_quadraticMeanTreeDiameter(forest_herbs), "double")
+})
 test_that("Test stand metrics with missing tree data",{
   f <-exampleforest
   f$treeData<- f$treeData[numeric(0), ,drop = FALSE]
