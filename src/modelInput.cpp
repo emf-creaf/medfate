@@ -1490,59 +1490,102 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
-  NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub), Z100(ntree+nshrub);
-
-  NumericVector treeZ95 = treeData["Z95"];
-  NumericVector treeZ50 = treeData["Z50"];
-  NumericVector treeZ100(ntree, NA_REAL);
-  if(treeData.containsElementNamed("Z100")) treeZ100 = Rcpp::as<Rcpp::NumericVector>(treeData["Z100"]);
-  
-  IntegerVector treeSP, shrubSP;
-  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
-    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
-  } else {
-    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
-    treeSP = speciesIndex(tspecies, SpParams);
+  int nherb = 0;
+  DataFrame herbData;
+  if(x.containsElementNamed("herbData")) {
+    herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
   }
-  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
-    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
-  } else {
-    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
-    shrubSP = speciesIndex(sspecies, SpParams);
-  }
+  NumericVector Z95(ntree+nshrub+nherb), Z50(ntree+nshrub+nherb), Z100(ntree+nshrub+nherb);
   
-  NumericVector treeSPZ50 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z50");
-  NumericVector treeSPZ95 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z95");
-  for(int i=0;i<ntree;i++) {
-    Z50[i] = treeZ50[i];
-    Z95[i] = treeZ95[i];
-    Z100[i] = treeZ100[i];
-    if(fillMissingRootParams) {
-      if(NumericVector::is_na(Z50[i])) Z50[i] = treeSPZ50[i];
-      if(NumericVector::is_na(Z95[i])) Z95[i] = treeSPZ95[i];
-      if(NumericVector::is_na(Z50[i]) && !NumericVector::is_na(Z95[i])) Z50[i] = exp(log(Z95[i])/1.4);
-      if(NumericVector::is_na(Z100[i]) && !NumericVector::is_na(Z95[i]) && truncateRootDistribution) Z100[i] = exp(log(Z95[i])/0.95);
+  if(ntree>0) {
+    NumericVector treeZ95 = treeData["Z95"];
+    NumericVector treeZ50 = treeData["Z50"];
+    NumericVector treeZ100(ntree, NA_REAL);
+    if(treeData.containsElementNamed("Z100")) treeZ100 = Rcpp::as<Rcpp::NumericVector>(treeData["Z100"]);
+    
+    IntegerVector treeSP;
+    if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+      treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+    } else {
+      CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+      treeSP = speciesIndex(tspecies, SpParams);
+    }
+    
+    NumericVector treeSPZ50 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z50");
+    NumericVector treeSPZ95 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z95");
+    
+    for(int i=0;i<ntree;i++) {
+      Z50[i] = treeZ50[i];
+      Z95[i] = treeZ95[i];
+      Z100[i] = treeZ100[i];
+      if(fillMissingRootParams) {
+        if(NumericVector::is_na(Z50[i])) Z50[i] = treeSPZ50[i];
+        if(NumericVector::is_na(Z95[i])) Z95[i] = treeSPZ95[i];
+        if(NumericVector::is_na(Z50[i]) && !NumericVector::is_na(Z95[i])) Z50[i] = exp(log(Z95[i])/1.4);
+        if(NumericVector::is_na(Z100[i]) && !NumericVector::is_na(Z95[i]) && truncateRootDistribution) Z100[i] = exp(log(Z95[i])/0.95);
+      }
     }
   }
-  NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericVector shrubZ50 = shrubData["Z50"];  
-  NumericVector shrubZ100(nshrub, NA_REAL);
-  if(shrubData.containsElementNamed("Z100")) shrubZ100 = Rcpp::as<Rcpp::NumericVector>(shrubData["Z100"]);
   
-  NumericVector shrubSPZ50 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z50");
-  NumericVector shrubSPZ95 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z95");
-  for(int i=0;i<nshrub;i++) {
-    Z50[ntree+i] = shrubZ50[i]; 
-    Z95[ntree+i] = shrubZ95[i]; 
-    Z100[ntree+i] = shrubZ100[i]; 
-    if(fillMissingRootParams) {
-      if(NumericVector::is_na(Z50[ntree+i])) Z50[ntree+i] = shrubSPZ50[i];
-      if(NumericVector::is_na(Z95[ntree+i])) Z95[ntree+i] = shrubSPZ95[i];
-      if(NumericVector::is_na(Z50[ntree+i]) && !NumericVector::is_na(Z95[ntree+i])) Z50[ntree+i] = exp(log(Z95[ntree+i])/1.4);
-      if(NumericVector::is_na(Z100[ntree+i]) && !NumericVector::is_na(Z95[ntree+i]) && truncateRootDistribution) Z100[ntree+i] = exp(log(Z95[ntree+i])/0.95);
+  if(nshrub>0) {
+    NumericVector shrubZ95 = shrubData["Z95"];  
+    NumericVector shrubZ50 = shrubData["Z50"];  
+    NumericVector shrubZ100(nshrub, NA_REAL);
+    if(shrubData.containsElementNamed("Z100")) shrubZ100 = Rcpp::as<Rcpp::NumericVector>(shrubData["Z100"]);
+
+    IntegerVector shrubSP;
+    if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+      shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+    } else {
+      CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+      shrubSP = speciesIndex(sspecies, SpParams);
+    }
+    
+    NumericVector shrubSPZ50 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z50");
+    NumericVector shrubSPZ95 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z95");
+    for(int i=0;i<nshrub;i++) {
+      Z50[ntree+i] = shrubZ50[i]; 
+      Z95[ntree+i] = shrubZ95[i]; 
+      Z100[ntree+i] = shrubZ100[i]; 
+      if(fillMissingRootParams) {
+        if(NumericVector::is_na(Z50[ntree+i])) Z50[ntree+i] = shrubSPZ50[i];
+        if(NumericVector::is_na(Z95[ntree+i])) Z95[ntree+i] = shrubSPZ95[i];
+        if(NumericVector::is_na(Z50[ntree+i]) && !NumericVector::is_na(Z95[ntree+i])) Z50[ntree+i] = exp(log(Z95[ntree+i])/1.4);
+        if(NumericVector::is_na(Z100[ntree+i]) && !NumericVector::is_na(Z95[ntree+i]) && truncateRootDistribution) Z100[ntree+i] = exp(log(Z95[ntree+i])/0.95);
+      }
     }
   }
 
+  if(nherb>0) {
+    NumericVector herbZ95 = herbData["Z95"];  
+    NumericVector herbZ50 = herbData["Z50"];  
+    NumericVector herbZ100(nherb, NA_REAL);
+    if(herbData.containsElementNamed("Z100")) herbZ100 = Rcpp::as<Rcpp::NumericVector>(herbData["Z100"]);
+    
+    IntegerVector herbSP;
+    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
+    } else {
+      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
+      herbSP = speciesIndex(hspecies, SpParams);
+    }
+    
+    NumericVector herbSPZ50 = speciesNumericParameterFromIndex(herbSP, SpParams, "Z50");
+    NumericVector herbSPZ95 = speciesNumericParameterFromIndex(herbSP, SpParams, "Z95");
+    for(int i=0;i<nherb;i++) {
+      Z50[ntree+nshrub+i] = herbZ50[i]; 
+      Z95[ntree+nshrub+i] = herbZ95[i]; 
+      Z100[ntree+nshrub+i] = herbZ100[i]; 
+      if(fillMissingRootParams) {
+        if(NumericVector::is_na(Z50[ntree+nshrub+i])) Z50[ntree+nshrub+i] = herbSPZ50[i];
+        if(NumericVector::is_na(Z95[ntree+nshrub+i])) Z95[ntree+nshrub+i] = herbSPZ95[i];
+        if(NumericVector::is_na(Z50[ntree+nshrub+i]) && !NumericVector::is_na(Z95[ntree+nshrub+i])) Z50[ntree+nshrub+i] = exp(log(Z95[ntree+nshrub+i])/1.4);
+        if(NumericVector::is_na(Z100[ntree+nshrub+i]) && !NumericVector::is_na(Z95[ntree+nshrub+i]) && truncateRootDistribution) Z100[ntree+nshrub+i] = exp(log(Z95[ntree+nshrub+i])/0.95);
+      }
+    }
+  }
+  
   return(DataFrame::create(_["Z50"] = Z50, _["Z95"] = Z95, _["Z100"] = Z100));  
 }
 
