@@ -1700,28 +1700,47 @@ NumericVector speciesNumericParameterWithImputation(CharacterVector species, Dat
 NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing = true, bool fillWithGenus = true){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericVector par(treeData.nrow() + shrubData.nrow());
-  NumericVector parTrees, parShrubs;
-  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
-    IntegerVector tSP = treeData["Species"];
-    parTrees = speciesNumericParameterWithImputation(tSP, SpParams, parName, fillMissing, fillWithGenus);
-  } else {
-    CharacterVector tspecies = treeData["Species"];
-    parTrees = speciesNumericParameterWithImputation(tspecies, SpParams, parName, fillMissing, fillWithGenus);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  NumericVector parTrees, parShrubs, parHerbs;
+  if(ntree>0) {
+    if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+      IntegerVector tSP = treeData["Species"];
+      parTrees = speciesNumericParameterWithImputation(tSP, SpParams, parName, fillMissing, fillWithGenus);
+    } else {
+      CharacterVector tspecies = treeData["Species"];
+      parTrees = speciesNumericParameterWithImputation(tspecies, SpParams, parName, fillMissing, fillWithGenus);
+    }
   }
-  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
-    IntegerVector shSP = shrubData["Species"];
-    parShrubs = speciesNumericParameterWithImputation(shSP, SpParams, parName, fillMissing, fillWithGenus);
-  } else {
-    CharacterVector sspecies = shrubData["Species"];
-    parShrubs = speciesNumericParameterWithImputation(sspecies, SpParams, parName, fillMissing, fillWithGenus);
+  if(nshrub>0) {
+    if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+      IntegerVector shSP = shrubData["Species"];
+      parShrubs = speciesNumericParameterWithImputation(shSP, SpParams, parName, fillMissing, fillWithGenus);
+    } else {
+      CharacterVector sspecies = shrubData["Species"];
+      parShrubs = speciesNumericParameterWithImputation(sspecies, SpParams, parName, fillMissing, fillWithGenus);
+    }
   }
-  for(int i=0;i<treeData.nrow();i++) {
-    par[i] = parTrees[i];
+  
+  int nherb = 0;
+  if(x.containsElementNamed("herbData")) {
+    DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
+    nherb = herbData.nrows();
+    if(nherb>0) {
+      if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
+        IntegerVector hSP = herbData["Species"];
+        parHerbs = speciesNumericParameterWithImputation(hSP, SpParams, parName, fillMissing, fillWithGenus);
+      } else {
+        CharacterVector hspecies = herbData["Species"];
+        parHerbs = speciesNumericParameterWithImputation(hspecies, SpParams, parName, fillMissing, fillWithGenus);
+      }
+    }
   }
-  for(int i=0;i<shrubData.nrow();i++) {
-    par[i + treeData.nrow()] = parShrubs[i];
-  }
+  
+  NumericVector par(ntree + nshrub + nherb);
+  for(int i=0;i<ntree;i++) par[i] = parTrees[i];
+  for(int i=0;i<nshrub;i++) par[i + ntree] = parShrubs[i];
+  for(int i=0;i<nherb;i++) par[i + ntree+nshrub] = parHerbs[i];
   par.attr("names") = cohortIDs(x, SpParams);
   return(par);
 }

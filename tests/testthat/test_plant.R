@@ -99,28 +99,28 @@ test_that("Plant foliar biomass can be retrieved",{
   expect_type(plant_foliarBiomass(exampleforest, SpParamsMED), "double")
   expect_type(plant_foliarBiomass(exampleforest_minimal, SpParamsMED), "double")
   expect_type(plant_foliarBiomass(emptyforest, SpParamsMED), "double")
-  # expect_type(plant_foliarBiomass(forest_herbs, SpParamsMED), "double")
+  expect_type(plant_foliarBiomass(forest_herbs, SpParamsMED), "double")
 })
 
 test_that("Plant fuel loading can be retrieved",{
   expect_type(plant_fuelLoading(exampleforest, SpParamsMED), "double")
   expect_type(plant_fuelLoading(exampleforest_minimal, SpParamsMED), "double")
   expect_type(plant_fuelLoading(emptyforest, SpParamsMED), "double")
-  # expect_type(plant_fuelLoading(forest_herbs, SpParamsMED), "double")
+  expect_type(plant_fuelLoading(forest_herbs, SpParamsMED), "double")
 })
 
 test_that("Plant equilibrium leaf litter can be retrieved",{
   expect_type(plant_equilibriumLeafLitter(exampleforest, SpParamsMED), "double")
   expect_type(plant_equilibriumLeafLitter(exampleforest_minimal, SpParamsMED), "double")
   expect_type(plant_equilibriumLeafLitter(emptyforest, SpParamsMED), "double")
-  # expect_type(plant_equilibriumLeafLitter(forest_herbs, SpParamsMED), "double")
+  expect_type(plant_equilibriumLeafLitter(forest_herbs, SpParamsMED), "double")
 })
 
 test_that("Plant equilibrium small branch litter can be retrieved",{
   expect_type(plant_equilibriumSmallBranchLitter(exampleforest, SpParamsMED), "double")
   expect_type(plant_equilibriumSmallBranchLitter(exampleforest_minimal, SpParamsMED), "double")
   expect_type(plant_equilibriumSmallBranchLitter(emptyforest, SpParamsMED), "double")
-  # expect_type(plant_equilibriumSmallBranchLitter(forest_herbs, SpParamsMED), "double")
+  expect_type(plant_equilibriumSmallBranchLitter(forest_herbs, SpParamsMED), "double")
 })
 
 
@@ -136,5 +136,12 @@ test_that("Plant LAI can be retrieved",{
   expect_type(plant_LAI(exampleforest, SpParamsMED), "double")
   expect_type(plant_LAI(exampleforest_minimal, SpParamsMED), "double")
   expect_type(plant_LAI(emptyforest, SpParamsMED), "double")
-  # expect_type(plant_LAI(forest_herbs, SpParamsMED), "double")
+  expect_type(plant_LAI(forest_herbs, SpParamsMED), "double")
+})
+
+test_that("Aboveground data frame can be build",{
+  expect_s3_class(forest2aboveground(exampleforest, SpParamsMED), "data.frame")
+  expect_s3_class(forest2aboveground(exampleforest_minimal, SpParamsMED), "data.frame")
+  expect_s3_class(forest2aboveground(emptyforest, SpParamsMED), "data.frame")
+  expect_s3_class(forest2aboveground(forest_herbs, SpParamsMED), "data.frame")
 })

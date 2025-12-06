@@ -13,6 +13,9 @@ exampleforest_minimal$seedlingBank <- NULL
 
 emptyforest <- emptyforest()
 
+forest_herbs <- exampleforest
+forest_herbs$herbData <- forest_herbs$shrubData
+
 test_that("Empty forests can be created",{
   expect_s3_class(emptyforest(), "forest")
   expect_s3_class(emptyforest(addcolumns = "LAI"), "forest")
@@ -85,6 +88,7 @@ test_that("Test forest summary",{
   expect_s3_class(summary(exampleforest2, SpParamsMED), "summary.forest")
   expect_s3_class(summary(exampleforest_minimal, SpParamsMED), "summary.forest")
   expect_s3_class(summary(emptyforest, SpParamsMED), "summary.forest")
+  expect_s3_class(summary(forest_herbs, SpParamsMED), "summary.forest")
 })
 
 test_that("Test forest simplification",{
