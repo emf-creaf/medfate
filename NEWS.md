@@ -1,6 +1,7 @@
 # medfate 4.9.0
 * Forest objects can now have a seedling bank
 * Recruitment from seeds with daily/annual environmental filters
+* Data frame 'herbData' can be defined in forest objects for herbaceous cohorts 
 
 # medfate 4.8.5
 * Store medfate version in initialized objects, to implement backwards compatibility
