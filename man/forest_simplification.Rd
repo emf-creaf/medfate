@@ -4,12 +4,15 @@
 \alias{forest_simplification}
 \alias{forest_mergeTrees}
 \alias{forest_mergeShrubs}
+\alias{forest_mergeHerbs}
 \alias{forest_reduceToDominant}
 \title{Forest complexity reduction}
 \usage{
 forest_mergeTrees(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE)
 
 forest_mergeShrubs(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE)
+
+forest_mergeHerbs(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE)
 
 forest_reduceToDominant(x, SpParams)
 }
@@ -28,16 +31,16 @@ forest_reduceToDominant(x, SpParams)
 Another \code{\link{forest}} object with simplified structure/composition, depending on the function.
 }
 \description{
-Functions \code{forest_mergeTrees} and \code{forest_mergeShrubs} merge cohorts of a \code{\link{forest}} object.
+Functions \code{forest_mergeTrees}, \code{forest_mergeShrubs} and \code{forest_mergeHerbs} merge cohorts of a \code{\link{forest}} object.
 Function \code{forest_reduceToDominant} performs a strongest simplification of plant cohorts (see details).
 }
 \details{
-Tree DBH classes are defined in 5-cm intervals, whereas shrub height classes are defined in 10-cm intervals.
-Tree DBH and shrub height classes are defined up to a specific size (i.e. larger plants are not merged)
+Tree DBH classes are defined in 5-cm intervals, whereas shrub/herb height classes are defined in 10-cm intervals.
+Tree DBH and shrub/herb height classes are defined up to a specific size (i.e. larger plants are not merged)
 corresponding to 52.5 cm and 90 cm, respectively.
 
 Function \code{forest_reduceToDominant} simplifies the input forest to the tree cohort of highest LAI, among those of the tree species with highest LAI.
-The leaf area index of the whole tree layer will be attributed to the chosen cohort. The same is performed for the shrub layer.
+The leaf area index of the whole tree layer will be attributed to the chosen cohort. The same is performed for the shrub and herb layers.
 }
 \examples{
 # Example forest data
