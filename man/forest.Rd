@@ -30,13 +30,17 @@ It has the following structure (see additional columns in details):
 }
 }
 }
-Additionally, it can contain information about the herb layer, seedling layer and seed bank:
+Additionally, it can contain information about the herbaceous layer, seedling/sapling bank and seed bank:
 \itemize{
-\item{\code{herbCover}: Percent cover of the herb layer.}
-\item{\code{herbHeight}: Mean height (in cm) of the herb layer.}
-\item{\code{herbLAI}: Leaf area index (m2/m2) of the herb layer.}
-\item{\code{herbFoliarBiomass}: Dry biomass (kg/m2) of the herb layer.}
-\item{\code{herbFuelLoading}: Fine fuel loading (kg/m2) of the herb layer.}
+\item{\code{herbData}: A data frame of herbaceous cohorts (in rows) and the following columns (see an alternative way of defining the herbaceous layer in details):
+\itemize{
+\item{\code{Species}: String with species (taxon) name or a non-negative integer for herbaceous species identity (i.e., 0,1,2,...) matching SpParams.}
+\item{\code{Height}: Average total height of plants (in cm).}
+\item{\code{Cover}: Percent cover.}
+\item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+\item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+}
+}
 \item{\code{seedlingBank}: An optional data frame containing seedling/sapling information with the following columns:
 \itemize{
 \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
@@ -62,8 +66,8 @@ DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Di
 }
 \details{
 The structure presented above for \code{forest} objects corresponds to the main (required and optional) data elements and their required columns.
-A \code{forest} object can contain additional information when this is available. Data frames \code{treeData}
-and \code{shrubData} can contain additional columns (\code{Z100} is also commonly used for data frame \code{seedlingBank}):
+A \code{forest} object can contain additional information when this is available. Data frames \code{treeData},
+\code{shrubData} and \code{herbData} can contain additional columns (\code{Z100} is also commonly used for data frame \code{seedlingBank}):
 \itemize{
 \item{\code{Z100}: Depth (in mm) corresponding to 100\% of fine roots (to specify a truncated root distribution).}
 \item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
@@ -80,6 +84,16 @@ Leaf area index (\code{LAI}), foliar biomass (\code{FoliarBiomass}), fuel loadin
 when initializing inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}, but they will have no effect in simulations of \code{\link{growth}}, \code{\link{growth_day}} or \code{\link{fordyn}}.
 Note that leaf area index, foliar biomass and fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply
 one or the other, and not all of them at the same time.
+
+Instead of defining \code{herbData}, the herbaceous layer can be defined collectively (avoiding the need to specify species parameters for herbaceous species),
+using the following list items:
+\itemize{
+\item{\code{herbCover}: Percent cover of the herb layer.}
+\item{\code{herbHeight}: Mean height (in cm) of the herb layer.}
+\item{\code{herbLAI}: Leaf area index (m2/m2) of the herb layer.}
+\item{\code{herbFoliarBiomass}: Dry biomass (kg/m2) of the herb layer.}
+\item{\code{herbFuelLoading}: Fine fuel loading (kg/m2) of the herb layer.}
+}
 }
 \examples{
 data(exampleforest)

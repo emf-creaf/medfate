@@ -4,10 +4,17 @@
 \alias{emptyforest}
 \title{Creation of an empty forest}
 \usage{
-emptyforest(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0, addcolumns = NULL)
+emptyforest(
+  ntree = 0,
+  nshrub = 0,
+  nherb = 0,
+  nseedling = 0,
+  nseed = 0,
+  addcolumns = NULL
+)
 }
 \arguments{
-\item{ntree, nshrub}{Number of tree and shrub cohorts, respectively.}
+\item{ntree, nshrub, nherb}{Number of tree, shrub and herb cohorts, respectively.}
 
 \item{nseedling}{Number of species in the seedling bank.}
 
@@ -32,7 +39,7 @@ Creates an empty \code{\link{forest}} object.
 }
 \details{
 List elements \code{treeData} and \code{shrubData} are always created, regardless of the number of cohorts.
-In contrast, list elements \code{seedBank} and \code{seedlingBank} are only created if \code{nseed} and \code{nseedling} are non-zero, respectively.
+In contrast, list elements \code{herbData}, \code{seedBank} and \code{seedlingBank} are only created if \code{nherb}, \code{nseed} and \code{nseedling} are non-zero, respectively.
 }
 \examples{
 # Initializes forest with 2 tree cohorts
@@ -44,8 +51,8 @@ emptyforest(ntree = 2, nshrub = 1)
 # Initializes with extra column for leaf area index (LAI)
 emptyforest(ntree = 2, nshrub = 1, addcolumns = "LAI")
 
-# Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 seedling element
-emptyforest(ntree = 2, nshrub = 1, nseedling = 1)
+# Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 herbaceous cohort
+emptyforest(ntree = 2, nshrub = 1, nherb = 1)
 }
 \seealso{
 \code{\link{forest}}, \code{\link{tree2forest}}, \code{\link{summary.forest}}, \code{\link{forest_mapWoodyTables}},  \code{\link{forest_mergeTrees}},
