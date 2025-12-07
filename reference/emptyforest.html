@@ -54,15 +54,22 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">0</span>, nshrub <span class="op">=</span> <span class="fl">0</span>, nseedling <span class="op">=</span> <span class="fl">0</span>, nseed <span class="op">=</span> <span class="fl">0</span>, addcolumns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emptyforest</span><span class="op">(</span></span>
+<span>  ntree <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  nshrub <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  nherb <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  nseedling <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  nseed <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  addcolumns <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-ntree-nshrub">ntree, nshrub<a class="anchor" aria-label="anchor" href="#arg-ntree-nshrub"></a></dt>
-<dd><p>Number of tree and shrub cohorts, respectively.</p></dd>
+<dl><dt id="arg-ntree-nshrub-nherb">ntree, nshrub, nherb<a class="anchor" aria-label="anchor" href="#arg-ntree-nshrub-nherb"></a></dt>
+<dd><p>Number of tree, shrub and herb cohorts, respectively.</p></dd>
 
 
 <dt id="arg-nseedling">nseedling<a class="anchor" aria-label="anchor" href="#arg-nseedling"></a></dt>
@@ -91,7 +98,7 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>List elements <code>treeData</code> and <code>shrubData</code> are always created, regardless of the number of cohorts.
-In contrast, list elements <code>seedBank</code> and <code>seedlingBank</code> are only created if <code>nseed</code> and <code>nseedling</code> are non-zero, respectively.</p>
+In contrast, list elements <code>herbData</code>, <code>seedBank</code> and <code>seedlingBank</code> are only created if <code>nherb</code>, <code>nseed</code> and <code>nseedling</code> are non-zero, respectively.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -147,8 +154,8 @@ In contrast, list elements <code>seedBank</code> and <code>seedlingBank</code> a
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 seedling element</span></span></span>
-<span class="r-in"><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">2</span>, nshrub <span class="op">=</span> <span class="fl">1</span>, nseedling <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 herbaceous cohort</span></span></span>
+<span class="r-in"><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">2</span>, nshrub <span class="op">=</span> <span class="fl">1</span>, nherb <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $treeData</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Species DBH Height  N Z50 Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    &lt;NA&gt;  NA     NA NA  NA  NA</span>
@@ -158,9 +165,9 @@ In contrast, list elements <code>seedBank</code> and <code>seedlingBank</code> a
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Species Height Cover Z50 Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    &lt;NA&gt;     NA    NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $seedlingBank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Species Percent Age Z50 Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    &lt;NA&gt;      NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $herbData</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Species Height Cover Z50 Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    &lt;NA&gt;     NA    NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>

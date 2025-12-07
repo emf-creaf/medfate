@@ -7,14 +7,21 @@ object.
 ## Usage
 
 ``` r
-emptyforest(ntree = 0, nshrub = 0, nseedling = 0, nseed = 0, addcolumns = NULL)
+emptyforest(
+  ntree = 0,
+  nshrub = 0,
+  nherb = 0,
+  nseedling = 0,
+  nseed = 0,
+  addcolumns = NULL
+)
 ```
 
 ## Arguments
 
-- ntree, nshrub:
+- ntree, nshrub, nherb:
 
-  Number of tree and shrub cohorts, respectively.
+  Number of tree, shrub and herb cohorts, respectively.
 
 - nseedling:
 
@@ -54,9 +61,9 @@ object.
 ## Details
 
 List elements `treeData` and `shrubData` are always created, regardless
-of the number of cohorts. In contrast, list elements `seedBank` and
-`seedlingBank` are only created if `nseed` and `nseedling` are non-zero,
-respectively.
+of the number of cohorts. In contrast, list elements `herbData`,
+`seedBank` and `seedlingBank` are only created if `nherb`, `nseed` and
+`nseedling` are non-zero, respectively.
 
 ## See also
 
@@ -116,8 +123,8 @@ emptyforest(ntree = 2, nshrub = 1, addcolumns = "LAI")
 #> attr(,"class")
 #> [1] "forest" "list"  
 
-# Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 seedling element
-emptyforest(ntree = 2, nshrub = 1, nseedling = 1)
+# Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 herbaceous cohort
+emptyforest(ntree = 2, nshrub = 1, nherb = 1)
 #> $treeData
 #>   Species DBH Height  N Z50 Z95
 #> 1    <NA>  NA     NA NA  NA  NA
@@ -127,9 +134,9 @@ emptyforest(ntree = 2, nshrub = 1, nseedling = 1)
 #>   Species Height Cover Z50 Z95
 #> 1    <NA>     NA    NA  NA  NA
 #> 
-#> $seedlingBank
-#>   Species Percent Age Z50 Z95
-#> 1    <NA>      NA  NA  NA  NA
+#> $herbData
+#>   Species Height Cover Z50 Z95
+#> 1    <NA>     NA    NA  NA  NA
 #> 
 #> attr(,"class")
 #> [1] "forest" "list"  

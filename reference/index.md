@@ -19,6 +19,7 @@ Forest definition and manipulation functions
   : Map forest plot data
 - [`forest_mergeTrees()`](https://emf-creaf.github.io/medfate/reference/forest_simplification.md)
   [`forest_mergeShrubs()`](https://emf-creaf.github.io/medfate/reference/forest_simplification.md)
+  [`forest_mergeHerbs()`](https://emf-creaf.github.io/medfate/reference/forest_simplification.md)
   [`forest_reduceToDominant()`](https://emf-creaf.github.io/medfate/reference/forest_simplification.md)
   : Forest complexity reduction
 - [`poblet_trees`](https://emf-creaf.github.io/medfate/reference/poblet_trees.md)

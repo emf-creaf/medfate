@@ -328,7 +328,7 @@ G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Final soil water content (mm): 274.718
 #> Final snowpack content (mm): 0
 #> Change in plant water content (mm): 0.0118714
-#> Plant water balance result (mm): 4.21353e-16
+#> Plant water balance result (mm): 5.30253e-17
 #> Change in soil water content (mm): -16.1567
 #> Soil water balance result (mm): -16.1567
 #> Change in snowpack water content (mm): 0

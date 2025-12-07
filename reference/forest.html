@@ -71,11 +71,13 @@ It has the following structure (see additional columns in details):</p><ul><li><
 <li><p><code>Z50</code>: Depth (in mm) corresponding to 50% of fine roots.</p></li>
 <li><p><code>Z95</code>: Depth (in mm) corresponding to 95% of fine roots.</p></li>
 </ul></li>
-</ul><p>Additionally, it can contain information about the herb layer, seedling layer and seed bank:</p><ul><li><p><code>herbCover</code>: Percent cover of the herb layer.</p></li>
-<li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer.</p></li>
-<li><p><code>herbLAI</code>: Leaf area index (m2/m2) of the herb layer.</p></li>
-<li><p><code>herbFoliarBiomass</code>: Dry biomass (kg/m2) of the herb layer.</p></li>
-<li><p><code>herbFuelLoading</code>: Fine fuel loading (kg/m2) of the herb layer.</p></li>
+</ul><p>Additionally, it can contain information about the herbaceous layer, seedling/sapling bank and seed bank:</p><ul><li><p><code>herbData</code>: A data frame of herbaceous cohorts (in rows) and the following columns (see an alternative way of defining the herbaceous layer in details):
+</p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for herbaceous species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
+<li><p><code>Height</code>: Average total height of plants (in cm).</p></li>
+<li><p><code>Cover</code>: Percent cover.</p></li>
+<li><p><code>Z50</code>: Depth (in mm) corresponding to 50% of fine roots.</p></li>
+<li><p><code>Z95</code>: Depth (in mm) corresponding to 95% of fine roots.</p></li>
+</ul></li>
 <li><p><code>seedlingBank</code>: An optional data frame containing seedling/sapling information with the following columns:
 </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Percent</code>: Amount of seedling in relation to full seedling bank (in %).</p></li>
@@ -95,8 +97,8 @@ It has the following structure (see additional columns in details):</p><ul><li><
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The structure presented above for <code>forest</code> objects corresponds to the main (required and optional) data elements and their required columns.
-A <code>forest</code> object can contain additional information when this is available. Data frames <code>treeData</code>
-and <code>shrubData</code> can contain additional columns (<code>Z100</code> is also commonly used for data frame <code>seedlingBank</code>):</p><ul><li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
+A <code>forest</code> object can contain additional information when this is available. Data frames <code>treeData</code>,
+<code>shrubData</code> and <code>herbData</code> can contain additional columns (<code>Z100</code> is also commonly used for data frame <code>seedlingBank</code>):</p><ul><li><p><code>Z100</code>: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).</p></li>
 <li><p><code>Age</code>: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with <code><a href="fordyn.html">fordyn</a></code>.</p></li>
 <li><p><code>LAI</code>: Leaf area index (m2/m2).</p></li>
 <li><p><code>FoliarBiomass</code>: Standing dry biomass of leaves (kg/m2).</p></li>
@@ -109,7 +111,13 @@ or removed during simulations.</p></li>
 when initializing inputs for functions <code><a href="spwb.html">spwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>, but they will have no effect in simulations of <code><a href="growth.html">growth</a></code>, <code><a href="growth_day.html">growth_day</a></code> or <code><a href="fordyn.html">fordyn</a></code>.
 Note that leaf area index, foliar biomass and fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply
 one or the other, and not all of them at the same time.</p>
-    </div>
+<p>Instead of defining <code>herbData</code>, the herbaceous layer can be defined collectively (avoiding the need to specify species parameters for herbaceous species),
+using the following list items:</p><ul><li><p><code>herbCover</code>: Percent cover of the herb layer.</p></li>
+<li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer.</p></li>
+<li><p><code>herbLAI</code>: Leaf area index (m2/m2) of the herb layer.</p></li>
+<li><p><code>herbFoliarBiomass</code>: Dry biomass (kg/m2) of the herb layer.</p></li>
+<li><p><code>herbFuelLoading</code>: Fine fuel loading (kg/m2) of the herb layer.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code>forest</code>, <code><a href="spwb.html">spwb</a></code>, <code><a href="modelInput.html">spwbInput</a></code></p>

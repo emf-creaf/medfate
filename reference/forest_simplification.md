@@ -1,7 +1,8 @@
 # Forest complexity reduction
 
-Functions `forest_mergeTrees` and `forest_mergeShrubs` merge cohorts of
-a [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md)
+Functions `forest_mergeTrees`, `forest_mergeShrubs` and
+`forest_mergeHerbs` merge cohorts of a
+[`forest`](https://emf-creaf.github.io/medfate/reference/forest.md)
 object. Function `forest_reduceToDominant` performs a strongest
 simplification of plant cohorts (see details).
 
@@ -11,6 +12,8 @@ simplification of plant cohorts (see details).
 forest_mergeTrees(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE)
 
 forest_mergeShrubs(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE)
+
+forest_mergeHerbs(x, byHeightclass = TRUE, keepCohortsWithObsID = FALSE)
 
 forest_reduceToDominant(x, SpParams)
 ```
@@ -52,15 +55,15 @@ object with simplified structure/composition, depending on the function.
 
 ## Details
 
-Tree DBH classes are defined in 5-cm intervals, whereas shrub height
-classes are defined in 10-cm intervals. Tree DBH and shrub height
-classes are defined up to a specific size (i.e. larger plants are not
-merged) corresponding to 52.5 cm and 90 cm, respectively.
+Tree DBH classes are defined in 5-cm intervals, whereas shrub/herb
+height classes are defined in 10-cm intervals. Tree DBH and shrub/herb
+height classes are defined up to a specific size (i.e. larger plants are
+not merged) corresponding to 52.5 cm and 90 cm, respectively.
 
 Function `forest_reduceToDominant` simplifies the input forest to the
 tree cohort of highest LAI, among those of the tree species with highest
 LAI. The leaf area index of the whole tree layer will be attributed to
-the chosen cohort. The same is performed for the shrub layer.
+the chosen cohort. The same is performed for the shrub and herb layers.
 
 ## See also
 

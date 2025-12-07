@@ -44,18 +44,24 @@ additional columns in details):
 
   - `Z95`: Depth (in mm) corresponding to 95% of fine roots.
 
-Additionally, it can contain information about the herb layer, seedling
-layer and seed bank:
+Additionally, it can contain information about the herbaceous layer,
+seedling/sapling bank and seed bank:
 
-- `herbCover`: Percent cover of the herb layer.
+- `herbData`: A data frame of herbaceous cohorts (in rows) and the
+  following columns (see an alternative way of defining the herbaceous
+  layer in details):
 
-- `herbHeight`: Mean height (in cm) of the herb layer.
+  - `Species`: String with species (taxon) name or a non-negative
+    integer for herbaceous species identity (i.e., 0,1,2,...) matching
+    SpParams.
 
-- `herbLAI`: Leaf area index (m2/m2) of the herb layer.
+  - `Height`: Average total height of plants (in cm).
 
-- `herbFoliarBiomass`: Dry biomass (kg/m2) of the herb layer.
+  - `Cover`: Percent cover.
 
-- `herbFuelLoading`: Fine fuel loading (kg/m2) of the herb layer.
+  - `Z50`: Depth (in mm) corresponding to 50% of fine roots.
+
+  - `Z95`: Depth (in mm) corresponding to 95% of fine roots.
 
 - `seedlingBank`: An optional data frame containing seedling/sapling
   information with the following columns:
@@ -94,8 +100,9 @@ Ambiente, Madrid.
 The structure presented above for `forest` objects corresponds to the
 main (required and optional) data elements and their required columns. A
 `forest` object can contain additional information when this is
-available. Data frames `treeData` and `shrubData` can contain additional
-columns (`Z100` is also commonly used for data frame `seedlingBank`):
+available. Data frames `treeData`, `shrubData` and `herbData` can
+contain additional columns (`Z100` is also commonly used for data frame
+`seedlingBank`):
 
 - `Z100`: Depth (in mm) corresponding to 100% of fine roots (to specify
   a truncated root distribution).
@@ -134,6 +141,20 @@ Note that leaf area index, foliar biomass and fuel loading are related
 entities, and they are treated as such in medfate. Therefore, users are
 expected to supply one or the other, and not all of them at the same
 time.
+
+Instead of defining `herbData`, the herbaceous layer can be defined
+collectively (avoiding the need to specify species parameters for
+herbaceous species), using the following list items:
+
+- `herbCover`: Percent cover of the herb layer.
+
+- `herbHeight`: Mean height (in cm) of the herb layer.
+
+- `herbLAI`: Leaf area index (m2/m2) of the herb layer.
+
+- `herbFoliarBiomass`: Dry biomass (kg/m2) of the herb layer.
+
+- `herbFuelLoading`: Fine fuel loading (kg/m2) of the herb layer.
 
 ## See also
 
