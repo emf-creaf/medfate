@@ -594,6 +594,10 @@ plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L, herbOffset 
     .Call(`_medfate_cohortIDs`, x, SpParams, treeOffset, shrubOffset, herbOffset)
 }
 
+.cohortType <- function(IDs) {
+    .Call(`_medfate_cohortType`, IDs)
+}
+
 #' @rdname plant_values
 #' @keywords internal
 plant_basalArea <- function(x, SpParams) {

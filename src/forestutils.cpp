@@ -593,6 +593,25 @@ CharacterVector cohortIDs(List x, DataFrame SpParams,
   return(IDs);
 }
 
+// [[Rcpp::export(".cohortType")]]
+CharacterVector cohortType(CharacterVector IDs) {
+  CharacterVector types(IDs.size());
+  for(int i=0;i<IDs.size();i++) {
+    String s_i = IDs[i];
+    std::string cstr = s_i.get_cstring();
+    if(cstr.substr(0,1) =="T") {
+      types[i] = "tree";
+    } else if(cstr.substr(0,1) =="S") {
+      types[i] = "shrub";
+    } else if(cstr.substr(0,1) =="H") {
+      types[i] = "herb";
+    } else {
+      stop("Wrong ID start");
+    }
+  }
+  return(types);
+}
+
 //' @rdname plant_values
 //' @keywords internal
 // [[Rcpp::export("plant_basalArea")]]
@@ -905,21 +924,8 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
   if(x.containsElementNamed("herbData")) {
     DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
     nherb = herbData.nrows();
-    if((TYPEOF(herbData["Species"]) == INTSXP) || (TYPEOF(herbData["Species"]) == REALSXP)) {
-      herbSP = Rcpp::as<Rcpp::IntegerVector>(herbData["Species"]);  
-    } else {
-      CharacterVector hspecies = Rcpp::as<Rcpp::CharacterVector>(herbData["Species"]);
-      herbSP = speciesIndex(hspecies, SpParams);
-    }
-    if(herbData.containsElementNamed("CrownRatio")) {
-      herbCR = herbData["CrownRatio"];
-    } else {
-      herbCR = NumericVector(nherb, NA_REAL);
-    }
-    NumericVector herbCRAllom = shrubCrownRatioAllometric(herbSP, SpParams);
-    for(int i=0;i<nshrub;i++) {
-      if(NumericVector::is_na(herbCR[i])) herbCR[i] = herbCRAllom[i];
-    }
+    //Herbs assumed to have crowns starting at the ground level
+    herbCR = NumericVector(nherb, 1.0);
   }
   
   int numCohorts  = ntree+nshrub+nherb;

@@ -818,6 +818,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cohortType
+CharacterVector cohortType(CharacterVector IDs);
+RcppExport SEXP _medfate_cohortType(SEXP IDsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type IDs(IDsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortType(IDs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cohortBasalArea
 NumericVector cohortBasalArea(List x, DataFrame SpParams);
 RcppExport SEXP _medfate_cohortBasalArea(SEXP xSEXP, SEXP SpParamsSEXP) {
@@ -6165,6 +6176,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_herbCover", (DL_FUNC) &_medfate_herbCover, 2},
     {"_medfate_shrubPhytovolumeAllometric", (DL_FUNC) &_medfate_shrubPhytovolumeAllometric, 4},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 5},
+    {"_medfate_cohortType", (DL_FUNC) &_medfate_cohortType, 1},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 3},
     {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 2},
