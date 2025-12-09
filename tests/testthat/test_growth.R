@@ -1,6 +1,12 @@
 library(medfate)
 
 data(exampleforest)
+
+
+forest_herbs <- exampleforest
+forest_herbs$herbData <- forest_herbs$shrubData
+
+
 data(SpParamsMED)
 data(examplemeteo)
 examplemeteo2 <- examplemeteo
@@ -20,7 +26,7 @@ control_sureau$verbose <- FALSE
 #Initialize soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("growth can be run in example and empty forests",{
+test_that("growth can be run in example, herbs and empty forests",{
   expect_s3_class(growth(growthInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
@@ -39,6 +45,15 @@ test_that("growth can be run in example and empty forests",{
   expect_s3_class(growth(growthInput(emptyforest(), examplesoil, SpParamsMED, control_sureau), 
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(forest_herbs, examplesoil, SpParamsMED, control_granier), 
+                         examplemeteo[1:10,],
+                         latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(forest_herbs, examplesoil, SpParamsMED, control_sperry), 
+                         examplemeteo[1:10,],
+                         latitude = 41.82592, elevation = 100), "growth")
+  expect_s3_class(growth(growthInput(forest_herbs, examplesoil, SpParamsMED, control_sureau), 
+                         examplemeteo[1:10,],
+                         latitude = 41.82592, elevation = 100), "growth")
 })
 
 test_that("growth can be run using dates as columns",{

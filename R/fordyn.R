@@ -223,7 +223,9 @@ fordyn<-function(forest, soil, SpParams,
     deadShrubTableYear <- .createDeadShrubTable(iYear, year, xo)
     
     # 2.2 Update forest structural variables
-    isTree <- is.na(xo$above$Cover)
+    ctype <- .cohortType(row.names(xo$cohorts))
+    isTree <- (ctype=="tree")
+    isShrub <- (ctype=="shrub")
     forest$treeData$N  <- xo$above$N[isTree]
     forest$treeData$DBH  <- xo$above$DBH[isTree]
     forest$treeData$Height  <- xo$above$H[isTree]
@@ -231,11 +233,11 @@ fordyn<-function(forest, soil, SpParams,
     forest$treeData$Z95  <- xo$below$Z95[isTree]
     forest$treeData$Z100  <- xo$below$Z100[isTree]
     if(control$shrubDynamics) {
-      forest$shrubData$Cover  <- xo$above$Cover[!isTree]
-      forest$shrubData$Height  <- xo$above$H[!isTree]
-      forest$shrubData$Z50  <- xo$below$Z50[!isTree]
-      forest$shrubData$Z95  <- xo$below$Z95[!isTree]
-      forest$shrubData$Z100  <- xo$below$Z100[!isTree]
+      forest$shrubData$Cover  <- xo$above$Cover[isShrub]
+      forest$shrubData$Height  <- xo$above$H[isShrub]
+      forest$shrubData$Z50  <- xo$below$Z50[isShrub]
+      forest$shrubData$Z95  <- xo$below$Z95[isShrub]
+      forest$shrubData$Z100  <- xo$below$Z100[isShrub]
     }
     
     # 2.3 Call management function if required
@@ -250,7 +252,7 @@ fordyn<-function(forest, soil, SpParams,
       forest$treeData$N <- pmax(0,forest$treeData$N - management_result$N_tree_cut)
       xo$above$N[isTree] <- forest$treeData$N
       forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - management_result$Cover_shrub_cut)
-      xo$above$Cover[!isTree] <- forest$shrubData$Cover
+      xo$above$Cover[isShrub] <- forest$shrubData$Cover
       # Update cut tables
       cutTreeTableYear <- .createCutTreeTable(iYear, year, xo, management_result$N_tree_cut)
       cutShrubTableYear <- .createCutShrubTable(iYear, year, xo, management_result$Cover_shrub_cut)

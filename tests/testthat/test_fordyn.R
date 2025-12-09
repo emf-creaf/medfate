@@ -4,6 +4,9 @@ data(exampleforest)
 data(SpParamsMED)
 
 
+forest_herbs <- exampleforest
+forest_herbs$herbData <- forest_herbs$shrubData
+
 data(examplemeteo)
 #Prepare a two-year meteorological data with half precipitation during 
 #the second year
@@ -30,12 +33,15 @@ control$verbose <- FALSE
 #Initialize soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("fordyn can be run and continued in example and empty forests",{
+test_that("fordyn can be run and continued in example, herbs and empty forests",{
   fd <- fordyn(exampleforest, examplesoil, 
                SpParamsMED, meteo_01_02, control,
                latitude = 41.82592, elevation = 100)
   expect_s3_class(fd, "fordyn")
   expect_s3_class(fordyn(fd, examplesoil, 
+                         SpParamsMED, meteo_01_02, control,
+                         latitude = 41.82592, elevation = 100), "fordyn")
+  expect_s3_class(fordyn(forest_herbs, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
   expect_s3_class(fordyn(emptyforest(), examplesoil, 
@@ -85,8 +91,13 @@ test_that("fordyn can be run using different recruitment modes",{
   }
 })
 
-test_that("fordyn can be run in example and empty forests using management",{
+test_that("fordyn can be run in example, herbs and empty forests using management",{
   expect_s3_class(fordyn(exampleforest, examplesoil, 
+                         SpParamsMED, meteo_01_02, control,
+                         latitude = 41.82592, elevation = 100,
+                         management_function = defaultManagementFunction,
+                         management_args = defaultManagementArguments()), "fordyn")
+  expect_s3_class(fordyn(forest_herbs, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100,
                          management_function = defaultManagementFunction,

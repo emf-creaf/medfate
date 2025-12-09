@@ -362,6 +362,7 @@ regeneration_seedlings <- function(forest, SpParams, control,
   recr_forest$shrubData <- recr_forest$shrubData[recr_forest$shrubData$Cover>0, ,drop=FALSE]
   
   
+  if("herbData" %in% names(recr_forest)) recr_forest$herbData <- NULL
   if("herbCover" %in% names(recr_forest)) recr_forest$herbCover <- NULL
   if("herbHeight" %in% names(recr_forest)) recr_forest$herbHeight <- NULL
   if("seedBank" %in% names(recr_forest)) recr_forest$seedBank <- NULL
@@ -464,9 +465,10 @@ regeneration_resprouting <- function(forest, internalMortality, SpParams, contro
   resp_forest$treeData <- resp_forest$treeData[resp_forest$treeData$N > 0, , drop = FALSE]
   resp_forest$shrubData <- resp_forest$shrubData[resp_forest$shrubData$Cover > 0, , drop = FALSE]
   
+  if("herbData" %in% names(resp_forest)) resp_forest$herbData <- NULL
   if("herbCover" %in% names(resp_forest)) resp_forest$herbCover <- NULL
   if("herbHeight" %in% names(resp_forest)) resp_forest$herbHeight <- NULL
   if("seedBank" %in% names(resp_forest)) resp_forest$seedBank <- NULL
-
+  
   return(resp_forest)
 }

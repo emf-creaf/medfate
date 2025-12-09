@@ -236,6 +236,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  CharacterVector ctype = cohortType(cohorts.attr("row.names"));
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   int numCohorts = SP.size();
   
@@ -336,10 +337,10 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   if(shrubDynamics) {
     double treeLAI = 0.0;
     for(int j=0;j<numCohorts;j++) {
-      if(!NumericVector::is_na(DBH[j])) treeLAI +=LAI_live[j];
+      if(ctype[j] == "tree") treeLAI +=LAI_live[j];
     }
     for(int j=0;j<numCohorts; j++) {
-      if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+      if((ctype[j]=="shrub") && N[j]>0.0) {
         if(budFormation[j]) {
           leafAreaTarget[j] = (Al2As[j]*SA[j])/10000.0; // Set leaf area target according to current sapwood area
           double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
@@ -443,6 +444,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  CharacterVector ctype = cohortType(cohorts.attr("row.names"));
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   int numCohorts = SP.size();
   
@@ -1251,8 +1253,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       //MORTALITY Death by carbon starvation or dessication
       double Ndead_day = 0.0;
       bool dynamicCohort = true;
-      bool isShrub = !NumericVector::is_na(Cover[j]);
-      if((!shrubDynamics) && isShrub) dynamicCohort = false;
+      if((ctype[j] == "shrub") && (!shrubDynamics)) dynamicCohort = false;
+      else if(ctype[j] =="herb") dynamicCohort = false;
       double stemSympRWC = NA_REAL;
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       else stemSympRWC = symplasticRelativeWaterContent(psiSympStem[j], StemPI0[j], StemEPS[j]);
@@ -1294,7 +1296,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           double bark_diff = barkThermalDiffusivity(fm_dead, 500.0, tmax);
           double xn = radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax, rho_air);
           double bark_thickness = 1.0;
-          if(isShrub) {
+          if(ctype[j] == "shrub") {
             bark_thickness = BTsh[j]*0.1; // from mm to cm
           } else {
             bark_thickness = Abt[j]*pow(DBH[j],Bbt[j])*0.1;// from mm to cm
@@ -1370,7 +1372,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           N_burnt[j] = N_burnt[j] + Ndead_day;
         } else if(cause == "dessication") {
           N_dessication[j] = N_dessication[j] + Ndead_day;
-        } else if(!isShrub) { // Self-thinning occurring in tree cohorts
+        } else if(ctype[j]=="tree") { // Self-thinning occurring in tree cohorts
           if(DBH[j] < IngrowthTreeDBH[j]) {
             double b_st = log(RecrTreeDensity[j]/IngrowthTreeDensity[j])/log(RecrTreeDBH[j]/IngrowthTreeDBH[j]);
             double a_st = IngrowthTreeDensity[j]/pow(IngrowthTreeDBH[j], b_st);
@@ -1382,7 +1384,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         }
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
-        if(isShrub) {
+        if(ctype[j]=="shrub") {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
           Cover_dead[j] = Cover_dead[j] + Cdead_day;
           if(cause == "starvation") {
