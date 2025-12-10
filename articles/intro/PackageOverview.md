@@ -2,12 +2,12 @@
 
 ## Introduction
 
-Being able to anticipate the impact of global change on forest
+Being able to anticipate the impact of global change on terrestrial
 ecosystems is one of the major environmental challenges in contemporary
-societies. However, uncertainties in how forests function and practical
-constraints in how to integrate available information prevent the
-development of robust and reliable predictive models. Despite the amount
-of knowledge accumulated about the functioning and dynamics of
+societies. However, uncertainties in how plant communities function and
+practical constraints in how to integrate available information prevent
+the development of robust and reliable predictive models. Despite the
+amount of knowledge accumulated about the functioning and dynamics of
 Mediterranean forests, scientists should make coordinate their efforts
 to address the challenge of integrating the different global change
 drivers in a modelling framework useful for research and applications.
@@ -17,27 +17,26 @@ and simulate the functioning and structural dynamics of forest
 ecosystems. Climatic conditions are the main environmental drivers, with
 a particular focus on drought and fire impacts under Mediterranean
 conditions. Representation of vegetation accounts for structural and
-compositional variation but is not spatially-explicit (i.e. trees or
-shrubs do not have explicit coordinates within forest stands). This
-representation is chosen so that package functions can be easily applied
-to forest plot data from national forest inventories. Since the package
-intends to facilitate predictions of not only forest functioning but
-also forest structural and compositional dynamics, the taxonomic
-identity of plants is stored, and parameter values need to be provided
-for each taxonomic entity (but the package could be used with functional
-groups).
+compositional variation but is not spatially-explicit (i.e. trees,
+shrubs or herbs do not have explicit coordinates within forest stands).
+This representation is chosen so that package functions can be easily
+applied to forest plot data from national forest inventories. Since the
+package intends to facilitate predictions of not only forest functioning
+but also structure and composition dynamics, the taxonomic identity of
+plants is stored, and parameter values need to be provided for each
+taxonomic entity (but the package could be used with functional groups).
 
 Currently, the distributed R package does not include any vignette, but
 the package [website](https://emf-creaf.github.io/medfate/) includes
 articles covering model simulation examples, sensitivity analysis,
 parameter specification, model evaluation and applications. In addition,
-complete documentation on the design and formulation of the simulation
+a detailed documentation on the design and formulation of the simulation
 models can be found at the [medfate reference
 book](https://emf-creaf.github.io/medfatebook/index.html).
 
 ## Dynamic simulation functions
 
-Three main kinds of simulations can be done in medfate, each model
+Three main kinds of simulations can be done in `medfate`, each model
 building on the previous ones.
 
 ### Water/energy balance
@@ -87,8 +86,8 @@ likelihood of mortality, resulting in a decrease of the number of
 individuals in the cohort.
 
 Package `medfate` allows simulating daily water/carbon balances, growth
-and mortality of a set of cohorts (competing for light and water) in a
-single forest stand using function
+and mortality of a set of plant cohorts (competing for light and water)
+in a single forest stand using function
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md),
 which adds carbon balance, growth and mortality processes to those
 simulated by function
@@ -133,8 +132,8 @@ returns an object of class `spwb`).
 
 - Implementations of [`summary()`](https://rdrr.io/r/base/summary.html)
   and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) are
-  available for simulation output objects, which facilitates displaying
-  and summarizing information.
+  available for simulation inputs (`forest` or `soil` objects) and
+  outputs, which facilitates displaying and summarizing information.
 - A generic function
   [`shinyplot()`](https://emf-creaf.github.io/medfate/reference/shinyplot.md)
   (as well as its implementation for different output objects) allows an
@@ -198,16 +197,13 @@ does not overwhelm users.
 ### Plant, species and stand attributes
 
 The package includes a number of functions to examine properties of the
-plants conforming the `forest` object, summary functions at the stand
-level or vertical profiles of several physical properties:
+plants conforming the `forest` object:
 
 - `plant_*`: Cohort-level information (species name, id, leaf area
   index, height…).
 - `species_*`: Species-level attributes (e.g. basal area, leaf area
   index).
 - `stand_*`: Stand-level attributes (e.g. basal area).
-- `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area
-  density).
 
 ### Sub-model functions
 

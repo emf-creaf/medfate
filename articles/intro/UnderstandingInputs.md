@@ -204,8 +204,8 @@ found in
 
 Models included in `medfate` were primarily designed to be ran on
 **forest inventory plots**. In this kind of data, the vegetation of a
-sampled area is often described by several records of woody plants
-(trees and shrubs) along with their size and species identity. Forest
+sampled area is often described by several records of plants (trees,
+shrubs and herbs) along with their size and species identity. Forest
 plots in `medfate` are assumed to be in a data structure that follows
 closely the Spanish national forest inventory, but is simple enough to
 so that other forest sampling schemes can be mapped onto it.
@@ -238,8 +238,9 @@ distribution has to be specified for both growth forms, in terms of the
 depths (mm) corresponding to 50% and 95% of cumulative fine root
 distribution. Functions are provided in the package to map variables in
 user data frames into tables `treeData` and `shrubData`. Information
-about the herb layer may be either absent or included in an aggregated
-way (i.e. without distinguishing cohorts).
+about the herb layer may be either absent, defined in a table `herbData`
+(analogous to `shrubData`) or included in an aggregated way
+(i.e. without distinguishing cohorts).
 
 While the former example illustrates the standard structure of a
 `forest` object, users may use an alternative description, based on leaf

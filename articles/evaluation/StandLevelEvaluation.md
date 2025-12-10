@@ -1,10 +1,8 @@
 # Model evaluation in experimental plots
 
-    ## Error in readRDS(file_name_output): error reading from connection
-
 ## Introduction
 
-This document presents **medfate** (**ver. 4.8.0**) model evaluation
+This document presents **medfate** (**ver. 4.9.0**) model evaluation
 results at stand-level, using data from a set of **20 experimental
 forest plots**. The main source of observed data are SAPFLUXNET database
 ([Poyatos et
@@ -180,13 +178,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| WOMBAT | sperry | 730 | 2.600475 | 75.25273 | 5.016844 | 145.1778 | 0.5621591 | -1.0500799 | -0.2253586 |
+| WOMBAT | sureau | 730 | 2.586075 | 74.83601 | 4.768960 | 138.0045 | 0.5667960 | -0.7745536 | -0.1648134 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png)
 
@@ -194,13 +189,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| WOMBAT | sperry | 730 | -3.157123 | -54.76089 | 3.374487 | 58.53110 | 0.5492935 | -0.7500186 | -0.3466214 |
+| WOMBAT | sureau | 730 | -3.263691 | -56.60932 | 3.385140 | 58.71588 | 0.6969171 | -0.6589523 | -0.3508727 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-45-1.png)
 
@@ -208,13 +200,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| WOMBAT | granier | 730 | -2.6944993 | -48.86060 | 2.752716 | 49.91627 | 0.7225719 | -0.6685083 | -0.3158651 |
+| WOMBAT | sperry | 730 | -0.8669382 | -15.72059 | 1.594796 | 28.91918 | 0.6586017 | 0.3147340 | 0.2376486 |
+| WOMBAT | sureau | 730 | -1.4026171 | -25.43431 | 1.753773 | 31.80198 | 0.7285550 | 0.1788762 | 0.1616539 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png)
 
@@ -222,13 +212,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.1)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| WOMBAT | granier | 1035 | -0.0817882 | -38.93786 | 0.0883318 | 42.05314 | 0.3699423 | -1.499753 | -0.7253290 |
+| WOMBAT | sperry | 1035 | -0.0797165 | -37.95156 | 0.0872436 | 41.53508 | 0.3575807 | -1.428781 | -0.7040743 |
+| WOMBAT | sureau | 1035 | -0.0806969 | -38.41834 | 0.0876563 | 41.73156 | 0.3692498 | -1.457076 | -0.7121353 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png)
 
@@ -238,12 +226,12 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| WOMBAT | T1_7431 | granier | 1035 | -0.1417501 | -34.78071 | 0.1507744 | 36.99499 | 0.9096005 | 0.4811424 | 0.2946822 |
-| WOMBAT | T1_7431 | sperry | 1035 | -0.1389368 | -34.09043 | 0.1450798 | 35.59771 | 0.9291188 | 0.5612928 | 0.3213218 |
-| WOMBAT | T1_7431 | sureau | 1035 | -0.1006258 | -24.69020 | 0.1482999 | 36.38783 | 0.9108201 | 0.5147453 | 0.3062578 |
-| WOMBAT | T2_7526 | granier | 1035 | -0.1173446 | -25.93085 | 0.1439880 | 31.81853 | 0.9120013 | 0.6617901 | 0.4800668 |
-| WOMBAT | T2_7526 | sperry | 1035 | -0.1703508 | -37.64420 | 0.1727077 | 38.16502 | 0.9442743 | 0.5867044 | 0.3763614 |
-| WOMBAT | T2_7526 | sureau | 1035 | -0.1022853 | -22.60306 | 0.1425305 | 31.49645 | 0.9323598 | 0.7150339 | 0.4853297 |
+| WOMBAT | T1_7431 | granier | 1035 | -0.1687791 | -41.41273 | 0.1757917 | 43.13338 | 0.8809295 | 0.2753780 | 0.1776524 |
+| WOMBAT | T1_7431 | sperry | 1035 | -0.1394164 | -34.20811 | 0.1455198 | 35.70568 | 0.9290043 | 0.5589456 | 0.3192633 |
+| WOMBAT | T1_7431 | sureau | 1035 | -0.1385786 | -34.00254 | 0.1580950 | 38.79122 | 0.9145502 | 0.4969340 | 0.2604368 |
+| WOMBAT | T2_7526 | granier | 1035 | -0.1655800 | -36.58994 | 0.1837911 | 40.61424 | 0.8687882 | 0.4248388 | 0.3363398 |
+| WOMBAT | T2_7526 | sperry | 1035 | -0.1707542 | -37.73334 | 0.1730738 | 38.24591 | 0.9442202 | 0.5848070 | 0.3750396 |
+| WOMBAT | T2_7526 | sureau | 1035 | -0.1361686 | -30.09060 | 0.1509832 | 33.36434 | 0.9374027 | 0.6947895 | 0.4548073 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-66-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-66-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-66-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-66-4.png)
 
@@ -332,13 +320,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| EUCFACE | sperry | 884 | -2.110592 | -43.68872 | 4.305725 | 89.12742 | 0.3106459 | -1.0354596 | -0.3672240 |
+| EUCFACE | sureau | 884 | -1.883877 | -38.99578 | 4.124443 | 85.37494 | 0.2865083 | -0.8663871 | -0.3096606 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-99-1.png)
 
@@ -346,13 +331,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| EUCFACE | sperry | 884 | -2.816318 | -50.52309 | 2.885080 | 51.75664 | 0.6093248 | -1.700928 | -0.9232982 |
+| EUCFACE | sureau | 884 | -3.162415 | -56.73186 | 3.204562 | 57.48795 | 0.5183815 | -2.366945 | -1.1362760 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-106-1.png)
 
@@ -360,13 +342,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| EUCFACE | granier | 884 | -0.6786855 | -22.34654 | 1.041018 | 34.27678 | 0.3164765 | -0.4680075 | -0.2074953 |
+| EUCFACE | sperry | 884 | 2.4767438 | 81.54979 | 2.562458 | 84.37204 | 0.3481429 | -6.0762564 | -1.9722406 |
+| EUCFACE | sureau | 884 | 1.5056873 | 49.57658 | 1.655174 | 54.49860 | 0.2956801 | -2.2537359 | -0.9198653 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-113-1.png)
 
@@ -374,13 +354,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| EUCFACE | granier | 710 | -0.0057752 | -6.057183 | 0.0473376 | 49.64857 | 0.4868848 | 0.1701432 | 0.1335998 |
+| EUCFACE | sperry | 710 | -0.0096740 | -10.146286 | 0.0454911 | 47.71190 | 0.4798745 | 0.1709765 | 0.1673959 |
+| EUCFACE | sureau | 710 | -0.0078969 | -8.282440 | 0.0463297 | 48.59143 | 0.4635703 | 0.1651038 | 0.1520477 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-120-1.png)
 
@@ -390,22 +368,20 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| EUCFACE | T1_7590 | granier | 708 | -0.3059868 | -47.08936 | 0.3179183 | 48.92554 | 0.7156483 | -0.7090373 | -0.4259406 |
+| EUCFACE | T1_7590 | granier | 708 | -0.3155961 | -48.56817 | 0.3260133 | 50.17131 | 0.7267545 | -0.7770994 | -0.4622488 |
 | EUCFACE | T1_7590 | sperry | 708 | -0.1699725 | -26.15765 | 0.2011028 | 30.94840 | 0.7715523 | 0.1811446 | 0.0980053 |
-| EUCFACE | T1_7590 | sureau | 708 | -0.1709932 | -26.31473 | 0.2502836 | 38.51700 | 0.6952598 | -0.1704686 | -0.1225826 |
+| EUCFACE | T1_7590 | sureau | 708 | -0.2231318 | -34.33852 | 0.2581643 | 39.72979 | 0.7113742 | -0.2364998 | -0.1579294 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-127-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-127-2.png)
 
 #### Leaf water potential
 
-    ## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed
-
 | Site | Cohort | WP | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| EUCFACE | T1_7590 | Midday | sperry | 15 | 0.6268778 | 31.47533 | 0.7376916 | 37.03925 | 0.2071056 | -1.506711 | -0.5923862 |
-| EUCFACE | T1_7590 | Midday | sureau | 15 | 0.8796616 | 44.16752 | 1.0785328 | 54.15278 | 0.0744972 | -3.932285 | -1.3281284 |
-| EUCFACE | T1_7590 | Predawn | sperry | 8 | 0.1375796 | 21.37955 | 0.2778156 | 43.17188 | 0.3955593 | -1.394345 | -0.8812367 |
-| EUCFACE | T1_7590 | Predawn | sureau | 8 | -0.2556126 | -39.72159 | 0.4358844 | 67.73540 | 0.1337131 | -9.443432 | -1.9516047 |
+| EUCFACE | T1_7590 | Midday | sperry | 15 | 0.6268778 | 31.47533 | 0.7376916 | 37.03925 | 0.2071056 | -1.5067114 | -0.5923862 |
+| EUCFACE | T1_7590 | Midday | sureau | 15 | 1.0943407 | 54.94649 | 1.1532759 | 57.90561 | 0.1509508 | -4.6859314 | -1.4894695 |
+| EUCFACE | T1_7590 | Predawn | sperry | 8 | 0.1375796 | 21.37955 | 0.2778156 | 43.17188 | 0.3955593 | -1.3943445 | -0.8812367 |
+| EUCFACE | T1_7590 | Predawn | sureau | 8 | 0.0764864 | 11.88580 | 0.2165934 | 33.65810 | 0.5136820 | -0.5813806 | -0.4666687 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-132-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-132-2.png)
 
@@ -493,13 +469,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| SOROE | sperry | 1461 | -2.821307 | -1810.811 | 6.351118 | 4076.365 | 0.3466944 | -1.846792 | -0.7945913 |
+| SOROE | sureau | 1461 | -1.802605 | -1156.974 | 6.127848 | 3933.063 | 0.3904302 | -1.735913 | -0.7315035 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-164-1.png)
 
@@ -507,13 +480,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| SOROE | sperry | 1461 | 1.029663 | 35.618677 | 1.804545 | 62.42379 | 0.6811450 | 0.3244145 | 0.3215193 |
+| SOROE | sureau | 1461 | -0.100055 | -3.461158 | 2.407022 | 83.26501 | 0.3427894 | -0.0285535 | 0.0949973 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-171-1.png)
 
@@ -521,13 +491,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| SOROE | granier | 1461 | 0.6686326 | 12.20259 | 2.772429 | 50.59701 | 0.8347640 | 0.6514127 | 0.4559557 |
+| SOROE | sperry | 1461 | 2.3387976 | 42.68320 | 2.897244 | 52.87489 | 0.8810292 | 0.5980873 | 0.4314628 |
+| SOROE | sureau | 1461 | 1.2300464 | 22.44842 | 2.528592 | 46.14696 | 0.8677881 | 0.6954012 | 0.5038048 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-178-1.png)
 
@@ -535,13 +503,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| SOROE | granier | 1461 | -0.0717646 | -31.52245 | 0.0772213 | 33.91927 | 0.5606022 | -1.3741448 | -0.6940781 |
+| SOROE | sperry | 1461 | -0.0649644 | -28.53545 | 0.0710859 | 31.22433 | 0.5277637 | -1.0820531 | -0.5594810 |
+| SOROE | sureau | 1461 | -0.0552180 | -24.25439 | 0.0661443 | 29.05374 | 0.4436313 | -0.7859524 | -0.4510720 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-185-1.png)
 
@@ -632,13 +598,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAPUE | sperry | 1096 | 0.7091794 | 20.03411 | 4.126571 | 116.5744 | 0.7012380 | -0.0710422 | 0.0910885 |
+| FRAPUE | sureau | 1096 | 0.8773274 | 24.78424 | 3.792415 | 107.1346 | 0.6812086 | 0.0966535 | 0.1646892 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-221-1.png)
 
@@ -646,13 +609,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAPUE | sperry | 1096 | -0.6213170 | -19.52938 | 2.123809 | 66.75606 | 0.1528356 | -0.5932759 | -0.1132033 |
+| FRAPUE | sureau | 1096 | -0.9235667 | -29.02976 | 1.751178 | 55.04342 | 0.5261058 | 0.0789480 | 0.0821131 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-228-1.png)
 
@@ -660,13 +620,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAPUE | granier | 1096 | -0.0564101 | -1.709898 | 1.199534 | 36.36019 | 0.6572415 | 0.3420145 | 0.2373708 |
+| FRAPUE | sperry | 1096 | -0.7486825 | -22.694012 | 1.522117 | 46.13830 | 0.3724089 | -0.4864733 | 0.0322818 |
+| FRAPUE | sureau | 1096 | -0.3031693 | -9.189647 | 0.889379 | 26.95880 | 0.7978724 | 0.6035443 | 0.4345584 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-235-1.png)
 
@@ -674,13 +632,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.2)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAPUE | granier | 1021 | -0.0187856 | -11.79326 | 0.0293413 | 18.41991 | 0.7824730 | 0.4044871 | 0.2350578 |
+| FRAPUE | sperry | 1021 | -0.0447104 | -28.06832 | 0.0480113 | 30.14061 | 0.8133482 | -0.4637887 | -0.2516798 |
+| FRAPUE | sureau | 1021 | -0.0186275 | -11.69401 | 0.0269961 | 16.94766 | 0.8403371 | 0.5047975 | 0.2961974 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-242-1.png)
 
@@ -690,22 +646,20 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| FRAPUE | T1_2854 | granier | 1096 | -0.0818435 | -23.85896 | 0.1257926 | 36.67098 | 0.7740577 | 0.4531214 | 0.3050664 |
-| FRAPUE | T1_2854 | sperry | 1096 | -0.0438887 | -12.79441 | 0.2810124 | 81.92054 | 0.2335627 | -2.0042843 | -0.5524357 |
-| FRAPUE | T1_2854 | sureau | 1096 | -0.0645240 | -18.80999 | 0.1347261 | 39.27524 | 0.7959383 | 0.3627556 | 0.2557143 |
+| FRAPUE | T1_2854 | granier | 1096 | -0.0875490 | -25.52221 | 0.1297054 | 37.81162 | 0.7584299 | 0.4113520 | 0.2834507 |
+| FRAPUE | T1_2854 | sperry | 1096 | -0.0330665 | -9.63952 | 0.2732000 | 79.64306 | 0.2378637 | -1.8985760 | -0.5092762 |
+| FRAPUE | T1_2854 | sureau | 1096 | -0.0857442 | -24.99608 | 0.1350925 | 39.38208 | 0.8306098 | 0.3821038 | 0.2536897 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-249-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-249-2.png)
 
 #### Leaf water potential
 
-    ## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed
-
 | Site | Cohort | WP | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| FRAPUE | T1_2854 | Midday | sperry | 14 | -0.7607598 | -25.36243 | 1.0579453 | 35.27009 | 0.1576664 | -3.5406235 | -1.1957091 |
-| FRAPUE | T1_2854 | Midday | sureau | 28 | 0.4383139 | 14.04752 | 0.8599314 | 27.55993 | 0.6541764 | -0.9622805 | -0.4403996 |
-| FRAPUE | T1_2854 | Predawn | sperry | 14 | -1.5965810 | -136.03429 | 1.6164152 | 137.72423 | 0.4569802 | -3.7935507 | -0.9391046 |
-| FRAPUE | T1_2854 | Predawn | sureau | 28 | -0.5971095 | -40.82177 | 0.8364286 | 57.18297 | 0.7530155 | 0.2119242 | 0.1203657 |
+| FRAPUE | T1_2854 | Midday | sperry | 16 | -0.8667751 | -28.60570 | 1.1129919 | 36.73146 | 0.2206411 | -4.2696050 | -1.5256593 |
+| FRAPUE | T1_2854 | Midday | sureau | 28 | 0.3260463 | 10.44945 | 0.7664665 | 24.56448 | 0.7572531 | -0.7769527 | -0.2838443 |
+| FRAPUE | T1_2854 | Predawn | sperry | 16 | -1.7673364 | -147.18221 | 1.7809574 | 148.31656 | 0.4836091 | -5.0731345 | -1.3541743 |
+| FRAPUE | T1_2854 | Predawn | sureau | 28 | -0.9489590 | -64.87618 | 1.0380478 | 70.96680 | 0.8682520 | -0.1800865 | -0.0916681 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-254-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-254-2.png)
 
@@ -793,13 +747,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | sperry | 1070 | -6.424645 | -437.5994 | 8.715119 | 593.6096 | 0.3387258 | -6.405685 | -2.244986 |
+| FRAHES | sureau | 1070 | -5.942324 | -404.7473 | 8.405016 | 572.4877 | 0.3513127 | -6.122615 | -2.129522 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-286-1.png)
 
@@ -807,13 +758,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | sperry | 1064 | 4.924529 | 208.2519 | 4.995029 | 211.2332 | 0.5282436 | -3.427270 | -1.206155 |
+| FRAHES | sureau | 1064 | 4.411126 | 186.5407 | 4.607555 | 194.8475 | 0.3372953 | -3.368079 | -1.035019 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-293-1.png)
 
@@ -821,13 +769,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.1)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | granier | 43 | -0.1167927 | -35.96654 | 0.1195657 | 36.82048 | -0.0447996 | -3.205517 | -1.0635067 |
+| FRAHES | sperry | 43 | -0.1015041 | -31.25840 | 0.1044324 | 32.16018 | 0.3739676 | -2.208586 | -0.8023324 |
+| FRAHES | sureau | 43 | -0.0961584 | -29.61217 | 0.1009050 | 31.07389 | 0.1508324 | -2.102857 | -0.7414540 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-301-1.png)
 
@@ -835,13 +781,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.2)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | granier | 43 | -0.0554048 | -16.16960 | 0.0626661 | 18.28876 | 0.6292911 | -0.4740954 | -0.1568336 |
+| FRAHES | sperry | 43 | -0.0697226 | -20.34816 | 0.0697226 | 20.34816 | 0.9252582 | -0.4952064 | -0.2870983 |
+| FRAHES | sureau | 43 | -0.0433818 | -12.66075 | 0.0507298 | 14.80521 | 0.8114872 | -0.0018787 | 0.0635142 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-307-1.png)
 
@@ -849,13 +793,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.3)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | granier | 43 | -0.0131000 | -3.908371 | 0.0206488 | 6.160557 | 0.8145394 | 0.3367829 | 0.2724901 |
+| FRAHES | sperry | 43 | -0.0537498 | -16.036236 | 0.0574243 | 17.132536 | 0.8655994 | -3.8996764 | -1.0232081 |
+| FRAHES | sureau | 43 | -0.0261403 | -7.798945 | 0.0333691 | 9.955679 | 0.9139930 | -0.5801261 | -0.1756818 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-313-1.png)
 
@@ -863,13 +805,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.4)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | granier | 43 | -0.0253122 | -7.811079 | 0.0305826 | 9.437468 | 0.8157366 | -8.176814 | -2.084371 |
+| FRAHES | sperry | 43 | -0.0732815 | -22.613911 | 0.0766628 | 23.657348 | 0.7468941 | -56.591412 | -6.731739 |
+| FRAHES | sureau | 43 | -0.0538238 | -16.609474 | 0.0581363 | 17.940258 | 0.7958251 | -33.469512 | -4.863269 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-319-1.png)
 
@@ -877,13 +817,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.5)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FRAHES | granier | 43 | -0.0021158 | -0.7151926 | 0.0041871 | 1.415296 | 0.3674432 | -1.845976 | -0.7531172 |
+| FRAHES | sperry | 43 | -0.0041774 | -1.4120265 | 0.0049052 | 1.658027 | 0.4283351 | -2.948199 | -1.0537856 |
+| FRAHES | sureau | 43 | -0.0033983 | -1.1486742 | 0.0043343 | 1.465055 | 0.4656803 | -2.149878 | -0.8147531 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-325-1.png)
 
@@ -893,9 +831,9 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| FRAHES | T1_1396 | granier | 559 | -0.2117071 | -41.84626 | 0.2736146 | 54.08296 | 0.7249868 | 0.0798059 | 0.1572628 |
-| FRAHES | T1_1396 | sperry | 559 | -0.5059165 | -100.00000 | 0.5059165 | 100.00000 | NA | -1.7363005 | -0.5582304 |
-| FRAHES | T1_1396 | sureau | 559 | -0.5059165 | -100.00000 | 0.5059165 | 100.00000 | NA | -1.7363005 | -0.5582304 |
+| FRAHES | T1_1396 | granier | 559 | -0.2070140 | -40.91862 | 0.2843263 | 56.20025 | 0.7589582 | 0.0346228 | 0.1242706 |
+| FRAHES | T1_1396 | sperry | 559 | -0.1590868 | -31.44527 | 0.2246880 | 44.41207 | 0.7743905 | 0.3955688 | 0.3079576 |
+| FRAHES | T1_1396 | sureau | 559 | -0.2002308 | -39.57783 | 0.2586176 | 51.11863 | 0.7276322 | 0.1796239 | 0.2034540 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-332-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-332-2.png)
 
@@ -985,13 +923,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FONTAINEBLEAU | sperry | 842 | -3.606711 | -272.5310 | 6.359181 | 480.5136 | 0.3470153 | -8.020759 | -1.991221 |
+| FONTAINEBLEAU | sureau | 842 | -3.189159 | -240.9798 | 6.100736 | 460.9849 | 0.3540096 | -7.459807 | -1.869654 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-365-1.png)
 
@@ -999,13 +934,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FONTAINEBLEAU | sperry | 842 | 0.4050401 | 8.350385 | 1.723501 | 35.53203 | 0.7197648 | 0.4641103 | 0.3767237 |
+| FONTAINEBLEAU | sureau | 842 | 0.0763086 | 1.573193 | 1.930411 | 39.79773 | 0.6693312 | 0.3689898 | 0.3018981 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-372-1.png)
 
@@ -1013,13 +945,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FONTAINEBLEAU | granier | 842 | -1.600863 | -25.33391 | 3.223897 | 51.01869 | 0.7971266 | 0.3927816 | 0.2646893 |
+| FONTAINEBLEAU | sperry | 842 | 3.762197 | 59.53738 | 3.924695 | 62.10894 | 0.8491455 | 0.0980251 | 0.1048504 |
+| FONTAINEBLEAU | sureau | 842 | 3.398290 | 53.77850 | 3.524887 | 55.78191 | 0.8642702 | 0.2725630 | 0.1960391 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-379-1.png)
 
@@ -1029,12 +959,12 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| FONTAINEBLEAU | T1_2856 | granier | 740 | -0.2458481 | -50.864246 | 0.2473650 | 51.17808 | 0.8749491 | 8.756470e-02 | 0.1251816 |
-| FONTAINEBLEAU | T1_2856 | sperry | 740 | -0.4111060 | -85.054929 | 0.4270885 | 88.36159 | 0.1713097 | -1.711092e+00 | -0.5104191 |
-| FONTAINEBLEAU | T1_2856 | sureau | 740 | 90.6532317 | 18755.514694 | 91.6193594 | 18955.39970 | -0.0458421 | -4.950048e+07 | -323.0163149 |
-| FONTAINEBLEAU | T2_730 | granier | 732 | -0.0132565 | -8.289367 | 0.0443122 | 27.70868 | 0.8441996 | 6.982369e-01 | 0.5276194 |
-| FONTAINEBLEAU | T2_730 | sperry | 732 | 0.7195601 | 449.944719 | 0.7289074 | 455.78959 | 0.3603320 | -9.385169e+01 | -6.7703513 |
-| FONTAINEBLEAU | T2_730 | sureau | 732 | -0.1599219 | -100.000000 | 0.1599219 | 100.00000 | NA | -2.027473e+00 | -0.7048110 |
+| FONTAINEBLEAU | T1_2856 | granier | 740 | -0.2345005 | -48.51650 | 0.2792133 | 57.76725 | 0.7503480 | -0.0574703 | 0.0125488 |
+| FONTAINEBLEAU | T1_2856 | sperry | 740 | -0.2065900 | -42.74201 | 0.2542840 | 52.60957 | 0.6687282 | 0.0373690 | 0.1007122 |
+| FONTAINEBLEAU | T1_2856 | sureau | 740 | -0.2259329 | -46.74392 | 0.2712834 | 56.12663 | 0.6330826 | -0.0920662 | 0.0405930 |
+| FONTAINEBLEAU | T2_730 | granier | 732 | -0.0400328 | -25.03275 | 0.0559700 | 34.99831 | 0.8127820 | 0.5267715 | 0.4033449 |
+| FONTAINEBLEAU | T2_730 | sperry | 732 | -0.0698322 | -43.66644 | 0.0871546 | 54.49823 | 0.7351887 | 0.0718052 | 0.0709082 |
+| FONTAINEBLEAU | T2_730 | sureau | 732 | -0.0961035 | -60.09402 | 0.0989634 | 61.88232 | 0.7107221 | -0.2278494 | -0.0549766 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-387-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-387-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-387-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-387-4.png)
 
@@ -1125,13 +1055,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FONBLA | sperry | 1004 | -1.0312666 | -21.03789 | 4.148988 | 84.63955 | 0.6794009 | -0.0111644 | 0.1032998 |
+| FONBLA | sureau | 1004 | -0.5974221 | -12.18744 | 3.923233 | 80.03413 | 0.6714751 | 0.0901733 | 0.1520913 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-420-1.png)
 
@@ -1139,13 +1066,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FONBLA | sperry | 1026 | -0.3652071 | -12.45583 | 1.470337 | 50.14761 | 0.4707739 | -0.0835329 | 0.0279308 |
+| FONBLA | sureau | 1026 | -0.5430908 | -18.52277 | 1.572532 | 53.63310 | 0.5235614 | -0.0819579 | -0.0396324 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-427-1.png)
 
@@ -1153,13 +1077,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| FONBLA | granier | 1760 | -0.1699596 | -38.13552 | 0.1700243 | 38.15005 | 0.8828316 | -0.7937427 | -0.3302394 |
+| FONBLA | sperry | 1760 | -0.1751688 | -39.30438 | 0.1752191 | 39.31565 | 0.9086845 | -0.8189105 | -0.3708824 |
+| FONBLA | sureau | 1760 | -0.1779463 | -39.92757 | 0.1779938 | 39.93825 | 0.8990984 | -0.8467524 | -0.3925914 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-435-1.png)
 
@@ -1169,29 +1091,27 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| FONBLA | T2_2631 | granier | 300 | 0.1666387 | 81.021726 | 0.1842212 | 89.57056 | 0.5172616 | -3.8339740 | -0.8616505 |
-| FONBLA | T2_2631 | sperry | 300 | -0.0033812 | -1.643974 | 0.0704962 | 34.27607 | 0.7864860 | 0.3817768 | 0.2876000 |
-| FONBLA | T2_2631 | sureau | 300 | 0.1571105 | 76.388989 | 0.2143290 | 104.20929 | 0.4403794 | -7.8039064 | -1.1659045 |
-| FONBLA | T3_2854 | granier | 309 | -0.0163691 | -5.655087 | 0.0584433 | 20.19056 | 0.8998449 | 0.8004192 | 0.6018379 |
-| FONBLA | T3_2854 | sperry | 309 | 0.1473393 | 50.901664 | 0.1711797 | 59.13788 | 0.9067961 | -0.4719543 | -0.1662112 |
-| FONBLA | T3_2854 | sureau | 309 | -0.0030396 | -1.050108 | 0.0774652 | 26.76212 | 0.8943981 | 0.6323699 | 0.4722456 |
+| FONBLA | T2_2631 | granier | 300 | 0.1401927 | 68.163335 | 0.1584582 | 77.04425 | 0.5902966 | -2.4193670 | -0.6013013 |
+| FONBLA | T2_2631 | sperry | 300 | 0.0275698 | 13.404748 | 0.0872013 | 42.39833 | 0.6916213 | -0.0917146 | 0.1187855 |
+| FONBLA | T2_2631 | sureau | 300 | 0.1513536 | 73.589901 | 0.2121985 | 103.17343 | 0.4361402 | -7.6028654 | -1.1443750 |
+| FONBLA | T3_2854 | granier | 309 | -0.0093674 | -3.236196 | 0.0624460 | 21.57338 | 0.8856051 | 0.7812994 | 0.5745685 |
+| FONBLA | T3_2854 | sperry | 309 | 0.1010601 | 34.913486 | 0.1267154 | 43.77669 | 0.9037622 | 0.1600268 | 0.1367146 |
+| FONBLA | T3_2854 | sureau | 309 | 0.0036870 | 1.273770 | 0.0789663 | 27.28068 | 0.8932891 | 0.6079389 | 0.4620194 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-442-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-442-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-442-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-442-4.png)
 
 #### Leaf water potential
 
-    ## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed
-
 | Site | Cohort | WP | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| FONBLA | T2_2631 | Midday | sperry | 3 | 0.4784493 | 17.9343749 | 0.5173967 | 19.39429 | 0.9927048 | -6.5953079 | -1.7662792 |
-| FONBLA | T2_2631 | Midday | sureau | 3 | 0.3546824 | 13.2950520 | 0.4872948 | 18.26594 | 0.9910873 | -4.7359338 | -1.6053386 |
-| FONBLA | T2_2631 | Predawn | sperry | 3 | 0.1609549 | 8.2753153 | 0.5199023 | 26.73019 | 0.9766495 | -0.4778994 | -0.4622251 |
-| FONBLA | T2_2631 | Predawn | sureau | 3 | -0.0480019 | -2.4679641 | 0.3789449 | 19.48303 | 0.9953903 | -0.0815382 | -0.0657826 |
-| FONBLA | T3_2854 | Midday | sperry | 3 | 0.0119589 | 0.4382317 | 0.3800231 | 13.92593 | 0.9484634 | -0.0685059 | -0.1739844 |
-| FONBLA | T3_2854 | Midday | sureau | 3 | 0.5025246 | 18.4149881 | 0.5629994 | 20.63109 | 0.9939351 | -2.0328857 | -0.7392431 |
-| FONBLA | T3_2854 | Predawn | sperry | 3 | -0.2155732 | -14.2032101 | 0.2639521 | 17.39069 | 0.9938450 | 0.4478595 | 0.4036230 |
-| FONBLA | T3_2854 | Predawn | sureau | 3 | -0.4181692 | -27.5514126 | 0.4495545 | 29.61926 | 0.9996811 | -0.2713647 | -0.0157298 |
+| FONBLA | T2_2631 | Midday | sperry | 3 | 0.8040548 | 30.139498 | 0.8040548 | 30.13950 | 0.9821158 | -12.5520966 | -3.2989070 |
+| FONBLA | T2_2631 | Midday | sureau | 3 | 0.3309003 | 12.403593 | 0.5346218 | 20.03997 | 0.9850975 | -5.3541430 | -1.8583742 |
+| FONBLA | T2_2631 | Predawn | sperry | 3 | 0.6687932 | 34.385254 | 0.6687932 | 34.38525 | 0.9789705 | -1.7476112 | -0.8809808 |
+| FONBLA | T2_2631 | Predawn | sureau | 3 | -0.0566764 | -2.913956 | 0.4424417 | 22.74765 | 0.9902574 | -0.4115934 | -0.2443673 |
+| FONBLA | T3_2854 | Midday | sperry | 3 | 0.6338100 | 23.225938 | 0.6338100 | 23.22594 | 0.9419772 | -2.0661325 | -0.9579944 |
+| FONBLA | T3_2854 | Midday | sureau | 3 | 0.4927896 | 18.058251 | 0.6171812 | 22.61657 | 0.9879538 | -2.3052748 | -0.9066238 |
+| FONBLA | T3_2854 | Predawn | sperry | 3 | 0.2788256 | 18.370645 | 0.2788256 | 18.37064 | 0.9917150 | 0.6655061 | 0.3700176 |
+| FONBLA | T3_2854 | Predawn | sureau | 3 | -0.4311340 | -28.405610 | 0.4762455 | 31.37781 | 0.9977193 | -0.5152720 | -0.0760358 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-447-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-447-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-447-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-447-4.png)
 
@@ -1278,13 +1198,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| COLLELONGO | sperry | 1096 | -1.2353106 | -41.81980 | 4.522891 | 153.1165 | 0.3852017 | -2.950934 | -0.8492370 |
+| COLLELONGO | sureau | 1096 | -0.4686333 | -15.86496 | 4.505644 | 152.5326 | 0.4063043 | -2.870977 | -0.8421852 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-479-1.png)
 
@@ -1292,13 +1209,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| COLLELONGO | sperry | 1096 | 2.469258 | 91.75938 | 2.700000 | 100.33390 | 0.5709577 | -1.0376325 | -0.3203585 |
+| COLLELONGO | sureau | 1096 | 1.556553 | 57.84263 | 2.236573 | 83.11262 | 0.4595437 | -0.6997558 | -0.0937326 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-486-1.png)
 
@@ -1306,13 +1220,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| COLLELONGO | granier | 1096 | 3.235170 | 80.99168 | 3.980176 | 99.64272 | 0.6740509 | -0.0570138 | 0.0527023 |
+| COLLELONGO | sperry | 1096 | 4.145140 | 103.77253 | 4.656980 | 116.58633 | 0.6502941 | -0.4528247 | -0.1083797 |
+| COLLELONGO | sureau | 1096 | 3.050072 | 76.35779 | 3.794291 | 94.98913 | 0.6881477 | 0.0345015 | 0.0969437 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-493-1.png)
 
@@ -1320,13 +1232,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| COLLELONGO | granier | 1096 | -0.0658845 | -21.19950 | 0.0679496 | 21.86398 | 0.7151824 | -0.1954632 | -0.1093978 |
+| COLLELONGO | sperry | 1096 | -0.0631716 | -20.32657 | 0.0664443 | 21.37961 | 0.7174353 | -0.1398915 | -0.0848206 |
+| COLLELONGO | sureau | 1096 | -0.0504427 | -16.23083 | 0.0566589 | 18.23102 | 0.7105910 | 0.0893095 | 0.0749419 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-500-1.png)
 
@@ -1418,9 +1328,9 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| MITRA | T1_394 | granier | 1060 | -0.6221568 | -60.08950 | 0.6345726 | 61.28865 | 0.8351585 | -1.1705383 | -0.6849225 |
+| MITRA | T1_394 | granier | 1060 | -0.6229574 | -60.16683 | 0.6353503 | 61.36377 | 0.8356874 | -1.1755837 | -0.6869876 |
 | MITRA | T1_394 | sperry | 1060 | -0.1281138 | -12.37356 | 0.4068453 | 39.29417 | 0.8428604 | -0.0564714 | -0.0802592 |
-| MITRA | T1_394 | sureau | 1060 | -0.4436160 | -42.84557 | 0.4595107 | 44.38072 | 0.8860309 | -0.1751699 | -0.2200966 |
+| MITRA | T1_394 | sureau | 1060 | -0.4413545 | -42.62715 | 0.4576423 | 44.20027 | 0.8848686 | -0.1708583 | -0.2151357 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-540-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-540-2.png)
 
@@ -1509,13 +1419,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ESPRIN | granier | 28 | -0.0195095 | -11.23664 | 0.0480846 | 27.69469 | 0.7098820 | 0.3592953 | 0.2698148 |
+| ESPRIN | sperry | 28 | -0.0281330 | -16.20344 | 0.0387631 | 22.32592 | 0.8707302 | 0.4977594 | 0.4113653 |
+| ESPRIN | sureau | 28 | -0.0212111 | -12.21672 | 0.0459664 | 26.47471 | 0.6964435 | 0.3840233 | 0.3019803 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-576-1.png)
 
@@ -1525,22 +1433,20 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| ESPRIN | T1_402 | granier | 103 | 0.0684239 | 18.91182 | 0.0826196 | 22.83542 | 0.6632678 | -0.4536259 | -0.3948501 |
-| ESPRIN | T1_402 | sperry | 103 | -0.0945417 | -26.13060 | 0.2172311 | 60.04099 | 0.0303429 | -7.9401076 | -2.6674679 |
-| ESPRIN | T1_402 | sureau | 103 | -0.3618047 | -100.00000 | 0.3618047 | 100.00000 | NA | -18.7454913 | -5.1082735 |
+| ESPRIN | T1_402 | granier | 103 | 0.0433034 | 11.96871 | 0.0728124 | 20.12477 | 0.6405361 | -0.1256516 | -0.229276 |
+| ESPRIN | T1_402 | sperry | 103 | 0.1983072 | 54.81056 | 0.2280273 | 63.02496 | 0.5927588 | -9.5199068 | -2.849737 |
+| ESPRIN | T1_402 | sureau | 103 | 0.1329784 | 36.75419 | 0.2084606 | 57.61688 | 0.4911223 | -9.1444055 | -2.519397 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-583-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-583-2.png)
 
 #### Leaf water potential
 
-    ## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed
-
 | Site | Cohort | WP | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| ESPRIN | T1_402 | Midday | sperry | 15 | -6.169674e+00 | -3.901531e+02 | 6.169674e+00 | 3.901531e+02 | 0.5721158 | -1.276797e+02 | -1.337174e+01 |
-| ESPRIN | T1_402 | Midday | sureau | 15 | -5.608683e+07 | -3.546776e+09 | 5.608683e+07 | 3.546776e+09 | NA | -1.057294e+16 | -1.306496e+08 |
-| ESPRIN | T1_402 | Predawn | sperry | 15 | -7.350617e+00 | -1.835802e+03 | 7.350617e+00 | 1.835802e+03 | 0.4551408 | -1.476818e+03 | -4.451320e+01 |
-| ESPRIN | T1_402 | Predawn | sureau | 15 | -5.608683e+07 | -1.400758e+10 | 5.608683e+07 | 1.400758e+10 | NA | -8.598230e+16 | -3.472758e+08 |
+| ESPRIN | T1_402 | Midday | sperry | 15 | 0.1044321 | 6.603999 | 0.3103223 | 19.62393 | 0.7753966 | 0.5280601 | 0.2771297 |
+| ESPRIN | T1_402 | Midday | sureau | 15 | -0.5315740 | -33.615273 | 0.6189078 | 39.13802 | 0.7824509 | -1.8029680 | -0.4416945 |
+| ESPRIN | T1_402 | Predawn | sperry | 15 | -0.1655488 | -41.345477 | 0.2690001 | 67.18224 | 0.6183757 | -2.2962836 | -0.6655821 |
+| ESPRIN | T1_402 | Predawn | sureau | 15 | -0.6366121 | -158.992625 | 0.6834435 | 170.68866 | 0.6111314 | -24.4482717 | -3.2317129 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-588-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-588-2.png)
 
@@ -1632,13 +1538,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.2)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| QVALLCEBRE | granier | 445 | 0.0063995 | 2.153539 | 0.0350804 | 11.80519 | 0.3762598 | 0.0938464 | 0.0276431 |
+| QVALLCEBRE | sperry | 445 | 0.0038097 | 1.282038 | 0.0351415 | 11.82577 | 0.3700599 | 0.1043881 | 0.0259479 |
+| QVALLCEBRE | sureau | 445 | 0.0056629 | 1.905677 | 0.0353343 | 11.89063 | 0.3545169 | 0.0762063 | 0.0206054 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-623-1.png)
 
@@ -1648,9 +1552,9 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| QVALLCEBRE | T1_400 | granier | 279 | -0.3429614 | -44.42992 | 0.3823034 | 49.52659 | 0.5788657 | -0.7041443 | -0.4478138 |
-| QVALLCEBRE | T1_400 | sperry | 279 | 0.2708497 | 35.08800 | 0.3813270 | 49.40010 | 0.5858822 | -1.1519593 | -0.4441162 |
-| QVALLCEBRE | T1_400 | sureau | 279 | 0.1520440 | 19.69697 | 0.3350921 | 43.41046 | 0.5796233 | -0.7247994 | -0.2690208 |
+| QVALLCEBRE | T1_400 | granier | 279 | -0.6776365 | -87.78636 | 0.6830502 | 88.48770 | 0.4276319 | -3.955211 | -1.586766 |
+| QVALLCEBRE | T1_400 | sperry | 279 | -0.7719149 | -99.99992 | 0.7719149 | 99.99992 | 0.0113448 | -5.251250 | -1.923304 |
+| QVALLCEBRE | T1_400 | sureau | 279 | -0.7719155 | -100.00000 | 0.7719155 | 100.00000 | NA | -5.251259 | -1.923306 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-630-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-630-2.png)
 
@@ -1741,13 +1645,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.2)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| PVALLCEBRE | granier | 743 | -0.0509432 | -23.73060 | 0.0536858 | 25.00814 | 0.6243016 | -0.5221338 | -0.1332389 |
+| PVALLCEBRE | sperry | 743 | -0.0543417 | -25.31367 | 0.0559257 | 26.05154 | 0.7073752 | -0.5384204 | -0.1805204 |
+| PVALLCEBRE | sureau | 743 | -0.0518721 | -24.16328 | 0.0539346 | 25.12405 | 0.6808283 | -0.4838932 | -0.1384911 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-666-1.png)
 
@@ -1757,9 +1659,9 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| PVALLCEBRE | T1_361 | granier | 733 | -0.4751063 | -64.11986 | 0.4896616 | 66.08423 | 0.7128155 | -0.6003174 | -0.2191701 |
-| PVALLCEBRE | T1_361 | sperry | 733 | -0.3774654 | -50.94234 | 0.4027072 | 54.34895 | 0.7137062 | -0.1245449 | -0.0026691 |
-| PVALLCEBRE | T1_361 | sureau | 733 | -0.4558566 | -61.52195 | 0.4801462 | 64.80005 | 0.6014946 | -0.5613990 | -0.1954786 |
+| PVALLCEBRE | T1_361 | granier | 733 | -0.4791828 | -64.67002 | 0.4933712 | 66.58487 | 0.7180062 | -0.6175715 | -0.2284064 |
+| PVALLCEBRE | T1_361 | sperry | 733 | -0.3783439 | -51.06091 | 0.4034255 | 54.44589 | 0.7134381 | -0.1279842 | -0.0044575 |
+| PVALLCEBRE | T1_361 | sureau | 733 | -0.4580281 | -61.81501 | 0.4807692 | 64.88412 | 0.6066207 | -0.5637218 | -0.1970296 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-673-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-673-2.png)
 
@@ -1848,13 +1750,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| PRADES | granier | 1219 | 0.0126859 | 6.658040 | 0.0277414 | 14.55971 | 0.9037732 | 0.7603946 | 0.5356481 |
+| PRADES | sperry | 1219 | -0.0341963 | -17.947483 | 0.0392720 | 20.61141 | 0.8562335 | 0.4985917 | 0.3426418 |
+| PRADES | sureau | 1219 | 0.0007093 | 0.372253 | 0.0225653 | 11.84312 | 0.9122336 | 0.8319628 | 0.6222882 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-709-1.png)
 
@@ -1864,29 +1764,27 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| PRADES | T1_361 | granier | 1157 | 0.0492175 | 18.7432274 | 0.1584464 | 60.34019 | 0.6527672 | 0.1994840 | 0.1919765 |
-| PRADES | T1_361 | sperry | 1157 | -0.1671737 | -63.6637855 | 0.1762032 | 67.10242 | 0.6495317 | -0.0154983 | 0.1014226 |
-| PRADES | T1_361 | sureau | 1157 | -0.0011093 | -0.4224599 | 0.1359271 | 51.76430 | 0.7644063 | 0.3091780 | 0.3068174 |
-| PRADES | T2_394 | granier | 908 | 0.0619715 | 37.4526153 | 0.0850859 | 51.42183 | 0.8328476 | 0.0922513 | 0.1604051 |
-| PRADES | T2_394 | sperry | 908 | 0.2003130 | 121.0595630 | 0.2952601 | 178.44108 | 0.4468124 | -13.9366629 | -1.9135138 |
-| PRADES | T2_394 | sureau | 908 | 0.1104204 | 66.7328160 | 0.1416889 | 85.62997 | 0.8109413 | -1.7751083 | -0.3981315 |
+| PRADES | T1_361 | granier | 1157 | 0.0240317 | 9.151837 | 0.1383128 | 52.67284 | 0.7185727 | 0.3949991 | 0.2946511 |
+| PRADES | T1_361 | sperry | 1157 | -0.1675409 | -63.803595 | 0.1765273 | 67.22586 | 0.6477598 | -0.0182773 | 0.0997696 |
+| PRADES | T1_361 | sureau | 1157 | -0.1551231 | -59.074616 | 0.1917968 | 73.04084 | 0.6909798 | 0.0464280 | 0.0219005 |
+| PRADES | T2_394 | granier | 908 | 0.0645376 | 39.003423 | 0.0866384 | 52.36007 | 0.8293234 | 0.0794978 | 0.1450859 |
+| PRADES | T2_394 | sperry | 908 | 0.2009877 | 121.467344 | 0.3005758 | 181.65364 | 0.4345681 | -14.5269977 | -1.9659672 |
+| PRADES | T2_394 | sureau | 908 | 0.1496196 | 90.422936 | 0.1759120 | 106.31279 | 0.8200349 | -3.6734347 | -0.7358323 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-716-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-716-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-716-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-716-4.png)
 
 #### Leaf water potential
 
-    ## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed
-
 | Site | Cohort | WP | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| PRADES | T1_361 | Midday | sperry | 13 | -2.6313473 | -153.53271 | 2.7614695 | 161.12503 | 0.8484840 | -107.2701734 | -10.8817161 |
-| PRADES | T1_361 | Midday | sureau | 13 | -0.5924877 | -34.57021 | 1.0442295 | 60.92825 | 0.8351514 | -19.2444701 | -3.4929841 |
-| PRADES | T1_361 | Predawn | sperry | 13 | -2.8240228 | -236.07839 | 3.0012924 | 250.89750 | 0.8943752 | -64.7022515 | -7.4773567 |
-| PRADES | T1_361 | Predawn | sureau | 13 | -0.7037766 | -58.83325 | 1.0879162 | 90.94597 | 0.9316014 | -10.4135967 | -2.0728941 |
-| PRADES | T2_394 | Midday | sperry | 9 | -1.9078141 | -66.26729 | 2.1321562 | 74.05973 | 0.5441536 | -4.5826030 | -1.5065338 |
-| PRADES | T2_394 | Midday | sureau | 9 | 0.5634273 | 19.57046 | 0.8948573 | 31.08257 | 0.9632963 | 0.0494185 | -0.0519821 |
-| PRADES | T2_394 | Predawn | sperry | 9 | -1.7962535 | -85.02895 | 2.0161388 | 95.43763 | 0.7481450 | -2.9380831 | -1.2176109 |
-| PRADES | T2_394 | Predawn | sureau | 9 | 0.2767893 | 13.10233 | 0.6622449 | 31.34857 | 0.9522929 | 0.6172810 | 0.2715772 |
+| PRADES | T1_361 | Midday | sperry | 13 | -2.9939678 | -174.690735 | 3.1125045 | 181.60706 | 0.7892417 | -137.0450274 | -12.3921068 |
+| PRADES | T1_361 | Midday | sureau | 13 | -0.5858098 | -34.180575 | 1.0191117 | 59.46269 | 0.8358349 | -17.9219085 | -3.3849103 |
+| PRADES | T1_361 | Predawn | sperry | 13 | -2.9303878 | -244.970124 | 3.1070671 | 259.73989 | 0.8887888 | -68.7034130 | -7.7761247 |
+| PRADES | T1_361 | Predawn | sureau | 13 | -0.7148896 | -59.762255 | 1.1098711 | 92.78133 | 0.9493691 | -10.6162747 | -2.1349073 |
+| PRADES | T2_394 | Midday | sperry | 9 | -1.9387935 | -67.343343 | 2.1691204 | 75.34367 | 0.5430751 | -4.6989131 | -1.5499884 |
+| PRADES | T2_394 | Midday | sureau | 9 | 0.6122760 | 21.267202 | 0.8465349 | 29.40411 | 0.9600492 | 0.1342736 | 0.0048252 |
+| PRADES | T2_394 | Predawn | sperry | 9 | -1.9412741 | -91.893768 | 2.1773976 | 103.07111 | 0.6976748 | -3.6843692 | -1.3949843 |
+| PRADES | T2_394 | Predawn | sureau | 9 | 0.0807108 | 3.820595 | 0.7749422 | 36.68331 | 0.9693239 | 0.5026515 | 0.1476181 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-721-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-721-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-721-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-721-4.png)
 
@@ -1987,13 +1885,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| CANBALASC | granier | 676 | 0.0473977 | 30.16485 | 0.0486203 | 30.94294 | 0.7837562 | -0.5697617 | -0.4046595 |
+| CANBALASC | sperry | 676 | 0.0227535 | 14.48081 | 0.0374101 | 23.80855 | 0.7848474 | -0.0671201 | -0.0807927 |
+| CANBALASC | sureau | 676 | 0.0386241 | 24.58114 | 0.0450748 | 28.68653 | 0.7509600 | -0.4852941 | -0.3022297 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-756-1.png)
 
@@ -2003,18 +1899,18 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| CANBALASC | T1_35 | granier | 644 | 0.0190200 | 6.401961 | 0.1222338 | 41.14270 | 0.7104228 | 0.1585963 | 0.1351475 |
-| CANBALASC | T1_35 | sperry | 644 | -0.1081508 | -36.402505 | 0.1772191 | 59.65023 | 0.6727779 | -0.5818300 | -0.2538955 |
-| CANBALASC | T1_35 | sureau | 644 | -0.0833083 | -28.040756 | 0.1652169 | 55.61041 | 0.5325312 | -0.3591860 | -0.1689752 |
-| CANBALASC | T2_356 | granier | 611 | 0.1978144 | 76.277553 | 0.2662718 | 102.67484 | 0.2366570 | -4.0086109 | -0.9961643 |
-| CANBALASC | T2_356 | sperry | 611 | -0.0722405 | -27.856045 | 0.1565422 | 60.36293 | 0.7306051 | -0.3763655 | -0.1735525 |
-| CANBALASC | T2_356 | sureau | 611 | 0.1137660 | 43.868368 | 0.2903578 | 111.96244 | 0.1998277 | -5.1614136 | -1.1767301 |
-| CANBALASC | T3_400 | granier | 679 | -0.1011840 | -25.517481 | 0.2312931 | 58.32956 | 0.3620810 | -0.6725705 | -0.3410041 |
-| CANBALASC | T3_400 | sperry | 679 | -0.1046531 | -26.392352 | 0.3168409 | 79.90376 | 0.6032489 | -2.0168196 | -0.8369978 |
-| CANBALASC | T3_400 | sureau | 679 | 0.0215137 | 5.425518 | 0.3750134 | 94.57420 | 0.2580938 | -3.3696721 | -1.1742730 |
-| CANBALASC | T4_394 | granier | 644 | -0.0488733 | -16.633930 | 0.1177102 | 40.06246 | 0.7519443 | 0.5088036 | 0.3578063 |
-| CANBALASC | T4_394 | sperry | 644 | 0.1074892 | 36.583741 | 0.2391250 | 81.38575 | 0.7111901 | -0.9104010 | -0.3045983 |
-| CANBALASC | T4_394 | sureau | 644 | 0.0185712 | 6.320667 | 0.1525887 | 51.93327 | 0.6910585 | 0.1443864 | 0.1675194 |
+| CANBALASC | T1_35 | granier | 644 | 0.0494477 | 16.643602 | 0.1357419 | 45.68939 | 0.6400983 | -0.1034996 | 0.0395725 |
+| CANBALASC | T1_35 | sperry | 644 | 0.0279878 | 9.420433 | 0.1986003 | 66.84690 | 0.8221526 | -1.3167017 | -0.4051753 |
+| CANBALASC | T1_35 | sureau | 644 | -0.0290858 | -9.790005 | 0.1849189 | 62.24191 | 0.4793934 | -0.7324706 | -0.3083746 |
+| CANBALASC | T2_356 | granier | 611 | 0.2042640 | 78.764532 | 0.2715383 | 104.70559 | 0.2072645 | -4.1388446 | -1.0356453 |
+| CANBALASC | T2_356 | sperry | 611 | 0.0312130 | 12.035781 | 0.1953536 | 75.32867 | 0.6019596 | -1.4808097 | -0.4645106 |
+| CANBALASC | T2_356 | sureau | 611 | 0.1343729 | 51.814398 | 0.3096059 | 119.38452 | 0.1766265 | -6.0043058 | -1.3210273 |
+| CANBALASC | T3_400 | granier | 679 | -0.3222220 | -81.260809 | 0.3264160 | 82.31849 | 0.0855845 | -2.2387665 | -0.8925127 |
+| CANBALASC | T3_400 | sperry | 679 | -0.3964901 | -99.990398 | 0.3964901 | 99.99040 | 0.0670838 | -3.3697095 | -1.2987921 |
+| CANBALASC | T3_400 | sureau | 679 | -0.3791250 | -95.611103 | 0.3791250 | 95.61110 | 0.1764338 | -3.0672721 | -1.1981115 |
+| CANBALASC | T4_394 | granier | 644 | -0.0473004 | -16.098599 | 0.1184825 | 40.32531 | 0.7451627 | 0.5040159 | 0.3535929 |
+| CANBALASC | T4_394 | sperry | 644 | 0.0961102 | 32.710923 | 0.2020600 | 68.77073 | 0.7741900 | -0.3487563 | -0.1023820 |
+| CANBALASC | T4_394 | sureau | 644 | 0.0538849 | 18.339641 | 0.1685543 | 57.36714 | 0.6858141 | -0.1182911 | 0.0804155 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-4.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-5.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-6.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-7.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-763-8.png)
 
@@ -2105,13 +2001,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ESPALTARM | granier | 715 | 0.1433899 | 259.1233 | 0.1433899 | 259.1233 | 0.7870933 | -14.63805 | -3.623193 |
+| ESPALTARM | sperry | 715 | 0.1247126 | 225.3710 | 0.1247126 | 225.3710 | 0.8700708 | -11.15875 | -3.020994 |
+| ESPALTARM | sureau | 715 | 0.1454450 | 262.8371 | 0.1454450 | 262.8371 | 0.7472993 | -15.22292 | -3.689452 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-799-1.png)
 
@@ -2121,36 +2015,34 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| ESPALTARM | T1_357 | granier | 627 | -1.1530267 | -76.93483 | 1.1904728 | 79.43339 | 0.5152036 | -0.5270615 | -0.0047696 |
-| ESPALTARM | T1_357 | sperry | 627 | -1.2489553 | -83.33559 | 1.2491133 | 83.34613 | 0.8298681 | -0.4970636 | -0.0542627 |
-| ESPALTARM | T1_357 | sureau | 627 | -1.3108752 | -87.46715 | 1.4215948 | 94.85483 | 0.0654928 | -0.9151624 | -0.1998386 |
-| ESPALTARM | T2_392 | granier | 537 | -1.2626613 | -73.44048 | 1.3024396 | 75.75411 | 0.8072240 | -0.6730840 | -0.1673612 |
-| ESPALTARM | T2_392 | sperry | 537 | -0.6878325 | -40.00657 | 0.9474072 | 55.10428 | 0.6734741 | 0.1166209 | 0.1508501 |
-| ESPALTARM | T2_392 | sureau | 537 | -1.0951525 | -63.69762 | 1.1303698 | 65.74597 | 0.8112555 | -0.2296442 | -0.0131371 |
-| ESPALTARM | T3_394 | granier | 628 | -1.2873244 | -78.72585 | 1.2888552 | 78.81947 | 0.8074908 | -1.0212483 | -0.3345416 |
-| ESPALTARM | T3_394 | sperry | 628 | -0.7581360 | -46.36353 | 0.7728455 | 47.26308 | 0.8819359 | 0.3272028 | 0.1997593 |
-| ESPALTARM | T3_394 | sureau | 628 | -1.1280846 | -68.98760 | 1.1395783 | 69.69049 | 0.7706570 | -0.4987502 | -0.1799732 |
+| ESPALTARM | T1_357 | granier | 627 | -1.1582563 | -77.28377 | 1.1918684 | 79.52651 | 0.5283444 | -0.5309958 | -0.0059475 |
+| ESPALTARM | T1_357 | sperry | 627 | -1.2524345 | -83.56774 | 1.2525842 | 83.57772 | 0.8292409 | -0.5009595 | -0.0571921 |
+| ESPALTARM | T1_357 | sureau | 627 | -1.4392528 | -96.03304 | 1.4424187 | 96.24429 | 0.0356331 | -1.0305610 | -0.2174142 |
+| ESPALTARM | T2_392 | granier | 537 | -1.2373645 | -71.96913 | 1.2804475 | 74.47498 | 0.8003660 | -0.6686507 | -0.1476499 |
+| ESPALTARM | T2_392 | sperry | 537 | -0.6744082 | -39.22577 | 0.9357470 | 54.42608 | 0.6625246 | 0.1133615 | 0.1613011 |
+| ESPALTARM | T2_392 | sureau | 537 | -1.3775515 | -80.12286 | 1.4091252 | 81.95929 | 0.3292837 | -1.1445880 | -0.2629822 |
+| ESPALTARM | T3_394 | granier | 628 | -1.2903450 | -78.91057 | 1.2918604 | 79.00325 | 0.8114469 | -1.0250536 | -0.3376533 |
+| ESPALTARM | T3_394 | sperry | 628 | -0.7492384 | -45.81940 | 0.7655518 | 46.81704 | 0.8850627 | 0.3447780 | 0.2073115 |
+| ESPALTARM | T3_394 | sureau | 628 | -1.3730589 | -83.96891 | 1.4195981 | 86.81500 | 0.3015672 | -1.4120144 | -0.4699189 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-806-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-806-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-806-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-806-4.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-806-5.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-806-6.png)
 
 #### Leaf water potential
 
-    ## Error in if (df_site$Mode[[k]] != "granier") {: missing value where TRUE/FALSE needed
-
 | Site | Cohort | WP | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| ESPALTARM | T1_357 | Midday | sperry | 4 | -1.8823586 | -106.57374 | 1.8823586 | 106.57374 | 0.9656991 | -65.7496237 | -5.0235475 |
-| ESPALTARM | T1_357 | Midday | sureau | 4 | -9.6737939 | -547.70242 | 9.7926297 | 554.43056 | -0.1644799 | -1482.8693296 | -30.3364151 |
-| ESPALTARM | T1_357 | Predawn | sperry | 4 | -1.0547426 | -94.17345 | 1.2096666 | 108.00594 | 0.9923175 | -8.3935183 | -1.7969169 |
-| ESPALTARM | T1_357 | Predawn | sureau | 4 | -9.9608708 | -889.36347 | 10.1801008 | 908.93758 | -0.4264289 | -741.2011051 | -22.5378054 |
-| ESPALTARM | T2_392 | Midday | sperry | 4 | -1.0172295 | -39.90113 | 1.0172295 | 39.90113 | 0.8774845 | -14.5855171 | -3.3401790 |
-| ESPALTARM | T2_392 | Midday | sureau | 4 | 1.2711589 | 49.86159 | 1.3201147 | 51.78190 | 0.5719907 | -28.0893053 | -4.6324894 |
-| ESPALTARM | T2_392 | Predawn | sperry | 4 | -1.2304261 | -166.41435 | 1.2510030 | 169.19737 | 0.8744093 | -9.0299375 | -1.9413738 |
-| ESPALTARM | T2_392 | Predawn | sureau | 4 | -0.0813345 | -11.00044 | 0.4087554 | 55.28391 | 0.9654873 | -0.1054423 | 0.0389292 |
-| ESPALTARM | T3_394 | Midday | sperry | 4 | -1.4191383 | -60.21271 | 1.4191383 | 60.21271 | 0.9946249 | -3.7665083 | -1.8015068 |
-| ESPALTARM | T3_394 | Midday | sureau | 4 | 0.9311895 | 39.50950 | 0.9311895 | 39.50950 | 0.9066835 | -1.4801006 | -0.8382519 |
-| ESPALTARM | T3_394 | Predawn | sperry | 4 | -0.8457113 | -74.14455 | 0.9629444 | 84.42252 | 0.8473820 | -0.5757565 | -0.1765644 |
-| ESPALTARM | T3_394 | Predawn | sureau | 4 | 0.3340068 | 29.28279 | 0.3340068 | 29.28279 | 0.9968815 | 0.8629790 | 0.5918970 |
+| ESPALTARM | T1_357 | Midday | sperry | 4 | -1.900146 | -107.58083 | 1.900146 | 107.58083 | 0.9662285 | -67.0809648 | -5.0804685 |
+| ESPALTARM | T1_357 | Midday | sureau | 4 | -13.553574 | -767.36444 | 13.571665 | 768.38870 | 0.5914709 | -2027.8222032 | -42.4293293 |
+| ESPALTARM | T1_357 | Predawn | sperry | 4 | -1.118683 | -99.88239 | 1.274139 | 113.76239 | 0.9917442 | -9.5546907 | -1.9459855 |
+| ESPALTARM | T1_357 | Predawn | sureau | 4 | -13.956630 | -1246.12772 | 14.171109 | 1265.27762 | 0.3265365 | -1003.1520667 | -31.7655708 |
+| ESPALTARM | T2_392 | Midday | sperry | 4 | -1.059349 | -41.55327 | 1.059349 | 41.55327 | 0.8768157 | -16.2007805 | -3.5198872 |
+| ESPALTARM | T2_392 | Midday | sureau | 4 | -11.299509 | -443.22664 | 12.169158 | 477.33887 | -0.4405119 | -3493.6472894 | -50.9217400 |
+| ESPALTARM | T2_392 | Predawn | sperry | 4 | -1.278712 | -172.94498 | 1.299780 | 175.79447 | 0.8664038 | -9.8864451 | -2.0560597 |
+| ESPALTARM | T2_392 | Predawn | sureau | 4 | -12.815870 | -1733.33833 | 12.997189 | 1757.86158 | -0.6728001 | -1238.8587688 | -29.5591513 |
+| ESPALTARM | T3_394 | Midday | sperry | 4 | -1.427386 | -60.56266 | 1.427386 | 60.56266 | 0.9929924 | -3.8180473 | -1.8177888 |
+| ESPALTARM | T3_394 | Midday | sureau | 4 | -5.560706 | -235.93555 | 6.117674 | 259.56719 | -0.3687785 | -128.1877828 | -11.0768398 |
+| ESPALTARM | T3_394 | Predawn | sperry | 4 | -0.882941 | -77.40853 | 1.003353 | 87.96516 | 0.8401473 | -0.7370877 | -0.2259367 |
+| ESPALTARM | T3_394 | Predawn | sureau | 4 | -5.530471 | -484.86318 | 6.074577 | 532.56567 | -0.5194238 | -73.6648544 | -6.4221638 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-811-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-811-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-811-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-811-4.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-811-5.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-811-6.png)
 
@@ -2240,13 +2132,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| RONDA | granier | 731 | -0.0259815 | -9.803531 | 0.0470927 | 17.76938 | 0.7778536 | 0.4064516 | 0.3414886 |
+| RONDA | sperry | 731 | -0.0315778 | -11.915174 | 0.0452281 | 17.06582 | 0.8168955 | 0.4185891 | 0.3675616 |
+| RONDA | sureau | 731 | -0.0352805 | -13.312309 | 0.0445116 | 16.79545 | 0.8403874 | 0.4313748 | 0.3775813 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-846-1.png)
 
@@ -2256,12 +2146,12 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| RONDA | T1_2 | granier | 730 | -0.2039726 | -35.1064926 | 0.2451818 | 42.19916 | 0.7516074 | 0.1546505 | 0.1045173 |
-| RONDA | T1_2 | sperry | 730 | 0.0061551 | 1.0593762 | 0.1776540 | 30.57670 | 0.7878721 | 0.5089785 | 0.3511505 |
-| RONDA | T1_2 | sureau | 730 | 0.0003763 | 0.0647726 | 0.2374525 | 40.86885 | 0.7569577 | 0.1129686 | 0.1327471 |
-| RONDA | T2_490 | granier | 712 | 0.3964500 | 132.5619150 | 0.4084152 | 136.56276 | 0.7604728 | -3.2999064 | -1.1761360 |
-| RONDA | T2_490 | sperry | 712 | 0.3247356 | 108.5826296 | 0.3435079 | 114.85956 | 0.6873378 | -2.1907404 | -0.8302942 |
-| RONDA | T2_490 | sureau | 712 | 0.4122786 | 137.8545851 | 0.4465293 | 149.30706 | 0.6606020 | -5.6737217 | -1.3792171 |
+| RONDA | T1_2 | granier | 730 | -0.2194396 | -37.7685724 | 0.2581159 | 44.42529 | 0.7506175 | 0.0836503 | 0.0572780 |
+| RONDA | T1_2 | sperry | 730 | -0.0193042 | -3.3225120 | 0.1691480 | 29.11270 | 0.7882288 | 0.5419261 | 0.3822173 |
+| RONDA | T1_2 | sureau | 730 | -0.0029819 | -0.5132313 | 0.2350946 | 40.46303 | 0.7579859 | 0.1313242 | 0.1413589 |
+| RONDA | T2_490 | granier | 712 | 0.4074759 | 136.2486973 | 0.4189946 | 140.10022 | 0.7591982 | -3.5353514 | -1.2325057 |
+| RONDA | T2_490 | sperry | 712 | 0.3249809 | 108.6646355 | 0.3437419 | 114.93779 | 0.6871920 | -2.1953304 | -0.8315407 |
+| RONDA | T2_490 | sureau | 712 | 0.4124187 | 137.9014375 | 0.4466308 | 149.34102 | 0.6614605 | -5.6726249 | -1.3797583 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-853-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-853-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-853-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-853-4.png)
 
@@ -2349,13 +2239,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| DAVOS | sperry | 1065 | -0.7657610 | -39.40939 | 5.585792 | 287.4692 | -0.0032606 | -3.275767 | -1.0616317 |
+| DAVOS | sureau | 1065 | 0.7908215 | 40.69912 | 5.215662 | 268.4207 | 0.0741696 | -3.031016 | -0.9250223 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-886-1.png)
 
@@ -2363,13 +2250,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| DAVOS | sperry | 1065 | -0.6836765 | -12.31346 | 2.336597 | 42.08365 | 0.6566201 | 0.3910246 | 0.3287846 |
+| DAVOS | sureau | 1065 | -2.6964103 | -48.56412 | 3.488684 | 62.83350 | 0.4947136 | -0.2591815 | -0.0021661 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-893-1.png)
 
@@ -2377,13 +2261,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| DAVOS | granier | 1065 | -0.4496603 | -12.69573 | 1.515589 | 42.79120 | 0.7523455 | 0.5225207 | 0.3683756 |
+| DAVOS | sperry | 1065 | 3.5287276 | 99.63024 | 3.590429 | 101.37231 | 0.8295993 | -1.1537128 | -0.4963177 |
+| DAVOS | sureau | 1065 | 2.5218941 | 71.20326 | 2.627119 | 74.17419 | 0.8419396 | -0.1377968 | -0.0948567 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-900-1.png)
 
@@ -2391,13 +2273,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.1)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| DAVOS | granier | 365 | -0.0998496 | -42.45747 | 0.1000014 | 42.52202 | -0.1428519 | -7.452678 | -2.378283 |
+| DAVOS | sperry | 365 | -0.0994479 | -42.28666 | 0.0999469 | 42.49886 | 0.3099641 | -7.226880 | -2.376444 |
+| DAVOS | sureau | 365 | -0.0720454 | -30.63471 | 0.0907165 | 38.57395 | -0.5589951 | -5.807497 | -2.064618 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-907-1.png)
 
@@ -2405,13 +2285,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.3)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| DAVOS | granier | 335 | -0.0721579 | -25.19281 | 0.0721579 | 25.19281 | -0.2659240 | -24.17779 | -4.715613 |
+| DAVOS | sperry | 335 | -0.1463298 | -51.08881 | 0.1463298 | 51.08881 | 0.4148438 | -97.77566 | -10.590763 |
+| DAVOS | sureau | 335 | -0.0710973 | -24.82254 | 0.0711698 | 24.84784 | 0.5853325 | -22.09837 | -4.637349 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-913-1.png)
 
@@ -2421,9 +2299,9 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| DAVOS | T1_2602 | granier | 364 | 0.0433762 | 34.11646 | 0.0651225 | 51.22050 | 0.8657599 | 0.6549379 | 0.4705638 |
-| DAVOS | T1_2602 | sperry | 364 | 0.1443894 | 113.56594 | 0.1773161 | 139.46357 | 0.7204132 | -1.5699177 | -0.4415530 |
-| DAVOS | T1_2602 | sureau | 364 | -0.0147769 | -11.62239 | 0.0722495 | 56.82608 | 0.7553116 | 0.5526946 | 0.4126222 |
+| DAVOS | T1_2602 | granier | 364 | 0.0396852 | 31.21337 | 0.0637066 | 50.10682 | 0.8624273 | 0.6652376 | 0.4820753 |
+| DAVOS | T1_2602 | sperry | 364 | 0.1450038 | 114.04912 | 0.1776036 | 139.68971 | 0.7222512 | -1.5776436 | -0.4438905 |
+| DAVOS | T1_2602 | sureau | 364 | -0.0147712 | -11.61792 | 0.0722213 | 56.80391 | 0.7555197 | 0.5530534 | 0.4128514 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-920-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-920-2.png)
 
@@ -2515,13 +2393,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.1)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| LOTSCHENTAL | granier | 1262 | -0.0947313 | -57.23762 | 0.0947703 | 57.26123 | 0.3830117 | -2.522469 | -0.8178025 |
+| LOTSCHENTAL | sperry | 1262 | -0.0944304 | -57.05585 | 0.0944748 | 57.08265 | 0.0203554 | -2.510329 | -0.8121335 |
+| LOTSCHENTAL | sureau | 1262 | -0.0947084 | -57.22380 | 0.0947485 | 57.24804 | 0.2418909 | -2.522678 | -0.8173840 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-956-1.png)
 
@@ -2529,13 +2405,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.3)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| LOTSCHENTAL | granier | 1253 | -0.0772424 | -18.05830 | 0.1169106 | 27.33224 | 0.4913111 | -0.2708428 | -0.1171372 |
+| LOTSCHENTAL | sperry | 1253 | -0.1048706 | -24.51743 | 0.1490001 | 34.83435 | -0.0942243 | -1.1772032 | -0.4237675 |
+| LOTSCHENTAL | sureau | 1253 | -0.0918774 | -21.47978 | 0.1250625 | 29.23804 | 0.2878240 | -0.5303322 | -0.1950321 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-962-1.png)
 
@@ -2543,13 +2417,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC.4)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| LOTSCHENTAL | granier | 1262 | -0.0302744 | -16.24065 | 0.0563511 | 30.22949 | 0.4193756 | -0.1488663 | -0.0504372 |
+| LOTSCHENTAL | sperry | 1262 | -0.0406996 | -21.83327 | 0.0641166 | 34.39531 | 0.0775572 | -0.4873555 | -0.1951941 |
+| LOTSCHENTAL | sureau | 1262 | -0.0340843 | -18.28449 | 0.0573594 | 30.77041 | 0.3154501 | -0.2296359 | -0.0692332 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-968-1.png)
 
@@ -2559,12 +2431,12 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| LOTSCHENTAL | T1_1956 | granier | 572 | -0.6039623 | -86.7662577 | 0.6116333 | 87.86829 | 0.4120099 | -1.5697464 | -0.5204192 |
-| LOTSCHENTAL | T1_1956 | sperry | 572 | -0.6960797 | -100.0000000 | 0.6960797 | 100.00000 | NA | -2.2232712 | -0.7303389 |
-| LOTSCHENTAL | T1_1956 | sureau | 572 | -0.4549944 | -65.3652704 | 0.5091861 | 73.15054 | 0.4158550 | -0.7870801 | -0.2657523 |
-| LOTSCHENTAL | T2_2602 | granier | 695 | -0.1024756 | -37.7279849 | 0.1673835 | 61.62482 | 0.4913074 | 0.0073525 | 0.0938739 |
-| LOTSCHENTAL | T2_2602 | sperry | 695 | -0.2670687 | -98.3254983 | 0.2705248 | 99.59791 | 0.0897168 | -1.5920365 | -0.4644792 |
-| LOTSCHENTAL | T2_2602 | sureau | 695 | -0.0026150 | -0.9627351 | 0.1366533 | 50.31103 | 0.6188276 | 0.2519476 | 0.2602309 |
+| LOTSCHENTAL | T1_1956 | granier | 572 | -0.6139748 | -88.204672 | 0.6212300 | 89.24697 | 0.3345069 | -1.6696735 | -0.5442750 |
+| LOTSCHENTAL | T1_1956 | sperry | 572 | -0.6656370 | -95.626543 | 0.6665345 | 95.75548 | 0.3016867 | -1.9589186 | -0.6568943 |
+| LOTSCHENTAL | T1_1956 | sureau | 572 | -0.4274111 | -61.402610 | 0.4941607 | 70.99197 | 0.3804645 | -0.7123096 | -0.2284016 |
+| LOTSCHENTAL | T2_2602 | granier | 695 | -0.1072958 | -39.502620 | 0.1677483 | 61.75913 | 0.5015690 | -0.0042430 | 0.0918991 |
+| LOTSCHENTAL | T2_2602 | sperry | 695 | -0.1818994 | -66.969078 | 0.2787827 | 102.63818 | 0.3451237 | -1.9540071 | -0.5091831 |
+| LOTSCHENTAL | T2_2602 | sureau | 695 | 0.0110793 | 4.079001 | 0.1465618 | 53.95899 | 0.5906479 | 0.1556494 | 0.2065916 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-975-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-975-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-975-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-975-4.png)
 
@@ -2659,13 +2531,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Sensible heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = Hmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_H' not found
-
-    ## Error: object 'df_all_H' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| USAMORSF | sperry | 1096 | -9.381381 | -285.2483 | 12.69905 | 386.1247 | 0.1719677 | -21.70736 | -3.997474 |
+| USAMORSF | sureau | 1096 | -9.001336 | -273.6927 | 12.21847 | 371.5121 | 0.1605327 | -20.16373 | -3.808348 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1008-1.png)
 
@@ -2673,13 +2542,10 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Latent heat turbulent flux
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
-
-    ## Error: object 'df_all_LE' not found
-
-    ## Error: object 'df_all_LE' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| USAMORSF | sperry | 1096 | -0.3354250 | -8.327449 | 3.007687 | 74.6705 | 0.3986226 | 0.1162605 | 0.1930587 |
+| USAMORSF | sureau | 1096 | -0.3669866 | -9.111014 | 3.041175 | 75.5019 | 0.3951234 | 0.1129860 | 0.1840740 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1015-1.png)
 
@@ -2687,13 +2553,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Gross primary productivity
 
-    ## Error in rowSums(out$Plants$GrossPhotosynthesis): 'x' must be an array of at least two dimensions
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_GPP' not found
-
-    ## Error: object 'df_all_GPP' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| USAMORSF | granier | 1096 | -0.6868668 | -15.895021 | 3.636825 | 84.16102 | 0.6299199 | 0.2229482 | 0.1634666 |
+| USAMORSF | sperry | 1096 | -0.1856127 | -4.295328 | 2.385368 | 55.20062 | 0.8625133 | 0.6393227 | 0.4513237 |
+| USAMORSF | sureau | 1096 | 1.0964125 | 25.372458 | 2.305396 | 53.34996 | 0.8945023 | 0.6813222 | 0.4697186 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1022-1.png)
 
@@ -2701,13 +2565,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 #### Soil water content (SWC)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 4, 3
-
-    ## Error: object 'df_all_SMC' not found
-
-    ## Error: object 'df_all_SMC' not found
+| Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
+|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| USAMORSF | granier | 1096 | 0.0093041 | 2.845939 | 0.0573540 | 17.54353 | 0.6525159 | 0.3437470 | 0.1678458 |
+| USAMORSF | sperry | 1096 | 0.0161682 | 4.945548 | 0.0561446 | 17.17358 | 0.6818479 | 0.3733632 | 0.1853937 |
+| USAMORSF | sureau | 1096 | 0.0195814 | 5.989600 | 0.0579825 | 17.73578 | 0.6462042 | 0.3242294 | 0.1587265 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1029-1.png)
 
@@ -2717,18 +2579,18 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| USAMORSF | T1_57 | granier | 159 | 0.1710568 | 97.18187 | 0.1710568 | 97.18187 | 0.4691369 | -8.971652 | -3.0662602 |
-| USAMORSF | T1_57 | sperry | 159 | 0.4238982 | 240.82768 | 0.4397722 | 249.84611 | 0.1225056 | -136.783819 | -9.4540007 |
-| USAMORSF | T1_57 | sureau | 159 | -0.1760172 | -100.00000 | 0.1760172 | 100.00000 | NA | -9.063758 | -3.1841758 |
-| USAMORSF | T2_1644 | granier | 154 | 0.1092573 | 48.54284 | 0.1365711 | 60.67830 | 0.1994919 | -1.160739 | -0.6515981 |
-| USAMORSF | T2_1644 | sperry | 154 | -0.0417615 | -18.55455 | 0.2440215 | 108.41831 | -0.0860125 | -6.084363 | -1.9510297 |
-| USAMORSF | T2_1644 | sureau | 154 | -0.2250741 | -100.00000 | 0.2250741 | 100.00000 | NA | -4.220847 | -1.7218925 |
-| USAMORSF | T3_2591 | granier | 119 | 0.2126944 | 161.81646 | 0.2126944 | 161.81646 | 0.2014337 | -40.748551 | -8.7534912 |
-| USAMORSF | T3_2591 | sperry | 119 | -0.1310615 | -99.71073 | 0.1310615 | 99.71073 | -0.2861297 | -14.317325 | -5.0100666 |
-| USAMORSF | T3_2591 | sureau | 119 | -0.1314418 | -100.00000 | 0.1314418 | 100.00000 | NA | -14.397289 | -5.0275024 |
-| USAMORSF | T4_2536 | granier | 119 | 0.2619603 | 264.35815 | 0.2619603 | 264.35815 | 0.1636680 | -110.666245 | -15.4781404 |
-| USAMORSF | T4_2536 | sperry | 119 | -0.0984025 | -99.30324 | 0.0984025 | 99.30324 | -0.2017966 | -14.626280 | -5.1898329 |
-| USAMORSF | T4_2536 | sureau | 119 | -0.0990930 | -100.00000 | 0.0990930 | 100.00000 | NA | -14.829472 | -5.2332637 |
+| USAMORSF | T1_57 | granier | 159 | 0.1752095 | 99.54112 | 0.1752095 | 99.54112 | 0.4680211 | -9.452734 | -3.1649754 |
+| USAMORSF | T1_57 | sperry | 159 | 0.3883679 | 220.64195 | 0.4076379 | 231.58978 | 0.4614672 | -61.608630 | -8.6901236 |
+| USAMORSF | T1_57 | sureau | 159 | 0.1736351 | 98.64667 | 0.2004242 | 113.86625 | 0.3758731 | -18.086265 | -3.7643641 |
+| USAMORSF | T2_1644 | granier | 154 | 0.1152704 | 51.21445 | 0.1421627 | 63.16261 | 0.1670790 | -1.340378 | -0.7192184 |
+| USAMORSF | T2_1644 | sperry | 154 | 0.1493060 | 66.33641 | 0.1972770 | 87.64983 | 0.2169393 | -3.434234 | -1.3857340 |
+| USAMORSF | T2_1644 | sureau | 154 | 0.1529975 | 67.97652 | 0.2261393 | 100.47327 | -0.0361855 | -6.134140 | -1.7347742 |
+| USAMORSF | T3_2591 | granier | 119 | -0.0843033 | -64.13740 | 0.0887489 | 67.51956 | 0.1772907 | -6.044433 | -3.0697432 |
+| USAMORSF | T3_2591 | sperry | 119 | -0.1310793 | -99.72425 | 0.1310793 | 99.72425 | 0.1095720 | -14.317584 | -5.0108818 |
+| USAMORSF | T3_2591 | sureau | 119 | 0.0297873 | 22.66198 | 0.1080429 | 82.19830 | 0.1119496 | -13.251304 | -3.9545047 |
+| USAMORSF | T4_2536 | granier | 119 | 0.2669789 | 269.42267 | 0.2669789 | 269.42267 | 0.1556662 | -115.127852 | -15.7938254 |
+| USAMORSF | T4_2536 | sperry | 119 | 0.3527855 | 356.01468 | 0.3599122 | 363.20658 | 0.1519395 | -223.277532 | -21.6396237 |
+| USAMORSF | T4_2536 | sureau | 119 | 0.3452678 | 348.42819 | 0.3487056 | 351.89739 | 0.1324050 | -243.505257 | -20.9346921 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-4.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-5.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-6.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-7.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1036-8.png)
 
@@ -2809,57 +2671,35 @@ evaluation. The following sub-sections are reported for each stand:
 
 ### Microclimate
 
-    ## Error in xy.coords(x, y, xlabel, ylabel, log): 'x' and 'y' lengths differ
+![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1048-1.png)
 
 ### Runoff & deep drainage
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1049-1.png)
 
-    ## Error in plot.window(...): need finite 'xlim' values
-
 ### Evaluation results
 
 #### Soil water content (SWC.2)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
 | Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| SEVILLETA | granier | 2178 | 0.002078 | 3.33171 | 0.0212112 | 34.0082 | 0.5898673 | 0.3287251 | 0.1994663 |
-| SEVILLETA | sperry | 2178 | 0.002078 | 3.33171 | 0.0212112 | 34.0082 | 0.5898673 | 0.3287251 | 0.1994663 |
-| NA | NA | 2178 | 0.002078 | 3.33171 | 0.0212112 | 34.0082 | 0.5898673 | 0.3287251 | 0.1994663 |
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
+| SEVILLETA | granier | 2178 | 0.0002639 | 0.4230835 | 0.0201238 | 32.26474 | 0.6037450 | 0.3538163 | 0.2405065 |
+| SEVILLETA | sperry | 2178 | -0.0075679 | -12.1336950 | 0.0185520 | 29.74462 | 0.6512673 | 0.3713968 | 0.2998286 |
+| SEVILLETA | sureau | 2178 | -0.0024045 | -3.8551443 | 0.0202728 | 32.50352 | 0.5851166 | 0.3368382 | 0.2348858 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1072-1.png)
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1073-1.png)
 
 #### Soil water content (SWC.4)
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
 | Site | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| SEVILLETA | granier | 2178 | 0.0243602 | 39.94145 | 0.030584 | 50.14622 | 0.0750284 | -2.749334 | -1.249642 |
-| SEVILLETA | sperry | 2178 | 0.0243602 | 39.94145 | 0.030584 | 50.14622 | 0.0750284 | -2.749334 | -1.249642 |
-| NA | NA | 2178 | 0.0243602 | 39.94145 | 0.030584 | 50.14622 | 0.0750284 | -2.749334 | -1.249642 |
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
+| SEVILLETA | granier | 2178 | 0.0240140 | 39.37384 | 0.0297670 | 48.80667 | 0.0764376 | -2.627320 | -1.189548 |
+| SEVILLETA | sperry | 2178 | 0.0074503 | 12.21571 | 0.0282489 | 46.31760 | 0.0942935 | -2.262767 | -1.077884 |
+| SEVILLETA | sureau | 2178 | 0.0206725 | 33.89514 | 0.0317713 | 52.09288 | 0.0417967 | -2.979154 | -1.336973 |
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1078-1.png)
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
-
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm[[var_mod]]): arguments imply differing number of rows: 0, 1
 
 ![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1079-1.png)
 
@@ -2867,7 +2707,11 @@ evaluation. The following sub-sections are reported for each stand:
 
 | Site | Cohort | Mode | n | Bias | Bias.rel | MAE | MAE.rel | r | NSE | NSE.abs |
 |:---|:---|:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| SEVILLETA | T1_2222 | granier | 1787 | 0.4943358 | 313.9768 | 0.4946026 | 314.1463 | 0.2514512 | -21.435589 | -4.716608 |
-| SEVILLETA | T2_1548 | granier | 1776 | 0.2305316 | 175.3820 | 0.2313366 | 175.9944 | 0.4977085 | -7.728738 | -2.179814 |
+| SEVILLETA | T1_2222 | granier | 1787 | 0.4344575 | 275.94520 | 0.4349358 | 276.2490 | 0.3198403 | -16.950405 | -4.026980 |
+| SEVILLETA | T1_2222 | sperry | 1787 | -0.0489987 | -31.12148 | 0.2049202 | 130.1548 | -0.0212776 | -4.039247 | -1.368463 |
+| SEVILLETA | T1_2222 | sureau | 1787 | -0.0312583 | -19.85366 | 0.2250501 | 142.9403 | -0.0130848 | -7.124662 | -1.601125 |
+| SEVILLETA | T2_1548 | granier | 1776 | 0.2266323 | 172.41553 | 0.2274706 | 173.0533 | 0.4968503 | -7.370381 | -2.126675 |
+| SEVILLETA | T2_1548 | sperry | 1776 | 0.5906476 | 449.34821 | 0.5908405 | 449.4949 | 0.6100420 | -56.594584 | -7.121339 |
+| SEVILLETA | T2_1548 | sureau | 1776 | 0.2818470 | 214.42130 | 0.2912637 | 221.5853 | 0.3536526 | -22.181278 | -3.003536 |
 
-    ## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = pt[, : arguments imply differing number of rows: 0, 1
+![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-1.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-2.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-3.png)![](StandLevelEvaluation_files/figure-html/unnamed-chunk-1085-4.png)

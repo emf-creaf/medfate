@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-12-07</h4>
+            <h4 data-toc-skip class="date">2025-12-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1311,7 +1311,7 @@ found in <a href="https://emf-creaf.github.io/traits4models/index.html" class="e
 <p>Models included in <code>medfate</code> were primarily designed to be
 ran on <strong>forest inventory plots</strong>. In this kind of data,
 the vegetation of a sampled area is often described by several records
-of woody plants (trees and shrubs) along with their size and species
+of plants (trees, shrubs and herbs) along with their size and species
 identity. Forest plots in <code>medfate</code> are assumed to be in a
 data structure that follows closely the Spanish national forest
 inventory, but is simple enough to so that other forest sampling schemes
@@ -1342,8 +1342,9 @@ depths (mm) corresponding to 50% and 95% of cumulative fine root
 distribution. Functions are provided in the package to map variables in
 user data frames into tables <code>treeData</code> and
 <code>shrubData</code>. Information about the herb layer may be either
-absent or included in an aggregated way (i.e. without distinguishing
-cohorts).</p>
+absent, defined in a table <code>herbData</code> (analogous to
+<code>shrubData</code>) or included in an aggregated way (i.e. without
+distinguishing cohorts).</p>
 <p>While the former example illustrates the standard structure of a
 <code>forest</code> object, users may use an alternative description,
 based on leaf area index and crown ratio of woody cohorts and the herb
