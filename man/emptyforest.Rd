@@ -10,6 +10,7 @@ emptyforest(
   nherb = 0,
   nseedling = 0,
   nseed = 0,
+  nlitter = 0,
   addcolumns = NULL
 )
 }
@@ -19,6 +20,8 @@ emptyforest(
 \item{nseedling}{Number of species in the seedling bank.}
 
 \item{nseed}{Number of species in the seed bank.}
+
+\item{nlitter}{Number of items in the litter compartment.}
 
 \item{addcolumns}{A character vector with additional columns. Currently allowed are (see \code{\link{forest}}):
 \itemize{

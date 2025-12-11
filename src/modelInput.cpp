@@ -1036,7 +1036,21 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   return(df);
 }  
 
-
+DataFrame internalLitterDataFrame(DataFrame above) {
+  int numCohorts = above.nrow();
+  NumericVector leaves(numCohorts, 0.0);
+  NumericVector twigs(numCohorts, 0.0);
+  NumericVector smallbranches(numCohorts, 0.0);
+  NumericVector fineroots(numCohorts, 0.0);
+  NumericVector exudates(numCohorts, 0.0);
+  DataFrame df = DataFrame::create(Named("leaves") = leaves,
+                                   Named("twigs") = twigs,
+                                   Named("smallbranches") = smallbranches,
+                                   Named("fineroots") = fineroots,
+                                   Named("exudates") = exudates);
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}
 DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
   DataFrame df;
@@ -1188,7 +1202,6 @@ void update_4_8_3_to_4_8_4(List x) {
   }
   x["paramsWaterStorage"] = paramsWaterStoragedf;
 } 
-
 // [[Rcpp::export(".spwbInputVersionUpdate")]]
 void spwbInputVersionUpdate(List x) {
   update_4_8_3_to_4_8_4(x);
@@ -1472,6 +1485,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                               paramsAnatomydf,
                                               paramsTranspirationdf, control), "internalAllocation");
   
+  input.push_back(internalLitterDataFrame(above), "internalLitter");
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
   input.push_back(medfateVersionString(), "version");
@@ -1788,6 +1802,7 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
+//'   \item{\code{internalLitter}: A data frame with the cumulative necromass (kg/m2) of different litter components: leaves, twigs, small branches, fine roots and exudates.}
 //'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 //'   also distinguishing mortality due to starvation or dessication.}
 //' }

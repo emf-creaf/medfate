@@ -204,6 +204,15 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
 void updateLeaves(List x, double wind, bool fromGrowthModel) {
   List control = x["control"];
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector litter_leaves, litter_twigs;
+  bool exportLitter = false;
+  if(x.containsElementNamed("internalLitter")) {
+    DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
+    litter_leaves = internalLitter["leaves"];
+    litter_twigs = internalLitter["twigs"];
+    exportLitter = true;
+  }
+  
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector LAI = above["LAI_expanded"];
@@ -215,6 +224,10 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   CharacterVector phenoType = paramsPhenology["PhenologyType"];
   NumericVector leafDuration = paramsPhenology["LeafDuration"];
+
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector SLA = paramsAnatomy["SLA"];
+  NumericVector r635 = paramsAnatomy["r635"];
   
   DataFrame internalPhenology =  Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   NumericVector phi = internalPhenology["phi"];
@@ -226,7 +239,14 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   for(int j=0;j<numCohorts;j++) {
     bool leafFall = true;
     if(phenoType[j] == "winter-semideciduous") leafFall = leafUnfolding[j];
-    if(leafFall) LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
+    if(leafFall) {
+      double LAIlitter = LAI_dead[j]*(1.0 - exp(-1.0*(wind/10.0)));//Decrease dead leaf area according to wind speed
+      LAI_dead[j] = LAI_dead[j] - LAIlitter;
+      if(exportLitter) {
+        litter_leaves[j] += LAIlitter/SLA[j]; // from m2/m2 to kg/m2
+        litter_twigs[j] += LAIlitter/(SLA[j]*(r635[j] - 1.0)); // from m2/m2 to kg/m2
+      }
+    } 
     //Leaf unfolding, senescence and defoliation only dealt with if called from spwb
     if(!fromGrowthModel) {
       if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {

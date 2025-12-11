@@ -44,7 +44,7 @@
 #'   }
 #'   \item{\code{seedlingBank}: An optional data frame containing seedling/sapling information with the following columns:
 #'       \itemize{
-#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for seedling/sapling species identity (i.e., 0,1,2,...) matching SpParams.}
 #'         \item{\code{Percent}: Amount of seedling in relation to full seedling bank (in %).}
 #'         \item{\code{Age}: A numeric vector indicating age of seedlings/saplings in years.}
 #'         \item{\code{Z50}: Depth (in mm) corresponding to 50% of fine roots.}
@@ -53,8 +53,15 @@
 #'   }
 #'   \item{\code{seedBank}: An optional data frame containing seed bank information with the following columns:
 #'       \itemize{
-#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for seed species identity (i.e., 0,1,2,...) matching SpParams.}
 #'         \item{\code{Percent}: Amount of seeds in relation to full seed bank (in %).}
+#'      }
+#'   }
+#'   \item{\code{litterData}: An optional data frame containing litter information with the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for litter species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Type}: String indicating litter type (i.e. "leaves", "fineroots", "twigs", or "smallbranches")}
+#'         \item{\code{Necromass}: Mass of dead material (in kg/ha).}
 #'      }
 #'   }
 #' }

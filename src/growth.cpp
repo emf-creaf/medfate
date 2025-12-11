@@ -663,6 +663,17 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector Bbt  = paramsAllometries["Bbt"];
   NumericVector BTsh  = paramsAllometries["BTsh"];
   
+  //Litter
+  NumericVector litter_smallbranches, litter_fineroots, litter_exudates;
+  bool exportLitter = false;
+  if(x.containsElementNamed("internalLitter")) {
+    DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
+    litter_smallbranches = internalLitter["smallbranches"];
+    litter_fineroots = internalLitter["fineroots"];
+    litter_exudates = internalLitter["exudates"];
+    exportLitter = true;
+  }
+  
   //Ring of forming vessels
   // List ringList = as<Rcpp::List>(x["internalRings"]);
 
@@ -755,6 +766,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
   NumericVector Starch_max_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStarchMaximumConcentration"]);
   NumericVector LeafStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStructuralBiomass"]);
+  NumericVector SapwoodStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
   NumericVector SapwoodLivingStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodLivingStructuralBiomass"]);
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
@@ -1130,6 +1142,10 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
       double deltaSASenescence = std::max(0.0, SA[j] - sapwoodAreaTarget[j]);
       propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
+      if(exportLitter) {
+        // 10% of SA biomass senescence as branches (90% as heartwood)
+        litter_smallbranches[j] += 0.001*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); //From g/ind to kg/m2
+      }  
         
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(nlayers, 0.0);
@@ -1140,7 +1156,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         deltaFRBsenescence[l] = fineRootBiomass[j]*V(j,l)*daySenescence;
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
-      
+      if(exportLitter) {
+        litter_fineroots[j] += 0.001*senescenceFinerootLoss*(N[j]/10000.0); //From g/ind to kg/m2
+      }
       // if(j==(numCohorts-1)) Rcout<< j << " before translocation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
       
 
@@ -1163,11 +1181,14 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       if(!subdailyCarbonBalance) {
         //Excess sapwood starch carbon is lost as root exudation
         if(starchSapwood[j] > Starch_max_sapwood[j]) {
-          RootExudation[j] += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+          RootExudation[j] = ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
           starchSapwood[j] = Starch_max_sapwood[j];
         }
         //Labile CARBON balance
         LabileCarbonBalance[j] = GrossPhotosynthesis[j] - MaintenanceRespiration[j] - GrowthCosts[j] - RootExudation[j];
+      }
+      if(exportLitter) {
+        litter_exudates[j] += 0.001*RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); //From g/g ind to kg/m2
       }
       
         
