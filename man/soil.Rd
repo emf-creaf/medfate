@@ -28,12 +28,13 @@ Function \code{soil} returns a data frame of class \code{soil} with the followin
 \item{\code{clay}: Clay percentage for each layer (in percent volume).}
 \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
 \item{\code{nitrogen}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg).}
+\item{\code{ph}: pH in water of each layer (0-14).}
 \item{\code{rfc}: Percentage of rock fragment content for each layer.}
 \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
 \item{\code{Ksat}: Saturated soil conductivity for each layer (in mmol·m-1·s-1·MPa-1, estimated using function \code{\link{soil_saturatedConductivitySX}}.}
 \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
 \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
-\item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
+\item{\code{Temp}: State variable with temperature (in Celsius) of each layer.}
 }
 }
 \description{
@@ -53,7 +54,7 @@ to override Van Genuchten parameters an saturated conductivity estimated from pe
 df_soil <- defaultSoilParams()
 
 # Initializes soil
-s = soil(df_soil)
+s <- soil(df_soil)
 s
 
 # Prints soil characteristics according to Saxton's water retention curve
@@ -67,7 +68,7 @@ df_soil$VG_theta_sat <- 0.400
 df_soil$VG_theta_res <- 0.040 
 
 # Reinitialize soil (should override estimations)
-s2 = soil(df_soil)
+s2 <- soil(df_soil)
 s2
 summary(s2, model="VG")
 }

@@ -26,9 +26,14 @@ summary.soil<-function(object, model="SX",...) {
     if(!is.na(object$om[l])) silt = silt - object$om[l]
     usda_Type = soil_USDAType(object$clay[l],object$sand[l]);
     
-    cat(paste("\nLayer ",l," [",dini," to ",dfin,"mm ]",
-              "\n    clay (%):", round(object$clay[l]),"silt (%):", round(silt), "sand (%):", round(object$sand[l]), "organic matter (%):", round(object$om[l]),
-              "[",   usda_Type,"]\n    Rock fragment content (%):", round(object$rfc[l]),"Macroporosity (%):", round(object$macro[l]*100),  
+    s <- paste("\nLayer ",l," [",dini," to ",dfin,"mm ]",
+               "\n    clay (%):", round(object$clay[l]),"silt (%):", round(silt), "sand (%):", round(object$sand[l]), " usda:",   usda_Type)
+    if(any(c("om", "nitrogen", "ph") %in% names(object))) s <- paste(s, "\n   ")
+    if("om" %in% names(object)) s <- paste(s,  "organic matter (%):", round(object$om[l]))
+    if("nitrogen" %in% names(object)) s <- paste(s,  "nitrogen (g/kg):", round(object$nitrogen[l]))
+    if("ph" %in% names(object)) s <- paste(s,  "ph (0-14):", round(object$ph[l]))
+    cat(paste(s,
+              "\n    rock fragment content (%):", round(object$rfc[l]),"macroporosity (%):", round(object$macro[l]*100),  
               "\n    Theta WP (%):", round(100*Theta_WP[l]),"Theta FC (%):", round(100*Theta_FC[l]), "Theta SAT (%):", round(100*Theta_SAT[l]), "Theta current (%)", round(100*object$W[l]*Theta_FC[l]),
               "\n    Vol. WP (mm):", round(Water_WP[l]),"Vol. FC (mm):", round(Water_FC[l]),"Vol. SAT (mm):", round(Water_SAT[l]), "Vol. current (mm):", round(object$W[l]*Water_FC[l]), 
               "\n    Temperature (Celsius):", round(object$Temp[l],1),
