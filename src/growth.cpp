@@ -5,6 +5,7 @@
 #include "biophysicsutils.h"
 #include "carbon.h"
 #include "communication_structures.h"
+#include "decomposition.h"
 #include "forestutils.h"
 #include "fireseverity.h"
 #include "firebehaviour.h"
@@ -664,13 +665,17 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector BTsh  = paramsAllometries["BTsh"];
   
   //Litter
-  NumericVector litter_smallbranches, litter_fineroots, litter_exudates;
+  NumericVector litter_smallbranches, structural_litter_fineroots;
+  NumericVector internalCENTURYPools;
+  NumericVector Nfineroot;
   bool exportLitter = false;
-  if(x.containsElementNamed("internalLitter")) {
-    DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
-    litter_smallbranches = internalLitter["smallbranches"];
-    litter_fineroots = internalLitter["fineroots"];
-    litter_exudates = internalLitter["exudates"];
+  if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalCENTURYPools") && x.containsElementNamed("paramsDecomposition")) {
+    DataFrame paramsDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsDecomposition"]);
+    Nfineroot = paramsDecomposition["Nfineroot"];
+    DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+    internalCENTURYPools = Rcpp::as<Rcpp::NumericVector>(x["internalCENTURYPools"]);
+    litter_smallbranches = internalStructuralLitter["smallbranches"];
+    structural_litter_fineroots = internalStructuralLitter["fineroots"];
     exportLitter = true;
   }
   
@@ -1144,7 +1149,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
       if(exportLitter) {
         // 10% of SA biomass senescence as branches (90% as heartwood)
-        litter_smallbranches[j] += 0.001*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); //From g/ind to kg/m2
+        double smallbranchlitter = 0.001*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); //From g/ind to kg/m2
+        //All litter goes to structural litter
+        litter_smallbranches[j] += smallbranchlitter;
       }  
         
       //FRB SENESCENCE
@@ -1157,7 +1164,11 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
       if(exportLitter) {
-        litter_fineroots[j] += 0.001*senescenceFinerootLoss*(N[j]/10000.0); //From g/ind to kg/m2
+        double fineroot_litter = 0.001*senescenceFinerootLoss*(N[j]/10000.0); //From g/ind to kg/m2
+        double fmet = litterMetabolicFraction(34.9, Nfineroot[j]); //Fine root lignin fraction 0.349
+        //Distribute between metabolic and structural
+        internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + fineroot_litter*fmet;
+        structural_litter_fineroots[j] += fineroot_litter*(1.0 - fmet);
       }
       // if(j==(numCohorts-1)) Rcout<< j << " before translocation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
       
@@ -1188,7 +1199,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         LabileCarbonBalance[j] = GrossPhotosynthesis[j] - MaintenanceRespiration[j] - GrowthCosts[j] - RootExudation[j];
       }
       if(exportLitter) {
-        litter_exudates[j] += 0.001*RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); //From g/g ind to kg/m2
+        internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + 0.001*RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); //From g/g ind to kg/m2
       }
       
         

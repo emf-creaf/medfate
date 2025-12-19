@@ -868,6 +868,22 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
   return(paramsAllometriesdf);
 }
 
+DataFrame paramsDecomposition(DataFrame above, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus) {
+  IntegerVector SP = above["SP"];
+  
+  NumericVector LeafLignin = speciesNumericParameterWithImputation(SP, SpParams, "LigninPercent",fillMissingSpParams, fillWithGenus);
+  NumericVector Nleaf = speciesNumericParameterWithImputation(SP, SpParams, "Nleaf",fillMissingSpParams, fillWithGenus);
+  NumericVector Nsapwood = speciesNumericParameterWithImputation(SP, SpParams, "Nsapwood",fillMissingSpParams, fillWithGenus);
+  NumericVector Nfineroot = speciesNumericParameterWithImputation(SP, SpParams, "Nfineroot",fillMissingSpParams, fillWithGenus);
+  
+  DataFrame paramsDecompositiondf = DataFrame::create(_["LeafLignin"] = LeafLignin, 
+                                                      _["Nleaf"] = Nleaf, 
+                                                      _["Nsapwood"] = Nsapwood,
+                                                      _["Nfineroot"] = Nfineroot);
+  paramsDecompositiondf.attr("row.names") = above.attr("row.names");
+  return(paramsDecompositiondf);
+}
+
 DataFrame internalPhenologyDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector phi(numCohorts,0.0);
@@ -1036,20 +1052,26 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   return(df);
 }  
 
-DataFrame internalLitterDataFrame(DataFrame above) {
+DataFrame internalStructuralLitterDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector leaves(numCohorts, 0.0);
-  NumericVector twigs(numCohorts, 0.0);
   NumericVector smallbranches(numCohorts, 0.0);
   NumericVector fineroots(numCohorts, 0.0);
-  NumericVector exudates(numCohorts, 0.0);
   DataFrame df = DataFrame::create(Named("leaves") = leaves,
-                                   Named("twigs") = twigs,
                                    Named("smallbranches") = smallbranches,
-                                   Named("fineroots") = fineroots,
-                                   Named("exudates") = exudates);
+                                   Named("fineroots") = fineroots);
   df.attr("row.names") = above.attr("row.names");
   return(df);
+}
+
+NumericVector internalCENTURYPools() {
+  return(NumericVector::create(Named("surface/metabolic") = 0.0,
+                               Named("surface/active") = 0.0, 
+                               Named("surface/slow") = 0.0,
+                               Named("soil/metabolic") = 0.0,
+                               Named("soil/active")=0.0, 
+                               Named("soil/slow") = 0.0,
+                               Named("soil/passive") = 0.0));
 }
 DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
@@ -1383,6 +1405,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   DataFrame paramsMortalityRegenerationdf = paramsMortalityRegeneration(above, SpParams, control);
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams, fillWithGenus);
+  DataFrame paramsDecompositiondf = paramsDecomposition(above, SpParams, fillMissingSpParams, fillWithGenus);
   
   
   DataFrame paramsTranspirationdf;
@@ -1474,6 +1497,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                        _["paramsGrowth"]= paramsGrowthdf,
                        _["paramsMortalityRegeneration"] =paramsMortalityRegenerationdf,
                        _["paramsAllometries"] = paramsAllometriesdf,
+                       _["paramsDecomposition"] = paramsDecompositiondf,
                        _["internalPhenology"] = internalPhenologyDataFrame(above),
                        _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
   input.push_back(internalLAIDistribution(above, paramsCanopydf),"internalLAIDistribution");
@@ -1485,7 +1509,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                               paramsAnatomydf,
                                               paramsTranspirationdf, control), "internalAllocation");
   
-  input.push_back(internalLitterDataFrame(above), "internalLitter");
+  input.push_back(internalStructuralLitterDataFrame(above), "internalStructuralLitter");
+  input.push_back(internalCENTURYPools(), "internalCENTURYPools");
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
   input.push_back(medfateVersionString(), "version");
@@ -1802,7 +1827,8 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-//'   \item{\code{internalLitter}: A data frame with the cumulative necromass (kg/m2) of different litter components: leaves, twigs, small branches, fine roots and exudates.}
+//'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (kg C/m2) of different litter components: leaves, small branches and fine roots.}
+//'   \item{\code{internalCENTURYPools}: A named numeric vector with surface/soil decomposing carbon pools (kg C/m2).}
 //'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 //'   also distinguishing mortality due to starvation or dessication.}
 //' }

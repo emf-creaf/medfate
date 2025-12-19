@@ -15,7 +15,7 @@
   numCohorts <- nrow(xo$cohorts)
   litterLeaves <- data.frame(Species = xo$cohorts$Name,
                              Type = rep("leaves", numCohorts),
-                             Necromass = xo$internalLitter$leaves)
+                             Necromass = xo$internalStructuralLitter$leaves)
   litterTwigs <- data.frame(Species = xo$cohorts$Name,
                             Type = rep("twigs", numCohorts),
                             Necromass = xo$internalLitter$twigs)

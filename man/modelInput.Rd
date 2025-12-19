@@ -205,7 +205,8 @@ Function \code{growthInput()} returns a list of class \code{growthInput} with th
 }
 }
 \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-\item{\code{internalLitter}: A data frame with the cumulative necromass (kg/m2) of different litter components: leaves, twigs, small branches, fine roots and exudates.}
+\item{\code{internalStructuralLitter}: A data frame with the structural necromass (kg C/m2) of different litter components: leaves, small branches and fine roots.}
+\item{\code{internalCENTURYPools}: A named numeric vector with surface/soil decomposing carbon pools (kg C/m2).}
 \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 also distinguishing mortality due to starvation or dessication.}
 }

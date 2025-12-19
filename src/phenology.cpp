@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "decomposition.h"
 using namespace Rcpp;
 
 // [[Rcpp::export(".gdd")]]
@@ -204,12 +205,18 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
 void updateLeaves(List x, double wind, bool fromGrowthModel) {
   List control = x["control"];
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector litter_leaves, litter_twigs;
+  NumericVector structural_litter_leaves, structural_litter_smallbranches, internalCENTURYPools;
+  NumericVector Nleaf, LeafLignin;
   bool exportLitter = false;
-  if(x.containsElementNamed("internalLitter")) {
-    DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
-    litter_leaves = internalLitter["leaves"];
-    litter_twigs = internalLitter["twigs"];
+  if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalCENTURYPools") && x.containsElementNamed("paramsDecomposition")) {
+    DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+    structural_litter_leaves = internalStructuralLitter["leaves"];
+    structural_litter_smallbranches = internalStructuralLitter["smallbranches"];
+    DataFrame paramsDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsDecomposition"]);
+    Nleaf = paramsDecomposition["Nleaf"];
+    LeafLignin = paramsDecomposition["LeafLignin"];
+    
+    internalCENTURYPools = Rcpp::as<Rcpp::NumericVector>(x["internalCENTURYPools"]);
     exportLitter = true;
   }
   
@@ -243,8 +250,14 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
       double LAIlitter = LAI_dead[j]*(1.0 - exp(-1.0*(wind/10.0)));//Decrease dead leaf area according to wind speed
       LAI_dead[j] = LAI_dead[j] - LAIlitter;
       if(exportLitter) {
-        litter_leaves[j] += LAIlitter/SLA[j]; // from m2/m2 to kg/m2
-        litter_twigs[j] += LAIlitter/(SLA[j]*(r635[j] - 1.0)); // from m2/m2 to kg/m2
+        double leaf_litter = LAIlitter/SLA[j]; // from m2/m2 to kg/m2
+        double smallbranch_litter = LAIlitter/(SLA[j]*(r635[j] - 1.0)); // from m2/m2 to kg/m2
+        double fmet = litterMetabolicFraction(LeafLignin[j], Nleaf[j]);
+        //Distribute between metabolic and structural
+        internalCENTURYPools["surface/metabolic"] = internalCENTURYPools["surface/metabolic"] + leaf_litter*fmet;
+        structural_litter_leaves[j] += leaf_litter*(1.0 - fmet);
+        // All small branch goes to structural litter compartment
+        structural_litter_smallbranches[j] += smallbranch_litter;
       }
     } 
     //Leaf unfolding, senescence and defoliation only dealt with if called from spwb

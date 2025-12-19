@@ -619,6 +619,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// litterMetabolicFraction
+double litterMetabolicFraction(double ligninPercent, double Nmass);
+RcppExport SEXP _medfate_litterMetabolicFraction(SEXP ligninPercentSEXP, SEXP NmassSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type ligninPercent(ligninPercentSEXP);
+    Rcpp::traits::input_parameter< double >::type Nmass(NmassSEXP);
+    rcpp_result_gen = Rcpp::wrap(litterMetabolicFraction(ligninPercent, Nmass));
+    return rcpp_result_gen;
+END_RCPP
+}
 // criticalFirelineIntensity
 double criticalFirelineIntensity(double CBH, double M);
 RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
@@ -6174,6 +6186,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
     {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
+    {"_medfate_litterMetabolicFraction", (DL_FUNC) &_medfate_litterMetabolicFraction, 2},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
