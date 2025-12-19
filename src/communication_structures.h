@@ -77,9 +77,24 @@ const int SOILEBCOM_k_down = 13;
 const int SOILEBCOM_tempch = 14;
 List communicationSoilEnergyBalance(int nlayers);
 
-NumericVector communicationFireHazard();
+const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
+const int LITDECOMPCOM_TRANSFER_SOIL_SLOW = 3;
+const int LITDECOMPCOM_FLUX_RESPIRATION = 4;
 
+const int DECOMPCOM_SURFACE_METABOLIC = 0;
+const int DECOMPCOM_SOIL_METABOLIC = 1;
+const int DECOMPCOM_SURFACE_ACTIVE = 2;
+const int DECOMPCOM_SOIL_ACTIVE = 3;
+const int DECOMPCOM_SURFACE_SLOW = 4;
+const int DECOMPCOM_SOIL_SLOW = 5;
+const int DECOMPCOM_SOIL_PASSIVE = 6;
+
+NumericVector communicationLitterDecomposition();
 List communicationDecomposition();
+
+NumericVector communicationFireHazard();
 
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers);
 List advancedTranspirationCommunicationOutput(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);

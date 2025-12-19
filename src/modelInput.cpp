@@ -1066,10 +1066,10 @@ DataFrame internalStructuralLitterDataFrame(DataFrame above) {
 
 NumericVector internalCENTURYPools() {
   return(NumericVector::create(Named("surface/metabolic") = 0.0,
-                               Named("surface/active") = 0.0, 
-                               Named("surface/slow") = 0.0,
                                Named("soil/metabolic") = 0.0,
+                               Named("surface/active") = 0.0, 
                                Named("soil/active")=0.0, 
+                               Named("surface/slow") = 0.0,
                                Named("soil/slow") = 0.0,
                                Named("soil/passive") = 0.0));
 }

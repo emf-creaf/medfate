@@ -631,6 +631,86 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pHEffect
+double pHEffect(double x, String pool);
+RcppExport SEXP _medfate_pHEffect(SEXP xSEXP, SEXP poolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< String >::type pool(poolSEXP);
+    rcpp_result_gen = Rcpp::wrap(pHEffect(x, pool));
+    return rcpp_result_gen;
+END_RCPP
+}
+// moistureEffect
+double moistureEffect(double sand, double clay, double soilMoisture);
+RcppExport SEXP _medfate_moistureEffect(SEXP sandSEXP, SEXP claySEXP, SEXP soilMoistureSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type soilMoisture(soilMoistureSEXP);
+    rcpp_result_gen = Rcpp::wrap(moistureEffect(sand, clay, soilMoisture));
+    return rcpp_result_gen;
+END_RCPP
+}
+// temperatureEffect
+double temperatureEffect(double soilTemperature);
+RcppExport SEXP _medfate_temperatureEffect(SEXP soilTemperatureSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperatureEffect(soilTemperature));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DAYCENTlitter
+NumericVector DAYCENTlitter(DataFrame structuralLitter, DataFrame paramsDecomposition, NumericVector baseAnnualRates, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENTlitter(SEXP structuralLitterSEXP, SEXP paramsDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type structuralLitter(structuralLitterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsDecomposition(paramsDecompositionSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
+    Rcpp::traits::input_parameter< double >::type soilMoisture(soilMoistureSEXP);
+    Rcpp::traits::input_parameter< double >::type soilPH(soilPHSEXP);
+    Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
+    Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
+    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
+    rcpp_result_gen = Rcpp::wrap(DAYCENTlitter(structuralLitter, paramsDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DAYCENT
+double DAYCENT(DataFrame structuralLitter, NumericVector CENTURYPools, DataFrame paramsDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENT(SEXP structuralLitterSEXP, SEXP CENTURYPoolsSEXP, SEXP paramsDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type structuralLitter(structuralLitterSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type CENTURYPools(CENTURYPoolsSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsDecomposition(paramsDecompositionSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
+    Rcpp::traits::input_parameter< double >::type annualTurnoverRate(annualTurnoverRateSEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
+    Rcpp::traits::input_parameter< double >::type soilMoisture(soilMoistureSEXP);
+    Rcpp::traits::input_parameter< double >::type soilPH(soilPHSEXP);
+    Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
+    Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
+    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
+    rcpp_result_gen = Rcpp::wrap(DAYCENT(structuralLitter, CENTURYPools, paramsDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    return rcpp_result_gen;
+END_RCPP
+}
 // criticalFirelineIntensity
 double criticalFirelineIntensity(double CBH, double M);
 RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
@@ -6187,6 +6267,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
     {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
     {"_medfate_litterMetabolicFraction", (DL_FUNC) &_medfate_litterMetabolicFraction, 2},
+    {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
+    {"_medfate_moistureEffect", (DL_FUNC) &_medfate_moistureEffect, 3},
+    {"_medfate_temperatureEffect", (DL_FUNC) &_medfate_temperatureEffect, 1},
+    {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},
+    {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 13},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},

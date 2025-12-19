@@ -194,18 +194,27 @@ NumericVector communicationFireHazard() {
   return(fireHazard);
 }
 
-//'  0 = metabolic litter (surface)
-//'  1 = metabolic litter (soil)
-//'  2 = structural litter (surface)
-//'  3 = structural litter (soil)
-//'  4 = coarse woody debris: fine branch
-//'  5 = coarse woody debris: large wood
-//'  6 = coarse woody debris: coarse root
-//'  7 = active SOM1 (surface)
-//'  8 = active SOM1 (soil)
-//'  9 = slow SOM2 (SRFC)
-//' 10 = slow SOM2 (SOIL)
-//' 11 = passive SOM3
+const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
+const int LITDECOMPCOM_TRANSFER_SOIL_SLOW = 3;
+const int LITDECOMPCOM_FLUX_RESPIRATION = 4;
+NumericVector communicationLitterDecomposition() {
+  NumericVector output = NumericVector::create(_["transfer_surface_active"] = 0.0,
+                                               _["transfer_surface_slow"] = 0.0,
+                                               _["transfer_soil_active"] = 0.0,
+                                               _["transfer_soil_slow"] = 0.0,
+                                               _["flux_respiration"] = 0.0);
+  return(output);
+}
+
+const int DECOMPCOM_SURFACE_METABOLIC = 0;
+const int DECOMPCOM_SOIL_METABOLIC = 1;
+const int DECOMPCOM_SURFACE_ACTIVE = 2;
+const int DECOMPCOM_SOIL_ACTIVE = 3;
+const int DECOMPCOM_SURFACE_SLOW = 4;
+const int DECOMPCOM_SOIL_SLOW = 5;
+const int DECOMPCOM_SOIL_PASSIVE = 6;
 //' Creates list with the following matrices:
 //' pools:
 //'   \itemize{
@@ -215,20 +224,26 @@ NumericVector communicationFireHazard() {
 //'     \item{\code{respf}: Fractional respiration loss for carbon flow from pool j to pool i.} 
 //' }
 List communicationDecomposition() {
-  int npool = 12;
-  NumericMatrix xi(npool, npool);
+  int npool = 7;
+  NumericVector litterDecompositionOutput = communicationLitterDecomposition();
+  NumericVector xi(npool), K(npool);
   NumericMatrix A(npool, npool);
   NumericMatrix pathf(npool, npool);
   NumericMatrix respf(npool, npool);
   for(int i = 0; i< npool; i++) {
+    xi[i] = 0.0;
+    K[i] = 0.0;
     for(int j = 0; j< npool; j++) {
-      xi(i,j) = 0.0;
       A(i,j) = 0.0;
       pathf(i,j) = 0.0;
       respf(i,j) = 0.0;
     }
   }
-  List l = List::create(_["xi"] = xi,
+  List l = List::create(_["ldo"] = litterDecompositionOutput,
+                        _["xi"] = xi,
+                        _["K"] = K,
+                        _["Kmix"] = 0.0,
+                        _["K_s21"] = 0.0,
                         _["A"] = A,
                         _["pathf"] = pathf,
                         _["respf"] = respf);
