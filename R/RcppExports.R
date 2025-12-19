@@ -285,6 +285,28 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
 
+#'  0 = metabolic litter (surface)
+#'  1 = metabolic litter (soil)
+#'  2 = structural litter (surface)
+#'  3 = structural litter (soil)
+#'  4 = coarse woody debris: fine branch
+#'  5 = coarse woody debris: large wood
+#'  6 = coarse woody debris: coarse root
+#'  7 = active SOM1 (surface)
+#'  8 = active SOM1 (soil)
+#'  9 = slow SOM2 (SRFC)
+#' 10 = slow SOM2 (SOIL)
+#' 11 = passive SOM3
+#' Creates list with the following matrices:
+#' pools:
+#'   \itemize{
+#'     \item{\code{xi}: Environmental scalar matrix.}
+#'     \item{\code{A}: Carbon transfer matrix.} 
+#'     \item{\code{pathf}: Fractional carbon flow from pool j to pool i.} 
+#'     \item{\code{respf}: Fractional respiration loss for carbon flow from pool j to pool i.} 
+#' }
+NULL
+
 #' Internal communication
 #'
 #' Functions for internal communication. Not to be called by users.
@@ -317,6 +339,41 @@ general_communication_structures <- function(numCohorts, nlayers, ncanlayers, nt
 #' @keywords internal
 instance_communication_structures <- function(x, model) {
     .Call(`_medfate_instanceCommunicationStructures`, x, model)
+}
+
+#' @rdname decomposition
+#' @param npool number of carbon pools
+#' @param sand  percent sand
+#' @param clay  percent clay
+#' @param O2   effect of soil anaerobic conditions on decomposition (0-1)
+#' @param strlig lignin fraction: (1) SRFC and (2) SOIL structural litter (g lignin/g biomass)
+#' @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
+#' @param rsplig fraction of carbon lost as respiration (lignin)
+#' @param Kmix base mixing rate: SOM2(SRFC) -> SOM2(SOIL), 1/sec
+#' @param K_s21 rate constant: total loss from SOM2(SRFC), 1/sec
+#' 
+#'   
+#' @keywords internal
+NULL
+
+#'  @param cdi soil temperature and moisture scalar (0-1)
+#'  @param pH  soil pH
+#'  @param O2 effect of soil anaerobic conditions on decomposition (0-1)
+#'  @param sand percent sand
+#'  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
+#'  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
+#'  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
+#'  @param K base decomposition rate (1/sec)
+#'  @param Kmix base mixing rate: SOM2(surface) -> SOM2(soil), 1/sec
+#' 
+#' % Output
+#' %   K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
+#' %   xi          ! environmental scalar
+NULL
+
+#' @keywords internal
+decomposition_annualLitterDecompositionRate <- function(AET, lignin) {
+    .Call(`_medfate_annualLitterDecompositionRate`, AET, lignin)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
@@ -2733,7 +2790,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'     }
 #'   }
 #'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-#'   \item{\code{internalLitter}: A data frame with the cummulative necromass (kg/m2) of different litter components: leaves, twigs, small branches, fine roots and exudates.}
+#'   \item{\code{internalLitter}: A data frame with the cumulative necromass (kg/m2) of different litter components: leaves, twigs, small branches, fine roots and exudates.}
 #'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 #'   also distinguishing mortality due to starvation or dessication.}
 #' }

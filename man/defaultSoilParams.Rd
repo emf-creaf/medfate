@@ -17,15 +17,16 @@ A data frame with layers in rows and the following columns (and default values):
 \item{\code{sand (= 25)}: Sand percentage for each layer (in \%).}
 \item{\code{om (= NA)}: Organic matter percentage for each layer (in \%) (optional).}
 \item{\code{nitrogen (= NA)}: Sum of total nitrogen (ammonia, organic and reduced nitrogen) for each layer (in g/kg) (optional).}
+\item{\code{ph (=NA)}: pH in water (0-14).}
 \item{\code{bd (= 1.5)}: Bulk density for each layer (in g/cm3).}
 \item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content (volume basis) for each layer.}
 }
 }
 \description{
-Creates a data frame with default soil physical description for model functions
+Creates a data frame with default soil physical and chemical description for model functions
 }
 \details{
-The function returns a data frame with default physical soil description, with soil layers in rows.
+The function returns a data frame with default physical and chemical soil description, with soil layers in rows.
 Users can change those that need to be set to other values and use the list as input for function \code{\link{soil}}.
 }
 \note{

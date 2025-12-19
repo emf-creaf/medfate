@@ -194,6 +194,47 @@ NumericVector communicationFireHazard() {
   return(fireHazard);
 }
 
+//'  0 = metabolic litter (surface)
+//'  1 = metabolic litter (soil)
+//'  2 = structural litter (surface)
+//'  3 = structural litter (soil)
+//'  4 = coarse woody debris: fine branch
+//'  5 = coarse woody debris: large wood
+//'  6 = coarse woody debris: coarse root
+//'  7 = active SOM1 (surface)
+//'  8 = active SOM1 (soil)
+//'  9 = slow SOM2 (SRFC)
+//' 10 = slow SOM2 (SOIL)
+//' 11 = passive SOM3
+//' Creates list with the following matrices:
+//' pools:
+//'   \itemize{
+//'     \item{\code{xi}: Environmental scalar matrix.}
+//'     \item{\code{A}: Carbon transfer matrix.} 
+//'     \item{\code{pathf}: Fractional carbon flow from pool j to pool i.} 
+//'     \item{\code{respf}: Fractional respiration loss for carbon flow from pool j to pool i.} 
+//' }
+List communicationDecomposition() {
+  int npool = 12;
+  NumericMatrix xi(npool, npool);
+  NumericMatrix A(npool, npool);
+  NumericMatrix pathf(npool, npool);
+  NumericMatrix respf(npool, npool);
+  for(int i = 0; i< npool; i++) {
+    for(int j = 0; j< npool; j++) {
+      xi(i,j) = 0.0;
+      A(i,j) = 0.0;
+      pathf(i,j) = 0.0;
+      respf(i,j) = 0.0;
+    }
+  }
+  List l = List::create(_["xi"] = xi,
+                        _["A"] = A,
+                        _["pathf"] = pathf,
+                        _["respf"] = respf);
+  return(l);
+}
+
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers) {
 
   NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer

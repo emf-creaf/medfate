@@ -162,6 +162,8 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{recrTreeDensity [= 3000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
 \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{IngrowthTreeDBH} is missing).}
 \item{\code{ingrowthTreeDensity [= 127]}: Default density (ind·ha-1) for ingrowth trees  (when species parameter \code{IngrowthTreeDensity} is missing).}
+\item{\code{decompositionBaseAnnualRates}: Vector of base annual decomposition rates (in yr-1) for 12 pools in the CENTURY model}
+\item{\code{decompositionAnnualTurnoverRate [= 0.1]}: Annual turnover time for biome in the CENTURY model.}
 }
 \bold{Forest dynamics} (function \code{\link{fordyn}}):
 \itemize{

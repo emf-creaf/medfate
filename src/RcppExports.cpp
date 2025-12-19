@@ -607,6 +607,18 @@ RcppExport SEXP _medfate_instanceCommunicationStructures(SEXP xSEXP, SEXP modelS
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// annualLitterDecompositionRate
+double annualLitterDecompositionRate(double AET, double lignin);
+RcppExport SEXP _medfate_annualLitterDecompositionRate(SEXP AETSEXP, SEXP ligninSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type AET(AETSEXP);
+    Rcpp::traits::input_parameter< double >::type lignin(ligninSEXP);
+    rcpp_result_gen = Rcpp::wrap(annualLitterDecompositionRate(AET, lignin));
+    return rcpp_result_gen;
+END_RCPP
+}
 // criticalFirelineIntensity
 double criticalFirelineIntensity(double CBH, double M);
 RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
@@ -6161,6 +6173,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_copyModelOutput", (DL_FUNC) &_medfate_copyModelOutput, 3},
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
+    {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},

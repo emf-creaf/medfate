@@ -155,6 +155,8 @@
 #'       \item{\code{recrTreeDensity [= 3000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
 #'       \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{IngrowthTreeDBH} is missing).}
 #'       \item{\code{ingrowthTreeDensity [= 127]}: Default density (ind·ha-1) for ingrowth trees  (when species parameter \code{IngrowthTreeDensity} is missing).}
+#'       \item{\code{decompositionBaseAnnualRates}: Vector of base annual decomposition rates (in yr-1) for 12 pools in the CENTURY model}
+#'       \item{\code{decompositionAnnualTurnoverRate [= 0.1]}: Annual turnover time for biome in the CENTURY model.}
 #'    }
 #'   \bold{Forest dynamics} (function \code{\link{fordyn}}):
 #'    \itemize{
@@ -307,11 +309,13 @@ defaultControl<-function(transpirationMode = "Granier",
     recrTreeDensity = 3000,
     ingrowthTreeDBH = 7.5,
     ingrowthTreeDensity = 127,
-    
+    decompositionAnnualBaseRates = c(8.0, 18.5, 2.0, 4.9, 1.5, 0.02, 0.1, 6.0, 11.0, 0.08, 0.4, 0.0033),
+    decompositionAnnualTurnoverRate = 0.10,
     #dynamics
     allowSeedBankDynamics = TRUE,
     allowRecruitment = TRUE,
     allowResprouting = TRUE,
+    allowLitterDynamics = TRUE,
     recruitmentMode = "annual/stochastic",
     removeEmptyCohorts=TRUE,
     minimumTreeCohortDensity = 1,

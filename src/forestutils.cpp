@@ -7,6 +7,7 @@
 #include "phenology.h"
 #include "root.h"
 #include "soil.h"
+#include "decomposition.h"
 #include "incgamma.h"
 using namespace Rcpp;
 
@@ -1295,7 +1296,7 @@ NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET
   NumericVector eqli(ncoh);
   double ki = 0.0;
   for(int i=0;i<ncoh;i++) {
-    ki = (-0.5365+0.00241*AET) - (-0.01586+0.000056*AET)*lignin[i];//Meentemeyer (1978)
+    ki = annualLitterDecompositionRate(AET, lignin[i]);
     // Rcout<<ki<<"\n";
     eqli[i] = fb[i]/(ld[i]*ki);
   }

@@ -79,6 +79,8 @@ List communicationSoilEnergyBalance(int nlayers);
 
 NumericVector communicationFireHazard();
 
+List communicationDecomposition();
+
 List basicTranspirationCommunicationOutput(int numCohorts, int nlayers);
 List advancedTranspirationCommunicationOutput(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);
 List copyBasicTranspirationOutput(List btc, List x);
