@@ -250,8 +250,11 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
       double LAIlitter = LAI_dead[j]*(1.0 - exp(-1.0*(wind/10.0)));//Decrease dead leaf area according to wind speed
       LAI_dead[j] = LAI_dead[j] - LAIlitter;
       if(exportLitter) {
-        double leaf_litter = LAIlitter/SLA[j]; // from m2/m2 to kg/m2
-        double smallbranch_litter = LAIlitter/(SLA[j]*(r635[j] - 1.0)); // from m2/m2 to kg/m2
+        // from m2/m2 to g C/m2
+        double C_dry = 0.5;
+        double leaf_litter = C_dry*1000.0*LAIlitter/SLA[j]; 
+        // from m2/m2 to g C/m2
+        double smallbranch_litter = C_dry*1000.0*LAIlitter/(SLA[j]*(r635[j] - 1.0));
         double fmet = litterMetabolicFraction(LeafLignin[j], Nleaf[j]);
         //Distribute between metabolic and structural
         internalCENTURYPools["surface/metabolic"] = internalCENTURYPools["surface/metabolic"] + leaf_litter*fmet;

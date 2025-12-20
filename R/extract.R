@@ -293,7 +293,7 @@
   
   if(level=="forest") {
     stand_level_names <-c("WaterBalance", "Stand", "Snow",
-                          "EnergyBalance", "Temperature", "CarbonBalance", "BiomassBalance", "FireHazard")
+                          "EnergyBalance", "Temperature", "CarbonBalance", "BiomassBalance", "DecompositionPools","FireHazard")
     if(is.null(output)) {
       output <- stand_level_names
     } else {

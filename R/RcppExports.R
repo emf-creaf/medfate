@@ -1188,6 +1188,7 @@ growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude,
 #' Function \code{growth_day()} returns a list of class \code{growth_day} with the 
 #' same elements as \code{\link{spwb_day}} and the following:
 #' \itemize{
+#'   \item{\code{"CarbonBalance"}: A vector of different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange), all in g C · m-2.}
 #'   \item{\code{"LabileCarbonBalance"}: A data frame with labile carbon balance results for plant cohorts, with elements:}
 #'   \itemize{
 #'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
@@ -1337,7 +1338,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #'   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
 #'   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
 #'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-#'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
+#'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange.), all in g C · m-2.}
 #'   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
 #'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
 #'   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
@@ -1387,6 +1388,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
 #'     \item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
 #'     \item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}
 #'   }
+#'   \item{\code{"DecompositionPools"}: A data frame with the mass of different decomposition carbon pools, all in g C · m-2.}
 #'   \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
 #' }
 #' 

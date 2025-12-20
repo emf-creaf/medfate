@@ -41,6 +41,7 @@ growth_day(
 Function \code{growth_day()} returns a list of class \code{growth_day} with the
 same elements as \code{\link{spwb_day}} and the following:
 \itemize{
+\item{\code{"CarbonBalance"}: A vector of different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange), all in g C · m-2.}
 \item{\code{"LabileCarbonBalance"}: A data frame with labile carbon balance results for plant cohorts, with elements:}
 \itemize{
 \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}

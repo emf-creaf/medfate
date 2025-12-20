@@ -366,8 +366,9 @@ List basicGROWTHCommunicationOutput(List spwbOut, int numCohorts, int nlayers) {
                                                     _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
                                                     _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
   
-  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL};
-  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"});
+  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL};
+  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction", 
+               "HeterotrophicRespiration", "NetEcosystemExchange"});
   
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(
@@ -744,8 +745,9 @@ List advancedGROWTHCommunicationOutput(List spwbOut, int numCohorts, int ntimest
                                                     _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
                                                     _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
 
-  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL};
-  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"});
+  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL};
+  standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction",
+               "HeterotrophicRespiration", "NetEcosystemExchange"});
   
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(
@@ -1538,9 +1540,11 @@ List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers,
     List basicGROWTHOutput = basicGROWTHCommunicationOutput(basicSPWBOutput, numCohorts, nlayers);
     List advancedGROWTHOutput = advancedGROWTHCommunicationOutput(advancedSPWBOutput, numCohorts, ntimesteps);
     List initialFinalCC = communicationInitialFinalCarbonCompartments(numCohorts);
+    List decomposition = communicationDecomposition();
     ic.push_back(basicGROWTHOutput, "basicGROWTHOutput");
     ic.push_back(advancedGROWTHOutput, "advancedGROWTHOutput");
     ic.push_back(initialFinalCC, "initialFinalCC");
+    ic.push_back(decomposition, "decomposition");
   }
   return(ic);
 }

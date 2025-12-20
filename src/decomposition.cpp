@@ -300,7 +300,7 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   for(int i=0;i<numCohorts;i++) {
     pHeff = pHEffect(soilPH, "soil/structural");
     k = (baseAnnualRates["soil/structural"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
-    loss = structural_fineroots[i]*k;
+    loss = structural_fineroots[i]*k*tstep;
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW] += loss*flig*(1.0 - 0.30);
     litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
@@ -362,24 +362,24 @@ double DAYCENTInner(List commDecomp,
     // carbon transfer from pool j to pool i
     for(int j=0;j<npool;j++) {
       if(j!=i) {
-        dC[i] = dC[i] + (1.0 - respf(i,j)) * pathf(i,j) * xi[j] * K[j] * CENTURYPools[j];
+        dC[i] = dC[i] + (1.0 - respf(i,j)) * pathf(i,j) * xi[j] * K[j] * CENTURYPools[j]*tstep;
       }
     }
     //  carbon loss from pool i
-    dC[i] = dC[i] - xi[i] * K[i] * CENTURYPools[i];
+    dC[i] = dC[i] - xi[i] * K[i] * CENTURYPools[i]*tstep;
   }
   //   heterotrophic respiration
   double RH = litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION];
   for(int i=0;i<npool;i++) {
     for(int j=0;j<npool;j++) {
       if(j!=i) {
-        RH = RH + respf(i,j) * pathf(i,j) * xi[j] * K[j] * CENTURYPools[j];
+        RH = RH + respf(i,j) * pathf(i,j) * xi[j] * K[j] * CENTURYPools[j] * tstep;
       }
     }
   }
   // update pools
   for(int i=0;i<npool;i++) {
-    CENTURYPools[i] += dC[i] * tstep;
+    CENTURYPools[i] += dC[i];
   }
   //return respiration
   return(RH);

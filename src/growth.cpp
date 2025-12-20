@@ -452,14 +452,16 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   //Soil
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   int nlayers = soil.nrow();
-  NumericVector psiSoil = psi(soil,"soilFunctions");
+  NumericVector psiSoil = psi(soil, soilFunctions);
   NumericVector widths = soil["widths"];
+  NumericVector sand = soil["sand"];
+  NumericVector clay = soil["clay"];
   NumericVector rfc = soil["rfc"];
   NumericVector Ksat = soil["Ksat"];
   NumericVector VG_n = soil["VG_n"];
   NumericVector VG_alpha = soil["VG_alpha"];
   NumericVector Tsoil = soil["Temp"];
-  
+
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector DBH = above["DBH"];
@@ -665,14 +667,16 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector BTsh  = paramsAllometries["BTsh"];
   
   //Litter
+  DataFrame internalStructuralLitter;
+  DataFrame paramsDecomposition;
   NumericVector litter_smallbranches, structural_litter_fineroots;
   NumericVector internalCENTURYPools;
   NumericVector Nfineroot;
   bool exportLitter = false;
   if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalCENTURYPools") && x.containsElementNamed("paramsDecomposition")) {
-    DataFrame paramsDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsDecomposition"]);
+    paramsDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsDecomposition"]);
     Nfineroot = paramsDecomposition["Nfineroot"];
-    DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+    internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
     internalCENTURYPools = Rcpp::as<Rcpp::NumericVector>(x["internalCENTURYPools"]);
     litter_smallbranches = internalStructuralLitter["smallbranches"];
     structural_litter_fineroots = internalStructuralLitter["fineroots"];
@@ -1149,7 +1153,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
       if(exportLitter) {
         // 10% of SA biomass senescence as branches (90% as heartwood)
-        double smallbranchlitter = 0.001*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); //From g/ind to kg/m2
+        // From g dry/ind to g C/m2
+        double C_dry = 0.5;
+        double smallbranchlitter = C_dry*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); 
         //All litter goes to structural litter
         litter_smallbranches[j] += smallbranchlitter;
       }  
@@ -1164,7 +1170,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
       if(exportLitter) {
-        double fineroot_litter = 0.001*senescenceFinerootLoss*(N[j]/10000.0); //From g/ind to kg/m2
+        double C_dry = 0.5;
+        //From g/ind to g C/m2
+        double fineroot_litter = C_dry*senescenceFinerootLoss*(N[j]/10000.0); 
         double fmet = litterMetabolicFraction(34.9, Nfineroot[j]); //Fine root lignin fraction 0.349
         //Distribute between metabolic and structural
         internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + fineroot_litter*fmet;
@@ -1199,7 +1207,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         LabileCarbonBalance[j] = GrossPhotosynthesis[j] - MaintenanceRespiration[j] - GrowthCosts[j] - RootExudation[j];
       }
       if(exportLitter) {
-        internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + 0.001*RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); //From g/g ind to kg/m2
+        //From g gluc/g ind to g C/m2
+        double metabolicSoil = (carbonMolarMass/glucoseMolarMass) * RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); 
+        internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + metabolicSoil;
       }
       
         
@@ -1540,13 +1550,32 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
-  
+
   NumericVector standCB = modelOutput["CarbonBalance"];
   standCB["GrossPrimaryProduction"] = standGrossPrimaryProduction;
   standCB["MaintenanceRespiration"] = standMaintenanceRespiration;
   standCB["SynthesisRespiration"] = standSynthesisRespiration;
   standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
 
+  //4. Decomposition
+  if(exportLitter) {
+    NumericVector baseAnnualRates = control["decompositionAnnualBaseRates"];
+    double annualTurnoverRate = control["decompositionAnnualTurnoverRate"];
+    List commDecomp = internalCommunication["decomposition"];
+    double soilPH = 7.0;
+    if(soil.containsElementNamed("pH")) {
+      NumericVector pH = soil["pH"]; 
+      if(!NumericVector::is_na(pH[0])) soilPH = pH[0];
+    }
+    NumericVector soilTheta = theta(soil, soilFunctions);
+    NumericVector soilThetaSAT = thetaSAT(soil, soilFunctions);
+    double heterotrophicRespiration = DAYCENTInner(commDecomp, internalStructuralLitter, internalCENTURYPools,
+                                                   paramsDecomposition,
+                                                   baseAnnualRates, annualTurnoverRate,
+                                                   sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
+    standCB["HeterotrophicRespiration"] = heterotrophicRespiration;
+    standCB["NetEcosystemExchange"] = standCB["NetPrimaryProduction"] - heterotrophicRespiration; 
+  }
 }
 
 
@@ -1683,6 +1712,7 @@ void growthDay_inner(List internalCommunication, List x, CharacterVector date, N
 //' Function \code{growth_day()} returns a list of class \code{growth_day} with the 
 //' same elements as \code{\link{spwb_day}} and the following:
 //' \itemize{
+//'   \item{\code{"CarbonBalance"}: A vector of different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange), all in g C · m-2.}
 //'   \item{\code{"LabileCarbonBalance"}: A data frame with labile carbon balance results for plant cohorts, with elements:}
 //'   \itemize{
 //'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
@@ -1960,7 +1990,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   NumericMatrix MortalityBiomassLoss(numDays, numCohorts);
   NumericMatrix CohortBiomassBalance(numDays, numCohorts);
   NumericMatrix StandBiomassBalance(numDays, 5);
-  NumericMatrix StandCarbonBalance(numDays, 4);
+  NumericMatrix StandCarbonBalance(numDays, 6);
   
   
   //Add matrix dimnames
@@ -1999,8 +2029,8 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   StandBiomassBalance.attr("dimnames") = List::create(dateStrings, 
                            CharacterVector::create("StructuralBalance", "LabileBalance", "PlantBalance", "MortalityLoss", "CohortBalance"));
   StandCarbonBalance.attr("dimnames") = List::create(dateStrings, 
-                          CharacterVector::create("GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction"));
-  
+                          CharacterVector::create("GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction",
+                                                  "HeterotrophicRespiration", "NetEcosystemExchange"));
   // Assemble output
   List labileCarbonBalance = List::create(
     Named("GrossPhotosynthesis") = GrossPhotosynthesis,
@@ -2039,6 +2069,11 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
                                  Named("DessicationRate") = dessicationRate,
                                  Named("MortalityRate") = mortalityRate);
 
+  NumericMatrix DecompositionPools(numDays, 9);
+  DecompositionPools.attr("dimnames") = List::create(dateStrings, 
+                          CharacterVector::create("surface/structural", "soil/structural", "surface/metabolic", "soil/metabolic",
+                                                  "surface/active", "soil/active", "surface/slow", "soil/slow", "soil/passive"));
+  
   List l;
   if(transpirationMode=="Granier") {
     l = List::create(Named("latitude") = latitude,
@@ -2057,6 +2092,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
     l.push_back(plantBiomassBalance, "PlantBiomassBalance");
     if(control["plantStructureResults"]) l.push_back(plantStructure, "PlantStructure");
     if(control["growthMortalityResults"]) l.push_back(growthMortality, "GrowthMortality");
+    if(control["decompositionPoolResults"]) l.push_back(DecompositionPools, "DecompositionPools"); 
     if(control["fireHazardResults"]) {
       DataFrame fireHazard = defineFireHazardOutput(dateStrings);
       l.push_back(fireHazard, "FireHazard");
@@ -2088,6 +2124,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
     l.push_back(plantBiomassBalance, "PlantBiomassBalance");
     if(control["plantStructureResults"]) l.push_back(plantStructure, "PlantStructure");
     if(control["growthMortalityResults"]) l.push_back(growthMortality, "GrowthMortality");
+    if(control["decompositionPoolResults"]) l.push_back(DecompositionPools, "DecompositionPools"); 
     if(control["leafResults"]) {
       l.push_back(sunlitDO, "SunlitLeaves");
       l.push_back(shadeDO, "ShadeLeaves");
@@ -2295,6 +2332,24 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     }
   }
   
+  if(control["decompositionPoolResults"]) {
+    NumericMatrix decompositionPool = Rcpp::as<Rcpp::NumericMatrix>(l["DecompositionPools"]);
+    NumericVector internalCENTURYPools = x["internalCENTURYPools"];
+    DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+    NumericVector structural_litter_leaves = internalStructuralLitter["leaves"]; 
+    NumericVector structural_litter_smallbranches = internalStructuralLitter["smallbranches"]; 
+    NumericVector structural_litter_fineroots = internalStructuralLitter["fineroots"]; 
+    decompositionPool(iday,0) = sum(structural_litter_leaves) + sum(structural_litter_smallbranches);
+    decompositionPool(iday,1) = sum(structural_litter_fineroots);
+    decompositionPool(iday,2) = internalCENTURYPools["surface/metabolic"];
+    decompositionPool(iday,3) = internalCENTURYPools["soil/metabolic"];
+    decompositionPool(iday,4) = internalCENTURYPools["surface/active"];
+    decompositionPool(iday,5) = internalCENTURYPools["soil/active"];
+    decompositionPool(iday,6) = internalCENTURYPools["surface/slow"];
+    decompositionPool(iday,7) = internalCENTURYPools["soil/slow"];
+    decompositionPool(iday,8) = internalCENTURYPools["soil/passive"];
+  }
+  
   NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(l["BiomassBalance"]);
   StandBiomassBalance(iday,_) = standLevelBiomassBalance(bb);
   
@@ -2335,7 +2390,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //'   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
 //'   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
 //'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-//'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
+//'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange.), all in g C · m-2.}
 //'   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
 //'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
 //'   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
@@ -2385,6 +2440,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 //'     \item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
 //'     \item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}
 //'   }
+//'   \item{\code{"DecompositionPools"}: A data frame with the mass of different decomposition carbon pools, all in g C · m-2.}
 //'   \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
 //' }
 //' 

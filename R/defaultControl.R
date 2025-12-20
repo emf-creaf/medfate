@@ -32,6 +32,7 @@
 #'       \item{\code{labileCarbonBalanceResults [= TRUE]}: Boolean flag to keep plant-level labile carbon balance results (in a list called 'LabileCarbonBalance').}
 #'       \item{\code{plantStructureResults [= TRUE]}: Boolean flag to keep plant-level structure results (in a list called 'PlantStructure').}
 #'       \item{\code{growthMortalityResults [= TRUE]}: Boolean flag to keep plant-level growth and mortality results (in a list called 'GrowthMortality').}
+#'       \item{\code{decompositionPoolResults [= TRUE]}: Boolean flag to keep decomposition pool results (in a data frame called 'DecompositionPools').}
 #'       \item{\code{leafResults [= TRUE]}: Boolean flag to keep leaf-level results (in elements called 'SunlitLeaves' and 'ShadeLeaves').}
 #'       \item{\code{temperatureResults [= TRUE]}: Boolean flag to keep temperature results (in elements called 'Temperature' and 'TemperatureLayers').}
 #'       \item{\code{subdailyResults [= FALSE]}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
@@ -210,6 +211,7 @@ defaultControl<-function(transpirationMode = "Granier",
     labileCarbonBalanceResults = TRUE,
     plantStructureResults = TRUE,
     growthMortalityResults = TRUE,
+    decompositionPoolResults  = TRUE,
     leafResults = TRUE,
     temperatureResults = TRUE,
     fireHazardResults = FALSE,
