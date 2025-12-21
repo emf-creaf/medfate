@@ -11,53 +11,6 @@
   forest$shrubData <- forest$shrubData[,c("Species", "Cover", "Height", "Z50", "Z95","Z100", "Age", "ObsID")]
   return(forest)
 }
-.litterUpdate <- function(initialLitterData, xo) {
-  numCohorts <- nrow(xo$cohorts)
-  litterLeaves <- data.frame(Species = xo$cohorts$Name,
-                             Type = rep("leaves", numCohorts),
-                             Necromass = xo$internalStructuralLitter$leaves)
-  litterTwigs <- data.frame(Species = xo$cohorts$Name,
-                            Type = rep("twigs", numCohorts),
-                            Necromass = xo$internalLitter$twigs)
-  litterSmallBranches <- data.frame(Species = xo$cohorts$Name,
-                                    Type = rep("smallbranches", numCohorts),
-                                    Necromass = xo$internalLitter$smallbranches)
-  litterData <- data.frame(Species = character(0),
-                           Type = character(0),
-                           Necromass = numeric(0))
-  for(i in 1:numCohorts) {
-    r <- which((litterData$Species == litterLeaves$Species[i]) & (litterData$Type == litterLeaves$Type[i]))
-    if(length(r)==1) {
-      litterData$Necromass[r] <-litterData$Necromass[r] + litterLeaves$Necromass[i]
-    } else {
-      litterData <- rbind(litterData, litterLeaves[i, , drop = FALSE])
-    }
-    r <- which((litterData$Species == litterTwigs$Species[i]) & (litterData$Type == litterTwigs$Type[i]))
-    if(length(r)==1) {
-      litterData$Necromass[r] <-litterData$Necromass[r] + litterTwigs$Necromass[i]
-    } else {
-      litterData <- rbind(litterData, litterTwigs[i, , drop = FALSE])
-    }
-    r <- which((litterData$Species == litterSmallBranches$Species[i]) & (litterData$Type == litterSmallBranches$Type[i]))
-    if(length(r)==1) {
-      litterData$Necromass[r] <-litterData$Necromass[r] + litterSmallBranches$Necromass[i]
-    } else {
-      litterData <- rbind(litterData, litterSmallBranches[i, , drop = FALSE])
-    }
-  }
-  # Add existing litter
-  if(!is.null(initialLitterData)) {
-    for(i in 1:nrow(initialLitterData)) {
-      r <- which((litterData$Species == initialLitterData$Species[i]) & (litterData$Type == initialLitterData$Type[i]))
-      if(length(r)==1) {
-        litterData$Necromass[r] <-litterData$Necromass[r] + initialLitterData$Necromass[i]
-      } else {
-        litterData <- rbind(litterData, initialLitterData[i, , drop = FALSE])
-      }
-    }
-  }
-  return(litterData)
-}
 .nextYearForest<-function(forest, xo, SpParams, control,
                           planted_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID")),
                           recr_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID")),
@@ -204,11 +157,6 @@
     forest$seedlingBank <- recr_forest$seedlingBank
   }
   
-  # 4.4 Litter dynamics
-  if(control$allowLitterDynamics) {
-    forest$litterData <- .litterUpdate(forest$litterData, xo)
-  }
-
   # 5.1 Prepare growth input for next year
   FCCSprops = fuel_FCCS(forest, SpParams);
   treeZ50 <- forest$treeData$Z50

@@ -205,21 +205,9 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
 // [[Rcpp::export("pheno_updateLeaves")]]
 void updateLeaves(List x, double wind, bool fromGrowthModel) {
   List control = x["control"];
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  CharacterVector speciesNames = cohorts["Name"];
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector structural_litter_leaves, structural_litter_smallbranches, internalCENTURYPools;
-  NumericVector Nleaf, LeafLignin;
-  bool exportLitter = false;
-  if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalCENTURYPools") && x.containsElementNamed("paramsDecomposition")) {
-    DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
-    structural_litter_leaves = internalStructuralLitter["leaves"];
-    structural_litter_smallbranches = internalStructuralLitter["smallbranches"];
-    DataFrame paramsDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsDecomposition"]);
-    Nleaf = paramsDecomposition["Nleaf"];
-    LeafLignin = paramsDecomposition["LeafLignin"];
-    
-    internalCENTURYPools = Rcpp::as<Rcpp::NumericVector>(x["internalCENTURYPools"]);
-    exportLitter = true;
-  }
   
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_dead = above["LAI_dead"];
@@ -250,17 +238,19 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
     if(leafFall) {
       double LAIlitter = LAI_dead[j]*(1.0 - exp(-1.0*(wind/10.0)));//Decrease dead leaf area according to wind speed
       LAI_dead[j] = LAI_dead[j] - LAIlitter;
-      if(exportLitter) {
+      if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalSOM") && x.containsElementNamed("paramsLitterDecomposition")) {
+        DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+        DataFrame paramsLitterDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
+        NumericVector internalSOM = Rcpp::as<Rcpp::NumericVector>(x["internalSOM"]);
         // from m2/m2 to g C/m2
-        double leaf_litter = leafCperDry*1000.0*LAIlitter/SLA[j]; 
+        double leaf_litter = leafCperDry*1000.0*LAIlitter/SLA[j];
+        addLeafLitter(speciesNames[j], leaf_litter,
+                      internalStructuralLitter, paramsLitterDecomposition,
+                      internalSOM);
         // from m2/m2 to g C/m2
         double smallbranch_litter = leafCperDry*1000.0*LAIlitter/(SLA[j]*(r635[j] - 1.0));
-        double fmet = litterMetabolicFraction(LeafLignin[j], Nleaf[j]);
-        //Distribute between metabolic and structural
-        internalCENTURYPools["surface/metabolic"] = internalCENTURYPools["surface/metabolic"] + leaf_litter*fmet;
-        structural_litter_leaves[j] += leaf_litter*(1.0 - fmet);
-        // All small branch goes to structural litter compartment
-        structural_litter_smallbranches[j] += smallbranch_litter;
+        addSmallBranchLitter(speciesNames[j], smallbranch_litter,
+                             internalStructuralLitter);
       }
     } 
     //Leaf unfolding, senescence and defoliation only dealt with if called from spwb

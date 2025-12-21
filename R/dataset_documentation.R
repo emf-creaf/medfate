@@ -59,9 +59,12 @@
 #'   }
 #'   \item{\code{litterData}: An optional data frame containing litter information with the following columns:
 #'       \itemize{
-#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for litter species identity (i.e., 0,1,2,...) matching SpParams.}
-#'         \item{\code{Type}: String indicating litter type (i.e. "leaves", "fineroots", "twigs", or "smallbranches")}
-#'         \item{\code{Necromass}: Mass of dead material (in kg/ha).}
+#'         \item{\code{Species}: String with species (taxon) name.}
+#'         \item{\code{Leaves}: Mass of leaf litter (in g C/m2)}
+#'         \item{\code{SmallBranches}: Mass of small dead branches (in g C/m2)}
+#'         \item{\code{LargeWood}: Mass of large dead wood (in g C/m2)}
+#'         \item{\code{FineRoots}: Mass of fine root litter (in g C/m2)}
+#'         \item{\code{CoarseRoots}: Mass of dead coarse roots (in g C/m2)}
 #'      }
 #'   }
 #' }
