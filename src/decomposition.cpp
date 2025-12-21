@@ -77,6 +77,10 @@ double pHEffect(double x, String pool) {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
   } else if(pool=="cwd/smallbranch") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
+  } else if(pool=="cwd/largewood") {
+    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
+  } else if(pool=="cwd/coarseroot") {
+    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
   } else if(pool=="surface/active") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
   } else if(pool=="soil/active") {
@@ -267,6 +271,8 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   NumericVector structural_leaves = structuralLitter["leaves"];
   NumericVector structural_smallbranches = structuralLitter["smallbranches"];
   NumericVector structural_fineroots = structuralLitter["fineroots"];
+  NumericVector structural_largewood = structuralLitter["largewood"];
+  NumericVector structural_coarseroots = structuralLitter["coarseroots"];
   
   NumericVector LeafLignin = paramsDecomposition["LeafLignin"];
   int numCohorts = structuralLitter.nrow();
@@ -309,6 +315,30 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
     litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
     structural_smallbranches[i] -= loss;
+  }
+
+  // STRUCTURAL large wood
+  flig = 0.25; //Lignin fraction for large wood
+  for(int i=0;i<numCohorts;i++) {
+    pHeff = pHEffect(soilPH, "cwd/largewood");
+    k = (baseAnnualRates["cwd/largewood"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
+    loss = structural_largewood[i]*k*tstep;
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
+    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
+    structural_largewood[i] -= loss;
+  }
+
+  // STRUCTURAL coarse root
+  flig = 0.25; //Lignin fraction for coarse root
+  for(int i=0;i<numCohorts;i++) {
+    pHeff = pHEffect(soilPH, "cwd/coarseroot");
+    k = (baseAnnualRates["cwd/coarseroot"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
+    loss = structural_coarseroots[i]*k*tstep;
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.55);
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
+    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.55);
+    structural_coarseroots[i] -= loss;
   }
   
   // STRUCTURAL fineroots

@@ -2337,8 +2337,10 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     NumericVector structural_litter_leaves = internalStructuralLitter["leaves"]; 
     NumericVector structural_litter_smallbranches = internalStructuralLitter["smallbranches"]; 
     NumericVector structural_litter_fineroots = internalStructuralLitter["fineroots"]; 
-    decompositionPool(iday,0) = sum(structural_litter_leaves) + sum(structural_litter_smallbranches);
-    decompositionPool(iday,1) = sum(structural_litter_fineroots);
+    NumericVector structural_litter_largewood = internalStructuralLitter["largewood"]; 
+    NumericVector structural_litter_coarseroots = internalStructuralLitter["coarseroots"]; 
+    decompositionPool(iday,0) = sum(structural_litter_leaves) + sum(structural_litter_smallbranches) + sum(structural_litter_largewood);
+    decompositionPool(iday,1) = sum(structural_litter_fineroots)+ sum(structural_litter_coarseroots);
     decompositionPool(iday,2) = internalCENTURYPools["surface/metabolic"];
     decompositionPool(iday,3) = internalCENTURYPools["soil/metabolic"];
     decompositionPool(iday,4) = internalCENTURYPools["surface/active"];
