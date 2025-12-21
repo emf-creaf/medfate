@@ -57,7 +57,7 @@ double litterMetabolicFraction(double ligninPercent, double Nmass) {
 void addLeafLitter(String species_litter, double leaf_litter, 
                    DataFrame structuralLitter, 
                    DataFrame paramsLitterDecomposition,
-                   NumericVector internalSOM) {
+                   NumericVector internalSOC) {
   
   NumericVector structural_litter_leaves = structuralLitter["Leaves"];
   NumericVector Nleaf = paramsLitterDecomposition["Nleaf"];
@@ -69,7 +69,7 @@ void addLeafLitter(String species_litter, double leaf_litter,
   if(row !=-1) {
     double fmet = litterMetabolicFraction(LeafLignin[row], Nleaf[row]);
     //Distribute between metabolic and structural
-    internalSOM["SurfaceMetabolic"] = internalSOM["SurfaceMetabolic"] + leaf_litter*fmet;
+    internalSOC["SurfaceMetabolic"] = internalSOC["SurfaceMetabolic"] + leaf_litter*fmet;
     structural_litter_leaves[row] += leaf_litter*(1.0 - fmet);
   }
 }
@@ -89,7 +89,7 @@ void addSmallBranchLitter(String species_litter, double smallbranch_litter,
 void addFineRootLitter(String species_litter, double fineroot_litter, 
                        DataFrame structuralLitter, 
                        DataFrame paramsLitterDecomposition,
-                       NumericVector internalSOM) {
+                       NumericVector internalSOC) {
   
   NumericVector structural_litter_fineroots = structuralLitter["FineRoots"];
   NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
@@ -100,7 +100,7 @@ void addFineRootLitter(String species_litter, double fineroot_litter,
   if(row !=-1) {
     double fmet = litterMetabolicFraction(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
     //Distribute between metabolic and structural
-    internalSOM["SoilMetabolic"] = internalSOM["SoilMetabolic"] + fineroot_litter*fmet;
+    internalSOC["SoilMetabolic"] = internalSOC["SoilMetabolic"] + fineroot_litter*fmet;
     structural_litter_fineroots[row] += fineroot_litter*(1.0 - fmet);
   }
 }

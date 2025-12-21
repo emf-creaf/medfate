@@ -2626,8 +2626,8 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_spwbInputInner`, above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control)
 }
 
-.growthInput <- function(above, Z50, Z95, Z100, soil, litterData, FCCSprops, SpParams, control) {
-    .Call(`_medfate_growthInputInner`, above, Z50, Z95, Z100, soil, litterData, FCCSprops, SpParams, control)
+.growthInput <- function(above, Z50, Z95, Z100, soil, litterData, SOCData, FCCSprops, SpParams, control) {
+    .Call(`_medfate_growthInputInner`, above, Z50, Z95, Z100, soil, litterData, SOCData, FCCSprops, SpParams, control)
 }
 
 .cloneInput <- function(input) {
@@ -2838,7 +2838,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'   }
 #'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
 #'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.}
-#'   \item{\code{internalSOM}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
+#'   \item{\code{internalSOC}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 #'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 #'   also distinguishing mortality due to starvation or dessication.}
 #' }

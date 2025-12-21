@@ -16,6 +16,7 @@
 #'  \item{\code{Age}: A numeric vector indicating age of cohorts in years.}
 #'  \item{\code{ObsID} A character vector to label specific cohorts in simulations of forest dynamics.}
 #' }
+#' @param SOC A boolean flag to initialize SOC data (see \code{\link{forest}}).
 #' 
 #' @details
 #' List elements \code{treeData} and \code{shrubData} are always created, regardless of the number of cohorts. 
@@ -43,7 +44,7 @@
 #' emptyforest(ntree = 2, nshrub = 1, nherb = 1)
 #' @name emptyforest
 emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed = 0, nlitter = 0,
-                        addcolumns = NULL) {
+                        addcolumns = NULL, SOC = FALSE) {
   l <- list()
   l$treeData <- data.frame(Species=as.character(rep(NA, ntree)),
                            DBH=as.numeric(rep(NA, ntree)), 
@@ -124,7 +125,11 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
       if(nherb>0) l$herbData$ObsID <- as.numeric(rep(NA, nherb))
     }
   }
-  
+
+  if(SOC) {
+    l$SOCData = c(SurfaceMetabolic = 0, SoilMetabolic = 0, SurfaceActive = 0, SoilActive = 0,
+                  SurfaceSlow = 0, SoilSlow = 0, SoilPassive = 0)
+  }  
   class(l)<-c("forest","list")
   return(l)
 }

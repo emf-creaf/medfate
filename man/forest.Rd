@@ -66,6 +66,17 @@ Additionally, it can contain information about the herbaceous layer, seedling/sa
 \item{\code{CoarseRoots}: Mass of dead coarse roots (in g C/m2)}
 }
 }
+\item{\code{SOCData}: An optional named numeric vector containing CENTURY soil organic carbon pools (normally from previous simulations):
+\itemize{
+\item{\code{SurfaceMetabolic}: Metabolic carbon in the surface (in g C/m2).}
+\item{\code{SoilMetabolic}: Metabolic carbon in the soil (in g C/m2)}
+\item{\code{SurfaceActive}: Active decomposition carbon pool in the surface (in g C/m2)}
+\item{\code{SoilActive}: Active decomposition carbon pool in the soil (in g C/m2)}
+\item{\code{SurfaceSlow}: Slow decomposition carbon pool in the surface (in g C/m2)}
+\item{\code{SoilSlow}: Slow decomposition carbon pool in the soil (in g C/m2)}
+\item{\code{SoilPassive}: Passive decomposition carbon pool in the soil (in g C/m2)}
+}
+}
 }
 }
 \source{

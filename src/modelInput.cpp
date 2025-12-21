@@ -1098,14 +1098,28 @@ DataFrame internalStructuralLitterDataFrame(CharacterVector Species, DataFrame l
   return(df);
 }
 
-NumericVector internalSOM() {
-  return(NumericVector::create(Named("SurfaceMetabolic") = 0.0,
-                               Named("SoilMetabolic") = 0.0,
-                               Named("SurfaceActive") = 0.0, 
-                               Named("SoilActive")=0.0, 
-                               Named("SurfaceSlow") = 0.0,
-                               Named("SoilSlow") = 0.0,
-                               Named("SoilPassive") = 0.0));
+NumericVector internalSOC(NumericVector SOCData) {
+  double surface_metabolic = 0.0;
+  double soil_metabolic = 0.0;
+  double surface_active = 0.0;
+  double soil_active = 0.0;
+  double surface_slow = 0.0;
+  double soil_slow = 0.0;
+  double soil_passive = 0.0;
+  if(SOCData.containsElementNamed("SurfaceMetabolic")) surface_metabolic += SOCData["SurfaceMetabolic"];
+  if(SOCData.containsElementNamed("SoilMetabolic")) soil_metabolic += SOCData["SoilMetabolic"];
+  if(SOCData.containsElementNamed("SurfaceActive")) surface_active += SOCData["SurfaceActive"];
+  if(SOCData.containsElementNamed("SoilActive")) soil_active += SOCData["SoilActive"];
+  if(SOCData.containsElementNamed("SurfaceSlow")) surface_slow += SOCData["SurfaceSlow"];
+  if(SOCData.containsElementNamed("SoilSlow")) soil_slow += SOCData["SoilSlow"];
+  if(SOCData.containsElementNamed("SoilPassive")) soil_passive += SOCData["SoilPassive"];
+  return(NumericVector::create(Named("SurfaceMetabolic") = surface_metabolic,
+                               Named("SoilMetabolic") = soil_metabolic,
+                               Named("SurfaceActive") = surface_active, 
+                               Named("SoilActive")=soil_active, 
+                               Named("SurfaceSlow") = surface_slow,
+                               Named("SoilSlow") = soil_slow,
+                               Named("SoilPassive") = soil_passive));
 }
 DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
@@ -1397,7 +1411,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
 
 // [[Rcpp::export(".growthInput")]]
 List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100,
-                      DataFrame soil, DataFrame litterData, DataFrame FCCSprops,
+                      DataFrame soil, DataFrame litterData, NumericVector SOCData, DataFrame FCCSprops,
                       DataFrame SpParams, List control) {
 
   String VG_PTF = control["VG_PTF"]; 
@@ -1551,7 +1565,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(internalStructuralLitter, "internalStructuralLitter");
-  input.push_back(internalSOM(), "internalSOM");
+  input.push_back(internalSOC(SOCData), "internalSOC");
   input.push_back(FCCSprops, "internalFCCS");
   input.push_back(medfateVersionString(), "version");
   input.attr("class") = CharacterVector::create("growthInput","list");
@@ -1868,7 +1882,7 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
 //'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.}
-//'   \item{\code{internalSOM}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
+//'   \item{\code{internalSOC}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 //'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 //'   also distinguishing mortality due to starvation or dessication.}
 //' }
@@ -1949,8 +1963,14 @@ List growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
    } else {
      litterData = DataFrame::create();
    }
+   NumericVector SOCData;
+   if(x.containsElementNamed("SOCData")) {
+     SOCData = Rcpp::as<Rcpp::NumericVector>(x["SOCData"]);
+   } else {
+     SOCData = NumericVector::create();
+   }
    List g = growthInputInner(above,  rdc["Z50"], rdc["Z95"], rdc["Z100"],
-                             soil, litterData, FCCSprops, SpParams, control);
+                             soil, litterData, SOCData, FCCSprops, SpParams, control);
    g["herbLAImax"] = 0.0;
    g["herbLAI"] = 0.0;
    if(x.containsElementNamed("herbCover") && x.containsElementNamed("herbHeight")) {

@@ -11,12 +11,12 @@ double annualLitterDecompositionRate(double AET, double lignin);
 void addLeafLitter(String species_litter, double leaf_litter, 
                    DataFrame structuralLitter, 
                    DataFrame paramsLitterDecomposition,
-                   NumericVector internalSOM);
+                   NumericVector internalSOC);
 
 void addFineRootLitter(String species_litter, double fineroot_litter, 
                        DataFrame structuralLitter, 
                        DataFrame paramsLitterDecomposition,
-                       NumericVector internalSOM);
+                       NumericVector internalSOC);
   
 void addSmallBranchLitter(String species_litter, double smallbranch_litter, 
                           DataFrame structuralLitter);

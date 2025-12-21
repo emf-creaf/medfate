@@ -3476,8 +3476,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // growthInputInner
-List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame litterData, DataFrame FCCSprops, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP litterDataSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame litterData, NumericVector SOCData, DataFrame FCCSprops, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP litterDataSEXP, SEXP SOCDataSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3487,10 +3487,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type Z100(Z100SEXP);
     Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type litterData(litterDataSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type SOCData(SOCDataSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, Z100, soil, litterData, FCCSprops, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, Z100, soil, litterData, SOCData, FCCSprops, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6433,7 +6434,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbInputVersionUpdate", (DL_FUNC) &_medfate_spwbInputVersionUpdate, 1},
     {"_medfate_growthInputVersionUpdate", (DL_FUNC) &_medfate_growthInputVersionUpdate, 1},
     {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 8},
-    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 9},
+    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 10},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
     {"_medfate_rootDistributionComplete", (DL_FUNC) &_medfate_rootDistributionComplete, 4},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 4},

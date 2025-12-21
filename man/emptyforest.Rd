@@ -11,7 +11,8 @@ emptyforest(
   nseedling = 0,
   nseed = 0,
   nlitter = 0,
-  addcolumns = NULL
+  addcolumns = NULL,
+  SOC = FALSE
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ emptyforest(
 \item{\code{Age}: A numeric vector indicating age of cohorts in years.}
 \item{\code{ObsID} A character vector to label specific cohorts in simulations of forest dynamics.}
 }}
+
+\item{SOC}{A boolean flag to initialize SOC data (see \code{\link{forest}}).}
 }
 \value{
 An empty \code{\link{forest}} object.

@@ -180,7 +180,7 @@
                      Z50 = c(treeZ50, shrubZ50, herbZ50),
                      Z95 = c(treeZ95, shrubZ95, herbZ95),
                      Z100 = c(treeZ100, shrubZ100, herbZ100),
-                     xo$soil, FCCSprops, SpParams, control)
+                     xo$soil, data.frame(), c(), FCCSprops, SpParams, control)
   if("herbLAI" %in% names(xo)) xi$herbLAI <- xo$herbLAI
   if("herbLAImax" %in% names(xo)) xi$herbLAImax <- xo$herbLAImax
   
