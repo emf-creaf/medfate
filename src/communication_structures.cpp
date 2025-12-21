@@ -215,14 +215,15 @@ const int DECOMPCOM_SOIL_ACTIVE = 3;
 const int DECOMPCOM_SURFACE_SLOW = 4;
 const int DECOMPCOM_SOIL_SLOW = 5;
 const int DECOMPCOM_SOIL_PASSIVE = 6;
-//' Creates list with the following matrices:
-//' pools:
-//'   \itemize{
-//'     \item{\code{xi}: Environmental scalar matrix.}
-//'     \item{\code{A}: Carbon transfer matrix.} 
-//'     \item{\code{pathf}: Fractional carbon flow from pool j to pool i.} 
-//'     \item{\code{respf}: Fractional respiration loss for carbon flow from pool j to pool i.} 
-//' }
+
+// Creates list with the following matrices:
+// pools:
+//   \itemize{
+//     \item{\code{xi}: Environmental scalar matrix.}
+//     \item{\code{A}: Carbon transfer matrix.} 
+//     \item{\code{pathf}: Fractional carbon flow from pool j to pool i.} 
+//     \item{\code{respf}: Fractional respiration loss for carbon flow from pool j to pool i.} 
+// }
 List communicationDecomposition() {
   int npool = 7;
   NumericVector litterDecompositionOutput = communicationLitterDecomposition();

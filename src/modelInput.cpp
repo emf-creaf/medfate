@@ -1831,15 +1831,15 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-//'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (kg C/m2) of different litter components: leaves, small branches and fine roots.}
-//'   \item{\code{internalCENTURYPools}: A named numeric vector with surface/soil decomposing carbon pools (kg C/m2).}
+//'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches and fine roots.}
+//'   \item{\code{internalCENTURYPools}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 //'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 //'   also distinguishing mortality due to starvation or dessication.}
 //' }
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @seealso \code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  
+//' @seealso \code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{growth}}, \code{\link{soil}},  
 //' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 //' 
 //' @examples

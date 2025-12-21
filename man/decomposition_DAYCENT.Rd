@@ -21,24 +21,48 @@ decomposition_DAYCENT(
 )
 }
 \arguments{
-\item{structuralLitter}{A data frame with structural carbon pools corresponding to plant cohorts.}
+\item{structuralLitter}{A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).}
 
-\item{CENTURYPools}{A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil}
+\item{CENTURYPools}{A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).}
+
+\item{paramsDecomposition}{A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).}
+
+\item{baseAnnualRates}{A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).}
+
+\item{annualTurnoverRate}{Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).}
+
+\item{sand, clay}{Soil texture (sand and sand) in percent volume (\%).}
 
 \item{soilTemperature}{Soil temperature (in Celsius).}
 
-\item{soilMoisture}{Soil moisture content, relative to saturation.}
+\item{soilMoisture}{Soil moisture content, relative to saturation (0-1).}
 
 \item{soilPH}{Soil pH (0-14).}
 
-\item{soilO2}{Soil oxygen factor.}
+\item{soilO2}{Soil oxygen factor (0-1).}
 
-\item{cultfac}{Cultivation factor.}
+\item{cultfac}{Cultivation factor (0-1).}
 
-\item{tstep}{Time step in days.}
-
-\item{decompositionParams}{A data frame of species-specific decomposition parameters.}
+\item{tstep}{Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.}
+}
+\value{
+A scalar value with heterotrophic respiration, in g C/m2
 }
 \description{
-DAYCENT decomposition
+This function implements the DAYCENT carbon decomposition model, following the description in Bonan (2019)
+}
+\details{
+Each call to function \code{decomposition_DAYCENT} conducts one time step of the DAYCENT
+model and returns the heterotrophic respiration for that day. The function modifies input data \code{structuralLitter}
+and \code{CENTURYPools} according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
+soil physical and chemical characteristics correspond to the uppermost soil layer.
+}
+\references{
+Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+}
+\seealso{
+\code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
+}
+\author{
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }

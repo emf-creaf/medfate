@@ -4,6 +4,7 @@
 * Data frame 'herbData' can be defined in forest objects for herbaceous cohorts 
 * New function 'forest_mergeHerbs()'
 * Soil data frames accept column 'ph' (for water pH)
+* Decomposition added to growth, using an implementation of DAYCENT model
 
 # medfate 4.8.5
 * Store medfate version in initialized objects, to implement backwards compatibility

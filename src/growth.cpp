@@ -1154,8 +1154,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       if(exportLitter) {
         // 10% of SA biomass senescence as branches (90% as heartwood)
         // From g dry/ind to g C/m2
-        double C_dry = 0.5;
-        double smallbranchlitter = C_dry*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); 
+        double smallbranchlitter = WoodC[j]*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); 
         //All litter goes to structural litter
         litter_smallbranches[j] += smallbranchlitter;
       }  
@@ -1170,9 +1169,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
       if(exportLitter) {
-        double C_dry = 0.5;
         //From g/ind to g C/m2
-        double fineroot_litter = C_dry*senescenceFinerootLoss*(N[j]/10000.0); 
+        double fineroot_litter = rootCperDry*senescenceFinerootLoss*(N[j]/10000.0); 
         double fmet = litterMetabolicFraction(34.9, Nfineroot[j]); //Fine root lignin fraction 0.349
         //Distribute between metabolic and structural
         internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + fineroot_litter*fmet;
@@ -1208,7 +1206,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       }
       if(exportLitter) {
         //From g gluc/g ind to g C/m2
-        double metabolicSoil = (carbonMolarMass/glucoseMolarMass) * RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); 
+        double metabolicSoil = (6.0*carbonMolarMass/glucoseMolarMass) * RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); 
         internalCENTURYPools["soil/metabolic"] = internalCENTURYPools["soil/metabolic"] + metabolicSoil;
       }
       

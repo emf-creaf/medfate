@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "carbon.h"
 #include "decomposition.h"
 using namespace Rcpp;
 
@@ -251,10 +252,9 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
       LAI_dead[j] = LAI_dead[j] - LAIlitter;
       if(exportLitter) {
         // from m2/m2 to g C/m2
-        double C_dry = 0.5;
-        double leaf_litter = C_dry*1000.0*LAIlitter/SLA[j]; 
+        double leaf_litter = leafCperDry*1000.0*LAIlitter/SLA[j]; 
         // from m2/m2 to g C/m2
-        double smallbranch_litter = C_dry*1000.0*LAIlitter/(SLA[j]*(r635[j] - 1.0));
+        double smallbranch_litter = leafCperDry*1000.0*LAIlitter/(SLA[j]*(r635[j] - 1.0));
         double fmet = litterMetabolicFraction(LeafLignin[j], Nleaf[j]);
         //Distribute between metabolic and structural
         internalCENTURYPools["surface/metabolic"] = internalCENTURYPools["surface/metabolic"] + leaf_litter*fmet;

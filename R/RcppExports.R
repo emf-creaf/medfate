@@ -285,16 +285,6 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
 
-#' Creates list with the following matrices:
-#' pools:
-#'   \itemize{
-#'     \item{\code{xi}: Environmental scalar matrix.}
-#'     \item{\code{A}: Carbon transfer matrix.} 
-#'     \item{\code{pathf}: Fractional carbon flow from pool j to pool i.} 
-#'     \item{\code{respf}: Fractional respiration loss for carbon flow from pool j to pool i.} 
-#' }
-NULL
-
 #' Internal communication
 #'
 #' Functions for internal communication. Not to be called by users.
@@ -329,36 +319,65 @@ instance_communication_structures <- function(x, model) {
     .Call(`_medfate_instanceCommunicationStructures`, x, model)
 }
 
-#' @rdname decomposition
-NULL
-
+#' Low-level decomposition functions
+#' 
+#' Functions related to litter and soil carbon decomposition processes
+#' 
+#' @param AET Actual evapotranspiration (mm)
+#' @param lignin Lignin percent
+#' 
+#' @details
+#' Function \code{decomposition_moistureEffect} follows Kelly et al. (2000) 
+#' 
+#' @return Functions \code{decomposition_moistureEffect}, \code{decomposition_pHEffect} and \code{decomposition_temperatureEffect} return
+#' a scalar value representing a factor that should modify a decomposition rate. Function \code{decomposition_annualLitterDecompositionRate} 
+#' directly returns a scalar value with the annual decomposition rate (yr-1). Function \code{decomposition_litterMetabolicFraction} returns
+#' a scalar with the fraction of litter that corresponds to metabolic carbon.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @references
+#' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+#' 
+#' @seealso \code{\link{decomposition_DAYCENT}}
+#' 
+#' @references 
+#' Meentemeyer (1978)
+#' Kelly et al (2000)
+#' 
 #' @keywords internal
+#' @name decomposition_annualLitterDecompositionRate
 decomposition_annualLitterDecompositionRate <- function(AET, lignin) {
     .Call(`_medfate_annualLitterDecompositionRate`, AET, lignin)
 }
 
 #' @param ligninPercent lignin content (% of dry)
 #' @param Nmass  nitrogen content (mg N / g dry)
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
 decomposition_litterMetabolicFraction <- function(ligninPercent, Nmass) {
     .Call(`_medfate_litterMetabolicFraction`, ligninPercent, Nmass)
 }
 
+#' @param x Soil water pH (0-14)
+#' @param pool String indicating the decomposition pool
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
 decomposition_pHEffect <- function(x, pool) {
     .Call(`_medfate_pHEffect`, x, pool)
 }
 
-#' Moisture effect 
-#' 
-#' Moisture factor in CENTURY (from Kelly et al 2000)
-#' 
-#' @param sand, clay texture values in percent.
+#' @param sand,clay Soil texture values in percent volume.
 #' @param soilMoisture Soil moisture content, relative to saturation.
 #' 
+#' @rdname decomposition_annualLitterDecompositionRate
 decomposition_moistureEffect <- function(sand, clay, soilMoisture) {
     .Call(`_medfate_moistureEffect`, sand, clay, soilMoisture)
 }
 
 #' @param soilTemperature Soil temperature (in Celsius).
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
 decomposition_temperatureEffect <- function(soilTemperature) {
     .Call(`_medfate_temperatureEffect`, soilTemperature)
 }
@@ -369,15 +388,34 @@ decomposition_DAYCENTlitter <- function(structuralLitter, paramsDecomposition, b
 
 #' DAYCENT decomposition
 #' 
-#' @param structuralLitter A data frame with structural carbon pools corresponding to plant cohorts.
-#' @param CENTURYPools A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil 
-#' @param decompositionParams A data frame of species-specific decomposition parameters.
+#' This function implements the DAYCENT carbon decomposition model, following the description in Bonan (2019) 
+#' 
+#' @param structuralLitter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
+#' @param CENTURYPools A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
+#' @param paramsDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
+#' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
+#' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
+#' @param sand,clay Soil texture (sand and sand) in percent volume (%). 
 #' @param soilTemperature Soil temperature (in Celsius).
-#' @param soilMoisture Soil moisture content, relative to saturation.
+#' @param soilMoisture Soil moisture content, relative to saturation (0-1).
 #' @param soilPH Soil pH (0-14).
-#' @param soilO2 Soil oxygen factor.
-#' @param cultfac Cultivation factor.
-#' @param tstep Time step in days.
+#' @param soilO2 Soil oxygen factor (0-1).
+#' @param cultfac Cultivation factor (0-1).
+#' @param tstep Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @details Each call to function \code{decomposition_DAYCENT} conducts one time step of the DAYCENT
+#' model and returns the heterotrophic respiration for that day. The function modifies input data \code{structuralLitter}
+#' and \code{CENTURYPools} according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
+#' soil physical and chemical characteristics correspond to the uppermost soil layer.
+#' 
+#' @returns A scalar value with heterotrophic respiration, in g C/m2
+#' 
+#' @references
+#' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+#' 
+#' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
 decomposition_DAYCENT <- function(structuralLitter, CENTURYPools, paramsDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
     .Call(`_medfate_DAYCENT`, structuralLitter, CENTURYPools, paramsDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
@@ -2799,15 +2837,15 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'     }
 #'   }
 #'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-#'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (kg C/m2) of different litter components: leaves, small branches and fine roots.}
-#'   \item{\code{internalCENTURYPools}: A named numeric vector with surface/soil decomposing carbon pools (kg C/m2).}
+#'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches and fine roots.}
+#'   \item{\code{internalCENTURYPools}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 #'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 #'   also distinguishing mortality due to starvation or dessication.}
 #' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso \code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  
+#' @seealso \code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{growth}}, \code{\link{soil}},  
 #' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
 #' 
 #' @examples
