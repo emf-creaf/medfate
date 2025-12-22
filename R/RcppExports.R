@@ -181,6 +181,7 @@ biophysics_waterDynamicViscosity <- function(temp) {
 #' 
 #' @param LAI Leaf area index.
 #' @param N Density (ind·ha-1).
+#' @param DBH Tree diameter (cm).
 #' @param SLA Specific leaf area (mm2/mg = m2/kg).
 #' @param leafDensity  Density of leaf tissue (dry weight over volume).
 #' @param SA Sapwood area (cm2).
@@ -217,6 +218,21 @@ biophysics_waterDynamicViscosity <- function(temp) {
 #' Forst P, Wermer F, Delgado A (2002). On the pressure dependence of the viscosity of aqueous sugar solutions. Rheol Acta 41: 369–374 DOI 10.1007/s00397-002-0238-y
 #' 
 #' @seealso \code{\link{growth}}
+#' 
+#' @examples
+#' #Load example plot plant data
+#' data(exampleforest)
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' #Initialize control parameters
+#' control <- defaultControl("Granier")
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
+#' #Initialize model input
+#' x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
+#' 
+#' # Estimate carbon compartments
+#' carbon_carbonCompartments(x1)
 #' 
 #' @name carbon
 #' @keywords internal
@@ -256,13 +272,50 @@ carbon_leafStructuralBiomass <- function(LAI, N, SLA) {
 
 #' @rdname carbon
 #' @keywords internal
+carbon_twigStructuralBiomass <- function(LAI, N, SLA, r635) {
+    .Call(`_medfate_twigStructuralBiomass`, LAI, N, SLA, r635)
+}
+
+#' @rdname carbon
+#' @keywords internal
 carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
 }
 
 #' @rdname carbon
+#' @keywords internal
 carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
     .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_heartwoodStructuralBiomass <- function(DBH, SA, H, L, V, woodDensity) {
+    .Call(`_medfate_heartwoodStructuralBiomass`, DBH, SA, H, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_abovegroundSapwoodStructuralBiomass <- function(SA, H, woodDensity) {
+    .Call(`_medfate_abovegroundSapwoodStructuralBiomass`, SA, H, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_belowgroundSapwoodStructuralBiomass <- function(SA, L, V, woodDensity) {
+    .Call(`_medfate_belowgroundSapwoodStructuralBiomass`, SA, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_abovegroundHeartwoodStructuralBiomass <- function(DBH, H, woodDensity) {
+    .Call(`_medfate_abovegroundHeartwoodStructuralBiomass`, DBH, H, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_belowgroundHeartwoodStructuralBiomass <- function(DBH, L, V, woodDensity) {
+    .Call(`_medfate_belowgroundHeartwoodStructuralBiomass`, DBH, L, V, woodDensity)
 }
 
 #' @rdname carbon
@@ -359,6 +412,26 @@ decomposition_litterMetabolicFraction <- function(ligninPercent, Nmass) {
     .Call(`_medfate_litterMetabolicFraction`, ligninPercent, Nmass)
 }
 
+.decomposition_addLeafTwigLitter <- function(species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC) {
+    invisible(.Call(`_medfate_addLeafTwigLitter`, species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC))
+}
+
+.decomposition_addSmallBranchLitter <- function(species_litter, smallbranch_litter, litter) {
+    invisible(.Call(`_medfate_addSmallBranchLitter`, species_litter, smallbranch_litter, litter))
+}
+
+.decomposition_addLargeWoodLitter <- function(species_litter, largewood_litter, litter) {
+    invisible(.Call(`_medfate_addLargeWoodLitter`, species_litter, largewood_litter, litter))
+}
+
+.decomposition_addCoarseRootLitter <- function(species_litter, coarsewood_litter, litter) {
+    invisible(.Call(`_medfate_addCoarseRootLitter`, species_litter, coarsewood_litter, litter))
+}
+
+.decomposition_addFineRootLitter <- function(species_litter, fineroot_litter, litter, paramsLitterDecomposition, SOC) {
+    invisible(.Call(`_medfate_addFineRootLitter`, species_litter, fineroot_litter, litter, paramsLitterDecomposition, SOC))
+}
+
 #' @param x Soil water pH (0-14)
 #' @param pool String indicating the decomposition pool
 #' 
@@ -383,8 +456,9 @@ decomposition_temperatureEffect <- function(soilTemperature) {
 }
 
 #' @rdname decomposition_DAYCENT
-decomposition_DAYCENTlitter <- function(structuralLitter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
-    .Call(`_medfate_DAYCENTlitter`, structuralLitter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
+#' @keywords internal
+decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
+    .Call(`_medfate_DAYCENTlitter`, litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
 #' DAYCENT decomposition
@@ -393,7 +467,7 @@ decomposition_DAYCENTlitter <- function(structuralLitter, paramsLitterDecomposit
 #' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
 #' performs the whole model for carbon decomposition.
 #' 
-#' @param structuralLitter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
+#' @param litter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 #' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 #' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 #' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
@@ -410,7 +484,7 @@ decomposition_DAYCENTlitter <- function(structuralLitter, paramsLitterDecomposit
 #' 
 #' @details Each call to function \code{decomposition_DAYCENTlitter} conducts one time step of the litter dynamics in DAYCENT. 
 #' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
-#' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{structuralLitter}
+#' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{litter}
 #' (and in case case of \code{decomposition_DAYCENT} also \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 #' soil physical and chemical characteristics correspond to the uppermost soil layer.
 #' 
@@ -422,8 +496,9 @@ decomposition_DAYCENTlitter <- function(structuralLitter, paramsLitterDecomposit
 #' 
 #' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
-decomposition_DAYCENT <- function(structuralLitter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
-    .Call(`_medfate_DAYCENT`, structuralLitter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
+#' @keywords internal
+decomposition_DAYCENT <- function(litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
+    .Call(`_medfate_DAYCENT`, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
@@ -2842,7 +2917,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'     }
 #'   }
 #'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-#'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.}
+#'   \item{\code{internalLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.}
 #'   \item{\code{internalSOC}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 #'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 #'   also distinguishing mortality due to starvation or dessication.}

@@ -61,10 +61,11 @@
 #'       \itemize{
 #'         \item{\code{Species}: String with species (taxon) name.}
 #'         \item{\code{Leaves}: Mass of leaf litter (in g C/m2)}
+#'         \item{\code{Twigs}: Mass of twig litter (in g C/m2)}
 #'         \item{\code{SmallBranches}: Mass of small dead branches (in g C/m2)}
 #'         \item{\code{LargeWood}: Mass of large dead wood (in g C/m2)}
-#'         \item{\code{FineRoots}: Mass of fine root litter (in g C/m2)}
 #'         \item{\code{CoarseRoots}: Mass of dead coarse roots (in g C/m2)}
+#'         \item{\code{FineRoots}: Mass of fine root litter (in g C/m2)}
 #'      }
 #'   }
 #'   \item{\code{SOCData}: An optional named numeric vector containing CENTURY soil organic carbon pools (normally from previous simulations):

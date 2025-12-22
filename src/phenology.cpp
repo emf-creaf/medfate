@@ -238,19 +238,16 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
     if(leafFall) {
       double LAIlitter = LAI_dead[j]*(1.0 - exp(-1.0*(wind/10.0)));//Decrease dead leaf area according to wind speed
       LAI_dead[j] = LAI_dead[j] - LAIlitter;
-      if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
-        DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+      if(x.containsElementNamed("internalLitter") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
+        DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
         DataFrame paramsLitterDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
         NumericVector internalSOC = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
         // from m2/m2 to g C/m2
         double leaf_litter = leafCperDry*1000.0*LAIlitter/SLA[j];
-        addLeafLitter(speciesNames[j], leaf_litter,
-                      internalStructuralLitter, paramsLitterDecomposition,
-                      internalSOC);
-        // from m2/m2 to g C/m2
-        double smallbranch_litter = leafCperDry*1000.0*LAIlitter/(SLA[j]*(r635[j] - 1.0));
-        addSmallBranchLitter(speciesNames[j], smallbranch_litter,
-                             internalStructuralLitter);
+        double twig_litter = leaf_litter/(r635[j] - 1.0);
+        addLeafTwigLitter(speciesNames[j], leaf_litter, twig_litter, 
+                          internalLitter, paramsLitterDecomposition,
+                          internalSOC);
       }
     } 
     //Leaf unfolding, senescence and defoliation only dealt with if called from spwb

@@ -425,6 +425,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// twigStructuralBiomass
+double twigStructuralBiomass(double LAI, double N, double SLA, double r635);
+RcppExport SEXP _medfate_twigStructuralBiomass(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP r635SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
+    Rcpp::traits::input_parameter< double >::type r635(r635SEXP);
+    rcpp_result_gen = Rcpp::wrap(twigStructuralBiomass(LAI, N, SLA, r635));
+    return rcpp_result_gen;
+END_RCPP
+}
 // leafStarchCapacity
 double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
 RcppExport SEXP _medfate_leafStarchCapacity(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP leafDensitySEXP) {
@@ -451,6 +465,76 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
     rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, L, V, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// heartwoodStructuralBiomass
+double heartwoodStructuralBiomass(double DBH, double SA, double H, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_heartwoodStructuralBiomass(SEXP DBHSEXP, SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// abovegroundSapwoodStructuralBiomass
+double abovegroundSapwoodStructuralBiomass(double SA, double H, double woodDensity);
+RcppExport SEXP _medfate_abovegroundSapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(abovegroundSapwoodStructuralBiomass(SA, H, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// belowgroundSapwoodStructuralBiomass
+double belowgroundSapwoodStructuralBiomass(double SA, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_belowgroundSapwoodStructuralBiomass(SEXP SASEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(belowgroundSapwoodStructuralBiomass(SA, L, V, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// abovegroundHeartwoodStructuralBiomass
+double abovegroundHeartwoodStructuralBiomass(double DBH, double H, double woodDensity);
+RcppExport SEXP _medfate_abovegroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(abovegroundHeartwoodStructuralBiomass(DBH, H, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// belowgroundHeartwoodStructuralBiomass
+double belowgroundHeartwoodStructuralBiomass(double DBH, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_belowgroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(belowgroundHeartwoodStructuralBiomass(DBH, L, V, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -631,6 +715,71 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// addLeafTwigLitter
+void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter, DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector SOC);
+RcppExport SEXP _medfate_addLeafTwigLitter(SEXP species_litterSEXP, SEXP leaf_litterSEXP, SEXP twig_litterSEXP, SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP SOCSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
+    Rcpp::traits::input_parameter< double >::type leaf_litter(leaf_litterSEXP);
+    Rcpp::traits::input_parameter< double >::type twig_litter(twig_litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
+    addLeafTwigLitter(species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC);
+    return R_NilValue;
+END_RCPP
+}
+// addSmallBranchLitter
+void addSmallBranchLitter(String species_litter, double smallbranch_litter, DataFrame litter);
+RcppExport SEXP _medfate_addSmallBranchLitter(SEXP species_litterSEXP, SEXP smallbranch_litterSEXP, SEXP litterSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
+    Rcpp::traits::input_parameter< double >::type smallbranch_litter(smallbranch_litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
+    addSmallBranchLitter(species_litter, smallbranch_litter, litter);
+    return R_NilValue;
+END_RCPP
+}
+// addLargeWoodLitter
+void addLargeWoodLitter(String species_litter, double largewood_litter, DataFrame litter);
+RcppExport SEXP _medfate_addLargeWoodLitter(SEXP species_litterSEXP, SEXP largewood_litterSEXP, SEXP litterSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
+    Rcpp::traits::input_parameter< double >::type largewood_litter(largewood_litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
+    addLargeWoodLitter(species_litter, largewood_litter, litter);
+    return R_NilValue;
+END_RCPP
+}
+// addCoarseRootLitter
+void addCoarseRootLitter(String species_litter, double coarsewood_litter, DataFrame litter);
+RcppExport SEXP _medfate_addCoarseRootLitter(SEXP species_litterSEXP, SEXP coarsewood_litterSEXP, SEXP litterSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
+    Rcpp::traits::input_parameter< double >::type coarsewood_litter(coarsewood_litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
+    addCoarseRootLitter(species_litter, coarsewood_litter, litter);
+    return R_NilValue;
+END_RCPP
+}
+// addFineRootLitter
+void addFineRootLitter(String species_litter, double fineroot_litter, DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector SOC);
+RcppExport SEXP _medfate_addFineRootLitter(SEXP species_litterSEXP, SEXP fineroot_litterSEXP, SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP SOCSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
+    Rcpp::traits::input_parameter< double >::type fineroot_litter(fineroot_litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
+    addFineRootLitter(species_litter, fineroot_litter, litter, paramsLitterDecomposition, SOC);
+    return R_NilValue;
+END_RCPP
+}
 // pHEffect
 double pHEffect(double x, String pool);
 RcppExport SEXP _medfate_pHEffect(SEXP xSEXP, SEXP poolSEXP) {
@@ -668,12 +817,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // DAYCENTlitter
-NumericVector DAYCENTlitter(DataFrame structuralLitter, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
-RcppExport SEXP _medfate_DAYCENTlitter(SEXP structuralLitterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENTlitter(SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type structuralLitter(structuralLitterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
@@ -684,17 +833,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
     Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(DAYCENTlitter(structuralLitter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    rcpp_result_gen = Rcpp::wrap(DAYCENTlitter(litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
 // DAYCENT
-double DAYCENT(DataFrame structuralLitter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
-RcppExport SEXP _medfate_DAYCENT(SEXP structuralLitterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+double DAYCENT(DataFrame litter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENT(SEXP litterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type structuralLitter(structuralLitterSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
@@ -707,7 +856,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
     Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(DAYCENT(structuralLitter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    rcpp_result_gen = Rcpp::wrap(DAYCENT(litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6259,8 +6408,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 3},
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
     {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
+    {"_medfate_twigStructuralBiomass", (DL_FUNC) &_medfate_twigStructuralBiomass, 4},
     {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
     {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 5},
+    {"_medfate_heartwoodStructuralBiomass", (DL_FUNC) &_medfate_heartwoodStructuralBiomass, 6},
+    {"_medfate_abovegroundSapwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundSapwoodStructuralBiomass, 3},
+    {"_medfate_belowgroundSapwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundSapwoodStructuralBiomass, 4},
+    {"_medfate_abovegroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass, 3},
+    {"_medfate_belowgroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundHeartwoodStructuralBiomass, 4},
     {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
@@ -6269,6 +6424,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
     {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
     {"_medfate_litterMetabolicFraction", (DL_FUNC) &_medfate_litterMetabolicFraction, 2},
+    {"_medfate_addLeafTwigLitter", (DL_FUNC) &_medfate_addLeafTwigLitter, 6},
+    {"_medfate_addSmallBranchLitter", (DL_FUNC) &_medfate_addSmallBranchLitter, 3},
+    {"_medfate_addLargeWoodLitter", (DL_FUNC) &_medfate_addLargeWoodLitter, 3},
+    {"_medfate_addCoarseRootLitter", (DL_FUNC) &_medfate_addCoarseRootLitter, 3},
+    {"_medfate_addFineRootLitter", (DL_FUNC) &_medfate_addFineRootLitter, 5},
     {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
     {"_medfate_moistureEffect", (DL_FUNC) &_medfate_moistureEffect, 3},
     {"_medfate_temperatureEffect", (DL_FUNC) &_medfate_temperatureEffect, 1},

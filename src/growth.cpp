@@ -668,13 +668,13 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector BTsh  = paramsAllometries["BTsh"];
   
   //Litter
-  DataFrame internalStructuralLitter;
+  DataFrame internalLitter;
   DataFrame paramsLitterDecomposition;
   NumericVector internalSOC;
   bool exportLitter = false;
-  if(x.containsElementNamed("internalStructuralLitter") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
+  if(x.containsElementNamed("internalLitter") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
     paramsLitterDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
-    internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
+    internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
     internalSOC = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
     exportLitter = true;
   }
@@ -1153,7 +1153,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         double smallbranchlitter = WoodC[j]*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); 
         //All litter goes to structural litter
         addSmallBranchLitter(speciesNames[j], smallbranchlitter,
-                             internalStructuralLitter);
+                             internalLitter);
       }  
         
       //FRB SENESCENCE
@@ -1169,7 +1169,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         //From g/ind to g C/m2
         double fineroot_litter = rootCperDry*senescenceFinerootLoss*(N[j]/10000.0); 
         addFineRootLitter(speciesNames[j], fineroot_litter,
-                          internalStructuralLitter, paramsLitterDecomposition,
+                          internalLitter, paramsLitterDecomposition,
                           internalSOC);
       }
       // if(j==(numCohorts-1)) Rcout<< j << " before translocation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
@@ -1563,7 +1563,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     }
     NumericVector soilTheta = theta(soil, soilFunctions);
     NumericVector soilThetaSAT = thetaSAT(soil, soilFunctions);
-    double heterotrophicRespiration = DAYCENTInner(commDecomp, internalStructuralLitter, internalSOC,
+    double heterotrophicRespiration = DAYCENTInner(commDecomp, internalLitter, internalSOC,
                                                    paramsLitterDecomposition,
                                                    baseAnnualRates, annualTurnoverRate,
                                                    sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
@@ -2065,7 +2065,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 
   NumericMatrix DecompositionPools(numDays, 9);
   DecompositionPools.attr("dimnames") = List::create(dateStrings, 
-                          CharacterVector::create("SurfaceStructural", "SoilStructural", "SurfaceMetabolic", "SoilMetabolic",
+                          CharacterVector::create("SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
                                                   "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
   
   List l;
@@ -2329,13 +2329,14 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   if(control["decompositionPoolResults"]) {
     NumericMatrix decompositionPool = Rcpp::as<Rcpp::NumericMatrix>(l["DecompositionPools"]);
     NumericVector internalSOC = x["internalSOC"];
-    DataFrame internalStructuralLitter = Rcpp::as<Rcpp::DataFrame>(x["internalStructuralLitter"]);
-    NumericVector structural_litter_leaves = internalStructuralLitter["Leaves"]; 
-    NumericVector structural_litter_smallbranches = internalStructuralLitter["SmallBranches"]; 
-    NumericVector structural_litter_fineroots = internalStructuralLitter["FineRoots"]; 
-    NumericVector structural_litter_largewood = internalStructuralLitter["LargeWood"]; 
-    NumericVector structural_litter_coarseroots = internalStructuralLitter["CoarseRoots"]; 
-    decompositionPool(iday,0) = sum(structural_litter_leaves) + sum(structural_litter_smallbranches) + sum(structural_litter_largewood);
+    DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
+    NumericVector structural_litter_leaves = internalLitter["Leaves"]; 
+    NumericVector structural_litter_twigs = internalLitter["Twigs"]; 
+    NumericVector structural_litter_smallbranches = internalLitter["SmallBranches"]; 
+    NumericVector structural_litter_largewood = internalLitter["LargeWood"]; 
+    NumericVector structural_litter_coarseroots = internalLitter["CoarseRoots"]; 
+    NumericVector structural_litter_fineroots = internalLitter["FineRoots"]; 
+    decompositionPool(iday,0) = sum(structural_litter_leaves) + sum(structural_litter_twigs) +sum(structural_litter_smallbranches) + sum(structural_litter_largewood);
     decompositionPool(iday,1) = sum(structural_litter_fineroots)+ sum(structural_litter_coarseroots);
     decompositionPool(iday,2) = internalSOC["SurfaceMetabolic"];
     decompositionPool(iday,3) = internalSOC["SoilMetabolic"];
@@ -2811,8 +2812,8 @@ List growth(List x, DataFrame meteo, double latitude,
   if(verbose) {
     NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(outputList["BiomassBalance"]);
     
-    Rcout<<"Final plant biomass (g/m2): "<<finalCohortBiomass<<"\n";
-    Rcout<<"Change in plant biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
+    Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
+    Rcout<<"Change in plant cohort biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
     Rcout<<"Plant biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
     Rcout<<"Plant biomass balance components:\n";
     

@@ -6,7 +6,7 @@
 \title{DAYCENT decomposition}
 \usage{
 decomposition_DAYCENTlitter(
-  structuralLitter,
+  litter,
   paramsLitterDecomposition,
   baseAnnualRates,
   sand,
@@ -20,7 +20,7 @@ decomposition_DAYCENTlitter(
 )
 
 decomposition_DAYCENT(
-  structuralLitter,
+  litter,
   SOC,
   paramsLitterDecomposition,
   baseAnnualRates,
@@ -36,7 +36,7 @@ decomposition_DAYCENT(
 )
 }
 \arguments{
-\item{structuralLitter}{A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).}
+\item{litter}{A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).}
 
 \item{paramsLitterDecomposition}{A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).}
 
@@ -72,7 +72,7 @@ performs the whole model for carbon decomposition.
 \details{
 Each call to function \code{decomposition_DAYCENTlitter} conducts one time step of the litter dynamics in DAYCENT.
 Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
-model and returns the heterotrophic respiration for that day. Both functions modify input data \code{structuralLitter}
+model and returns the heterotrophic respiration for that day. Both functions modify input data \code{litter}
 (and in case case of \code{decomposition_DAYCENT} also \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 soil physical and chemical characteristics correspond to the uppermost soil layer.
 }
@@ -85,3 +85,4 @@ Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge U
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\keyword{internal}

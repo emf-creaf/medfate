@@ -79,10 +79,11 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
   if(nlitter > 0) {
     l$litterData <- data.frame(Species = as.character(rep(NA, nlitter)),
                                Leaves = as.numeric(rep(NA, nlitter)),
+                               Twigs = as.numeric(rep(NA, nlitter)),
                                SmallBranches = as.numeric(rep(NA, nlitter)),
                                LargeWood = as.numeric(rep(NA, nlitter)),
-                               FineRoots = as.numeric(rep(NA, nlitter)),
-                               CoarseRoots = as.numeric(rep(NA, nlitter)))
+                               CoarseRoots = as.numeric(rep(NA, nlitter)),
+                               FineRoots = as.numeric(rep(NA, nlitter)))
   }
   
   if(!is.null(addcolumns)) {

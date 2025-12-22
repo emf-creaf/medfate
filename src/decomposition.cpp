@@ -53,32 +53,35 @@ double litterMetabolicFraction(double ligninPercent, double Nmass) {
   return(fmet);
 }
 
-
-void addLeafLitter(String species_litter, double leaf_litter, 
-                   DataFrame structuralLitter, 
-                   DataFrame paramsLitterDecomposition,
-                   NumericVector internalSOC) {
+// [[Rcpp::export(".decomposition_addLeafTwigLitter")]]
+void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter,
+                       DataFrame litter, 
+                       DataFrame paramsLitterDecomposition,
+                       NumericVector SOC) {
   
-  NumericVector structural_litter_leaves = structuralLitter["Leaves"];
+  NumericVector structural_litter_leaves = litter["Leaves"];
+  NumericVector structural_litter_twigs = litter["Twigs"];
   NumericVector Nleaf = paramsLitterDecomposition["Nleaf"];
   NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
   
-  CharacterVector Species = structuralLitter["Species"];
+  CharacterVector Species = litter["Species"];
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
     double fmet = litterMetabolicFraction(LeafLignin[row], Nleaf[row]);
     //Distribute between metabolic and structural
-    internalSOC["SurfaceMetabolic"] = internalSOC["SurfaceMetabolic"] + leaf_litter*fmet;
+    SOC["SurfaceMetabolic"] = SOC["SurfaceMetabolic"] + leaf_litter*fmet;
     structural_litter_leaves[row] += leaf_litter*(1.0 - fmet);
+    structural_litter_twigs[row] += twig_litter;
   }
 }
 
+// [[Rcpp::export(".decomposition_addSmallBranchLitter")]]
 void addSmallBranchLitter(String species_litter, double smallbranch_litter, 
-                          DataFrame structuralLitter) {
-  NumericVector structural_litter_smallbranches = structuralLitter["SmallBranches"];
+                          DataFrame litter) {
+  NumericVector structural_litter_smallbranches = litter["SmallBranches"];
   // All small branch goes to structural litter compartment
-  CharacterVector Species = structuralLitter["Species"];
+  CharacterVector Species = litter["Species"];
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
@@ -86,21 +89,48 @@ void addSmallBranchLitter(String species_litter, double smallbranch_litter,
   }
 }
 
+// [[Rcpp::export(".decomposition_addLargeWoodLitter")]]
+void addLargeWoodLitter(String species_litter, double largewood_litter, 
+                        DataFrame litter) {
+  NumericVector structural_litter_largewood = litter["LargeWood"];
+  // All small branch goes to structural litter compartment
+  CharacterVector Species = litter["Species"];
+  int row = -1;
+  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+  if(row !=-1) {
+    structural_litter_largewood[row] += largewood_litter;
+  }
+}
+
+// [[Rcpp::export(".decomposition_addCoarseRootLitter")]]
+void addCoarseRootLitter(String species_litter, double coarsewood_litter, 
+                        DataFrame litter) {
+  NumericVector structural_litter_coarseroots = litter["CoarseRoots"];
+  // All small branch goes to structural litter compartment
+  CharacterVector Species = litter["Species"];
+  int row = -1;
+  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+  if(row !=-1) {
+    structural_litter_coarseroots[row] += coarsewood_litter;
+  }
+}
+
+// [[Rcpp::export(".decomposition_addFineRootLitter")]]
 void addFineRootLitter(String species_litter, double fineroot_litter, 
-                       DataFrame structuralLitter, 
+                       DataFrame litter, 
                        DataFrame paramsLitterDecomposition,
-                       NumericVector internalSOC) {
+                       NumericVector SOC) {
   
-  NumericVector structural_litter_fineroots = structuralLitter["FineRoots"];
+  NumericVector structural_litter_fineroots = litter["FineRoots"];
   NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
 
-  CharacterVector Species = structuralLitter["Species"];
+  CharacterVector Species = litter["Species"];
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
     double fmet = litterMetabolicFraction(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
     //Distribute between metabolic and structural
-    internalSOC["SoilMetabolic"] = internalSOC["SoilMetabolic"] + fineroot_litter*fmet;
+    SOC["SoilMetabolic"] = SOC["SoilMetabolic"] + fineroot_litter*fmet;
     structural_litter_fineroots[row] += fineroot_litter*(1.0 - fmet);
   }
 }
@@ -125,9 +155,11 @@ double pHEffect(double x, String pool) {
     a = 4.8; b=0.5; c=1.14; d = 0.7;
   } else if(pool=="SoilMetabolic") {
       a = 4.8; b=0.5; c=1.14; d = 0.7;
-  } else if(pool=="SurfaceStructural") {
+  } else if(pool=="Leaves") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilStructural") {
+  } else if(pool=="FineRoots") {
+    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
+  } else if(pool=="Twigs") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
   } else if(pool=="SmallBranches") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
@@ -315,21 +347,22 @@ void updateCarbonTransferMatrices(List commDecomp,
 
 
 void DAYCENTlitterInner(NumericVector litterDecompositionOutput, 
-                        DataFrame structuralLitter, DataFrame paramsLitterDecomposition,
+                        DataFrame litter, DataFrame paramsLitterDecomposition,
                         NumericVector baseAnnualRates,
                         double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                         double soilO2 = 1.0, double cultfac = 1.0,
                         double tstep = 1.0) {
   
   
-  NumericVector structural_leaves = structuralLitter["Leaves"];
-  NumericVector structural_smallbranches = structuralLitter["SmallBranches"];
-  NumericVector structural_fineroots = structuralLitter["FineRoots"];
-  NumericVector structural_largewood = structuralLitter["LargeWood"];
-  NumericVector structural_coarseroots = structuralLitter["CoarseRoots"];
+  NumericVector structural_leaves = litter["Leaves"];
+  NumericVector structural_twigs = litter["Twigs"];
+  NumericVector structural_smallbranches = litter["SmallBranches"];
+  NumericVector structural_largewood = litter["LargeWood"];
+  NumericVector structural_coarseroots = litter["CoarseRoots"];
+  NumericVector structural_fineroots = litter["FineRoots"];
   
   NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
-  int numCohorts = structuralLitter.nrow();
+  int numCohorts = litter.nrow();
 
   // Reset output
   litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] = 0.0;
@@ -349,16 +382,28 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   
   // STRUCTURAL leaves
   for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "SurfaceStructural");
+    pHeff = pHEffect(soilPH, "Leaves");
     flig = LeafLignin[i]/100.0;
-    k = (baseAnnualRates["SurfaceStructural"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
+    k = (baseAnnualRates["Leaves"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
     loss = structural_leaves[i]*k*tstep;
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
     litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
     structural_leaves[i] -= loss;
   }
-
+  
+  // STRUCTURAL twigs
+  flig = 0.25; //Lignin fraction for small branches
+  for(int i=0;i<numCohorts;i++) {
+    pHeff = pHEffect(soilPH, "Twigs");
+    k = (baseAnnualRates["Twigs"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
+    loss = structural_smallbranches[i]*k*tstep;
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
+    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
+    structural_smallbranches[i] -= loss;
+  }
+  
   // STRUCTURAL small branches
   flig = 0.25; //Lignin fraction for small branches
   for(int i=0;i<numCohorts;i++) {
@@ -399,8 +444,8 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   //Fine root lignin fraction 0.349
   flig = 0.349;
   for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "SoilStructural");
-    k = (baseAnnualRates["SoilStructural"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
+    pHeff = pHEffect(soilPH, "FineRoots");
+    k = (baseAnnualRates["FineRoots"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
     loss = structural_fineroots[i]*k*tstep;
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW] += loss*flig*(1.0 - 0.30);
@@ -410,15 +455,16 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
 }
 
 //' @rdname decomposition_DAYCENT
+//' @keywords internal
 // [[Rcpp::export("decomposition_DAYCENTlitter")]]
-NumericVector DAYCENTlitter(DataFrame structuralLitter, DataFrame paramsLitterDecomposition,
+NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecomposition,
                             NumericVector baseAnnualRates,
                             double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                             double soilO2 = 1.0, double cultfac = 1.0,
                             double tstep = 1.0) {
   NumericVector litterDecompositionOutput = communicationLitterDecomposition();
   DAYCENTlitterInner(litterDecompositionOutput, 
-                     structuralLitter, paramsLitterDecomposition, 
+                     litter, paramsLitterDecomposition, 
                      baseAnnualRates,
                      sand, clay, soilTemperature, soilMoisture, soilPH,
                      soilO2, cultfac,
@@ -427,7 +473,7 @@ NumericVector DAYCENTlitter(DataFrame structuralLitter, DataFrame paramsLitterDe
 }
 
 double DAYCENTInner(List commDecomp,
-                    DataFrame structuralLitter, NumericVector SOC,
+                    DataFrame litter, NumericVector SOC,
                     DataFrame paramsLitterDecomposition,
                     NumericVector baseAnnualRates, double annualTurnoverRate,
                     double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
@@ -437,7 +483,7 @@ double DAYCENTInner(List commDecomp,
   int npool = 7;
   NumericVector litterDecompositionOutput = commDecomp["ldo"];
   DAYCENTlitterInner(litterDecompositionOutput, 
-                     structuralLitter, paramsLitterDecomposition, 
+                     litter, paramsLitterDecomposition, 
                      baseAnnualRates,
                      sand, clay, soilTemperature, soilMoisture, soilPH,
                      tstep);
@@ -493,7 +539,7 @@ double DAYCENTInner(List commDecomp,
 //' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
 //' performs the whole model for carbon decomposition.
 //' 
-//' @param structuralLitter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
+//' @param litter A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 //' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 //' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 //' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
@@ -510,7 +556,7 @@ double DAYCENTInner(List commDecomp,
 //' 
 //' @details Each call to function \code{decomposition_DAYCENTlitter} conducts one time step of the litter dynamics in DAYCENT. 
 //' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
-//' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{structuralLitter}
+//' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{litter}
 //' (and in case case of \code{decomposition_DAYCENT} also \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 //' soil physical and chemical characteristics correspond to the uppermost soil layer.
 //' 
@@ -522,8 +568,9 @@ double DAYCENTInner(List commDecomp,
 //' 
 //' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 //' 
+//' @keywords internal
 // [[Rcpp::export("decomposition_DAYCENT")]]
-double DAYCENT(DataFrame structuralLitter, NumericVector SOC,
+double DAYCENT(DataFrame litter, NumericVector SOC,
                DataFrame paramsLitterDecomposition,
                NumericVector baseAnnualRates, double annualTurnoverRate,
                double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
@@ -531,7 +578,7 @@ double DAYCENT(DataFrame structuralLitter, NumericVector SOC,
                double tstep = 1.0) {
   List commDecomp = communicationDecomposition();
   return(DAYCENTInner(commDecomp,
-                      structuralLitter, SOC,
+                      litter, SOC,
                       paramsLitterDecomposition,
                       baseAnnualRates, annualTurnoverRate,
                       sand, clay, soilTemperature, soilMoisture, soilPH, 

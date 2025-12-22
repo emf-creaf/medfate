@@ -868,8 +868,8 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
   return(paramsAllometriesdf);
 }
 
-DataFrame paramsLitterDecomposition(DataFrame internalStructuralLitter, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus) {
-  CharacterVector Species = internalStructuralLitter["Species"];
+DataFrame paramsLitterDecomposition(DataFrame internalLitter, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus) {
+  CharacterVector Species = internalLitter["Species"];
   IntegerVector uniqueSP = speciesIndex(Species, SpParams);
 
   NumericVector LeafLignin = speciesNumericParameterWithImputation(uniqueSP, SpParams, "LigninPercent",fillMissingSpParams, fillWithGenus);
@@ -1053,7 +1053,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   return(df);
 }  
 
-DataFrame internalStructuralLitterDataFrame(CharacterVector Species, DataFrame litterData) {
+DataFrame internalLitterDataFrame(CharacterVector Species, DataFrame litterData) {
   if(litterData.nrow()>0) {
     CharacterVector litterSpecies = litterData["Species"];
     int nlitter = litterSpecies.size();
@@ -1066,6 +1066,7 @@ DataFrame internalStructuralLitterDataFrame(CharacterVector Species, DataFrame l
   CharacterVector uniqueSpecies = Rcpp::unique(Species).sort();
   int numSpp = uniqueSpecies.size();
   NumericVector leaves(numSpp, 0.0);
+  NumericVector twigs(numSpp, 0.0);
   NumericVector smallbranches(numSpp, 0.0);
   NumericVector fineroots(numSpp, 0.0);
   NumericVector largewood(numSpp, 0.0);
@@ -1073,28 +1074,31 @@ DataFrame internalStructuralLitterDataFrame(CharacterVector Species, DataFrame l
   if(litterData.nrow()>0) {
     CharacterVector litterSpecies = litterData["Species"];
     NumericVector litterLeaves = litterData["Leaves"];
+    NumericVector litterTwigs = litterData["Twigs"];
     NumericVector litterSmallBranches = litterData["SmallBranches"];
-    NumericVector litterFineRoots = litterData["FineRoots"];
     NumericVector litterLargeWood = litterData["LargeWood"];
     NumericVector litterCoarseRoots = litterData["CoarseRoots"];
+    NumericVector litterFineRoots = litterData["FineRoots"];
     for(int i=0;i<litterData.nrow();i++){
       int row = -1;
       for(int j=0;j<uniqueSpecies.length();j++) if(uniqueSpecies[j]==litterSpecies[i]) row = j;
       if(row !=-1) {
         if(!NumericVector::is_na(litterLeaves[i])) leaves[row] += litterLeaves[i]; 
+        if(!NumericVector::is_na(litterTwigs[i])) twigs[row] += litterTwigs[i]; 
         if(!NumericVector::is_na(litterSmallBranches[i])) smallbranches[row] += litterSmallBranches[i]; 
-        if(!NumericVector::is_na(litterFineRoots[i])) fineroots[row] += litterFineRoots[i]; 
         if(!NumericVector::is_na(litterLargeWood[i])) largewood[row] += litterLargeWood[i]; 
         if(!NumericVector::is_na(litterCoarseRoots[i])) coarseroots[row] += litterCoarseRoots[i]; 
+        if(!NumericVector::is_na(litterFineRoots[i])) fineroots[row] += litterFineRoots[i]; 
       }      
     }
   }
   DataFrame df = DataFrame::create(Named("Species") = uniqueSpecies,
                                    Named("Leaves") = leaves,
+                                   Named("Twigs") = twigs,
                                    Named("SmallBranches") = smallbranches,
-                                   Named("FineRoots") = fineroots,
                                    Named("LargeWood") = largewood,
-                                   Named("CoarseRoots") = coarseroots);
+                                   Named("CoarseRoots") = coarseroots,
+                                   Named("FineRoots") = fineroots);
   return(df);
 }
 
@@ -1504,8 +1508,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   plantsdf.attr("row.names") = above.attr("row.names");
   
 
-  DataFrame internalStructuralLitter = internalStructuralLitterDataFrame(nsp, litterData);
-  DataFrame paramsDecompositiondf = paramsLitterDecomposition(internalStructuralLitter, SpParams, fillMissingSpParams, fillWithGenus);
+  DataFrame internalLitter = internalLitterDataFrame(nsp, litterData);
+  DataFrame paramsDecompositiondf = paramsLitterDecomposition(internalLitter, SpParams, fillMissingSpParams, fillWithGenus);
   
   // List ringList(numCohorts);
   // for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
@@ -1564,7 +1568,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                               paramsTranspirationdf, control), "internalAllocation");
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
-  input.push_back(internalStructuralLitter, "internalStructuralLitter");
+  input.push_back(internalLitter, "internalLitter");
   input.push_back(internalSOC(SOCData), "internalSOC");
   input.push_back(FCCSprops, "internalFCCS");
   input.push_back(medfateVersionString(), "version");
@@ -1881,7 +1885,7 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-//'   \item{\code{internalStructuralLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.}
+//'   \item{\code{internalLitter}: A data frame with the aboveground and belowground mass (g C/m2) of different litter components: leaves, twigs, small branches, large wood, coarse roots and fine roots.}
 //'   \item{\code{internalSOC}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 //'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 //'   also distinguishing mortality due to starvation or dessication.}

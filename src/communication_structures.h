@@ -105,3 +105,5 @@ List copyAdvancedSPWBOutput(List aoc, List x);
 List copyBasicGROWTHOutput(List boc, List x);
 List copyAdvancedGROWTHOutput(List aoc, List x);
 List copyModelOutput(List internalCommunication, List x, String model);
+
+DataFrame communicationCarbonCompartments(int numCohorts);

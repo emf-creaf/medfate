@@ -8,8 +8,14 @@
 \alias{carbon_sugarConcentration}
 \alias{carbon_relativeSapViscosity}
 \alias{carbon_leafStructuralBiomass}
+\alias{carbon_twigStructuralBiomass}
 \alias{carbon_leafStarchCapacity}
 \alias{carbon_sapwoodStructuralBiomass}
+\alias{carbon_heartwoodStructuralBiomass}
+\alias{carbon_abovegroundSapwoodStructuralBiomass}
+\alias{carbon_belowgroundSapwoodStructuralBiomass}
+\alias{carbon_abovegroundHeartwoodStructuralBiomass}
+\alias{carbon_belowgroundHeartwoodStructuralBiomass}
 \alias{carbon_sapwoodStructuralLivingBiomass}
 \alias{carbon_sapwoodStarchCapacity}
 \alias{carbon_carbonCompartments}
@@ -27,9 +33,21 @@ carbon_relativeSapViscosity(sugarConc, temp)
 
 carbon_leafStructuralBiomass(LAI, N, SLA)
 
+carbon_twigStructuralBiomass(LAI, N, SLA, r635)
+
 carbon_leafStarchCapacity(LAI, N, SLA, leafDensity)
 
 carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
+
+carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
+
+carbon_abovegroundSapwoodStructuralBiomass(SA, H, woodDensity)
+
+carbon_belowgroundSapwoodStructuralBiomass(SA, L, V, woodDensity)
+
+carbon_abovegroundHeartwoodStructuralBiomass(DBH, H, woodDensity)
+
+carbon_belowgroundHeartwoodStructuralBiomass(DBH, L, V, woodDensity)
 
 carbon_sapwoodStructuralLivingBiomass(
   SA,
@@ -75,6 +93,8 @@ carbon_carbonCompartments(x, biomassUnits = "g_m2")
 
 \item{woodDensity}{Wood density (dry weight over volume).}
 
+\item{DBH}{Tree diameter (cm).}
+
 \item{conduit2sapwood}{Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue.}
 
 \item{x}{An object of class \code{\link{growthInput}}.}
@@ -99,6 +119,22 @@ Values returned for each function are:
 }
 \description{
 Low-level functions used in the calculation of carbon balance.
+}
+\examples{
+#Load example plot plant data
+data(exampleforest)
+#Default species parameterization
+data(SpParamsMED)
+#Initialize control parameters
+control <- defaultControl("Granier")
+#Initialize soil with default soil params (4 layers)
+examplesoil <- defaultSoilParams(4)
+#Initialize model input
+x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
+
+# Estimate carbon compartments
+carbon_carbonCompartments(x1)
+
 }
 \references{
 Forst P, Wermer F, Delgado A (2002). On the pressure dependence of the viscosity of aqueous sugar solutions. Rheol Acta 41: 369–374 DOI 10.1007/s00397-002-0238-y

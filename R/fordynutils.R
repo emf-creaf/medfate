@@ -181,13 +181,13 @@
                      Z50 = c(treeZ50, shrubZ50, herbZ50),
                      Z95 = c(treeZ95, shrubZ95, herbZ95),
                      Z100 = c(treeZ100, shrubZ100, herbZ100),
-                     xo$soil, xo$internalStructuralLitter, xo$internalSOC, FCCSprops, 
+                     xo$soil, xo$internalLitter, xo$internalSOC, FCCSprops, 
                      SpParams, control)
   if("herbLAI" %in% names(xo)) xi$herbLAI <- xo$herbLAI
   if("herbLAImax" %in% names(xo)) xi$herbLAImax <- xo$herbLAImax
   
   # Add litter and SOC pools to forest
-  forest$litterData <- xo$internalStructuralLitter
+  forest$litterData <- xo$internalLitter
   forest$SOCData <- xo$internalSOC
   
   # 5.2 Replace previous state for surviving cohorts (except age)
