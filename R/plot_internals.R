@@ -844,7 +844,9 @@
   df<-as.data.frame(CarbonBalance)
   df[,2] = - df[,2]
   df[,3] = - df[,3]
-  names(df)<-c("Gross primary production", "Maintenance respiration","Synthesis respiration", "Net primary production")
+  df[,5] = - df[,5]
+  names(df)<-c("Gross primary production", "Maintenance respiration","Synthesis respiration", "Net primary production",
+               "Heterotrophic respiration", "Net ecosystem exchange")
   if(is.null(ylab))  ylab = expression(gC%.%m^{-2})    
   if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
   if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)

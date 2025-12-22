@@ -869,7 +869,7 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
 }
 
 DataFrame paramsLitterDecomposition(DataFrame internalStructuralLitter, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus) {
-  CharacterVector Species = internalStructuralLitter.attr("row.names");
+  CharacterVector Species = internalStructuralLitter["Species"];
   IntegerVector uniqueSP = speciesIndex(Species, SpParams);
 
   NumericVector LeafLignin = speciesNumericParameterWithImputation(uniqueSP, SpParams, "LigninPercent",fillMissingSpParams, fillWithGenus);
@@ -877,11 +877,11 @@ DataFrame paramsLitterDecomposition(DataFrame internalStructuralLitter, DataFram
   NumericVector Nsapwood = speciesNumericParameterWithImputation(uniqueSP, SpParams, "Nsapwood",fillMissingSpParams, fillWithGenus);
   NumericVector Nfineroot = speciesNumericParameterWithImputation(uniqueSP, SpParams, "Nfineroot",fillMissingSpParams, fillWithGenus);
   
-  DataFrame paramsDecompositiondf = DataFrame::create(_["LeafLignin"] = LeafLignin, 
+  DataFrame paramsDecompositiondf = DataFrame::create(_["Species"] = Species,
+                                                      _["LeafLignin"] = LeafLignin, 
                                                       _["Nleaf"] = Nleaf, 
                                                       _["Nsapwood"] = Nsapwood,
                                                       _["Nfineroot"] = Nfineroot);
-  paramsDecompositiondf.attr("row.names") = Species;
   return(paramsDecompositiondf);
 }
 
@@ -1089,12 +1089,12 @@ DataFrame internalStructuralLitterDataFrame(CharacterVector Species, DataFrame l
       }      
     }
   }
-  DataFrame df = DataFrame::create(Named("Leaves") = leaves,
+  DataFrame df = DataFrame::create(Named("Species") = uniqueSpecies,
+                                   Named("Leaves") = leaves,
                                    Named("SmallBranches") = smallbranches,
                                    Named("FineRoots") = fineroots,
                                    Named("LargeWood") = largewood,
                                    Named("CoarseRoots") = coarseroots);
-  df.attr("row.names") = uniqueSpecies;
   return(df);
 }
 

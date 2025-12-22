@@ -176,13 +176,19 @@
     herbZ100 <- rep(NA, nrow(forest$herbData))
     if("Z100" %in% names(forest$herbData)) herbZ100 <- forest$herbData$Z100
   }
+  
   xi <- .growthInput(above = above_all, 
                      Z50 = c(treeZ50, shrubZ50, herbZ50),
                      Z95 = c(treeZ95, shrubZ95, herbZ95),
                      Z100 = c(treeZ100, shrubZ100, herbZ100),
-                     xo$soil, data.frame(), c(), FCCSprops, SpParams, control)
+                     xo$soil, xo$internalStructuralLitter, xo$internalSOC, FCCSprops, 
+                     SpParams, control)
   if("herbLAI" %in% names(xo)) xi$herbLAI <- xo$herbLAI
   if("herbLAImax" %in% names(xo)) xi$herbLAImax <- xo$herbLAImax
+  
+  # Add litter and SOC pools to forest
+  forest$litterData <- xo$internalStructuralLitter
+  forest$SOCData <- xo$internalSOC
   
   # 5.2 Replace previous state for surviving cohorts (except age)
   xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]

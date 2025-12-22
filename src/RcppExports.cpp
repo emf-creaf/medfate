@@ -689,13 +689,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // DAYCENT
-double DAYCENT(DataFrame structuralLitter, NumericVector CENTURYPools, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
-RcppExport SEXP _medfate_DAYCENT(SEXP structuralLitterSEXP, SEXP CENTURYPoolsSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+double DAYCENT(DataFrame structuralLitter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENT(SEXP structuralLitterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type structuralLitter(structuralLitterSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type CENTURYPools(CENTURYPoolsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
     Rcpp::traits::input_parameter< double >::type annualTurnoverRate(annualTurnoverRateSEXP);
@@ -707,7 +707,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
     Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(DAYCENT(structuralLitter, CENTURYPools, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    rcpp_result_gen = Rcpp::wrap(DAYCENT(structuralLitter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
     return rcpp_result_gen;
 END_RCPP
 }

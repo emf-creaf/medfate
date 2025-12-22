@@ -63,7 +63,7 @@ void addLeafLitter(String species_litter, double leaf_litter,
   NumericVector Nleaf = paramsLitterDecomposition["Nleaf"];
   NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
   
-  CharacterVector Species = structuralLitter.attr("row.names");
+  CharacterVector Species = structuralLitter["Species"];
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
@@ -78,7 +78,7 @@ void addSmallBranchLitter(String species_litter, double smallbranch_litter,
                           DataFrame structuralLitter) {
   NumericVector structural_litter_smallbranches = structuralLitter["SmallBranches"];
   // All small branch goes to structural litter compartment
-  CharacterVector Species = structuralLitter.attr("row.names");
+  CharacterVector Species = structuralLitter["Species"];
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
@@ -94,7 +94,7 @@ void addFineRootLitter(String species_litter, double fineroot_litter,
   NumericVector structural_litter_fineroots = structuralLitter["FineRoots"];
   NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
 
-  CharacterVector Species = structuralLitter.attr("row.names");
+  CharacterVector Species = structuralLitter["Species"];
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
@@ -409,6 +409,7 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   }
 }
 
+//' @rdname decomposition_DAYCENT
 // [[Rcpp::export("decomposition_DAYCENTlitter")]]
 NumericVector DAYCENTlitter(DataFrame structuralLitter, DataFrame paramsLitterDecomposition,
                             NumericVector baseAnnualRates,
@@ -426,7 +427,7 @@ NumericVector DAYCENTlitter(DataFrame structuralLitter, DataFrame paramsLitterDe
 }
 
 double DAYCENTInner(List commDecomp,
-                    DataFrame structuralLitter, NumericVector CENTURYPools,
+                    DataFrame structuralLitter, NumericVector SOC,
                     DataFrame paramsLitterDecomposition,
                     NumericVector baseAnnualRates, double annualTurnoverRate,
                     double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
@@ -463,24 +464,24 @@ double DAYCENTInner(List commDecomp,
     // carbon transfer from pool j to pool i
     for(int j=0;j<npool;j++) {
       if(j!=i) {
-        dC[i] = dC[i] + (1.0 - respf(i,j)) * pathf(i,j) * xi[j] * K[j] * CENTURYPools[j]*tstep;
+        dC[i] = dC[i] + (1.0 - respf(i,j)) * pathf(i,j) * xi[j] * K[j] * SOC[j]*tstep;
       }
     }
     //  carbon loss from pool i
-    dC[i] = dC[i] - xi[i] * K[i] * CENTURYPools[i]*tstep;
+    dC[i] = dC[i] - xi[i] * K[i] * SOC[i]*tstep;
   }
   //   heterotrophic respiration
   double RH = litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION];
   for(int i=0;i<npool;i++) {
     for(int j=0;j<npool;j++) {
       if(j!=i) {
-        RH = RH + respf(i,j) * pathf(i,j) * xi[j] * K[j] * CENTURYPools[j] * tstep;
+        RH = RH + respf(i,j) * pathf(i,j) * xi[j] * K[j] * SOC[j] * tstep;
       }
     }
   }
   // update pools
   for(int i=0;i<npool;i++) {
-    CENTURYPools[i] += dC[i];
+    SOC[i] += dC[i];
   }
   //return respiration
   return(RH);
@@ -488,10 +489,12 @@ double DAYCENTInner(List commDecomp,
 
 //' DAYCENT decomposition
 //' 
-//' This function implements the DAYCENT carbon decomposition model, following the description in Bonan (2019) 
+//' Functions implementing the DAYCENT carbon decomposition model, following the description in Bonan (2019).
+//' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
+//' performs the whole model for carbon decomposition.
 //' 
 //' @param structuralLitter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
-//' @param CENTURYPools A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
+//' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 //' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 //' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 //' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
@@ -505,12 +508,14 @@ double DAYCENTInner(List commDecomp,
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @details Each call to function \code{decomposition_DAYCENT} conducts one time step of the DAYCENT
-//' model and returns the heterotrophic respiration for that day. The function modifies input data \code{structuralLitter}
-//' and \code{CENTURYPools} according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
+//' @details Each call to function \code{decomposition_DAYCENTlitter} conducts one time step of the litter dynamics in DAYCENT. 
+//' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
+//' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{structuralLitter}
+//' (and in case case of \code{decomposition_DAYCENT} also \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 //' soil physical and chemical characteristics correspond to the uppermost soil layer.
 //' 
-//' @returns A scalar value with heterotrophic respiration, in g C/m2
+//' @returns Function \code{decomposition_DAYCENTlitter} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from litter decomposition. 
+//' Function \code{decomposition_DAYCENT} returns scalar value with heterotrophic respiration (litter + soil), in g C/m2.
 //' 
 //' @references
 //' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
@@ -518,7 +523,7 @@ double DAYCENTInner(List commDecomp,
 //' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 //' 
 // [[Rcpp::export("decomposition_DAYCENT")]]
-double DAYCENT(DataFrame structuralLitter, NumericVector CENTURYPools,
+double DAYCENT(DataFrame structuralLitter, NumericVector SOC,
                DataFrame paramsLitterDecomposition,
                NumericVector baseAnnualRates, double annualTurnoverRate,
                double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
@@ -526,7 +531,7 @@ double DAYCENT(DataFrame structuralLitter, NumericVector CENTURYPools,
                double tstep = 1.0) {
   List commDecomp = communicationDecomposition();
   return(DAYCENTInner(commDecomp,
-                      structuralLitter, CENTURYPools,
+                      structuralLitter, SOC,
                       paramsLitterDecomposition,
                       baseAnnualRates, annualTurnoverRate,
                       sand, clay, soilTemperature, soilMoisture, soilPH, 

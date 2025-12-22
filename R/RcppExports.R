@@ -382,16 +382,19 @@ decomposition_temperatureEffect <- function(soilTemperature) {
     .Call(`_medfate_temperatureEffect`, soilTemperature)
 }
 
+#' @rdname decomposition_DAYCENT
 decomposition_DAYCENTlitter <- function(structuralLitter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
     .Call(`_medfate_DAYCENTlitter`, structuralLitter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
 #' DAYCENT decomposition
 #' 
-#' This function implements the DAYCENT carbon decomposition model, following the description in Bonan (2019) 
+#' Functions implementing the DAYCENT carbon decomposition model, following the description in Bonan (2019).
+#' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
+#' performs the whole model for carbon decomposition.
 #' 
 #' @param structuralLitter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
-#' @param CENTURYPools A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
+#' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 #' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 #' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 #' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
@@ -405,20 +408,22 @@ decomposition_DAYCENTlitter <- function(structuralLitter, paramsLitterDecomposit
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @details Each call to function \code{decomposition_DAYCENT} conducts one time step of the DAYCENT
-#' model and returns the heterotrophic respiration for that day. The function modifies input data \code{structuralLitter}
-#' and \code{CENTURYPools} according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
+#' @details Each call to function \code{decomposition_DAYCENTlitter} conducts one time step of the litter dynamics in DAYCENT. 
+#' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
+#' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{structuralLitter}
+#' (and in case case of \code{decomposition_DAYCENT} also \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 #' soil physical and chemical characteristics correspond to the uppermost soil layer.
 #' 
-#' @returns A scalar value with heterotrophic respiration, in g C/m2
+#' @returns Function \code{decomposition_DAYCENTlitter} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from litter decomposition. 
+#' Function \code{decomposition_DAYCENT} returns scalar value with heterotrophic respiration (litter + soil), in g C/m2.
 #' 
 #' @references
 #' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
 #' 
 #' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
-decomposition_DAYCENT <- function(structuralLitter, CENTURYPools, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
-    .Call(`_medfate_DAYCENT`, structuralLitter, CENTURYPools, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
+decomposition_DAYCENT <- function(structuralLitter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
+    .Call(`_medfate_DAYCENT`, structuralLitter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
