@@ -36,7 +36,7 @@ decomposition_DAYCENT(
 )
 }
 \arguments{
-\item{litter}{A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).}
+\item{litter}{A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).}
 
 \item{paramsLitterDecomposition}{A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).}
 

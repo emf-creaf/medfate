@@ -467,7 +467,7 @@ decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseA
 #' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
 #' performs the whole model for carbon decomposition.
 #' 
-#' @param litter A data frame with structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
+#' @param litter A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 #' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 #' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 #' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
@@ -1257,6 +1257,156 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOff
     .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, loadingOffset, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
+.defineGrowthDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
+    .Call(`_medfate_defineGrowthDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
+}
+
+.fillGrowthDailyOutput <- function(l, x, sDay, iday) {
+    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, x, sDay, iday))
+}
+
+#' Forest growth
+#' 
+#' Function \code{growth} is a process-based model that performs energy, water and carbon balances; 
+#' and determines changes in water/carbon pools, functional variables (leaf area, sapwood area, root area) 
+#' and structural ones (tree diameter, tree height, shrub cover) for woody plant cohorts in a given forest stand 
+#' during a period specified in the input climatic data. 
+#' 
+#' @param x An object of class \code{\link{growthInput}}.
+#' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
+#' @param latitude Latitude (in degrees).
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
+#' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
+#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+#' 
+#' @details
+#' Detailed model description is available in the medfate book. 
+#' 
+#' Forest growth simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis (see details in \code{\link{spwb}}). 
+#' 
+#' @return
+#' Function \code{growth} returns a list of class 'growth'. Since lists are difficult to handle, we recommend using
+#' function \code{\link{extract}} to reshape simulation results (including their units) from those objects. 
+#' 
+#' List elements are as follows:
+#' \itemize{
+#'   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
+#'   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
+#'   \item{\code{"weather"}: A copy of the input weather data frame.}
+#'   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
+#'   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
+#'   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
+#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
+#'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange.), all in g C · m-2.}
+#'   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
+#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
+#'   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
+#'   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
+#'   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
+#'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
+#'   \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
+#'     \item{\code{"LabileCarbonBalance"}: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
+#'     \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
+#'     \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
+#'     \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
+#'     \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
+#'     \item{\code{"SugarTransport"}:  Average instantaneous rate of carbon transferred between leaves and stem compartments via floem (mol gluc·s-1).}
+#'   }
+#'   \item{\code{"PlantBiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · m-2).}
+#'     \item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · m-2).}
+#'     \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · m-2).}
+#'     \item{\code{"MortalityBiomassLoss"}: Biomass loss due to mortality (g dry · m-2).}    
+#'     \item{\code{"CohortBiomassBalance"}: Daily cohort biomass balance (including mortality) (g dry · m-2).}
+#'   }
+#'   \item{\code{"PlantStructure"}: A list of daily area and biomass values for compartments of plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"LeafBiomass"}: Daily amount of leaf structural biomass (in g dry) for an average individual of each plant cohort.}
+#'     \item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
+#'     \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
+#'     \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
+#'     \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
+#'     \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
+#'     \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}
+#'     \item{\code{"RootAreaLeafArea"}: The ratio of fine root area to (target) leaf area (in m2/m2).}
+#'     \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
+#'     \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
+#'   }
+#'   \item{\code{"GrowthMortality"}: A list of daily growth and mortality rates for plant cohorts, with elements:}
+#'   \itemize{
+#'     \item{\code{"LAgrowth"}: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.}
+#'     \item{\code{"SAgrowth"}: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.}
+#'     \item{\code{"FRAgrowth"}: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.}
+#'     \item{\code{"StarvationRate"}: Daily mortality rate from starvation (ind/d-1).}
+#'     \item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
+#'     \item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}
+#'   }
+#'   \item{\code{"DecompositionPools"}: A data frame with the mass of different decomposition carbon pools, all in g C · m-2.}
+#'   \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{growthInput}}, \code{\link{growth_day}}, \code{\link{plot.growth}}
+#' 
+#' @references
+#' De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, 
+#' Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate 
+#' Mediterranean forest function and dynamics at regional scales. 
+#' Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
+#' 
+#' @examples
+#' \donttest{
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforest)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#'   
+#' #Initialize control parameters
+#' control <- defaultControl("Granier")
+#'   
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
+#' 
+#' #Initialize model input
+#' x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function
+#' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+#'  
+#' #Switch to 'Sperry' transpiration mode
+#' control <- defaultControl("Sperry")
+#' 
+#' #Initialize model input
+#' x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function
+#' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+#' 
+#' #Switch to 'Sureau' transpiration mode
+#' control <- defaultControl("Sureau")
+#' 
+#' #Initialize model input
+#' x3 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function
+#' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
+#' }
+#'       
+growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
+    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
+}
+
 #' Mortality
 #' 
 #' A simple sigmoid function to determine a daily mortality likelihood according 
@@ -1414,156 +1564,6 @@ growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude,
 #' @name growth_day
 growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
-}
-
-.defineGrowthDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
-    .Call(`_medfate_defineGrowthDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
-}
-
-.fillGrowthDailyOutput <- function(l, x, sDay, iday) {
-    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, x, sDay, iday))
-}
-
-#' Forest growth
-#' 
-#' Function \code{growth} is a process-based model that performs energy, water and carbon balances; 
-#' and determines changes in water/carbon pools, functional variables (leaf area, sapwood area, root area) 
-#' and structural ones (tree diameter, tree height, shrub cover) for woody plant cohorts in a given forest stand 
-#' during a period specified in the input climatic data. 
-#' 
-#' @param x An object of class \code{\link{growthInput}}.
-#' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
-#' @param latitude Latitude (in degrees).
-#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
-#' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
-#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
-#' 
-#' @details
-#' Detailed model description is available in the medfate book. 
-#' 
-#' Forest growth simulations allow using different sub-models for bulk soil water flows and different sub-models of transpiration and photosynthesis (see details in \code{\link{spwb}}). 
-#' 
-#' @return
-#' Function \code{growth} returns a list of class 'growth'. Since lists are difficult to handle, we recommend using
-#' function \code{\link{extract}} to reshape simulation results (including their units) from those objects. 
-#' 
-#' List elements are as follows:
-#' \itemize{
-#'   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
-#'   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
-#'   \item{\code{"weather"}: A copy of the input weather data frame.}
-#'   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
-#'   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
-#'   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
-#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-#'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange.), all in g C · m-2.}
-#'   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
-#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-#'   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
-#'   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
-#'   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
-#'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
-#'   \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
-#'   \itemize{
-#'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
-#'     \item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
-#'     \item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
-#'     \item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
-#'     \item{\code{"LabileCarbonBalance"}: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
-#'     \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
-#'     \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
-#'     \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
-#'     \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
-#'     \item{\code{"SugarTransport"}:  Average instantaneous rate of carbon transferred between leaves and stem compartments via floem (mol gluc·s-1).}
-#'   }
-#'   \item{\code{"PlantBiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
-#'   \itemize{
-#'     \item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · m-2).}
-#'     \item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · m-2).}
-#'     \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · m-2).}
-#'     \item{\code{"MortalityBiomassLoss"}: Biomass loss due to mortality (g dry · m-2).}    
-#'     \item{\code{"CohortBiomassBalance"}: Daily cohort biomass balance (including mortality) (g dry · m-2).}
-#'   }
-#'   \item{\code{"PlantStructure"}: A list of daily area and biomass values for compartments of plant cohorts, with elements:}
-#'   \itemize{
-#'     \item{\code{"LeafBiomass"}: Daily amount of leaf structural biomass (in g dry) for an average individual of each plant cohort.}
-#'     \item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
-#'     \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
-#'     \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
-#'     \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
-#'     \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
-#'     \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}
-#'     \item{\code{"RootAreaLeafArea"}: The ratio of fine root area to (target) leaf area (in m2/m2).}
-#'     \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
-#'     \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
-#'   }
-#'   \item{\code{"GrowthMortality"}: A list of daily growth and mortality rates for plant cohorts, with elements:}
-#'   \itemize{
-#'     \item{\code{"LAgrowth"}: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.}
-#'     \item{\code{"SAgrowth"}: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.}
-#'     \item{\code{"FRAgrowth"}: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.}
-#'     \item{\code{"StarvationRate"}: Daily mortality rate from starvation (ind/d-1).}
-#'     \item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
-#'     \item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}
-#'   }
-#'   \item{\code{"DecompositionPools"}: A data frame with the mass of different decomposition carbon pools, all in g C · m-2.}
-#'   \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
-#' }
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' @seealso \code{\link{growthInput}}, \code{\link{growth_day}}, \code{\link{plot.growth}}
-#' 
-#' @references
-#' De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, 
-#' Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate 
-#' Mediterranean forest function and dynamics at regional scales. 
-#' Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
-#' 
-#' @examples
-#' \donttest{
-#' #Load example daily meteorological data
-#' data(examplemeteo)
-#' 
-#' #Load example plot plant data
-#' data(exampleforest)
-#' 
-#' #Default species parameterization
-#' data(SpParamsMED)
-#'   
-#' #Initialize control parameters
-#' control <- defaultControl("Granier")
-#'   
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil <- defaultSoilParams(4)
-#' 
-#' #Initialize model input
-#' x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function
-#' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-#'  
-#' #Switch to 'Sperry' transpiration mode
-#' control <- defaultControl("Sperry")
-#' 
-#' #Initialize model input
-#' x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function
-#' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
-#' 
-#' #Switch to 'Sureau' transpiration mode
-#' control <- defaultControl("Sureau")
-#' 
-#' #Initialize model input
-#' x3 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function
-#' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
-#' }
-#'       
-growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
-    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
 #' Hydraulic confuctance functions
@@ -2917,7 +2917,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'     }
 #'   }
 #'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
-#'   \item{\code{internalLitter}: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.}
+#'   \item{\code{internalLitter}: A data frame with the aboveground and belowground mass (g C/m2) of different litter components: leaves, twigs, small branches, large wood, coarse roots and fine roots.}
 #'   \item{\code{internalSOC}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 #'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
 #'   also distinguishing mortality due to starvation or dessication.}
