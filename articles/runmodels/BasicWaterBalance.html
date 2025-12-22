@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-12-10</h4>
+            <h4 data-toc-skip class="date">2025-12-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="d-none name"><code>BasicWaterBalance.Rmd</code></div>
@@ -118,11 +118,11 @@ number of layers, using function <code><a href="../../reference/defaultSoilParam
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">examplesoil</span></span></code></pre></div>
-<pre><code><span><span class="co">##   widths clay sand om nitrogen  bd rfc</span></span>
-<span><span class="co">## 1    300   25   25 NA       NA 1.5  25</span></span>
-<span><span class="co">## 2    700   25   25 NA       NA 1.5  45</span></span>
-<span><span class="co">## 3   1000   25   25 NA       NA 1.5  75</span></span>
-<span><span class="co">## 4   2000   25   25 NA       NA 1.5  95</span></span></code></pre>
+<pre><code><span><span class="co">##   widths clay sand om nitrogen ph  bd rfc</span></span>
+<span><span class="co">## 1    300   25   25 NA       NA NA 1.5  25</span></span>
+<span><span class="co">## 2    700   25   25 NA       NA NA 1.5  45</span></span>
+<span><span class="co">## 3   1000   25   25 NA       NA NA 1.5  75</span></span>
+<span><span class="co">## 4   2000   25   25 NA       NA NA 1.5  95</span></span></code></pre>
 <p>As explained in the package overview, models included in
 <code>medfate</code> were primarily designed to be ran on <strong>forest
 inventory plots</strong>. Here we use the example object provided with
@@ -241,7 +241,7 @@ balance for that day only:</p>
 <span><span class="va">meteovec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">meteovec</span>,  </span>
 <span>             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.4]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.5]</span></span></code></pre>
 <p>Function <code><a href="../../reference/spwb_day.html">spwb_day()</a></code> is most useful when working with the
 complex transpiration model. This is why so many meteorological
 variables are required. The output of <code><a href="../../reference/spwb_day.html">spwb_day()</a></code> is a list

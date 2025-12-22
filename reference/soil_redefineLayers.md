@@ -52,30 +52,30 @@ Miquel De Cáceres Ainsa, EMF-CREAF
 # Define initial soil with 5 layers
 spar <- defaultSoilParams(5)
 spar
-#>   widths clay sand om nitrogen  bd rfc
-#> 1    300   25   25 NA       NA 1.5  25
-#> 2    700   25   25 NA       NA 1.5  45
-#> 3   1000   25   25 NA       NA 1.5  75
-#> 4   2000   25   25 NA       NA 1.5  95
-#> 5   4000   25   25 NA       NA 1.5  98
+#>   widths clay sand om nitrogen ph  bd rfc
+#> 1    300   25   25 NA       NA NA 1.5  25
+#> 2    700   25   25 NA       NA NA 1.5  45
+#> 3   1000   25   25 NA       NA NA 1.5  75
+#> 4   2000   25   25 NA       NA NA 1.5  95
+#> 5   4000   25   25 NA       NA NA 1.5  98
 
 # Redefine to four layers
 soil_redefineLayers(spar)
-#>   widths clay sand om nitrogen  bd rfc
-#> 1    300   25   25 NA       NA 1.5  25
-#> 2    700   25   25 NA       NA 1.5  45
-#> 3   1000   25   25 NA       NA 1.5  75
-#> 4   2000   25   25 NA       NA 1.5  95
+#>   widths clay sand om nitrogen ph  bd rfc
+#> 1    300   25   25 NA       NA NA 1.5  25
+#> 2    700   25   25 NA       NA NA 1.5  45
+#> 3   1000   25   25 NA       NA NA 1.5  75
+#> 4   2000   25   25 NA       NA NA 1.5  95
 
 # Same but after soil parameter initialization
 examplesoil <- soil(spar)
 examplesoil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
-#> 5   4000   25   25 Silt loam NA       NA 1.5  98 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
+#> 5   4000   25   25 Silt loam NA       NA NA 1.5  98 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA
@@ -84,11 +84,11 @@ examplesoil
 #> 5 1.303861        0.041     0.423715 1   NA
 
 soil_redefineLayers(examplesoil)
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA

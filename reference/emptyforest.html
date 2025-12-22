@@ -60,7 +60,9 @@
 <span>  nherb <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  nseedling <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  nseed <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  addcolumns <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  nlitter <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  addcolumns <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  SOC <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -80,6 +82,10 @@
 <dd><p>Number of species in the seed bank.</p></dd>
 
 
+<dt id="arg-nlitter">nlitter<a class="anchor" aria-label="anchor" href="#arg-nlitter"></a></dt>
+<dd><p>Number of items in the litter compartment.</p></dd>
+
+
 <dt id="arg-addcolumns">addcolumns<a class="anchor" aria-label="anchor" href="#arg-addcolumns"></a></dt>
 <dd><p>A character vector with additional columns. Currently allowed are (see <code><a href="forest.html">forest</a></code>):</p><ul><li><p><code>Z100</code>: A numeric vector with maximum rooting depth in mm.</p></li>
 <li><p><code>LAI</code>: Leaf area index (m2/m2).</p></li>
@@ -89,6 +95,10 @@
 <li><p><code>Age</code>: A numeric vector indicating age of cohorts in years.</p></li>
 <li><p><code>ObsID</code> A character vector to label specific cohorts in simulations of forest dynamics.</p></li>
 </ul></dd>
+
+
+<dt id="arg-soc">SOC<a class="anchor" aria-label="anchor" href="#arg-soc"></a></dt>
+<dd><p>A boolean flag to initialize SOC data (see <code><a href="forest.html">forest</a></code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

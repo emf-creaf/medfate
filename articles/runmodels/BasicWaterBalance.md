@@ -35,11 +35,11 @@ examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
 
-    ##   widths clay sand om nitrogen  bd rfc
-    ## 1    300   25   25 NA       NA 1.5  25
-    ## 2    700   25   25 NA       NA 1.5  45
-    ## 3   1000   25   25 NA       NA 1.5  75
-    ## 4   2000   25   25 NA       NA 1.5  95
+    ##   widths clay sand om nitrogen ph  bd rfc
+    ## 1    300   25   25 NA       NA NA 1.5  25
+    ## 2    700   25   25 NA       NA NA 1.5  45
+    ## 3   1000   25   25 NA       NA NA 1.5  75
+    ## 4   2000   25   25 NA       NA NA 1.5  95
 
 As explained in the package overview, models included in `medfate` were
 primarily designed to be ran on **forest inventory plots**. Here we use
@@ -174,7 +174,7 @@ sd1<-spwb_day(x, date, meteovec,
              latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
 ```
 
-    ## Package 'meteoland' [ver. 2.2.4]
+    ## Package 'meteoland' [ver. 2.2.5]
 
 Function
 [`spwb_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)

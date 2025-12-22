@@ -13,7 +13,9 @@ emptyforest(
   nherb = 0,
   nseedling = 0,
   nseed = 0,
-  addcolumns = NULL
+  nlitter = 0,
+  addcolumns = NULL,
+  SOC = FALSE
 )
 ```
 
@@ -30,6 +32,10 @@ emptyforest(
 - nseed:
 
   Number of species in the seed bank.
+
+- nlitter:
+
+  Number of items in the litter compartment.
 
 - addcolumns:
 
@@ -51,6 +57,11 @@ emptyforest(
 
   - `ObsID` A character vector to label specific cohorts in simulations
     of forest dynamics.
+
+- SOC:
+
+  A boolean flag to initialize SOC data (see
+  [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md)).
 
 ## Value
 

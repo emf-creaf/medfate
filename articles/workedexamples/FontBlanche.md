@@ -94,11 +94,11 @@ water capacity:
 print(fb_soil)
 ```
 
-    ##   widths sand clay      usda om nitrogen   bd rfc   macro     Ksat VG_alpha
-    ## 1    300   26   39 Clay loam  6       NA 1.45  50 0.07387 7232.425 44.14586
-    ## 2    700   26   39 Clay loam  3       NA 1.45  65 0.07387 3481.917 61.34088
-    ## 3   1000   26   39 Clay loam  1       NA 1.45  90 0.07387 1879.187 76.38182
-    ## 4   2500   26   39 Clay loam  1       NA 1.45  95 0.07387 1879.187 76.38182
+    ##   widths sand clay      usda om nitrogen ph   bd rfc   macro     Ksat VG_alpha
+    ## 1    300   26   39 Clay loam  6       NA NA 1.45  50 0.07387 7232.425 44.14586
+    ## 2    700   26   39 Clay loam  3       NA NA 1.45  65 0.07387 3481.917 61.34088
+    ## 3   1000   26   39 Clay loam  1       NA NA 1.45  90 0.07387 1879.187 76.38182
+    ## 4   2500   26   39 Clay loam  1       NA NA 1.45  95 0.07387 1879.187 76.38182
     ##       VG_n VG_theta_res VG_theta_sat W Temp
     ## 1 1.254346        0.041    0.4388377 1   NA
     ## 2 1.273896        0.041    0.4388377 1   NA
@@ -534,7 +534,7 @@ Now we are ready to call function
 fb_SWB <- spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
 ```
 
-    ## Package 'meteoland' [ver. 2.2.4]
+    ## Package 'meteoland' [ver. 2.2.5]
 
     ## Initial plant water content (mm): 31.8864
     ## Initial soil water content (mm): 213.886

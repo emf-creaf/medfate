@@ -158,22 +158,22 @@ x1s <- modifyInputParams(x1, c("rfc@1" = 5, "sand@1" = 10))
 
 # Inspect original and modified soils 
 x1$soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA
 #> 3 1.303861        0.041     0.423715 1   NA
 #> 4 1.303861        0.041     0.423715 1   NA
 x1s$soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   10   25 Silt loam NA       NA 1.5   5 0.0167 7046.523 97.10141
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   10   25 Silt loam NA       NA NA 1.5   5 0.0167 7046.523 97.10141
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.240345        0.041     0.426520 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA

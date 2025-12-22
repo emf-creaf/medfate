@@ -67,8 +67,8 @@ seedling/sapling bank and seed bank:
   information with the following columns:
 
   - `Species`: String with species (taxon) name or a non-negative
-    integer for tree species identity (i.e., 0,1,2,...) matching
-    SpParams.
+    integer for seedling/sapling species identity (i.e., 0,1,2,...)
+    matching SpParams.
 
   - `Percent`: Amount of seedling in relation to full seedling bank (in
     %).
@@ -84,10 +84,46 @@ seedling/sapling bank and seed bank:
   with the following columns:
 
   - `Species`: String with species (taxon) name or a non-negative
-    integer for tree species identity (i.e., 0,1,2,...) matching
+    integer for seed species identity (i.e., 0,1,2,...) matching
     SpParams.
 
   - `Percent`: Amount of seeds in relation to full seed bank (in %).
+
+- `litterData`: An optional data frame containing litter information
+  with the following columns:
+
+  - `Species`: String with species (taxon) name.
+
+  - `Leaves`: Mass of leaf litter (in g C/m2)
+
+  - `SmallBranches`: Mass of small dead branches (in g C/m2)
+
+  - `LargeWood`: Mass of large dead wood (in g C/m2)
+
+  - `FineRoots`: Mass of fine root litter (in g C/m2)
+
+  - `CoarseRoots`: Mass of dead coarse roots (in g C/m2)
+
+- `SOCData`: An optional named numeric vector containing CENTURY soil
+  organic carbon pools (normally from previous simulations):
+
+  - `SurfaceMetabolic`: Metabolic carbon in the surface (in g C/m2).
+
+  - `SoilMetabolic`: Metabolic carbon in the soil (in g C/m2)
+
+  - `SurfaceActive`: Active decomposition carbon pool in the surface (in
+    g C/m2)
+
+  - `SoilActive`: Active decomposition carbon pool in the soil (in g
+    C/m2)
+
+  - `SurfaceSlow`: Slow decomposition carbon pool in the surface (in g
+    C/m2)
+
+  - `SoilSlow`: Slow decomposition carbon pool in the soil (in g C/m2)
+
+  - `SoilPassive`: Passive decomposition carbon pool in the soil (in g
+    C/m2)
 
 ## Source
 

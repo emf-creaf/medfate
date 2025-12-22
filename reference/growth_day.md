@@ -73,6 +73,11 @@ same elements as
 [`spwb_day`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
 and the following:
 
+- `"CarbonBalance"`: A vector of different stand-level carbon balance
+  components (gross primary production, maintenance respiration,
+  synthesis respiration, net primary production, heterotrophic
+  respiration and net ecosystem exchange), all in g C · m-2.
+
 - `"LabileCarbonBalance"`: A data frame with labile carbon balance
   results for plant cohorts, with elements:
 

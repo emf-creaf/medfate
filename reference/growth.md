@@ -89,7 +89,8 @@ List elements are as follows:
 
 - `"CarbonBalance"`: A data frame where different stand-level carbon
   balance components (gross primary production, maintenance respiration,
-  synthesis respiration and net primary production), all in g C · m-2.
+  synthesis respiration, net primary production, heterotrophic
+  respiration and net ecosystem exchange.), all in g C · m-2.
 
 - `"BiomassBalance"`: A data frame with the daily values of stand
   biomass balance components (in g dry · m-2.
@@ -214,6 +215,9 @@ List elements are as follows:
 
   - `"MortalityRate"`: Daily mortality rate (any cause) (ind/d-1).
 
+- `"DecompositionPools"`: A data frame with the mass of different
+  decomposition carbon pools, all in g C · m-2.
+
 - `"subdaily"`: A list of objects of class
   [`growth_day`](https://emf-creaf.github.io/medfate/reference/growth_day.md),
   one per day simulated (only if required in `control` parameters, see
@@ -279,21 +283,21 @@ G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  Year 2001:............
 #> 
-#> Final plant biomass (g/m2): 5210.49
-#> Change in plant biomass (g/m2): 168.622
-#> Plant biomass balance result (g/m2): 168.622
+#> Final plant biomass (g/m2): 5207.91
+#> Change in plant biomass (g/m2): 166.035
+#> Plant biomass balance result (g/m2): 166.035
 #> Plant biomass balance components:
-#>   Structural balance (g/m2) 87 Labile balance (g/m2) 89
-#>   Plant individual balance (g/m2) 176 Mortality loss (g/m2) 8
-#> Final plant water content (mm): 4.706
-#> Final soil water content (mm): 275.66
+#>   Structural balance (g/m2) 85 Labile balance (g/m2) 89
+#>   Plant individual balance (g/m2) 174 Mortality loss (g/m2) 8
+#> Final plant water content (mm): 4.70599
+#> Final soil water content (mm): 275.653
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): 0.00746396
-#> Plant water balance result (mm): -0.00136322
-#> Change in soil water content (mm): -15.2151
-#> Soil water balance result (mm): -15.2151
+#> Change in plant water content (mm): 0.00745671
+#> Plant water balance result (mm): -0.00137021
+#> Change in soil water content (mm): -15.222
+#> Soil water balance result (mm): -15.222
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 0
+#> Snowpack water balance result (mm): 7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
@@ -328,7 +332,7 @@ G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Final soil water content (mm): 274.718
 #> Final snowpack content (mm): 0
 #> Change in plant water content (mm): 0.0118714
-#> Plant water balance result (mm): 4.21353e-16
+#> Plant water balance result (mm): 5.30253e-17
 #> Change in soil water content (mm): -16.1567
 #> Soil water balance result (mm): -16.1567
 #> Change in snowpack water content (mm): 0

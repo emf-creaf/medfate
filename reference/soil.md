@@ -53,6 +53,8 @@ columns:
 - `nitrogen`: Sum of total nitrogen (ammonia, organic and reduced
   nitrogen) for each layer (in g/kg).
 
+- `ph`: pH in water of each layer (0-14).
+
 - `rfc`: Percentage of rock fragment content for each layer.
 
 - `macro`: Macroporosity for each layer (estimated using Stolf et al.
@@ -69,7 +71,7 @@ columns:
 - `W`: State variable with relative water content of each layer (in as
   proportion relative to FC).
 
-- `Temp`: State variable with temperature (in ºC) of each layer.
+- `Temp`: State variable with temperature (in Celsius) of each layer.
 
 ## Details
 
@@ -118,13 +120,13 @@ Miquel De Cáceres Ainsa, CREAF
 df_soil <- defaultSoilParams()
 
 # Initializes soil
-s = soil(df_soil)
+s <- soil(df_soil)
 s
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA
@@ -136,29 +138,33 @@ summary(s, model="SX")
 #> Soil depth (mm): 4000 
 #> 
 #> Layer  1  [ 0  to  300 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 25 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 25 macroporosity (%): 5 
 #>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
 #>     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  2  [ 300  to  1000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 45 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 45 macroporosity (%): 5 
 #>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
 #>     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  3  [ 1000  to  2000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 75 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 75 macroporosity (%): 5 
 #>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
 #>     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  4  [ 2000  to  4000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 95 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 95 macroporosity (%): 5 
 #>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
 #>     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 
 #>     Temperature (Celsius): NA 
@@ -175,29 +181,33 @@ summary(s, model="VG")
 #> Soil depth (mm): 4000 
 #> 
 #> Layer  1  [ 0  to  300 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 25 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 25 macroporosity (%): 5 
 #>     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
 #>     Vol. WP (mm): 29 Vol. FC (mm): 68 Vol. SAT (mm): 95 Vol. current (mm): 68 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  2  [ 300  to  1000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 45 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 45 macroporosity (%): 5 
 #>     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
 #>     Vol. WP (mm): 49 Vol. FC (mm): 117 Vol. SAT (mm): 163 Vol. current (mm): 117 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  3  [ 1000  to  2000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 75 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 75 macroporosity (%): 5 
 #>     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
 #>     Vol. WP (mm): 32 Vol. FC (mm): 76 Vol. SAT (mm): 106 Vol. current (mm): 76 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  4  [ 2000  to  4000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 95 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 95 macroporosity (%): 5 
 #>     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
 #>     Vol. WP (mm): 13 Vol. FC (mm): 30 Vol. SAT (mm): 42 Vol. current (mm): 30 
 #>     Temperature (Celsius): NA 
@@ -214,13 +224,13 @@ df_soil$VG_theta_sat <- 0.400
 df_soil$VG_theta_res <- 0.040 
 
 # Reinitialize soil (should override estimations)
-s2 = soil(df_soil)
+s2 <- soil(df_soil)
 s2
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861         0.04          0.4 1   NA
 #> 2 1.303861         0.04          0.4 1   NA
@@ -230,29 +240,33 @@ summary(s2, model="VG")
 #> Soil depth (mm): 4000 
 #> 
 #> Layer  1  [ 0  to  300 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 25 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 25 macroporosity (%): 5 
 #>     Theta WP (%): 12 Theta FC (%): 29 Theta SAT (%): 40 Theta current (%) 29 
 #>     Vol. WP (mm): 27 Vol. FC (mm): 64 Vol. SAT (mm): 90 Vol. current (mm): 64 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  2  [ 300  to  1000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 45 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 45 macroporosity (%): 5 
 #>     Theta WP (%): 12 Theta FC (%): 29 Theta SAT (%): 40 Theta current (%) 29 
 #>     Vol. WP (mm): 47 Vol. FC (mm): 110 Vol. SAT (mm): 154 Vol. current (mm): 110 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  3  [ 1000  to  2000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 75 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 75 macroporosity (%): 5 
 #>     Theta WP (%): 12 Theta FC (%): 29 Theta SAT (%): 40 Theta current (%) 29 
 #>     Vol. WP (mm): 30 Vol. FC (mm): 72 Vol. SAT (mm): 100 Vol. current (mm): 72 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  4  [ 2000  to  4000 mm ] 
-#>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-#>     Rock fragment content (%): 95 Macroporosity (%): 5 
+#>     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+#>     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 95 macroporosity (%): 5 
 #>     Theta WP (%): 12 Theta FC (%): 29 Theta SAT (%): 40 Theta current (%) 29 
 #>     Vol. WP (mm): 12 Vol. FC (mm): 29 Vol. SAT (mm): 40 Vol. current (mm): 29 
 #>     Temperature (Celsius): NA 

@@ -36,11 +36,11 @@ examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
 
-    ##   widths clay sand om nitrogen  bd rfc
-    ## 1    300   25   25 NA       NA 1.5  25
-    ## 2    700   25   25 NA       NA 1.5  45
-    ## 3   1000   25   25 NA       NA 1.5  75
-    ## 4   2000   25   25 NA       NA 1.5  95
+    ##   widths clay sand om nitrogen ph  bd rfc
+    ## 1    300   25   25 NA       NA NA 1.5  25
+    ## 2    700   25   25 NA       NA NA 1.5  45
+    ## 3   1000   25   25 NA       NA NA 1.5  75
+    ## 4   2000   25   25 NA       NA NA 1.5  95
 
 As explained in the package overview, models included in `medfate` were
 primarily designed to be ran on **forest inventory plots**. Here we use
@@ -149,11 +149,11 @@ Element `soil` contains soil layer parameters and state variables
 x$soil
 ```
 
-    ##   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-    ## 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-    ## 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-    ## 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-    ## 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+    ##   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+    ## 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+    ## 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+    ## 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+    ## 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
     ##       VG_n VG_theta_res VG_theta_sat W Temp
     ## 1 1.303861        0.041     0.423715 1   NA
     ## 2 1.303861        0.041     0.423715 1   NA
@@ -453,7 +453,7 @@ transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
                               latitude = 41.82592, elevation = 100, type="E")
 ```
 
-    ## Package 'meteoland' [ver. 2.2.4]
+    ## Package 'meteoland' [ver. 2.2.5]
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-1.png)
 

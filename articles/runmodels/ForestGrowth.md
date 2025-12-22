@@ -39,11 +39,11 @@ examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
 
-    ##   widths clay sand om nitrogen  bd rfc
-    ## 1    300   25   25 NA       NA 1.5  25
-    ## 2    700   25   25 NA       NA 1.5  45
-    ## 3   1000   25   25 NA       NA 1.5  75
-    ## 4   2000   25   25 NA       NA 1.5  95
+    ##   widths clay sand om nitrogen ph  bd rfc
+    ## 1    300   25   25 NA       NA NA 1.5  25
+    ## 2    700   25   25 NA       NA NA 1.5  45
+    ## 3   1000   25   25 NA       NA NA 1.5  75
+    ## 4   2000   25   25 NA       NA NA 1.5  95
 
 As explained in the package overview, models included in `medfate` were
 primarily designed to be ran on **forest inventory plots**. Here we use
@@ -149,10 +149,12 @@ names(x)
     ## [13] "paramsInterception"          "paramsTranspiration"        
     ## [15] "paramsWaterStorage"          "paramsGrowth"               
     ## [17] "paramsMortalityRegeneration" "paramsAllometries"          
-    ## [19] "internalPhenology"           "internalWater"              
-    ## [21] "internalLAIDistribution"     "internalCarbon"             
-    ## [23] "internalAllocation"          "internalMortality"          
-    ## [25] "internalFCCS"                "version"
+    ## [19] "paramsLitterDecomposition"   "internalPhenology"          
+    ## [21] "internalWater"               "internalLAIDistribution"    
+    ## [23] "internalCarbon"              "internalAllocation"         
+    ## [25] "internalMortality"           "internalStructuralLitter"   
+    ## [27] "internalSOC"                 "internalFCCS"               
+    ## [29] "version"
 
 As with `spwbInput` objects, information about the cohort species is
 found in element `cohorts` (i.e. code, species and name):
@@ -277,7 +279,7 @@ which has the same parameter names as
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Package 'meteoland' [ver. 2.2.4]
+    ## Package 'meteoland' [ver. 2.2.5]
 
     ## Initial plant cohort biomass (g/m2): 5041.87
     ## Initial plant water content (mm): 4.69853
@@ -287,21 +289,21 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant biomass (g/m2): 5210.49
-    ## Change in plant biomass (g/m2): 168.622
-    ## Plant biomass balance result (g/m2): 168.622
+    ## Final plant biomass (g/m2): 5207.91
+    ## Change in plant biomass (g/m2): 166.035
+    ## Plant biomass balance result (g/m2): 166.035
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 87 Labile balance (g/m2) 89
-    ##   Plant individual balance (g/m2) 176 Mortality loss (g/m2) 8
-    ## Final plant water content (mm): 4.706
-    ## Final soil water content (mm): 275.66
+    ##   Structural balance (g/m2) 85 Labile balance (g/m2) 89
+    ##   Plant individual balance (g/m2) 174 Mortality loss (g/m2) 8
+    ## Final plant water content (mm): 4.70599
+    ## Final soil water content (mm): 275.653
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00746396
-    ## Plant water balance result (mm): -0.00136322
-    ## Change in soil water content (mm): -15.2151
-    ## Soil water balance result (mm): -15.2151
+    ## Change in plant water content (mm): 0.00745671
+    ## Plant water balance result (mm): -0.00137021
+    ## Change in soil water content (mm): -15.222
+    ## Soil water balance result (mm): -15.222
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): 7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
@@ -338,7 +340,7 @@ names(G1)
     ##  [7] "CarbonBalance"       "BiomassBalance"      "Soil"               
     ## [10] "Snow"                "Stand"               "Plants"             
     ## [13] "LabileCarbonBalance" "PlantBiomassBalance" "PlantStructure"     
-    ## [16] "GrowthMortality"
+    ## [16] "GrowthMortality"     "DecompositionPools"
 
 Some elements are common with the output of
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md). In
@@ -370,7 +372,7 @@ extract(G1, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 365 × 38
+    ## # A tibble: 365 × 49
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
     ##  1 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 
@@ -384,7 +386,7 @@ extract(G1, "forest", addunits = TRUE) |>
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
     ## 10 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 
     ## # ℹ 355 more rows
-    ## # ℹ 30 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## # ℹ 41 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
     ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
     ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
@@ -518,9 +520,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1213048 -17.8564462   0.1213048  17.8564462   0.9926801 
+    ##  12.0000000  -0.1213229 -17.8591108   0.1213229  17.8591108   0.9926776 
     ##         NSE     NSE.abs 
-    ##   0.9159164   0.7698905
+    ##   0.9158917   0.7698562
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

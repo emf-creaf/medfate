@@ -361,11 +361,11 @@ spar <- defaultSoilParams(4)
 print(spar)
 ```
 
-    ##   widths clay sand om nitrogen  bd rfc
-    ## 1    300   25   25 NA       NA 1.5  25
-    ## 2    700   25   25 NA       NA 1.5  45
-    ## 3   1000   25   25 NA       NA 1.5  75
-    ## 4   2000   25   25 NA       NA 1.5  95
+    ##   widths clay sand om nitrogen ph  bd rfc
+    ## 1    300   25   25 NA       NA NA 1.5  25
+    ## 2    700   25   25 NA       NA NA 1.5  45
+    ## 3   1000   25   25 NA       NA NA 1.5  75
+    ## 4   2000   25   25 NA       NA NA 1.5  95
 
 where `widths` are soil layer widths in mm; `clay` and `sand` are the
 percentage of clay and sand, in percent of dry weight, `om` stands for
@@ -397,11 +397,11 @@ simulations:
 examplesoil
 ```
 
-    ##   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-    ## 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-    ## 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-    ## 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-    ## 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+    ##   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+    ## 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+    ## 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+    ## 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+    ## 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
     ##       VG_n VG_theta_res VG_theta_sat W Temp
     ## 1 1.303861        0.041     0.423715 1   NA
     ## 2 1.303861        0.041     0.423715 1   NA
@@ -423,29 +423,33 @@ summary(examplesoil, model = "SX")
     ## Soil depth (mm): 4000 
     ## 
     ## Layer  1  [ 0  to  300 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 25 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 25 macroporosity (%): 5 
     ##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
     ##     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 
     ##     Temperature (Celsius): NA 
     ## 
     ## Layer  2  [ 300  to  1000 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 45 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 45 macroporosity (%): 5 
     ##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
     ##     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 
     ##     Temperature (Celsius): NA 
     ## 
     ## Layer  3  [ 1000  to  2000 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 75 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 75 macroporosity (%): 5 
     ##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
     ##     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 
     ##     Temperature (Celsius): NA 
     ## 
     ## Layer  4  [ 2000  to  4000 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 95 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 95 macroporosity (%): 5 
     ##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 
     ##     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 
     ##     Temperature (Celsius): NA 
@@ -504,29 +508,33 @@ summary(examplesoil, model="VG")
     ## Soil depth (mm): 4000 
     ## 
     ## Layer  1  [ 0  to  300 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 25 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 25 macroporosity (%): 5 
     ##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
     ##     Vol. WP (mm): 29 Vol. FC (mm): 68 Vol. SAT (mm): 95 Vol. current (mm): 68 
     ##     Temperature (Celsius): NA 
     ## 
     ## Layer  2  [ 300  to  1000 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 45 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 45 macroporosity (%): 5 
     ##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
     ##     Vol. WP (mm): 49 Vol. FC (mm): 117 Vol. SAT (mm): 163 Vol. current (mm): 117 
     ##     Temperature (Celsius): NA 
     ## 
     ## Layer  3  [ 1000  to  2000 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 75 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 75 macroporosity (%): 5 
     ##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
     ##     Vol. WP (mm): 32 Vol. FC (mm): 76 Vol. SAT (mm): 106 Vol. current (mm): 76 
     ##     Temperature (Celsius): NA 
     ## 
     ## Layer  4  [ 2000  to  4000 mm ] 
-    ##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]
-    ##     Rock fragment content (%): 95 Macroporosity (%): 5 
+    ##     clay (%): 25 silt (%): 50 sand (%): 25  usda: Silt loam 
+    ##     organic matter (%): NA nitrogen (g/kg): NA ph (0-14): NA 
+    ##     rock fragment content (%): 95 macroporosity (%): 5 
     ##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 
     ##     Vol. WP (mm): 13 Vol. FC (mm): 30 Vol. SAT (mm): 42 Vol. current (mm): 30 
     ##     Temperature (Celsius): NA 
@@ -620,57 +628,59 @@ names(control)
     ##   [7] "soilResults"                        "soilPoolResults"                   
     ##   [9] "snowResults"                        "plantResults"                      
     ##  [11] "labileCarbonBalanceResults"         "plantStructureResults"             
-    ##  [13] "growthMortalityResults"             "leafResults"                       
-    ##  [15] "temperatureResults"                 "fireHazardResults"                 
-    ##  [17] "fireHazardStandardWind"             "fireHazardStandardDFMC"            
-    ##  [19] "transpirationMode"                  "soilDomains"                       
-    ##  [21] "rhizosphereOverlap"                 "truncateRootDistribution"          
-    ##  [23] "fullRhizosphereOverlapConductivity" "soilFunctions"                     
-    ##  [25] "VG_PTF"                             "ndailysteps"                       
-    ##  [27] "max_nsubsteps_soil"                 "defaultWindSpeed"                  
-    ##  [29] "defaultCO2"                         "defaultRainfallIntensityPerMonth"  
-    ##  [31] "leafPhenology"                      "bareSoilEvaporation"               
-    ##  [33] "unlimitedSoilWater"                 "interceptionMode"                  
-    ##  [35] "infiltrationMode"                   "infiltrationCorrection"            
-    ##  [37] "unfoldingDD"                        "verticalLayerSize"                 
-    ##  [39] "windMeasurementHeight"              "segmentedXylemVulnerability"       
-    ##  [41] "stemCavitationRecovery"             "leafCavitationRecovery"            
-    ##  [43] "lfmcComponent"                      "hydraulicRedistributionFraction"   
-    ##  [45] "nsubsteps_canopy"                   "taper"                             
-    ##  [47] "multiLayerBalance"                  "sapFluidityVariation"              
-    ##  [49] "TPhase_gmin"                        "Q10_1_gmin"                        
-    ##  [51] "Q10_2_gmin"                         "rootRadialConductance"             
-    ##  [53] "averageFracRhizosphereResistance"   "thermalCapacityLAI"                
-    ##  [55] "boundaryLayerSize"                  "cavitationRecoveryMaximumRate"     
-    ##  [57] "sunlitShade"                        "numericParams"                     
-    ##  [59] "leafCavitationEffects"              "stemCavitationEffects"             
-    ##  [61] "stomatalSubmodel"                   "plantCapacitance"                  
-    ##  [63] "cavitationFlux"                     "leafCuticularTranspiration"        
-    ##  [65] "stemCuticularTranspiration"         "C_SApoInit"                        
-    ##  [67] "C_LApoInit"                         "k_SSym"                            
-    ##  [69] "fractionLeafSymplasm"               "gs_NightFrac"                      
-    ##  [71] "JarvisPAR"                          "fTRBToLeaf"                        
-    ##  [73] "subdailyCarbonBalance"              "allowDessication"                  
-    ##  [75] "allowStarvation"                    "sinkLimitation"                    
-    ##  [77] "shrubDynamics"                      "herbDynamics"                      
-    ##  [79] "allocationStrategy"                 "phloemConductanceFactor"           
-    ##  [81] "nonSugarConcentration"              "equilibriumOsmoticConcentration"   
-    ##  [83] "minimumRelativeStarchForGrowth"     "constructionCosts"                 
-    ##  [85] "senescenceRates"                    "maximumRelativeGrowthRates"        
-    ##  [87] "mortalityMode"                      "mortalityBaselineRate"             
-    ##  [89] "mortalityRelativeSugarThreshold"    "mortalityRWCThreshold"             
-    ##  [91] "recrTreeDBH"                        "recrTreeDensity"                   
-    ##  [93] "ingrowthTreeDBH"                    "ingrowthTreeDensity"               
-    ##  [95] "allowSeedBankDynamics"              "allowRecruitment"                  
-    ##  [97] "allowResprouting"                   "recruitmentMode"                   
-    ##  [99] "removeEmptyCohorts"                 "minimumTreeCohortDensity"          
-    ## [101] "minimumShrubCohortCover"            "dynamicallyMergeCohorts"           
-    ## [103] "keepCohortsWithObsID"               "seedRain"                          
-    ## [105] "seedProductionTreeHeight"           "seedProductionShrubHeight"         
-    ## [107] "probRecr"                           "minTempRecr"                       
-    ## [109] "minMoistureRecr"                    "minFPARRecr"                       
-    ## [111] "recrAge"                            "recrTreeHeight"                    
-    ## [113] "recrShrubCover"                     "recrShrubHeight"
+    ##  [13] "growthMortalityResults"             "decompositionPoolResults"          
+    ##  [15] "leafResults"                        "temperatureResults"                
+    ##  [17] "fireHazardResults"                  "fireHazardStandardWind"            
+    ##  [19] "fireHazardStandardDFMC"             "transpirationMode"                 
+    ##  [21] "soilDomains"                        "rhizosphereOverlap"                
+    ##  [23] "truncateRootDistribution"           "fullRhizosphereOverlapConductivity"
+    ##  [25] "soilFunctions"                      "VG_PTF"                            
+    ##  [27] "ndailysteps"                        "max_nsubsteps_soil"                
+    ##  [29] "defaultWindSpeed"                   "defaultCO2"                        
+    ##  [31] "defaultRainfallIntensityPerMonth"   "leafPhenology"                     
+    ##  [33] "bareSoilEvaporation"                "unlimitedSoilWater"                
+    ##  [35] "interceptionMode"                   "infiltrationMode"                  
+    ##  [37] "infiltrationCorrection"             "unfoldingDD"                       
+    ##  [39] "verticalLayerSize"                  "windMeasurementHeight"             
+    ##  [41] "segmentedXylemVulnerability"        "stemCavitationRecovery"            
+    ##  [43] "leafCavitationRecovery"             "lfmcComponent"                     
+    ##  [45] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  
+    ##  [47] "taper"                              "multiLayerBalance"                 
+    ##  [49] "sapFluidityVariation"               "TPhase_gmin"                       
+    ##  [51] "Q10_1_gmin"                         "Q10_2_gmin"                        
+    ##  [53] "rootRadialConductance"              "averageFracRhizosphereResistance"  
+    ##  [55] "thermalCapacityLAI"                 "boundaryLayerSize"                 
+    ##  [57] "cavitationRecoveryMaximumRate"      "sunlitShade"                       
+    ##  [59] "numericParams"                      "leafCavitationEffects"             
+    ##  [61] "stemCavitationEffects"              "stomatalSubmodel"                  
+    ##  [63] "plantCapacitance"                   "cavitationFlux"                    
+    ##  [65] "leafCuticularTranspiration"         "stemCuticularTranspiration"        
+    ##  [67] "C_SApoInit"                         "C_LApoInit"                        
+    ##  [69] "k_SSym"                             "fractionLeafSymplasm"              
+    ##  [71] "gs_NightFrac"                       "JarvisPAR"                         
+    ##  [73] "fTRBToLeaf"                         "subdailyCarbonBalance"             
+    ##  [75] "allowDessication"                   "allowStarvation"                   
+    ##  [77] "sinkLimitation"                     "shrubDynamics"                     
+    ##  [79] "herbDynamics"                       "allocationStrategy"                
+    ##  [81] "phloemConductanceFactor"            "nonSugarConcentration"             
+    ##  [83] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    
+    ##  [85] "constructionCosts"                  "senescenceRates"                   
+    ##  [87] "maximumRelativeGrowthRates"         "mortalityMode"                     
+    ##  [89] "mortalityBaselineRate"              "mortalityRelativeSugarThreshold"   
+    ##  [91] "mortalityRWCThreshold"              "recrTreeDBH"                       
+    ##  [93] "recrTreeDensity"                    "ingrowthTreeDBH"                   
+    ##  [95] "ingrowthTreeDensity"                "decompositionAnnualBaseRates"      
+    ##  [97] "decompositionAnnualTurnoverRate"    "allowSeedBankDynamics"             
+    ##  [99] "allowRecruitment"                   "allowResprouting"                  
+    ## [101] "recruitmentMode"                    "removeEmptyCohorts"                
+    ## [103] "minimumTreeCohortDensity"           "minimumShrubCohortCover"           
+    ## [105] "dynamicallyMergeCohorts"            "keepCohortsWithObsID"              
+    ## [107] "seedRain"                           "seedProductionTreeHeight"          
+    ## [109] "seedProductionShrubHeight"          "probRecr"                          
+    ## [111] "minTempRecr"                        "minMoistureRecr"                   
+    ## [113] "minFPARRecr"                        "recrAge"                           
+    ## [115] "recrTreeHeight"                     "recrShrubCover"                    
+    ## [117] "recrShrubHeight"
 
 Control parameters should normally be left to their default value until
 their effect on simulations is fully understood.

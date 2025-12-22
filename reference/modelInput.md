@@ -429,6 +429,13 @@ same elements as `spwbInput`, but with additional information.
 - `internalCarbon`: A data frame with the concentration (mol·gluc·l-1)
   of metabolic and storage carbon compartments for leaves and sapwood.
 
+- `internalStructuralLitter`: A data frame with the structural necromass
+  (g C/m2) of different litter components: leaves, small branches, fine
+  roots, large wood and coarse roots.
+
+- `internalSOC`: A named numeric vector with surface/soil decomposing
+  carbon pools (g C/m2).
+
 - `internalMortality`: A data frame to store the cumulative mortality
   (density for trees and cover for shrubs) predicted during the
   simulation, also distinguishing mortality due to starvation or
@@ -443,6 +450,7 @@ differently depending on control parameters.
 
 [`resetInputs`](https://emf-creaf.github.io/medfate/reference/resetInputs.md),
 [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
+[`growth`](https://emf-creaf.github.io/medfate/reference/growth.md),
 [`soil`](https://emf-creaf.github.io/medfate/reference/soil.md),
 [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md),
 [`SpParamsMED`](https://emf-creaf.github.io/medfate/reference/SpParams.md),
@@ -513,6 +521,9 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$growthMortalityResults
+#> [1] TRUE
+#> 
+#> $control$decompositionPoolResults
 #> [1] TRUE
 #> 
 #> $control$leafResults
@@ -798,6 +809,17 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $control$ingrowthTreeDensity
 #> [1] 127
 #> 
+#> $control$decompositionAnnualBaseRates
+#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
+#>            8.0000           18.5000            2.0000            4.9000 
+#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
+#>            1.5000            0.0200            0.1000            6.0000 
+#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
+#>           11.0000            0.0800            0.4000            0.0033 
+#> 
+#> $control$decompositionAnnualTurnoverRate
+#> [1] 0.1
+#> 
 #> $control$allowSeedBankDynamics
 #> [1] TRUE
 #> 
@@ -860,11 +882,11 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA
@@ -1163,6 +1185,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$growthMortalityResults
 #> [1] TRUE
 #> 
+#> $control$decompositionPoolResults
+#> [1] TRUE
+#> 
 #> $control$leafResults
 #> [1] TRUE
 #> 
@@ -1446,6 +1471,17 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$ingrowthTreeDensity
 #> [1] 127
 #> 
+#> $control$decompositionAnnualBaseRates
+#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
+#>            8.0000           18.5000            2.0000            4.9000 
+#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
+#>            1.5000            0.0200            0.1000            6.0000 
+#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
+#>           11.0000            0.0800            0.4000            0.0033 
+#> 
+#> $control$decompositionAnnualTurnoverRate
+#> [1] 0.1
+#> 
 #> $control$allowSeedBankDynamics
 #> [1] TRUE
 #> 
@@ -1508,11 +1544,11 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA
@@ -1849,6 +1885,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$growthMortalityResults
 #> [1] TRUE
 #> 
+#> $control$decompositionPoolResults
+#> [1] TRUE
+#> 
 #> $control$leafResults
 #> [1] TRUE
 #> 
@@ -2132,6 +2171,17 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$ingrowthTreeDensity
 #> [1] 127
 #> 
+#> $control$decompositionAnnualBaseRates
+#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
+#>            8.0000           18.5000            2.0000            4.9000 
+#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
+#>            1.5000            0.0200            0.1000            6.0000 
+#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
+#>           11.0000            0.0800            0.4000            0.0033 
+#> 
+#> $control$decompositionAnnualTurnoverRate
+#> [1] 0.1
+#> 
 #> $control$allowSeedBankDynamics
 #> [1] TRUE
 #> 
@@ -2194,11 +2244,11 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA
@@ -2540,6 +2590,9 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$growthMortalityResults
 #> [1] TRUE
 #> 
+#> $control$decompositionPoolResults
+#> [1] TRUE
+#> 
 #> $control$leafResults
 #> [1] TRUE
 #> 
@@ -2823,6 +2876,17 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$ingrowthTreeDensity
 #> [1] 127
 #> 
+#> $control$decompositionAnnualBaseRates
+#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
+#>            8.0000           18.5000            2.0000            4.9000 
+#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
+#>            1.5000            0.0200            0.1000            6.0000 
+#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
+#>           11.0000            0.0800            0.4000            0.0033 
+#> 
+#> $control$decompositionAnnualTurnoverRate
+#> [1] 0.1
+#> 
 #> $control$allowSeedBankDynamics
 #> [1] TRUE
 #> 
@@ -2885,11 +2949,11 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $soil
-#>   widths sand clay      usda om nitrogen  bd rfc  macro     Ksat VG_alpha
-#> 1    300   25   25 Silt loam NA       NA 1.5  25 0.0485 5401.471 89.16112
-#> 2    700   25   25 Silt loam NA       NA 1.5  45 0.0485 5401.471 89.16112
-#> 3   1000   25   25 Silt loam NA       NA 1.5  75 0.0485 5401.471 89.16112
-#> 4   2000   25   25 Silt loam NA       NA 1.5  95 0.0485 5401.471 89.16112
+#>   widths sand clay      usda om nitrogen ph  bd rfc  macro     Ksat VG_alpha
+#> 1    300   25   25 Silt loam NA       NA NA 1.5  25 0.0485 5401.471 89.16112
+#> 2    700   25   25 Silt loam NA       NA NA 1.5  45 0.0485 5401.471 89.16112
+#> 3   1000   25   25 Silt loam NA       NA NA 1.5  75 0.0485 5401.471 89.16112
+#> 4   2000   25   25 Silt loam NA       NA NA 1.5  95 0.0485 5401.471 89.16112
 #>       VG_n VG_theta_res VG_theta_sat W Temp
 #> 1 1.303861        0.041     0.423715 1   NA
 #> 2 1.303861        0.041     0.423715 1   NA

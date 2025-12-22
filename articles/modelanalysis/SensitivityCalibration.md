@@ -85,7 +85,7 @@ the default parameter settings:
 S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Package 'meteoland' [ver. 2.2.4]
+    ## Package 'meteoland' [ver. 2.2.5]
 
     ## Initial plant water content (mm): 4.69853
     ## Initial soil water content (mm): 290.875

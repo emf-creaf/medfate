@@ -114,7 +114,7 @@ function <code><a href="extract.html">extract</a></code> to reshape simulation r
 <li><p><code>"growthOutput"</code>: An copy of the final state of the object <code>x</code> of class <code><a href="modelInput.html">growthInput</a></code>.</p></li>
 <li><p><code>"WaterBalance"</code>: A data frame where different water balance variables (see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Sureau"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
-<li><p><code>"CarbonBalance"</code>: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.</p></li>
+<li><p><code>"CarbonBalance"</code>: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration, net primary production, heterotrophic respiration and net ecosystem exchange.), all in g C · m-2.</p></li>
 <li><p><code>"BiomassBalance"</code>: A data frame with the daily values of stand biomass balance components (in g dry · m-2.</p></li>
 <li><p><code>"Temperature"</code>: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Sureau"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"Soil"</code>: A data frame where different soil variables  (see <code><a href="spwb.html">spwb</a></code>).</p></li>
@@ -156,6 +156,7 @@ function <code><a href="extract.html">extract</a></code> to reshape simulation r
 <li><p><code>"DessicationRate"</code>: Daily mortality rate from dessication (ind/d-1).</p></li>
 <li><p><code>"MortalityRate"</code>: Daily mortality rate (any cause) (ind/d-1).</p></li>
 </ul></li>
+<li><p><code>"DecompositionPools"</code>: A data frame with the mass of different decomposition carbon pools, all in g C · m-2.</p></li>
 <li><p><code>"subdaily"</code>: A list of objects of class <code><a href="growth_day.html">growth_day</a></code>, one per day simulated (only if required in <code>control</code> parameters, see <code><a href="defaultControl.html">defaultControl</a></code>).</p></li>
 </ul></div>
     <div class="section level2">
@@ -210,21 +211,21 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:............</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 5210.49</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 168.622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 168.622</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 5207.91</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 166.035</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 166.035</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 87 Labile balance (g/m2) 89</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 176 Mortality loss (g/m2) 8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 4.706</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 275.66</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 85 Labile balance (g/m2) 89</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 174 Mortality loss (g/m2) 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 4.70599</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 275.653</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.00746396</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00136322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.2151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.2151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.00745671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00137021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.222</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 83 Net rainfall (mm) 379</span>
@@ -259,7 +260,7 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 274.718</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.0118714</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 4.21353e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 5.30253e-17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -16.1567</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -16.1567</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>

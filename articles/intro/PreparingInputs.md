@@ -18,7 +18,7 @@ We begin by loading packages **medfate** and **meteoland**:
 library(medfate)
 #> Package 'medfate' [ver. 4.9.0]
 library(meteoland)
-#> Package 'meteoland' [ver. 2.2.4]
+#> Package 'meteoland' [ver. 2.2.5]
 ```
 
 ## Building/manipulating forest objects
@@ -388,22 +388,25 @@ summary(pobl_soil)
 #> Soil depth (mm): 2000 
 #> 
 #> Layer  1  [ 0  to  300 mm ] 
-#>     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]
-#>     Rock fragment content (%): 18 Macroporosity (%): 22 
+#>     clay (%): 26 silt (%): 38 sand (%): 31  usda: Loam 
+#>     organic matter (%): 4 nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 18 macroporosity (%): 22 
 #>     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 
 #>     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  2  [ 300  to  1000 mm ] 
-#>     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]
-#>     Rock fragment content (%): 19 Macroporosity (%): 9 
+#>     clay (%): 30 silt (%): 39 sand (%): 30  usda: Clay loam 
+#>     organic matter (%): 1 nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 19 macroporosity (%): 9 
 #>     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 
 #>     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  3  [ 1000  to  2000 mm ] 
-#>     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]
-#>     Rock fragment content (%): 21 Macroporosity (%): 6 
+#>     clay (%): 32 silt (%): 38 sand (%): 30  usda: Clay loam 
+#>     organic matter (%): 1 nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 21 macroporosity (%): 6 
 #>     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 
 #>     Vol. WP (mm): 152 Vol. FC (mm): 263 Vol. SAT (mm): 347 Vol. current (mm): 263 
 #>     Temperature (Celsius): NA 
@@ -435,22 +438,25 @@ summary(pobl_soil)
 #> Soil depth (mm): 2000 
 #> 
 #> Layer  1  [ 0  to  300 mm ] 
-#>     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]
-#>     Rock fragment content (%): 18 Macroporosity (%): 22 
+#>     clay (%): 26 silt (%): 38 sand (%): 31  usda: Loam 
+#>     organic matter (%): 4 nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 18 macroporosity (%): 22 
 #>     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 
 #>     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  2  [ 300  to  1000 mm ] 
-#>     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]
-#>     Rock fragment content (%): 19 Macroporosity (%): 9 
+#>     clay (%): 30 silt (%): 39 sand (%): 30  usda: Clay loam 
+#>     organic matter (%): 1 nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 19 macroporosity (%): 9 
 #>     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 
 #>     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 
 #>     Temperature (Celsius): NA 
 #> 
 #> Layer  3  [ 1000  to  2000 mm ] 
-#>     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]
-#>     Rock fragment content (%): 80 Macroporosity (%): 6 
+#>     clay (%): 32 silt (%): 38 sand (%): 30  usda: Clay loam 
+#>     organic matter (%): 1 nitrogen (g/kg): NA ph (0-14): NA 
+#>     rock fragment content (%): 80 macroporosity (%): 6 
 #>     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 
 #>     Vol. WP (mm): 38 Vol. FC (mm): 67 Vol. SAT (mm): 88 Vol. current (mm): 67 
 #>     Temperature (Celsius): NA 

@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2025-12-10</h4>
+            <h4 data-toc-skip class="date">2025-12-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="d-none name"><code>FontBlanche.Rmd</code></div>
@@ -174,11 +174,11 @@ provides a lot of information on soil physical properties and water
 capacity:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fb_soil</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   widths sand clay      usda om nitrogen   bd rfc   macro     Ksat VG_alpha</span></span>
-<span><span class="co">## 1    300   26   39 Clay loam  6       NA 1.45  50 0.07387 7232.425 44.14586</span></span>
-<span><span class="co">## 2    700   26   39 Clay loam  3       NA 1.45  65 0.07387 3481.917 61.34088</span></span>
-<span><span class="co">## 3   1000   26   39 Clay loam  1       NA 1.45  90 0.07387 1879.187 76.38182</span></span>
-<span><span class="co">## 4   2500   26   39 Clay loam  1       NA 1.45  95 0.07387 1879.187 76.38182</span></span>
+<pre><code><span><span class="co">##   widths sand clay      usda om nitrogen ph   bd rfc   macro     Ksat VG_alpha</span></span>
+<span><span class="co">## 1    300   26   39 Clay loam  6       NA NA 1.45  50 0.07387 7232.425 44.14586</span></span>
+<span><span class="co">## 2    700   26   39 Clay loam  3       NA NA 1.45  65 0.07387 3481.917 61.34088</span></span>
+<span><span class="co">## 3   1000   26   39 Clay loam  1       NA NA 1.45  90 0.07387 1879.187 76.38182</span></span>
+<span><span class="co">## 4   2500   26   39 Clay loam  1       NA NA 1.45  95 0.07387 1879.187 76.38182</span></span>
 <span><span class="co">##       VG_n VG_theta_res VG_theta_sat W Temp</span></span>
 <span><span class="co">## 1 1.254346        0.041    0.4388377 1   NA</span></span>
 <span><span class="co">## 2 1.273896        0.041    0.4388377 1   NA</span></span>
@@ -567,7 +567,7 @@ function <code><a href="../../reference/modifyParams.html">modifyCohortParams()<
 <p>Now we are ready to call function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fb_SWB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">fb_x</span>, <span class="va">fb_meteo</span>, elevation <span class="op">=</span> <span class="fl">420</span>, latitude <span class="op">=</span> <span class="fl">43.24083</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.4]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.5]</span></span></code></pre>
 <pre><code><span><span class="co">## Initial plant water content (mm): 31.8864</span></span>
 <span><span class="co">## Initial soil water content (mm): 213.886</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>

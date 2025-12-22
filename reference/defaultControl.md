@@ -94,6 +94,10 @@ A list, with the following options (default values in brackets):
   - `growthMortalityResults [= TRUE]`: Boolean flag to keep plant-level
     growth and mortality results (in a list called 'GrowthMortality').
 
+  - `decompositionPoolResults [= TRUE]`: Boolean flag to keep
+    decomposition pool results (in a data frame called
+    'DecompositionPools').
+
   - `leafResults [= TRUE]`: Boolean flag to keep leaf-level results (in
     elements called 'SunlitLeaves' and 'ShadeLeaves').
 
@@ -444,6 +448,12 @@ A list, with the following options (default values in brackets):
   - `ingrowthTreeDensity [= 127]`: Default density (ind·ha-1) for
     ingrowth trees (when species parameter `IngrowthTreeDensity` is
     missing).
+
+  - `decompositionBaseAnnualRates`: Vector of base annual decomposition
+    rates (in yr-1) for 12 pools in the CENTURY model
+
+  - `decompositionAnnualTurnoverRate [= 0.1]`: Annual turnover time for
+    biome in the CENTURY model.
 
   **Forest dynamics** (function
   [`fordyn`](https://emf-creaf.github.io/medfate/reference/fordyn.md)):

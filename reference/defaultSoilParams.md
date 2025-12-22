@@ -1,7 +1,7 @@
 # Default soil parameters
 
-Creates a data frame with default soil physical description for model
-functions
+Creates a data frame with default soil physical and chemical description
+for model functions
 
 ## Usage
 
@@ -27,10 +27,12 @@ values):
 - `sand (= 25)`: Sand percentage for each layer (in %).
 
 - `om (= NA)`: Organic matter percentage for each layer (in %)
-  (optional).
+  (optional).0
 
 - `nitrogen (= NA)`: Sum of total nitrogen (ammonia, organic and reduced
   nitrogen) for each layer (in g/kg) (optional).
+
+- `ph (=NA)`: pH in water (0-14) (optional).
 
 - `bd (= 1.5)`: Bulk density for each layer (in g/cm3).
 
@@ -39,9 +41,9 @@ values):
 
 ## Details
 
-The function returns a data frame with default physical soil
-description, with soil layers in rows. Users can change those that need
-to be set to other values and use the list as input for function
+The function returns a data frame with default physical and chemical
+soil description, with soil layers in rows. Users can change those that
+need to be set to other values and use the list as input for function
 [`soil`](https://emf-creaf.github.io/medfate/reference/soil.md).
 
 ## Note
@@ -64,9 +66,9 @@ Miquel De Cáceres Ainsa, CREAF
 
 ``` r
 defaultSoilParams(4)
-#>   widths clay sand om nitrogen  bd rfc
-#> 1    300   25   25 NA       NA 1.5  25
-#> 2    700   25   25 NA       NA 1.5  45
-#> 3   1000   25   25 NA       NA 1.5  75
-#> 4   2000   25   25 NA       NA 1.5  95
+#>   widths clay sand om nitrogen ph  bd rfc
+#> 1    300   25   25 NA       NA NA 1.5  25
+#> 2    700   25   25 NA       NA NA 1.5  45
+#> 3   1000   25   25 NA       NA NA 1.5  75
+#> 4   2000   25   25 NA       NA NA 1.5  95
 ```

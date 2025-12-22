@@ -261,11 +261,11 @@ vg
 # Define soil with default params
 soil_df <- defaultSoilParams(4)
 soil_df
-#>   widths clay sand om nitrogen  bd rfc
-#> 1    300   25   25 NA       NA 1.5  25
-#> 2    700   25   25 NA       NA 1.5  45
-#> 3   1000   25   25 NA       NA 1.5  75
-#> 4   2000   25   25 NA       NA 1.5  95
+#>   widths clay sand om nitrogen ph  bd rfc
+#> 1    300   25   25 NA       NA NA 1.5  25
+#> 2    700   25   25 NA       NA NA 1.5  45
+#> 3   1000   25   25 NA       NA NA 1.5  75
+#> 4   2000   25   25 NA       NA NA 1.5  95
 
 # Initialize soil parameters and state variables
 s = soil(soil_df)
