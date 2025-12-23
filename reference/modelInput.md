@@ -397,6 +397,11 @@ same elements as `spwbInput`, but with additional information.
 
   - `IngrowthTreeDBH`: Ingrowth DBH for trees (e.g. 7.5 cm).
 
+  - `RespFire`: Probability of resprouting after a fire disturbance.
+
+  - `RespDist`: Probability of resprouting after undefined disturbance
+    (typically desiccation).
+
 - `paramsAllometry`: A data frame with allometric parameters for each
   cohort:
 
@@ -429,9 +434,14 @@ same elements as `spwbInput`, but with additional information.
 - `internalCarbon`: A data frame with the concentration (mol·gluc·l-1)
   of metabolic and storage carbon compartments for leaves and sapwood.
 
-- `internalStructuralLitter`: A data frame with the structural necromass
-  (g C/m2) of different litter components: leaves, small branches, fine
-  roots, large wood and coarse roots.
+- `internalSnags`: A data frame with characteristics (species identity,
+  height, diameter, age), small branch mass and large wood mass (both in
+  g C/m2) corresponding to decomposing snag cohorts (see
+  [`forest`](https://emf-creaf.github.io/medfate/reference/forest.md)).
+
+- `internalLitter`: A data frame with the aboveground and belowground
+  mass (g C/m2) of different litter components: leaves, twigs, small
+  branches, large wood, coarse roots and fine roots.
 
 - `internalSOC`: A named numeric vector with surface/soil decomposing
   carbon pools (g C/m2).
@@ -439,7 +449,8 @@ same elements as `spwbInput`, but with additional information.
 - `internalMortality`: A data frame to store the cumulative mortality
   (density for trees and cover for shrubs) predicted during the
   simulation, also distinguishing mortality due to starvation or
-  dessication.
+  dessication, the number of resprouting elements and the accumulation
+  of aboveground dead wood (branches and large wood).
 
 ## Details
 
@@ -810,12 +821,14 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
-#>            8.0000           18.5000            2.0000            4.9000 
-#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
-#>            1.5000            0.0200            0.1000            6.0000 
-#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
-#>           11.0000            0.0800            0.4000            0.0033 
+#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
+#>           8.0000          18.5000           2.0000           4.9000 
+#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
+#>           1.8000           1.5000           0.0200           0.1000 
+#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
+#>           6.0000          11.0000           0.0800           0.4000 
+#>      SoilPassive 
+#>           0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1
@@ -1472,12 +1485,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
-#>            8.0000           18.5000            2.0000            4.9000 
-#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
-#>            1.5000            0.0200            0.1000            6.0000 
-#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
-#>           11.0000            0.0800            0.4000            0.0033 
+#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
+#>           8.0000          18.5000           2.0000           4.9000 
+#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
+#>           1.8000           1.5000           0.0200           0.1000 
+#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
+#>           6.0000          11.0000           0.0800           0.4000 
+#>      SoilPassive 
+#>           0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1
@@ -2172,12 +2187,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
-#>            8.0000           18.5000            2.0000            4.9000 
-#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
-#>            1.5000            0.0200            0.1000            6.0000 
-#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
-#>           11.0000            0.0800            0.4000            0.0033 
+#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
+#>           8.0000          18.5000           2.0000           4.9000 
+#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
+#>           1.8000           1.5000           0.0200           0.1000 
+#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
+#>           6.0000          11.0000           0.0800           0.4000 
+#>      SoilPassive 
+#>           0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1
@@ -2877,12 +2894,14 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural 
-#>            8.0000           18.5000            2.0000            4.9000 
-#>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive 
-#>            1.5000            0.0200            0.1000            6.0000 
-#>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive 
-#>           11.0000            0.0800            0.4000            0.0033 
+#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
+#>           8.0000          18.5000           2.0000           4.9000 
+#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
+#>           1.8000           1.5000           0.0200           0.1000 
+#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
+#>           6.0000          11.0000           0.0800           0.4000 
+#>      SoilPassive 
+#>           0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1

@@ -152,9 +152,9 @@ names(x)
     ## [19] "paramsLitterDecomposition"   "internalPhenology"          
     ## [21] "internalWater"               "internalLAIDistribution"    
     ## [23] "internalCarbon"              "internalAllocation"         
-    ## [25] "internalMortality"           "internalStructuralLitter"   
-    ## [27] "internalSOC"                 "internalFCCS"               
-    ## [29] "version"
+    ## [25] "internalMortality"           "internalSnags"              
+    ## [27] "internalLitter"              "internalSOC"                
+    ## [29] "internalFCCS"                "version"
 
 As with `spwbInput` objects, information about the cohort species is
 found in element `cohorts` (i.e. code, species and name):
@@ -281,7 +281,7 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
     ## Package 'meteoland' [ver. 2.2.5]
 
-    ## Initial plant cohort biomass (g/m2): 5041.87
+    ## Initial plant cohort biomass (g/m2): 14337.4
     ## Initial plant water content (mm): 4.69853
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
@@ -289,28 +289,28 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant biomass (g/m2): 5207.91
-    ## Change in plant biomass (g/m2): 166.035
-    ## Plant biomass balance result (g/m2): 166.035
+    ## Final plant cohort biomass (g/m2): 14727
+    ## Change in plant cohort biomass (g/m2): 389.538
+    ## Plant biomass balance result (g/m2): 149.294
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 85 Labile balance (g/m2) 89
-    ##   Plant individual balance (g/m2) 174 Mortality loss (g/m2) 8
-    ## Final plant water content (mm): 4.70599
-    ## Final soil water content (mm): 275.653
+    ##   Structural balance (g/m2) 82 Labile balance (g/m2) 89
+    ##   Plant individual balance (g/m2) 171 Mortality loss (g/m2) 22
+    ## Final plant water content (mm): 4.70545
+    ## Final soil water content (mm): 275.705
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00745671
-    ## Plant water balance result (mm): -0.00137021
-    ## Change in soil water content (mm): -15.222
-    ## Soil water balance result (mm): -15.222
+    ## Change in plant water content (mm): 0.00691703
+    ## Plant water balance result (mm): -0.00138423
+    ## Change in soil water content (mm): -15.1704
+    ## Soil water balance result (mm): -15.1704
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 7.10543e-15
+    ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
     ##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 247
-    ##   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
-    ##   Runoff (mm) 21 Deep drainage (mm) 151
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+    ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
+    ##   Runoff (mm) 21 Deep drainage (mm) 152
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -520,9 +520,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1213229 -17.8591108   0.1213229  17.8591108   0.9926776 
+    ##  12.0000000  -0.1254482 -18.4663618   0.1254482  18.4663618   0.9923190 
     ##         NSE     NSE.abs 
-    ##   0.9158917   0.7698562
+    ##   0.9142804   0.7620308
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-12-22</h4>
+            <h4 data-toc-skip class="date">2025-12-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -215,9 +215,9 @@ object, whose names are:</p>
 <span><span class="co">## [19] "paramsLitterDecomposition"   "internalPhenology"          </span></span>
 <span><span class="co">## [21] "internalWater"               "internalLAIDistribution"    </span></span>
 <span><span class="co">## [23] "internalCarbon"              "internalAllocation"         </span></span>
-<span><span class="co">## [25] "internalMortality"           "internalStructuralLitter"   </span></span>
-<span><span class="co">## [27] "internalSOC"                 "internalFCCS"               </span></span>
-<span><span class="co">## [29] "version"</span></span></code></pre>
+<span><span class="co">## [25] "internalMortality"           "internalSnags"              </span></span>
+<span><span class="co">## [27] "internalLitter"              "internalSOC"                </span></span>
+<span><span class="co">## [29] "internalFCCS"                "version"</span></span></code></pre>
 <p>As with <code>spwbInput</code> objects, information about the cohort
 species is found in element <code>cohorts</code> (i.e. code, species and
 name):</p>
@@ -317,7 +317,7 @@ model sink limitations on wood formation.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.5]</span></span></code></pre>
-<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 5041.87</span></span>
+<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 14337.4</span></span>
 <span><span class="co">## Initial plant water content (mm): 4.69853</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
@@ -325,28 +325,28 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 5207.91</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 166.035</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 166.035</span></span>
+<span><span class="co">## Final plant cohort biomass (g/m2): 14727</span></span>
+<span><span class="co">## Change in plant cohort biomass (g/m2): 389.538</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 149.294</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 85 Labile balance (g/m2) 89</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 174 Mortality loss (g/m2) 8</span></span>
-<span><span class="co">## Final plant water content (mm): 4.70599</span></span>
-<span><span class="co">## Final soil water content (mm): 275.653</span></span>
+<span><span class="co">##   Structural balance (g/m2) 82 Labile balance (g/m2) 89</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 171 Mortality loss (g/m2) 22</span></span>
+<span><span class="co">## Final plant water content (mm): 4.70545</span></span>
+<span><span class="co">## Final soil water content (mm): 275.705</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.00745671</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00137021</span></span>
-<span><span class="co">## Change in soil water content (mm): -15.222</span></span>
-<span><span class="co">## Soil water balance result (mm): -15.222</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.00691703</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00138423</span></span>
+<span><span class="co">## Change in soil water content (mm): -15.1704</span></span>
+<span><span class="co">## Soil water balance result (mm): -15.1704</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 83 Net rainfall (mm) 379</span></span>
 <span><span class="co">##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 247</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span></span>
-<span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 151</span></span></code></pre>
+<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span></span>
+<span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 152</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -498,9 +498,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.1213229 -17.8591108   0.1213229  17.8591108   0.9926776 </span></span>
+<span><span class="co">##  12.0000000  -0.1254482 -18.4663618   0.1254482  18.4663618   0.9923190 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.9158917   0.7698562</span></span></code></pre>
+<span><span class="co">##   0.9142804   0.7620308</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

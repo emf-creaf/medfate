@@ -17,9 +17,21 @@ carbon_relativeSapViscosity(sugarConc, temp)
 
 carbon_leafStructuralBiomass(LAI, N, SLA)
 
+carbon_twigStructuralBiomass(LAI, N, SLA, r635)
+
 carbon_leafStarchCapacity(LAI, N, SLA, leafDensity)
 
+carbon_abovegroundSapwoodStructuralBiomass(SA, H, woodDensity)
+
+carbon_belowgroundSapwoodStructuralBiomass(SA, L, V, woodDensity)
+
 carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
+
+carbon_abovegroundHeartwoodStructuralBiomass(DBH, SA, H, woodDensity)
+
+carbon_belowgroundHeartwoodStructuralBiomass(DBH, SA, L, V, woodDensity)
+
+carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
 
 carbon_sapwoodStructuralLivingBiomass(
   SA,
@@ -85,6 +97,10 @@ carbon_carbonCompartments(x, biomassUnits = "g_m2")
 
   Plant height (cm).
 
+- woodDensity:
+
+  Wood density (dry weight over volume).
+
 - L:
 
   Coarse root length (mm) for each soil layer.
@@ -93,9 +109,9 @@ carbon_carbonCompartments(x, biomassUnits = "g_m2")
 
   Proportion of fine roots in each soil layer.
 
-- woodDensity:
+- DBH:
 
-  Wood density (dry weight over volume).
+  Tree diameter (cm).
 
 - conduit2sapwood:
 
@@ -160,3 +176,45 @@ viscosity of aqueous sugar solutions. Rheol Acta 41: 369–374 DOI
 ## Author
 
 Miquel De Cáceres Ainsa, CREAF
+
+## Examples
+
+``` r
+#Load example plot plant data
+data(exampleforest)
+#Default species parameterization
+data(SpParamsMED)
+#Initialize control parameters
+control <- defaultControl("Granier")
+#Initialize soil with default soil params (4 layers)
+examplesoil <- defaultSoilParams(4)
+#Initialize model input
+x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
+
+# Estimate carbon compartments
+carbon_carbonCompartments(x1)
+#>   LeafStorageVolume SapwoodStorageVolume LeafStarchMaximumConcentration
+#> 1        26.5664330          14.49487928                       0.925123
+#> 2         4.0406733           5.17625488                       0.925123
+#> 3         0.1679022           0.03056702                       0.925123
+#>   SapwoodStarchMaximumConcentration LeafStarchCapacity SapwoodStarchCapacity
+#> 1                          4.625615         24.5772184            67.0477318
+#> 2                          4.625615          3.7381199            23.9433625
+#> 3                          4.625615          0.1553302             0.1413913
+#>   LeafStructuralBiomass TwigStructuralBiomass SapwoodStructuralBiomass
+#> 1            165.109206            171.234885              3201.235698
+#> 2            111.289246            138.097964              1146.794384
+#> 3              6.149703              4.769236                 3.738437
+#>   SapwoodLivingStructuralBiomass HeartwoodStructuralBiomass
+#> 1                     244.444357                   6043.965
+#> 2                     431.409712                   2937.490
+#> 3                       1.406353                      0.000
+#>   AbovegroundWoodBiomass BelowgroundWoodBiomass FineRootBiomass
+#> 1            9044.809878             200.390824      23.2157679
+#> 2            3822.186939             262.097660      20.9930167
+#> 3               2.566923               1.171515       0.7933894
+#>   StructuralBiomass LabileBiomass TotalLivingBiomass TotalBiomass
+#> 1        9604.76056    199.895416          632.66475   9804.65598
+#> 2        4354.66483    159.784125          723.47610   4514.44895
+#> 3          15.45077      2.872282           11.22173     18.32305
+```

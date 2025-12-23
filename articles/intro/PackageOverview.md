@@ -218,6 +218,7 @@ subject):
 
 - `biophysics_*`: Physical and biophysical utility functions.
 - `carbon_*`: Carbon balance.
+- `decomposition_*`: Dynamics of litter and soil organic carbon.
 - `fire_*`: Fire severity.
 - `fuel_*`: Fuel properties.
 - `hydraulics_*`: Plant hydraulics.

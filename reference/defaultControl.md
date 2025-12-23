@@ -450,7 +450,7 @@ A list, with the following options (default values in brackets):
     missing).
 
   - `decompositionBaseAnnualRates`: Vector of base annual decomposition
-    rates (in yr-1) for 12 pools in the CENTURY model
+    rates (in yr-1) for different pools.
 
   - `decompositionAnnualTurnoverRate [= 0.1]`: Annual turnover time for
     biome in the CENTURY model.

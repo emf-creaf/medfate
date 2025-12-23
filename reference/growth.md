@@ -275,7 +275,7 @@ x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 
 #Call simulation function
 G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant cohort biomass (g/m2): 5041.87
+#> Initial plant cohort biomass (g/m2): 14337.4
 #> Initial plant water content (mm): 4.69853
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
@@ -283,28 +283,28 @@ G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  Year 2001:............
 #> 
-#> Final plant biomass (g/m2): 5207.91
-#> Change in plant biomass (g/m2): 166.035
-#> Plant biomass balance result (g/m2): 166.035
+#> Final plant cohort biomass (g/m2): 14727
+#> Change in plant cohort biomass (g/m2): 389.538
+#> Plant biomass balance result (g/m2): 149.294
 #> Plant biomass balance components:
-#>   Structural balance (g/m2) 85 Labile balance (g/m2) 89
-#>   Plant individual balance (g/m2) 174 Mortality loss (g/m2) 8
-#> Final plant water content (mm): 4.70599
-#> Final soil water content (mm): 275.653
+#>   Structural balance (g/m2) 82 Labile balance (g/m2) 89
+#>   Plant individual balance (g/m2) 171 Mortality loss (g/m2) 22
+#> Final plant water content (mm): 4.70545
+#> Final soil water content (mm): 275.705
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): 0.00745671
-#> Plant water balance result (mm): -0.00137021
-#> Change in soil water content (mm): -15.222
-#> Soil water balance result (mm): -15.222
+#> Change in plant water content (mm): 0.00691703
+#> Plant water balance result (mm): -0.00138423
+#> Change in soil water content (mm): -15.1704
+#> Soil water balance result (mm): -15.1704
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 7.10543e-15
+#> Snowpack water balance result (mm): 0
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
 #>   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 247
-#>   Plant extraction from soil (mm) 247  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
-#>   Runoff (mm) 21 Deep drainage (mm) 151
+#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+#>   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
+#>   Runoff (mm) 21 Deep drainage (mm) 152
  
 #Switch to 'Sperry' transpiration mode
 control <- defaultControl("Sperry")
@@ -314,7 +314,7 @@ x2 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant cohort biomass (g/m2): 6177.36
+#> Initial plant cohort biomass (g/m2): 17496.5
 #> Initial plant water content (mm): 6.71035
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
@@ -322,28 +322,28 @@ G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  Year 2001:............
 #> 
-#> Final plant biomass (g/m2): 6323.12
-#> Change in plant biomass (g/m2): 145.761
-#> Plant biomass balance result (g/m2): 145.761
+#> Final plant cohort biomass (g/m2): 17825.2
+#> Change in plant cohort biomass (g/m2): 328.765
+#> Plant biomass balance result (g/m2): 123.071
 #> Plant biomass balance components:
-#>   Structural balance (g/m2) 59 Labile balance (g/m2) 97
-#>   Plant individual balance (g/m2) 155 Mortality loss (g/m2) 10
-#> Final plant water content (mm): 6.72222
-#> Final soil water content (mm): 274.718
+#>   Structural balance (g/m2) 54 Labile balance (g/m2) 96
+#>   Plant individual balance (g/m2) 150 Mortality loss (g/m2) 27
+#> Final plant water content (mm): 6.7208
+#> Final soil water content (mm): 274.824
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): 0.0118714
-#> Plant water balance result (mm): 5.30253e-17
-#> Change in soil water content (mm): -16.1567
-#> Soil water balance result (mm): -16.1567
+#> Change in plant water content (mm): 0.01045
+#> Plant water balance result (mm): -3.99091e-16
+#> Change in soil water content (mm): -16.0507
+#> Soil water balance result (mm): -16.0507
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): -7.10543e-15
+#> Snowpack water balance result (mm): 0
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 83 Net rainfall (mm) 379
-#>   Infiltration (mm) 411 Infiltration excess (mm) 19 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 22  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 243
-#>   Plant extraction from soil (mm) 243  Plant water balance (mm) 0 Hydraulic redistribution (mm) 4
-#>   Runoff (mm) 19 Deep drainage (mm) 163
+#>   Interception (mm) 83 Net rainfall (mm) 380
+#>   Infiltration (mm) 412 Infiltration excess (mm) 19 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 22  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 241
+#>   Plant extraction from soil (mm) 241  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4
+#>   Runoff (mm) 19 Deep drainage (mm) 164
 
 #Switch to 'Sureau' transpiration mode
 control <- defaultControl("Sureau")
@@ -353,7 +353,7 @@ x3 <- growthInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant cohort biomass (g/m2): 7776.21
+#> Initial plant cohort biomass (g/m2): 19095.3
 #> Initial plant water content (mm): 6.71035
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
@@ -361,21 +361,21 @@ G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  Year 2001:............
 #> 
-#> Final plant biomass (g/m2): 7641.04
-#> Change in plant biomass (g/m2): -135.171
-#> Plant biomass balance result (g/m2): -136.855
+#> Final plant cohort biomass (g/m2): 19028.1
+#> Change in plant cohort biomass (g/m2): -67.1942
+#> Plant biomass balance result (g/m2): -207.456
 #> Plant biomass balance components:
-#>   Structural balance (g/m2) 26 Labile balance (g/m2) -65
-#>   Plant individual balance (g/m2) -40 Mortality loss (g/m2) 97
-#> Final plant water content (mm): 6.6505
-#> Final soil water content (mm): 279.247
+#>   Structural balance (g/m2) -7 Labile balance (g/m2) -66
+#>   Plant individual balance (g/m2) -73 Mortality loss (g/m2) 135
+#> Final plant water content (mm): 6.64667
+#> Final soil water content (mm): 279.257
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.059855
-#> Plant water balance result (mm): -0.134463
-#> Change in soil water content (mm): -11.6279
-#> Soil water balance result (mm): -11.6279
+#> Change in plant water content (mm): -0.0636826
+#> Plant water balance result (mm): -0.134546
+#> Change in soil water content (mm): -11.6182
+#> Soil water balance result (mm): -11.6182
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 0
+#> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 82 Net rainfall (mm) 380

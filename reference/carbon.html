@@ -66,9 +66,21 @@
 <span></span>
 <span><span class="fu">carbon_leafStructuralBiomass</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">carbon_twigStructuralBiomass</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span>, <span class="va">r635</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">carbon_leafStarchCapacity</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span>, <span class="va">leafDensity</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">carbon_abovegroundSapwoodStructuralBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">carbon_belowgroundSapwoodStructuralBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">carbon_sapwoodStructuralBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">carbon_abovegroundHeartwoodStructuralBiomass</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">SA</span>, <span class="va">H</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">carbon_belowgroundHeartwoodStructuralBiomass</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">SA</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">carbon_heartwoodStructuralBiomass</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">carbon_sapwoodStructuralLivingBiomass</span><span class="op">(</span></span>
 <span>  <span class="va">SA</span>,</span>
@@ -136,6 +148,10 @@
 <dd><p>Plant height (cm).</p></dd>
 
 
+<dt id="arg-wooddensity">woodDensity<a class="anchor" aria-label="anchor" href="#arg-wooddensity"></a></dt>
+<dd><p>Wood density (dry weight over volume).</p></dd>
+
+
 <dt id="arg-l">L<a class="anchor" aria-label="anchor" href="#arg-l"></a></dt>
 <dd><p>Coarse root length (mm) for each soil layer.</p></dd>
 
@@ -144,8 +160,8 @@
 <dd><p>Proportion of fine roots in each soil layer.</p></dd>
 
 
-<dt id="arg-wooddensity">woodDensity<a class="anchor" aria-label="anchor" href="#arg-wooddensity"></a></dt>
-<dd><p>Wood density (dry weight over volume).</p></dd>
+<dt id="arg-dbh">DBH<a class="anchor" aria-label="anchor" href="#arg-dbh"></a></dt>
+<dd><p>Tree diameter (cm).</p></dd>
 
 
 <dt id="arg-conduit-sapwood">conduit2sapwood<a class="anchor" aria-label="anchor" href="#arg-conduit-sapwood"></a></dt>
@@ -187,6 +203,48 @@
     <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Initialize soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Initialize model input</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate carbon compartments</span></span></span>
+<span class="r-in"><span><span class="fu">carbon_carbonCompartments</span><span class="op">(</span><span class="va">x1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   LeafStorageVolume SapwoodStorageVolume LeafStarchMaximumConcentration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        26.5664330          14.49487928                       0.925123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         4.0406733           5.17625488                       0.925123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         0.1679022           0.03056702                       0.925123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SapwoodStarchMaximumConcentration LeafStarchCapacity SapwoodStarchCapacity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                          4.625615         24.5772184            67.0477318</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                          4.625615          3.7381199            23.9433625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                          4.625615          0.1553302             0.1413913</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   LeafStructuralBiomass TwigStructuralBiomass SapwoodStructuralBiomass</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1            165.109206            171.234885              3201.235698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            111.289246            138.097964              1146.794384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              6.149703              4.769236                 3.738437</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SapwoodLivingStructuralBiomass HeartwoodStructuralBiomass</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                     244.444357                   6043.965</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                     431.409712                   2937.490</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                       1.406353                      0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   AbovegroundWoodBiomass BelowgroundWoodBiomass FineRootBiomass</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1            9044.809878             200.390824      23.2157679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            3822.186939             262.097660      20.9930167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3               2.566923               1.171515       0.7933894</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   StructuralBiomass LabileBiomass TotalLivingBiomass TotalBiomass</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        9604.76056    199.895416          632.66475   9804.65598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        4354.66483    159.784125          723.47610   4514.44895</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          15.45077      2.872282           11.22173     18.32305</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

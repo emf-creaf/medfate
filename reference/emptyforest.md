@@ -13,6 +13,7 @@ emptyforest(
   nherb = 0,
   nseedling = 0,
   nseed = 0,
+  nsnag = 0,
   nlitter = 0,
   addcolumns = NULL,
   SOC = FALSE
@@ -32,6 +33,10 @@ emptyforest(
 - nseed:
 
   Number of species in the seed bank.
+
+- nsnag:
+
+  Number of snag (dead standing) cohorts.
 
 - nlitter:
 

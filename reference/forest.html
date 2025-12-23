@@ -71,7 +71,7 @@ It has the following structure (see additional columns in details):</p><ul><li><
 <li><p><code>Z50</code>: Depth (in mm) corresponding to 50% of fine roots.</p></li>
 <li><p><code>Z95</code>: Depth (in mm) corresponding to 95% of fine roots.</p></li>
 </ul></li>
-</ul><p>Additionally, it can contain information about the herbaceous layer, seedling/sapling bank and seed bank:</p><ul><li><p><code>herbData</code>: A data frame of herbaceous cohorts (in rows) and the following columns (see an alternative way of defining the herbaceous layer in details):
+</ul><p>Additionally, it can contain information about other elements: the herbaceous layer, seedling/sapling bank, seed bank, snags, litter or soil carbon:</p><ul><li><p><code>herbData</code>: A data frame of herbaceous cohorts (in rows) and the following columns (see an alternative way of defining the herbaceous layer in details):
 </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for herbaceous species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Height</code>: Average total height of plants (in cm).</p></li>
 <li><p><code>Cover</code>: Percent cover.</p></li>
@@ -89,13 +89,22 @@ It has the following structure (see additional columns in details):</p><ul><li><
 </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for seed species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
 <li><p><code>Percent</code>: Amount of seeds in relation to full seed bank (in %).</p></li>
 </ul></li>
+<li><p><code>snagData</code>: An optional data frame containing information for snag cohorts, with the following columns:
+</p><ul><li><p><code>Species</code>: String with species (taxon) name.</p></li>
+<li><p><code>DBH</code>: Diameter at breast height (in cm), for tree snags only.</p></li>
+<li><p><code>Height</code>: Height of the snag cohort (tree or shrub) (in cm).</p></li>
+<li><p><code>Age</code>: Years passed since plant death (in yrs).</p></li>
+<li><p><code>SmallBranches</code>: Mass of (standing) small dead branches (in g C/m2).</p></li>
+<li><p><code>LargeWood</code>: Mass of (standing) large dead wood (in g C/m2).</p></li>
+</ul></li>
 <li><p><code>litterData</code>: An optional data frame containing litter information with the following columns:
 </p><ul><li><p><code>Species</code>: String with species (taxon) name.</p></li>
 <li><p><code>Leaves</code>: Mass of leaf litter (in g C/m2)</p></li>
-<li><p><code>SmallBranches</code>: Mass of small dead branches (in g C/m2)</p></li>
-<li><p><code>LargeWood</code>: Mass of large dead wood (in g C/m2)</p></li>
-<li><p><code>FineRoots</code>: Mass of fine root litter (in g C/m2)</p></li>
+<li><p><code>Twigs</code>: Mass of twig litter (in g C/m2)</p></li>
+<li><p><code>SmallBranches</code>: Mass of (downed) small dead branches (in g C/m2)</p></li>
+<li><p><code>LargeWood</code>: Mass of (downed) large dead wood (in g C/m2)</p></li>
 <li><p><code>CoarseRoots</code>: Mass of dead coarse roots (in g C/m2)</p></li>
+<li><p><code>FineRoots</code>: Mass of fine root litter (in g C/m2)</p></li>
 </ul></li>
 <li><p><code>SOCData</code>: An optional named numeric vector containing CENTURY soil organic carbon pools (normally from previous simulations):
 </p><ul><li><p><code>SurfaceMetabolic</code>: Metabolic carbon in the surface (in g C/m2).</p></li>
@@ -137,8 +146,7 @@ using the following list items:</p><ul><li><p><code>herbCover</code>: Percent co
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code>forest</code>, <code><a href="spwb.html">spwb</a></code>, <code><a href="modelInput.html">spwbInput</a></code></p>
-<p><code><a href="summary.forest.html">summary.forest</a></code>, <code><a href="emptyforest.html">emptyforest</a></code>, <code><a href="plot.forest.html">plot.forest</a></code></p></div>
+    <div class="dont-index"><p><code><a href="summary.forest.html">summary.forest</a></code>, <code><a href="emptyforest.html">emptyforest</a></code>, <code><a href="plot.forest.html">plot.forest</a></code>, <code><a href="modelInput.html">spwbInput</a></code></p></div>
     </div>
 
     <div class="section level2">

@@ -44,8 +44,9 @@ additional columns in details):
 
   - `Z95`: Depth (in mm) corresponding to 95% of fine roots.
 
-Additionally, it can contain information about the herbaceous layer,
-seedling/sapling bank and seed bank:
+Additionally, it can contain information about other elements: the
+herbaceous layer, seedling/sapling bank, seed bank, snags, litter or
+soil carbon:
 
 - `herbData`: A data frame of herbaceous cohorts (in rows) and the
   following columns (see an alternative way of defining the herbaceous
@@ -89,6 +90,21 @@ seedling/sapling bank and seed bank:
 
   - `Percent`: Amount of seeds in relation to full seed bank (in %).
 
+- `snagData`: An optional data frame containing information for snag
+  cohorts, with the following columns:
+
+  - `Species`: String with species (taxon) name.
+
+  - `DBH`: Diameter at breast height (in cm), for tree snags only.
+
+  - `Height`: Height of the snag cohort (tree or shrub) (in cm).
+
+  - `Age`: Years passed since plant death (in yrs).
+
+  - `SmallBranches`: Mass of (standing) small dead branches (in g C/m2).
+
+  - `LargeWood`: Mass of (standing) large dead wood (in g C/m2).
+
 - `litterData`: An optional data frame containing litter information
   with the following columns:
 
@@ -96,13 +112,15 @@ seedling/sapling bank and seed bank:
 
   - `Leaves`: Mass of leaf litter (in g C/m2)
 
-  - `SmallBranches`: Mass of small dead branches (in g C/m2)
+  - `Twigs`: Mass of twig litter (in g C/m2)
 
-  - `LargeWood`: Mass of large dead wood (in g C/m2)
+  - `SmallBranches`: Mass of (downed) small dead branches (in g C/m2)
 
-  - `FineRoots`: Mass of fine root litter (in g C/m2)
+  - `LargeWood`: Mass of (downed) large dead wood (in g C/m2)
 
   - `CoarseRoots`: Mass of dead coarse roots (in g C/m2)
+
+  - `FineRoots`: Mass of fine root litter (in g C/m2)
 
 - `SOCData`: An optional named numeric vector containing CENTURY soil
   organic carbon pools (normally from previous simulations):
@@ -194,13 +212,10 @@ herbaceous species), using the following list items:
 
 ## See also
 
-`forest`,
-[`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
-[`spwbInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
-
 [`summary.forest`](https://emf-creaf.github.io/medfate/reference/summary.forest.md),
 [`emptyforest`](https://emf-creaf.github.io/medfate/reference/emptyforest.md),
-[`plot.forest`](https://emf-creaf.github.io/medfate/reference/plot.forest.md)
+[`plot.forest`](https://emf-creaf.github.io/medfate/reference/plot.forest.md),
+[`spwbInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
 
 ## Examples
 

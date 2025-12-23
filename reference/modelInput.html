@@ -222,6 +222,8 @@ If <code>control$transpirationMode = "Sureau"</code> columns are:
 <li><p><code>IngrowthTreeDensity</code>: Density of trees reaching ingrowth DBH.</p></li>
 <li><p><code>RecrTreeDBH</code>: DBH for tree recruits from seeds or resprouting (e.g. 1 cm).</p></li>
 <li><p><code>IngrowthTreeDBH</code>: Ingrowth DBH for trees (e.g. 7.5 cm).</p></li>
+<li><p><code>RespFire</code>: Probability of resprouting after a fire disturbance.</p></li>
+<li><p><code>RespDist</code>: Probability of resprouting after undefined disturbance (typically desiccation).</p></li>
 </ul></li>
 <li><p><code>paramsAllometry</code>: A data frame with allometric parameters for each cohort:
 </p><ul><li><p><code>Aash</code>: Regression coefficient relating the square of shrub height with shrub area.</p></li>
@@ -237,10 +239,11 @@ If <code>control$transpirationMode = "Sureau"</code> columns are:
 <li><p><code>crownBudPercent</code>: Percentage of the crown with buds.</p></li>
 </ul></li>
 <li><p><code>internalCarbon</code>: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.</p></li>
-<li><p><code>internalStructuralLitter</code>: A data frame with the structural necromass (g C/m2) of different litter components: leaves, small branches, fine roots, large wood and coarse roots.</p></li>
+<li><p><code>internalSnags</code>: A data frame with characteristics (species identity, height, diameter, age), small branch mass and large wood mass (both in g C/m2) corresponding to decomposing snag cohorts (see <code><a href="forest.html">forest</a></code>).</p></li>
+<li><p><code>internalLitter</code>: A data frame with the aboveground and belowground mass (g C/m2) of different litter components: leaves, twigs, small branches, large wood, coarse roots and fine roots.</p></li>
 <li><p><code>internalSOC</code>: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).</p></li>
 <li><p><code>internalMortality</code>: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
-also distinguishing mortality due to starvation or dessication.</p></li>
+also distinguishing mortality due to starvation or dessication, the number of resprouting elements and the accumulation of aboveground dead wood (branches and large wood).</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -604,12 +607,14 @@ also distinguishing mortality due to starvation or dessication.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualBaseRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            8.0000           18.5000            2.0000            4.9000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            1.5000            0.0200            0.1000            6.0000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           11.0000            0.0800            0.4000            0.0033 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           8.0000          18.5000           2.0000           4.9000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Twigs    SmallBranches        LargeWood      CoarseRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           1.8000           1.5000           0.0200           0.1000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           6.0000          11.0000           0.0800           0.4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SoilPassive </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           0.0033 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualTurnoverRate</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
@@ -1266,12 +1271,14 @@ also distinguishing mortality due to starvation or dessication.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualBaseRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            8.0000           18.5000            2.0000            4.9000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            1.5000            0.0200            0.1000            6.0000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           11.0000            0.0800            0.4000            0.0033 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           8.0000          18.5000           2.0000           4.9000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Twigs    SmallBranches        LargeWood      CoarseRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           1.8000           1.5000           0.0200           0.1000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           6.0000          11.0000           0.0800           0.4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SoilPassive </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           0.0033 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualTurnoverRate</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
@@ -1966,12 +1973,14 @@ also distinguishing mortality due to starvation or dessication.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualBaseRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            8.0000           18.5000            2.0000            4.9000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            1.5000            0.0200            0.1000            6.0000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           11.0000            0.0800            0.4000            0.0033 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           8.0000          18.5000           2.0000           4.9000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Twigs    SmallBranches        LargeWood      CoarseRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           1.8000           1.5000           0.0200           0.1000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           6.0000          11.0000           0.0800           0.4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SoilPassive </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           0.0033 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualTurnoverRate</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
@@ -2671,12 +2680,14 @@ also distinguishing mortality due to starvation or dessication.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualBaseRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  SurfaceMetabolic     SoilMetabolic SurfaceStructural    SoilStructural </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            8.0000           18.5000            2.0000            4.9000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     SmallBranches         LargeWood       CoarseRoots     SurfaceActive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            1.5000            0.0200            0.1000            6.0000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        SoilActive       SurfaceSlow          SoilSlow       SoilPassive </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           11.0000            0.0800            0.4000            0.0033 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           8.0000          18.5000           2.0000           4.9000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Twigs    SmallBranches        LargeWood      CoarseRoots </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           1.8000           1.5000           0.0200           0.1000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           6.0000          11.0000           0.0800           0.4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SoilPassive </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           0.0033 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$decompositionAnnualTurnoverRate</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
