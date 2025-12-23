@@ -705,6 +705,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// snagFallProbability
+double snagFallProbability(double DBH, int decayClass, double durabilityEffect);
+RcppExport SEXP _medfate_snagFallProbability(SEXP DBHSEXP, SEXP decayClassSEXP, SEXP durabilityEffectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< int >::type decayClass(decayClassSEXP);
+    Rcpp::traits::input_parameter< double >::type durabilityEffect(durabilityEffectSEXP);
+    rcpp_result_gen = Rcpp::wrap(snagFallProbability(DBH, decayClass, durabilityEffect));
+    return rcpp_result_gen;
+END_RCPP
+}
 // litterMetabolicFraction
 double litterMetabolicFraction(double ligninPercent, double Nmass);
 RcppExport SEXP _medfate_litterMetabolicFraction(SEXP ligninPercentSEXP, SEXP NmassSEXP) {
@@ -6444,6 +6457,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
     {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
+    {"_medfate_snagFallProbability", (DL_FUNC) &_medfate_snagFallProbability, 3},
     {"_medfate_litterMetabolicFraction", (DL_FUNC) &_medfate_litterMetabolicFraction, 2},
     {"_medfate_addLeafTwigLitter", (DL_FUNC) &_medfate_addLeafTwigLitter, 6},
     {"_medfate_addSmallBranchLitter", (DL_FUNC) &_medfate_addSmallBranchLitter, 3},

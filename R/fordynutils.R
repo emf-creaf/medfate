@@ -24,6 +24,7 @@
                             SmallBranches = xo$internalMortality$Snag_smallbranches,
                             LargeWood = xo$internalMortality$Snag_largewood)
   mergedSnagData <- rbind(oldSnagData, newSnagData)
+  row.names(mergedSnagData) <- NULL
   return(mergedSnagData)
 }
 
@@ -33,15 +34,31 @@
     for(s in 1:nrow(snagData)) {
       # Determine branch fall and large wood fall
       speciesSnag <- snagData$Species[s]
+      dbhSnag <- snagData$DBH[s]
+      ageSnag <- snagData$Age[s]
       smallBranchFallAmount <- 0.0
       largeWoodFallAmount <- 0.0
-      if(snagData$Age[s] > 5) { # Tree fall after 5 years
+      decayClass <- 1
+      if(ageSnag >= 2  && ageSnag <= 4) { # 50% branch fall after 2 years
+        smallBranchFallAmount <- snagData$SmallBranches[s]/2
+        decayClass <- 2
+      } else if(ageSnag > 4) { # 100% branch fall after 5 years
+        smallBranchFallAmount <- snagData$SmallBranches[s];
+        decayClass <- 3
+        if(ageSnag > 8) { 
+          decayClass <- 4
+        }
+      }
+      if(!is.na(dbhSnag)) {
+        p_fall<- decomposition_snagFallProbability(DBH = dbhSnag, decayClass = decayClass)
+      } else {
+        p_fall <- 0.5
+      }
+      # To prevent infinite accumulation of snag cohorts
+      if(ageSnag > 30) p_fall <- 1.0
+      if(runif(1) < p_fall) {
         largeWoodFallAmount <- snagData$LargeWood[s]
         smallBranchFallAmount <- snagData$SmallBranches[s]
-      } else if(snagData$Age[s] > 2) { # 100% branch fall after 2 years
-        smallBranchFallAmount <- snagData$SmallBranches[s]
-      } else if(snagData$Age[s] > 1) { # 50% branch fall after 1 year
-        smallBranchFallAmount <- snagData$SmallBranches[s]/2
       }
       # Remove branch fall and large wood fall from snag data
       snagData$SmallBranches[s] = snagData$SmallBranches[s] - smallBranchFallAmount

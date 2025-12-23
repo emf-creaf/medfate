@@ -13,6 +13,7 @@ using namespace Rcpp;
 //' 
 //' @details
 //' Function \code{decomposition_moistureEffect} follows Kelly et al. (2000) 
+//' Function \code{decomposition_snagFallProbability} follows Vanderwell et al. (2006) 
 //' 
 //' @return Functions \code{decomposition_moistureEffect}, \code{decomposition_pHEffect} and \code{decomposition_temperatureEffect} return
 //' a scalar value representing a factor that should modify a decomposition rate. Function \code{decomposition_annualLitterDecompositionRate} 
@@ -21,13 +22,16 @@ using namespace Rcpp;
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @references
-//' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
 //' 
 //' @seealso \code{\link{decomposition_DAYCENT}}
 //' 
-//' @references 
+//' @references
+//' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+//' 
+//' Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.
+//' 
 //' Meentemeyer (1978)
+//' 
 //' Kelly et al (2000)
 //' 
 //' @keywords internal
@@ -38,7 +42,26 @@ double annualLitterDecompositionRate(double AET, double lignin) {
   return(ki);
 }
 
-
+//' @param DBH Diameter at breast height
+//' @param decayClass Decay class, from 1 to 5
+//' @param durabilityEffect Effect of wood durability
+//' 
+//' @rdname decomposition_annualLitterDecompositionRate
+// [[Rcpp::export("decomposition_snagFallProbability")]]
+double snagFallProbability(double DBH, int decayClass, double durabilityEffect = 0.0) {
+  double gamma_dur[5];
+  gamma_dur[0] = 0.0;
+  gamma_dur[1] = 0.177;
+  gamma_dur[2] = 0.542;
+  gamma_dur[3] = 0.702;
+  gamma_dur[4] = 0.528;
+  
+  double lnDBH = log(DBH);
+  double lp  = 5.691 + durabilityEffect + gamma_dur[decayClass - 1] - 3.777*lnDBH + 0.531*pow(lnDBH,2.0);
+  double p5 = exp(lp)/(1.0 + exp(lp));
+  double p1 = 1.0 - pow(1.0 - p5, 1.0/5.0);
+  return(p1);
+}
 
 
 //' @param ligninPercent lignin content (% of dry)

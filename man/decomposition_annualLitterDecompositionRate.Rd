@@ -2,6 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{decomposition_annualLitterDecompositionRate}
 \alias{decomposition_annualLitterDecompositionRate}
+\alias{decomposition_snagFallProbability}
 \alias{decomposition_litterMetabolicFraction}
 \alias{decomposition_pHEffect}
 \alias{decomposition_moistureEffect}
@@ -9,6 +10,8 @@
 \title{Low-level decomposition functions}
 \usage{
 decomposition_annualLitterDecompositionRate(AET, lignin)
+
+decomposition_snagFallProbability(DBH, decayClass, durabilityEffect = 0)
 
 decomposition_litterMetabolicFraction(ligninPercent, Nmass)
 
@@ -22,6 +25,12 @@ decomposition_temperatureEffect(soilTemperature)
 \item{AET}{Actual evapotranspiration (mm)}
 
 \item{lignin}{Lignin percent}
+
+\item{DBH}{Diameter at breast height}
+
+\item{decayClass}{Decay class, from 1 to 5}
+
+\item{durabilityEffect}{Effect of wood durability}
 
 \item{ligninPercent}{lignin content (\% of dry)}
 
@@ -48,11 +57,15 @@ Functions related to litter and soil carbon decomposition processes
 }
 \details{
 Function \code{decomposition_moistureEffect} follows Kelly et al. (2000)
+Function \code{decomposition_snagFallProbability} follows Vanderwell et al. (2006)
 }
 \references{
 Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
 
+Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.
+
 Meentemeyer (1978)
+
 Kelly et al (2000)
 }
 \seealso{

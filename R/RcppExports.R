@@ -381,6 +381,7 @@ instance_communication_structures <- function(x, model) {
 #' 
 #' @details
 #' Function \code{decomposition_moistureEffect} follows Kelly et al. (2000) 
+#' Function \code{decomposition_snagFallProbability} follows Vanderwell et al. (2006) 
 #' 
 #' @return Functions \code{decomposition_moistureEffect}, \code{decomposition_pHEffect} and \code{decomposition_temperatureEffect} return
 #' a scalar value representing a factor that should modify a decomposition rate. Function \code{decomposition_annualLitterDecompositionRate} 
@@ -389,19 +390,31 @@ instance_communication_structures <- function(x, model) {
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @references
-#' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
 #' 
 #' @seealso \code{\link{decomposition_DAYCENT}}
 #' 
-#' @references 
+#' @references
+#' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+#' 
+#' Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.
+#' 
 #' Meentemeyer (1978)
+#' 
 #' Kelly et al (2000)
 #' 
 #' @keywords internal
 #' @name decomposition_annualLitterDecompositionRate
 decomposition_annualLitterDecompositionRate <- function(AET, lignin) {
     .Call(`_medfate_annualLitterDecompositionRate`, AET, lignin)
+}
+
+#' @param DBH Diameter at breast height
+#' @param decayClass Decay class, from 1 to 5
+#' @param durabilityEffect Effect of wood durability
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
+decomposition_snagFallProbability <- function(DBH, decayClass, durabilityEffect = 0.0) {
+    .Call(`_medfate_snagFallProbability`, DBH, decayClass, durabilityEffect)
 }
 
 #' @param ligninPercent lignin content (% of dry)

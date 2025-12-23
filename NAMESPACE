@@ -1,10 +1,10 @@
 import(ggplot2)
 import(shiny)
 importFrom("meteoland", "utils_atmosphericPressure", "utils_averageDailyVP",
-       "utils_saturationVP", "penman")
+           "utils_saturationVP", "penman")
 importFrom("stats", "aggregate","filter","median",
            "cor","quantile", "dnorm", "Gamma", "glm", "predict",
-           "rpois", "rbinom", "uniroot")
+           "rpois", "rbinom", "runif", "uniroot")
 importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")
