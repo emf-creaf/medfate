@@ -1307,8 +1307,36 @@ void growthInputVersionUpdate(List x) {
     control.push_back(false, "decompositionPoolResults");
     x["control"] = control;
   }
+  DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
+  int numCohorts = internalMortality.nrow();
+  if(!internalMortality.containsElementNamed("N_resprouting_stumps")) {
+    NumericVector N_resprouting_stumps(numCohorts, 0.0);
+    internalMortality.push_back(N_resprouting_stumps, "N_resprouting_stumps");
+  }
+  if(!internalMortality.containsElementNamed("Cover_resprouting_stumps")) {
+    NumericVector Cover_resprouting_stumps(numCohorts, 0.0);
+    internalMortality.push_back(Cover_resprouting_stumps, "Cover_resprouting_stumps");
+  }
+  if(!internalMortality.containsElementNamed("Snag_smallbranches")) {
+    NumericVector Snag_smallbranches(numCohorts, 0.0);
+    internalMortality.push_back(Snag_smallbranches, "Snag_smallbranches");
+  }
+  if(!internalMortality.containsElementNamed("Snag_largewood")) {
+    NumericVector Snag_largewood(numCohorts, 0.0);
+    internalMortality.push_back(Snag_largewood, "Snag_largewood");
+  }
+  x["internalMortality"] = internalMortality;
+  DataFrame paramsMortalityRegenerationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsMortalityRegeneration"]);
+  if(!paramsMortalityRegenerationdf.containsElementNamed("RespFire")) {
+    NumericVector RespFire(numCohorts, 0.0);
+    paramsMortalityRegenerationdf.push_back(RespFire, "RespFire");
+  }
+  if(!paramsMortalityRegenerationdf.containsElementNamed("RespDist")) {
+    NumericVector RespDist(numCohorts, 0.0);
+    paramsMortalityRegenerationdf.push_back(RespDist, "RespDist");
+  }
+  x["paramsMortalityRegeneration"] = paramsMortalityRegenerationdf;
 }
-
 // [[Rcpp::export(".spwbInput")]]
 List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, 
                     DataFrame soil, DataFrame FCCSprops, 
