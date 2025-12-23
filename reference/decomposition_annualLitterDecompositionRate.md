@@ -7,6 +7,8 @@ Functions related to litter and soil carbon decomposition processes
 ``` r
 decomposition_annualLitterDecompositionRate(AET, lignin)
 
+decomposition_snagFallProbability(DBH, decayClass, durabilityEffect = 0)
+
 decomposition_litterMetabolicFraction(ligninPercent, Nmass)
 
 decomposition_pHEffect(x, pool)
@@ -25,6 +27,18 @@ decomposition_temperatureEffect(soilTemperature)
 - lignin:
 
   Lignin percent
+
+- DBH:
+
+  Diameter at breast height
+
+- decayClass:
+
+  Decay class, from 1 to 5
+
+- durabilityEffect:
+
+  Effect of wood durability
 
 - ligninPercent:
 
@@ -67,13 +81,21 @@ fraction of litter that corresponds to metabolic carbon.
 ## Details
 
 Function `decomposition_moistureEffect` follows Kelly et al. (2000)
+Function `decomposition_snagFallProbability` follows Vanderwell et al.
+(2006)
 
 ## References
 
 Bonan, G. (2019). Climate change and terrestrial ecosystem modeling.
 Cambridge University Press, Cambridge, UK.
 
-Meentemeyer (1978) Kelly et al (2000)
+Vanderwel et al. (2006) Snag dynamics in partially harvested and
+unmanaged northern hardwood forests. Canadian Journal of Forest Research
+36: 2769-2779.
+
+Meentemeyer (1978)
+
+Kelly et al (2000)
 
 ## See also
 

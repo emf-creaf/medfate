@@ -56,6 +56,8 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">decomposition_annualLitterDecompositionRate</span><span class="op">(</span><span class="va">AET</span>, <span class="va">lignin</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">decomposition_snagFallProbability</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">decayClass</span>, durabilityEffect <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">decomposition_litterMetabolicFraction</span><span class="op">(</span><span class="va">ligninPercent</span>, <span class="va">Nmass</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">decomposition_pHEffect</span><span class="op">(</span><span class="va">x</span>, <span class="va">pool</span><span class="op">)</span></span>
@@ -75,6 +77,18 @@
 
 <dt id="arg-lignin">lignin<a class="anchor" aria-label="anchor" href="#arg-lignin"></a></dt>
 <dd><p>Lignin percent</p></dd>
+
+
+<dt id="arg-dbh">DBH<a class="anchor" aria-label="anchor" href="#arg-dbh"></a></dt>
+<dd><p>Diameter at breast height</p></dd>
+
+
+<dt id="arg-decayclass">decayClass<a class="anchor" aria-label="anchor" href="#arg-decayclass"></a></dt>
+<dd><p>Decay class, from 1 to 5</p></dd>
+
+
+<dt id="arg-durabilityeffect">durabilityEffect<a class="anchor" aria-label="anchor" href="#arg-durabilityeffect"></a></dt>
+<dd><p>Effect of wood durability</p></dd>
 
 
 <dt id="arg-ligninpercent">ligninPercent<a class="anchor" aria-label="anchor" href="#arg-ligninpercent"></a></dt>
@@ -114,13 +128,15 @@ a scalar with the fraction of litter that corresponds to metabolic carbon.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Function <code>decomposition_moistureEffect</code> follows Kelly et al. (2000)</p>
+    <p>Function <code>decomposition_moistureEffect</code> follows Kelly et al. (2000)
+Function <code>decomposition_snagFallProbability</code> follows Vanderwell et al. (2006)</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.</p>
-<p>Meentemeyer (1978)
-Kelly et al (2000)</p>
+<p>Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.</p>
+<p>Meentemeyer (1978)</p>
+<p>Kelly et al (2000)</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

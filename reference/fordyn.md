@@ -292,10 +292,10 @@ fd$DeadTreeTable
 #> 2    1 2001 T2_168     Quercus ilex 14.70489 663.2652 0.3327930            0
 #> 3    2 2002 T1_148 Pinus halepensis 37.76664 811.6041 0.3032510            0
 #> 4    2 2002 T2_168     Quercus ilex 14.80163 666.2698 0.3353758            0
-#>   N_dessication N_burnt Z50  Z95 Z100 Age ObsID
-#> 1             0       0 100  300   NA  NA  <NA>
-#> 2             0       0 300 1000   NA  NA  <NA>
-#> 3             0       0 100  300   NA  NA  <NA>
-#> 4             0       0 300 1000   NA  NA  <NA>
+#>   N_dessication N_burnt N_resprouting_stumps Z50  Z95 Z100 Age ObsID
+#> 1             0       0                    0 100  300   NA  NA  <NA>
+#> 2             0       0                    0 300 1000   NA  NA  <NA>
+#> 3             0       0                    0 100  300   NA  NA  <NA>
+#> 4             0       0                    0 300 1000   NA  NA  <NA>
 # }
 ```

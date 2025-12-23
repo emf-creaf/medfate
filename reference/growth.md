@@ -375,7 +375,7 @@ G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Change in soil water content (mm): -11.6182
 #> Soil water balance result (mm): -11.6182
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): -7.10543e-15
+#> Snowpack water balance result (mm): 0
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 82 Net rainfall (mm) 380

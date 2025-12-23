@@ -468,43 +468,43 @@ meteorological inputs, snow dynamics, and different components of the
 water balance:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"PET_Precipitation"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Snow"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-19-2.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-19-2.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Export"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-19-3.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-19-3.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Evapotranspiration"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>Function <code>plot</code> is also allows displaying soil moisture
 dynamics by layer, which can be done in four different ways (the first
 two only imply a change in axis units):</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilTheta"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilRWC"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-2.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-2.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilPsi"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-3.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-3.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilVol"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-4.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-4.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>Finally, the same function can also be used to draw the dynamics of
 plant variables by cohorts, such as transpiration, gross photosynthesis
 or water potential:</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"Transpiration"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"GrossPhotosynthesis"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-2.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-2.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantPsi"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-3.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-3.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>Finally, one can interactively create plots using function
 <code>shinyplot</code>, e.g.:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
@@ -712,7 +712,7 @@ water stress index (integral of water potential values) can be
 calculated and drawn for every month:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/droughtStress.html">droughtStress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"WSI"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-31-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-31-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>Another specific summary function is
 <code><a href="../../reference/waterUseEfficiency.html">waterUseEfficiency()</a></code>. This is most useful with advanced
 water and energy balance modeling, but for simple water balance it
