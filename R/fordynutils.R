@@ -484,6 +484,7 @@
                   N_starvation = x$internalMortality$N_starvation[range],
                   N_dessication = x$internalMortality$N_dessication[range],
                   N_burnt = x$internalMortality$N_burnt[range],
+                  N_resprouting_stumps = x$internalMortality$N_resprouting_stumps[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range],
                   Z100 = x$below$Z100[range])
@@ -570,6 +571,7 @@
                   Cover_starvation = x$internalMortality$Cover_starvation[range],
                   Cover_dessication = x$internalMortality$Cover_dessication[range],
                   Cover_burnt = x$internalMortality$Cover_burnt[range],
+                  Cover_resprouting_stumps = x$internalMortality$Cover_resprouting_stumps[range],
                   Height = x$above$H[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range],

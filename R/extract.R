@@ -165,9 +165,11 @@
     } else if(output=="Temperature") {
       if(variable %in% c("Tatm_mean", "Tatm_min", "Tatm_max", "Tcan_mean", "Tcan_min", "Tcan_max", "Tsoil_mean", "Tsoil_min", "Tsoil_max")) u <- "celsius"
     } else if(output=="CarbonBalance") {
-      u <- "g/m2"
+      u <- "g C/m2"
     } else if(output=="BiomassBalance") {
       u <- "g/m2"
+    } else if(output=="DecompositionPools") {
+      u <- "g C/m2"
     } else if(output=="FireHazard") {
       if(variable %in% c("Loading_overstory", "Loading_understory")) u <- "kg/m2"
       else if(variable %in% c("CFMC_understory", "CFMC_overstory", "DFMC")) u <- "%"

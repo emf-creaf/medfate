@@ -258,9 +258,9 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
                                  Named("DessicationRate") = dessicationRate,
                                  Named("MortalityRate") = mortalityRate);
 
-  NumericMatrix DecompositionPools(numDays, 9);
+  NumericMatrix DecompositionPools(numDays, 10);
   DecompositionPools.attr("dimnames") = List::create(dateStrings, 
-                          CharacterVector::create("SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
+                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
                                                   "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
   
   List l;
@@ -524,6 +524,9 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   if(control["decompositionPoolResults"]) {
     NumericMatrix decompositionPool = Rcpp::as<Rcpp::NumericMatrix>(l["DecompositionPools"]);
     NumericVector internalSOC = x["internalSOC"];
+    DataFrame internalSnags = Rcpp::as<Rcpp::DataFrame>(x["internalSnags"]);
+    NumericVector structural_snags_smallbranches = internalSnags["SmallBranches"]; 
+    NumericVector structural_snags_largewood = internalSnags["LargeWood"]; 
     DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
     NumericVector structural_litter_leaves = internalLitter["Leaves"]; 
     NumericVector structural_litter_twigs = internalLitter["Twigs"]; 
@@ -531,15 +534,16 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     NumericVector structural_litter_largewood = internalLitter["LargeWood"]; 
     NumericVector structural_litter_coarseroots = internalLitter["CoarseRoots"]; 
     NumericVector structural_litter_fineroots = internalLitter["FineRoots"]; 
-    decompositionPool(iday,0) = sum(structural_litter_leaves) + sum(structural_litter_twigs) +sum(structural_litter_smallbranches) + sum(structural_litter_largewood);
-    decompositionPool(iday,1) = sum(structural_litter_fineroots)+ sum(structural_litter_coarseroots);
-    decompositionPool(iday,2) = internalSOC["SurfaceMetabolic"];
-    decompositionPool(iday,3) = internalSOC["SoilMetabolic"];
-    decompositionPool(iday,4) = internalSOC["SurfaceActive"];
-    decompositionPool(iday,5) = internalSOC["SoilActive"];
-    decompositionPool(iday,6) = internalSOC["SurfaceSlow"];
-    decompositionPool(iday,7) = internalSOC["SoilSlow"];
-    decompositionPool(iday,8) = internalSOC["SoilPassive"];
+    decompositionPool(iday,0) = sum(structural_snags_smallbranches) + sum(structural_snags_largewood);
+    decompositionPool(iday,1) = sum(structural_litter_leaves) + sum(structural_litter_twigs) +sum(structural_litter_smallbranches) + sum(structural_litter_largewood);
+    decompositionPool(iday,2) = sum(structural_litter_fineroots)+ sum(structural_litter_coarseroots);
+    decompositionPool(iday,3) = internalSOC["SurfaceMetabolic"];
+    decompositionPool(iday,4) = internalSOC["SoilMetabolic"];
+    decompositionPool(iday,5) = internalSOC["SurfaceActive"];
+    decompositionPool(iday,6) = internalSOC["SoilActive"];
+    decompositionPool(iday,7) = internalSOC["SurfaceSlow"];
+    decompositionPool(iday,8) = internalSOC["SoilSlow"];
+    decompositionPool(iday,9) = internalSOC["SoilPassive"];
   }
   
   NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(l["BiomassBalance"]);
