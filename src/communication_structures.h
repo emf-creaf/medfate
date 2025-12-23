@@ -92,6 +92,12 @@ const int DECOMPCOM_SOIL_SLOW = 5;
 const int DECOMPCOM_SOIL_PASSIVE = 6;
 
 NumericVector communicationLitterDecomposition();
+
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int SNAGDECOMPCOM_FLUX_RESPIRATION = 2;
+NumericVector communicationSnagDecomposition();
+  
 List communicationDecomposition();
 
 NumericVector communicationFireHazard();

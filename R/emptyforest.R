@@ -5,6 +5,7 @@
 #' @param ntree,nshrub,nherb Number of tree, shrub and herb cohorts, respectively.
 #' @param nseedling Number of species in the seedling bank.
 #' @param nseed Number of species in the seed bank.
+#' @param nsnag Number of snag (dead standing) cohorts.
 #' @param nlitter Number of items in the litter compartment.
 #' @param addcolumns A character vector with additional columns. Currently allowed are (see \code{\link{forest}}):
 #' \itemize{
@@ -43,7 +44,7 @@
 #' # Initializes forest with 2 tree cohorts, 1 shrub cohort and 1 herbaceous cohort
 #' emptyforest(ntree = 2, nshrub = 1, nherb = 1)
 #' @name emptyforest
-emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed = 0, nlitter = 0,
+emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed = 0, nsnag = 0, nlitter = 0,
                         addcolumns = NULL, SOC = FALSE) {
   l <- list()
   l$treeData <- data.frame(Species=as.character(rep(NA, ntree)),
@@ -75,6 +76,14 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
   if(nseed > 0 ) {
     l$seedBank <- data.frame(Species = as.character(rep(NA, nseed)),
                              Percent = as.numeric(rep(NA, nseed)))
+  }
+  if(nsnag > 0) {
+    l$snagData<- data.frame(Species = as.character(rep(NA, nsnag)),
+                            DBH = as.numeric(rep(NA, nsnag)),
+                            Height = as.numeric(rep(NA, nsnag)),
+                            DeadAge = as.numeric(rep(NA, nsnag)),
+                            SmallBranches = as.numeric(rep(NA, nsnag)),
+                            LargeWood = as.numeric(rep(NA, nsnag)))
   }
   if(nlitter > 0) {
     l$litterData <- data.frame(Species = as.character(rep(NA, nlitter)),

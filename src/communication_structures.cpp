@@ -194,6 +194,16 @@ NumericVector communicationFireHazard() {
   return(fireHazard);
 }
 
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int SNAGDECOMPCOM_FLUX_RESPIRATION = 2;
+NumericVector communicationSnagDecomposition() {
+  NumericVector output = NumericVector::create(_["transfer_surface_active"] = 0.0,
+                                               _["transfer_surface_slow"] = 0.0,
+                                               _["flux_respiration"] = 0.0);
+  return(output);
+}
+
 const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
 const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
 const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
@@ -226,6 +236,7 @@ const int DECOMPCOM_SOIL_PASSIVE = 6;
 // }
 List communicationDecomposition() {
   int npool = 7;
+  NumericVector snagDecompositionOutput = communicationSnagDecomposition();
   NumericVector litterDecompositionOutput = communicationLitterDecomposition();
   NumericVector xi(npool), K(npool);
   NumericMatrix A(npool, npool);
@@ -240,7 +251,8 @@ List communicationDecomposition() {
       respf(i,j) = 0.0;
     }
   }
-  List l = List::create(_["ldo"] = litterDecompositionOutput,
+  List l = List::create(_["sdo"] = snagDecompositionOutput,
+                        _["ldo"] = litterDecompositionOutput,
                         _["xi"] = xi,
                         _["K"] = K,
                         _["Kmix"] = 0.0,
@@ -1474,6 +1486,8 @@ DataFrame communicationCarbonCompartments(int numCohorts) {
     _["SapwoodStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
     _["SapwoodLivingStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
     _["HeartwoodStructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["AbovegroundWoodBiomass"] = NumericVector(numCohorts, NA_REAL),
+    _["BelowgroundWoodBiomass"] = NumericVector(numCohorts, NA_REAL),
     _["FineRootBiomass"] = NumericVector(numCohorts, NA_REAL),
     _["StructuralBiomass"] = NumericVector(numCohorts, NA_REAL),
     _["LabileBiomass"] = NumericVector(numCohorts, NA_REAL),

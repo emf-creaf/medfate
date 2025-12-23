@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "fuelmoisture.h"
 #include "communication_structures.h"
 using namespace Rcpp;
 
@@ -120,7 +121,6 @@ void addFineRootLitter(String species_litter, double fineroot_litter,
                        DataFrame litter, 
                        DataFrame paramsLitterDecomposition,
                        NumericVector SOC) {
-  
   NumericVector structural_litter_fineroots = litter["FineRoots"];
   NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
 
@@ -345,6 +345,69 @@ void updateCarbonTransferMatrices(List commDecomp,
    }
  }
 
+void DAYCENTsnagsInner(NumericVector snagDecompositionOutput, 
+                       DataFrame snags,
+                       NumericVector baseAnnualRates,
+                       double airTemperature, double airRelativeHumidity, 
+                       double tstep = 1.0) {
+  
+  NumericVector structural_smallbranches = snags["SmallBranches"];
+  NumericVector structural_largewood = snags["LargeWood"];
+  int numCohorts = snags.nrow();
+  
+  // Reset output
+  snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] = 0.0;
+  snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] = 0.0;
+  snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] = 0.0;
+  
+  
+  //Temperature effect
+  double tempEff = temperatureEffect(airTemperature);
+  //Moisture effect for fine texture
+  double fuelMaximumMoisture = 100.0; //% dry Depends on wood density
+  double fuelMoisture = EMCSimard(airTemperature, airRelativeHumidity); //Ranges between 0 and 30% dry
+  double moistEff = moistureEffect(0, 80, fuelMoisture/fuelMaximumMoisture);
+  
+  double k, flig, loss;
+  
+  // STRUCTURAL small branches
+  flig = 0.25; //Lignin fraction for small branches
+  for(int i=0;i<numCohorts;i++) {
+    k = (baseAnnualRates["SmallBranches"]/365.25)*tempEff*moistEff*exp(-3.0*flig);
+    loss = structural_smallbranches[i]*k*tstep;
+    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
+    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
+    snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
+    structural_smallbranches[i] -= loss;
+  }
+  
+  // STRUCTURAL large wood
+  flig = 0.25; //Lignin fraction for large wood
+  for(int i=0;i<numCohorts;i++) {
+    k = (baseAnnualRates["LargeWood"]/365.25)*tempEff*moistEff*exp(-3.0*flig);
+    loss = structural_largewood[i]*k*tstep;
+    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
+    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
+    snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
+    structural_largewood[i] -= loss;
+  }
+}
+
+//' @rdname decomposition_DAYCENT
+//' @keywords internal
+// [[Rcpp::export("decomposition_DAYCENTsnags")]]
+NumericVector DAYCENTsnags(DataFrame snags, 
+                           NumericVector baseAnnualRates,
+                           double airTemperature, double airRelativeHumidity, 
+                           double tstep = 1.0) {
+  NumericVector snagDecompositionOutput = communicationSnagDecomposition();
+  DAYCENTsnagsInner(snagDecompositionOutput, 
+                    snags,  
+                    baseAnnualRates,
+                    airTemperature, airRelativeHumidity, 
+                    tstep);
+  return(snagDecompositionOutput);
+}
 
 void DAYCENTlitterInner(NumericVector litterDecompositionOutput, 
                         DataFrame litter, DataFrame paramsLitterDecomposition,
@@ -454,6 +517,7 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   }
 }
 
+
 //' @rdname decomposition_DAYCENT
 //' @keywords internal
 // [[Rcpp::export("decomposition_DAYCENTlitter")]]
@@ -473,14 +537,22 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 }
 
 double DAYCENTInner(List commDecomp,
-                    DataFrame litter, NumericVector SOC,
+                    DataFrame snags, DataFrame litter, NumericVector SOC,
                     DataFrame paramsLitterDecomposition,
                     NumericVector baseAnnualRates, double annualTurnoverRate,
+                    double airTemperature, double airRelativeHumidity, 
                     double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                     double soilO2 = 1.0, double cultfac = 1.0,
                     double tstep = 1.0) {
   
   int npool = 7;
+  NumericVector snagDecompositionOutput = commDecomp["sdo"];
+  DAYCENTsnagsInner(snagDecompositionOutput, 
+                    snags, 
+                    baseAnnualRates,
+                    airTemperature, airRelativeHumidity,
+                    tstep);
+  
   NumericVector litterDecompositionOutput = commDecomp["ldo"];
   DAYCENTlitterInner(litterDecompositionOutput, 
                      litter, paramsLitterDecomposition, 
@@ -502,9 +574,9 @@ double DAYCENTInner(List commDecomp,
   NumericVector K = commDecomp["K"];
   
   NumericVector dC(npool, 0.0);
-  dC[DECOMPCOM_SURFACE_ACTIVE] = litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE];
+  dC[DECOMPCOM_SURFACE_ACTIVE] = snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] + litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE];
+  dC[DECOMPCOM_SURFACE_SLOW] = snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] + litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW];
   dC[DECOMPCOM_SOIL_ACTIVE] = litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE];
-  dC[DECOMPCOM_SURFACE_SLOW] = litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW];
   dC[DECOMPCOM_SOIL_SLOW] = litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW];
   for(int i=0;i<npool;i++) {
     // carbon transfer from pool j to pool i
@@ -517,7 +589,7 @@ double DAYCENTInner(List commDecomp,
     dC[i] = dC[i] - xi[i] * K[i] * SOC[i]*tstep;
   }
   //   heterotrophic respiration
-  double RH = litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION];
+  double RH = snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] + litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION];
   for(int i=0;i<npool;i++) {
     for(int j=0;j<npool;j++) {
       if(j!=i) {
@@ -539,12 +611,15 @@ double DAYCENTInner(List commDecomp,
 //' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
 //' performs the whole model for carbon decomposition.
 //' 
+//' @param snags A data frame with dead standing (snag) cohort information (see \code{\link{growthInput}}).
 //' @param litter A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 //' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 //' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 //' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 //' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
 //' @param sand,clay Soil texture (sand and sand) in percent volume (%). 
+//' @param airTemperature Mean daily air temperature (in Celsius).
+//' @param airRelativeHumidity Mean daily relative humidity (%).
 //' @param soilTemperature Soil temperature (in Celsius).
 //' @param soilMoisture Soil moisture content, relative to saturation (0-1).
 //' @param soilPH Soil pH (0-14).
@@ -570,17 +645,19 @@ double DAYCENTInner(List commDecomp,
 //' 
 //' @keywords internal
 // [[Rcpp::export("decomposition_DAYCENT")]]
-double DAYCENT(DataFrame litter, NumericVector SOC,
+double DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
                DataFrame paramsLitterDecomposition,
                NumericVector baseAnnualRates, double annualTurnoverRate,
+               double airTemperature, double airRelativeHumidity, 
                double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                double soilO2 = 1.0, double cultfac = 1.0,
                double tstep = 1.0) {
   List commDecomp = communicationDecomposition();
   return(DAYCENTInner(commDecomp,
-                      litter, SOC,
+                      snags, litter, SOC,
                       paramsLitterDecomposition,
                       baseAnnualRates, annualTurnoverRate,
+                      airTemperature, airRelativeHumidity,  
                       sand, clay, soilTemperature, soilMoisture, soilPH, 
                       soilO2, cultfac,
                       tstep));

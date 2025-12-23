@@ -215,7 +215,7 @@ double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity) 
 /**
  * aboveground wood volume in l = dm3
  * 
- * SA - cm2
+ * area - cm2
  * H - cm
  */
 double abovegroundWoodVolume(double area, double H) {
@@ -231,6 +231,12 @@ double belowgroundWoodVolume(double area, NumericVector L, NumericVector V) {
   return(vBelow);
 }
 
+double abovegroundSapwoodVolume(double SA, double H) {
+  return(abovegroundWoodVolume(SA, H));
+}
+double belowgroundSapwoodVolume(double SA, NumericVector L, NumericVector V) {
+  return(belowgroundWoodVolume(SA, L, V));
+}
 /**
  * sapwood volume in l = dm3
  * 
@@ -239,24 +245,35 @@ double belowgroundWoodVolume(double area, NumericVector L, NumericVector V) {
  * Z - mm
  */
 double sapwoodVolume(double SA, double H, NumericVector L, NumericVector V) {
-  double vAbove = abovegroundWoodVolume(SA, H);
-  double vBelow = belowgroundWoodVolume(SA, L, V);
+  double vAbove = abovegroundSapwoodVolume(SA, H);
+  double vBelow = belowgroundSapwoodVolume(SA, L, V);
   return(vAbove+vBelow);
 }
 
+double abovegroundHeartwoodVolume(double DBH, double SA, double H) {
+  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
+  double vAbove = abovegroundWoodVolume(section_cm2, H);
+  double vAboveSap = abovegroundSapwoodVolume(SA, H);
+  return(std::max(0.0,vAbove- vAboveSap));
+}
+double belowgroundHeartwoodVolume(double DBH, double SA, NumericVector L, NumericVector V) {
+  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
+  double vBelow = belowgroundWoodVolume(section_cm2, L, V);
+  double vBelowSap = belowgroundSapwoodVolume(SA, L, V);
+  return(std::max(0.0,vBelow - vBelowSap));
+}
+
 /**
- * tree wood volume (including heartwood and sapwood) in l = dm3
+ * heartwood volume in l = dm3
  * 
  * DBH - cm
  * H - cm
  * Z - mm
  */
 double heartwoodVolume(double DBH, double SA, double H, NumericVector L, NumericVector V) {
-  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
-  double vAbove = abovegroundWoodVolume(section_cm2, H);
-  double vBelow = belowgroundWoodVolume(section_cm2, L, V);
-  double sapwoodVol = sapwoodVolume(SA, H, L, V);
-  return(std::max(0.0,vAbove+vBelow - sapwoodVol));
+  double vAbove = abovegroundHeartwoodVolume(DBH, SA, H);
+  double vBelow = belowgroundHeartwoodVolume(DBH, SA, L, V);
+  return(vAbove+vBelow);
 }
 
 /**
@@ -273,6 +290,24 @@ double sapwoodStorageVolume(double SA, double H, NumericVector L, NumericVector 
   return((1.0 - conduit2sapwood)*sapwoodVolume(SA,H,L,V)*woodPorosity);
 }
 
+
+
+
+//' @rdname carbon
+//' @keywords internal
+// [[Rcpp::export("carbon_abovegroundSapwoodStructuralBiomass")]]
+double abovegroundSapwoodStructuralBiomass(double SA, double H, double woodDensity) {
+   return(1000.0*abovegroundSapwoodVolume(SA, H)*woodDensity);
+}
+
+//' @rdname carbon
+//' @keywords internal
+// [[Rcpp::export("carbon_belowgroundSapwoodStructuralBiomass")]]
+double belowgroundSapwoodStructuralBiomass(double SA, NumericVector L, NumericVector V, 
+                                           double woodDensity) {
+  return(1000.0*belowgroundSapwoodVolume(SA, L, V)*woodDensity);
+}
+
 /**
  * sapwood structural biomass in g dw / ind
  * 
@@ -286,7 +321,24 @@ double sapwoodStorageVolume(double SA, double H, NumericVector L, NumericVector 
 // [[Rcpp::export("carbon_sapwoodStructuralBiomass")]]
 double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, 
                                 double woodDensity) {
-  return(1000.0*sapwoodVolume(SA,H,L,V)*woodDensity);
+  double B_above = abovegroundSapwoodStructuralBiomass(SA,H,woodDensity);
+  double B_below = belowgroundSapwoodStructuralBiomass(SA,L, V,woodDensity);
+  return(B_above + B_below);
+}
+
+//' @rdname carbon
+//' @keywords internal
+// [[Rcpp::export("carbon_abovegroundHeartwoodStructuralBiomass")]]
+double abovegroundHeartwoodStructuralBiomass(double DBH, double SA, double H, double woodDensity) {
+  return(1000.0*abovegroundHeartwoodVolume(DBH, SA, H)*woodDensity);
+}
+
+//' @rdname carbon
+//' @keywords internal
+// [[Rcpp::export("carbon_belowgroundHeartwoodStructuralBiomass")]]
+double belowgroundHeartwoodStructuralBiomass(double DBH, double SA, NumericVector L, NumericVector V, 
+                                             double woodDensity) {
+  return(1000.0*belowgroundHeartwoodVolume(DBH, SA, L, V)*woodDensity);
 }
 
 //' @rdname carbon
@@ -294,39 +346,9 @@ double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVec
 // [[Rcpp::export("carbon_heartwoodStructuralBiomass")]]
 double heartwoodStructuralBiomass(double DBH, double SA, double H, NumericVector L, NumericVector V, 
                                   double woodDensity) {
-  return(1000.0*heartwoodVolume(DBH, SA, H,L,V)*woodDensity);
-}
-
-//' @rdname carbon
-//' @keywords internal
-// [[Rcpp::export("carbon_abovegroundSapwoodStructuralBiomass")]]
-double abovegroundSapwoodStructuralBiomass(double SA, double H, double woodDensity) {
-   return(1000.0*abovegroundWoodVolume(SA, H)*woodDensity);
-}
-
-//' @rdname carbon
-//' @keywords internal
-// [[Rcpp::export("carbon_belowgroundSapwoodStructuralBiomass")]]
-double belowgroundSapwoodStructuralBiomass(double SA, NumericVector L, NumericVector V, 
-                                           double woodDensity) {
-  return(1000.0*belowgroundWoodVolume(SA, L, V)*woodDensity);
-}
-
-//' @rdname carbon
-//' @keywords internal
-// [[Rcpp::export("carbon_abovegroundHeartwoodStructuralBiomass")]]
-double abovegroundHeartwoodStructuralBiomass(double DBH, double H, double woodDensity) {
-  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
-  return(1000.0*abovegroundWoodVolume(section_cm2, H)*woodDensity);
-}
-
-//' @rdname carbon
-//' @keywords internal
-// [[Rcpp::export("carbon_belowgroundHeartwoodStructuralBiomass")]]
-double belowgroundHeartwoodStructuralBiomass(double DBH, NumericVector L, NumericVector V, 
-                                             double woodDensity) {
-  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
-  return(1000.0*belowgroundWoodVolume(section_cm2, L, V)*woodDensity);
+  double B_above = abovegroundHeartwoodStructuralBiomass(DBH, SA,H,woodDensity);
+  double B_below = belowgroundHeartwoodStructuralBiomass(DBH, SA,L, V,woodDensity);
+  return(B_above + B_below);
 }
 
 //' @rdname carbon
@@ -406,6 +428,8 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
   NumericVector sapwoodStructBiomass = cc["SapwoodStructuralBiomass"];
   NumericVector sapwoodStructLivingBiomass = cc["SapwoodLivingStructuralBiomass"];
   NumericVector heartwoodStructBiomass = cc["HeartwoodStructuralBiomass"];
+  NumericVector abovegroundWoodBiomass = cc["AbovegroundWoodBiomass"];
+  NumericVector belowgroundWoodBiomass = cc["BelowgroundWoodBiomass"];
   NumericVector fineRootBiomass = cc["FineRootBiomass"];
   NumericVector structuralBiomass = cc["StructuralBiomass"];
   NumericVector labileBiomass = cc["LabileBiomass"];
@@ -418,8 +442,12 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
     twigStructBiomass[j] = twigStructuralBiomass(LAI_expanded[j],N[j],SLA[j], r635[j]);
     sapwoodStructBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j]);
     sapwoodStructLivingBiomass[j] = sapwoodStructuralLivingBiomass((1.0 - StemPLC[j])*SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], conduit2sapwood[j]);
+    abovegroundWoodBiomass[j] = abovegroundSapwoodStructuralBiomass(SA[j], H[j], WoodDensity[j]);
+    belowgroundWoodBiomass[j] = belowgroundSapwoodStructuralBiomass(SA[j], L(j,_), V(j,_), WoodDensity[j]);
     if(ctype[j] =="tree") {
       heartwoodStructBiomass[j] = heartwoodStructuralBiomass(DBH[j], SA[j], H[j], L(j,_),V(j,_), WoodDensity[j]);
+      abovegroundWoodBiomass[j] += abovegroundHeartwoodStructuralBiomass(DBH[j], SA[j], H[j], WoodDensity[j]);
+      belowgroundWoodBiomass[j] += belowgroundHeartwoodStructuralBiomass(DBH[j], SA[j], L(j,_),V(j,_), WoodDensity[j]);
     } else {
       heartwoodStructBiomass[j] = 0.0;
     }
@@ -442,6 +470,8 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
       twigStructBiomass[j] = twigStructBiomass[j]*f;
       sapwoodStructBiomass[j] = sapwoodStructBiomass[j]*f;
       heartwoodStructBiomass[j] = heartwoodStructBiomass[j]*f;
+      abovegroundWoodBiomass[j] = abovegroundWoodBiomass[j]*f;
+      belowgroundWoodBiomass[j] = belowgroundWoodBiomass[j]*f;
       sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f;
       fineRootBiomass[j] = fineRootBiomass[j]*f;
       labileBiomass[j] = labileBiomass[j]*f;

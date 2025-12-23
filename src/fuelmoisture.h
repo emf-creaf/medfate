@@ -5,6 +5,8 @@
 #endif
 using namespace Rcpp;
 
+double EMCSimard(double fuelTemperature, double fuelHumidity);
+
 NumericVector fuelConditions(double airTemp, double airHumidity, double fuelRadiation, double fuelWindSpeed);
 double fine1hday(double m0, double fuelTemp, double fuelHumidity, double fuelWindSpeed, double effRain);
 double coarse10hday(double m0, 

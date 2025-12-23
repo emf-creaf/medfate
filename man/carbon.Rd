@@ -10,12 +10,12 @@
 \alias{carbon_leafStructuralBiomass}
 \alias{carbon_twigStructuralBiomass}
 \alias{carbon_leafStarchCapacity}
-\alias{carbon_sapwoodStructuralBiomass}
-\alias{carbon_heartwoodStructuralBiomass}
 \alias{carbon_abovegroundSapwoodStructuralBiomass}
 \alias{carbon_belowgroundSapwoodStructuralBiomass}
+\alias{carbon_sapwoodStructuralBiomass}
 \alias{carbon_abovegroundHeartwoodStructuralBiomass}
 \alias{carbon_belowgroundHeartwoodStructuralBiomass}
+\alias{carbon_heartwoodStructuralBiomass}
 \alias{carbon_sapwoodStructuralLivingBiomass}
 \alias{carbon_sapwoodStarchCapacity}
 \alias{carbon_carbonCompartments}
@@ -37,17 +37,17 @@ carbon_twigStructuralBiomass(LAI, N, SLA, r635)
 
 carbon_leafStarchCapacity(LAI, N, SLA, leafDensity)
 
-carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
-
-carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
-
 carbon_abovegroundSapwoodStructuralBiomass(SA, H, woodDensity)
 
 carbon_belowgroundSapwoodStructuralBiomass(SA, L, V, woodDensity)
 
-carbon_abovegroundHeartwoodStructuralBiomass(DBH, H, woodDensity)
+carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
 
-carbon_belowgroundHeartwoodStructuralBiomass(DBH, L, V, woodDensity)
+carbon_abovegroundHeartwoodStructuralBiomass(DBH, SA, H, woodDensity)
+
+carbon_belowgroundHeartwoodStructuralBiomass(DBH, SA, L, V, woodDensity)
+
+carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
 
 carbon_sapwoodStructuralLivingBiomass(
   SA,
@@ -87,11 +87,11 @@ carbon_carbonCompartments(x, biomassUnits = "g_m2")
 
 \item{H}{Plant height (cm).}
 
+\item{woodDensity}{Wood density (dry weight over volume).}
+
 \item{L}{Coarse root length (mm) for each soil layer.}
 
 \item{V}{Proportion of fine roots in each soil layer.}
-
-\item{woodDensity}{Wood density (dry weight over volume).}
 
 \item{DBH}{Tree diameter (cm).}
 

@@ -11,6 +11,59 @@
   forest$shrubData <- forest$shrubData[,c("Species", "Cover", "Height", "Z50", "Z95","Z100", "Age", "ObsID")]
   return(forest)
 }
+
+.ageSnagCohorts<-function(xo) {
+  oldSnagData <- xo$internalSnags
+  if(nrow(oldSnagData)>0) {
+    oldSnagData$Age <- oldSnagData$Age + 1
+  }
+  newSnagData <- data.frame(Species = xo$cohorts$Name,
+                            DBH = xo$above$DBH,
+                            Height = xo$above$H,
+                            Age = rep(1, nrow(xo$above)),
+                            SmallBranches = xo$internalMortality$Snag_smallbranches,
+                            LargeWood = xo$internalMortality$Snag_largewood)
+  mergedSnagData <- rbind(oldSnagData, newSnagData)
+  return(mergedSnagData)
+}
+
+# TO BE IMPROVED!
+.snagFall<-function(snagData, litterData) {
+  if(nrow(snagData)>0) {
+    for(s in 1:nrow(snagData)) {
+      # Determine branch fall and large wood fall
+      speciesSnag <- snagData$Species[s]
+      smallBranchFallAmount <- 0.0
+      largeWoodFallAmount <- 0.0
+      if(snagData$Age[s] > 5) { # Tree fall after 5 years
+        largeWoodFallAmount <- snagData$LargeWood[s]
+        smallBranchFallAmount <- snagData$SmallBranches[s]
+      } else if(snagData$Age[s] > 2) { # 100% branch fall after 2 years
+        smallBranchFallAmount <- snagData$SmallBranches[s]
+      } else if(snagData$Age[s] > 1) { # 50% branch fall after 1 year
+        smallBranchFallAmount <- snagData$SmallBranches[s]/2
+      }
+      # Remove branch fall and large wood fall from snag data
+      snagData$SmallBranches[s] = snagData$SmallBranches[s] - smallBranchFallAmount
+      snagData$LargeWood[s] = snagData$LargeWood[s] - largeWoodFallAmount
+      # Add branch fall and large wood fall to litter data
+      if(speciesSnag %in% litterData$Species) {
+        row <- which(litterData$Species==speciesSnag)
+        litterData$SmallBranches[row] = litterData$SmallBranches[row] + smallBranchFallAmount
+        litterData$LargeWood[row] = litterData$LargeWood[row] + largeWoodFallAmount 
+      } else { ## Create new row
+        litterData <- rbind(litterData,
+                            data.frame(Species = speciesSnag, Leaves = 0, Twigs = 0, 
+                                       SmallBranches = smallBranchFallAmount,
+                                       LargeWood = largeWoodFallAmount, 
+                                       CoarseRoots = 0))
+      }
+    }
+    # Remove snags that do not have remaining mass
+    snagData <- snagData[snagData$SmallBranches>0 | snagData$LargeWood>0, , drop = FALSE]
+  }
+  return(list(snagData = snagData, litterData = litterData))
+}
 .nextYearForest<-function(forest, xo, SpParams, control,
                           planted_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID")),
                           recr_forest = emptyforest(addcolumns = c("Z100", "Age", "ObsID")),
@@ -177,18 +230,26 @@
     if("Z100" %in% names(forest$herbData)) herbZ100 <- forest$herbData$Z100
   }
   
+  # Add new snag cohorts from mortality and increment snag age
+  pooled_snags <- .ageSnagCohorts(xo)
+  # Process snag fall and add new litter
+  snag_fall <- .snagFall(pooled_snags, xo$internalLitter)
+  forest$snagData <- snag_fall$snagData
+  forest$litterData <- snag_fall$litterData
+  # Add SOC pools to forest
+  forest$SOCData <- xo$internalSOC
+  
+  
   xi <- .growthInput(above = above_all, 
                      Z50 = c(treeZ50, shrubZ50, herbZ50),
                      Z95 = c(treeZ95, shrubZ95, herbZ95),
                      Z100 = c(treeZ100, shrubZ100, herbZ100),
-                     xo$soil, xo$internalLitter, xo$internalSOC, FCCSprops, 
+                     xo$soil, forest$snagData, forest$litterData, forest$SOCData, FCCSprops, 
                      SpParams, control)
   if("herbLAI" %in% names(xo)) xi$herbLAI <- xo$herbLAI
   if("herbLAImax" %in% names(xo)) xi$herbLAImax <- xo$herbLAImax
   
-  # Add litter and SOC pools to forest
-  forest$litterData <- xo$internalLitter
-  forest$SOCData <- xo$internalSOC
+
   
   # 5.2 Replace previous state for surviving cohorts (except age)
   xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]

@@ -284,18 +284,6 @@ carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
 
 #' @rdname carbon
 #' @keywords internal
-carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
-    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
-carbon_heartwoodStructuralBiomass <- function(DBH, SA, H, L, V, woodDensity) {
-    .Call(`_medfate_heartwoodStructuralBiomass`, DBH, SA, H, L, V, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
 carbon_abovegroundSapwoodStructuralBiomass <- function(SA, H, woodDensity) {
     .Call(`_medfate_abovegroundSapwoodStructuralBiomass`, SA, H, woodDensity)
 }
@@ -308,14 +296,26 @@ carbon_belowgroundSapwoodStructuralBiomass <- function(SA, L, V, woodDensity) {
 
 #' @rdname carbon
 #' @keywords internal
-carbon_abovegroundHeartwoodStructuralBiomass <- function(DBH, H, woodDensity) {
-    .Call(`_medfate_abovegroundHeartwoodStructuralBiomass`, DBH, H, woodDensity)
+carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
+    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
 }
 
 #' @rdname carbon
 #' @keywords internal
-carbon_belowgroundHeartwoodStructuralBiomass <- function(DBH, L, V, woodDensity) {
-    .Call(`_medfate_belowgroundHeartwoodStructuralBiomass`, DBH, L, V, woodDensity)
+carbon_abovegroundHeartwoodStructuralBiomass <- function(DBH, SA, H, woodDensity) {
+    .Call(`_medfate_abovegroundHeartwoodStructuralBiomass`, DBH, SA, H, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_belowgroundHeartwoodStructuralBiomass <- function(DBH, SA, L, V, woodDensity) {
+    .Call(`_medfate_belowgroundHeartwoodStructuralBiomass`, DBH, SA, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_heartwoodStructuralBiomass <- function(DBH, SA, H, L, V, woodDensity) {
+    .Call(`_medfate_heartwoodStructuralBiomass`, DBH, SA, H, L, V, woodDensity)
 }
 
 #' @rdname carbon
@@ -457,6 +457,12 @@ decomposition_temperatureEffect <- function(soilTemperature) {
 
 #' @rdname decomposition_DAYCENT
 #' @keywords internal
+decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, airTemperature, airRelativeHumidity, tstep = 1.0) {
+    .Call(`_medfate_DAYCENTsnags`, snags, baseAnnualRates, airTemperature, airRelativeHumidity, tstep)
+}
+
+#' @rdname decomposition_DAYCENT
+#' @keywords internal
 decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
     .Call(`_medfate_DAYCENTlitter`, litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
@@ -467,12 +473,15 @@ decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseA
 #' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
 #' performs the whole model for carbon decomposition.
 #' 
+#' @param snags A data frame with dead standing (snag) cohort information (see \code{\link{growthInput}}).
 #' @param litter A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 #' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 #' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
 #' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 #' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
 #' @param sand,clay Soil texture (sand and sand) in percent volume (%). 
+#' @param airTemperature Mean daily air temperature (in Celsius).
+#' @param airRelativeHumidity Mean daily relative humidity (%).
 #' @param soilTemperature Soil temperature (in Celsius).
 #' @param soilMoisture Soil moisture content, relative to saturation (0-1).
 #' @param soilPH Soil pH (0-14).
@@ -497,8 +506,8 @@ decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseA
 #' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
 #' @keywords internal
-decomposition_DAYCENT <- function(litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
-    .Call(`_medfate_DAYCENT`, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
+decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
+    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
@@ -2706,8 +2715,8 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_spwbInputInner`, above, Z50, Z95, Z100, soil, FCCSprops, SpParams, control)
 }
 
-.growthInput <- function(above, Z50, Z95, Z100, soil, litterData, SOCData, FCCSprops, SpParams, control) {
-    .Call(`_medfate_growthInputInner`, above, Z50, Z95, Z100, soil, litterData, SOCData, FCCSprops, SpParams, control)
+.growthInput <- function(above, Z50, Z95, Z100, soil, snagData, litterData, SOCData, FCCSprops, SpParams, control) {
+    .Call(`_medfate_growthInputInner`, above, Z50, Z95, Z100, soil, snagData, litterData, SOCData, FCCSprops, SpParams, control)
 }
 
 .cloneInput <- function(input) {

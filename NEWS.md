@@ -1,5 +1,5 @@
 # medfate 4.9.0
-* Forest objects can now have a seedling bank
+* Forest objects can now have a seedling bank, snag data and litter data
 * Recruitment from seeds with daily/annual environmental filters
 * Data frame 'herbData' can be defined in forest objects for herbaceous cohorts 
 * New function 'forest_mergeHerbs()'

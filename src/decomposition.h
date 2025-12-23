@@ -27,11 +27,12 @@ void addFineRootLitter(String species_litter, double fineroot_litter,
                        DataFrame paramsLitterDecomposition,
                        NumericVector SOC);
   
-
 double DAYCENTInner(List commDecomp,
-                    DataFrame litter, NumericVector SOC,
+                    DataFrame snags, DataFrame litter, NumericVector SOC,
                     DataFrame paramsLitterDecomposition,
                     NumericVector baseAnnualRates, double annualTurnoverRate,
+                    double airTemperature, double airRelativeHumidity, 
                     double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                     double soilO2 = 1.0, double cultfac = 1.0,
                     double tstep = 1.0);
+  

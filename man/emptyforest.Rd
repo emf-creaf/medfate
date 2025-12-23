@@ -10,6 +10,7 @@ emptyforest(
   nherb = 0,
   nseedling = 0,
   nseed = 0,
+  nsnag = 0,
   nlitter = 0,
   addcolumns = NULL,
   SOC = FALSE
@@ -21,6 +22,8 @@ emptyforest(
 \item{nseedling}{Number of species in the seedling bank.}
 
 \item{nseed}{Number of species in the seed bank.}
+
+\item{nsnag}{Number of snag (dead standing) cohorts.}
 
 \item{nlitter}{Number of items in the litter compartment.}
 

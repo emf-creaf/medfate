@@ -805,6 +805,10 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
   if(SpParams.containsElementNamed("RecrTreeDBH")) RecrTreeDBH = speciesNumericParameterFromIndex(SP, SpParams, "RecrTreeDBH");
   if(SpParams.containsElementNamed("IngrowthTreeDensity")) IngrowthTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDensity");
   if(SpParams.containsElementNamed("IngrowthTreeDBH")) IngrowthTreeDBH = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDBH");
+  NumericVector RespFire(numCohorts, NA_REAL);
+  NumericVector RespDist(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("RespFire")) RespFire = speciesNumericParameterFromIndex(SP, SpParams, "RespFire");
+  if(SpParams.containsElementNamed("RespDist")) RespDist = speciesNumericParameterFromIndex(SP, SpParams, "RespDist");
   
   double mortalityBaselineRate_default = control["mortalityBaselineRate"];
   double recrTreeDensity_default = control["recrTreeDensity"];
@@ -821,6 +825,8 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
         if(NumericVector::is_na(RecrTreeDBH[c])) RecrTreeDBH[c] = recrTreeDBH_default;
         if(NumericVector::is_na(IngrowthTreeDensity[c])) IngrowthTreeDensity[c] = ingrowthTreeDensity_default;
         if(NumericVector::is_na(IngrowthTreeDBH[c])) IngrowthTreeDBH[c] = ingrowthTreeDBH_default;
+        if(NumericVector::is_na(RespDist[c])) RespDist[c] = 0.0;
+        if(NumericVector::is_na(RespFire[c])) RespFire[c] = 0.0;
       }
     }
   }
@@ -831,7 +837,9 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
                                                              _["RecrTreeDensity"] = RecrTreeDensity,
                                                              _["RecrTreeDBH"] = RecrTreeDBH,
                                                              _["IngrowthTreeDensity"] = IngrowthTreeDensity,
-                                                             _["IngrowthTreeDBH"] = IngrowthTreeDBH);
+                                                             _["IngrowthTreeDBH"] = IngrowthTreeDBH,
+                                                             _["RespDist"] = RespDist,
+                                                             _["RespFire"] = RespFire);
   paramsMortalityRecruitmentdf.attr("row.names") = above.attr("row.names");
   return(paramsMortalityRecruitmentdf);
 }
@@ -988,18 +996,26 @@ DataFrame internalMortalityDataFrame(DataFrame above) {
   NumericVector N_starvation(numCohorts, 0.0);
   NumericVector N_dessication(numCohorts, 0.0);
   NumericVector N_burnt(numCohorts, 0.0);
+  NumericVector N_resprouting_stumps(numCohorts, 0.0);
   NumericVector Cover_dead(numCohorts, 0.0);
   NumericVector Cover_starvation(numCohorts, 0.0);
   NumericVector Cover_dessication(numCohorts, 0.0);
   NumericVector Cover_burnt(numCohorts, 0.0);
+  NumericVector Cover_resprouting_stumps(numCohorts, 0.0);
+  NumericVector Snag_smallbranches(numCohorts, 0.0);
+  NumericVector Snag_largewood(numCohorts, 0.0);
   DataFrame df = DataFrame::create(Named("N_dead") = N_dead,
                                    Named("N_starvation") = N_starvation,
                                    Named("N_dessication") = N_dessication,
                                    Named("N_burnt") = N_burnt,
+                                   Named("N_resprouting_stumps") = N_resprouting_stumps,
                                    Named("Cover_dead") = Cover_dead,
                                    Named("Cover_starvation") = Cover_starvation,
                                    Named("Cover_dessication") = Cover_dessication,
-                                   Named("Cover_burnt") = Cover_burnt);
+                                   Named("Cover_burnt") = Cover_burnt,
+                                   Named("Cover_resprouting_stumps") = Cover_resprouting_stumps,
+                                   Named("Snag_smallbranches") = Snag_smallbranches,
+                                   Named("Snag_largewood") = Snag_largewood);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
@@ -1415,7 +1431,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
 
 // [[Rcpp::export(".growthInput")]]
 List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100,
-                      DataFrame soil, DataFrame litterData, NumericVector SOCData, DataFrame FCCSprops,
+                      DataFrame soil, DataFrame snagData, DataFrame litterData, NumericVector SOCData, DataFrame FCCSprops,
                       DataFrame SpParams, List control) {
 
   String VG_PTF = control["VG_PTF"]; 
@@ -1568,6 +1584,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                               paramsTranspirationdf, control), "internalAllocation");
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
+  input.push_back(snagData, "internalSnags");
   input.push_back(internalLitter, "internalLitter");
   input.push_back(internalSOC(SOCData), "internalSOC");
   input.push_back(FCCSprops, "internalFCCS");
@@ -1973,8 +1990,26 @@ List growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
    } else {
      SOCData = NumericVector::create();
    }
+   DataFrame snagData;
+   if(x.containsElementNamed("snagData")) {
+     snagData = clone(Rcpp::as<Rcpp::DataFrame>(x["snagData"]));
+   } else {
+     CharacterVector species(0);
+     NumericVector dbh(0);
+     NumericVector height(0);
+     NumericVector deadage(0);
+     NumericVector smallbranches(0);
+     NumericVector largewood(0);
+     snagData = DataFrame::create(_["Species"] = species,
+                                  _["DBH"] = dbh,
+                                  _["Height"] = height,
+                                  _["DeadAge"] = deadage,
+                                  _["SmallBranches"] = smallbranches,
+                                  _["LargeWood"] = largewood);
+   }
+   
    List g = growthInputInner(above,  rdc["Z50"], rdc["Z95"], rdc["Z100"],
-                             soil, litterData, SOCData, FCCSprops, SpParams, control);
+                             soil, snagData, litterData, SOCData, FCCSprops, SpParams, control);
    g["herbLAImax"] = 0.0;
    g["herbLAI"] = 0.0;
    if(x.containsElementNamed("herbCover") && x.containsElementNamed("herbHeight")) {

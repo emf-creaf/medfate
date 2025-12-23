@@ -409,36 +409,22 @@ regeneration_resprouting <- function(forest, internalMortality, SpParams, contro
   n_shrubs <- nrow(forest$shrubData)
   
   ## Resprouting survivorship
-  resp_dist_trees <- species_parameter(forest$treeData$Species, SpParams, "RespDist")
-  resp_dist_trees[is.na(resp_dist_trees)] <- 0
-  resp_dist_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespDist")
-  resp_dist_shrubs[is.na(resp_dist_shrubs)] <- 0
-  resp_fire_trees <- species_parameter(forest$treeData$Species, SpParams, "RespFire")
-  resp_fire_trees[is.na(resp_fire_trees)] <- 0
-  resp_fire_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespFire")
-  resp_fire_shrubs[is.na(resp_fire_shrubs)] <- 0
   resp_clip_trees <- species_parameter(forest$treeData$Species, SpParams, "RespClip")
   resp_clip_trees[is.na(resp_clip_trees)] <- 0
   resp_clip_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespClip")
   resp_clip_shrubs[is.na(resp_clip_shrubs)] <- 0
   
-  N_resprouting_dessication <- internalMortality$N_dessication
-  N_resprouting_burnt <- internalMortality$N_burnt
+  # Resprouting survivorship (fire + dessication)
+  N_resprouting_stumps <- internalMortality$N_resprouting_stumps
   if(n_trees>0) {
-    # Resprouting survivorship (fire + dessication)
-    N_surv_dessication <- N_resprouting_dessication[1:n_trees]*resp_dist_trees
-    N_surv_fire <- N_resprouting_burnt[1:n_trees]*resp_fire_trees
-    N_surv <- N_surv_dessication + N_surv_fire
     # Resprouting vigor depends on cm2 of stump area
-    N_resprouting <- N_surv*pi*(forest$treeData$DBH/2)^2*1.82*10^(-0.053*5) 
+    N_resprouting <- N_resprouting_stumps[1:n_trees]*pi*(forest$treeData$DBH/2)^2*1.82*10^(-0.053*5) 
   } else { 
     N_resprouting <- numeric(0)
   }
-  Cover_resprouting_dessication <- internalMortality$Cover_dessication
-  Cover_resprouting_burnt <- internalMortality$Cover_burnt
+  Cover_resprouting_stumps <- internalMortality$Cover_resprouting_stumps
   if(n_shrubs>0) {
-    Cover_resprouting <- Cover_resprouting_dessication[(n_trees+1):(n_trees+n_shrubs)]*resp_dist_shrubs
-    Cover_resprouting <- Cover_resprouting + Cover_resprouting_burnt[(n_trees+1):(n_trees+n_shrubs)]*resp_fire_shrubs
+    Cover_resprouting <- Cover_resprouting_stumps[(n_trees+1):(n_trees+n_shrubs)]
   } else {
     Cover_resprouting <- numeric(0)
   }

@@ -453,37 +453,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sapwoodStructuralBiomass
-double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity);
-RcppExport SEXP _medfate_sapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
-    Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
-    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, L, V, woodDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
-// heartwoodStructuralBiomass
-double heartwoodStructuralBiomass(double DBH, double SA, double H, NumericVector L, NumericVector V, double woodDensity);
-RcppExport SEXP _medfate_heartwoodStructuralBiomass(SEXP DBHSEXP, SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
-    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
-    Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
-    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
 // abovegroundSapwoodStructuralBiomass
 double abovegroundSapwoodStructuralBiomass(double SA, double H, double woodDensity);
 RcppExport SEXP _medfate_abovegroundSapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
@@ -511,30 +480,63 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sapwoodStructuralBiomass
+double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_sapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, L, V, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
 // abovegroundHeartwoodStructuralBiomass
-double abovegroundHeartwoodStructuralBiomass(double DBH, double H, double woodDensity);
-RcppExport SEXP _medfate_abovegroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
+double abovegroundHeartwoodStructuralBiomass(double DBH, double SA, double H, double woodDensity);
+RcppExport SEXP _medfate_abovegroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(abovegroundHeartwoodStructuralBiomass(DBH, H, woodDensity));
+    rcpp_result_gen = Rcpp::wrap(abovegroundHeartwoodStructuralBiomass(DBH, SA, H, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
 // belowgroundHeartwoodStructuralBiomass
-double belowgroundHeartwoodStructuralBiomass(double DBH, NumericVector L, NumericVector V, double woodDensity);
-RcppExport SEXP _medfate_belowgroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
+double belowgroundHeartwoodStructuralBiomass(double DBH, double SA, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_belowgroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP SASEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(belowgroundHeartwoodStructuralBiomass(DBH, L, V, woodDensity));
+    rcpp_result_gen = Rcpp::wrap(belowgroundHeartwoodStructuralBiomass(DBH, SA, L, V, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// heartwoodStructuralBiomass
+double heartwoodStructuralBiomass(double DBH, double SA, double H, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_heartwoodStructuralBiomass(SEXP DBHSEXP, SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -816,6 +818,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// DAYCENTsnags
+NumericVector DAYCENTsnags(DataFrame snags, NumericVector baseAnnualRates, double airTemperature, double airRelativeHumidity, double tstep);
+RcppExport SEXP _medfate_DAYCENTsnags(SEXP snagsSEXP, SEXP baseAnnualRatesSEXP, SEXP airTemperatureSEXP, SEXP airRelativeHumiditySEXP, SEXP tstepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type snags(snagsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
+    Rcpp::traits::input_parameter< double >::type airTemperature(airTemperatureSEXP);
+    Rcpp::traits::input_parameter< double >::type airRelativeHumidity(airRelativeHumiditySEXP);
+    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
+    rcpp_result_gen = Rcpp::wrap(DAYCENTsnags(snags, baseAnnualRates, airTemperature, airRelativeHumidity, tstep));
+    return rcpp_result_gen;
+END_RCPP
+}
 // DAYCENTlitter
 NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
 RcppExport SEXP _medfate_DAYCENTlitter(SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
@@ -838,16 +855,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // DAYCENT
-double DAYCENT(DataFrame litter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
-RcppExport SEXP _medfate_DAYCENT(SEXP litterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+double DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double airTemperature, double airRelativeHumidity, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENT(SEXP snagsSEXP, SEXP litterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP airTemperatureSEXP, SEXP airRelativeHumiditySEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type snags(snagsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
     Rcpp::traits::input_parameter< double >::type annualTurnoverRate(annualTurnoverRateSEXP);
+    Rcpp::traits::input_parameter< double >::type airTemperature(airTemperatureSEXP);
+    Rcpp::traits::input_parameter< double >::type airRelativeHumidity(airRelativeHumiditySEXP);
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type clay(claySEXP);
     Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
@@ -856,7 +876,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
     Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(DAYCENT(litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    rcpp_result_gen = Rcpp::wrap(DAYCENT(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3625,8 +3645,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // growthInputInner
-List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame litterData, NumericVector SOCData, DataFrame FCCSprops, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP litterDataSEXP, SEXP SOCDataSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, NumericVector Z100, DataFrame soil, DataFrame snagData, DataFrame litterData, NumericVector SOCData, DataFrame FCCSprops, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInputInner(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP Z100SEXP, SEXP soilSEXP, SEXP snagDataSEXP, SEXP litterDataSEXP, SEXP SOCDataSEXP, SEXP FCCSpropsSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3635,12 +3655,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Z100(Z100SEXP);
     Rcpp::traits::input_parameter< DataFrame >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type snagData(snagDataSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type litterData(litterDataSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type SOCData(SOCDataSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type FCCSprops(FCCSpropsSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, Z100, soil, litterData, SOCData, FCCSprops, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInputInner(above, Z50, Z95, Z100, soil, snagData, litterData, SOCData, FCCSprops, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6410,12 +6431,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
     {"_medfate_twigStructuralBiomass", (DL_FUNC) &_medfate_twigStructuralBiomass, 4},
     {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
-    {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 5},
-    {"_medfate_heartwoodStructuralBiomass", (DL_FUNC) &_medfate_heartwoodStructuralBiomass, 6},
     {"_medfate_abovegroundSapwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundSapwoodStructuralBiomass, 3},
     {"_medfate_belowgroundSapwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundSapwoodStructuralBiomass, 4},
-    {"_medfate_abovegroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass, 3},
-    {"_medfate_belowgroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundHeartwoodStructuralBiomass, 4},
+    {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 5},
+    {"_medfate_abovegroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass, 4},
+    {"_medfate_belowgroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundHeartwoodStructuralBiomass, 5},
+    {"_medfate_heartwoodStructuralBiomass", (DL_FUNC) &_medfate_heartwoodStructuralBiomass, 6},
     {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
@@ -6432,8 +6453,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
     {"_medfate_moistureEffect", (DL_FUNC) &_medfate_moistureEffect, 3},
     {"_medfate_temperatureEffect", (DL_FUNC) &_medfate_temperatureEffect, 1},
+    {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 5},
     {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},
-    {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 13},
+    {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 16},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
@@ -6594,7 +6616,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbInputVersionUpdate", (DL_FUNC) &_medfate_spwbInputVersionUpdate, 1},
     {"_medfate_growthInputVersionUpdate", (DL_FUNC) &_medfate_growthInputVersionUpdate, 1},
     {"_medfate_spwbInputInner", (DL_FUNC) &_medfate_spwbInputInner, 8},
-    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 10},
+    {"_medfate_growthInputInner", (DL_FUNC) &_medfate_growthInputInner, 11},
     {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
     {"_medfate_rootDistributionComplete", (DL_FUNC) &_medfate_rootDistributionComplete, 4},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 4},

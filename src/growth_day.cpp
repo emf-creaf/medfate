@@ -422,7 +422,10 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   
   //Weather
   double tday = meteovec["tday"];
+  double tmin = meteovec["tmin"];
   double tmax = meteovec["tmax"];
+  double rhmin = meteovec["rhmin"];
+  double rhmax = meteovec["rhmax"];
   double Patm = meteovec["Patm"];
   double pfire = meteovec["pfire"];
   
@@ -518,10 +521,14 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector N_starvation = internalMortality["N_starvation"];
   NumericVector N_dessication = internalMortality["N_dessication"];
   NumericVector N_burnt = internalMortality["N_burnt"];
+  NumericVector N_resprouting_stumps = internalMortality["N_resprouting_stumps"];
   NumericVector Cover_dead = internalMortality["Cover_dead"];
   NumericVector Cover_starvation = internalMortality["Cover_starvation"];
   NumericVector Cover_dessication = internalMortality["Cover_dessication"];
   NumericVector Cover_burnt = internalMortality["Cover_burnt"];
+  NumericVector Cover_resprouting_stumps = internalMortality["Cover_resprouting_stumps"];
+  NumericVector Snag_smallbranches = internalMortality["Snag_smallbranches"];
+  NumericVector Snag_largewood = internalMortality["Snag_largewood"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
@@ -609,6 +616,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector RecrTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDBH"]);
   NumericVector IngrowthTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDensity"]);
   NumericVector IngrowthTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDBH"]);
+  NumericVector RespFire = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RespFire"]);
+  NumericVector RespDist = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RespDist"]);
   
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -659,12 +668,13 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector BTsh  = paramsAllometries["BTsh"];
   
   //Litter
-  DataFrame internalLitter;
+  DataFrame internalLitter, internalSnags;
   DataFrame paramsLitterDecomposition;
   NumericVector internalSOC;
   bool exportLitter = false;
-  if(x.containsElementNamed("internalLitter") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
+  if(x.containsElementNamed("internalLitter") && x.containsElementNamed("internalSnags") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
     paramsLitterDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
+    internalSnags = Rcpp::as<Rcpp::DataFrame>(x["internalSnags"]);
     internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
     internalSOC = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
     exportLitter = true;
@@ -762,7 +772,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
   NumericVector Starch_max_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStarchMaximumConcentration"]);
   NumericVector LeafStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStructuralBiomass"]);
-  NumericVector SapwoodStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
+  NumericVector AbovegroundWoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["AbovegroundWoodBiomass"]);
+  NumericVector BelowgroundWoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["BelowgroundWoodBiomass"]);
   NumericVector SapwoodLivingStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodLivingStructuralBiomass"]);
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
@@ -1139,15 +1150,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
       double deltaSASenescence = std::max(0.0, SA[j] - sapwoodAreaTarget[j]);
       propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
-      if(exportLitter) {
-        // 10% of SA biomass senescence as branches (90% as heartwood)
-        // From g dry/ind to g C/m2
-        double smallbranchlitter = WoodC[j]*(0.1*propSASenescence*SapwoodStructBiomass[j])*(N[j]/10000.0); 
-        //All litter goes to structural litter
-        addSmallBranchLitter(speciesNames[j], smallbranchlitter,
-                             internalLitter);
-      }  
-        
+
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
@@ -1279,7 +1282,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       FineRootBiomassBalance[j] = finerootBiomassIncrement - senescenceFinerootLoss;
       
       //MORTALITY Death by carbon starvation or dessication
-      double Ndead_day = 0.0;
+      double Ndead_day = 0.0, N_resprouting_stump_day = 0.0, Cover_resprouting_stump_day = 0.0;
       bool dynamicCohort = true;
       if((ctype[j] == "shrub") && (!shrubDynamics)) dynamicCohort = false;
       else if(ctype[j] =="herb") dynamicCohort = false;
@@ -1398,8 +1401,10 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           N_starvation[j] = N_starvation[j] + Ndead_day;
         } else if(cause == "burnt") {
           N_burnt[j] = N_burnt[j] + Ndead_day;
+          N_resprouting_stump_day = Ndead_day*RespFire[j];
         } else if(cause == "dessication") {
           N_dessication[j] = N_dessication[j] + Ndead_day;
+          N_resprouting_stump_day = Ndead_day*RespDist[j];
         } else if(ctype[j]=="tree") { // Self-thinning occurring in tree cohorts
           if(DBH[j] < IngrowthTreeDBH[j]) {
             double b_st = log(RecrTreeDensity[j]/IngrowthTreeDensity[j])/log(RecrTreeDBH[j]/IngrowthTreeDBH[j]);
@@ -1410,6 +1415,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
             Ndead_day = Ndead_day + N_dead_selfthinning;
           }
         }
+        N_resprouting_stumps[j] = N_resprouting_stumps[j] + N_resprouting_stump_day;
+        // Rcout << Ndead_day <<"\n";
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
         if(ctype[j]=="shrub") {
@@ -1419,9 +1426,25 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
             Cover_starvation[j] = Cover_starvation[j] + Cdead_day;
           } else if(cause == "dessication") {
             Cover_dessication[j] = Cover_dessication[j] + Cdead_day;
+            Cover_resprouting_stump_day =  Cdead_day*RespDist[j];
           } else if(cause == "burnt") {
             Cover_burnt[j] = Cover_burnt[j] + Cdead_day;
+            Cover_resprouting_stump_day =  Cdead_day*RespFire[j];
           }
+        }
+        Cover_resprouting_stumps[j] = Cover_resprouting_stumps[j] + Cover_resprouting_stump_day;
+        
+        //ADD STANDING DEADWOOD (in g C / m2) according to non-resprouting
+        double snag_wood_biomass = (Ndead_day/10000.0)*AbovegroundWoodBiomass[j]*WoodC[j]; //Aboveground necromass (includes burning and dessication)
+        if(ctype[j]=="tree") { // 20% goes to small branches (diameter < 7.5) SHOULD depend on size allometry
+          Snag_smallbranches[j] += 0.2*snag_wood_biomass; 
+          Snag_largewood[j] += 0.8*snag_wood_biomass; 
+        } else if(ctype[j] =="shrub") { // For shrubs 100% goes to small branches
+          Snag_smallbranches[j] = snag_wood_biomass;
+        }
+        if(exportLitter) {
+          double coarseroot_litter = ((Ndead_day - N_resprouting_stump_day)/10000.0)*BelowgroundWoodBiomass[j]*WoodC[j]; //Only adds non-resprouting death biomass
+          addCoarseRootLitter(speciesNames[j], coarseroot_litter, internalLitter);
         }
         //Update LAI dead and LAI expanded as a result of density decrease
         if(abovegroundFireSurvival) {
@@ -1429,6 +1452,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           LAI_dead[j] = LAI_dead[j] + LAI_change;
           LAI_expanded[j] = std::max(0.0, LAI_expanded[j] - LAI_change - LAI_burnt_change);
         } else {
+          //TODO: We should store emissions (leaves + twigs?)
           fineRootBiomassTarget[j] = 0.0;
           sapwoodAreaTarget[j] = 0.0;
           leafAreaTarget[j] = 0.0;
@@ -1555,9 +1579,14 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     }
     NumericVector soilTheta = theta(soil, soilFunctions);
     NumericVector soilThetaSAT = thetaSAT(soil, soilFunctions);
-    double heterotrophicRespiration = DAYCENTInner(commDecomp, internalLitter, internalSOC,
+    double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double vpsat = meteoland::utils_saturationVP(tday);
+    double rhmean = 100.0*std::max(1.0, vpatm/vpsat);
+    double heterotrophicRespiration = DAYCENTInner(commDecomp, internalSnags, internalLitter, internalSOC,
                                                    paramsLitterDecomposition,
                                                    baseAnnualRates, annualTurnoverRate,
+                                                   tday, rhmean, 
                                                    sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
     standCB["HeterotrophicRespiration"] = heterotrophicRespiration;
     standCB["NetEcosystemExchange"] = standCB["NetPrimaryProduction"] - heterotrophicRespiration; 
