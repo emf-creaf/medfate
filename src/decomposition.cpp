@@ -607,14 +607,14 @@ double DAYCENTInner(List commDecomp,
 
 //' DAYCENT decomposition
 //' 
-//' Functions implementing the DAYCENT carbon decomposition model, following the description in Bonan (2019).
-//' Function \code{decompositionDAYCENTlitter} conducts litter decomposition only, whereas function \code{decomposition_DAYCENT}
-//' performs the whole model for carbon decomposition.
+//' Functions implementing a modification of the DAYCENT carbon decomposition model, inspired by the description given in Chapter 18 of Bonan (2019).
+//' Functions \code{decompositionDAYCENTsnags} and \code{decompositionDAYCENTlitter} conduct snag and litter decomposition, respectively, 
+//' whereas function \code{decomposition_DAYCENT} performs the whole model for carbon decomposition.
 //' 
 //' @param snags A data frame with dead standing (snag) cohort information (see \code{\link{growthInput}}).
 //' @param litter A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 //' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
-//' @param paramsLitterDecomposition A data frame of species-specific decomposition parameters (see \code{\link{growthInput}}).
+//' @param paramsLitterDecomposition A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).
 //' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 //' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
 //' @param sand,clay Soil texture (sand and sand) in percent volume (%). 
@@ -629,14 +629,17 @@ double DAYCENTInner(List commDecomp,
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @details Each call to function \code{decomposition_DAYCENTlitter} conducts one time step of the litter dynamics in DAYCENT. 
-//' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
-//' model and returns the heterotrophic respiration for that day. Both functions modify input data \code{litter}
-//' (and in case case of \code{decomposition_DAYCENT} also \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
-//' soil physical and chemical characteristics correspond to the uppermost soil layer.
+//' @details Each call to functions \code{decomposition_DAYCENTlitter} or \code{decomposition_DAYCENTsnags} conducts one time step of the snag or litter dynamics, respectively. 
+//' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT 
+//' model and returns the heterotrophic respiration for that day. 
 //' 
-//' @returns Function \code{decomposition_DAYCENTlitter} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from litter decomposition. 
-//' Function \code{decomposition_DAYCENT} returns scalar value with heterotrophic respiration (litter + soil), in g C/m2.
+//' \emph{IMPORTANT NOTE}: Decomposition functions modify the input data (i.e. \code{snags}, \code{litter} and/or \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
+//' soil physical and chemical parameters correspond to the uppermost soil layer.
+//' 
+//' @returns 
+//' Function \code{decomposition_DAYCENTsnags} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from snag decomposition.
+//' Function \code{decomposition_DAYCENTlitter} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from litter decomposition. 
+//' Function \code{decomposition_DAYCENT} returns scalar value with heterotrophic respiration (snags + litter + soil), in g C/m2.
 //' 
 //' @references
 //' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.

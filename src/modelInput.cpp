@@ -1910,6 +1910,8 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'       \item{\code{IngrowthTreeDensity}: Density of trees reaching ingrowth DBH.}
 //'       \item{\code{RecrTreeDBH}: DBH for tree recruits from seeds or resprouting (e.g. 1 cm).}
 //'       \item{\code{IngrowthTreeDBH}: Ingrowth DBH for trees (e.g. 7.5 cm).}
+//'       \item{\code{RespFire}: Probability of resprouting after a fire disturbance.}
+//'       \item{\code{RespDist}: Probability of resprouting after undefined disturbance (typically desiccation).}
 //'     }
 //'   }
 //'   \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
@@ -1930,10 +1932,11 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
+//'   \item{\code{internalSnags}: A data frame with characteristics (species identity, height, diameter, age), small branch mass and large wood mass (both in g C/m2) corresponding to decomposing snag cohorts (see \code{\link{forest}}).}
 //'   \item{\code{internalLitter}: A data frame with the aboveground and belowground mass (g C/m2) of different litter components: leaves, twigs, small branches, large wood, coarse roots and fine roots.}
 //'   \item{\code{internalSOC}: A named numeric vector with surface/soil decomposing carbon pools (g C/m2).}
 //'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
-//'   also distinguishing mortality due to starvation or dessication.}
+//'   also distinguishing mortality due to starvation or dessication, the number of resprouting elements and the accumulation of aboveground dead wood (branches and large wood).}
 //' }
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

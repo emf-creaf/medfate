@@ -7,7 +7,6 @@
 #' @docType data
 #' 
 #' @source DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Dirección}{Direccion} General de \enc{Conservación}{Conservacion} de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
-#' @seealso \code{\link{forest}}, \code{\link{spwb}}, \code{\link{spwbInput}}
 #' @format  An object of class \code{forest} contains the description of the woody (tree or shrub) cohorts of a forest patch.
 #' It has the following structure (see additional columns in details):
 #' \itemize{
@@ -31,7 +30,7 @@
 #'       }
 #'   }
 #' }
-#' Additionally, it can contain information about the herbaceous layer, seedling/sapling bank and seed bank:
+#' Additionally, it can contain information about other elements: the herbaceous layer, seedling/sapling bank, seed bank, snags, litter or soil carbon:
 #' \itemize{
 #'    \item{\code{herbData}: A data frame of herbaceous cohorts (in rows) and the following columns (see an alternative way of defining the herbaceous layer in details):
 #'       \itemize{
@@ -57,13 +56,23 @@
 #'         \item{\code{Percent}: Amount of seeds in relation to full seed bank (in %).}
 #'      }
 #'   }
+#'   \item{\code{snagData}: An optional data frame containing information for snag cohorts, with the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: String with species (taxon) name.}
+#'         \item{\code{DBH}: Diameter at breast height (in cm), for tree snags only.}
+#'         \item{\code{Height}: Height of the snag cohort (tree or shrub) (in cm).}
+#'         \item{\code{Age}: Years passed since plant death (in yrs).}
+#'         \item{\code{SmallBranches}: Mass of (standing) small dead branches (in g C/m2).}
+#'         \item{\code{LargeWood}: Mass of (standing) large dead wood (in g C/m2).}
+#'      }
+#'   }
 #'   \item{\code{litterData}: An optional data frame containing litter information with the following columns:
 #'       \itemize{
 #'         \item{\code{Species}: String with species (taxon) name.}
 #'         \item{\code{Leaves}: Mass of leaf litter (in g C/m2)}
 #'         \item{\code{Twigs}: Mass of twig litter (in g C/m2)}
-#'         \item{\code{SmallBranches}: Mass of small dead branches (in g C/m2)}
-#'         \item{\code{LargeWood}: Mass of large dead wood (in g C/m2)}
+#'         \item{\code{SmallBranches}: Mass of (downed) small dead branches (in g C/m2)}
+#'         \item{\code{LargeWood}: Mass of (downed) large dead wood (in g C/m2)}
 #'         \item{\code{CoarseRoots}: Mass of dead coarse roots (in g C/m2)}
 #'         \item{\code{FineRoots}: Mass of fine root litter (in g C/m2)}
 #'      }
@@ -112,7 +121,7 @@
 #' }
 #' 
 #' 
-#' @seealso \code{\link{summary.forest}}, \code{\link{emptyforest}}, \code{\link{plot.forest}}
+#' @seealso \code{\link{summary.forest}}, \code{\link{emptyforest}}, \code{\link{plot.forest}}, \code{\link{spwbInput}}
 #' @examples
 #' data(exampleforest)
 #' exampleforest
