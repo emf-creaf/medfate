@@ -169,10 +169,10 @@ Leaf and sapwood area dynamics arising from the interplay between growth and sen
 plot(G1, "LeafArea", bySpecies = T)
 plot(G1, "SapwoodArea", bySpecies = T)
 ```
-Even if one year is a short period for tree growth, we can display the resulting dynamics in diameter at breast height (DBH) or plant height:
+
+We can also inspect carbon balance at the stand level, here displayed at monthly resolution:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
-plot(G1, "DBH", bySpecies = T)
-plot(G1, "Height", bySpecies = T)
+plot(G1, "CarbonBalance", summary.freq = "months")
 ```
 
 ### Interactive plots
