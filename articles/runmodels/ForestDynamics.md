@@ -492,7 +492,7 @@ extract(fd, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 3,650 × 50
+    ## # A tibble: 3,650 × 51
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
     ##  1 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 
@@ -506,7 +506,7 @@ extract(fd, "forest", addunits = TRUE) |>
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
     ## 10 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 
     ## # ℹ 3,640 more rows
-    ## # ℹ 42 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## # ℹ 43 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
     ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
     ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
@@ -604,14 +604,14 @@ fd$TreeTable
     ## 12    5 2005 T3_168     Quercus ilex  1.466372  75.69700 1997.0597 300.0000
     ## 13    6 2006 T1_148 Pinus halepensis 38.258900 837.26439  157.4597 100.0000
     ## 14    6 2006 T3_168     Quercus ilex  1.579728  82.60212 1845.0721 300.0000
-    ## 15    7 2007 T1_148 Pinus halepensis 38.378804 843.44100  157.2816 100.0000
-    ## 16    7 2007 T3_168     Quercus ilex  1.693745  89.54970 1713.3212 300.0000
-    ## 17    8 2008 T1_148 Pinus halepensis 38.498524 849.57516  157.1015 100.0000
-    ## 18    8 2008 T3_168     Quercus ilex  1.808302  96.53534 1598.1686 300.0000
-    ## 19    9 2009 T1_148 Pinus halepensis 38.618036 855.66584  156.9206 100.0000
-    ## 20    9 2009 T2_168     Quercus ilex  1.767277  99.70782 1902.7556 309.5582
-    ## 21   10 2010 T1_148 Pinus halepensis 38.733850 861.53671  156.7398 100.0000
-    ## 22   10 2010 T2_168     Quercus ilex  1.880641 106.63349 1532.9028 309.5582
+    ## 15    7 2007 T1_148 Pinus halepensis 38.378804 843.44101  157.2816 100.0000
+    ## 16    7 2007 T3_168     Quercus ilex  1.693745  89.54970 1713.3211 300.0000
+    ## 17    8 2008 T1_148 Pinus halepensis 38.498525 849.57517  157.1015 100.0000
+    ## 18    8 2008 T3_168     Quercus ilex  1.808302  96.53536 1598.1683 300.0000
+    ## 19    9 2009 T1_148 Pinus halepensis 38.618036 855.66585  156.9206 100.0000
+    ## 20    9 2009 T2_168     Quercus ilex  1.767277  99.70784 1902.7552 309.5582
+    ## 21   10 2010 T1_148 Pinus halepensis 38.733850 861.53672  156.7398 100.0000
+    ## 22   10 2010 T2_168     Quercus ilex  1.880641 106.63345 1532.9035 309.5582
     ##         Z95 Z100      Age ObsID
     ## 1   300.000   NA 40.00000  <NA>
     ## 2  1000.000   NA 24.00000  <NA>

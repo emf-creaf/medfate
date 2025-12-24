@@ -10,6 +10,7 @@
 - Soil data frames accept column ‘ph’ (for water pH)
 - Decomposition added to growth, using an implementation of DAYCENT
   model
+- Fire combustion added to stand carbon balance
 
 ## medfate 4.8.5
 

@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2025-12-23</h4>
+            <h4 data-toc-skip class="date">2025-12-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestDynamics.Rmd" class="external-link"><code>vignettes/runmodels/ForestDynamics.Rmd</code></a></small>
       <div class="d-none name"><code>ForestDynamics.Rmd</code></div>
@@ -501,7 +501,7 @@ bind outputs for all the internal calls to function
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"forest"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3,650 × 50</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3,650 × 51</span></span></span>
 <span><span class="co">##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494;">[L/m^2]</span>       <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^</span>… <span style="color: #949494;">[L/m^2]</span>  <span style="color: #949494;">[L/m^2]</span>      <span style="color: #949494;">[L/m^2]</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 </span></span>
@@ -515,7 +515,7 @@ bind outputs for all the internal calls to function
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09   1.98           0       0      0      0         0           0    </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 </span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 3,640 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 42 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 43 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],</span></span></span>
@@ -595,14 +595,14 @@ ilex</em> after the thinning intervention, evidenced by the new cohort
 <span><span class="co">## 12    5 2005 T3_168     Quercus ilex  1.466372  75.69700 1997.0597 300.0000</span></span>
 <span><span class="co">## 13    6 2006 T1_148 Pinus halepensis 38.258900 837.26439  157.4597 100.0000</span></span>
 <span><span class="co">## 14    6 2006 T3_168     Quercus ilex  1.579728  82.60212 1845.0721 300.0000</span></span>
-<span><span class="co">## 15    7 2007 T1_148 Pinus halepensis 38.378804 843.44100  157.2816 100.0000</span></span>
-<span><span class="co">## 16    7 2007 T3_168     Quercus ilex  1.693745  89.54970 1713.3212 300.0000</span></span>
-<span><span class="co">## 17    8 2008 T1_148 Pinus halepensis 38.498524 849.57516  157.1015 100.0000</span></span>
-<span><span class="co">## 18    8 2008 T3_168     Quercus ilex  1.808302  96.53534 1598.1686 300.0000</span></span>
-<span><span class="co">## 19    9 2009 T1_148 Pinus halepensis 38.618036 855.66584  156.9206 100.0000</span></span>
-<span><span class="co">## 20    9 2009 T2_168     Quercus ilex  1.767277  99.70782 1902.7556 309.5582</span></span>
-<span><span class="co">## 21   10 2010 T1_148 Pinus halepensis 38.733850 861.53671  156.7398 100.0000</span></span>
-<span><span class="co">## 22   10 2010 T2_168     Quercus ilex  1.880641 106.63349 1532.9028 309.5582</span></span>
+<span><span class="co">## 15    7 2007 T1_148 Pinus halepensis 38.378804 843.44101  157.2816 100.0000</span></span>
+<span><span class="co">## 16    7 2007 T3_168     Quercus ilex  1.693745  89.54970 1713.3211 300.0000</span></span>
+<span><span class="co">## 17    8 2008 T1_148 Pinus halepensis 38.498525 849.57517  157.1015 100.0000</span></span>
+<span><span class="co">## 18    8 2008 T3_168     Quercus ilex  1.808302  96.53536 1598.1683 300.0000</span></span>
+<span><span class="co">## 19    9 2009 T1_148 Pinus halepensis 38.618036 855.66585  156.9206 100.0000</span></span>
+<span><span class="co">## 20    9 2009 T2_168     Quercus ilex  1.767277  99.70784 1902.7552 309.5582</span></span>
+<span><span class="co">## 21   10 2010 T1_148 Pinus halepensis 38.733850 861.53672  156.7398 100.0000</span></span>
+<span><span class="co">## 22   10 2010 T2_168     Quercus ilex  1.880641 106.63345 1532.9035 309.5582</span></span>
 <span><span class="co">##         Z95 Z100      Age ObsID</span></span>
 <span><span class="co">## 1   300.000   NA 40.00000  &lt;NA&gt;</span></span>
 <span><span class="co">## 2  1000.000   NA 24.00000  &lt;NA&gt;</span></span>

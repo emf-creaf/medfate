@@ -372,7 +372,7 @@ extract(G1, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 365 × 50
+    ## # A tibble: 365 × 51
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
     ##  1 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 
@@ -386,7 +386,7 @@ extract(G1, "forest", addunits = TRUE) |>
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
     ## 10 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 
     ## # ℹ 355 more rows
-    ## # ℹ 42 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## # ℹ 43 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
     ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
     ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
@@ -453,24 +453,16 @@ plot(G1, "LeafArea", bySpecies = T)
 plot(G1, "SapwoodArea", bySpecies = T)
 ```
 
-![](ForestGrowth_files/figure-html/unnamed-chunk-22-2.png) Even if one
-year is a short period for tree growth, we can display the resulting
-dynamics in diameter at breast height (DBH) or plant height:
+![](ForestGrowth_files/figure-html/unnamed-chunk-22-2.png)
+
+We can also inspect carbon balance at the stand level, here displayed at
+monthly resolution:
 
 ``` r
-plot(G1, "DBH", bySpecies = T)
+plot(G1, "CarbonBalance", summary.freq = "months")
 ```
-
-    ## Warning: Removed 365 rows containing missing values or values outside the scale range
-    ## (`geom_line()`).
 
 ![](ForestGrowth_files/figure-html/unnamed-chunk-23-1.png)
-
-``` r
-plot(G1, "Height", bySpecies = T)
-```
-
-![](ForestGrowth_files/figure-html/unnamed-chunk-23-2.png)
 
 ### Interactive plots
 
