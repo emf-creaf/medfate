@@ -630,7 +630,7 @@ double DAYCENTInner(List commDecomp,
 
 //' DAYCENT decomposition
 //' 
-//' Functions implementing a modification of the DAYCENT carbon decomposition model, inspired by the description given in Chapter 18 of Bonan (2019).
+//' Functions implementing a modification of the DAYCENT (Parton et al. 1998) carbon decomposition model, inspired by the description given in Chapter 18 of Bonan (2019).
 //' Functions \code{decompositionDAYCENTsnags} and \code{decompositionDAYCENTlitter} conduct snag and litter decomposition, respectively, 
 //' whereas function \code{decomposition_DAYCENT} performs the whole model for carbon decomposition.
 //' 
@@ -666,6 +666,8 @@ double DAYCENTInner(List commDecomp,
 //' 
 //' @references
 //' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+//' 
+//' Parton WJ, Hartman M, Ojima D, Schimel D (1998). DAYCENT and its land surface submodel: Description and testing. Global and Planetary Change, 19: 35-48.
 //' 
 //' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 //' 
