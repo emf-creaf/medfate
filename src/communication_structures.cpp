@@ -379,9 +379,9 @@ List basicGROWTHCommunicationOutput(List spwbOut, int numCohorts, int nlayers) {
                                                     _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
                                                     _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
   
-  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL};
+  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL};
   standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction", 
-               "HeterotrophicRespiration", "NetEcosystemExchange"});
+               "HeterotrophicRespiration", "FireCombustion", "NetEcosystemProduction"});
   
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(
@@ -758,9 +758,9 @@ List advancedGROWTHCommunicationOutput(List spwbOut, int numCohorts, int ntimest
                                                     _["StarchSapwood"] = NumericVector(numCohorts, NA_REAL),
                                                     _["SugarTransport"] = NumericVector(numCohorts, NA_REAL));
 
-  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL};
+  NumericVector standCB = {NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL, NA_REAL};
   standCB.attr("names") = CharacterVector({"GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction",
-               "HeterotrophicRespiration", "NetEcosystemExchange"});
+               "HeterotrophicRespiration", "FireCombustion",  "NetEcosystemProduction"});
   
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(

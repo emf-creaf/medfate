@@ -179,7 +179,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   NumericMatrix MortalityBiomassLoss(numDays, numCohorts);
   NumericMatrix CohortBiomassBalance(numDays, numCohorts);
   NumericMatrix StandBiomassBalance(numDays, 5);
-  NumericMatrix StandCarbonBalance(numDays, 6);
+  NumericMatrix StandCarbonBalance(numDays, 7);
   
   
   //Add matrix dimnames
@@ -219,7 +219,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
                            CharacterVector::create("StructuralBalance", "LabileBalance", "PlantBalance", "MortalityLoss", "CohortBalance"));
   StandCarbonBalance.attr("dimnames") = List::create(dateStrings, 
                           CharacterVector::create("GrossPrimaryProduction", "MaintenanceRespiration", "SynthesisRespiration", "NetPrimaryProduction",
-                                                  "HeterotrophicRespiration", "NetEcosystemExchange"));
+                                                  "HeterotrophicRespiration", "FireCombustion", "NetEcosystemProduction"));
   // Assemble output
   List labileCarbonBalance = List::create(
     Named("GrossPhotosynthesis") = GrossPhotosynthesis,

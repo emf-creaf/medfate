@@ -745,6 +745,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     RootAreaLeafArea[c] = 0.0;
   }
   
+  // Fire combustion (in C/m2) for stand carbon balance
+  double fireCombustion = 0.0;
+  
   NumericVector deltaLAgrowth(numCohorts,0.0);
   NumericVector deltaSAgrowth(numCohorts,0.0);
   
@@ -1337,6 +1340,13 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           //Effects
           double LAburned = LAexpanded * burnRatioLeaves;
           LAI_burnt_change = LAburned*N[j]/10000.0;
+          
+          // Fire emissions
+          // from m2/m2 to g C/m2
+          double leaf_burnt_C = leafCperDry*1000.0*LAI_burnt_change/SLA[j];
+          double twig_burnt_C = leaf_burnt_C/(r635[j] - 1.0);
+          fireCombustion +=leaf_burnt_C + twig_burnt_C;
+          
           crownBudPercent[j] = crownBudPercent[j]*(1.0 - burnRatioBuds);
           abovegroundFireSurvival = (burnRatioBuds < 1.0) && (bark_thickness > xn);
           // Rcout << "abovegroundSurvival "<< abovegroundFireSurvival<< " burnRatioLeaves "<< burnRatioLeaves<< " LAI_burnt_change "<<LAI_burnt_change<<"\n";
@@ -1436,11 +1446,20 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         
         //ADD STANDING DEADWOOD (in g C / m2) according to non-resprouting
         double snag_wood_biomass = (Ndead_day/10000.0)*AbovegroundWoodBiomass[j]*WoodC[j]; //Aboveground necromass (includes burning and dessication)
-        if(ctype[j]=="tree") { // 20% goes to small branches (diameter < 7.5) SHOULD depend on size allometry
-          Snag_smallbranches[j] += 0.2*snag_wood_biomass; 
-          Snag_largewood[j] += 0.8*snag_wood_biomass; 
-        } else if(ctype[j] =="shrub") { // For shrubs 100% goes to small branches
-          Snag_smallbranches[j] = snag_wood_biomass;
+        if(cause != "burnt") {
+          if(ctype[j]=="tree") { // 20% goes to small branches (diameter < 7.5) SHOULD depend on size allometry
+            Snag_smallbranches[j] += 0.2*snag_wood_biomass; 
+            Snag_largewood[j] += 0.8*snag_wood_biomass; 
+          } else if(ctype[j] =="shrub") { // For shrubs 100% goes to small branches
+            Snag_smallbranches[j] = snag_wood_biomass;
+          }
+        } else { // burnt
+          if(ctype[j]=="tree") { 
+            fireCombustion += 0.2*snag_wood_biomass; //20% goes to fire emissions
+            Snag_largewood[j] += 0.8*snag_wood_biomass; 
+          } else if(ctype[j] =="shrub") { // For shrubs 100% goes to fire emissions
+            fireCombustion += snag_wood_biomass;
+          }
         }
         if(exportLitter) {
           double coarseroot_litter = ((Ndead_day - N_resprouting_stump_day)/10000.0)*BelowgroundWoodBiomass[j]*WoodC[j]; //Only adds non-resprouting death biomass
@@ -1452,7 +1471,6 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           LAI_dead[j] = LAI_dead[j] + LAI_change;
           LAI_expanded[j] = std::max(0.0, LAI_expanded[j] - LAI_change - LAI_burnt_change);
         } else {
-          //TODO: We should store emissions (leaves + twigs?)
           fineRootBiomassTarget[j] = 0.0;
           sapwoodAreaTarget[j] = 0.0;
           leafAreaTarget[j] = 0.0;
@@ -1561,13 +1579,22 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   }
   
 
-  NumericVector standCB = modelOutput["CarbonBalance"];
-  standCB["GrossPrimaryProduction"] = standGrossPrimaryProduction;
-  standCB["MaintenanceRespiration"] = standMaintenanceRespiration;
-  standCB["SynthesisRespiration"] = standSynthesisRespiration;
-  standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
+  //4. Fire effects on litter combustion
+  if(fireOccurrence) {
+    NumericVector litter_leaves = internalLitter["Leaves"];
+    NumericVector litter_twigs = internalLitter["Twigs"];
+    NumericVector litter_smallbranches = internalLitter["SmallBranches"];
+    fireCombustion += sum(litter_leaves) + sum(litter_twigs) + sum(litter_smallbranches);
+    for(int i=0;i<litter_leaves.size();i++) {
+      litter_leaves[i] = 0.0;
+      litter_twigs[i] = 0.0;
+      litter_smallbranches[i] = 0.0;
+    }
+  }
+  
 
-  //4. Decomposition
+  //5. Decomposition
+  double heterotrophicRespiration = 0.0;
   if(exportLitter) {
     NumericVector baseAnnualRates = control["decompositionAnnualBaseRates"];
     double annualTurnoverRate = control["decompositionAnnualTurnoverRate"];
@@ -1583,14 +1610,23 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
     double vpsat = meteoland::utils_saturationVP(tday);
     double rhmean = 100.0*std::max(1.0, vpatm/vpsat);
-    double heterotrophicRespiration = DAYCENTInner(commDecomp, internalSnags, internalLitter, internalSOC,
-                                                   paramsLitterDecomposition,
-                                                   baseAnnualRates, annualTurnoverRate,
-                                                   tday, rhmean, 
-                                                   sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
-    standCB["HeterotrophicRespiration"] = heterotrophicRespiration;
-    standCB["NetEcosystemExchange"] = standCB["NetPrimaryProduction"] - heterotrophicRespiration; 
+    heterotrophicRespiration = DAYCENTInner(commDecomp, internalSnags, internalLitter, internalSOC,
+                                            paramsLitterDecomposition,
+                                            baseAnnualRates, annualTurnoverRate,
+                                            tday, rhmean, 
+                                            sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
   }
+  
+  // Stand-level carbon balance
+  NumericVector standCB = modelOutput["CarbonBalance"];
+  standCB["GrossPrimaryProduction"] = standGrossPrimaryProduction;
+  standCB["MaintenanceRespiration"] = standMaintenanceRespiration;
+  standCB["SynthesisRespiration"] = standSynthesisRespiration;
+  standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
+  standCB["FireCombustion"] = fireCombustion;
+  standCB["HeterotrophicRespiration"] = heterotrophicRespiration;
+  standCB["NetEcosystemProduction"] = standCB["NetPrimaryProduction"] - fireCombustion - heterotrophicRespiration; 
+  
 }
 
 
