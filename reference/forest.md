@@ -99,7 +99,7 @@ soil carbon:
 
   - `Height`: Height of the snag cohort (tree or shrub) (in cm).
 
-  - `Age`: Years passed since plant death (in yrs).
+  - `DeathAge`: Years passed since plant death (in yrs).
 
   - `SmallBranches`: Mass of (standing) small dead branches (in g C/m2).
 
