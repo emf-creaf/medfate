@@ -81,7 +81,7 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
     l$snagData<- data.frame(Species = as.character(rep(NA, nsnag)),
                             DBH = as.numeric(rep(NA, nsnag)),
                             Height = as.numeric(rep(NA, nsnag)),
-                            DeadAge = as.numeric(rep(NA, nsnag)),
+                            DeathAge = as.numeric(rep(NA, nsnag)),
                             SmallBranches = as.numeric(rep(NA, nsnag)),
                             LargeWood = as.numeric(rep(NA, nsnag)))
   }

@@ -2034,7 +2034,7 @@ List growthInput(List x, DataFrame soil, DataFrame SpParams, List control) {
      snagData = DataFrame::create(_["Species"] = species,
                                   _["DBH"] = dbh,
                                   _["Height"] = height,
-                                  _["DeadAge"] = deadage,
+                                  _["DeathAge"] = deadage,
                                   _["SmallBranches"] = smallbranches,
                                   _["LargeWood"] = largewood);
    }

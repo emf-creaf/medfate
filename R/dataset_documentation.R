@@ -61,7 +61,7 @@
 #'         \item{\code{Species}: String with species (taxon) name.}
 #'         \item{\code{DBH}: Diameter at breast height (in cm), for tree snags only.}
 #'         \item{\code{Height}: Height of the snag cohort (tree or shrub) (in cm).}
-#'         \item{\code{Age}: Years passed since plant death (in yrs).}
+#'         \item{\code{DeathAge}: Years passed since plant death (in yrs).}
 #'         \item{\code{SmallBranches}: Mass of (standing) small dead branches (in g C/m2).}
 #'         \item{\code{LargeWood}: Mass of (standing) large dead wood (in g C/m2).}
 #'      }

@@ -15,12 +15,12 @@
 .ageSnagCohorts<-function(xo) {
   oldSnagData <- xo$internalSnags
   if(nrow(oldSnagData)>0) {
-    oldSnagData$Age <- oldSnagData$Age + 1
+    oldSnagData$DeathAge <- oldSnagData$DeathAge + 1
   }
   newSnagData <- data.frame(Species = xo$cohorts$Name,
                             DBH = xo$above$DBH,
                             Height = xo$above$H,
-                            Age = rep(1, nrow(xo$above)),
+                            DeathAge = rep(1, nrow(xo$above)),
                             SmallBranches = xo$internalMortality$Snag_smallbranches,
                             LargeWood = xo$internalMortality$Snag_largewood)
   mergedSnagData <- rbind(oldSnagData, newSnagData)
@@ -35,7 +35,7 @@
       # Determine branch fall and large wood fall
       speciesSnag <- snagData$Species[s]
       dbhSnag <- snagData$DBH[s]
-      ageSnag <- snagData$Age[s]
+      ageSnag <- snagData$DeathAge[s]
       smallBranchFallAmount <- 0.0
       largeWoodFallAmount <- 0.0
       decayClass <- 1
