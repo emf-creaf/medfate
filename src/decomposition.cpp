@@ -476,6 +476,7 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
     litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
     structural_leaves[i] -= loss;
+    // if(i==0) Rcout<< structural_leaves[i] << " T" <<soilTemperature <<  " Teff"<< tempEff << " M"<< moistEff << " pH"<< pHeff << " K" << k << " Loss: "<< loss << "\n"; 
   }
   
   // STRUCTURAL twigs
@@ -483,11 +484,11 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   for(int i=0;i<numCohorts;i++) {
     pHeff = pHEffect(soilPH, "Twigs");
     k = (baseAnnualRates["Twigs"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
-    loss = structural_smallbranches[i]*k*tstep;
+    loss = structural_twigs[i]*k*tstep;
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
     litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
     litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_smallbranches[i] -= loss;
+    structural_twigs[i] -= loss;
   }
   
   // STRUCTURAL small branches
