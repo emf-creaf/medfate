@@ -1,11 +1,12 @@
 # DAYCENT decomposition
 
 Functions implementing a modification of the DAYCENT carbon
-decomposition model, inspired by the description given in Chapter 18 of
-Bonan (2019). Functions `decompositionDAYCENTsnags` and
-`decompositionDAYCENTlitter` conduct snag and litter decomposition,
-respectively, whereas function `decomposition_DAYCENT` performs the
-whole model for carbon decomposition.
+decomposition model (Parton et al. 1988, 1993, 1998), inspired by the
+description given in Chapter 18 of Bonan (2019). Functions
+`decompositionDAYCENTsnags` and `decompositionDAYCENTlitter` conduct
+snag and litter decomposition, respectively, whereas function
+`decomposition_DAYCENT` performs the whole model for carbon
+decomposition.
 
 ## Usage
 
@@ -152,6 +153,18 @@ uppermost soil layer.
 
 Bonan, G. (2019). Climate change and terrestrial ecosystem modeling.
 Cambridge University Press, Cambridge, UK.
+
+Parton WJ, Steward JWB, Cole CV (1988). Dynamics of C, N, P and S in
+grassland soils: a model. Biogeochemistry 5: 109-131.
+
+Parton WJ, Scurlock JMO, Ojima DS, Gilmanov TG, Scoles RJ et al. (1993).
+Observations and modeling of biomass and soil organic matter dynamics
+for the grassland biome worldwide. Global Biogeochemical Cycles 7:
+785-809.
+
+Parton WJ, Hartman M, Ojima DS, Schimel D (1998). DAYCENT and its land
+surface submodel: Description and testing. Global and Planetary Change,
+19: 35-48.
 
 ## See also
 
