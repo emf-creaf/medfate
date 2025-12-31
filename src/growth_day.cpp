@@ -429,6 +429,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   double Patm = meteovec["Patm"];
   double pfire = meteovec["pfire"];
   
+  //Atmospheric pressure (if missing)
+  if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  
   bool fireOccurrence = false;
   NumericVector fireBehavior = communicationFireHazard();
   if(R::runif(0.0,1.0) < pfire) {
@@ -1304,38 +1307,47 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         if(fireOccurrence) {
           double rho_air = meteoland::utils_airDensity(tmax, Patm);
           double foliar_factor = leafThermalFactor(SLA[j]);
-          //Determine foliage/bud burn
           double Ib_surf = fireBehavior["I_b_surface [kW/m]"];
           double t_res_surf = fireBehavior["t_r_surface [s]"];
           double t_r_crown = fireBehavior["t_r_crown [s]"];
           double fm_dead = fireBehavior["DFMC [%]"];
           double Ic_ratio = fireBehavior["Ic_ratio"];
-          double Hn_leaves = 100.0*necrosisHeight(Ib_surf, t_res_surf, foliar_factor, tmax, rho_air); //Necrosis height (cm)
-          double Hn_buds = 100.0*necrosisHeight(Ib_surf, t_res_surf, 0.130, tmax, rho_air); //Bud necrosis height (cm)
           double cbh = H[j]*(1.0 - CR[j]);
-          double burnRatioLeaves = leafAreaProportion(0.0, Hn_leaves, cbh, H[j]);
-          double burnRatioBuds = leafAreaProportion(0.0, Hn_buds, cbh, H[j]);
-          // Rcout << " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
-          //Determine crown fire or torching effects
-          double canopyFMC = (LFMC[j]*(1.0 - StemPLC[j]) + fm_dead*StemPLC[j]);
-          double Ib_crit = criticalFirelineIntensity(cbh/100.0, canopyFMC);
-          // Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
-          if((Ic_ratio > 1.0) || (Ib_surf > Ib_crit)) {
-            burnRatioLeaves = 1.0;
-            double Tc = necrosisCriticalTemperature(t_r_crown, 0.130 , tmax, rho_air);
-            if(Tc < 900.0) burnRatioBuds = 1.0;
-          }
-          // Rcout << "br_leaves "<< burnRatioLeaves<< " br_buds "<< burnRatioBuds<<"\n";
-          //Surface fire effects on cambium
-          double bark_diff = barkThermalDiffusivity(fm_dead, 500.0, tmax);
-          double xn = radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax, rho_air);
           double bark_thickness = 1.0;
+          double Hn_leaves = 0.0, Hn_buds = 0.0;
+          double burnRatioLeaves = 0.0, burnRatioBuds = 0.0;
+          double xn = 0.0;
           if(ctype[j] == "shrub") {
             bark_thickness = BTsh[j]*0.1; // from mm to cm
           } else {
             bark_thickness = Abt[j]*pow(DBH[j],Bbt[j])*0.1;// from mm to cm
           } 
-          // Rcout << "xn "<< xn<< " xa "<<bark_thickness<<"\n";
+          //Determine foliage/bud burn
+          if(!NumericVector::is_na(Ib_surf) && !NumericVector::is_na(t_res_surf)) {
+            Hn_leaves =100.0*necrosisHeight(Ib_surf, t_res_surf, foliar_factor, tmax, rho_air); //Necrosis height (cm)
+            Hn_buds = 100.0*necrosisHeight(Ib_surf, t_res_surf, 0.130, tmax, rho_air); //Bud necrosis height (cm)
+            burnRatioLeaves = leafAreaProportion(0.0, Hn_leaves, cbh, H[j]);
+            burnRatioBuds = leafAreaProportion(0.0, Hn_buds, cbh, H[j]);
+            // Rcout << " tmax " << tmax << " rho_air " << rho_air <<" foliar_factor "<< foliar_factor << " Ib_surf "<< Ib_surf << " t_res_surf " << t_res_surf<< " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
+          }
+          //Determine crown fire or torching effects
+          if(!NumericVector::is_na(Ib_surf)) {
+            double canopyFMC = (LFMC[j]*(1.0 - StemPLC[j]) + fm_dead*StemPLC[j]);
+            double Ib_crit = criticalFirelineIntensity(cbh/100.0, canopyFMC);
+            // Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
+            if((Ic_ratio > 1.0) || (Ib_surf > Ib_crit)) {
+              burnRatioLeaves = 1.0;
+              double Tc = necrosisCriticalTemperature(t_r_crown, 0.130 , tmax, rho_air);
+              if(Tc < 900.0) burnRatioBuds = 1.0;
+            }
+            // Rcout << "br_leaves "<< burnRatioLeaves<< " br_buds "<< burnRatioBuds<<"\n";
+          }
+          //Surface fire effects on cambium
+          if(!NumericVector::is_na(Ib_surf) && !NumericVector::is_na(t_res_surf)) {
+            double bark_diff = barkThermalDiffusivity(fm_dead, 500.0, tmax);
+            xn =  radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax, rho_air);
+            // Rcout << "xn "<< xn<< " xa "<<bark_thickness<<"\n";
+          }
           
           //Effects
           double LAburned = LAexpanded * burnRatioLeaves;
