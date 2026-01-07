@@ -1355,8 +1355,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           
           // Fire emissions
           // from m2/m2 to g C/m2
-          double leaf_burnt_C = leafCperDry*1000.0*LAI_burnt_change/SLA[j];
-          double twig_burnt_C = leaf_burnt_C/(r635[j] - 1.0);
+          double leaf_burnt_dry = 1000.0*LAI_burnt_change/SLA[j];
+          double leaf_burnt_C = leafCperDry*leaf_burnt_dry;
+          double twig_burnt_C = WoodC[j]*leaf_burnt_dry/(r635[j] - 1.0);
           fireCombustion +=leaf_burnt_C + twig_burnt_C;
           
           crownBudPercent[j] = crownBudPercent[j]*(1.0 - burnRatioBuds);

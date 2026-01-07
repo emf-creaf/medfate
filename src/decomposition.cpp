@@ -521,8 +521,8 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
     pHeff = pHEffect(soilPH, "CoarseRoots");
     k = (baseAnnualRates["CoarseRoots"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
     loss = structural_coarseroots[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.55);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.55);
+    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW] += loss*flig*(1.0 - 0.30);
     litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.55);
     structural_coarseroots[i] -= loss;
   }
