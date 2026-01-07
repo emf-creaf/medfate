@@ -1156,7 +1156,12 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
       double deltaSASenescence = std::max(0.0, SA[j] - sapwoodAreaTarget[j]);
       propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
-
+      //For shrubs, convert SA senescence into mass of standing dead branches
+      if(ctype[j]=="shrub") {
+        double sh_wood_biomass = (deltaSASenescence/SA[j])*(N[j]/10000.0)*AbovegroundWoodBiomass[j]*WoodC[j]; //Aboveground necromass
+        Snag_smallbranches[j] += sh_wood_biomass;
+      }
+      
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
@@ -1464,7 +1469,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
             Snag_smallbranches[j] += 0.2*snag_wood_biomass; 
             Snag_largewood[j] += 0.8*snag_wood_biomass; 
           } else if(ctype[j] =="shrub") { // For shrubs 100% goes to small branches
-            Snag_smallbranches[j] = snag_wood_biomass;
+            Snag_smallbranches[j] += snag_wood_biomass;
           }
         } else { // burnt
           if(ctype[j]=="tree") { 
