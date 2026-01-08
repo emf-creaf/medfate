@@ -101,9 +101,11 @@ soil carbon:
 
   - `DeathAge`: Years passed since plant death (in yrs).
 
-  - `SmallBranches`: Mass of (standing) small dead branches (in g C/m2).
+  - `SmallBranches`: Mass of (standing) small dead branches (diameters
+    between 0.635 cm and 7.5 cm; 10h and 100h fuels; in g C/m2).
 
-  - `LargeWood`: Mass of (standing) large dead wood (in g C/m2).
+  - `LargeWood`: Mass of (standing) large dead wood (diameters larger
+    than 7.5 cm; 1000h and 10000h fuels; in g C/m2).
 
 - `litterData`: An optional data frame containing litter information
   with the following columns:
@@ -112,11 +114,14 @@ soil carbon:
 
   - `Leaves`: Mass of leaf litter (in g C/m2)
 
-  - `Twigs`: Mass of twig litter (in g C/m2)
+  - `Twigs`: Mass of twig litter (diameters \< 0.635 cm; 1h fuels; in g
+    C/m2)
 
-  - `SmallBranches`: Mass of (downed) small dead branches (in g C/m2)
+  - `SmallBranches`: Mass of (downed) small dead branches (diameters
+    between 0.635 cm and 7.5 cm; 10h and 100h fuels; in g C/m2)
 
-  - `LargeWood`: Mass of (downed) large dead wood (in g C/m2)
+  - `LargeWood`: Mass of (downed) large dead wood (diameters larger than
+    7.5 cm; 1000h and 10000h fuels; in g C/m2)
 
   - `CoarseRoots`: Mass of dead coarse roots (in g C/m2)
 
