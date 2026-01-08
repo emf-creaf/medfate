@@ -320,12 +320,6 @@ carbon_heartwoodStructuralBiomass <- function(DBH, SA, H, L, V, woodDensity) {
 
 #' @rdname carbon
 #' @keywords internal
-carbon_sapwoodStructuralLivingBiomass <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
-    .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, L, V, woodDensity, conduit2sapwood)
-}
-
-#' @rdname carbon
-#' @keywords internal
 carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
     .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, conduit2sapwood)
 }

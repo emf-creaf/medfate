@@ -540,22 +540,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sapwoodStructuralLivingBiomass
-double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double conduit2sapwood);
-RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP conduit2sapwoodSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
-    Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
-    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    Rcpp::traits::input_parameter< double >::type conduit2sapwood(conduit2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, L, V, woodDensity, conduit2sapwood));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sapwoodStarchCapacity
 double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double conduit2sapwood);
 RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP conduit2sapwoodSEXP) {
@@ -6450,7 +6434,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_abovegroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass, 4},
     {"_medfate_belowgroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundHeartwoodStructuralBiomass, 5},
     {"_medfate_heartwoodStructuralBiomass", (DL_FUNC) &_medfate_heartwoodStructuralBiomass, 6},
-    {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
     {"_medfate_copyModelOutput", (DL_FUNC) &_medfate_copyModelOutput, 3},

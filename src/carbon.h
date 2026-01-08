@@ -28,8 +28,6 @@ double sapwoodStorageVolume(double SA, double H, NumericVector L, NumericVector 
                             double woodDensity, double conduit2sapwood);
 double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, 
                                 double woodDensity);
-double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V,
-                                      double woodDensity, double conduit2sapwood);
 double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, 
                              double woodDensity, double conduit2sapwood);
 

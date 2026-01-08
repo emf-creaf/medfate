@@ -781,8 +781,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   NumericVector AbovegroundWoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["AbovegroundWoodBiomass"]);
   NumericVector BelowgroundWoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["BelowgroundWoodBiomass"]);
   NumericVector SapwoodLivingStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodLivingStructuralBiomass"]);
+  NumericVector TwigLivingStructuralBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TwigLivingStructuralBiomass"]);
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
-  NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
 
 
   //For survival model based on basal area  
@@ -795,7 +795,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
       double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
-      costPerLA += 1000.0*CCsapwood[j]*(r635[j] - 1.0)/SLA[j];// Include cost of twigs in g gluc · m-2 of leaf area
+      double twigCostPerLA = 1000.0*CCsapwood[j]*(r635[j] - 1.0)/SLA[j];// Include cost of twigs in g gluc · m-2 of leaf area
       double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
       NumericVector deltaFRBgrowth(nlayers, 0.0);
       
@@ -808,9 +808,11 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         
       double leafAgG = 0.0;
       double leafRespDay = 0.0;
+      double twigResp = 0.0;
       double sapwoodResp = 0.0;
       double finerootResp = 0.0;
       double synthesisRespLA = 0.0;
+      double twigSynthesisRespLA = 0.0;
       double synthesisRespSA = 0.0;
       double synthesisRespFRB = 0.0;   
       
@@ -841,16 +843,18 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         double leafSugarMass = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
         double sapwoodSugarMass = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
         double B_resp_leaves = LeafStructBiomass[j] + leafSugarMass;
-        double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMass;
+        double B_resp_sapwood = SapwoodLivingStructBiomass[j]  + sapwoodSugarMass;
+        double B_resp_twig = TwigLivingStructuralBiomass[j];
         // Rcout<<j<< " maintenance costs of leaf sugars: "<< (leafSugarMass/B_resp_leaves)<<" sapwood sugars: "<< (sapwoodSugarMass/B_resp_sapwood)<<"\n";
         double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(tday);
         if(LAexpanded>0.0) {
           leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0, 0.5)); //Reduction under shade
         }
+        twigResp = B_resp_twig*RERsapwood[j]*QR;
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
         finerootResp = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive);
-        MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
+        MaintenanceRespiration[j] += (leafRespDay+twigResp + sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
 
         //PHOTOSYNTHESIS
         if(LAexpanded>0.0) {
@@ -866,6 +870,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         
         //GROWTH
         double growthCostLA = 0.0;
+        double twigGrowthCostLA = 0.0;
         double growthCostSA = 0.0;
         double growthCostFRB = 0.0;   
         
@@ -879,6 +884,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
           growthCostLA = deltaLAgrowth[j]*costPerLA;
           synthesisRespLA = growthCostLA*(CCleaf[j] - 1.0)/CCleaf[j];
+          twigGrowthCostLA = deltaLAgrowth[j]*twigCostPerLA;
+          twigSynthesisRespLA = twigGrowthCostLA*(CCsapwood[j] - 1.0)/CCsapwood[j];
         }
         
         //fine root growth
@@ -921,8 +928,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         
         //PARTIAL CARBON BALANCE
         double leafSugarMassDelta = leafAgG - leafRespDay;
-        double sapwoodSugarMassDelta =  - sapwoodResp - finerootResp; 
-        double sapwoodStarchMassDelta =  - growthCostFRB - growthCostLA - growthCostSA;
+        double sapwoodSugarMassDelta =  - twigResp - sapwoodResp - finerootResp; 
+        double sapwoodStarchMassDelta =  - growthCostFRB - growthCostLA - twigGrowthCostLA - growthCostSA;
         
         sugarSapwood[j] += sapwoodSugarMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
         starchSapwood[j] += sapwoodStarchMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
@@ -980,7 +987,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           
           //MAINTENANCE RESPIRATION
           // double B_resp_leaves = LeafStructBiomass[j] + leafSugarMassStep;
-          double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMassStep;
+          double B_resp_sapwood = SapwoodLivingStructBiomass[j] + TwigLivingStructuralBiomass[j] + sapwoodSugarMassStep;
           double B_resp_fineroots = fineRootBiomass[j];
           double QR = qResp(Tcan[s]);
           leafRespDay +=leafRespStep;
@@ -1115,8 +1122,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double finerootBiomassIncrement = sum(deltaFRBgrowth);
       
       //add maintenance and synthesis respiration as g C·m-2
-      standMaintenanceRespiration += (leafRespDay+sapwoodResp+finerootResp)*(N[j]/10000.0)*((carbonMolarMass*6.0)/glucoseMolarMass);
-      standSynthesisRespiration += (synthesisRespSA+synthesisRespLA+synthesisRespFRB)*(N[j]/10000.0)*((carbonMolarMass*6.0)/glucoseMolarMass);
+      standMaintenanceRespiration += (leafRespDay+twigResp+sapwoodResp+finerootResp)*(N[j]/10000.0)*((carbonMolarMass*6.0)/glucoseMolarMass);
+      standSynthesisRespiration += (synthesisRespLA+ twigSynthesisRespLA +synthesisRespSA+synthesisRespFRB)*(N[j]/10000.0)*((carbonMolarMass*6.0)/glucoseMolarMass);
       
 
       //SENESCENCE
@@ -1308,6 +1315,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         String cause = "undertermined";
         //Determine fire severity if fire occurred
         double LAI_burnt_change = 0.0;
+        double LAI_dead_burnt_change = 0.0;
         bool abovegroundFireSurvival = true;
         if(fireOccurrence) {
           double rho_air = meteoland::utils_airDensity(tmax, Patm);
@@ -1356,11 +1364,13 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           
           //Effects
           double LAburned = LAexpanded * burnRatioLeaves;
+          double deadLAburned = LAdead * burnRatioLeaves;
           LAI_burnt_change = LAburned*N[j]/10000.0;
+          LAI_dead_burnt_change = deadLAburned*N[j]/10000.0;
           
           // Fire emissions
           // from m2/m2 to g C/m2
-          double leaf_burnt_dry = 1000.0*LAI_burnt_change/SLA[j];
+          double leaf_burnt_dry = 1000.0*(LAI_dead_burnt_change + LAI_burnt_change)/SLA[j];
           double leaf_burnt_C = leafCperDry*leaf_burnt_dry;
           double twig_burnt_C = WoodC[j]*leaf_burnt_dry/(r635[j] - 1.0);
           fireCombustion +=leaf_burnt_C + twig_burnt_C;
@@ -1479,14 +1489,19 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
             fireCombustion += snag_wood_biomass;
           }
         }
+        //Fine root and coarse root litter corresponding to non-resprouting trees
         if(exportLitter) {
           double coarseroot_litter = ((Ndead_day - N_resprouting_stump_day)/10000.0)*BelowgroundWoodBiomass[j]*WoodC[j]; //Only adds non-resprouting death biomass
           addCoarseRootLitter(speciesNames[j], coarseroot_litter, internalLitter);
+          double fineroot_litter = rootCperDry*((Ndead_day - N_resprouting_stump_day)/10000.0)*fineRootBiomass[j]; 
+          addFineRootLitter(speciesNames[j], fineroot_litter,
+                            internalLitter, paramsLitterDecomposition,
+                            internalSOC);
         }
-        //Update LAI dead and LAI expanded as a result of density decrease
+        //Update LAI dead and LAI expanded as a result of density decrease and foliage burn
         if(abovegroundFireSurvival) {
           double LAI_change = LAexpanded*Ndead_day/10000.0;
-          LAI_dead[j] = LAI_dead[j] + LAI_change;
+          LAI_dead[j] = LAI_dead[j] + LAI_change - LAI_dead_burnt_change;
           LAI_expanded[j] = std::max(0.0, LAI_expanded[j] - LAI_change - LAI_burnt_change);
         } else {
           fineRootBiomassTarget[j] = 0.0;

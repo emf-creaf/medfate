@@ -16,7 +16,6 @@
 \alias{carbon_abovegroundHeartwoodStructuralBiomass}
 \alias{carbon_belowgroundHeartwoodStructuralBiomass}
 \alias{carbon_heartwoodStructuralBiomass}
-\alias{carbon_sapwoodStructuralLivingBiomass}
 \alias{carbon_sapwoodStarchCapacity}
 \alias{carbon_carbonCompartments}
 \title{Carbon-related functions}
@@ -48,15 +47,6 @@ carbon_abovegroundHeartwoodStructuralBiomass(DBH, SA, H, woodDensity)
 carbon_belowgroundHeartwoodStructuralBiomass(DBH, SA, L, V, woodDensity)
 
 carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
-
-carbon_sapwoodStructuralLivingBiomass(
-  SA,
-  H,
-  L,
-  V,
-  woodDensity,
-  conduit2sapwood
-)
 
 carbon_sapwoodStarchCapacity(SA, H, L, V, woodDensity, conduit2sapwood)
 
