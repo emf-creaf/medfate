@@ -815,15 +815,25 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double minimumStarchForSecondaryGrowth = Starch_max_sapwood[j]*RSSG[j];
       double minimumStarchForPrimaryGrowth = Starch_max_sapwood[j]*0.1;
         
+      //Photosynthesis
       double leafAgG = 0.0;
+      //Maintenance respiration
       double leafRespDay = 0.0;
       double twigResp = 0.0;
       double sapwoodResp = 0.0;
       double finerootResp = 0.0;
+      //Growth costs
+      double growthCostLA = 0.0;
+      double twigGrowthCostLA = 0.0;
+      double growthCostFRB = 0.0;   
+      //Synthesis respiration
       double synthesisRespLA = 0.0;
       double twigSynthesisRespLA = 0.0;
       double synthesisRespSA = 0.0;
       double synthesisRespFRB = 0.0;   
+      double growthCostSA = 0.0;
+      //Initial labile (g gluc)
+      double initialLabile =  glucoseMolarMass*((sugarLeaf[j] + starchLeaf[j])*Volume_leaves[j] + (sugarSapwood[j] + starchSapwood[j])*Volume_sapwood[j]);
       
       //Estimate phloem conductance as a factor of stem conductance
       double k_phloem = NA_REAL;
@@ -876,11 +886,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         twigResp = B_resp_twig*RERsapwood[j]*QR;
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
         finerootResp = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive);
-        MaintenanceRespiration[j] += (leafRespDay+twigResp + sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
+        MaintenanceRespiration[j] = (leafRespDay+twigResp + sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
 
         ///// C4. LEAF/TWIG GROWTH /////
-        double growthCostLA = 0.0;
-        double twigGrowthCostLA = 0.0;
         if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j]*(1.0 - StemPLC[j]) - LAexpanded, 0.0);
           double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
@@ -895,7 +903,6 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         }
        
         ///// C5. SAPWOOD GROWTH /////
-        double growthCostSA = 0.0;
         if(LAexpanded>0.0) {
           double deltaSAsink = NA_REAL;
           if(!NumericVector::is_na(DBH[j])) { //Trees
@@ -914,7 +921,6 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         
         
         ///// C6. FINE ROOT GROWTH /////
-        double growthCostFRB = 0.0;   
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
           for(int s = 0;s<nlayers;s++) {
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
@@ -928,7 +934,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         }
         
         // Rcout<<growthCostLA<<" "<<growthCostSA<<" "<<growthCostFRB<< " "<< TotalLivingBiomass[j]<<"\n";
-        GrowthCosts[j] +=(growthCostLA + growthCostSA + growthCostFRB)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
+        GrowthCosts[j] +=(growthCostLA + twigGrowthCostLA + growthCostSA + growthCostFRB)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
         
         ///// C7a PARTIAL CARBON BALANCE: photosynthesis, maintenance respiration and growth /////
         double leafSugarMassDelta = leafAgG - leafRespDay;
@@ -1219,6 +1225,15 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         LabileCarbonBalance[j] = GrossPhotosynthesis[j] - MaintenanceRespiration[j] - GrowthCosts[j] - RootExudation[j];
       }
       
+      //CHECK LABILE BIOMASS BALANCE (g gluc)
+      //Final labile (g gluc)
+      double finalLabile =  glucoseMolarMass*((sugarLeaf[j] + starchLeaf[j])*Volume_leaves[j] + (sugarSapwood[j] + starchSapwood[j])*Volume_sapwood[j]);
+      double labileChange = finalLabile - initialLabile;
+      double labileBalance_ggluc = LabileCarbonBalance[j]*TotalLivingBiomass[j];
+      if(std::abs(labileChange - labileBalance_ggluc) > 0.1) {
+        Rcout << j << " Initial labile " << initialLabile << " Final Labile " << finalLabile << " Labile change " << (finalLabile-initialLabile) << " A - MR - GC - RE " <<  LabileCarbonBalance[j]*TotalLivingBiomass[j]<<"\n";
+        stop("Wrong labile biomass balance");
+      }
         
       ///// C13. UPDATE INDIVIDUAL LEAF AREA, DEAD LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS /////
       // Rcout<<"-update";
@@ -1285,6 +1300,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
         }
       }
+      
       
       ///// C15. CLOSE LEAF/FINE ROOT BIOMASS balance (g_ind)
       LeafBiomassBalance[j] = leafBiomassIncrement - senescenceLeafLoss;

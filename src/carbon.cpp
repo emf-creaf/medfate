@@ -416,6 +416,7 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
   NumericVector Starch_max_sapwood = cc["SapwoodStarchMaximumConcentration"];
   NumericVector LeafStarchCapacity = cc["LeafStarchCapacity"];
   NumericVector SapwoodStarchCapacity = cc["SapwoodStarchCapacity"];
+  
   NumericVector leafStructBiomass = cc["LeafStructuralBiomass"];
   NumericVector twigStructBiomass = cc["TwigStructuralBiomass"];
   NumericVector twigStructLivingBiomass = cc["TwigLivingStructuralBiomass"];
@@ -427,9 +428,10 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
   NumericVector abovegroundWoodBiomass = cc["AbovegroundWoodBiomass"];
   NumericVector belowgroundWoodBiomass = cc["BelowgroundWoodBiomass"];
   NumericVector fineRootBiomass = cc["FineRootBiomass"];
+  NumericVector labileBiomass = cc["LabileBiomass"];
+  
   NumericVector structuralBiomass = cc["StructuralBiomass"];
   NumericVector deadBiomass = cc["DeadBiomass"];
-  NumericVector labileBiomass = cc["LabileBiomass"];
   NumericVector totalLivingBiomass = cc["TotalLivingBiomass"]; 
   NumericVector totalBiomass = cc["TotalBiomass"];
   
@@ -472,10 +474,10 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
       deadLeafStructBiomass[j] = deadLeafStructBiomass[j]*f;
       deadTwigStructBiomass[j] = deadTwigStructBiomass[j]*f;
       sapwoodStructBiomass[j] = sapwoodStructBiomass[j]*f;
+      sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f;
       heartwoodStructBiomass[j] = heartwoodStructBiomass[j]*f;
       abovegroundWoodBiomass[j] = abovegroundWoodBiomass[j]*f;
       belowgroundWoodBiomass[j] = belowgroundWoodBiomass[j]*f;
-      sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f;
       fineRootBiomass[j] = fineRootBiomass[j]*f;
       labileBiomass[j] = labileBiomass[j]*f;
     }
