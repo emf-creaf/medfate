@@ -422,12 +422,15 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   bool sinkLimitation = control["sinkLimitation"];
   bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
-  if(transpirationMode=="Granier") allocationStrategy = "Al2As";
+  if(transpirationMode=="Granier")  {
+    allocationStrategy = "Al2As";
+    subdailyCarbonBalance = false;
+  }
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool taper = control["taper"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-  double phloemConductanceFactor = control["phloemConductanceFactor"];
+  // double phloemConductanceFactor = control["phloemConductanceFactor"];
   double nonSugarConcentration = control["nonSugarConcentration"];
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
@@ -836,8 +839,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double initialLabile =  glucoseMolarMass*((sugarLeaf[j] + starchLeaf[j])*Volume_leaves[j] + (sugarSapwood[j] + starchSapwood[j])*Volume_sapwood[j]);
       
       //Estimate phloem conductance as a factor of stem conductance
-      double k_phloem = NA_REAL;
-      if(subdailyCarbonBalance) k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
+      // double k_phloem = NA_REAL;
+      // if(subdailyCarbonBalance) k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
       
       //Xylogenesis
       // List ring = ringList[j];
@@ -856,29 +859,24 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
         // Rcout<<j<< " rcellmax "<< rcellmax<<" tcan_day "<< tcan_day<< " Psi:"<< psiRootCrown[j]<< " r:"<< rcambiumcell<<"\n";
       }
+      
+      //Respiratory biomass (g dw · ind-1)
+      double B_resp_leaves = LeafStructBiomass[j] + sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
+      double B_resp_sapwood = SapwoodLivingStructBiomass[j]  + sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
+      double B_resp_twig = TwigLivingStructuralBiomass[j];
+      double B_resp_fineroots = fineRootBiomass[j];
+      
       if(!subdailyCarbonBalance) {
         
         ////// C2. PHOTOSYNTHESIS //////
         if(LAexpanded>0.0) {
           standGrossPrimaryProduction += Ag[j]; //Add GPP in gC · m-2
-          
           //gross fotosynthesis
           double leafAgC = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C ·ind-1
           leafAgG = leafAgC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C·ind-1 to g gluc · ind-1
-          
-          //Update output values
-          GrossPhotosynthesis[j] = leafAgG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1 
         }
         
         ///// C3. MAINTENANCE RESPIRATION ///////
-        //Respiratory biomass (g dw · ind-1)
-        double leafSugarMass = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
-        double sapwoodSugarMass = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
-        double B_resp_leaves = LeafStructBiomass[j] + leafSugarMass;
-        double B_resp_sapwood = SapwoodLivingStructBiomass[j]  + sapwoodSugarMass;
-        double B_resp_twig = TwigLivingStructuralBiomass[j];
-        // Rcout<<j<< " maintenance costs of leaf sugars: "<< (leafSugarMass/B_resp_leaves)<<" sapwood sugars: "<< (sapwoodSugarMass/B_resp_sapwood)<<"\n";
-        double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(tday);
         if(LAexpanded>0.0) {
           leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0, 0.5)); //Reduction under shade
@@ -886,7 +884,6 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         twigResp = B_resp_twig*RERsapwood[j]*QR;
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
         finerootResp = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive);
-        MaintenanceRespiration[j] = (leafRespDay+twigResp + sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
 
         ///// C4. LEAF/TWIG GROWTH /////
         if(leafUnfolding[j]) {
@@ -929,12 +926,10 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
             double deltaFRBavailable = std::max(0.0,(starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
             deltaFRBgrowth[s] = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRB += deltaFRBgrowth[s]*CCfineroot[j];
-            synthesisRespFRB += growthCostFRB*(CCfineroot[j] - 1.0)/CCfineroot[j];
+            synthesisRespFRB += deltaFRBgrowth[s]*(CCfineroot[j] - 1.0);
           }
         }
         
-        // Rcout<<growthCostLA<<" "<<growthCostSA<<" "<<growthCostFRB<< " "<< TotalLivingBiomass[j]<<"\n";
-        GrowthCosts[j] +=(growthCostLA + twigGrowthCostLA + growthCostSA + growthCostFRB)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
         
         ///// C7a PARTIAL CARBON BALANCE: photosynthesis, maintenance respiration and growth /////
         double leafSugarMassDelta = leafAgG - leafRespDay;
@@ -958,6 +953,11 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         starchSapwood[j] +=conversionSapwood;
         sugarSapwood[j] -=conversionSapwood;
         
+        // LABILE BALANCE OUTPUT VARIABLES
+        GrossPhotosynthesis[j] = leafAgG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1 
+        GrowthCosts[j] = (growthCostLA + twigGrowthCostLA + growthCostSA + growthCostFRB)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
+        MaintenanceRespiration[j] = (leafRespDay+twigResp + sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
+        
       } else {
         //Get output matrices
         List labileCBInst = modelOutput["LabileCarbonBalanceInst"];
@@ -975,13 +975,14 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         //3.1 Carbon balance and growth by steps
         for(int s=0;s<numSteps;s++) {
           
-          //Transform sugar concentration (mol gluc · l-1) to sugar mass (g gluc)
-          // double leafSugarMassStep = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
-          double sapwoodSugarMassStep = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
-          
-          //LEAF PHOTOSYNTHESIS and RESPIRATION
           double leafRespStep = 0.0;
           double leafAgStepG = 0.0, leafAnStepG=0.0;
+          double growthCostLAStep = 0.0;
+          double twigGrowthCostLAStep = 0.0;
+          double growthCostSAStep = 0.0;
+          double growthCostFRBStep = 0.0;   
+          
+          //LEAF PHOTOSYNTHESIS and MAINTENANCE RESPIRATION
           if(LAexpanded>0.0){
             standGrossPrimaryProduction += AgStep(j,s); //Add GPP in gC · m-2
             
@@ -996,24 +997,18 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           }
           
           //MAINTENANCE RESPIRATION
-          // double B_resp_leaves = LeafStructBiomass[j] + leafSugarMassStep;
-          double B_resp_sapwood = SapwoodLivingStructBiomass[j] + TwigLivingStructuralBiomass[j] + sapwoodSugarMassStep;
-          double B_resp_fineroots = fineRootBiomass[j];
           double QR = qResp(Tcan[s]);
           leafRespDay +=leafRespStep;
           double sapwoodRespStep = B_resp_sapwood*RERsapwood[j]*QR/((double) numSteps);
           sapwoodResp += sapwoodRespStep;
+          double twigRespStep = B_resp_twig*RERsapwood[j]*QR/((double) numSteps);
+          twigResp += twigRespStep;
           double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive)/((double) numSteps);
           finerootResp += finerootRespStep;
-          MaintenanceRespirationInst(j,s) = (leafRespStep+sapwoodRespStep+finerootRespStep)/TotalLivingBiomass[j];//Rm in g gluc· gdry-1
+          MaintenanceRespirationInst(j,s) = (leafRespStep+twigRespStep+sapwoodRespStep+finerootRespStep)/TotalLivingBiomass[j];//Rm in g gluc· gdry-1
           MaintenanceRespiration[j] += MaintenanceRespirationInst(j,s); 
-          
-          
+        
           //GROWTH        
-          double growthCostLAStep = 0.0;
-          double growthCostSAStep = 0.0;
-          double growthCostFRBStep = 0.0;   
-          
           //Leaf growth
           if(leafUnfolding[j]) {
             double deltaLApheno = std::max(leafAreaTarget[j]*(1.0 - StemPLC[j]) - LAexpanded, 0.0);
@@ -1022,32 +1017,15 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
             //Grow at expense of stem sugar
             double deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
-            growthCostLAStep += deltaLAgrowthStep*costPerLA;
+            growthCostLAStep = deltaLAgrowthStep*costPerLA;
+            twigGrowthCostLAStep = deltaLAgrowthStep*twigCostPerLA;
             deltaLAgrowth[j] += deltaLAgrowthStep;
-            synthesisRespLA += deltaLAgrowthStep*(CCleaf[j] - 1.0)/CCleaf[j];
+            synthesisRespLA += growthCostLAStep*(CCleaf[j] - 1.0)/CCleaf[j];
+            twigSynthesisRespLA += twigGrowthCostLAStep*(CCsapwood[j] - 1.0)/CCsapwood[j];
           }
-          //fine root growth
-          if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
-            for(int l = 0;l<nlayers;l++) {
-              double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
-              double deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[l]/rcellmax);
-              if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-              double deltaFRBavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
-              double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
-              growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
-              deltaFRBgrowth[l] += deltaFRBgrowthStep;
-              synthesisRespFRB += deltaFRBgrowthStep*(CCfineroot[j] - 1.0)/CCfineroot[j];
-            }
-          }
+
           //sapwood area growth
           if(LAexpanded>0.0) {
-            // List ring = ringList[j];
-            // NumericVector SAring = ring["SA"];
-            // double deltaSAring = 0.0;
-            // if(SAring.size()==1) deltaSAring = SAring[0];
-            // else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
-            // double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
-            // double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
             double deltaSAsink = NA_REAL;
             if(!NumericVector::is_na(DBH[j])) { //Trees
               deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*(rcambiumcell/rcellmax))/((double) numSteps); 
@@ -1062,68 +1040,66 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
               Rcout<<deltaSAsink<<" "<< deltaSAavailable<< " "<< starchSapwood[j]<<"\n";
               stop("negative growth!"); 
             }
-            growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
+            growthCostSAStep = deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
+            growthCostSA += growthCostSAStep;
             deltaSAgrowth[j]  +=deltaSAgrowthStep;
             synthesisRespSA += growthCostSAStep*(CCsapwood[j] - 1.0)/CCsapwood[j];
           }
-          GrowthCostsInst(j,s) += (growthCostLAStep + growthCostSAStep + growthCostFRBStep)/TotalLivingBiomass[j];
+          
+          //fine root growth
+          if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
+            for(int l = 0;l<nlayers;l++) {
+              double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
+              double deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[l]/rcellmax);
+              if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
+              double deltaFRBavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
+              double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
+              growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
+              deltaFRBgrowth[l] += deltaFRBgrowthStep;
+              synthesisRespFRB += deltaFRBgrowthStep*(CCfineroot[j] - 1.0);
+            }
+            growthCostFRB += growthCostFRBStep;
+          }
+          
+          GrowthCostsInst(j,s) = (growthCostLAStep + twigGrowthCostLAStep + growthCostSAStep + growthCostFRBStep)/TotalLivingBiomass[j];
           GrowthCosts[j] +=GrowthCostsInst(j,s); //growth cost in g gluc · gdry-1
           
-          //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING PARTIAL MASS BALANCE)
-          //sugar mass balance
+          ///// C7a PARTIAL CARBON BALANCE: photosynthesis, maintenance respiration and growth /////
           double leafSugarMassDeltaStep = leafAgStepG - leafRespStep;
-          double sapwoodSugarMassDeltaStep = - finerootRespStep - sapwoodRespStep;
-          double sapwoodStarchMassDeltaStep = - growthCostFRBStep - growthCostLAStep - growthCostSAStep;
-          double ff = 0.0;
-          double ctl = 3600.0*Volume_leaves[j]*glucoseMolarMass;
-          double cts = 3600.0*Volume_sapwood[j]*glucoseMolarMass;
-          for(int t=0;t<3600;t++) {
-            sugarSapwood[j] += sapwoodSugarMassDeltaStep/cts;
-            starchSapwood[j] += sapwoodStarchMassDeltaStep/cts;
-            // double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), equilibriumSapwoodSugarConc);
-            double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j], starchSapwood[j], equilibriumSapwoodSugarConc);
-            // if(j==2) Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarSapwood[j] << " Lstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
-            // double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
-            double starchSapwoodIncrease = conversionSapwood;
-            
-            starchSapwood[j] += starchSapwoodIncrease;
-            
-            if(LAexpanded>0.0) {
-              sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
-              double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j], sugarSapwood[j], Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
-              // sugar-starch dynamics
-              double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j], starchLeaf[j], equilibriumLeafSugarConc);
-              double starchLeafIncrease = conversionLeaf;
-              starchLeaf[j]  += starchLeafIncrease;
-              // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
-              //Apply phloem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
-              sugarLeaf[j]  +=  (-ft/Volume_leaves[j]) - starchLeafIncrease;
-              sugarSapwood[j] +=  (ft/Volume_sapwood[j]) - starchSapwoodIncrease;
-              ff +=ft;
-            } else {
-              sugarSapwood[j] += (- starchSapwoodIncrease);
-            }
+          double sapwoodSugarMassDeltaStep =  - twigRespStep - sapwoodRespStep - finerootRespStep; 
+          double sapwoodStarchMassDeltaStep =  - growthCostFRBStep - growthCostLAStep - twigGrowthCostLAStep - growthCostSAStep;
+          sugarSapwood[j] += sapwoodSugarMassDeltaStep/(Volume_sapwood[j]*glucoseMolarMass);
+          starchSapwood[j] += sapwoodStarchMassDeltaStep/(Volume_sapwood[j]*glucoseMolarMass);
+          if(LAexpanded>0.0) sugarLeaf[j] += leafSugarMassDeltaStep/(Volume_leaves[j]*glucoseMolarMass);
+          
+          ///// C7b PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS /////  
+          if(LAexpanded>0.0) {
+            double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
+            sugarLeaf[j] -=ff;
+            PlantSugarTransportInst(j,s) = 1000.0*(ff*Volume_leaves[j])/(3600.0*((double) numSteps)); //mmol · s-1
+            PlantSugarTransport[j] += PlantSugarTransportInst(j,s)/((double) numSteps); //Average daily rate To calculate daily phloem balance (positive means towards stem)
+            sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
+            double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - equilibriumLeafSugarConc);
+            starchLeaf[j] +=conversionLeaf;
+            sugarLeaf[j] -=conversionLeaf;
           }
+          double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - equilibriumSapwoodSugarConc);
+          starchSapwood[j] +=conversionSapwood;
+          sugarSapwood[j] -=conversionSapwood;
+          
           //Divert to root exudation if sapwood starch is over maximum capacity
           if(starchSapwood[j] > Starch_max_sapwood[j]) {
-            RootExudationInst(j,s) += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+            RootExudationInst(j,s) = ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+            RootExudation[j] += RootExudationInst(j,s);//root exudation in g gluc · gdry-1
             starchSapwood[j] = Starch_max_sapwood[j];
           }
           
-
-          //Add instantaneous root exudation to daily root exudation
-          RootExudation[j] += RootExudationInst(j,s);
-          
           //Instantaneous carbon balance
           LabileCarbonBalanceInst(j,s) = GrossPhotosynthesisInst(j,s) - MaintenanceRespirationInst(j,s) - GrowthCostsInst(j,s) - RootExudationInst(j,s);
-          LabileCarbonBalance[j] +=LabileCarbonBalanceInst(j,s);
-          
           PlantSugarLeafInst(j,s) = sugarLeaf[j];
           PlantSugarSapwoodInst(j,s) = sugarSapwood[j];
           PlantStarchLeafInst(j,s) = starchLeaf[j];
           PlantStarchSapwoodInst(j,s) = starchSapwood[j];
-          PlantSugarTransportInst(j,s) = 1000.0*ff/(3600.0); //mmol·s-1
-          PlantSugarTransport[j] += ff/((double) numSteps); //Average daily rate To calculate daily phloem balance (positive means towards stem)
           // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeaf[j] << " conc sap: "<< sugarSapwood[j]<<" ff: "<<ff<< "\n";
         }
       }
@@ -1185,13 +1161,6 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         deltaFRBsenescence[l] = fineRootBiomass[j]*V(j,l)*daySenescence;
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
-      if(exportLitter) {
-        //From g/ind to g C/m2
-        double fineroot_litter = rootCperDry*senescenceFinerootLoss*(N[j]/10000.0); 
-        addFineRootLitter(speciesNames[j], fineroot_litter,
-                          internalLitter, paramsLitterDecomposition,
-                          internalSOC);
-      }
       // if(j==(numCohorts-1)) Rcout<< j << " before translocation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
       
 
@@ -1199,7 +1168,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
       double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*sugarSapwood[j];
-      if(Volume_leaves[j]>0) {
+      if(Volume_leaves[j]>0.0) {
         if(starchLeaf[j] > Starch_max_leaves[j]) { // Add excess leaf starch to translocation
           translocationStarchLeaf += ((starchLeaf[j] - Starch_max_leaves[j])*Volume_leaves[j]);
         }
@@ -1210,20 +1179,13 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j]; 
 
       ///// C12. ROOT EXUDATION and close labile carbon balance (non-subdaily carbon balance)
-      if(!subdailyCarbonBalance) {
-        //Excess sapwood starch carbon is lost as root exudation
-        if(starchSapwood[j] > Starch_max_sapwood[j]) {
-          RootExudation[j] = ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
-          if(exportLitter) {
-            //From g gluc/g ind to g C/m2
-            double metabolicSoil = (6.0*carbonMolarMass/glucoseMolarMass) * RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); 
-            internalSOC["SoilMetabolic"] = internalSOC["SoilMetabolic"] + metabolicSoil;
-          }
-          starchSapwood[j] = Starch_max_sapwood[j];
-        }
-        //Labile carbon balance
-        LabileCarbonBalance[j] = GrossPhotosynthesis[j] - MaintenanceRespiration[j] - GrowthCosts[j] - RootExudation[j];
+      //Excess sapwood starch carbon is lost as root exudation
+      if(starchSapwood[j] > Starch_max_sapwood[j]) {
+        RootExudation[j] += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+        starchSapwood[j] = Starch_max_sapwood[j];
       }
+      
+      LabileCarbonBalance[j] = GrossPhotosynthesis[j] - MaintenanceRespiration[j] - GrowthCosts[j] - RootExudation[j];
       
       //CHECK LABILE BIOMASS BALANCE (g gluc)
       //Final labile (g gluc)
@@ -1231,9 +1193,24 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double labileChange = finalLabile - initialLabile;
       double labileBalance_ggluc = LabileCarbonBalance[j]*TotalLivingBiomass[j];
       if(std::abs(labileChange - labileBalance_ggluc) > 0.1) {
-        Rcout << j << " Initial labile " << initialLabile << " Final Labile " << finalLabile << " Labile change " << (finalLabile-initialLabile) << " A - MR - GC - RE " <<  LabileCarbonBalance[j]*TotalLivingBiomass[j]<<"\n";
-        stop("Wrong labile biomass balance");
+        Rcout << " Wrong labile biomass balance for cohort "<< (j+1)<< ": " << "\n";
+        Rcout << "   Initial labile " << initialLabile << " Final Labile " << finalLabile << " Labile change " << (finalLabile-initialLabile);
+        Rcout << " A " << GrossPhotosynthesis[j]*TotalLivingBiomass[j] << " MR " << MaintenanceRespiration[j]*TotalLivingBiomass[j];
+        Rcout << " GC "<< GrowthCosts[j]*TotalLivingBiomass[j] << " RE " << RootExudation[j]*TotalLivingBiomass[j] << " DeltaS " <<  LabileCarbonBalance[j]*TotalLivingBiomass[j]<<"\n";
       }
+      
+      ///// C13. EXPORT ROOT EXUDATION AND FINEROOT LITTER TO DECOMPOSING POOLS
+      if(exportLitter) {
+        //From g/ind to g C/m2
+        double fineroot_litter = rootCperDry*senescenceFinerootLoss*(N[j]/10000.0); 
+        addFineRootLitter(speciesNames[j], fineroot_litter,
+                          internalLitter, paramsLitterDecomposition,
+                          internalSOC);
+        //From g gluc/g ind to g C/m2
+        double metabolicSoil = (6.0*carbonMolarMass/glucoseMolarMass) * RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); 
+        internalSOC["SoilMetabolic"] = internalSOC["SoilMetabolic"] + metabolicSoil;
+      }
+      
         
       ///// C13. UPDATE INDIVIDUAL LEAF AREA, DEAD LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS /////
       // Rcout<<"-update";
