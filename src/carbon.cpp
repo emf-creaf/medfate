@@ -251,13 +251,13 @@ double sapwoodVolume(double SA, double H, NumericVector L, NumericVector V) {
 }
 
 double abovegroundHeartwoodVolume(double DBH, double SA, double H) {
-  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
+  double section_cm2 = pow(DBH/2.0, 2.0)*M_PI;
   double vAbove = abovegroundWoodVolume(section_cm2, H);
   double vAboveSap = abovegroundSapwoodVolume(SA, H);
   return(std::max(0.0,vAbove- vAboveSap));
 }
 double belowgroundHeartwoodVolume(double DBH, double SA, NumericVector L, NumericVector V) {
-  double section_cm2 = pow(DBH/2.0, 2.0)*3.141593;
+  double section_cm2 = pow(DBH/2.0, 2.0)*M_PI;
   double vBelow = belowgroundWoodVolume(section_cm2, L, V);
   double vBelowSap = belowgroundSapwoodVolume(SA, L, V);
   return(std::max(0.0,vBelow - vBelowSap));
@@ -371,7 +371,7 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 
 void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
   
-  if((biomassUnits!="g_m2") && (biomassUnits !="g_ind")) stop("Wrong biomass units");
+  if((biomassUnits!="g_m2") && (biomassUnits !="g_ind") && (biomassUnits !="gC_m2")) stop("Wrong biomass units");
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector H = above["H"];
@@ -408,6 +408,10 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
   NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
   NumericVector LeafDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDensity"]);
   NumericVector conduit2sapwood = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["conduit2sapwood"]);
+  
+  //Anatomy parameters
+  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+  NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   
   //output vectors
   NumericVector Volume_leaves = cc["LeafStorageVolume"];
@@ -480,6 +484,20 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
       belowgroundWoodBiomass[j] = belowgroundWoodBiomass[j]*f;
       fineRootBiomass[j] = fineRootBiomass[j]*f;
       labileBiomass[j] = labileBiomass[j]*f;
+    } else if(biomassUnits=="gC_m2") {
+      double f = N[j]/(10000.0);
+      leafStructBiomass[j] = leafStructBiomass[j]*f*leafCperDry;
+      twigStructBiomass[j] = twigStructBiomass[j]*f*WoodC[j];
+      twigStructLivingBiomass[j] = twigStructLivingBiomass[j]*f*WoodC[j];
+      deadLeafStructBiomass[j] = deadLeafStructBiomass[j]*f*leafCperDry;
+      deadTwigStructBiomass[j] = deadTwigStructBiomass[j]*f*WoodC[j];
+      sapwoodStructBiomass[j] = sapwoodStructBiomass[j]*f*WoodC[j];
+      sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f*WoodC[j];
+      heartwoodStructBiomass[j] = heartwoodStructBiomass[j]*f*WoodC[j];
+      abovegroundWoodBiomass[j] = abovegroundWoodBiomass[j]*f*WoodC[j];
+      belowgroundWoodBiomass[j] = belowgroundWoodBiomass[j]*f*WoodC[j];
+      fineRootBiomass[j] = fineRootBiomass[j]*f*rootCperDry;
+      labileBiomass[j] = labileBiomass[j]*f*(6.0*carbonMolarMass/glucoseMolarMass);
     }
     
     structuralBiomass[j] = leafStructBiomass[j]  + twigStructBiomass[j]   + sapwoodStructBiomass[j]  + fineRootBiomass[j];
@@ -487,6 +505,9 @@ void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits) {
     totalLivingBiomass[j] = leafStructBiomass[j] + twigStructLivingBiomass[j] + sapwoodStructLivingBiomass[j] + fineRootBiomass[j] + labileBiomass[j];
     totalBiomass[j] = structuralBiomass[j] + deadBiomass[j] + labileBiomass[j];
   }
+  // if(biomassUnits=="gC_m2"){
+  //   Rcout << " B leaves " << sum(leafStructBiomass) << " fineroots "<< sum(fineRootBiomass) <<" sapwood " << sum(sapwoodStructBiomass) << " heartwood "<< sum(heartwoodStructBiomass)<<" struct " << sum(structuralBiomass)<< " dead " << sum(deadBiomass) << " labile " << sum(labileBiomass) << " total " << sum(totalBiomass) <<"\n";
+  // }
 }
 //' @rdname carbon
 //' @param x An object of class \code{\link{growthInput}}.

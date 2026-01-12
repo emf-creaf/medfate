@@ -1504,8 +1504,12 @@ DataFrame communicationCarbonCompartments(int numCohorts) {
 List communicationInitialFinalCarbonCompartments(int numCohorts) {
   DataFrame ccFin_g_ind = communicationCarbonCompartments(numCohorts);
   DataFrame ccIni_g_ind = clone(ccFin_g_ind);
+  DataFrame ccIni_gC_m2 = clone(ccFin_g_ind);
+  DataFrame ccFin_gC_m2 = clone(ccFin_g_ind);
   List l = List::create(_["ccIni_g_ind"] = ccIni_g_ind,
-                        _["ccFin_g_ind"] = ccFin_g_ind);
+                        _["ccFin_g_ind"] = ccFin_g_ind,
+                        _["ccIni_gC_m2"] = ccIni_gC_m2,
+                        _["ccFin_gC_m2"] = ccFin_gC_m2);
   return(l);
 }
 
