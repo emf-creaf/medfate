@@ -367,7 +367,7 @@ instance_communication_structures <- function(x, model) {
 }
 
 .testControlListToStructure <- function(x) {
-    invisible(.Call(`_medfate_testControlListToStructure`, x))
+    .Call(`_medfate_testControlListToStructure`, x)
 }
 
 #' Low-level decomposition functions
