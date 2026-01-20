@@ -76,7 +76,7 @@ struct AdvancedWBParams {
   bool sunlitShade;
 };
 
-struct SperryParams {
+struct SperryWBParams {
   bool leafCavitationEffects;
   bool stemCavitationEffects;
   int maxNsteps;
@@ -85,7 +85,7 @@ struct SperryParams {
   double ETol;
 };
 
-struct SureauParams {
+struct SureauWBParams {
   std::string stomatalSubmodel;
   bool plantCapacitance;
   bool cavitationFlux;
@@ -197,8 +197,8 @@ struct ControlParameters {
   CommonWBParams commonWB;
   BasicWBParams basicWB;
   AdvancedWBParams advancedWB;
-  SperryParams sperry;
-  SureauParams sureau;
+  SperryWBParams sperry;
+  SureauWBParams sureau;
   FireHazardParams fireHazard;
   GrowthParams growth;
   MortalityParams mortality;
