@@ -366,6 +366,10 @@ instance_communication_structures <- function(x, model) {
     .Call(`_medfate_instanceCommunicationStructures`, x, model)
 }
 
+.testControlListToStructure <- function(x) {
+    invisible(.Call(`_medfate_testControlListToStructure`, x))
+}
+
 #' Low-level decomposition functions
 #' 
 #' Functions related to litter and soil carbon decomposition processes

@@ -1,9 +1,44 @@
 #include <Rcpp.h>
+#include "medfate.h"
 
 #ifndef CARBON_H
 #define CARBON_H
-#endif
 using namespace Rcpp;
+
+
+struct CarbonCompartments {
+  std::vector<double> LeafStorageVolume;
+  std::vector<double> SapwoodStorageVolume;
+  std::vector<double> LeafStarchMaximumConcentration;
+  std::vector<double> SapwoodStarchMaximumConcentration;
+  std::vector<double> LeafStarchCapacity;
+  std::vector<double> SapwoodStarchCapacity;
+  std::vector<double> LeafStructuralBiomass;
+  std::vector<double> TwigStructuralBiomass;
+  std::vector<double> SapwoodStructuralBiomass;
+  std::vector<double> SapwoodLivingStructuralBiomass;
+  std::vector<double> HeartwoodStructuralBiomass;
+  std::vector<double> AbovegroundWoodBiomass;
+  std::vector<double> BelowgroundWoodBiomass;
+  std::vector<double> FineRootBiomass;
+  std::vector<double> StructuralBiomass;
+  std::vector<double> LabileBiomass;
+  std::vector<double> TotalLivingBiomass;
+  std::vector<double> TotalBiomass;
+  
+  CarbonCompartments(size_t numCohorts = 0) {
+    auto na = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    LeafStorageVolume = SapwoodStorageVolume = na;
+    LeafStarchMaximumConcentration = SapwoodStarchMaximumConcentration = na;
+    LeafStarchCapacity = SapwoodStarchCapacity = na;
+    LeafStructuralBiomass = TwigStructuralBiomass = na;
+    SapwoodStructuralBiomass = SapwoodLivingStructuralBiomass = na;
+    HeartwoodStructuralBiomass = AbovegroundWoodBiomass = na;
+    BelowgroundWoodBiomass = FineRootBiomass = na;
+    StructuralBiomass = LabileBiomass = na;
+    TotalLivingBiomass = TotalBiomass = na;
+  }
+};
 
 const double carbonMolarMass = 12.0107; //g*mol-1
 const double glucoseMolarMass = 180.156; //g*mol-1
@@ -37,3 +72,5 @@ double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSug
 
 DataFrame carbonCompartments(List x, String biomassUnits = "g_m2");
 void fillCarbonCompartments(DataFrame cc, List x, String biomassUnits);
+
+#endif

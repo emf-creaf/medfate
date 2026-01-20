@@ -677,6 +677,16 @@ RcppExport SEXP _medfate_instanceCommunicationStructures(SEXP xSEXP, SEXP modelS
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// testControlListToStructure
+void testControlListToStructure(List x);
+RcppExport SEXP _medfate_testControlListToStructure(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    testControlListToStructure(x);
+    return R_NilValue;
+END_RCPP
+}
 // annualLitterDecompositionRate
 double annualLitterDecompositionRate(double AET, double lignin);
 RcppExport SEXP _medfate_annualLitterDecompositionRate(SEXP AETSEXP, SEXP ligninSEXP) {
@@ -6439,6 +6449,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_copyModelOutput", (DL_FUNC) &_medfate_copyModelOutput, 3},
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
+    {"_medfate_testControlListToStructure", (DL_FUNC) &_medfate_testControlListToStructure, 1},
     {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
     {"_medfate_snagFallProbability", (DL_FUNC) &_medfate_snagFallProbability, 3},
     {"_medfate_litterMetabolicFraction", (DL_FUNC) &_medfate_litterMetabolicFraction, 2},

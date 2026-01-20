@@ -1714,9 +1714,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   
   double NEP_gC_m2 = standCB["NetEcosystemProduction"];
   if(std::abs(changeStand_gC_m2 - NEP_gC_m2) > 0.001) {
-    Rcout << " Stand biomass balance not closed!\n";
-    Rcout<< "GPP " << standGrossPrimaryProduction<<" MR "<<standMaintenanceRespiration<< " SR "<<standSynthesisRespiration<< " HR "<< heterotrophicRespiration << " FC "<< fireCombustion<<"\n";
-    Rcout<< "NEP: " << NEP_gC_m2<< " Mass change: " << changeStand_gC_m2<< " dif: "<< (changeStand_gC_m2 - NEP_gC_m2)<< "\n";
+    // Rcout << " Stand biomass balance not closed!\n";
+    // Rcout<< "GPP " << standGrossPrimaryProduction<<" MR "<<standMaintenanceRespiration<< " SR "<<standSynthesisRespiration<< " HR "<< heterotrophicRespiration << " FC "<< fireCombustion<<"\n";
+    // Rcout<< "NEP: " << NEP_gC_m2<< " Mass change: " << changeStand_gC_m2<< " dif: "<< (changeStand_gC_m2 - NEP_gC_m2)<< "\n";
   }
   
 }
