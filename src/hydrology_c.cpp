@@ -6,6 +6,7 @@
  * Implementation of hydrology routines using C++ code
  *=============================================================================*/
 
+
 //' @rdname hydrology_soilEvaporation
 //' 
 //' @param DEF Water deficit in the (topsoil) layer.
@@ -21,6 +22,26 @@ double soilEvaporationAmount_c(double DEF,double PETs, double Gsoil){
   return(Esoil);
 }
 
+
+double soilEvaporation_c(std::vector<double>& W, 
+                         const std::vector<double>& widths,
+                         const std::vector<double>& waterFC,
+                         const std::vector<double>& psiSoil,  
+                         double snowpack, 
+                         double pet, double LgroundSWR,
+                         bool modifySoil = true) {
+  double Esoil = 0.0;
+  if(snowpack == 0.0) {
+    double PETsoil = pet*(LgroundSWR/100.0);
+    double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
+    // Allow evaporation only if water potential is higher than -2 MPa
+    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount_c((waterFC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    if(modifySoil){
+      W[0] = W[0] - (Esoil/waterFC[0]);
+    }
+  }
+  return(Esoil);
+}
 
 //Old defaults
 //ERconv=0.05, ERsyn = 0.2

@@ -5343,6 +5343,40 @@ RcppExport SEXP _medfate_modifySoilLayerParam(SEXP soilSEXP, SEXP paramNameSEXP,
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// testSoilDataFrameToStructure
+int testSoilDataFrameToStructure(DataFrame x);
+static SEXP _medfate_testSoilDataFrameToStructure_try(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(testSoilDataFrameToStructure(x));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_testSoilDataFrameToStructure(SEXP xSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_testSoilDataFrameToStructure_try(xSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // thermalCapacity
 NumericVector thermalCapacity(DataFrame soil, String model);
 static SEXP _medfate_thermalCapacity_try(SEXP soilSEXP, SEXP modelSEXP) {
@@ -6183,6 +6217,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
         signatures.insert("DataFrame(*soil)(DataFrame,String)");
         signatures.insert("void(*.modifySoilLayerParam)(DataFrame,String,int,double,String)");
+        signatures.insert("int(*.testSoilDataFrameToStructure)(DataFrame)");
         signatures.insert("NumericVector(*soil_thermalCapacity)(DataFrame,String)");
         signatures.insert("NumericVector(*soil_thermalConductivity)(DataFrame,String)");
         signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
@@ -6252,6 +6287,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth", (DL_FUNC)_medfate_vanGenuchtenParamsToth_try);
     R_RegisterCCallable("medfate", "_medfate_soil", (DL_FUNC)_medfate_soilInit_try);
     R_RegisterCCallable("medfate", "_medfate_.modifySoilLayerParam", (DL_FUNC)_medfate_modifySoilLayerParam_try);
+    R_RegisterCCallable("medfate", "_medfate_.testSoilDataFrameToStructure", (DL_FUNC)_medfate_testSoilDataFrameToStructure_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalCapacity", (DL_FUNC)_medfate_thermalCapacity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalConductivity", (DL_FUNC)_medfate_thermalConductivity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_temperatureGradient", (DL_FUNC)_medfate_temperatureGradient_try);
@@ -6556,6 +6592,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
     {"_medfate_soilInit", (DL_FUNC) &_medfate_soilInit, 2},
     {"_medfate_modifySoilLayerParam", (DL_FUNC) &_medfate_modifySoilLayerParam, 5},
+    {"_medfate_testSoilDataFrameToStructure", (DL_FUNC) &_medfate_testSoilDataFrameToStructure, 1},
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
     {"_medfate_temperatureGradient", (DL_FUNC) &_medfate_temperatureGradient, 2},

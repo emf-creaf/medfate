@@ -1112,6 +1112,27 @@ namespace medfate {
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
     }
 
+    inline int _testSoilDataFrameToStructure(DataFrame x) {
+        typedef SEXP(*Ptr__testSoilDataFrameToStructure)(SEXP);
+        static Ptr__testSoilDataFrameToStructure p__testSoilDataFrameToStructure = NULL;
+        if (p__testSoilDataFrameToStructure == NULL) {
+            validateSignature("int(*_testSoilDataFrameToStructure)(DataFrame)");
+            p__testSoilDataFrameToStructure = (Ptr__testSoilDataFrameToStructure)R_GetCCallable("medfate", "_medfate__testSoilDataFrameToStructure");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__testSoilDataFrameToStructure(Shield<SEXP>(Rcpp::wrap(x)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<int >(rcpp_result_gen);
+    }
+
     inline NumericVector soil_thermalCapacity(DataFrame soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thermalCapacity)(SEXP,SEXP);
         static Ptr_soil_thermalCapacity p_soil_thermalCapacity = NULL;

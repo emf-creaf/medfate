@@ -1,23 +1,8 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
 #include <Rcpp.h>
+#include "soil.h"
 using namespace Rcpp;
-
-/**
- * Conversion factor from conductivity in cm·day-1 to molH20·m-2·MPa-1·s-1
- *  1 day = 86400 sec
- *  1 mol H20 = 18.01528 g
- */
-const double cmdTOmmolm2sMPa = 655.2934; //100.0/(18.01528*86400.0*0.00009804139432); 
-/**
- * Conversion factor from cm to MPa
- */
-const double cmTOMPa = 0.00009804139432; 
-
-/**
- * Conversion factor from m to MPa
- */
-const double mTOMPa = 0.009804139432; //1/9.804139*0.000001; 
 
 CharacterVector layerNames(int nlayers) {
   CharacterVector ln(nlayers);
@@ -1071,4 +1056,33 @@ void modifySoilLayerParam(DataFrame soil, String paramName, int layer, double ne
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
     Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]);
   }
+}
+
+// Copies Rcpp soil dataframe to SoilInit structure
+SoilInit controlDataFrameToStructure(DataFrame x) {
+  SoilInit soil;
+  soil.nlayers = x.nrow();
+  soil.widths = as< std::vector<double> >(x["widths"]);
+  soil.clay = as< std::vector<double> >(x["clay"]);
+  soil.sand = as< std::vector<double> >(x["sand"]);
+  soil.om = as< std::vector<double> >(x["om"]);
+  soil.nitrogen = as< std::vector<double> >(x["nitrogen"]);
+  soil.ph = as< std::vector<double> >(x["ph"]);
+  soil.bd = as< std::vector<double> >(x["bd"]);
+  soil.rfc = as< std::vector<double> >(x["rfc"]);
+  soil.macro = as< std::vector<double> >(x["macro"]);
+  soil.Ksat = as< std::vector<double> >(x["Ksat"]);
+  soil.VG_alpha = as< std::vector<double> >(x["VG_alpha"]);
+  soil.VG_n = as< std::vector<double> >(x["VG_n"]);
+  soil.VG_theta_res = as< std::vector<double> >(x["VG_theta_res"]);
+  soil.VG_theta_sat = as< std::vector<double> >(x["VG_theta_sat"]);
+  soil.W = as< std::vector<double> >(x["W"]);
+  soil.Temp = as< std::vector<double> >(x["Temp"]);
+  return(soil);
+}
+
+// [[Rcpp::export(.testSoilDataFrameToStructure)]]
+int testSoilDataFrameToStructure(DataFrame x) {
+  SoilInit soil = controlDataFrameToStructure(x);
+  return(sizeof(soil));
 }

@@ -3794,6 +3794,10 @@ soil <- function(x, VG_PTF = "Toth") {
     invisible(.Call(`_medfate_modifySoilLayerParam`, soil, paramName, layer, newValue, VG_PTF))
 }
 
+.testSoilDataFrameToStructure <- function(x) {
+    .Call(`_medfate_testSoilDataFrameToStructure`, x)
+}
+
 #' Soil thermodynamic functions
 #' 
 #' Functions \code{soil_thermalConductivity} and \code{soil_thermalCapacity} calculate thermal conductivity and thermal capacity 
