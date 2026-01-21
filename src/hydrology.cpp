@@ -5,24 +5,14 @@
 #include "soil.h"
 #include "root.h"
 #include "hydraulics.h"
+#include "hydrology_c.h"
 #include "communication_structures.h"
 #include "biophysicsutils.h"
 #include "numerical_solving.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
-//Old defaults
-//ERconv=0.05, ERsyn = 0.2
-//New defaults
-//Rconv = 5.6, Rsyn = 1.5
 
-// Rainfall intensity calculation
-double rainfallIntensity_c(int month, double prec, std::vector<double> rainfallIntensityPerMonth){
-   double Ri_month = rainfallIntensityPerMonth[month - 1];
-   double Ri = std::max(prec/24.0,Ri_month);
-   return(Ri); 
-}
- 
 //' @param month Month of the year (from 1 to 12).
 //' @param prec Precipitation for a given day (mm).
 //' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.
@@ -31,45 +21,12 @@ double rainfallIntensity_c(int month, double prec, std::vector<double> rainfallI
 //' @keywords internal
 // [[Rcpp::export("hydrology_rainfallIntensity")]]
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth){
-  // This makes a copy of the vector
-  std::vector<double> Ri_month = as<std::vector<double> >(rainfallIntensityPerMonth);
-  return(rainfallIntensity_c(month, prec, Ri_month));
+   // This makes a copy of the vector
+   std::vector<double> Ri_month = as<std::vector<double> >(rainfallIntensityPerMonth);
+   return(rainfallIntensity_c(month, prec, Ri_month));
 }
 
 
-// [[Rcpp::export(".hydrology_interceptionGashDay")]]
-double interceptionGashDay_c(double Rainfall, double Cm, double p, double ER=0.05) {
-  double I = 0.0;
-  double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Rainfall need to saturate the canopy
-  if(Cm==0.0 || p==1.0) PG = 0.0; //Avoid NAs
-  if(Rainfall>PG) {
-    I = (1-p)*PG + (1-p)*ER*(Rainfall-PG);
-  } else {
-    I = (1-p)*Rainfall;
-  }
-  return(I);
-}
-
-// [[Rcpp::export(".hydrology_interceptionLiuDay")]]
-double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05){
-  double I = Cm*(1.0 - exp(-1.0*(Rainfall)*((1.0 - p)/Cm)))*(1.0 - (ER/(1.0 - p))) + (ER*Rainfall);
-  return(I);
-}
-
-//' @rdname hydrology_soilEvaporation
-//' 
-//' @param DEF Water deficit in the (topsoil) layer.
-//' @param PETs Potential evapotranspiration at the soil surface.
-//' @param Gsoil Gamma parameter (maximum daily evaporation).
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_soilEvaporationAmount")]]
-double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
-  double t = pow(DEF/Gsoil, 2.0);
-  double Esoil = 0.0;
-  Esoil = std::min(Gsoil*(sqrt(t + 1.0)-sqrt(t)), PETs);
-  return(Esoil);
-}
 
 //' Bare soil evaporation and herbaceous transpiration
 //'
@@ -116,7 +73,7 @@ double soilEvaporation(DataFrame soil, double snowpack,
     double PETsoil = pet*(LgroundSWR/100.0);
     double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
     // Allow evaporation only if water potential is higher than -2 MPa
-    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount_c((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
     if(modifySoil){
       W[0] = W[0] - (Esoil/Water_FC[0]);
     }
@@ -150,106 +107,12 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
 }
 
 
-//' Soil infiltration
-//'
-//' Soil infiltration functions:
-//' \itemize{
-//'   \item{Function \code{hydrology_infiltrationBoughton} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989).}
-//'   \item{Function \code{hydrology_infiltrationGreenAmpt} calculates the amount of water that infiltrates into the topsoil, according to the model by Green & Ampt (1911).}
-//'   \item{Function \code{hydrology_infiltrationAmount} uses either Green & Ampt (1911) or Boughton (1989) to estimate infiltration.}
-//'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
-//' }
-//' 
-//' @param input A numeric vector of (daily) water input (in mm of water).
-//' @param Ssoil Soil water storage capacity (can be referred to topsoil) (in mm of water).
-//' 
-//' 
-//' @return 
-//' Functions \code{hydrology_infiltrationBoughton}, \code{hydrology_infiltrationGreenAmpt} and \code{hydrology_infiltrationAmount} 
-//' return the daily amount of water that infiltrates into the soil (in mm of water). 
-//' 
-//' Function \code{hydrology_infiltrationRepartition} returns the amount of infiltrated water that reaches each soil layer. 
-//' 
-//' @references 
-//' Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
-//' 
-//' Green, W.H. and Ampt, G.A. (1911) Studies on Soil Physics, 1: The Flow of Air and Water through Soils. The Journal of Agricultural Science, 4, 1-24. 
-//' 
-//' @details
-//'  When using function \code{hydrology_infiltrationGreenAmpt}, the units of \code{Ksat}, \code{t} and \code{psi_wat} have to be in the same system (e.g. cm/h, h and cm). 
-//' 
-//' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
-//' 
-//' @name hydrology_infiltration
-//' @keywords internal
-// [[Rcpp::export("hydrology_infiltrationBoughton")]]
-double infiltrationBoughton_c(double input, double Ssoil) {
-  double I = 0;
-  if(input>0.2*Ssoil) {
-    I = input-(pow(input-0.2*Ssoil,2.0)/(input+0.8*Ssoil));
-  } else {
-    I = input;
-  }
-  return(I);
-}
 
-double fGreenAmpt_c(double x, double t, double psi_w, double Ksat, double delta_theta) {
-  double f = Ksat*t + std::abs(psi_w)*delta_theta*log(1.0 + (x/(std::abs(psi_w)*delta_theta))) - x;
-  return(f);
-}
-double fGreenAmptDer_c(double x, double t, double psi_w, double Ksat, double delta_theta) {
-  double fder = (log(1.0 + (x/(std::abs(psi_w)*delta_theta)))/(1.0+ (x/(std::abs(psi_w)*delta_theta))))-1.0;
-  return(fder);
-}
 
-//' @rdname hydrology_infiltration
-//' 
-//' @param t Time of the infiltration event
-//' @param psi_w Matric potential at the wetting front
-//' @param Ksat hydraulic conductivity at saturation
-//' @param theta_sat volumetric content at saturation
-//' @param theta_dry volumetric content at the dry side of the wetting front
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_infiltrationGreenAmpt")]]
-double infitrationGreenAmpt_c(double t, double psi_w, double Ksat, double theta_sat, double theta_dry) {
-  double delta_theta = theta_sat - theta_dry;
-  double x,x1,e,fx,fx1;
-  x1 = 0.0;//initial guess
-  e = 0.001; // accuracy in mm
-  int cnt = 0;
-  int mxiter = 100;
-  do {
-    x=x1; /*make x equal to the last calculated value of  x1*/
-    fx=fGreenAmpt_c(x, t, psi_w, Ksat, delta_theta);            //simplifying f(x)to fx
-    fx1=fGreenAmptDer_c(x, t, psi_w, Ksat, delta_theta);            //simplifying fprime(x) to fx1
-    x1=x-(fx/fx1);/*calculate x{1} from x, fx and fx1*/ 
-    cnt++;
-  } while ((std::abs(x1-x)>=e) && (cnt < mxiter));
-  return(x);
-}
 
-void infiltrationRepartition_c(int nlayers, double I, 
-                               double* Ivec, double* widths, double* macro, 
-                               double a = -0.005, double b = 3.0) {
-  double pi = 0.0;
-  double z1 = 0.0;
-  double p1 = 1.0;
-  for(int i=0;i<nlayers;i++) {
-    double ai = a*pow(1.0-macro[i],b);
-    if(i<(nlayers-1)) {
-      pi = p1*(1.0-exp(ai*widths[i]));
-    } else {
-      pi = p1;
-    }
-    p1 = p1*exp(ai*widths[i]);
-    z1 = z1 + widths[i];
-    Ivec[i] = I*pi;
-  }
-}
+
+
+
 
 
 //' @rdname hydrology_infiltration
@@ -284,7 +147,15 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
 }
 
 
-//' @rdname hydrology_infiltration
+//' Soil infiltration
+//'
+//' Soil infiltration functions:
+//' \itemize{
+//'   \item{Function \code{hydrology_infiltrationBoughton} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989).}
+//'   \item{Function \code{hydrology_infiltrationGreenAmpt} calculates the amount of water that infiltrates into the topsoil, according to the model by Green & Ampt (1911).}
+//'   \item{Function \code{hydrology_infiltrationAmount} uses either Green & Ampt (1911) or Boughton (1989) to estimate infiltration.}
+//'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
+//' }
 //' 
 //' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
 //' @param soil A list containing the description of the soil (see \code{\link{soil}}).
@@ -292,6 +163,31 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
 //' @param rainfallIntensity rainfall intensity rate (mm/h)
 //' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 //' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
+//' 
+//' 
+//' @return 
+//' Functions \code{hydrology_infiltrationBoughton}, \code{hydrology_infiltrationGreenAmpt} and \code{hydrology_infiltrationAmount} 
+//' return the daily amount of water that infiltrates into the soil (in mm of water). 
+//' 
+//' Function \code{hydrology_infiltrationRepartition} returns the amount of infiltrated water that reaches each soil layer. 
+//' 
+//' @references 
+//' Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
+//' 
+//' Green, W.H. and Ampt, G.A. (1911) Studies on Soil Physics, 1: The Flow of Air and Water through Soils. The Journal of Agricultural Science, 4, 1-24. 
+//' 
+//' @details
+//'  When using function \code{hydrology_infiltrationGreenAmpt}, the units of \code{Ksat}, \code{t} and \code{psi_wat} have to be in the same system (e.g. cm/h, h and cm). 
+//' 
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}
+//' 
+//' @name hydrology_infiltration
+//' @keywords internal
+//' 
+//' @rdname hydrology_infiltration
 //' 
 //' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
@@ -320,25 +216,6 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFr
   }
   infiltration = std::min(infiltration, rainfallInput);
   return(infiltration);
-}
-
-//' @rdname hydrology_verticalInputs
-//' 
-//' @param tday Average day temperature (ºC).
-//' @param rad Solar radiation (in MJ/m2/day).
-//' @param elevation Altitude above sea level (m).
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_snowMelt")]]
-double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation) {
-  //missing data checks
-  if(std::isnan(rad)) stop("Missing radiation data for snow melt!");
-  if(std::isnan(elevation)) stop("Missing elevation data for snow melt!");
-  double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-  double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
-  double ren = (rad*(LgroundSWR/100.0))*(0.1); //90% albedo of snow
-  double melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
-  return(melt);
 }
 
 
@@ -441,74 +318,7 @@ NumericVector waterInputs(List x,
 }
 
 
-//Imbitition from macropores to micropores following Larsbo et al. 2005, eq. 6-7
-//Diffusion equation with gradients in water content as driving force
-//Returns m3/m3/s
-double microporeImbibitionRate(double theta_b, double theta_micro, 
-                               double D_theta_b, double D_theta_micro,
-                               double S_macro) {
-  double G_f = 3.0;//geometry factor
-  double gamma_w = 0.1; //Scaling factor
-  double D_w = ((D_theta_b + D_theta_micro)/2.0)*S_macro;//Effective water diffusivity
-  double d = 9.35*1e-3; //Effective diffusion pathlength in m
-  double S_w = std::max(0.0, ((G_f*D_w*gamma_w)/(d*d))*(theta_b - theta_micro));
-  // Rcout<< "D_w " << D_w << " S_w "<< S_w<<"\n";
-  return(S_w);
-}
 
-double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksat_b_ms, double kin_exp,
-                             double e_macro, double lambda, double dZ_m, double sourceSink_macro_m3s, double tstep, 
-                             int Nmax = 100) {
-  double a = 0.0;
-  //function at 'a'
-  double Ka = (Ksat_ms - Ksat_b_ms)*pow(a, kin_exp);
-  double f_a = S_t - a + (tstep/(e_macro*lambda*dZ_m))*((K_up - Ka) + sourceSink_macro_m3s);
-  double b = a + 1.0;
-  //function at 'b'
-  double Kb = (Ksat_ms - Ksat_b_ms)*pow(b, kin_exp);
-  double f_b = S_t - b + (tstep/(e_macro*lambda*dZ_m))*((K_up - Kb) + sourceSink_macro_m3s);
-  while(f_b > 0.0) {
-    b = b + 1.0;
-    Kb = (Ksat_ms - Ksat_b_ms)*pow(b, kin_exp);
-    f_b = S_t - b + (tstep/(e_macro*lambda*dZ_m))*((K_up - Kb) + sourceSink_macro_m3s);
-    if(b>10.0) stop("Could not find appropriate bounds for macropore circulation");
-  }
-  // Rcout<< "Ka "<< Ka <<" f_a "<< f_a<<" Kb "<< Kb <<" f_b "<< f_b<<"\n";
-  
-  int N = 1;
-  double c = NA_REAL;
-  double Kc = NA_REAL;
-  double f_c = NA_REAL;
-  double tol = 1e-7;
-  bool has_to_stop = false;
-  bool found = false;
-  while(!has_to_stop) {
-    c = (a + b)/2.0; // new midpoint
-    //function at 'c'
-    Kc = (Ksat_ms - Ksat_b_ms)*pow(c, kin_exp);
-    f_c = S_t - c + (tstep/(e_macro*lambda*dZ_m))*((K_up - Kc) + sourceSink_macro_m3s);
-    // Rcout<<N << " std::abs((b - a)/2.0 "<< std::abs((b - a)/2.0) << " c "<< c <<" f_c "<< f_c<<"\n";
-    if((f_c == 0) || (std::abs((b - a)/2.0) < tol)) { // solution found
-      found = true;
-      has_to_stop = true;
-    }
-    if(((f_c > 0) && (f_a > 0)) || ((f_c < 0) && (f_a < 0)) ) { //new interval
-      a = c;
-      f_a = f_c;
-    } else {
-      b = c;
-      f_b = f_c;
-    }
-    N = N + 1; //Increment step counter
-    if(N == Nmax) {
-      has_to_stop = true;
-    }
-  }
-  if(!found) {
-    stop("Not found");
-  }
-  return(c);
-}
 
 
 NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, String soilFunctions, 
@@ -998,9 +808,9 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
                 double D_theta_micro_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                              Psi_step[l]);
                 //Calculate imbibition rate in m3/m3/s = s-1
-                double imbibitionRate = microporeImbibitionRate(theta_b[l], theta_micro_step[l], 
-                                                                D_theta_b_m2s, D_theta_micro_m2s, 
-                                                                S_macro_step[l]);
+                double imbibitionRate = microporeImbibitionRate_c(theta_b[l], theta_micro_step[l], 
+                                                                  D_theta_b_m2s, D_theta_micro_m2s, 
+                                                                  S_macro_step[l]);
                 matrixImbibition_m3s[l] = dZ_m[l]*lambda[l]*imbibitionRate;
                 lateral_flows_step_mm[l] += imbibitionRate*widths[l]*lambda[l]*tsubstep; //From m3/m3/s to mm/step
               }
@@ -1272,8 +1082,8 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
                 ksat_b_i = 0.0;
               }
               //Find solution for half substep
-              double S_t1 = rootFindingMacropores(S_macro_step[l], K_up, ksat_i, ksat_b_i, kin_exp,
-                                                  e_macro[l], lambda[l], dZ_m[l], sourceSink_macro_m3s, tsubstep);
+              double S_t1 = rootFindingMacropores_c(S_macro_step[l], K_up, ksat_i, ksat_b_i, kin_exp,
+                                                    e_macro[l], lambda[l], dZ_m[l], sourceSink_macro_m3s, tsubstep);
               // Rcout << "S " << S_macro_step[l] << " source/sink step " << sourceSink_macro_m3s<< " S1 "<< S_t1<<"\n";
               // 
               //Update macropore conductances for next step (sets K_up for next layer)

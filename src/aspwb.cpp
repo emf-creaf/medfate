@@ -7,6 +7,7 @@
 #include "biophysicsutils.h"
 #include "communication_structures.h"
 #include "hydrology.h"
+#include "hydrology_c.h"
 using namespace Rcpp;
 using namespace meteoland;
 

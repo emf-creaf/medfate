@@ -5,16 +5,11 @@
 #endif
 using namespace Rcpp;
 
-double soilEvaporationAmount(double DEF,double PETs, double Gsoil);
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                       DataFrame soil, String soilFunctions, bool modifySoil = true);
 double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true);
-
-
-double infiltrationBoughton_c(double input, double Ssoil);
-double infitrationGreenAmpt_c(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
 
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, 
                           String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0);
@@ -22,10 +17,6 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
                                       double a = -0.005, double b = 3.0);
 
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth);
-double rainfallIntensity_c(int month, double prec, std::vector<double> rainfallIntensityPerMonth);
-double interceptionGashDay_c(double Rainfall, double Cm, double p, double ER=0.05);
-double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05);
-double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation);
 
 NumericVector waterInputs(List x, 
                           double prec, double rainfallIntensity,

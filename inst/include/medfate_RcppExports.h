@@ -357,69 +357,6 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline double _hydrology_interceptionGashDay(double Rainfall, double Cm, double p, double ER = 0.05) {
-        typedef SEXP(*Ptr__hydrology_interceptionGashDay)(SEXP,SEXP,SEXP,SEXP);
-        static Ptr__hydrology_interceptionGashDay p__hydrology_interceptionGashDay = NULL;
-        if (p__hydrology_interceptionGashDay == NULL) {
-            validateSignature("double(*_hydrology_interceptionGashDay)(double,double,double,double)");
-            p__hydrology_interceptionGashDay = (Ptr__hydrology_interceptionGashDay)R_GetCCallable("medfate", "_medfate__hydrology_interceptionGashDay");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__hydrology_interceptionGashDay(Shield<SEXP>(Rcpp::wrap(Rainfall)), Shield<SEXP>(Rcpp::wrap(Cm)), Shield<SEXP>(Rcpp::wrap(p)), Shield<SEXP>(Rcpp::wrap(ER)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
-    inline double _hydrology_interceptionLiuDay(double Rainfall, double Cm, double p, double ER = 0.05) {
-        typedef SEXP(*Ptr__hydrology_interceptionLiuDay)(SEXP,SEXP,SEXP,SEXP);
-        static Ptr__hydrology_interceptionLiuDay p__hydrology_interceptionLiuDay = NULL;
-        if (p__hydrology_interceptionLiuDay == NULL) {
-            validateSignature("double(*_hydrology_interceptionLiuDay)(double,double,double,double)");
-            p__hydrology_interceptionLiuDay = (Ptr__hydrology_interceptionLiuDay)R_GetCCallable("medfate", "_medfate__hydrology_interceptionLiuDay");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__hydrology_interceptionLiuDay(Shield<SEXP>(Rcpp::wrap(Rainfall)), Shield<SEXP>(Rcpp::wrap(Cm)), Shield<SEXP>(Rcpp::wrap(p)), Shield<SEXP>(Rcpp::wrap(ER)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
-    inline double hydrology_soilEvaporationAmount(double DEF, double PETs, double Gsoil) {
-        typedef SEXP(*Ptr_hydrology_soilEvaporationAmount)(SEXP,SEXP,SEXP);
-        static Ptr_hydrology_soilEvaporationAmount p_hydrology_soilEvaporationAmount = NULL;
-        if (p_hydrology_soilEvaporationAmount == NULL) {
-            validateSignature("double(*hydrology_soilEvaporationAmount)(double,double,double)");
-            p_hydrology_soilEvaporationAmount = (Ptr_hydrology_soilEvaporationAmount)R_GetCCallable("medfate", "_medfate_hydrology_soilEvaporationAmount");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_soilEvaporationAmount(Shield<SEXP>(Rcpp::wrap(DEF)), Shield<SEXP>(Rcpp::wrap(PETs)), Shield<SEXP>(Rcpp::wrap(Gsoil)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
     inline double hydrology_soilEvaporation(DataFrame soil, double snowpack, String soilFunctions, double pet, double LgroundSWR, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilEvaporation)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilEvaporation p_hydrology_soilEvaporation = NULL;
@@ -462,48 +399,6 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double hydrology_infiltrationBoughton(double input, double Ssoil) {
-        typedef SEXP(*Ptr_hydrology_infiltrationBoughton)(SEXP,SEXP);
-        static Ptr_hydrology_infiltrationBoughton p_hydrology_infiltrationBoughton = NULL;
-        if (p_hydrology_infiltrationBoughton == NULL) {
-            validateSignature("double(*hydrology_infiltrationBoughton)(double,double)");
-            p_hydrology_infiltrationBoughton = (Ptr_hydrology_infiltrationBoughton)R_GetCCallable("medfate", "_medfate_hydrology_infiltrationBoughton");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_infiltrationBoughton(Shield<SEXP>(Rcpp::wrap(input)), Shield<SEXP>(Rcpp::wrap(Ssoil)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
-    inline double hydrology_infiltrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sat, double theta_dry) {
-        typedef SEXP(*Ptr_hydrology_infiltrationGreenAmpt)(SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_hydrology_infiltrationGreenAmpt p_hydrology_infiltrationGreenAmpt = NULL;
-        if (p_hydrology_infiltrationGreenAmpt == NULL) {
-            validateSignature("double(*hydrology_infiltrationGreenAmpt)(double,double,double,double,double)");
-            p_hydrology_infiltrationGreenAmpt = (Ptr_hydrology_infiltrationGreenAmpt)R_GetCCallable("medfate", "_medfate_hydrology_infiltrationGreenAmpt");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_infiltrationGreenAmpt(Shield<SEXP>(Rcpp::wrap(t)), Shield<SEXP>(Rcpp::wrap(psi_w)), Shield<SEXP>(Rcpp::wrap(Ksat)), Shield<SEXP>(Rcpp::wrap(theta_sat)), Shield<SEXP>(Rcpp::wrap(theta_dry)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
     inline NumericVector hydrology_infiltrationRepartition(double I, NumericVector widths, NumericVector macro, double a = -0.005, double b = 3.0) {
         typedef SEXP(*Ptr_hydrology_infiltrationRepartition)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_infiltrationRepartition p_hydrology_infiltrationRepartition = NULL;
@@ -536,27 +431,6 @@ namespace medfate {
         {
             RNGScope RCPP_rngScope_gen;
             rcpp_result_gen = p_hydrology_infiltrationAmount(Shield<SEXP>(Rcpp::wrap(rainfallInput)), Shield<SEXP>(Rcpp::wrap(rainfallIntensity)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(model)), Shield<SEXP>(Rcpp::wrap(K_correction)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
-    inline double hydrology_snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
-        typedef SEXP(*Ptr_hydrology_snowMelt)(SEXP,SEXP,SEXP,SEXP);
-        static Ptr_hydrology_snowMelt p_hydrology_snowMelt = NULL;
-        if (p_hydrology_snowMelt == NULL) {
-            validateSignature("double(*hydrology_snowMelt)(double,double,double,double)");
-            p_hydrology_snowMelt = (Ptr_hydrology_snowMelt)R_GetCCallable("medfate", "_medfate_hydrology_snowMelt");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_snowMelt(Shield<SEXP>(Rcpp::wrap(tday)), Shield<SEXP>(Rcpp::wrap(rad)), Shield<SEXP>(Rcpp::wrap(LgroundSWR)), Shield<SEXP>(Rcpp::wrap(elevation)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

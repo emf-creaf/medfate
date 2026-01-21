@@ -2090,25 +2090,6 @@ hydrology_rainfallIntensity <- function(month, prec, rainfallIntensityPerMonth) 
     .Call(`_medfate_rainfallIntensity`, month, prec, rainfallIntensityPerMonth)
 }
 
-.hydrology_interceptionGashDay <- function(Rainfall, Cm, p, ER = 0.05) {
-    .Call(`_medfate_interceptionGashDay_c`, Rainfall, Cm, p, ER)
-}
-
-.hydrology_interceptionLiuDay <- function(Rainfall, Cm, p, ER = 0.05) {
-    .Call(`_medfate_interceptionLiuDay_c`, Rainfall, Cm, p, ER)
-}
-
-#' @rdname hydrology_soilEvaporation
-#' 
-#' @param DEF Water deficit in the (topsoil) layer.
-#' @param PETs Potential evapotranspiration at the soil surface.
-#' @param Gsoil Gamma parameter (maximum daily evaporation).
-#' 
-#' @keywords internal
-hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
-    .Call(`_medfate_soilEvaporationAmount`, DEF, PETs, Gsoil)
-}
-
 #' Bare soil evaporation and herbaceous transpiration
 #'
 #' Functions:
@@ -2153,6 +2134,18 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
     .Call(`_medfate_herbaceousTranspiration`, pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil)
 }
 
+#' @rdname hydrology_infiltration
+#' 
+#' @param I Soil infiltration (in mm of water).
+#' @param widths Width of soil layers (in mm).
+#' @param macro Macroporosity of soil layers (in %).
+#' @param a,b Parameters of the extinction function used for water infiltration.
+#' 
+#' @keywords internal
+hydrology_infiltrationRepartition <- function(I, widths, macro, a = -0.005, b = 3.0) {
+    .Call(`_medfate_infiltrationRepartition`, I, widths, macro, a, b)
+}
+
 #' Soil infiltration
 #'
 #' Soil infiltration functions:
@@ -2163,8 +2156,12 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
 #' }
 #' 
-#' @param input A numeric vector of (daily) water input (in mm of water).
-#' @param Ssoil Soil water storage capacity (can be referred to topsoil) (in mm of water).
+#' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
+#' @param soil A list containing the description of the soil (see \code{\link{soil}}).
+#' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+#' @param rainfallIntensity rainfall intensity rate (mm/h)
+#' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+#' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 #' 
 #' 
 #' @return 
@@ -2188,58 +2185,12 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #' 
 #' @name hydrology_infiltration
 #' @keywords internal
-hydrology_infiltrationBoughton <- function(input, Ssoil) {
-    .Call(`_medfate_infiltrationBoughton_c`, input, Ssoil)
-}
-
+#' 
 #' @rdname hydrology_infiltration
-#' 
-#' @param t Time of the infiltration event
-#' @param psi_w Matric potential at the wetting front
-#' @param Ksat hydraulic conductivity at saturation
-#' @param theta_sat volumetric content at saturation
-#' @param theta_dry volumetric content at the dry side of the wetting front
-#' 
-#' @keywords internal
-hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry) {
-    .Call(`_medfate_infitrationGreenAmpt_c`, t, psi_w, Ksat, theta_sat, theta_dry)
-}
-
-#' @rdname hydrology_infiltration
-#' 
-#' @param I Soil infiltration (in mm of water).
-#' @param widths Width of soil layers (in mm).
-#' @param macro Macroporosity of soil layers (in %).
-#' @param a,b Parameters of the extinction function used for water infiltration.
-#' 
-#' @keywords internal
-hydrology_infiltrationRepartition <- function(I, widths, macro, a = -0.005, b = 3.0) {
-    .Call(`_medfate_infiltrationRepartition`, I, widths, macro, a, b)
-}
-
-#' @rdname hydrology_infiltration
-#' 
-#' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
-#' @param soil A list containing the description of the soil (see \code{\link{soil}}).
-#' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
-#' @param rainfallIntensity rainfall intensity rate (mm/h)
-#' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
-#' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 #' 
 #' @keywords internal
 hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "GreenAmpt1911", K_correction = 1.0) {
     .Call(`_medfate_infiltrationAmount`, rainfallInput, rainfallIntensity, soil, soilFunctions, model, K_correction)
-}
-
-#' @rdname hydrology_verticalInputs
-#' 
-#' @param tday Average day temperature (ºC).
-#' @param rad Solar radiation (in MJ/m2/day).
-#' @param elevation Altitude above sea level (m).
-#' 
-#' @keywords internal
-hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
-    .Call(`_medfate_snowMelt_c`, tday, rad, LgroundSWR, elevation)
 }
 
 #' Water vertical inputs
@@ -2397,6 +2348,59 @@ hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, el
 #' @keywords internal
 hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "buckets", nsteps = 24L, max_nsubsteps = 3600L, modifySoil = TRUE) {
     .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, infiltrationCorrection, soilDomains, nsteps, max_nsubsteps, modifySoil)
+}
+
+#' @rdname hydrology_soilEvaporation
+#' 
+#' @param DEF Water deficit in the (topsoil) layer.
+#' @param PETs Potential evapotranspiration at the soil surface.
+#' @param Gsoil Gamma parameter (maximum daily evaporation).
+#' 
+#' @keywords internal
+hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
+    .Call(`_medfate_soilEvaporationAmount_c`, DEF, PETs, Gsoil)
+}
+
+.hydrology_interceptionGashDay <- function(Rainfall, Cm, p, ER = 0.05) {
+    .Call(`_medfate_interceptionGashDay_c`, Rainfall, Cm, p, ER)
+}
+
+.hydrology_interceptionLiuDay <- function(Rainfall, Cm, p, ER = 0.05) {
+    .Call(`_medfate_interceptionLiuDay_c`, Rainfall, Cm, p, ER)
+}
+
+#' @rdname hydrology_infiltration
+#' 
+#' @param input A numeric vector of (daily) water input (in mm of water).
+#' @param Ssoil Soil water storage capacity (can be referred to topsoil) (in mm of water).
+#' 
+#' @keywords internal
+hydrology_infiltrationBoughton <- function(input, Ssoil) {
+    .Call(`_medfate_infiltrationBoughton_c`, input, Ssoil)
+}
+
+#' @rdname hydrology_infiltration
+#' 
+#' @param t Time of the infiltration event
+#' @param psi_w Matric potential at the wetting front
+#' @param Ksat hydraulic conductivity at saturation
+#' @param theta_sat volumetric content at saturation
+#' @param theta_dry volumetric content at the dry side of the wetting front
+#' 
+#' @keywords internal
+hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry) {
+    .Call(`_medfate_infitrationGreenAmpt_c`, t, psi_w, Ksat, theta_sat, theta_dry)
+}
+
+#' @rdname hydrology_verticalInputs
+#' 
+#' @param tday Average day temperature (ºC).
+#' @param rad Solar radiation (in MJ/m2/day).
+#' @param elevation Altitude above sea level (m).
+#' 
+#' @keywords internal
+hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
+    .Call(`_medfate_snowMelt_c`, tday, rad, LgroundSWR, elevation)
 }
 
 .gammln <- function(xx) {
