@@ -2091,11 +2091,11 @@ hydrology_rainfallIntensity <- function(month, prec, rainfallIntensityPerMonth) 
 }
 
 .hydrology_interceptionGashDay <- function(Rainfall, Cm, p, ER = 0.05) {
-    .Call(`_medfate_interceptionGashDay`, Rainfall, Cm, p, ER)
+    .Call(`_medfate_interceptionGashDay_c`, Rainfall, Cm, p, ER)
 }
 
 .hydrology_interceptionLiuDay <- function(Rainfall, Cm, p, ER = 0.05) {
-    .Call(`_medfate_interceptionLiuDay`, Rainfall, Cm, p, ER)
+    .Call(`_medfate_interceptionLiuDay_c`, Rainfall, Cm, p, ER)
 }
 
 #' @rdname hydrology_soilEvaporation
@@ -2189,7 +2189,7 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #' @name hydrology_infiltration
 #' @keywords internal
 hydrology_infiltrationBoughton <- function(input, Ssoil) {
-    .Call(`_medfate_infiltrationBoughton`, input, Ssoil)
+    .Call(`_medfate_infiltrationBoughton_c`, input, Ssoil)
 }
 
 #' @rdname hydrology_infiltration
@@ -2202,7 +2202,7 @@ hydrology_infiltrationBoughton <- function(input, Ssoil) {
 #' 
 #' @keywords internal
 hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry) {
-    .Call(`_medfate_infitrationGreenAmpt`, t, psi_w, Ksat, theta_sat, theta_dry)
+    .Call(`_medfate_infitrationGreenAmpt_c`, t, psi_w, Ksat, theta_sat, theta_dry)
 }
 
 #' @rdname hydrology_infiltration
@@ -2239,7 +2239,7 @@ hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil,
 #' 
 #' @keywords internal
 hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
-    .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
+    .Call(`_medfate_snowMelt_c`, tday, rad, LgroundSWR, elevation)
 }
 
 #' Water vertical inputs

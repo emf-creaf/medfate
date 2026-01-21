@@ -1,6 +1,7 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
 #include <Rcpp.h>
+#include <cmath>
 #include "soil.h"
 #include "root.h"
 #include "hydraulics.h"
@@ -15,6 +16,13 @@ using namespace Rcpp;
 //New defaults
 //Rconv = 5.6, Rsyn = 1.5
 
+// Rainfall intensity calculation
+double rainfallIntensity_c(int month, double prec, std::vector<double> rainfallIntensityPerMonth){
+   double Ri_month = rainfallIntensityPerMonth[month - 1];
+   double Ri = std::max(prec/24.0,Ri_month);
+   return(Ri); 
+}
+ 
 //' @param month Month of the year (from 1 to 12).
 //' @param prec Precipitation for a given day (mm).
 //' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.
@@ -23,13 +31,14 @@ using namespace Rcpp;
 //' @keywords internal
 // [[Rcpp::export("hydrology_rainfallIntensity")]]
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth){
-  double Ri_month = rainfallIntensityPerMonth[month - 1];
-  double Ri = std::max(prec/24.0,Ri_month);
-  return(Ri);
+  // This makes a copy of the vector
+  std::vector<double> Ri_month = as<std::vector<double> >(rainfallIntensityPerMonth);
+  return(rainfallIntensity_c(month, prec, Ri_month));
 }
 
+
 // [[Rcpp::export(".hydrology_interceptionGashDay")]]
-double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05) {
+double interceptionGashDay_c(double Rainfall, double Cm, double p, double ER=0.05) {
   double I = 0.0;
   double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Rainfall need to saturate the canopy
   if(Cm==0.0 || p==1.0) PG = 0.0; //Avoid NAs
@@ -42,7 +51,7 @@ double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05)
 }
 
 // [[Rcpp::export(".hydrology_interceptionLiuDay")]]
-double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05){
+double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05){
   double I = Cm*(1.0 - exp(-1.0*(Rainfall)*((1.0 - p)/Cm)))*(1.0 - (ER/(1.0 - p))) + (ER*Rainfall);
   return(I);
 }
@@ -177,7 +186,7 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
 //' @name hydrology_infiltration
 //' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationBoughton")]]
-double infiltrationBoughton(double input, double Ssoil) {
+double infiltrationBoughton_c(double input, double Ssoil) {
   double I = 0;
   if(input>0.2*Ssoil) {
     I = input-(pow(input-0.2*Ssoil,2.0)/(input+0.8*Ssoil));
@@ -187,11 +196,11 @@ double infiltrationBoughton(double input, double Ssoil) {
   return(I);
 }
 
-double fGreenAmpt(double x, double t, double psi_w, double Ksat, double delta_theta) {
+double fGreenAmpt_c(double x, double t, double psi_w, double Ksat, double delta_theta) {
   double f = Ksat*t + std::abs(psi_w)*delta_theta*log(1.0 + (x/(std::abs(psi_w)*delta_theta))) - x;
   return(f);
 }
-double fGreenAmptDer(double x, double t, double psi_w, double Ksat, double delta_theta) {
+double fGreenAmptDer_c(double x, double t, double psi_w, double Ksat, double delta_theta) {
   double fder = (log(1.0 + (x/(std::abs(psi_w)*delta_theta)))/(1.0+ (x/(std::abs(psi_w)*delta_theta))))-1.0;
   return(fder);
 }
@@ -206,7 +215,7 @@ double fGreenAmptDer(double x, double t, double psi_w, double Ksat, double delta
 //' 
 //' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationGreenAmpt")]]
-double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sat, double theta_dry) {
+double infitrationGreenAmpt_c(double t, double psi_w, double Ksat, double theta_sat, double theta_dry) {
   double delta_theta = theta_sat - theta_dry;
   double x,x1,e,fx,fx1;
   x1 = 0.0;//initial guess
@@ -215,12 +224,31 @@ double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sa
   int mxiter = 100;
   do {
     x=x1; /*make x equal to the last calculated value of  x1*/
-    fx=fGreenAmpt(x, t, psi_w, Ksat, delta_theta);            //simplifying f(x)to fx
-    fx1=fGreenAmptDer(x, t, psi_w, Ksat, delta_theta);            //simplifying fprime(x) to fx1
+    fx=fGreenAmpt_c(x, t, psi_w, Ksat, delta_theta);            //simplifying f(x)to fx
+    fx1=fGreenAmptDer_c(x, t, psi_w, Ksat, delta_theta);            //simplifying fprime(x) to fx1
     x1=x-(fx/fx1);/*calculate x{1} from x, fx and fx1*/ 
     cnt++;
   } while ((std::abs(x1-x)>=e) && (cnt < mxiter));
   return(x);
+}
+
+void infiltrationRepartition_c(int nlayers, double I, 
+                               double* Ivec, double* widths, double* macro, 
+                               double a = -0.005, double b = 3.0) {
+  double pi = 0.0;
+  double z1 = 0.0;
+  double p1 = 1.0;
+  for(int i=0;i<nlayers;i++) {
+    double ai = a*pow(1.0-macro[i],b);
+    if(i<(nlayers-1)) {
+      pi = p1*(1.0-exp(ai*widths[i]));
+    } else {
+      pi = p1;
+    }
+    p1 = p1*exp(ai*widths[i]);
+    z1 = z1 + widths[i];
+    Ivec[i] = I*pi;
+  }
 }
 
 
@@ -235,22 +263,23 @@ double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sa
 // [[Rcpp::export("hydrology_infiltrationRepartition")]]
 NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVector macro, 
                                       double a = -0.005, double b = 3.0) {
-  int nlayers = widths.length();
-  NumericVector Pvec = NumericVector(nlayers,0.0);
-  NumericVector Ivec = NumericVector(nlayers,0.0);
-  double z1 = 0.0;
-  double p1 = 1.0;
+
+  int nlayers = widths.size();
+  double* Ivec_c = new double[nlayers];
+  double* widths_c = new double[nlayers];
+  double* macro_c = new double[nlayers];
   for(int i=0;i<nlayers;i++) {
-    double ai = a*pow(1.0-macro[i],b);
-    if(i<(nlayers-1)) {
-      Pvec[i] = p1*(1.0-exp(ai*widths[i]));
-    } else {
-      Pvec[i] = p1;
-    }
-    p1 = p1*exp(ai*widths[i]);
-    z1 = z1 + widths[i];
-    Ivec[i] = I*Pvec[i];
+    widths_c[i] = widths[i];
+    macro_c[i] = macro[i];
+    Ivec_c[i] = 0.0;
   }
+  infiltrationRepartition_c(nlayers, I, Ivec_c, widths_c, macro_c, a, b);
+  NumericVector Ivec(nlayers, 0.0);
+  for(int i=0;i<nlayers;i++) Ivec[i] = Ivec_c[i];
+
+  delete[] widths_c;
+  delete[] macro_c;
+  delete[] Ivec_c;
   return(Ivec);
 }
 
@@ -282,10 +311,10 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFr
     double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
     double theta_sat = cp["theta_sat"];
     double K_sat_0 = K_correction*Ksat[0]/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
-    infiltration = infitrationGreenAmpt(t, psi_w, K_sat_0, theta_sat, theta_dry[0]);
+    infiltration = infitrationGreenAmpt_c(t, psi_w, K_sat_0, theta_sat, theta_dry[0]);
   } else if(model=="Boughton1989") {
     NumericVector Water_FC = waterFC(soil, soilFunctions);
-    infiltration = infiltrationBoughton(rainfallInput, Water_FC[0]);
+    infiltration = infiltrationBoughton_c(rainfallInput, Water_FC[0]);
   } else {
     stop("Wrong infiltration model!");
   }
@@ -301,9 +330,10 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFr
 //' 
 //' @keywords internal
 // [[Rcpp::export("hydrology_snowMelt")]]
-double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
-  if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
-  if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
+double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation) {
+  //missing data checks
+  if(std::isnan(rad)) stop("Missing radiation data for snow melt!");
+  if(std::isnan(elevation)) stop("Missing elevation data for snow melt!");
   double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
   double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
   double ren = (rad*(LgroundSWR/100.0))*(0.1); //90% albedo of snow
@@ -383,7 +413,7 @@ NumericVector waterInputs(List x,
   }
   //Apply snow melting
   if(swe > 0.0) {
-    melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
+    melt = std::min(swe, snowMelt_c(tday, rad, LgroundSWR, elevation));
     // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
     swe = swe-melt;
   }
@@ -392,9 +422,9 @@ NumericVector waterInputs(List x,
   double NetRain = 0.0, Interception = 0.0;
   if(rain>0.0)  {
     if(interceptionMode=="Gash1995") {
-      Interception = interceptionGashDay(rain,Cm,LgroundPAR/100.0,er);
+      Interception = interceptionGashDay_c(rain,Cm,LgroundPAR/100.0,er);
     } else if(interceptionMode =="Liu2001") {
-      Interception = interceptionLiuDay(rain,Cm,LgroundPAR/100.0,er);
+      Interception = interceptionLiuDay_c(rain,Cm,LgroundPAR/100.0,er);
     } else {
       stop("Wrong interception model!");
     }

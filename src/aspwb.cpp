@@ -29,7 +29,7 @@ NumericVector agricultureWaterInputs(List x,
   }
   //Apply snow melting
   if(swe > 0.0) {
-    melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
+    melt = std::min(swe, snowMelt_c(tday, rad, LgroundSWR, elevation));
     // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
     swe = swe-melt;
   }
