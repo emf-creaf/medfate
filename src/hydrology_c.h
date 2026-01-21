@@ -18,9 +18,11 @@ double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation);
 double rainfallIntensity_c(int month, double prec, const std::vector<double>& rainfallIntensityPerMonth);
 double infiltrationBoughton_c(double input, double Ssoil);
 double infitrationGreenAmpt_c(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
-void infiltrationRepartition_c(int nlayers, double I, 
-                               double* Ivec, double* widths, double* macro, 
-                               double a = -0.005, double b = 3.0);
+void infiltrationRepartition_c(double I, 
+                               std::vector<double> &Ivec, 
+                               const std::vector<double> &widths, 
+                               const std::vector<double> &macro, 
+                               double a, double b);
 double microporeImbibitionRate_c(double theta_b, double theta_micro, 
                                  double D_theta_b, double D_theta_micro,
                                  double S_macro);

@@ -68,16 +68,19 @@ double soilEvaporation(DataFrame soil, double snowpack,
   NumericVector widths = soil["widths"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector psiSoil = psi(soil, soilFunctions);
-  double Esoil = 0.0;
-  if(snowpack == 0.0) {
-    double PETsoil = pet*(LgroundSWR/100.0);
-    double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
-    // Allow evaporation only if water potential is higher than -2 MPa
-    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount_c((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-    if(modifySoil){
-      W[0] = W[0] - (Esoil/Water_FC[0]);
+
+  std::vector<double> W_c = as<std::vector<double> >(W);
+  std::vector<double> widths_c = as<std::vector<double> >(widths);
+  std::vector<double> Water_FC_c = as<std::vector<double> >(Water_FC);
+  std::vector<double> psiSoil_c = as<std::vector<double> >(psiSoil);
+  double Esoil = soilEvaporation_c(W_c, widths_c, Water_FC_c, psiSoil_c, 
+                                  snowpack, pet, LgroundSWR, modifySoil);
+  if(modifySoil) {
+    for(int l=0;l<W.size();l++) {
+      W[l] = W_c[l];
     }
   }
+                                                              
   return(Esoil);
 }
 
@@ -128,21 +131,14 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
                                       double a = -0.005, double b = 3.0) {
 
   int nlayers = widths.size();
-  double* Ivec_c = new double[nlayers];
-  double* widths_c = new double[nlayers];
-  double* macro_c = new double[nlayers];
-  for(int i=0;i<nlayers;i++) {
-    widths_c[i] = widths[i];
-    macro_c[i] = macro[i];
-    Ivec_c[i] = 0.0;
-  }
-  infiltrationRepartition_c(nlayers, I, Ivec_c, widths_c, macro_c, a, b);
   NumericVector Ivec(nlayers, 0.0);
-  for(int i=0;i<nlayers;i++) Ivec[i] = Ivec_c[i];
-
-  delete[] widths_c;
-  delete[] macro_c;
-  delete[] Ivec_c;
+  std::vector<double> Ivec_c = as<std::vector<double> >(Ivec);
+  std::vector<double> widths_c = as<std::vector<double> >(widths);
+  std::vector<double> macro_c = as<std::vector<double> >(macro);
+  infiltrationRepartition_c(I, Ivec_c, widths_c, macro_c, a, b);
+  for(int i=0;i<nlayers;i++) {
+    Ivec[i] = Ivec_c[i];
+  }
   return(Ivec);
 }
 

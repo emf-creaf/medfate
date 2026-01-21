@@ -75,9 +75,12 @@ double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05
   return(I);
 }
 
-void infiltrationRepartition_c(int nlayers, double I, 
-                               double* Ivec, double* widths, double* macro, 
+void infiltrationRepartition_c(double I, 
+                               std::vector<double> &Ivec, 
+                               const std::vector<double> &widths, 
+                               const std::vector<double> &macro, 
                                double a = -0.005, double b = 3.0) {
+  int nlayers = widths.size();
   double pi = 0.0;
   double z1 = 0.0;
   double p1 = 1.0;
