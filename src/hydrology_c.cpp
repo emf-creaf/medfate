@@ -28,7 +28,7 @@ double soilEvaporationAmount_c(double DEF,double PETs, double Gsoil){
 //Rconv = 5.6, Rsyn = 1.5
 
 // Rainfall intensity calculation
-double rainfallIntensity_c(int month, double prec, std::vector<double> rainfallIntensityPerMonth){
+double rainfallIntensity_c(int month, double prec, const std::vector<double>& rainfallIntensityPerMonth){
   double Ri_month = rainfallIntensityPerMonth[month - 1];
   double Ri = std::max(prec/24.0,Ri_month);
   return(Ri); 

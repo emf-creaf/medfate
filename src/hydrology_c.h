@@ -8,7 +8,7 @@ double soilEvaporationAmount_c(double DEF,double PETs, double Gsoil);
 double interceptionGashDay_c(double Rainfall, double Cm, double p, double ER=0.05);
 double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05);
 double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation);
-double rainfallIntensity_c(int month, double prec, std::vector<double> rainfallIntensityPerMonth);
+double rainfallIntensity_c(int month, double prec, const std::vector<double>& rainfallIntensityPerMonth);
 double infiltrationBoughton_c(double input, double Ssoil);
 double infitrationGreenAmpt_c(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
 void infiltrationRepartition_c(int nlayers, double I, 
