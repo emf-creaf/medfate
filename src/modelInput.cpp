@@ -2,6 +2,7 @@
 #include "carbon.h"
 #include "root.h"
 #include "soil.h"
+#include "soil_c.h"
 #include "lightextinction_advanced.h"
 #include "photosynthesis.h"
 #include "woodformation.h"
@@ -636,7 +637,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
     
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
     RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(RhizoPsi.begin(), RhizoPsi.end(), -0.033);
+    std::fill(RhizoPsi.begin(), RhizoPsi.end(), fieldCapacityPsi);
 
     
     NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
@@ -1145,16 +1146,16 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
   DataFrame df;
   if(transpirationMode=="Granier") {
-    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, -0.033),
+    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
-                           Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("RootCrownPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sureau") {
@@ -1162,11 +1163,11 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("Elim") = NumericVector(numCohorts, 0.0),
                            Named("Emin_L") = NumericVector(numCohorts, 0.0),
                            Named("Emin_S") = NumericVector(numCohorts, 0.0),
-                           Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("RootCrownPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   }
@@ -2124,18 +2125,18 @@ void resetInputs(List x) {
     NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
     for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
-      RootCrownPsi[i] = -0.033;
-      StemPsi[i] = -0.033;
-      LeafPsi[i] = -0.033;
-      LeafSympPsi[i] = -0.033;
-      StemSympPsi[i] = -0.033;
+      RootCrownPsi[i] = fieldCapacityPsi;
+      StemPsi[i] = fieldCapacityPsi;
+      LeafPsi[i] = fieldCapacityPsi;
+      LeafSympPsi[i] = fieldCapacityPsi;
+      StemSympPsi[i] = fieldCapacityPsi;
       StemPLC[i] = 0.0;
-      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = -0.033;
+      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = fieldCapacityPsi;
     }
   } else {
     NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
     for(int i=0;i<StemPLC.length();i++) {
-      PlantPsi[i] = -0.033;
+      PlantPsi[i] = fieldCapacityPsi;
       StemPLC[i] = 0.0;
     }
   }

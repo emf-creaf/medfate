@@ -2,7 +2,6 @@
 
 #ifndef CONTROL_H
 #define CONTROL_H
-#endif
 
 struct FillMissing {
   bool fillMissingRootParams;
@@ -205,6 +204,6 @@ struct ControlParameters {
   RecruitmentParams recruitment;
   DecompositionParams decomposition;
 };
-
+#endif
 
 

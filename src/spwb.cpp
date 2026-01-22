@@ -16,6 +16,7 @@
 #include "photosynthesis.h"
 #include "phenology.h"
 #include "soil.h"
+#include "soil_c.h"
 #include "spwb_day.h"
 #include "transpiration.h"
 #include "tissuemoisture.h"
@@ -1521,8 +1522,8 @@ List spwb(List x, DataFrame meteo,
             NumericVector StemPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
             NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
             for(int j=0;j<StemPsi.length();j++) {
-              StemPsi[j] = -0.033;
-              StemSympPsi[j] = -0.033;
+              StemPsi[j] = fieldCapacityPsi;
+              StemSympPsi[j] = fieldCapacityPsi;
             } 
           }
         }
@@ -1536,8 +1537,8 @@ List spwb(List x, DataFrame meteo,
             NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
             NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
             for(int j=0;j<LeafPsi.length();j++) {
-              LeafPsi[j] = -0.033;
-              LeafSympPsi[j] = -0.033;
+              LeafPsi[j] = fieldCapacityPsi;
+              LeafSympPsi[j] = fieldCapacityPsi;
             }
           }
         }
@@ -1996,8 +1997,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
             NumericVector StemPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
             NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
             for(int j=0;j<StemPsi.length();j++) {
-              StemPsi[j] = -0.033;
-              StemSympPsi[j] = -0.033;
+              StemPsi[j] = fieldCapacityPsi;
+              StemSympPsi[j] = fieldCapacityPsi;
             } 
           }
         }
@@ -2011,8 +2012,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
           NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
           NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
           for(int j=0;j<LeafPsi.length();j++) {
-            LeafPsi[j] = -0.033;
-            LeafSympPsi[j] = -0.033;
+            LeafPsi[j] = fieldCapacityPsi;
+            LeafSympPsi[j] = fieldCapacityPsi;
           }
         }
       }

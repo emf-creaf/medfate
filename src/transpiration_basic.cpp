@@ -14,6 +14,7 @@
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
+#include "soil_c.h"
 #include "spwb.h"
 #include <meteoland.h>
 using namespace Rcpp;

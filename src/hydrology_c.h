@@ -1,5 +1,4 @@
-#include <cmath>
-#include <vector>
+#include "medfate.h"
 
 #ifndef HYDROLOGY_C_H
 #define HYDROLOGY_C_H

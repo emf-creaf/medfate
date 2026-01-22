@@ -43,7 +43,7 @@ Initializes soil parameters and state variables for its use in simulations.
 \details{
 Function \code{summary} prompts a description of soil characteristics and state variables (water content and temperature)
 according to a water retention curve (either Saxton's or Van Genuchten's).
-Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa.
+Volume at field capacity is calculated assuming a soil water potential equal to fieldCapacityPsi MPa.
 Parameter \code{Temp} is initialized as missing for all soil layers.
 
 If available, the user can specify columns \code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat} and \code{K_sat},

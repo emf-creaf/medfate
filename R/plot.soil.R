@@ -116,7 +116,7 @@ soil_conductivityCurvePlot<-function(soil, model="SX", layer = 1,
                                  alpha=soil$VG_alpha[layer], n = soil$VG_n[layer], 
                                  theta_res = soil$VG_theta_res[layer], 
                                  theta_sat = soil$VG_theta_sat[layer],
-                                 psi = -0.033)
+                                 psi = fieldCapacityPsi)
     }
     y_sx = 100*(y_sx/cfc_sx)
     y_vg = 100*(y_vg/cfc_vg)

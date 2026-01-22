@@ -16,6 +16,7 @@
 #include "spwb.h"
 #include "root.h"
 #include "soil.h"
+#include "soil_c.h"
 #include "soil_thermodynamics.h"
 #include "inner_sperry.h"
 #include "inner_sureau.h"

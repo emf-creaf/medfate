@@ -1,0 +1,133 @@
+#include "medfate.h"
+
+#ifndef SOIL_C_H
+#define SOIL_C_H
+
+struct ClappHornberger{
+  double theta_sat;
+  double psi_sat_cm;
+  double b;
+  double K_sat_cm_h;
+};
+
+class Soil {
+  private:
+  int nlayers;
+  std::string model;
+  ClappHornberger clapp_hornberger;
+  std::vector<double> widths;
+  std::vector<double> clay;
+  std::vector<double> sand;
+  std::vector<double> om;
+  std::vector<double> nitrogen;
+  std::vector<double> ph;
+  std::vector<double> bd;
+  std::vector<double> rfc;
+  std::vector<double> macro;
+  std::vector<double> Ksat;
+  std::vector<double> VG_alpha;
+  std::vector<double> VG_n;
+  std::vector<double> VG_theta_res;
+  std::vector<double> VG_theta_sat;
+  std::vector<std::string> usda_type;
+  std::vector<double> theta_SAT;
+  std::vector<double> theta_FC;
+  std::vector<double> W;
+  std::vector<double> psi;
+  std::vector<double> theta;
+  std::vector<double> Temp;
+  public:
+    Soil(int nlayers, 
+             std::string& model,
+             std::vector<double>& widths,
+             std::vector<double>& clay,
+             std::vector<double>& sand,
+             std::vector<double>& om,
+             std::vector<double>& nitrogen,
+             std::vector<double>& ph,
+             std::vector<double>& bd,
+             std::vector<double>& rfc,
+             std::vector<double>& macro,
+             std::vector<double>& Ksat,
+             std::vector<double>& VG_alpha,
+             std::vector<double>& VG_n,
+             std::vector<double>& VG_theta_res,
+             std::vector<double>& VG_theta_sat,
+             std::vector<std::string>& usda_type,
+             std::vector<double>& theta_SAT,
+             std::vector<double>& theta_FC,
+             std::vector<double>& W,
+             std::vector<double>& psi,
+             std::vector<double>& theta,
+             std::vector<double>& Temp,
+             ClappHornberger& clapp_hornberger);
+    double getW(int layer);
+    int getNlayers();
+    std::string getModel();
+    ClappHornberger getClappHornberger();
+    double getWidth(int layer);  
+    double getClay(int layer);
+    double getSand(int layer);
+    double getOM(int layer);
+    double getNitrogen(int layer);
+    double getPH(int layer);
+    double getBD(int layer);
+    double getRFC(int layer);
+    double getMacro(int layer);
+    double getKsat(int layer);
+    double getVG_alpha(int layer);
+    double getVG_n(int layer);
+    double getVG_theta_res(int layer);
+    double getVG_theta_sat(int layer);
+    std::string getUSDAType(int layer);
+    double getThetaSAT(int layer);
+    double getThetaFC(int layer);
+    double getPsi(int layer);
+    double getTheta(int layer);
+    double getTemp(int layer);
+    double setPsi(int layer, double value);
+    double setTheta(int layer, double value);
+    double setW(int layer, double value);
+    double setTemp(int layer, double value);
+    
+};
+
+/**
+ * Conversion factor from conductivity in cm·day-1 to molH20·m-2·MPa-1·s-1
+ *  1 day = 86400 sec
+ *  1 mol H20 = 18.01528 g
+ */
+const double cmdTOmmolm2sMPa = 655.2934;//100.0/(18.01528*86400.0*0.00009804139432); 
+/**
+ * Conversion factor from cm to MPa
+ */
+const double cmTOMPa = 0.00009804139432;
+/**
+ * Conversion factor from m to MPa
+ */
+const double mTOMPa = 0.009804139432;//1/9.804139*0.000001; 
+
+const double minimumPsi = -40.0;
+const double fieldCapacityPsi = -0.033; // -33 kPa
+
+/**
+ * Saxton et al. (1986) pedotransfer functions
+ */
+double saturatedConductivitySaxton(double clay, double sand, double bd, double om, bool mmol);
+double unsaturatedConductivitySaxton(double theta, double clay, double sand, double bd, double om, bool mmol);
+double theta2psiSaxton(double clay, double sand, double theta, double om);
+double psi2thetaSaxton(double clay, double sand, double psi, double om);
+double thetaSATSaxton(double clay, double sand, double om);
+
+/**
+ * Van Genuchten-Mualem pedotransfer functions
+ */
+double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
+double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
+double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi);
+double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double theta_res, double theta_sat, 
+                                   double psi, double psi_b);
+double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
+                         double psi);
+double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
+#endif

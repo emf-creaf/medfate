@@ -5,6 +5,7 @@
 #include "biophysicsutils.h"
 #include "hydraulics.h"
 #include "soil.h"
+#include "soil_c.h"
 #include "tissuemoisture.h"
 #include <meteoland.h>
 using namespace Rcpp;

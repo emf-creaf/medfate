@@ -3,6 +3,7 @@
 #include <Rcpp.h>
 #include <cmath>
 #include "soil.h"
+#include "soil_c.h"
 #include "root.h"
 #include "hydraulics.h"
 #include "hydrology_c.h"

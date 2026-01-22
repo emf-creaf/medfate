@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <meteoland.h>
+#include "soil_c.h"
 
 /*=============================================================================
  * Implementation of hydrology routines using C++ code
