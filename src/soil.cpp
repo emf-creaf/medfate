@@ -693,8 +693,10 @@ Soil soilDataFrameToStructure(DataFrame x, String model = "VG") {
   std::vector<double> clay = as< std::vector<double> >(x["clay"]);
   std::vector<double> sand = as< std::vector<double> >(x["sand"]);
   std::vector<double> om = as< std::vector<double> >(x["om"]);
-  std::vector<double> nitrogen = as< std::vector<double> >(x["nitrogen"]);
-  std::vector<double> ph = as< std::vector<double> >(x["ph"]);
+  std::vector<double> ph(nlayers);
+  if(x.containsElementNamed("ph")) ph = as< std::vector<double> >(x["ph"]);
+  std::vector<double> nitrogen(nlayers);
+  if(x.containsElementNamed("nitrogen")) nitrogen = as< std::vector<double> >(x["nitrogen"]);
   std::vector<double> bd = as< std::vector<double> >(x["bd"]);
   std::vector<double> rfc = as< std::vector<double> >(x["rfc"]);
   std::vector<double> macro = as< std::vector<double> >(x["macro"]);
