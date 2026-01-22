@@ -9,6 +9,8 @@ test_that("rainfall intensity routine", {
   expect_type(hydrology_rainfallIntensity(10, 5, control$defaultRainfallIntensityPerMonth), "double")
 })
 test_that("infiltration routines", {
+  expect_type(hydrology_infiltrationAmount(20, 4, s, "VG", "GreenAmpt1911"), "double")
+  expect_type(hydrology_infiltrationAmount(20, 4, s, "VG", "Boughton1989"), "double")
   expect_type(hydrology_infiltrationRepartition(100, s$widths, s$macro), "double")
   expect_true(sum(hydrology_infiltrationRepartition(100, s$widths, s$macro)) == 100)
   expect_type(hydrology_infiltrationBoughton(100, 30), "double")

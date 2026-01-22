@@ -176,6 +176,23 @@ double infitrationGreenAmpt_c(double t, double psi_w, double Ksat, double theta_
  }
 
 
+double infiltrationAmount_c(double rainfallInput, double rainfallIntensity, Soil& soil, 
+                            std::string model = "GreenAmpt1911", double K_correction = 1.0) {
+  double infiltration = 0.0;
+  if(model=="GreenAmpt1911") {
+    double theta_dry0 = soil.getTheta(0);
+    ClappHornberger cp = soil.getClappHornberger();
+    double t = std::min(24.0, rainfallInput/rainfallIntensity); // time in hours
+    double psi_w = cp.psi_sat_cm*((2.0*cp.b + 3.0)/(2*cp.b + 6.0));
+    double K_sat_0 = K_correction*soil.getKsat(0)/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
+    infiltration = infitrationGreenAmpt_c(t, psi_w, K_sat_0, cp.theta_sat, theta_dry0);
+  } else if(model=="Boughton1989") {
+    infiltration = infiltrationBoughton_c(rainfallInput, soil.getWaterFC(0));
+  }
+  infiltration = std::min(infiltration, rainfallInput);
+  return(infiltration);
+}
+
 //' @rdname hydrology_verticalInputs
 //' 
 //' @param tday Average day temperature (ºC).

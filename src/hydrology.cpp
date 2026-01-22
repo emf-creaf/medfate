@@ -190,29 +190,14 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, 
                           String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
-  double infiltration = 0.0;
-  if(model=="GreenAmpt1911") {
-    NumericVector clay = soil["clay"];
-    NumericVector sand = soil["sand"];
-    NumericVector bd = soil["bd"];
-    NumericVector Ksat = soil["Ksat"];
-    String usda = USDAType(clay[0], sand[0]);
-    NumericVector cp = campbellParamsClappHornberger(usda);
-    NumericVector theta_dry = theta(soil, soilFunctions);
-    double t = std::min(24.0, rainfallInput/rainfallIntensity); // time in hours
-    double b = cp["b"];
-    double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
-    double theta_sat = cp["theta_sat"];
-    double K_sat_0 = K_correction*Ksat[0]/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
-    infiltration = infitrationGreenAmpt_c(t, psi_w, K_sat_0, theta_sat, theta_dry[0]);
-  } else if(model=="Boughton1989") {
-    NumericVector Water_FC = waterFC(soil, soilFunctions);
-    infiltration = infiltrationBoughton_c(rainfallInput, Water_FC[0]);
-  } else {
+  if(model!="GreenAmpt1911" && model!="Boughton1989") {
     stop("Wrong infiltration model!");
   }
-  infiltration = std::min(infiltration, rainfallInput);
-  return(infiltration);
+  Soil soil_c = soilDataFrameToStructure(soil, soilFunctions);
+  std::string model_string = model.get_cstring();
+  return(infiltrationAmount_c(rainfallInput, rainfallIntensity, 
+                              soil_c, 
+                              model_string, K_correction));
 }
 
 

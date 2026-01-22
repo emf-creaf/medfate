@@ -26,6 +26,8 @@ void infiltrationRepartition_c(double I,
                                const std::vector<double> &widths, 
                                const std::vector<double> &macro, 
                                double a, double b);
+double infiltrationAmount_c(double rainfallInput, double rainfallIntensity, Soil& soil, 
+                            std::string model, double K_correction);
 double microporeImbibitionRate_c(double theta_b, double theta_micro, 
                                  double D_theta_b, double D_theta_micro,
                                  double S_macro);
