@@ -9,6 +9,12 @@ double soilEvaporation_c(Soil& soil,
                          double snowpack, 
                          double pet, double LgroundSWR,
                          bool modifySoil);
+void herbaceousTranspiration_c(std::vector<double>& EherbVec, 
+                               Soil& soil, 
+                               double pet, double LherbSWR, 
+                               double herbLAI,
+                               const std::vector<double> V,
+                               bool modifySoil = true);
 double interceptionGashDay_c(double Rainfall, double Cm, double p, double ER=0.05);
 double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05);
 double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation);

@@ -47,25 +47,24 @@ double soilEvaporation_c(Soil& soil,
 }
 
 
-std::vector<double> herbaceousTranspiration_c(double pet, double LherbSWR, 
-                                  double herbLAI,
-                                  std::vector<double> V,
-                                  Soil& soil, std::string soilFunctions, bool modifySoil = true){
+void herbaceousTranspiration_c(std::vector<double>& EherbVec, 
+                               Soil& soil, 
+                               double pet, double LherbSWR, 
+                               double herbLAI,
+                               const std::vector<double> V,
+                               bool modifySoil = true){
   int nlayers = soil.getNlayers();
-  std::vector<double> EherbVec(nlayers);
   for(int i=0;i<nlayers;i++) EherbVec[i] = 0.0;
   if(!std::isnan(herbLAI)) {
     double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
-    // NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
     double psi0 = soil.getPsi(0);
     for(int l=0;l<nlayers;l++) {
       EherbVec[l] = V[l]*Tmax_herb*Psi2K(psi0, -1.5, 2.0); 
       if(modifySoil) {
-        soil.setW(0, soil.getW(l) - (EherbVec[l]/soil.getWaterFC(l)));
+        soil.setW(l, soil.getW(l) - (EherbVec[l]/soil.getWaterFC(l)));
       }
     }
   }
-  return(EherbVec);
 }
 
 //Old defaults

@@ -3,6 +3,7 @@
 #include "photosynthesis.h"
 #include "biophysicsutils.h"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "soil.h"
 #include "tissuemoisture.h"
 using namespace Rcpp;

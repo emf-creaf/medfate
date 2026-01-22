@@ -87,19 +87,24 @@ double soilEvaporation(DataFrame soil, double snowpack,
 // [[Rcpp::export("hydrology_herbaceousTranspiration")]]
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                       DataFrame soil, String soilFunctions, bool modifySoil = true){
-  if(NumericVector::is_na(herbLAI)) return(0.0);
-  double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
   NumericVector widths = soil["widths"];
-  NumericVector W = soil["W"];
-  int nlayers = widths.size();
-  NumericVector psiSoil = psi(soil, soilFunctions);
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector EherbVec(nlayers,0.0);
   NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
-  for(int l=0;l<nlayers;l++) {
-    EherbVec[l] = V[l]*Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0); 
-    if(modifySoil) {
-      W[l] = W[l] - (EherbVec[l]/Water_FC[l]);
+  int nlayers = widths.size();
+  NumericVector EherbVec(nlayers,0.0);
+  Soil soil_c = soilDataFrameToStructure(soil, soilFunctions);
+  std::vector<double> EherbVec_c = as<std::vector<double> >(EherbVec);
+  herbaceousTranspiration_c(EherbVec_c, 
+                            soil_c, 
+                            pet, LherbSWR, herbLAI,
+                            as<std::vector<double> >(V),
+                            modifySoil);
+  
+  // Copy values
+  for(int l=0;l<nlayers;l++) EherbVec[l] = EherbVec_c[l];
+  if(modifySoil) {
+    NumericVector W = soil["W"];
+    for(int l=0;l<nlayers;l++) {
+      W[l] = soil_c.getW(l);
     }
   }
   return(EherbVec);

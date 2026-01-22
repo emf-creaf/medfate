@@ -6,6 +6,7 @@
 #include "windextinction.h"
 #include "windKatul.h"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "biophysicsutils.h"
 #include "phenology.h"
 #include "forestutils.h"
