@@ -20,6 +20,7 @@
 #include "spwb.h"
 #include "spwb_day.h"
 #include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "woodformation.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -93,8 +94,8 @@ double phloemFlow(double psiUpstream, double psiDownstream,
 //     for(int s=0;s<numSteps;s++) {
 //       // double leafPI = osmoticWaterPotential(concLeaf[c], Tcan[s]);
 //       // double sapwoodPI = osmoticWaterPotential(concs[c], Tcan[s]);
-//       double psiUp = symplasticWaterPotential(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
-//       double psiDown = symplasticWaterPotential(rwcStem(c,s), stemPI0[c], stemEPS[c]);
+//       double psiUp = symplasticWaterPotential_c(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
+//       double psiDown = symplasticWaterPotential_c(rwcStem(c,s), stemPI0[c], stemEPS[c]);
 //       ff(c,s) = phloemFlow(psiUp, psiDown, concLeaf[c], concSapwood[c], Tcan[s], k_phloem, nonSugarConc)*3600.0; //flow as mol per hour and leaf area basis
 //     }
 //   }
@@ -1400,8 +1401,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       if((ctype[j] == "shrub") && (!shrubDynamics)) dynamicCohort = false;
       else if(ctype[j] =="herb") dynamicCohort = false;
       double stemSympRWC = NA_REAL;
-      if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
-      else stemSympRWC = symplasticRelativeWaterContent(psiSympStem[j], StemPI0[j], StemEPS[j]);
+      if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent_c(PlantPsi[j], StemPI0[j], StemEPS[j]);
+      else stemSympRWC = symplasticRelativeWaterContent_c(psiSympStem[j], StemPI0[j], StemEPS[j]);
       if(NumericVector::is_na(stemSympRWC)) stop("Missing value for stem symp RWC");
 
 

@@ -9,6 +9,7 @@
 #include "forestutils.h"
 #include "paramutils.h"
 #include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "fuelstructure.h"
 #include "hydraulics.h"
 #include "stdlib.h"
@@ -186,7 +187,7 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
   //Calculate stem and leaf capacity per leaf area (in l·m-2)
   for(int c=0;c<numCohorts;c++){
     Vsapwood[c] = sapwoodWaterCapacity(Al2As[c], H[c], V, L, WoodDensity[c]); 
-    Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
+    Vleaf[c] = leafWaterCapacity_c(SLA[c], LeafDensity[c]); 
     maxMCstem[c] = 100*((1.0/std::max(0.5,WoodDensity[c])) - (1.0/1.53)); // Minimum 0.4 density to avoid overestimation
     maxMCleaf[c] = (maxFMC[c] - maxMCstem[c]*(1.0 - (1.0/r635[c])))*r635[c];
   }

@@ -11,7 +11,7 @@
 #include "biophysicsutils.h"
 #include "phenology.h"
 #include "forestutils.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "carbon.h"
 #include "spwb.h"
 #include "root.h"
@@ -907,8 +907,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
         StemPLC(c,n) = StemPLCVEC[c];
         LeafPLC(c,n) = LeafPLCVEC[c];
-        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
-        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
+        StemSympRWCInst(c,n) = symplasticRelativeWaterContent_c(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
+        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent_c(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
         StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
         LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
         StemPsiInst(c,n) = StemPsiVEC[c]; 
@@ -975,8 +975,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         minLeafPsi_SH[c] = LeafPsiVEC[c];
         maxLeafPsi_SL[c] = LeafPsiVEC[c];
         maxLeafPsi_SH[c] = LeafPsiVEC[c];
-        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
-        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
+        StemSympRWCInst(c,n) = symplasticRelativeWaterContent_c(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
+        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent_c(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
         StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
         LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
         

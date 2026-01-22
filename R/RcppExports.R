@@ -4389,50 +4389,50 @@ moisture_sapwoodWaterCapacity <- function(Al2As, height, V, L, wd) {
 
 #' @rdname moisture
 #' @keywords internal
+plant_water <- function(x) {
+    .Call(`_medfate_plantWaterContent`, x)
+}
+
+#' @rdname moisture
+#' @keywords internal
 moisture_leafWaterCapacity <- function(SLA, ld) {
-    .Call(`_medfate_leafWaterCapacity`, SLA, ld)
+    .Call(`_medfate_leafWaterCapacity_c`, SLA, ld)
 }
 
 #' @rdname moisture
 #' @keywords internal
 moisture_turgorLossPoint <- function(pi0, epsilon) {
-    .Call(`_medfate_turgorLossPoint`, pi0, epsilon)
+    .Call(`_medfate_turgorLossPoint_c`, pi0, epsilon)
 }
 
 #' @rdname moisture
 #' @keywords internal
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {
-    .Call(`_medfate_symplasticRelativeWaterContent`, psiSym, pi0, epsilon)
+    .Call(`_medfate_symplasticRelativeWaterContent_c`, psiSym, pi0, epsilon)
 }
 
 #' @rdname moisture
 #' @keywords internal
 moisture_symplasticPsi <- function(RWC, pi0, epsilon) {
-    .Call(`_medfate_symplasticWaterPotential`, RWC, pi0, epsilon)
+    .Call(`_medfate_symplasticWaterPotential_c`, RWC, pi0, epsilon)
 }
 
 #' @rdname moisture
 #' @keywords internal
 moisture_apoplasticRWC <- function(psiApo, c, d) {
-    .Call(`_medfate_apoplasticRelativeWaterContent`, psiApo, c, d)
+    .Call(`_medfate_apoplasticRelativeWaterContent_c`, psiApo, c, d)
 }
 
 #' @rdname moisture
 #' @keywords internal
 moisture_apoplasticPsi <- function(RWC, c, d) {
-    .Call(`_medfate_apoplasticWaterPotential`, RWC, c, d)
+    .Call(`_medfate_apoplasticWaterPotential_c`, RWC, c, d)
 }
 
 #' @rdname moisture
 #' @keywords internal
 moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
-    .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af)
-}
-
-#' @rdname moisture
-#' @keywords internal
-plant_water <- function(x) {
-    .Call(`_medfate_plantWaterContent`, x)
+    .Call(`_medfate_tissueRelativeWaterContent_c`, psiSym, pi0, epsilon, psiApo, c, d, af)
 }
 
 #' @rdname transp_modes

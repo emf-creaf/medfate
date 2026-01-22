@@ -1,7 +1,7 @@
 #include "Rcpp.h"
 #include "root.h"
 #include "biophysicsutils.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "hydraulics_c.h"
 #include "incgamma_c.h"
 #include <math.h>
@@ -583,10 +583,10 @@ List E2psiAboveground(double E, double psiRootCrown,
   bool leafCavitationEffects = hydraulicNetwork["leafCavitationEffects"];
     
   double psiPLCStem =  0.0;
-  if(stemCavitationEffects) psiPLCStem = apoplasticWaterPotential(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
+  if(stemCavitationEffects) psiPLCStem = apoplasticWaterPotential_c(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
   double psiStem = E2psiXylem(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
   double psiPLCLeaf= 0.0;
-  if(leafCavitationEffects) psiPLCLeaf = apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
+  if(leafCavitationEffects) psiPLCLeaf = apoplasticWaterPotential_c(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
   double psiLeaf = E2psiXylem(E, psiStem, kleafmax, leafc, leafd, psiPLCLeaf); 
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf));
 }
@@ -603,9 +603,9 @@ List E2psiAbovegroundSymp(double E, double psiRootCrown,
   double PLCstem = hydraulicNetwork["PLCstem"];
   double PLCleaf = hydraulicNetwork["PLCleaf"];
   
-  double psiPLCStem =  apoplasticWaterPotential(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
+  double psiPLCStem =  apoplasticWaterPotential_c(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
   double psiStem = E2psiXylem(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
-  double psiPLCLeaf=  apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
+  double psiPLCLeaf=  apoplasticWaterPotential_c(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
   double psiLeafApo = E2psiXylem(E, psiStem, kleafapomax, leafc, leafd, psiPLCLeaf); 
   double psiLeafSymp = psiLeafApo - E/kleafsymp;
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,

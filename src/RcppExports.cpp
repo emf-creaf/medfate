@@ -5616,85 +5616,96 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// leafWaterCapacity
-double leafWaterCapacity(double SLA, double ld);
-RcppExport SEXP _medfate_leafWaterCapacity(SEXP SLASEXP, SEXP ldSEXP) {
+// plantWaterContent
+NumericVector plantWaterContent(List x);
+RcppExport SEXP _medfate_plantWaterContent(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(plantWaterContent(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// leafWaterCapacity_c
+double leafWaterCapacity_c(double SLA, double ld);
+RcppExport SEXP _medfate_leafWaterCapacity_c(SEXP SLASEXP, SEXP ldSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
     Rcpp::traits::input_parameter< double >::type ld(ldSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafWaterCapacity(SLA, ld));
+    rcpp_result_gen = Rcpp::wrap(leafWaterCapacity_c(SLA, ld));
     return rcpp_result_gen;
 END_RCPP
 }
-// turgorLossPoint
-double turgorLossPoint(double pi0, double epsilon);
-RcppExport SEXP _medfate_turgorLossPoint(SEXP pi0SEXP, SEXP epsilonSEXP) {
+// turgorLossPoint_c
+double turgorLossPoint_c(double pi0, double epsilon);
+RcppExport SEXP _medfate_turgorLossPoint_c(SEXP pi0SEXP, SEXP epsilonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    rcpp_result_gen = Rcpp::wrap(turgorLossPoint(pi0, epsilon));
+    rcpp_result_gen = Rcpp::wrap(turgorLossPoint_c(pi0, epsilon));
     return rcpp_result_gen;
 END_RCPP
 }
-// symplasticRelativeWaterContent
-double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon);
-RcppExport SEXP _medfate_symplasticRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
+// symplasticRelativeWaterContent_c
+double symplasticRelativeWaterContent_c(double psiSym, double pi0, double epsilon);
+RcppExport SEXP _medfate_symplasticRelativeWaterContent_c(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psiSym(psiSymSEXP);
     Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    rcpp_result_gen = Rcpp::wrap(symplasticRelativeWaterContent(psiSym, pi0, epsilon));
+    rcpp_result_gen = Rcpp::wrap(symplasticRelativeWaterContent_c(psiSym, pi0, epsilon));
     return rcpp_result_gen;
 END_RCPP
 }
-// symplasticWaterPotential
-double symplasticWaterPotential(double RWC, double pi0, double epsilon);
-RcppExport SEXP _medfate_symplasticWaterPotential(SEXP RWCSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
+// symplasticWaterPotential_c
+double symplasticWaterPotential_c(double RWC, double pi0, double epsilon);
+RcppExport SEXP _medfate_symplasticWaterPotential_c(SEXP RWCSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type RWC(RWCSEXP);
     Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    rcpp_result_gen = Rcpp::wrap(symplasticWaterPotential(RWC, pi0, epsilon));
+    rcpp_result_gen = Rcpp::wrap(symplasticWaterPotential_c(RWC, pi0, epsilon));
     return rcpp_result_gen;
 END_RCPP
 }
-// apoplasticRelativeWaterContent
-double apoplasticRelativeWaterContent(double psiApo, double c, double d);
-RcppExport SEXP _medfate_apoplasticRelativeWaterContent(SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP) {
+// apoplasticRelativeWaterContent_c
+double apoplasticRelativeWaterContent_c(double psiApo, double c, double d);
+RcppExport SEXP _medfate_apoplasticRelativeWaterContent_c(SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psiApo(psiApoSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(apoplasticRelativeWaterContent(psiApo, c, d));
+    rcpp_result_gen = Rcpp::wrap(apoplasticRelativeWaterContent_c(psiApo, c, d));
     return rcpp_result_gen;
 END_RCPP
 }
-// apoplasticWaterPotential
-double apoplasticWaterPotential(double RWC, double c, double d);
-RcppExport SEXP _medfate_apoplasticWaterPotential(SEXP RWCSEXP, SEXP cSEXP, SEXP dSEXP) {
+// apoplasticWaterPotential_c
+double apoplasticWaterPotential_c(double RWC, double c, double d);
+RcppExport SEXP _medfate_apoplasticWaterPotential_c(SEXP RWCSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type RWC(RWCSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(apoplasticWaterPotential(RWC, c, d));
+    rcpp_result_gen = Rcpp::wrap(apoplasticWaterPotential_c(RWC, c, d));
     return rcpp_result_gen;
 END_RCPP
 }
-// tissueRelativeWaterContent
-double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, double psiApo, double c, double d, double af);
-RcppExport SEXP _medfate_tissueRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
+// tissueRelativeWaterContent_c
+double tissueRelativeWaterContent_c(double psiSym, double pi0, double epsilon, double psiApo, double c, double d, double af);
+RcppExport SEXP _medfate_tissueRelativeWaterContent_c(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5705,18 +5716,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
     Rcpp::traits::input_parameter< double >::type af(afSEXP);
-    rcpp_result_gen = Rcpp::wrap(tissueRelativeWaterContent(psiSym, pi0, epsilon, psiApo, c, d, af));
-    return rcpp_result_gen;
-END_RCPP
-}
-// plantWaterContent
-NumericVector plantWaterContent(List x);
-RcppExport SEXP _medfate_plantWaterContent(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(plantWaterContent(x));
+    rcpp_result_gen = Rcpp::wrap(tissueRelativeWaterContent_c(psiSym, pi0, epsilon, psiApo, c, d, af));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6381,14 +6381,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbDay_inner", (DL_FUNC) &_medfate_spwbDay_inner, 12},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 11},
     {"_medfate_sapwoodWaterCapacity", (DL_FUNC) &_medfate_sapwoodWaterCapacity, 5},
-    {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
-    {"_medfate_turgorLossPoint", (DL_FUNC) &_medfate_turgorLossPoint, 2},
-    {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
-    {"_medfate_symplasticWaterPotential", (DL_FUNC) &_medfate_symplasticWaterPotential, 3},
-    {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
-    {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
-    {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 7},
     {"_medfate_plantWaterContent", (DL_FUNC) &_medfate_plantWaterContent, 1},
+    {"_medfate_leafWaterCapacity_c", (DL_FUNC) &_medfate_leafWaterCapacity_c, 2},
+    {"_medfate_turgorLossPoint_c", (DL_FUNC) &_medfate_turgorLossPoint_c, 2},
+    {"_medfate_symplasticRelativeWaterContent_c", (DL_FUNC) &_medfate_symplasticRelativeWaterContent_c, 3},
+    {"_medfate_symplasticWaterPotential_c", (DL_FUNC) &_medfate_symplasticWaterPotential_c, 3},
+    {"_medfate_apoplasticRelativeWaterContent_c", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent_c, 3},
+    {"_medfate_apoplasticWaterPotential_c", (DL_FUNC) &_medfate_apoplasticWaterPotential_c, 3},
+    {"_medfate_tissueRelativeWaterContent_c", (DL_FUNC) &_medfate_tissueRelativeWaterContent_c, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 13},
     {"_medfate_transpirationSureau", (DL_FUNC) &_medfate_transpirationSureau, 12},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 8},

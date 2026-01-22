@@ -10,7 +10,7 @@
 #include "biophysicsutils.h"
 #include "phenology.h"
 #include "forestutils.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "carbon.h"
 #include "photosynthesis.h"
 #include "root.h"
@@ -38,10 +38,10 @@ struct ParamsVolume{
 //Plant volume in l·m-2 ground = mm
 double plantVol(double plantPsi, ParamsVolume pars) {
   
-  double leafrwc = tissueRelativeWaterContent(plantPsi, pars.leafpi0, pars.leafeps, 
+  double leafrwc = tissueRelativeWaterContent_c(plantPsi, pars.leafpi0, pars.leafeps, 
                                               plantPsi, pars.stem_c, pars.stem_d, 
                                               pars.leafaf);
-  double stemrwc = tissueRelativeWaterContent(plantPsi, pars.stempi0, pars.stemeps, 
+  double stemrwc = tissueRelativeWaterContent_c(plantPsi, pars.stempi0, pars.stemeps, 
                                               plantPsi, pars.stem_c, pars.stem_d, 
                                               pars.stemaf);
   return((pars.Vleaf * leafrwc * pars.LAI) + (pars.Vsapwood * stemrwc * pars.LAIlive));
@@ -423,10 +423,10 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     }
     
     //Relative water content and fuel moisture from plant water potential
-    RWClm[c] =  tissueRelativeWaterContent(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
+    RWClm[c] =  tissueRelativeWaterContent_c(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            LeafAF[c]);
-    RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
+    RWCsm[c] =  tissueRelativeWaterContent_c(PlantPsi[c], StemPI0[c], StemEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            StemAF[c]);
     // The fraction of leaves will decrease due to phenology or processes leading to defoliation

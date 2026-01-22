@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 #include "communication_structures.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "forestutils.h"
 #include "biophysicsutils.h"
 using namespace Rcpp;
@@ -179,7 +179,7 @@ double leafArea(double LAI, double N) {
  * leaf volume in l
  */
 double leafStorageVolume(double LAI, double N, double SLA, double leafDensity) {
-  return(leafArea(LAI,N)*leafWaterCapacity(SLA, leafDensity)); 
+  return(leafArea(LAI,N)*leafWaterCapacity_c(SLA, leafDensity)); 
 }
 
 /*

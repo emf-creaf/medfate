@@ -7,7 +7,7 @@
 #include "hydraulics_c.h"
 #include "soil.h"
 #include "soil_c.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -396,8 +396,8 @@ void update_capacitances(SureauNetwork &network) {
   double PiFullTurgor_Leaf = params.PiFullTurgor_Leaf;
   double epsilonSym_Stem = params.epsilonSym_Stem;
   double PiFullTurgor_Stem = params.PiFullTurgor_Stem;
-  double PsiTLP_Leaf = turgorLossPoint(PiFullTurgor_Leaf, epsilonSym_Leaf);
-  double PsiTLP_Stem = turgorLossPoint(PiFullTurgor_Stem, epsilonSym_Stem);
+  double PsiTLP_Leaf = turgorLossPoint_c(PiFullTurgor_Leaf, epsilonSym_Leaf);
+  double PsiTLP_Stem = turgorLossPoint_c(PiFullTurgor_Stem, epsilonSym_Stem);
 
   //#----Compute the relative water content of the symplasm----
   double RWC_LSym = 1.0 - RWC(PiFullTurgor_Leaf, epsilonSym_Leaf, Psi_LSym - dbxmin);

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "forestutils.h"
 #include "hydraulics.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 using namespace Rcpp;
 
 int findSpParamsRowByName(String spname, DataFrame SpParams) {
@@ -888,7 +888,7 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams, boo
   for(int c=0;c<Psi_Extract.size();c++) {
     if(NumericVector::is_na(Psi_Extract[c])) {
       double corr = pow(log(0.5)/log(0.10), 1.0/Exp_Extract[c]); //Assumes TLP corresponds to 10% stomatal conductance (Martin-StPaul 2017 Ecol. Lett)
-      Psi_Extract[c] = corr*turgorLossPoint(leafPI0[c], leafEPS[c]);
+      Psi_Extract[c] = corr*turgorLossPoint_c(leafPI0[c], leafEPS[c]);
     }
   }
   return(Psi_Extract);
@@ -1165,7 +1165,7 @@ NumericVector VCleafP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P50.size();c++) {
     if(NumericVector::is_na(VCleaf_P50[c])) {
-      double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
+      double leaf_tlp = turgorLossPoint_c(leafPI0[c], leafEPS[c]);
       //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
       VCleaf_P50[c] = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
     }
@@ -1234,7 +1234,7 @@ NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fil
         Gs_P50[c] = VCleaf_P50[c]; //If P50 leaf is defined in SpParams, use this value for imputation
       } else {
         //Use TLP for imputation
-        double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
+        double leaf_tlp = turgorLossPoint_c(leafPI0[c], leafEPS[c]);
         //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
         Gs_P50[c] = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
       }
