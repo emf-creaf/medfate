@@ -3049,40 +3049,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gammln
-double gammln(double xx);
-RcppExport SEXP _medfate_gammln(SEXP xxSEXP) {
+// gammln_c
+double gammln_c(double xx);
+RcppExport SEXP _medfate_gammln_c(SEXP xxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type xx(xxSEXP);
-    rcpp_result_gen = Rcpp::wrap(gammln(xx));
+    rcpp_result_gen = Rcpp::wrap(gammln_c(xx));
     return rcpp_result_gen;
 END_RCPP
 }
-// betacf
-double betacf(double a, double b, double x);
-RcppExport SEXP _medfate_betacf(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
+// betacf_c
+double betacf_c(double a, double b, double x);
+RcppExport SEXP _medfate_betacf_c(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< double >::type b(bSEXP);
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(betacf(a, b, x));
+    rcpp_result_gen = Rcpp::wrap(betacf_c(a, b, x));
     return rcpp_result_gen;
 END_RCPP
 }
-// incbeta
-double incbeta(double a, double b, double x);
-RcppExport SEXP _medfate_incbeta(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
+// incbeta_c
+double incbeta_c(double a, double b, double x);
+RcppExport SEXP _medfate_incbeta_c(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< double >::type b(bSEXP);
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(incbeta(a, b, x));
+    rcpp_result_gen = Rcpp::wrap(incbeta_c(a, b, x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6254,9 +6254,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_infiltrationBoughton_c", (DL_FUNC) &_medfate_infiltrationBoughton_c, 2},
     {"_medfate_infitrationGreenAmpt_c", (DL_FUNC) &_medfate_infitrationGreenAmpt_c, 5},
     {"_medfate_snowMelt_c", (DL_FUNC) &_medfate_snowMelt_c, 4},
-    {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
-    {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},
-    {"_medfate_incbeta", (DL_FUNC) &_medfate_incbeta, 3},
+    {"_medfate_gammln_c", (DL_FUNC) &_medfate_gammln_c, 1},
+    {"_medfate_betacf_c", (DL_FUNC) &_medfate_betacf_c, 3},
+    {"_medfate_incbeta_c", (DL_FUNC) &_medfate_incbeta_c, 3},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},

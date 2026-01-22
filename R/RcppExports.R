@@ -2404,15 +2404,15 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 }
 
 .gammln <- function(xx) {
-    .Call(`_medfate_gammln`, xx)
+    .Call(`_medfate_gammln_c`, xx)
 }
 
 .betacf <- function(a, b, x) {
-    .Call(`_medfate_betacf`, a, b, x)
+    .Call(`_medfate_betacf_c`, a, b, x)
 }
 
 .incbeta <- function(a, b, x) {
-    .Call(`_medfate_incbeta`, a, b, x)
+    .Call(`_medfate_incbeta_c`, a, b, x)
 }
 
 .invincgam <- function(a, p, q) {

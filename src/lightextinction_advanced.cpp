@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include "forestutils.h"
 #include "paramutils.h"
-#include "incbeta.h"
+#include "incbeta_c.h"
 #include <math.h>
 #include <meteoland.h>
 using namespace Rcpp;
@@ -86,7 +86,7 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 // [[Rcpp::export("light_leafAngleCDF")]]
 double leafAngleCDF(double leafAngle, double p, double q) {
   double theta = leafAngle*(2.0/M_PI);
-  return(incbeta(p,q,theta));
+  return(incbeta_c(p,q,theta));
 }
 
 //' @rdname light_advanced

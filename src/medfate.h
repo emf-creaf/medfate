@@ -19,6 +19,16 @@ namespace medfate {
 
     template<typename T>
     using Matrix = std::vector<std::vector<T>>;
+    
+    class MedfateInternalError : public std::exception {
+    private:
+      std::string message;  
+    public:
+      MedfateInternalError(const std::string& msg) : message(msg) {}
+      virtual const char* what() const noexcept override {
+        return message.c_str();
+      }
+    };      
 }
 
 #endif
