@@ -329,7 +329,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       NumericVector Klc(nlayers);
       NumericVector Kunlc(nlayers);
       for(int l=0;l<nlayers;l++) {
-        Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
+        Klc[l] = Psi2K_c(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
         //Limit Mean Kl due to previous cavitation
         if(stemCavitationRecovery!="total") {
           Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
@@ -363,7 +363,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       for(int j = 0;j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
           RHOPcohV(j,l) = RHOPcohDyn(j,l)*V(c,l);
-          Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
+          Klc(j,l) = Psi2K_c(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
           //Limit Mean Kl due to previous cavitation
           if(stemCavitationRecovery!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
           Kunlc(j,l) = std::sqrt(KunsatM(j,l))*RHOPcohV(j,l);
@@ -412,14 +412,14 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   //Plant water status (StemPLC, RWC, DDS)
   for(int c=0;c<numCohorts;c++) {
     if(stemCavitationRecovery!="total") {
-      StemPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
+      StemPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
     } else {
-      StemPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
+      StemPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
     }
     if(leafCavitationRecovery!="total") {
-      LeafPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
+      LeafPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
     } else {
-      LeafPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
+      LeafPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
     }
     
     //Relative water content and fuel moisture from plant water potential
@@ -438,7 +438,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     }
     
     //Daily drought stress from plant WP
-    DDS[c] = (1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
+    DDS[c] = (1.0 - Psi2K_c(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
     if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
       
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area

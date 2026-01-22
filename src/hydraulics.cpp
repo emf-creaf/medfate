@@ -15,7 +15,7 @@ NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract = 
   int n = psi_extract.size();
   NumericVector k(n);
   for(int i=0; i<n; i++) {
-    k[i] = Psi2K(psi,psi_extract[i],exp_extract);
+    k[i] = Psi2K_c(psi,psi_extract[i],exp_extract);
   }
   return k;
 }
@@ -24,7 +24,7 @@ NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extra
   int n = psi_extract.size();
   NumericVector psi(n);
   for(int i=0; i<n; i++) {
-    psi[i] = K2Psi(K[i], psi_extract[i], exp_extract);
+    psi[i] = K2Psi_c(K[i], psi_extract[i], exp_extract);
   }
   return psi;
 }
@@ -92,11 +92,11 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
   double E = kxylemmax*(-d/c)*g;
   if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
     if(psiCav < psi) {
-      E = xylemConductance(psiCav,kxylemmax,c,d)*(-psi); //square integral
+      E = xylemConductance_c(psiCav,kxylemmax,c,d)*(-psi); //square integral
     } else {
       NumericVector pq = incgam(h,pow(psiCav/d,c));
       double Epsimin = kxylemmax*(-d/c)*tgamma(h)*pq[0];
-      E = E - Epsimin + xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
+      E = E - Epsimin + xylemConductance_c(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
     }
   }
   return(E);
@@ -105,12 +105,12 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
 // [[Rcpp::export(".Egammainv")]]
 double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav = 0.0) {
   if(psiCav<0.0) {
-    double Eq = xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav);
+    double Eq = xylemConductance_c(psiCav,kxylemmax,c,d)*(-psiCav);
     if(Eg > Eq) {
       double Ec = Egamma(psiCav, kxylemmax, c, d) - Eq;
       Eg = Eg + Ec; 
     } else {
-      return(-1.0*(Eg/xylemConductance(psiCav,kxylemmax,c,d)));
+      return(-1.0*(Eg/xylemConductance_c(psiCav,kxylemmax,c,d)));
     }
   }
   double h = 1.0/c;
@@ -279,14 +279,14 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax,
 //     psiRhizo = tmp;
 //   }
 //   double psi = psiSoil;
-//   double vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
+//   double vg = vanGenuchtenConductance_c(psi, krhizomax, n, alpha);
 //   double E = 0.0, vgPrev = vg;
 //   psiStep = std::max(psiStep, (psiRhizo-psiSoil)/10.0); //Check that step is not too large
 //   do {
 //     psi = psi + psiStep;
 //     if(psi>psiRhizo) {
 //       vgPrev = vg;
-//       vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
+//       vg = vanGenuchtenConductance_c(psi, krhizomax, n, alpha);
 //       E += ((vg+vgPrev)/2.0)*std::abs(psiStep);
 //     } else {
 //       psi = psi - psiStep; //retrocedeix
@@ -301,7 +301,7 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax,
 //' @keywords internal
 // [[Rcpp::export("hydraulics_ECrit")]]
 double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
-  return(EXylem(psiCrit(c,d, pCrit), psiUpstream, kxylemmax, c, d));
+  return(EXylem(psiCrit_c(c,d, pCrit), psiUpstream, kxylemmax, c, d));
 }
 
 
@@ -314,7 +314,7 @@ double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pC
 //   // if(E<0.0) stop("E has to be positive");
 //   if(E==0) return(psiUpstream);
 //   double psi = psiUpstream;
-//   double k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
+//   double k = xylemConductance_c(std::min(psi, psiCav),kxylemmax, c, d);
 //   double Eg = 0.0;
 //   double psiPrev = psi;
 //   double kprev = k;
@@ -323,7 +323,7 @@ double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pC
 //     psiPrev = psi;
 //     kprev = k;
 //     psi = psi + psiStep;
-//     k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
+//     k = xylemConductance_c(std::min(psi, psiCav),kxylemmax, c, d);
 //     Eg = Eg + (-1.0*psiStep)*((kprev+k)/2.0);
 //     if(psi<psiMax) return(NA_REAL);
 //     if(NumericVector::is_na(Eg)) return(NA_REAL);
@@ -342,14 +342,14 @@ double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, d
   if(E==0) return(psiSoil);
   double psi = psiSoil;
   double psiPrev = psi;
-  double vgPrev = vanGenuchtenConductance(psi, krhizomax, n, alpha);
+  double vgPrev = vanGenuchtenConductance_c(psi, krhizomax, n, alpha);
   double vg = vgPrev;
   double Eg = 0.0;
   while(Eg<E) {
     psiPrev = psi;
     vgPrev = vg;
     psi = psi + psiStep;
-    vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
+    vg = vanGenuchtenConductance_c(psi, krhizomax, n, alpha);
     Eg = Eg + ((vg+vgPrev)/2.0)*std::abs(psiStep);
     if(psi<psiMax) return(NA_REAL);
   }
@@ -500,17 +500,17 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     for(int l1=0;l1<nlayers;l1++) { //funcio
       for(int l2=0;l2<nlayers;l2++) { //derivada
         if(l1==l2) {
-          fjac(l1,l2) = -vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
+          fjac(l1,l2) = -vanGenuchtenConductance_c(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance_c(x[l2], krootmax[l2], rootc, rootd);  
         }
         else fjac(l1,l2) = 0.0;
       }
     }
     fjac(nlayers,nlayers) = 0.0;
     for(int l=0;l<nlayers;l++) { 
-      fjac(l,nlayers) = xylemConductance(x[nlayers], krootmax[l], rootc, rootd); //funcio l derivada psi_rootcrown
-      fjac(nlayers,l) = xylemConductance(x[l], krootmax[l], rootc, rootd);//funcio nlayers derivada psi_l
+      fjac(l,nlayers) = xylemConductance_c(x[nlayers], krootmax[l], rootc, rootd); //funcio l derivada psi_rootcrown
+      fjac(nlayers,l) = xylemConductance_c(x[l], krootmax[l], rootc, rootd);//funcio nlayers derivada psi_l
       // funcio nlayers derivada psi_rootcrown
-      fjac(nlayers,nlayers) +=-xylemConductance(x[nlayers], krootmax[l], rootc, rootd);
+      fjac(nlayers,nlayers) +=-xylemConductance_c(x[nlayers], krootmax[l], rootc, rootd);
     }
     // for(int l1=0;l1<=nlayers;l1++) { //funcio
     //   for(int l2=0;l2<=nlayers;l2++) { //derivada
@@ -741,9 +741,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
   double psiStep2 = -0.1;
   double psiRoot = psiSoil;
   double psiPlant = psiSoil;
-  double vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+  double vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
   double vg = 0.0;
-  double wPrev = xylemConductance(std::min(psiCav,psiPlant), kxylemmax, c, d); //conductance can decrease if psiCav < psiPlant
+  double wPrev = xylemConductance_c(std::min(psiCav,psiPlant), kxylemmax, c, d); //conductance can decrease if psiCav < psiPlant
   double w = 0.0;
   double incr = 0.0;
   supplyPsiRoot[0] = psiSoil;
@@ -754,9 +754,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
     supplyE[i] = supplyE[i-1]+dE;
     psiStep1 = -0.01;
     psiRoot = supplyPsiRoot[i-1];
-    vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+    vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
     while((psiStep1<psiPrec) && (psiRoot>psiMax))  {
-      vg = vanGenuchtenConductance(psiRoot+psiStep1, krhizomax, n, alpha);
+      vg = vanGenuchtenConductance_c(psiRoot+psiStep1, krhizomax, n, alpha);
       incr = ((vg+vgPrev)/2.0)*std::abs(psiStep1);
       if((Eg1+incr)>supplyE[i]) {
         psiStep1 = psiStep1*0.5;
@@ -772,9 +772,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
     psiStep2 = -0.01;
     Eg2 = 0.0;
     psiPlant = psiRoot;
-    wPrev = xylemConductance(std::min(psiCav,psiPlant), kxylemmax, c, d);
+    wPrev = xylemConductance_c(std::min(psiCav,psiPlant), kxylemmax, c, d);
     while((psiStep2<psiPrec) && (psiPlant>psiMax))  {
-      w = xylemConductance(std::min(psiCav,psiPlant+psiStep2), kxylemmax, c, d);
+      w = xylemConductance_c(std::min(psiCav,psiPlant+psiStep2), kxylemmax, c, d);
       incr = ((w+wPrev)/2.0)*std::abs(psiStep2);
       if((Eg2+incr)>supplyE[i]) {
         psiStep2 = psiStep2*0.5;
@@ -835,11 +835,11 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
   double psiRoot = psiSoil;
   double psiStem = psiSoil;
   double psiLeaf = psiSoil;
-  double vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+  double vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
   double vg = 0.0;
   //conductance can decrease if psiCav < psiStem/psiLeaf
-  double wPrevStem = xylemConductance(std::min(psiCav,psiStem), kxylemmax, stemc, stemd); 
-  double wPrevLeaf = xylemConductance(std::min(psiCav,psiLeaf), kleafmax, leafc, leafd); 
+  double wPrevStem = xylemConductance_c(std::min(psiCav,psiStem), kxylemmax, stemc, stemd); 
+  double wPrevLeaf = xylemConductance_c(std::min(psiCav,psiLeaf), kleafmax, leafc, leafd); 
   double w = 0.0;
   double incr = 0.0;
   supplyPsiRoot[0] = psiSoil;
@@ -853,9 +853,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     
     // Root
     psiRoot = supplyPsiRoot[i-1];
-    vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+    vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
     while((psiStep1<psiPrec) && (psiRoot>psiMax))  {
-      vg = vanGenuchtenConductance(psiRoot+psiStep1, krhizomax, n, alpha);
+      vg = vanGenuchtenConductance_c(psiRoot+psiStep1, krhizomax, n, alpha);
       incr = ((vg+vgPrev)/2.0)*std::abs(psiStep1);
       if((Eg1+incr)>supplyE[i]) {
         psiStep1 = psiStep1*0.5;
@@ -872,9 +872,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     psiStep2 = -0.01;
     Eg2 = 0.0;
     psiStem = psiRoot;
-    wPrevStem = xylemConductance(std::min(psiCav,psiStem), kxylemmax, stemc, stemd);
+    wPrevStem = xylemConductance_c(std::min(psiCav,psiStem), kxylemmax, stemc, stemd);
     while((psiStep2<psiPrec) && (psiStem>psiMax))  {
-      w = xylemConductance(std::min(psiCav,psiStem+psiStep2), kxylemmax, stemc, stemd);
+      w = xylemConductance_c(std::min(psiCav,psiStem+psiStep2), kxylemmax, stemc, stemd);
       incr = ((w+wPrevStem)/2.0)*std::abs(psiStep2);
       if((Eg2+incr)>supplyE[i]) {
         psiStep2 = psiStep2*0.5;
@@ -891,9 +891,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     psiStep3 = -0.01;
     Eg3 = 0.0;
     psiLeaf = psiStem;
-    wPrevLeaf = xylemConductance(psiLeaf, kleafmax,  leafc, leafd);
+    wPrevLeaf = xylemConductance_c(psiLeaf, kleafmax,  leafc, leafd);
     while((psiStep3<psiPrec) && (psiLeaf>psiMax))  {
-      w = xylemConductance(psiLeaf+psiStep3, kleafmax,  leafc, leafd);
+      w = xylemConductance_c(psiLeaf+psiStep3, kleafmax,  leafc, leafd);
       incr = ((w+wPrevLeaf)/2.0)*std::abs(psiStep3);
       if((Eg3+incr)>supplyE[i]) {
         psiStep3 = psiStep3*0.5;
@@ -1188,15 +1188,15 @@ NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, 
   double Ein = E;
   if(Ein > Ec) {
     Ein = Ec;
-    psiUnregulated = psiCrit(c,d, 0.001);
+    psiUnregulated = psiCrit_c(c,d, 0.001);
   }
   double deltaPsiUnregulated = psiUnregulated - psiUpstream;
-  double kp = xylemConductance(psiUpstream, kxylemmax, c, d);
-  double deltaPsiRegulated = deltaPsiUnregulated*(xylemConductance(psiUnregulated, kxylemmax, c, d)/kp);
+  double kp = xylemConductance_c(psiUpstream, kxylemmax, c, d);
+  double deltaPsiRegulated = deltaPsiUnregulated*(xylemConductance_c(psiUnregulated, kxylemmax, c, d)/kp);
   //replace by maximum if found for lower psi values
   // Rcout <<"Initial "<<psiUnregulated << " "<< deltaPsiRegulated <<"\n";
   for(double psi = psiUpstream; psi > psiUnregulated; psi +=psiStep) {
-    double deltaPsi = (psi-psiUpstream)*(xylemConductance(psi, kxylemmax, c,d)/kp);
+    double deltaPsi = (psi-psiUpstream)*(xylemConductance_c(psi, kxylemmax, c,d)/kp);
     // Rcout <<psi << " "<< deltaPsi<< " "<< deltaPsiRegulated <<"\n";
     if(NumericVector::is_na(deltaPsiRegulated)) deltaPsiRegulated = deltaPsi;
     else if(deltaPsi < deltaPsiRegulated) deltaPsiRegulated = deltaPsi;
@@ -1336,11 +1336,11 @@ List soilPlantResistancesSigmoid(NumericVector psiSoil, NumericVector psiRhizo,
    NumericVector rrhizo(nlayers, 0.0);
    NumericVector rroot(nlayers, 0.0);
    for(int i=0;i<nlayers;i++) {
-     rrhizo[i] = 1.0/vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
-     rroot[i] = 1.0/xylemConductanceSigmoid(psiRhizo[i], krootmax[i], root_P50, root_slope);
+     rrhizo[i] = 1.0/vanGenuchtenConductance_c(psiSoil[i], krhizomax[i], n[i], alpha[i]);
+     rroot[i] = 1.0/xylemConductanceSigmoid_c(psiRhizo[i], krootmax[i], root_P50, root_slope);
    }
-   double rstem = 1.0/(kstemmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid(psiStem, 1.0, stem_P50, stem_slope)));
-   double rleaf = 1.0/(kleafmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid(psiLeaf, kleafmax, leaf_P50, leaf_slope)));
+   double rstem = 1.0/(kstemmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid_c(psiStem, 1.0, stem_P50, stem_slope)));
+   double rleaf = 1.0/(kleafmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid_c(psiLeaf, kleafmax, leaf_P50, leaf_slope)));
    List resistances = List::create(_["rhizosphere"] = rrhizo, 
                                    _["root"] = rroot, 
                                    _["stem"] = rstem, 
@@ -1362,11 +1362,11 @@ List soilPlantResistancesWeibull(NumericVector psiSoil, NumericVector psiRhizo,
   NumericVector rrhizo(nlayers, 0.0);
   NumericVector rroot(nlayers, 0.0);
   for(int i=0;i<nlayers;i++) {
-    rrhizo[i] = 1.0/vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
-    rroot[i] = 1.0/xylemConductance(psiRhizo[i], krootmax[i], rootc, rootd);
+    rrhizo[i] = 1.0/vanGenuchtenConductance_c(psiSoil[i], krhizomax[i], n[i], alpha[i]);
+    rroot[i] = 1.0/xylemConductance_c(psiRhizo[i], krootmax[i], rootc, rootd);
   }
-  double rstem = 1.0/(kstemmax*std::min(1.0-PLCstem, xylemConductance(psiStem, 1.0, stemc, stemd)));
-  double rleaf = 1.0/(kleafmax*std::min(1.0-PLCleaf, xylemConductance(psiLeaf, 1.0, leafc, leafd)));
+  double rstem = 1.0/(kstemmax*std::min(1.0-PLCstem, xylemConductance_c(psiStem, 1.0, stemc, stemd)));
+  double rleaf = 1.0/(kleafmax*std::min(1.0-PLCleaf, xylemConductance_c(psiLeaf, 1.0, leafc, leafd)));
   List resistances = List::create(_["rhizosphere"] = rrhizo, 
                                   _["root"] = rroot, 
                                   _["stem"] = rstem, 
@@ -1382,10 +1382,10 @@ double rhizosphereResistancePercent(double psiSoil,
                                     double krootmax, double rootc, double rootd,
                                     double kstemmax, double stemc, double stemd,
                                     double kleafmax, double leafc, double leafd) {
-  double krhizo = vanGenuchtenConductance(psiSoil, krhizomax, n, alpha);
-  double kroot = xylemConductance(psiSoil, krootmax, rootc, rootd);
-  double kstem = xylemConductance(psiSoil, kstemmax, stemc, stemd);
-  double kleaf = xylemConductance(psiSoil, kleafmax, leafc, leafd);
+  double krhizo = vanGenuchtenConductance_c(psiSoil, krhizomax, n, alpha);
+  double kroot = xylemConductance_c(psiSoil, krootmax, rootc, rootd);
+  double kstem = xylemConductance_c(psiSoil, kstemmax, stemc, stemd);
+  double kleaf = xylemConductance_c(psiSoil, kleafmax, leafc, leafd);
   return(100.0*(1.0/krhizo)/((1.0/kroot)+(1.0/kstem)+(1.0/kleaf)+(1.0/krhizo)));
 }
 
@@ -1397,7 +1397,7 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
                                            double kstemmax, double stemc, double stemd, 
                                            double kleafmax, double leafc, double leafd,
                                            double psiStep = -0.01){
-  double psiC = psiCrit(stemc, stemd, 0.001);
+  double psiC = psiCrit_c(stemc, stemd, 0.001);
   double cnt = 0.0;
   double sum = 0.0;
   for(double psi=0.0; psi>psiC;psi += psiStep) {
@@ -1598,8 +1598,8 @@ double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope,
 double proportionDefoliationWeibull(double psiLeaf, double c, double d, 
                                  double PLC_crit = 0.88, double P50_cv = 10.0) {
   double d_crit = psiLeaf/pow(-1.0*log(1.0 - PLC_crit), 1.0/c);
-  double P50 = xylemPsi(0.5,1.0, c, d);
-  double P50_crit = xylemPsi(0.5,1.0, c, d_crit);
+  double P50 = xylemPsi_c(0.5,1.0, c, d);
+  double P50_crit = xylemPsi_c(0.5,1.0, c, d_crit);
   NumericVector P50_vec = NumericVector::create(P50_crit);
   NumericVector PDEF_vec = Rcpp::pnorm(P50_vec, P50, std::abs((P50_cv/100.0)*P50));
   double PDEF = (1.0-PDEF_vec[0]);

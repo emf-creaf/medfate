@@ -2043,41 +2043,41 @@ hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, PLC_crit = 0.
 #' @name hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_psi2K <- function(psi, psi_extract, exp_extract = 3.0) {
-    .Call(`_medfate_Psi2K`, psi, psi_extract, exp_extract)
+    .Call(`_medfate_Psi2K_c`, psi, psi_extract, exp_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_K2Psi <- function(K, psi_extract, exp_extract = 3.0) {
-    .Call(`_medfate_K2Psi`, K, psi_extract, exp_extract)
+    .Call(`_medfate_K2Psi_c`, K, psi_extract, exp_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
 hydraulics_xylemConductance <- function(psi, kxylemmax, c, d) {
-    .Call(`_medfate_xylemConductance`, psi, kxylemmax, c, d)
+    .Call(`_medfate_xylemConductance_c`, psi, kxylemmax, c, d)
 }
 
 #' @rdname hydraulics_conductancefunctions
 hydraulics_xylemConductanceSigmoid <- function(psi, kxylemmax, P50, slope) {
-    .Call(`_medfate_xylemConductanceSigmoid`, psi, kxylemmax, P50, slope)
+    .Call(`_medfate_xylemConductanceSigmoid_c`, psi, kxylemmax, P50, slope)
 }
 
 #' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
-    .Call(`_medfate_xylemPsi`, kxylem, kxylemmax, c, d)
+    .Call(`_medfate_xylemPsi_c`, kxylem, kxylemmax, c, d)
 }
 
 #' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
-    .Call(`_medfate_psiCrit`, c, d, pCrit)
+    .Call(`_medfate_psiCrit_c`, c, d, pCrit)
 }
 
 #' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
-    .Call(`_medfate_vanGenuchtenConductance`, psi, krhizomax, n, alpha)
+    .Call(`_medfate_vanGenuchtenConductance_c`, psi, krhizomax, n, alpha)
 }
 
 #' @param month Month of the year (from 1 to 12).

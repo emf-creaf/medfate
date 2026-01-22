@@ -551,8 +551,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         double Q10_1_gmin = control["Q10_1_gmin"]; 
         double Q10_2_gmin = control["Q10_2_gmin"];
         //Here canopy air temperature is used instead of Tleaf, because leaf energy balance has not been closed
-        double gmin_SL = gmin(Tair[iLayerSunlit[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        double gmin_SH = gmin(Tair[iLayerShade[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        double gmin_SL = gmin_c(Tair[iLayerSunlit[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        double gmin_SH = gmin_c(Tair[iLayerShade[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
         // Rcout<< gmin_SL<< " " << gmin_SH << " " << Gswmax[c]<<"\n";
         //Photosynthesis function for sunlit and shade leaves
         List PMSunlit = profitMaximization2(sFunctionAbove, iPMSunlit[c], 
@@ -684,16 +684,16 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         // Update the leaf and stem PLC
         if(stemCavitationEffects) {
           if(stemCavitationRecovery!="total") {
-            StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+            StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance_c(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
           } else { //Immediate refilling
-            StemPLCVEC[c] = 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+            StemPLCVEC[c] = 1.0 - xylemConductance_c(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
           }
         }
         if(leafCavitationEffects) {
           if(leafCavitationRecovery!="total") {
-            LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
+            LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance_c(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
           } else { //Immediate refilling
-            LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
+            LeafPLCVEC[c] = 1.0 - xylemConductance_c(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
           }
         }
         

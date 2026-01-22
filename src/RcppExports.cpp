@@ -2589,35 +2589,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Psi2K
-double Psi2K(double psi, double psi_extract, double exp_extract);
-RcppExport SEXP _medfate_Psi2K(SEXP psiSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
+// Psi2K_c
+double Psi2K_c(double psi, double psi_extract, double exp_extract);
+RcppExport SEXP _medfate_Psi2K_c(SEXP psiSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< double >::type psi_extract(psi_extractSEXP);
     Rcpp::traits::input_parameter< double >::type exp_extract(exp_extractSEXP);
-    rcpp_result_gen = Rcpp::wrap(Psi2K(psi, psi_extract, exp_extract));
+    rcpp_result_gen = Rcpp::wrap(Psi2K_c(psi, psi_extract, exp_extract));
     return rcpp_result_gen;
 END_RCPP
 }
-// K2Psi
-double K2Psi(double K, double psi_extract, double exp_extract);
-RcppExport SEXP _medfate_K2Psi(SEXP KSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
+// K2Psi_c
+double K2Psi_c(double K, double psi_extract, double exp_extract);
+RcppExport SEXP _medfate_K2Psi_c(SEXP KSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type K(KSEXP);
     Rcpp::traits::input_parameter< double >::type psi_extract(psi_extractSEXP);
     Rcpp::traits::input_parameter< double >::type exp_extract(exp_extractSEXP);
-    rcpp_result_gen = Rcpp::wrap(K2Psi(K, psi_extract, exp_extract));
+    rcpp_result_gen = Rcpp::wrap(K2Psi_c(K, psi_extract, exp_extract));
     return rcpp_result_gen;
 END_RCPP
 }
-// xylemConductance
-double xylemConductance(double psi, double kxylemmax, double c, double d);
-RcppExport SEXP _medfate_xylemConductance(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+// xylemConductance_c
+double xylemConductance_c(double psi, double kxylemmax, double c, double d);
+RcppExport SEXP _medfate_xylemConductance_c(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2625,13 +2625,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(xylemConductance(psi, kxylemmax, c, d));
+    rcpp_result_gen = Rcpp::wrap(xylemConductance_c(psi, kxylemmax, c, d));
     return rcpp_result_gen;
 END_RCPP
 }
-// xylemConductanceSigmoid
-double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double slope);
-RcppExport SEXP _medfate_xylemConductanceSigmoid(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP P50SEXP, SEXP slopeSEXP) {
+// xylemConductanceSigmoid_c
+double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope);
+RcppExport SEXP _medfate_xylemConductanceSigmoid_c(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP P50SEXP, SEXP slopeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2639,13 +2639,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
     Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
-    rcpp_result_gen = Rcpp::wrap(xylemConductanceSigmoid(psi, kxylemmax, P50, slope));
+    rcpp_result_gen = Rcpp::wrap(xylemConductanceSigmoid_c(psi, kxylemmax, P50, slope));
     return rcpp_result_gen;
 END_RCPP
 }
-// xylemPsi
-double xylemPsi(double kxylem, double kxylemmax, double c, double d);
-RcppExport SEXP _medfate_xylemPsi(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+// xylemPsi_c
+double xylemPsi_c(double kxylem, double kxylemmax, double c, double d);
+RcppExport SEXP _medfate_xylemPsi_c(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2653,26 +2653,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(xylemPsi(kxylem, kxylemmax, c, d));
+    rcpp_result_gen = Rcpp::wrap(xylemPsi_c(kxylem, kxylemmax, c, d));
     return rcpp_result_gen;
 END_RCPP
 }
-// psiCrit
-double psiCrit(double c, double d, double pCrit);
-RcppExport SEXP _medfate_psiCrit(SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
+// psiCrit_c
+double psiCrit_c(double c, double d, double pCrit);
+RcppExport SEXP _medfate_psiCrit_c(SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
     Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
-    rcpp_result_gen = Rcpp::wrap(psiCrit(c, d, pCrit));
+    rcpp_result_gen = Rcpp::wrap(psiCrit_c(c, d, pCrit));
     return rcpp_result_gen;
 END_RCPP
 }
-// vanGenuchtenConductance
-double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha);
-RcppExport SEXP _medfate_vanGenuchtenConductance(SEXP psiSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP) {
+// vanGenuchtenConductance_c
+double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double alpha);
+RcppExport SEXP _medfate_vanGenuchtenConductance_c(SEXP psiSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2680,7 +2680,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
     Rcpp::traits::input_parameter< double >::type n(nSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    rcpp_result_gen = Rcpp::wrap(vanGenuchtenConductance(psi, krhizomax, n, alpha));
+    rcpp_result_gen = Rcpp::wrap(vanGenuchtenConductance_c(psi, krhizomax, n, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6234,13 +6234,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
     {"_medfate_proportionDefoliationSigmoid", (DL_FUNC) &_medfate_proportionDefoliationSigmoid, 5},
     {"_medfate_proportionDefoliationWeibull", (DL_FUNC) &_medfate_proportionDefoliationWeibull, 5},
-    {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},
-    {"_medfate_K2Psi", (DL_FUNC) &_medfate_K2Psi, 3},
-    {"_medfate_xylemConductance", (DL_FUNC) &_medfate_xylemConductance, 4},
-    {"_medfate_xylemConductanceSigmoid", (DL_FUNC) &_medfate_xylemConductanceSigmoid, 4},
-    {"_medfate_xylemPsi", (DL_FUNC) &_medfate_xylemPsi, 4},
-    {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 3},
-    {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
+    {"_medfate_Psi2K_c", (DL_FUNC) &_medfate_Psi2K_c, 3},
+    {"_medfate_K2Psi_c", (DL_FUNC) &_medfate_K2Psi_c, 3},
+    {"_medfate_xylemConductance_c", (DL_FUNC) &_medfate_xylemConductance_c, 4},
+    {"_medfate_xylemConductanceSigmoid_c", (DL_FUNC) &_medfate_xylemConductanceSigmoid_c, 4},
+    {"_medfate_xylemPsi_c", (DL_FUNC) &_medfate_xylemPsi_c, 4},
+    {"_medfate_psiCrit_c", (DL_FUNC) &_medfate_psiCrit_c, 3},
+    {"_medfate_vanGenuchtenConductance_c", (DL_FUNC) &_medfate_vanGenuchtenConductance_c, 4},
     {"_medfate_rainfallIntensity", (DL_FUNC) &_medfate_rainfallIntensity, 3},
     {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 6},
     {"_medfate_herbaceousTranspiration", (DL_FUNC) &_medfate_herbaceousTranspiration, 6},

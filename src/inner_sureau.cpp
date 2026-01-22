@@ -674,7 +674,7 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
     network.PsiSoil[l] = PsiSoil[l];
     network.k_SoilToStem[l] = NA_REAL; //Conductance from soil to trunk apoplasm
     network.k_RSApo[l] = NA_REAL; //Conductance from rhizosphere surface to trunk apoplasm
-    network.k_Soil[l] = vanGenuchtenConductance(PsiSoil[l],
+    network.k_Soil[l] = vanGenuchtenConductance_c(PsiSoil[l],
                                                 VGrhizo_kmax[l], 
                                                 VG_n[l], VG_alpha[l]); 
   }
@@ -1305,8 +1305,8 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           double gBL = 1000.0*gLeafBoundary(zWind[iLayerCohort[c]], LeafWidth[c]); // mmol boundary layer conductance
           
           //# Leaf cuticular conductances and cuticular transpiration
-          double gmin_SL = gmin(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-          double gmin_SH = gmin(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+          double gmin_SL = gmin_c(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+          double gmin_SH = gmin_c(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
           double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm)*f_dry; //Add f_dry to decrease transpiration in rainy days
           double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm)*f_dry;
           double Emin_L = ((Emin_L_SL*LAI_SL(c,n)) + (Emin_L_SH*LAI_SH(c,n)))/LAI; 
@@ -1570,7 +1570,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
         for(int l=0;l<nlayers;l++) {
           if(layerConnected(c,l)) {
             networks[c].PsiSoil[cnt] = psiSoil[l];
-            networks[c].k_Soil[cnt] = vanGenuchtenConductance(psiSoil[l],
+            networks[c].k_Soil[cnt] = vanGenuchtenConductance_c(psiSoil[l],
                                                               networks[c].params.VGrhizo_kmax[cnt], 
                                                               VG_n[l], VG_alpha[l]);
             cnt++;
@@ -1599,7 +1599,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
         for(int l=0;l<nlayers;l++) {
           if(layerConnectedCoh(j,l)) {
             networks[c].PsiSoil[cnt] = psiSoilM(j,l);
-            networks[c].k_Soil[cnt] = vanGenuchtenConductance(psiSoilM(j,l),
+            networks[c].k_Soil[cnt] = vanGenuchtenConductance_c(psiSoilM(j,l),
                                                               networks[c].params.VGrhizo_kmax[cnt], 
                                                               VG_n[l], VG_alpha[l]);
             // if(c==0) Rcout<< n << ":"<< l << ":"<< cnt << " "<< " psi " <<networks[c].PsiSoil[cnt]<<"\n";

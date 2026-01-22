@@ -84,7 +84,7 @@
 //' @name hydraulics_conductancefunctions
 //' @keywords internal
 // [[Rcpp::export("hydraulics_psi2K")]]
-double Psi2K(double psi, double psi_extract, double exp_extract = 3.0) {
+double Psi2K_c(double psi, double psi_extract, double exp_extract = 3.0) {
   return(exp(-0.6931472*pow(std::abs(psi/psi_extract),exp_extract)));
 }
 
@@ -95,7 +95,7 @@ double Psi2K(double psi, double psi_extract, double exp_extract = 3.0) {
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal
 // [[Rcpp::export("hydraulics_K2Psi")]]
-double K2Psi(double K, double psi_extract, double exp_extract = 3.0) {
+double K2Psi_c(double K, double psi_extract, double exp_extract = 3.0) {
   double psi = psi_extract*pow(log(K)/(-0.6931472),1.0/exp_extract);
   if(psi>0.0) psi = -psi; //Usually psi_extr is a positive number
   if(psi< -40.0) psi = -40.0; //Minimum value
@@ -106,7 +106,7 @@ double K2Psi(double K, double psi_extract, double exp_extract = 3.0) {
  *  Returns minimum leaf conductance (in mmolH2O·m-2·s-1·MPa-1) as a function of leaf temperature
  *  according to a two-Q10 model.
  */
-double gmin(double leafTemperature, double gmin_20, 
+double gmin_c(double leafTemperature, double gmin_20, 
             double TPhase, double Q10_1, double Q10_2) {
   double gmin;
   if (leafTemperature<= TPhase) {
@@ -119,7 +119,7 @@ double gmin(double leafTemperature, double gmin_20,
 
 //' @rdname hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_xylemConductance")]]
-double xylemConductance(double psi, double kxylemmax, double c, double d) {
+double xylemConductance_c(double psi, double kxylemmax, double c, double d) {
   if(psi>=0.0) return(kxylemmax);
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
@@ -128,7 +128,7 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
 
 //' @rdname hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_xylemConductanceSigmoid")]]
-double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double slope){
+double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope){
   if(psi>=0.0) return(kxylemmax);
   return (kxylemmax * (1.0 - 1.0/(1.0 + exp(slope / 25.0 * (psi - P50)))));
 }
@@ -136,7 +136,7 @@ double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double 
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal
 // [[Rcpp::export("hydraulics_xylemPsi")]]
-double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
+double xylemPsi_c(double kxylem, double kxylemmax, double c, double d) {
   double psi = d*pow(-log(kxylem/kxylemmax),1.0/c);
   if(psi< -40.0) psi = -40.0; //Minimum value
   return(psi);
@@ -145,7 +145,7 @@ double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal
 // [[Rcpp::export("hydraulics_psiCrit")]]
-double psiCrit(double c, double d, double pCrit = 0.001) {
+double psiCrit_c(double c, double d, double pCrit = 0.001) {
   return(d * pow(-log(pCrit), 1.0/c));
 }
 
@@ -155,7 +155,7 @@ double psiCrit(double c, double d, double pCrit = 0.001) {
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal
 // [[Rcpp::export("hydraulics_vanGenuchtenConductance")]]
-double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha) {
+double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double alpha) {
   double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
   return(krhizomax*pow(v,(n-1.0)/(2.0*n))*pow(pow((1.0-v),(n-1.0)/n)-1.0,2.0));
 }
