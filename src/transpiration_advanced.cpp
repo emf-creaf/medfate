@@ -4,7 +4,7 @@
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include "windKatul.h"
 #include "hydraulics.h"
 #include "hydrology.h"
@@ -1001,13 +1001,13 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum_abs_SWR_can);
     
     //Canopy convective heat exchange
-    double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
+    double RAcan = aerodynamicResistance_c(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
     Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
     
     if(!multiLayerBalance) {//Canopy balance assuming a single layer
       //Soil-canopy turbulent heat exchange
-      double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
-      double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
+      double wind2m = windSpeedMassmanExtinction_c(200.0, wind, LAIcell, canopyHeight);
+      double RAsoil = aerodynamicResistance_c(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
       if(snowpack==0.0) {
         Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
       } else {
@@ -1098,7 +1098,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       
       
       for(int s=0;s<nsubsteps;s++) {
-        double RAsoil = aerodynamicResistance(200.0, std::max(zWind[0],1.0)); //Aerodynamic resistance to convective heat transfer from soil
+        double RAsoil = aerodynamicResistance_c(200.0, std::max(zWind[0],1.0)); //Aerodynamic resistance to convective heat transfer from soil
         double Hcansoils = Cp_JKG*meteoland::utils_airDensity(Tair[0],Patm)*(Tair[0]-Tsoil[0])/RAsoil;
         // double Hcan_heats = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tair[ncanlayers-1]-Tatm[n]))/RAcan;
         for(int i=0;i<ncanlayers;i++) {

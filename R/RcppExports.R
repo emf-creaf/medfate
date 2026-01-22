@@ -4732,15 +4732,15 @@ wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u, windMeasurementHei
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {
-    .Call(`_medfate_windSpeedAtCanopyHeight`, wind20H, canopyHeight)
+    .Call(`_medfate_windSpeedAtCanopyHeight_c`, wind20H, canopyHeight)
 }
 
 .unshelteredMidflameWindSpeed <- function(wind20H, fuelBedHeight) {
-    .Call(`_medfate_unshelteredMidflameWindSpeed`, wind20H, fuelBedHeight)
+    .Call(`_medfate_unshelteredMidflameWindSpeed_c`, wind20H, fuelBedHeight)
 }
 
 .shelteredMidflameWindSpeed <- function(wind20H, crownFillProportion, topCanopyHeight) {
-    .Call(`_medfate_shelteredMidflameWindSpeed`, wind20H, crownFillProportion, topCanopyHeight)
+    .Call(`_medfate_shelteredMidflameWindSpeed_c`, wind20H, crownFillProportion, topCanopyHeight)
 }
 
 #' Wind adjustment factor for Rothermel's model
@@ -4775,15 +4775,11 @@ wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u, windMeasurementHei
 #' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
 #' 
 fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover) {
-    .Call(`_medfate_windAdjustmentFactor`, topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover)
+    .Call(`_medfate_windAdjustmentFactor_c`, topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover)
 }
 
 .windSpeedAtHeightOverCanopy <- function(z, wind20H, canopyHeight) {
-    .Call(`_medfate_windSpeedAtHeightOverCanopy`, z, wind20H, canopyHeight)
-}
-
-.windExtinctionProfile <- function(z, wind20H, LAIc, canopyHeight) {
-    .Call(`_medfate_windExtinctionProfile`, z, wind20H, LAIc, canopyHeight)
+    .Call(`_medfate_windSpeedAtHeightOverCanopy_c`, z, wind20H, canopyHeight)
 }
 
 #' Wood formation

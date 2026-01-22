@@ -3,7 +3,7 @@
 #include <numeric>
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include "windKatul.h"
 #include "hydraulics.h"
 #include "hydraulics_c.h"

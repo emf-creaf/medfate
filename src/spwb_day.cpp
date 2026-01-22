@@ -6,7 +6,7 @@
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include "hydraulics.h"
 #include "hydrology.h"
 #include "biophysicsutils.h"

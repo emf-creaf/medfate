@@ -20,7 +20,7 @@
 #include "spwb_day.h"
 #include "transpiration.h"
 #include "tissuemoisture.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
 

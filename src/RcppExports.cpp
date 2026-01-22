@@ -5812,46 +5812,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// windSpeedAtCanopyHeight
-double windSpeedAtCanopyHeight(double wind20H, double canopyHeight);
-RcppExport SEXP _medfate_windSpeedAtCanopyHeight(SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
+// windSpeedAtCanopyHeight_c
+double windSpeedAtCanopyHeight_c(double wind20H, double canopyHeight);
+RcppExport SEXP _medfate_windSpeedAtCanopyHeight_c(SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type wind20H(wind20HSEXP);
     Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(windSpeedAtCanopyHeight(wind20H, canopyHeight));
+    rcpp_result_gen = Rcpp::wrap(windSpeedAtCanopyHeight_c(wind20H, canopyHeight));
     return rcpp_result_gen;
 END_RCPP
 }
-// unshelteredMidflameWindSpeed
-double unshelteredMidflameWindSpeed(double wind20H, double fuelBedHeight);
-RcppExport SEXP _medfate_unshelteredMidflameWindSpeed(SEXP wind20HSEXP, SEXP fuelBedHeightSEXP) {
+// unshelteredMidflameWindSpeed_c
+double unshelteredMidflameWindSpeed_c(double wind20H, double fuelBedHeight);
+RcppExport SEXP _medfate_unshelteredMidflameWindSpeed_c(SEXP wind20HSEXP, SEXP fuelBedHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type wind20H(wind20HSEXP);
     Rcpp::traits::input_parameter< double >::type fuelBedHeight(fuelBedHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(unshelteredMidflameWindSpeed(wind20H, fuelBedHeight));
+    rcpp_result_gen = Rcpp::wrap(unshelteredMidflameWindSpeed_c(wind20H, fuelBedHeight));
     return rcpp_result_gen;
 END_RCPP
 }
-// shelteredMidflameWindSpeed
-double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, double topCanopyHeight);
-RcppExport SEXP _medfate_shelteredMidflameWindSpeed(SEXP wind20HSEXP, SEXP crownFillProportionSEXP, SEXP topCanopyHeightSEXP) {
+// shelteredMidflameWindSpeed_c
+double shelteredMidflameWindSpeed_c(double wind20H, double crownFillProportion, double topCanopyHeight);
+RcppExport SEXP _medfate_shelteredMidflameWindSpeed_c(SEXP wind20HSEXP, SEXP crownFillProportionSEXP, SEXP topCanopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type wind20H(wind20HSEXP);
     Rcpp::traits::input_parameter< double >::type crownFillProportion(crownFillProportionSEXP);
     Rcpp::traits::input_parameter< double >::type topCanopyHeight(topCanopyHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(shelteredMidflameWindSpeed(wind20H, crownFillProportion, topCanopyHeight));
+    rcpp_result_gen = Rcpp::wrap(shelteredMidflameWindSpeed_c(wind20H, crownFillProportion, topCanopyHeight));
     return rcpp_result_gen;
 END_RCPP
 }
-// windAdjustmentFactor
-double windAdjustmentFactor(double topShrubHeight, double bottomCanopyHeight, double topCanopyHeight, double canopyCover);
-RcppExport SEXP _medfate_windAdjustmentFactor(SEXP topShrubHeightSEXP, SEXP bottomCanopyHeightSEXP, SEXP topCanopyHeightSEXP, SEXP canopyCoverSEXP) {
+// windAdjustmentFactor_c
+double windAdjustmentFactor_c(double topShrubHeight, double bottomCanopyHeight, double topCanopyHeight, double canopyCover);
+RcppExport SEXP _medfate_windAdjustmentFactor_c(SEXP topShrubHeightSEXP, SEXP bottomCanopyHeightSEXP, SEXP topCanopyHeightSEXP, SEXP canopyCoverSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5859,34 +5859,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type bottomCanopyHeight(bottomCanopyHeightSEXP);
     Rcpp::traits::input_parameter< double >::type topCanopyHeight(topCanopyHeightSEXP);
     Rcpp::traits::input_parameter< double >::type canopyCover(canopyCoverSEXP);
-    rcpp_result_gen = Rcpp::wrap(windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover));
+    rcpp_result_gen = Rcpp::wrap(windAdjustmentFactor_c(topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover));
     return rcpp_result_gen;
 END_RCPP
 }
-// windSpeedAtHeightOverCanopy
-double windSpeedAtHeightOverCanopy(double z, double wind20H, double canopyHeight);
-RcppExport SEXP _medfate_windSpeedAtHeightOverCanopy(SEXP zSEXP, SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
+// windSpeedAtHeightOverCanopy_c
+double windSpeedAtHeightOverCanopy_c(double z, double wind20H, double canopyHeight);
+RcppExport SEXP _medfate_windSpeedAtHeightOverCanopy_c(SEXP zSEXP, SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type z(zSEXP);
     Rcpp::traits::input_parameter< double >::type wind20H(wind20HSEXP);
     Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(windSpeedAtHeightOverCanopy(z, wind20H, canopyHeight));
-    return rcpp_result_gen;
-END_RCPP
-}
-// windExtinctionProfile
-NumericVector windExtinctionProfile(NumericVector z, double wind20H, double LAIc, double canopyHeight);
-RcppExport SEXP _medfate_windExtinctionProfile(SEXP zSEXP, SEXP wind20HSEXP, SEXP LAIcSEXP, SEXP canopyHeightSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< double >::type wind20H(wind20HSEXP);
-    Rcpp::traits::input_parameter< double >::type LAIc(LAIcSEXP);
-    Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(windExtinctionProfile(z, wind20H, LAIc, canopyHeight));
+    rcpp_result_gen = Rcpp::wrap(windSpeedAtHeightOverCanopy_c(z, wind20H, canopyHeight));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6391,12 +6377,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 8},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
     {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 6},
-    {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
-    {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
-    {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},
-    {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
-    {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
-    {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
+    {"_medfate_windSpeedAtCanopyHeight_c", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight_c, 2},
+    {"_medfate_unshelteredMidflameWindSpeed_c", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed_c, 2},
+    {"_medfate_shelteredMidflameWindSpeed_c", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed_c, 3},
+    {"_medfate_windAdjustmentFactor_c", (DL_FUNC) &_medfate_windAdjustmentFactor_c, 4},
+    {"_medfate_windSpeedAtHeightOverCanopy_c", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy_c, 3},
     {"_medfate_initialize_ring", (DL_FUNC) &_medfate_initialize_ring, 0},
     {"_medfate_temperature_function", (DL_FUNC) &_medfate_temperature_function, 5},
     {"_medfate_relative_expansion_rate", (DL_FUNC) &_medfate_relative_expansion_rate, 6},

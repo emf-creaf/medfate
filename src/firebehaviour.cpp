@@ -6,7 +6,7 @@
 #include "forestutils.h"
 #include "fuelstructure.h"
 #include "fuelmoisture.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -265,9 +265,9 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   double midflameWindSpeedSI = NA_REAL;
   //unsheltered vs sheltered (5% of crownFillProportion)
   //from m/s to mph
-  if(crownFillProportion<0.05) midflameWindSpeedSI = unshelteredMidflameWindSpeed(windSpeedSI, delta_surf_heatsink/3.2808399);
-  else midflameWindSpeedSI = shelteredMidflameWindSpeed(windSpeedSI, crownFillProportion, htcSI[0]);
-  double crownfireWindSpeedSI = windSpeedAtCanopyHeight(windSpeedSI,htcSI[0]);
+  if(crownFillProportion<0.05) midflameWindSpeedSI = unshelteredMidflameWindSpeed_c(windSpeedSI, delta_surf_heatsink/3.2808399);
+  else midflameWindSpeedSI = shelteredMidflameWindSpeed_c(windSpeedSI, crownFillProportion, htcSI[0]);
+  double crownfireWindSpeedSI = windSpeedAtCanopyHeight_c(windSpeedSI,htcSI[0]);
   double midflameWindSpeed = midflameWindSpeedSI *2.23693629; 
   double crownfireWindSpeed = crownfireWindSpeedSI *2.23693629; 
   
@@ -796,10 +796,10 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
 //     
 //     //Calculates midflameWind
 //     if(NumericVector::is_na(canopyBaseHeight[i])) { //NO canopy over fire
-//        midflameWind[i] = unshelteredMidflameWindSpeed(WS[i], fuelbedHeight[i]/100.0); 
-//        fuelWind[i] = windSpeedAtCanopyHeight(WS[i], fuelbedHeight[i]/100.0);
+//        midflameWind[i] = unshelteredMidflameWindSpeed_c(WS[i], fuelbedHeight[i]/100.0); 
+//        fuelWind[i] = windSpeedAtCanopyHeight_c(WS[i], fuelbedHeight[i]/100.0);
 //     } else { //Wind extinction due to crowns
-//        midflameWind[i] = windSpeedMassmanExtinction(canopyBaseHeight[i]/100.0,WS[i], canopyLAI[i], canopyTopHeight[i]/100.0);
+//        midflameWind[i] = windSpeedMassmanExtinction_c(canopyBaseHeight[i]/100.0,WS[i], canopyLAI[i], canopyTopHeight[i]/100.0);
 //        fuelWind[i] = midflameWind[i];
 //     }    
 // 
