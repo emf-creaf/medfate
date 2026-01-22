@@ -58,8 +58,6 @@ fire_necrosisHeight(
 \item{c}{Specific heat capacity}
 
 \item{thermal_factor}{Tissue thermal factor.}
-
-\item{T_necrosis}{Temperature of tissue necrosis (degrees Celsius).}
 }
 \value{
 \itemize{

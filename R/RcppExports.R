@@ -648,7 +648,6 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' @param Ib_surf Surface fireline intensity (kW/m).
 #' @param t_res fire residence time (seconds).
 #' @param T_air Air temperature (degrees Celsius).
-#' @param T_necrosis Temperature of tissue necrosis (degrees Celsius).
 #' @param rho_air Air density (kg/m3).
 #' @param rho_bark Bark density (kg/m3).
 #' @param fmc_bark Bark moisture content (% dry weight).
