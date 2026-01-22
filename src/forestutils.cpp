@@ -8,7 +8,7 @@
 #include "root.h"
 #include "soil.h"
 #include "decomposition.h"
-#include "incgamma.h"
+#include "incgamma_c.h"
 using namespace Rcpp;
 
 
@@ -22,8 +22,8 @@ double leafAreaProportion(double z1, double z2, double zmin, double zmax) {
   z2 = std::min(z2, zmax);
   double x1 = (z1-mu)/sd;
   double x2 = (z2-mu)/sd;
-  double p1 = 0.5*(1.0+errorfunction(x1/sqrt(2.0), false, false));
-  double p2 = 0.5*(1.0+errorfunction(x2/sqrt(2.0), false, false));
+  double p1 = 0.5*(1.0+errorfunction_c(x1/sqrt(2.0), false, false));
+  double p2 = 0.5*(1.0+errorfunction_c(x2/sqrt(2.0), false, false));
   double v = (p2-p1)/0.8663856; //truncated to -1.5 to 1.5
   return(v);
 }

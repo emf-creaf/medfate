@@ -3086,28 +3086,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// invincgam
-double invincgam(double a, double p, double q);
-RcppExport SEXP _medfate_invincgam(SEXP aSEXP, SEXP pSEXP, SEXP qSEXP) {
+// invincgam_c
+double invincgam_c(double a, double p, double q);
+RcppExport SEXP _medfate_invincgam_c(SEXP aSEXP, SEXP pSEXP, SEXP qSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< double >::type q(qSEXP);
-    rcpp_result_gen = Rcpp::wrap(invincgam(a, p, q));
+    rcpp_result_gen = Rcpp::wrap(invincgam_c(a, p, q));
     return rcpp_result_gen;
 END_RCPP
 }
-// gammds
-double gammds(double x, double p);
-RcppExport SEXP _medfate_gammds(SEXP xSEXP, SEXP pSEXP) {
+// gammds_c
+double gammds_c(double x, double p);
+RcppExport SEXP _medfate_gammds_c(SEXP xSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
-    rcpp_result_gen = Rcpp::wrap(gammds(x, p));
+    rcpp_result_gen = Rcpp::wrap(gammds_c(x, p));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6257,8 +6257,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_gammln_c", (DL_FUNC) &_medfate_gammln_c, 1},
     {"_medfate_betacf_c", (DL_FUNC) &_medfate_betacf_c, 3},
     {"_medfate_incbeta_c", (DL_FUNC) &_medfate_incbeta_c, 3},
-    {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
-    {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
+    {"_medfate_invincgam_c", (DL_FUNC) &_medfate_invincgam_c, 3},
+    {"_medfate_gammds_c", (DL_FUNC) &_medfate_gammds_c, 2},
     {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_initSureauNetworks", (DL_FUNC) &_medfate_initSureauNetworks, 1},

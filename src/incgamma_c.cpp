@@ -1,17 +1,8 @@
-#define STRICT_R_HEADERS
-#include <Rcpp.h>
 #include <math.h>
-using namespace Rcpp;
-
-const double dwarf=0.0000001;
-const double giant=999999999.9;
-const double explow = -300.0;
-const double machtol = 1.0E-15;
-const double sqrttwopi=2.5066282746310005024;
-const double lnsqrttwopi=0.9189385332046727418;
-const double twopi=6.2831853071795864769;
-const double oneoversqrtpi=0.5641895835477562869;
-const double epss=1.0E-15;
+#include <cmath>
+#include <iostream>
+#include "medfate.h"
+#include "incgamma_c.h"
 
 // FUNCTION alfa(x)
 // USE Someconstants
@@ -26,7 +17,7 @@ const double epss=1.0E-15;
 // alfa=-0.6931_r8/log(dwarf)
 // ENDIF
 // END FUNCTION alfa
-double alfa(double x){
+double alfa_c(double x){
   double lnx = log(x);
   double alfa;
   if(x>0.25) {
@@ -55,7 +46,7 @@ double alfa(double x){
 //   ENDIF
 //   exmin1= y
 //   END FUNCTION exmin1
-double exmin1(double x) {
+double exmin1_c(double x) {
   double y;
   if(x==0.0) {
     y=1.0;
@@ -85,7 +76,7 @@ double exmin1(double x) {
 //   ENDIF
 //   exmin1minx=y
 //   END FUNCTION exmin1minx
-double exmin1minx(double x) {
+double exmin1minx_c(double x) {
   double y;
   if(x==0.0) {
     y = 1.0;
@@ -113,10 +104,10 @@ double exmin1minx(double x) {
 //   ENDIF
 //   logoneplusx= y0
 //   END FUNCTION logoneplusx
-double logoneplusx(double x) {
+double logoneplusx_c(double x) {
   double y0=log(1.0+x);
   if((-0.2928 < x) && (x < 0.4142)){
-    double s = y0*exmin1(y0);
+    double s = y0*exmin1_c(y0);
     double r = (s-x)/(s+1.0);
     y0=y0-r*(6.0-r)/(6.0-4.0*r);
   }
@@ -137,10 +128,10 @@ double logoneplusx(double x) {
 // lnec=ln1
 //   ! lnec := x + ln1
 //   END FUNCTION lnec
-double lnec(double x) {
-  double z = logoneplusx(x);
+double lnec_c(double x) {
+  double z = logoneplusx_c(x);
   double y0 = z - x;
-  double e2 = exmin1minx(z);
+  double e2 = exmin1minx_c(z);
   double s = e2*z*z/2.0;
   double r = (s+y0)/(s+1.0+z);
   double ln1 = y0 - r*(6.0-r)/(6.0-4.0*r);
@@ -171,7 +162,7 @@ double lnec(double x) {
 //   chepolsum=a(0)/2.0_r8-r+h*x
 //   ENDIF
 //   END FUNCTION chepolsum
-double chepolsum(double x, NumericVector a, int n) {
+double chepolsum_c(double x, const std::vector<double>& a, int n) {
   if(n==0) {
     return(a[0]/2.0);
   } else if (n==1) {
@@ -219,11 +210,11 @@ double chepolsum(double x, NumericVector a, int n) {
 // auxgamm=chepolsum(17,t,dr);
 // ENDIF
 //   END FUNCTION auxgam
-double auxgam(double x) {
-  NumericVector dr(18);
+double auxgam_c(double x) {
+  std::vector<double> dr(18);
   double auxgamm;
   if(x<0.0) {
-    auxgamm = -(1.0+(1.0+x)*(1.0+x)*auxgam(1.0+x))/(1.0-x);
+    auxgamm = -(1.0+(1.0+x)*(1.0+x)*auxgam_c(1.0+x))/(1.0-x);
   } else {
     dr[0]= -1.013609258009865776949;
     dr[1]= 0.784903531024782283535e-1;
@@ -244,7 +235,7 @@ double auxgam(double x) {
     dr[16]= 0.347e-19;
     dr[17]= -0.9e-21;
     double t=2*x-1.0;
-    auxgamm=chepolsum(t,dr, 17);
+    auxgamm=chepolsum_c(t,dr, 17);
   }
   return(auxgamm);
 }
@@ -256,8 +247,8 @@ double auxgam(double x) {
 //   ! {ln(gamma(1+x)), -1<=x<=1}
 // lngam1=-logoneplusx(x*(x-1.0_r8)*auxgam(x))
 //   END FUNCTION lngam1
-double lngam1(double x) {
-  return(-logoneplusx(x*(x-1.0)*auxgam(x)));
+double lngam1_c(double x) {
+  return(-logoneplusx_c(x*(x-1.0)*auxgam_c(x)));
 }
   
 
@@ -314,20 +305,20 @@ double lngam1(double x) {
 //   ENDIF
 //   ENDIF 
 //   END FUNCTION stirling
-double  stirling(double x) {
+double  stirling_c(double x) {
   double stirling, z;
-  NumericVector a(18);
-  NumericVector c(7);
+  std::vector<double> a(18);
+  std::vector<double> c(7);
   if(x<dwarf) {
     stirling = giant; 
   } else if(x<1.0) {
-    stirling= lngam1(x)-(x+0.5)*log(x)+x-lnsqrttwopi;
+    stirling= lngam1_c(x)-(x+0.5)*log(x)+x-lnsqrttwopi;
   }
   else if(x<2.0) {
-    stirling=lngam1(x-1.0)-(x-0.5)*log(x)+x-lnsqrttwopi;
+    stirling=lngam1_c(x-1.0)-(x-0.5)*log(x)+x-lnsqrttwopi;
   }
   else if(x<3.0) {
-    stirling=lngam1(x-2.0)-(x-0.5)*log(x)+x-lnsqrttwopi+log(x-1.0);
+    stirling=lngam1_c(x-2.0)-(x-0.5)*log(x)+x-lnsqrttwopi+log(x-1.0);
   }
   else if(x<12.0) {
     a[0]=1.996379051590076518221;
@@ -349,7 +340,7 @@ double  stirling(double x) {
     a[16]=0.332e-19;
     a[17]=-0.58e-20;
     z=18.0/(x*x)-1.0;
-    stirling=chepolsum(z,a, 17)/(12.0*x);
+    stirling=chepolsum_c(z,a, 17)/(12.0*x);
   } else {
     z=1.0/(x*x);
     if(x<1000.0) {
@@ -382,10 +373,10 @@ double  stirling(double x) {
 //   gamstar=giant
 //   ENDIF
 //   END FUNCTION gamstar
-double gamstar(double x) {
+double gamstar_c(double x) {
   double gamstar;
   if(x>=3.0) {
-    gamstar = exp(stirling(x));
+    gamstar = exp(stirling_c(x));
   } else if(x>0.0) {
     gamstar= tgamma(x)/(exp(-x+(x-0.5)*log(x))*sqrttwopi);
   } else {
@@ -433,7 +424,7 @@ double gamstar(double x) {
 //   ENDIF
 //   ENDIF
 //   END FUNCTION dompart
-double dompart(double a, double x, bool qt) {
+double dompart_c(double a, double x, bool qt) {
   double lnx = log(x);
   double r, la, dp, dompart;
   if(a<=1) {
@@ -459,11 +450,11 @@ double dompart(double a, double x, bool qt) {
       dompart = exp(a*lnx - x)/tgamma(a+1.0); //using in-built tgamma instead of fortran gamma
     } else {
       double mu = (x-a)/a;
-      double c = lnec(mu);
+      double c = lnec_c(mu);
       if((a*c)>log(giant)) {
         dompart = -100.0;
       } else {
-        dompart = exp(a*c)/(sqrt(a*2.0*M_PI)*gamstar(a));
+        dompart = exp(a*c)/(sqrt(a*2.0*M_PI)*gamstar_c(a));
       }
     }
   }
@@ -481,7 +472,7 @@ double dompart(double a, double x, bool qt) {
  //    ENDDO
  //    fractio=a/b
  //    END FUNCTION fractio
-double fractio(double x, int n, double r[9], double s[9]) {
+double fractio_c(double x, int n, double r[9], double s[9]) {
   double a=r[n];
   double b=1.0;
   for(int k=n-1;k>=0;k--) {
@@ -582,14 +573,14 @@ double fractio(double x, int n, double r[9], double s[9]) {
 //   errfu= y
 //   ENDIF        
 //   END FUNCTION errorfunction
-double errorfunction(double x, bool erfcc, bool expo){
+double errorfunction_c(double x, bool erfcc, bool expo){
   double y, z, errfu;
   double r[9], s[9];
   if(erfcc) {
     if(x<-6.5) {
       y = 2.0;
     } else if(x<0.0) {
-      y= 2.0 - errorfunction(-x, true, false);
+      y= 2.0 - errorfunction_c(-x, true, false);
     } else if(x==0.0) {
       y = 1.0;
     } else if(x<0.5) {
@@ -598,7 +589,7 @@ double errorfunction(double x, bool erfcc, bool expo){
       } else {
         y=1.0;  
       }
-      y=y*(1.0 - errorfunction(x, false, false));
+      y=y*(1.0 - errorfunction_c(x, false, false));
     } else if(x<4.0) {
       if(expo) {
         y= 1.0;  
@@ -622,7 +613,7 @@ double errorfunction(double x, bool erfcc, bool expo){
       s[5]= 5.371811018620098575e2;
       s[6]= 1.176939508913124993e2;
       s[7]= 1.574492611070983473e1;
-      y=y*fractio(x,8,r,s);
+      y=y*fractio_c(x,8,r,s);
     } else {
       z=x*x;
       if(expo) {
@@ -642,7 +633,7 @@ double errorfunction(double x, bool erfcc, bool expo){
       s[2]=5.279051029514284122e-1;
       s[3]=1.872952849923460472;
       s[4]=2.568520192289822421;
-      y=y*(oneoversqrtpi-z*fractio(z,5,r,s))/x;
+      y=y*(oneoversqrtpi-z*fractio_c(z,5,r,s))/x;
     }
     errfu = y;
   } else {
@@ -651,9 +642,9 @@ double errorfunction(double x, bool erfcc, bool expo){
     } else if(std::abs(x)>6.5) {
       y = x/std::abs(x);
     } else if(x > 0.5) {
-      y=1.0 - errorfunction(x, true, false);
+      y=1.0 - errorfunction_c(x, true, false);
     } else if(x < -0.5) {
-      y=errorfunction(-x, true, false)-1.0;
+      y=errorfunction_c(-x, true, false)-1.0;
     } else {
       r[0]=3.209377589138469473e3;
       r[1]=3.774852376853020208e2;
@@ -665,7 +656,7 @@ double errorfunction(double x, bool erfcc, bool expo){
       s[2]=2.440246379344441733e2;
       s[3]=2.360129095234412093e1;
       z=x*x;
-      y=x*fractio(z,4,r,s);
+      y=x*fractio_c(z,4,r,s);
     }
     errfu= y;
   }
@@ -723,7 +714,7 @@ double errorfunction(double x, bool erfcc, bool expo){
 //   ENDDO 
 //   saeta=s/(1.0_r8+bm(1)/a);
 // END FUNCTION saeta
-double saeta(double a, double eta){
+double saeta_c(double a, double eta){
   double saeta, y, s, t, eps;
   int m;
   double fm[27], bm[27];
@@ -806,7 +797,7 @@ double saeta(double a, double eta){
 //   ENDIF
 //   qtaylor=q
 //   END FUNCTION qtaylor
-double qtaylor(double a, double x, double dp){
+double qtaylor_c(double a, double x, double dp){
   double eps, lnx, p, q, r, s, t, u, v;
   eps=epss;
   lnx=log(x);
@@ -814,8 +805,8 @@ double qtaylor(double a, double x, double dp){
     q=0.0;
   } else {
     r = a*lnx;
-    q=r*exmin1(r);
-    s=a*(1.0-a)*auxgam(a); // {s = 1-1/Gamma(1+a) }
+    q=r*exmin1_c(r);
+    s=a*(1.0-a)*auxgam_c(a); // {s = 1-1/Gamma(1+a) }
     q=(1.0-s)*q;
     u=s-q;  // {u = 1 - x^a/Gamma(1+a)}
     p=a*x;
@@ -857,7 +848,7 @@ double qtaylor(double a, double x, double dp){
 //   ENDIF
 //   ptaylor=p
 //   END FUNCTION ptaylor
-double ptaylor(double a, double x, double dp) {
+double ptaylor_c(double a, double x, double dp) {
   double eps,p,c,r;
   eps=epss;
   if(dp==0) {
@@ -914,7 +905,7 @@ double ptaylor(double a, double x, double dp) {
 // pqasymp=u+v
 //   ENDIF
 //   END FUNCTION pqasymp
-double pqasymp(double a, double x, double dp, bool p) {
+double pqasymp_c(double a, double x, double dp, bool p) {
   double y, mu, eta, u, v;
   double pqasymp;
   int s;
@@ -928,7 +919,7 @@ double pqasymp(double a, double x, double dp, bool p) {
       s = 1;
     }
     mu=(x-a)/a;
-    y=-lnec(mu);
+    y=-lnec_c(mu);
     if(y<0.0) {
       eta = 0.0;
     } else {
@@ -940,8 +931,8 @@ double pqasymp(double a, double x, double dp, bool p) {
       eta = -eta;
       v = -v;
     }
-    u=0.5*errorfunction(s*v,true,false);
-    v=s*exp(-y)*saeta(a,eta)/sqrt(2.0*M_PI*a);
+    u=0.5*errorfunction_c(s*v,true,false);
+    v=s*exp(-y)*saeta_c(a,eta)/sqrt(2.0*M_PI*a);
     pqasymp=u+v;
   }
   return(pqasymp);
@@ -977,7 +968,7 @@ double pqasymp(double a, double x, double dp, bool p) {
 // ENDIF
 //   qfraction= q
 //   END FUNCTION qfraction
-double qfraction(double a, double x, double dp){
+double qfraction_c(double a, double x, double dp){
   double eps, g, p, q, r, s, t, tau, ro;
   eps=epss;
   if(dp==0.0) {
@@ -1092,23 +1083,23 @@ double qfraction(double a, double x, double dp){
 //     ENDIF
 //   ENDIF
 //   END SUBROUTINE incgam
-NumericVector incgam(double a, double x) {
-  double lnx, p = NA_REAL, q = NA_REAL;
+std::vector<double> incgam_c(double a, double x) {
+  double lnx, p = nan(""), q = nan("");
   double dp;
   if(x<dwarf) {
     lnx = log(dwarf);
   } else {
     lnx = log(x); 
   }
-  if(a>alfa(x)) {
-    dp = dompart(a,x, false);
+  if(a>alfa_c(x)) {
+    dp = dompart_c(a,x, false);
     if(dp<0.0) {
-      stop("dp < 0");
+      throw medfate::MedfateInternalError("dp < 0 in incgam");
     } else {
       if ((x < 0.3*a) || (a<12.0)) {
-        p=ptaylor(a,x,dp);
+        p=ptaylor_c(a,x,dp);
       } else {
-        p=pqasymp(a,x,dp, true);
+        p=pqasymp_c(a,x,dp, true);
       }
       q = 1.0 - p;
     }
@@ -1117,29 +1108,29 @@ NumericVector incgam(double a, double x) {
       q = 0.0;
     } else {
       if(x<1.0) {
-        dp=dompart(a,x,true);
+        dp=dompart_c(a,x,true);
         if(dp<0.0) {
-          stop("dp < 0");
+          throw medfate::MedfateInternalError("dp < 0 in incgam");
         } else {
-          q=qtaylor(a,x,dp);
+          q=qtaylor_c(a,x,dp);
           p=1.0-q;
         }
       } else {
-        dp=dompart(a,x,false);
+        dp=dompart_c(a,x,false);
         if(dp<0.0) {
-          stop("dp < 0");
+          throw medfate::MedfateInternalError("dp < 0 in incgam");
         } else {
           if((x>2.35*a) || (a<12.0)) {
-            q = qfraction(a,x,dp);
+            q = qfraction_c(a,x,dp);
           } else {
-            q=pqasymp(a,x,dp,false);
+            q=pqasymp_c(a,x,dp,false);
           }
           p=1.0-q;
         }
       }
     }
   }
-  return(NumericVector::create(p,q));
+  return(std::vector<double>{p,q});
 }
 
 
@@ -1153,7 +1144,7 @@ NumericVector incgam(double a, double x) {
 //   (1.0_r8+t*(1.432788+t*(0.189269_r8+t*0.001308_r8)))
 //   invq=t
 //   END FUNCTION invq
-double invq(double x)  {
+double invq_c(double x)  {
   double t;
   t=sqrt(-2.0*log(x));
   t=t-(2.515517+t*(0.802853+t*0.010328))/(1.0+t*(1.432788+t*(0.189269+t*0.001308)));
@@ -1182,14 +1173,14 @@ double invq(double x)  {
 // y=y0+h
 //   ENDIF
 //   END FUNCTION inverfc
-double inverfc(double x)  {
+double inverfc_c(double x)  {
   double y, y0, y02, h, r, f, fp, c1, c2, c3, c4, c5;
   if(x > 1.0)  {
-    y=-inverfc(2.0-x);
+    y=-inverfc_c(2.0-x);
   } else {
-    y0=0.70710678*invq(x/2.0);
+    y0=0.70710678*invq_c(x/2.0);
     // f= erfc(y0)-x;
-    f=errorfunction(y0,true,false)-x;
+    f=errorfunction_c(y0,true,false)-x;
     y02= y0*y0;
     fp=-2.0/sqrt(M_PI)*exp(-y02);
     c1=-1.0/fp;
@@ -1212,7 +1203,7 @@ double inverfc(double x)  {
 // q= bk(0)+x*(bk(1)+x*(bk(2)+x*(bk(3)+x*bk(4))));
 // ratfun=p/q
 //   END FUNCTION ratfun
-double ratfun(double x, double ak[5], double bk[5]){
+double ratfun_c(double x, double ak[5], double bk[5]){
   double p= ak[0]+x*(ak[1]+x*(ak[2]+x*(ak[3]+x*ak[4])));
   double q= bk[0]+x*(bk[1]+x*(bk[2]+x*(bk[3]+x*bk[4])));
   return(p/q);
@@ -1274,7 +1265,7 @@ double ratfun(double x, double ak[5], double bk[5]){
   //     lambdaeta=la
   //     END FUNCTION lambdaeta
   //     
-double lambdaeta(double eta) {
+double lambdaeta_c(double eta) {
   double q, r, s, L, la;
   double ak[6];
   double L2, L3, L4, L5;
@@ -1342,7 +1333,7 @@ double lambdaeta(double eta) {
 //   eps1=log(eta/(la-1.0_r8))/eta
 //     ENDIF
 //     END FUNCTION eps1
-double eps1(double eta) {
+double eps1_c(double eta) {
   double eps1, la;
   double ak[5], bk[5];
   if(std::abs(eta)<1.0) {
@@ -1351,9 +1342,9 @@ double eps1(double eta) {
     ak[2]=-5.041806657154e-2;  bk[2]= 2.118190062224e-1;
     ak[3]=-4.923635739372e-3;  bk[3]= 3.048648397436e-2;
     ak[4]=-4.293658292782e-5;  bk[4]= 1.605037988091e-3;
-    eps1=ratfun(eta,ak,bk);
+    eps1=ratfun_c(eta,ak,bk);
   } else {
-    la = lambdaeta(eta);
+    la = lambdaeta_c(eta);
     eps1=log(eta/(la-1.0))/eta;
   }
   return(eps1);
@@ -1393,7 +1384,7 @@ double eps1(double eta) {
 //           eps2=-1.0/(12.0*eta)
 //           ENDIF
 //           END FUNCTION
-double eps2(double eta) {
+double eps2_c(double eta) {
   double eps2, x, lnmeta;
   double ak[5], bk[5];
   if(eta < -5.0) {
@@ -1406,14 +1397,14 @@ double eps2(double eta) {
     ak[2]= -4.64910887221e-3;  bk[2]= 2.97143406325e-1;
     ak[3]= -6.06834887760e-4;  bk[3]= 5.79490176079e-2;
     ak[4]= -6.14830384279e-6;  bk[4]= 5.74558524851e-3;
-    eps2= ratfun(eta,ak,bk);
+    eps2= ratfun_c(eta,ak,bk);
   } else if(eta <2.0) {
     ak[0]=-1.72839517431e-2;  bk[0]= 1.00000000000e+0;
     ak[1]=-1.46362417966e-2;  bk[1]= 6.90560400696e-1;
     ak[2]=-3.57406772616e-3;  bk[2]= 2.49962384741e-1;
     ak[3]=-3.91032032692e-4;  bk[3]= 4.43843438769e-2;
     ak[4]=2.49634036069e-6;   bk[4]= 4.24073217211e-3;
-    eps2= ratfun(eta,ak,bk);
+    eps2= ratfun_c(eta,ak,bk);
   } else if(eta <1000.0) {
     ak[0]= 9.99944669480e-1;  bk[0]= 1.00000000000e+0;
     ak[1]= 1.04649839762e+2;  bk[1]= 1.04526456943e+2;
@@ -1421,7 +1412,7 @@ double eps2(double eta) {
     ak[3]= 7.31901559577e+2;  bk[3]= 3.11993802124e+3;
     ak[4]= 4.55174411671e+1;  bk[4]= 3.97003311219e+3;
     x=1.0/eta;
-    eps2=ratfun(x,ak,bk)/(-12.0*eta);
+    eps2=ratfun_c(x,ak,bk)/(-12.0*eta);
   } else {
     eps2=-1.0/(12.0*eta);
   }
@@ -1479,7 +1470,7 @@ double eps2(double eta) {
 //             eps3=-log(eta)/(12.0*eta3)
 //             ENDIF
 //             END FUNCTION eps3
-double eps3(double eta) {
+double eps3_c(double eta) {
   double eps3, eta3, x, y;
   double ak[5], bk[5];
   if(eta<-8.0) {
@@ -1493,7 +1484,7 @@ double eps3(double eta) {
     ak[2]= 6.88296911516e-3;  bk[2]= 2.61547111595e-1;
     ak[3]= 5.12634846317e-4;  bk[3]= 4.64854522477e-2;
     ak[4]= -2.01411722031e-5; bk[4]= 4.03751193496e-3;
-    eps3=ratfun(eta,ak,bk)/(eta*eta);
+    eps3=ratfun_c(eta,ak,bk)/(eta*eta);
   }
   else if(eta<-2.0) {
     ak[0]=4.52313583942e-3;  bk[0]= 1.00000000000e+0;
@@ -1501,7 +1492,7 @@ double eps3(double eta) {
     ak[2]=-7.89724156582e-5; bk[2]= 4.05368773071e-1;
     ak[3]=-5.04476066942e-5; bk[3]= 9.01638932349e-2;
     ak[4]=-5.35770949796e-6; bk[4]= 9.48935714996e-3;
-    eps3=ratfun(eta,ak,bk);
+    eps3=ratfun_c(eta,ak,bk);
   }
   else if(eta<2.0) {
     ak[0]= 4.39937562904e-3;  bk[0]= 1.00000000000e+0;
@@ -1509,7 +1500,7 @@ double eps3(double eta) {
     ak[2]= -1.28470657374e-4; bk[2]= 3.33094721709e-1;
     ak[3]= 5.29110969589e-6;  bk[3]= 7.03527806143e-2;
     ak[4]= 1.57166771750e-7;  bk[4]= 8.06110846078e-3;
-    eps3= ratfun(eta,ak,bk);
+    eps3= ratfun_c(eta,ak,bk);
   }
   else if(eta < 10.0) {
     ak[0]= -1.14811912320e-3;  bk[0]= 1.00000000000e+0;
@@ -1518,7 +1509,7 @@ double eps3(double eta) {
     ak[3]= -2.18472031183e-1;  bk[3]= 2.18938950816e+2;
     ak[4]= 7.30002451555e-2;   bk[4]= 2.77067027185e+2;
     x= 1.0/eta;
-    eps3= ratfun(x,ak,bk)/(eta*eta);
+    eps3= ratfun_c(x,ak,bk)/(eta*eta);
   }
   else if(eta < 100.0) {
     ak[0]= -1.45727889667e-4;  bk[0]= 1.00000000000e+0;
@@ -1527,7 +1518,7 @@ double eps3(double eta) {
     ak[3]= 1.99722374056e+2;   bk[3]= 7.11524019009e+3;
     ak[4]= -1.14311378756e+1;  bk[4]= 4.55746081453e+4;
     x= 1.0/eta;
-    eps3= ratfun(x,ak,bk)/(eta*eta);
+    eps3= ratfun_c(x,ak,bk)/(eta*eta);
   }
   else {
     eta3=eta*eta*eta;
@@ -1719,7 +1710,7 @@ double eps3(double eta) {
 //   xr=x
 //     END SUBROUTINE invincgam
 // [[Rcpp::export(".invincgam")]]
-double invincgam(double a, double p, double q) {
+double invincgam_c(double a, double p, double q) {
   double porq, s, dlnr, logr, r, a2, a3, a4, ap1, ap12, ap13, ap14;
   double ap2, ap22, x0, b, eta, L, L2, L3, L4;
   double b2, b3, x, x2, t, px, qx, y, fp;
@@ -1768,8 +1759,8 @@ double invincgam(double a, double p, double q) {
     b=1.0-a; 
     b2=b*b;
     b3=b2*b;
-    eta=sqrt(-2.0/a*log(q*gamstar(a)*sqrttwopi/sqrt(a)));
-    x0=a*lambdaeta(eta); 
+    eta=sqrt(-2.0/a*log(q*gamstar_c(a)*sqrttwopi/sqrt(a)));
+    x0=a*lambdaeta_c(eta); 
     L=log(x0); 
     if((a>0.12) || (x0>5.0))  {
       L2=L*L;
@@ -1806,10 +1797,10 @@ double invincgam(double a, double p, double q) {
     }
   } else {
     m=1;
-    r=inverfc(2.0*porq);
+    r=inverfc_c(2.0*porq);
     eta=s*r/sqrt(a*0.5);
-    eta=eta+(eps1(eta)+(eps2(eta)+eps3(eta)/a)/a)/a;
-    x0=a*lambdaeta(eta);
+    eta=eta+(eps1_c(eta)+(eps2_c(eta)+eps3_c(eta)/a)/a)/a;
+    x0=a*lambdaeta_c(eta);
   }
   t=1.0;
   x=x0; 
@@ -1824,16 +1815,16 @@ double invincgam(double a, double p, double q) {
       dlnr=(1.0-a)*log(x)+x+lgamma(a); //loggam in fortran
       if(dlnr > log(giant)) {
         n=20;
-        warning("overflow problem in the computation of one of the gamma factors before starting the Newton iteration. The initial approximation to the root is given as output.");
+        std::cout << "overflow problem in the computation of one of the gamma factors before starting the Newton iteration. The initial approximation to the root is given as output.\n";
       } else {
         r=exp(dlnr);
         if(pcase) {
-          NumericVector pq = incgam(a,x);
+          std::vector<double> pq = incgam_c(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=-r*(px-p);
         } else {
-          NumericVector pq = incgam(a,x);
+          std::vector<double> pq = incgam_c(a,x);
           px = pq[0];
           qx = pq[1];
           ck[0]=r*(qx-q);
@@ -1854,15 +1845,15 @@ double invincgam(double a, double p, double q) {
     }
     else {
       y=eta;
-      fp=-sqrt(a/twopi)*exp(-0.5*a*y*y)/(gamstar(a));
+      fp=-sqrt(a/twopi)*exp(-0.5*a*y*y)/(gamstar_c(a));
       r=-(1.0/fp)*x;
       if(pcase) {
-        NumericVector pq = incgam(a,x);
+        std::vector<double> pq = incgam_c(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=-r*(px-p);
       } else {
-        NumericVector pq = incgam(a,x);
+        std::vector<double> pq = incgam_c(a,x);
         px = pq[0];
         qx = pq[1];
         ck[0]=r*(qx-q);
@@ -1892,7 +1883,7 @@ double invincgam(double a, double p, double q) {
 
 
 // [[Rcpp::export(".gammds")]]
-double gammds ( double x, double p)
+double gammds_c ( double x, double p)
   
   //****************************************************************************80
   //
@@ -1950,14 +1941,14 @@ double gammds ( double x, double p)
   //
   if ( x <= 0.0 )
   {
-    warning("x <= 0.0 in gammds");
+    std::cout << "x <= 0.0 in gammds\n";
     value = 0.0;
     return value;
   }
   
   if ( p <= 0.0 ) 
   {
-    warning("p <= 0.0 in gammds");
+    std::cout << "p <= 0.0 in gammds\n";
     value = 0.0;
     return value;
   }
@@ -1969,7 +1960,7 @@ double gammds ( double x, double p)
   if ( arg < log ( uflo ) )
   {
     // stop("underflow during the computation in gammds");
-    value = NA_REAL;
+    value = nan("");
     return value;
   }
   
@@ -1978,7 +1969,7 @@ double gammds ( double x, double p)
   if ( f == 0.0 )
   {
     // stop("underflow during the computation in gammds");
-    value = NA_REAL;
+    value = nan("");
     return value;
   }
   

@@ -2416,11 +2416,11 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 }
 
 .invincgam <- function(a, p, q) {
-    .Call(`_medfate_invincgam`, a, p, q)
+    .Call(`_medfate_invincgam_c`, a, p, q)
 }
 
 .gammds <- function(x, p) {
-    .Call(`_medfate_gammds`, x, p)
+    .Call(`_medfate_gammds_c`, x, p)
 }
 
 #' @rdname hydraulics_supplyfunctions

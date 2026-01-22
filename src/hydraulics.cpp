@@ -3,7 +3,7 @@
 #include "biophysicsutils.h"
 #include "tissuemoisture.h"
 #include "hydraulics_c.h"
-#include "incgamma.h"
+#include "incgamma_c.h"
 #include <math.h>
 
 
@@ -87,14 +87,14 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
   else if(psi==0.0) return(0.0);
   double h = 1.0/c;
   double z = pow(psi/d,c);
-  NumericVector pq = incgam(h,z);
+  std::vector<double> pq = incgam_c(h,z);
   double g = tgamma(h)*pq[0]; //Upper incomplete gamma, without the normalizing factor
   double E = kxylemmax*(-d/c)*g;
   if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
     if(psiCav < psi) {
       E = xylemConductance_c(psiCav,kxylemmax,c,d)*(-psi); //square integral
     } else {
-      NumericVector pq = incgam(h,pow(psiCav/d,c));
+      std::vector<double> pq = incgam_c(h,pow(psiCav/d,c));
       double Epsimin = kxylemmax*(-d/c)*tgamma(h)*pq[0];
       E = E - Epsimin + xylemConductance_c(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
     }
@@ -117,7 +117,7 @@ double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav 
   double g = (-c/d)*(Eg/kxylemmax);
   double p = g/tgamma(h);
   double q = 1.0 - p;//Upper incomplete gamma, without the normalizing factor
-  double x = invincgam(h,p,q);
+  double x = invincgam_c(h,p,q);
   double psi = d*pow(x, 1.0/c);
   return(psi);
 }
