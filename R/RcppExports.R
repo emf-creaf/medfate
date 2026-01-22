@@ -678,37 +678,37 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' @name fire_severity
 #' @keywords internal
 fire_plumeTemperature <- function(Ib_surf, z, T_air = 25.0, rho_air = 1.169) {
-    .Call(`_medfate_plumeTemperature`, Ib_surf, z, T_air, rho_air)
+    .Call(`_medfate_plumeTemperature_c`, Ib_surf, z, T_air, rho_air)
 }
 
 #' @rdname fire_severity
 #' @keywords internal
 fire_barkThermalDiffusivity <- function(fmc_bark, rho_bark = 500.0, T_air = 25.0) {
-    .Call(`_medfate_barkThermalDiffusivity`, fmc_bark, rho_bark, T_air)
+    .Call(`_medfate_barkThermalDiffusivity_c`, fmc_bark, rho_bark, T_air)
 }
 
 #' @rdname fire_severity
 #' @keywords internal
-fire_radialBoleNecrosis <- function(Ib_surf, t_res, bark_diffusivity, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
-    .Call(`_medfate_radialBoleNecrosis`, Ib_surf, t_res, bark_diffusivity, T_air, rho_air, T_necrosis)
+fire_radialBoleNecrosis <- function(Ib_surf, t_res, bark_diffusivity, T_air = 25.0, rho_air = 1.169) {
+    .Call(`_medfate_radialBoleNecrosis_c`, Ib_surf, t_res, bark_diffusivity, T_air, rho_air)
 }
 
 #' @rdname fire_severity
 #' @keywords internal
 fire_leafThermalFactor <- function(SLA, h = 130.0, c = 2500.0) {
-    .Call(`_medfate_leafThermalFactor`, SLA, h, c)
+    .Call(`_medfate_leafThermalFactor_c`, SLA, h, c)
 }
 
 #' @rdname fire_severity
 #' @keywords internal
-fire_necrosisCriticalTemperature <- function(t_res, thermal_factor, T_air = 25.0, T_necrosis = 60.0) {
-    .Call(`_medfate_necrosisCriticalTemperature`, t_res, thermal_factor, T_air, T_necrosis)
+fire_necrosisCriticalTemperature <- function(t_res, thermal_factor, T_air = 25.0) {
+    .Call(`_medfate_necrosisCriticalTemperature_c`, t_res, thermal_factor, T_air)
 }
 
 #' @rdname fire_severity
 #' @keywords internal
-fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
-    .Call(`_medfate_necrosisHeight`, Ib_surf, t_res, thermal_factor, T_air, rho_air, T_necrosis)
+fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rho_air = 1.169) {
+    .Call(`_medfate_necrosisHeight_c`, Ib_surf, t_res, thermal_factor, T_air, rho_air)
 }
 
 .treeBasalArea <- function(N, dbh) {

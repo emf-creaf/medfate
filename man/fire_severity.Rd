@@ -19,26 +19,19 @@ fire_radialBoleNecrosis(
   t_res,
   bark_diffusivity,
   T_air = 25,
-  rho_air = 1.169,
-  T_necrosis = 60
+  rho_air = 1.169
 )
 
 fire_leafThermalFactor(SLA, h = 130, c = 2500)
 
-fire_necrosisCriticalTemperature(
-  t_res,
-  thermal_factor,
-  T_air = 25,
-  T_necrosis = 60
-)
+fire_necrosisCriticalTemperature(t_res, thermal_factor, T_air = 25)
 
 fire_necrosisHeight(
   Ib_surf,
   t_res,
   thermal_factor,
   T_air = 25,
-  rho_air = 1.169,
-  T_necrosis = 60
+  rho_air = 1.169
 )
 }
 \arguments{
@@ -58,8 +51,6 @@ fire_necrosisHeight(
 
 \item{bark_diffusivity}{Bark thermal diffusivity (m2/s).}
 
-\item{T_necrosis}{Temperature of tissue necrosis (degrees Celsius).}
-
 \item{SLA}{Specific leaf area (m2/kg).}
 
 \item{h}{Heat transfer coefficient}
@@ -67,6 +58,8 @@ fire_necrosisHeight(
 \item{c}{Specific heat capacity}
 
 \item{thermal_factor}{Tissue thermal factor.}
+
+\item{T_necrosis}{Temperature of tissue necrosis (degrees Celsius).}
 }
 \value{
 \itemize{

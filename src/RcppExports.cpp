@@ -936,9 +936,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// plumeTemperature
-double plumeTemperature(double Ib_surf, double z, double T_air, double rho_air);
-RcppExport SEXP _medfate_plumeTemperature(SEXP Ib_surfSEXP, SEXP zSEXP, SEXP T_airSEXP, SEXP rho_airSEXP) {
+// plumeTemperature_c
+double plumeTemperature_c(double Ib_surf, double z, double T_air, double rho_air);
+RcppExport SEXP _medfate_plumeTemperature_c(SEXP Ib_surfSEXP, SEXP zSEXP, SEXP T_airSEXP, SEXP rho_airSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -946,26 +946,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type z(zSEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
     Rcpp::traits::input_parameter< double >::type rho_air(rho_airSEXP);
-    rcpp_result_gen = Rcpp::wrap(plumeTemperature(Ib_surf, z, T_air, rho_air));
+    rcpp_result_gen = Rcpp::wrap(plumeTemperature_c(Ib_surf, z, T_air, rho_air));
     return rcpp_result_gen;
 END_RCPP
 }
-// barkThermalDiffusivity
-double barkThermalDiffusivity(double fmc_bark, double rho_bark, double T_air);
-RcppExport SEXP _medfate_barkThermalDiffusivity(SEXP fmc_barkSEXP, SEXP rho_barkSEXP, SEXP T_airSEXP) {
+// barkThermalDiffusivity_c
+double barkThermalDiffusivity_c(double fmc_bark, double rho_bark, double T_air);
+RcppExport SEXP _medfate_barkThermalDiffusivity_c(SEXP fmc_barkSEXP, SEXP rho_barkSEXP, SEXP T_airSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type fmc_bark(fmc_barkSEXP);
     Rcpp::traits::input_parameter< double >::type rho_bark(rho_barkSEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
-    rcpp_result_gen = Rcpp::wrap(barkThermalDiffusivity(fmc_bark, rho_bark, T_air));
+    rcpp_result_gen = Rcpp::wrap(barkThermalDiffusivity_c(fmc_bark, rho_bark, T_air));
     return rcpp_result_gen;
 END_RCPP
 }
-// radialBoleNecrosis
-double radialBoleNecrosis(double Ib_surf, double t_res, double bark_diffusivity, double T_air, double rho_air, double T_necrosis);
-RcppExport SEXP _medfate_radialBoleNecrosis(SEXP Ib_surfSEXP, SEXP t_resSEXP, SEXP bark_diffusivitySEXP, SEXP T_airSEXP, SEXP rho_airSEXP, SEXP T_necrosisSEXP) {
+// radialBoleNecrosis_c
+double radialBoleNecrosis_c(double Ib_surf, double t_res, double bark_diffusivity, double T_air, double rho_air);
+RcppExport SEXP _medfate_radialBoleNecrosis_c(SEXP Ib_surfSEXP, SEXP t_resSEXP, SEXP bark_diffusivitySEXP, SEXP T_airSEXP, SEXP rho_airSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -974,41 +974,39 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type bark_diffusivity(bark_diffusivitySEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
     Rcpp::traits::input_parameter< double >::type rho_air(rho_airSEXP);
-    Rcpp::traits::input_parameter< double >::type T_necrosis(T_necrosisSEXP);
-    rcpp_result_gen = Rcpp::wrap(radialBoleNecrosis(Ib_surf, t_res, bark_diffusivity, T_air, rho_air, T_necrosis));
+    rcpp_result_gen = Rcpp::wrap(radialBoleNecrosis_c(Ib_surf, t_res, bark_diffusivity, T_air, rho_air));
     return rcpp_result_gen;
 END_RCPP
 }
-// leafThermalFactor
-double leafThermalFactor(double SLA, double h, double c);
-RcppExport SEXP _medfate_leafThermalFactor(SEXP SLASEXP, SEXP hSEXP, SEXP cSEXP) {
+// leafThermalFactor_c
+double leafThermalFactor_c(double SLA, double h, double c);
+RcppExport SEXP _medfate_leafThermalFactor_c(SEXP SLASEXP, SEXP hSEXP, SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
     Rcpp::traits::input_parameter< double >::type h(hSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafThermalFactor(SLA, h, c));
+    rcpp_result_gen = Rcpp::wrap(leafThermalFactor_c(SLA, h, c));
     return rcpp_result_gen;
 END_RCPP
 }
-// necrosisCriticalTemperature
-double necrosisCriticalTemperature(double t_res, double thermal_factor, double T_air, double T_necrosis);
-RcppExport SEXP _medfate_necrosisCriticalTemperature(SEXP t_resSEXP, SEXP thermal_factorSEXP, SEXP T_airSEXP, SEXP T_necrosisSEXP) {
+// necrosisCriticalTemperature_c
+double necrosisCriticalTemperature_c(double t_res, double thermal_factor, double T_air);
+RcppExport SEXP _medfate_necrosisCriticalTemperature_c(SEXP t_resSEXP, SEXP thermal_factorSEXP, SEXP T_airSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type t_res(t_resSEXP);
     Rcpp::traits::input_parameter< double >::type thermal_factor(thermal_factorSEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
-    Rcpp::traits::input_parameter< double >::type T_necrosis(T_necrosisSEXP);
-    rcpp_result_gen = Rcpp::wrap(necrosisCriticalTemperature(t_res, thermal_factor, T_air, T_necrosis));
+    rcpp_result_gen = Rcpp::wrap(necrosisCriticalTemperature_c(t_res, thermal_factor, T_air));
     return rcpp_result_gen;
 END_RCPP
 }
-// necrosisHeight
-double necrosisHeight(double Ib_surf, double t_res, double thermal_factor, double T_air, double rho_air, double T_necrosis);
-RcppExport SEXP _medfate_necrosisHeight(SEXP Ib_surfSEXP, SEXP t_resSEXP, SEXP thermal_factorSEXP, SEXP T_airSEXP, SEXP rho_airSEXP, SEXP T_necrosisSEXP) {
+// necrosisHeight_c
+double necrosisHeight_c(double Ib_surf, double t_res, double thermal_factor, double T_air, double rho_air);
+RcppExport SEXP _medfate_necrosisHeight_c(SEXP Ib_surfSEXP, SEXP t_resSEXP, SEXP thermal_factorSEXP, SEXP T_airSEXP, SEXP rho_airSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1017,8 +1015,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type thermal_factor(thermal_factorSEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
     Rcpp::traits::input_parameter< double >::type rho_air(rho_airSEXP);
-    Rcpp::traits::input_parameter< double >::type T_necrosis(T_necrosisSEXP);
-    rcpp_result_gen = Rcpp::wrap(necrosisHeight(Ib_surf, t_res, thermal_factor, T_air, rho_air, T_necrosis));
+    rcpp_result_gen = Rcpp::wrap(necrosisHeight_c(Ib_surf, t_res, thermal_factor, T_air, rho_air));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6130,12 +6127,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
-    {"_medfate_plumeTemperature", (DL_FUNC) &_medfate_plumeTemperature, 4},
-    {"_medfate_barkThermalDiffusivity", (DL_FUNC) &_medfate_barkThermalDiffusivity, 3},
-    {"_medfate_radialBoleNecrosis", (DL_FUNC) &_medfate_radialBoleNecrosis, 6},
-    {"_medfate_leafThermalFactor", (DL_FUNC) &_medfate_leafThermalFactor, 3},
-    {"_medfate_necrosisCriticalTemperature", (DL_FUNC) &_medfate_necrosisCriticalTemperature, 4},
-    {"_medfate_necrosisHeight", (DL_FUNC) &_medfate_necrosisHeight, 6},
+    {"_medfate_plumeTemperature_c", (DL_FUNC) &_medfate_plumeTemperature_c, 4},
+    {"_medfate_barkThermalDiffusivity_c", (DL_FUNC) &_medfate_barkThermalDiffusivity_c, 3},
+    {"_medfate_radialBoleNecrosis_c", (DL_FUNC) &_medfate_radialBoleNecrosis_c, 5},
+    {"_medfate_leafThermalFactor_c", (DL_FUNC) &_medfate_leafThermalFactor_c, 3},
+    {"_medfate_necrosisCriticalTemperature_c", (DL_FUNC) &_medfate_necrosisCriticalTemperature_c, 3},
+    {"_medfate_necrosisHeight_c", (DL_FUNC) &_medfate_necrosisHeight_c, 5},
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
     {"_medfate_shrubCrownRatioAllometric", (DL_FUNC) &_medfate_shrubCrownRatioAllometric, 2},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},

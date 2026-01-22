@@ -1,8 +1,7 @@
-#include <Rcpp.h>
 #include <math.h>
-using namespace Rcpp;
+#include "fireseverity_c.h"
 
-double erfInv(double x){
+double erfInv_c(double x){
   if(abs(x) < 6e-3) return(x);
   double tt1, tt2, lnx, sgn;
   sgn = (x < 0.0) ? -1.0 : 1.0;
@@ -54,7 +53,7 @@ double erfInv(double x){
 //' @name fire_severity
 //' @keywords internal
 // [[Rcpp::export("fire_plumeTemperature")]]
-double plumeTemperature(double Ib_surf, double z, double T_air = 25.0, double rho_air = 1.169) {
+double plumeTemperature_c(double Ib_surf, double z, double T_air = 25.0, double rho_air = 1.169) {
   double C = 2.6; //(Yuan and Cox 1996)
   double c_air = 1.007; //J·kg-1·ºC-1
   return(std::min(900.0, C*(1.0/z)*pow((T_air + 273.15)/9.8,1.0/3.0)*pow(Ib_surf/(c_air*rho_air), 2.0/3.0)+ T_air));
@@ -63,7 +62,7 @@ double plumeTemperature(double Ib_surf, double z, double T_air = 25.0, double rh
 //' @rdname fire_severity
 //' @keywords internal
 // [[Rcpp::export("fire_barkThermalDiffusivity")]]
-double barkThermalDiffusivity(double fmc_bark, double rho_bark = 500.0, double T_air = 25.0) {
+double barkThermalDiffusivity_c(double fmc_bark, double rho_bark = 500.0, double T_air = 25.0) {
   double W = fmc_bark/100.0; // From percent to fraction
   double c_bark = 1105.315 + 4.857*T_air + W*4180.0 + 348.342; // Specific heat capacity of bark, J·kg-1·ºC-1, Martin 1963 
   // Rcout<< c_bark<<"\n";
@@ -78,36 +77,36 @@ double barkThermalDiffusivity(double fmc_bark, double rho_bark = 500.0, double T
 //' @rdname fire_severity
 //' @keywords internal
 // [[Rcpp::export("fire_radialBoleNecrosis")]]
-double radialBoleNecrosis(double Ib_surf, double t_res, double bark_diffusivity,
-                          double T_air = 25.0, double rho_air = 1.169, double T_necrosis = 60.0) {
-  double T_plume = plumeTemperature(Ib_surf, 0.1, T_air, rho_air);
-  double theta = std::max(0.0, (T_necrosis - T_plume)/(T_air - T_plume));
-  double xn = 2.0*pow(bark_diffusivity*t_res, 0.5)*erfInv(theta);
+double radialBoleNecrosis_c(double Ib_surf, double t_res, double bark_diffusivity,
+                          double T_air = 25.0, double rho_air = 1.169) {
+  double T_plume = plumeTemperature_c(Ib_surf, 0.1, T_air, rho_air);
+  double theta = std::max(0.0, (temperatureNecrosis - T_plume)/(T_air - T_plume));
+  double xn = 2.0*pow(bark_diffusivity*t_res, 0.5)*erfInv_c(theta);
   return(xn*100.0); // from m to cm
 }
 
 //' @rdname fire_severity
 //' @keywords internal
 // [[Rcpp::export("fire_leafThermalFactor")]]
-double leafThermalFactor(double SLA, double h = 130.0, double c = 2500.0) {
+double leafThermalFactor_c(double SLA, double h = 130.0, double c = 2500.0) {
    return(SLA*(h/c));
 }
 
 //' @rdname fire_severity
 //' @keywords internal
 // [[Rcpp::export("fire_necrosisCriticalTemperature")]]
-double necrosisCriticalTemperature(double t_res, double thermal_factor, double T_air = 25.0, double T_necrosis = 60.0) {
+double necrosisCriticalTemperature_c(double t_res, double thermal_factor, double T_air = 25.0) {
    double theta = exp(-1.0*thermal_factor*t_res);
-   double T_c = (T_necrosis - (theta*T_air))/(1.0 - theta);
+   double T_c = (temperatureNecrosis - (theta*T_air))/(1.0 - theta);
    return(T_c);
 }
 
 //' @rdname fire_severity
 //' @keywords internal
 // [[Rcpp::export("fire_necrosisHeight")]]
-double necrosisHeight(double Ib_surf, double t_res, double thermal_factor, 
-                      double T_air = 25.0, double rho_air = 1.169, double T_necrosis = 60.0) {
-  double T_c = necrosisCriticalTemperature(t_res, thermal_factor, T_air, T_necrosis);
+double necrosisHeight_c(double Ib_surf, double t_res, double thermal_factor, 
+                      double T_air = 25.0, double rho_air = 1.169) {
+  double T_c = necrosisCriticalTemperature_c(t_res, thermal_factor, T_air);
   double C = 2.6; //(Yuan and Cox 1996)
   double c_air = 1.007; //J·kg-1·ºC-1
   double z_necrosis = C*(1.0/(T_c - T_air))*pow((T_air + 273.15)/9.8,1.0/3.0)*pow(Ib_surf/(c_air*rho_air), 2.0/3.0);
