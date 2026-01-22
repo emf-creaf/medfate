@@ -11,6 +11,7 @@ test_that("default soils can be created",{
   df_minimal$ph <- NULL
   df_minimal$nitrogen <- NULL
   expect_s3_class(soil(df_minimal), "soil")
+  expect_type(medfate:::.testSoilDataFrameToStructure(soil(df)), "double")
 })
 
 test_that("soils can be redefined",{

@@ -3,6 +3,9 @@
 #ifndef SOIL_C_H
 #define SOIL_C_H
 
+//*
+//* Clapp-Hornberger parameters structure
+//* 
 struct ClappHornberger{
   double theta_sat;
   double psi_sat_cm;
@@ -10,6 +13,9 @@ struct ClappHornberger{
   double K_sat_cm_h;
 };
 
+//*
+//* Soil structure to hold soil properties and state variables
+//* 
 class Soil {
   private:
   int nlayers;
@@ -37,30 +43,30 @@ class Soil {
   std::vector<double> theta;
   std::vector<double> Temp;
   public:
-    Soil(int nlayers, 
-             std::string& model,
-             std::vector<double>& widths,
-             std::vector<double>& clay,
-             std::vector<double>& sand,
-             std::vector<double>& om,
-             std::vector<double>& nitrogen,
-             std::vector<double>& ph,
-             std::vector<double>& bd,
-             std::vector<double>& rfc,
-             std::vector<double>& macro,
-             std::vector<double>& Ksat,
-             std::vector<double>& VG_alpha,
-             std::vector<double>& VG_n,
-             std::vector<double>& VG_theta_res,
-             std::vector<double>& VG_theta_sat,
-             std::vector<std::string>& usda_type,
-             std::vector<double>& theta_SAT,
-             std::vector<double>& theta_FC,
-             std::vector<double>& W,
-             std::vector<double>& psi,
-             std::vector<double>& theta,
-             std::vector<double>& Temp,
-             ClappHornberger& clapp_hornberger);
+    Soil(int nlayersIn, 
+             std::string& modelIn,
+             std::vector<double>& widthsIn,
+             std::vector<double>& clayIn,
+             std::vector<double>& sandIn,
+             std::vector<double>& omIn,
+             std::vector<double>& nitrogenIn,
+             std::vector<double>& phIn,
+             std::vector<double>& bdIn,
+             std::vector<double>& rfcIn,
+             std::vector<double>& macroIn,
+             std::vector<double>& KsatIn,
+             std::vector<double>& VG_alphaIn,
+             std::vector<double>& VG_nIn,
+             std::vector<double>& VG_theta_resIn,
+             std::vector<double>& VG_theta_satIn,
+             std::vector<std::string>& usda_typeIn,
+             std::vector<double>& theta_SATIn,
+             std::vector<double>& theta_FCIn,
+             std::vector<double>& WIn,
+             std::vector<double>& psiIn,
+             std::vector<double>& thetaIn,
+             std::vector<double>& TempIn,
+             ClappHornberger& clapp_hornbergerIn);
     double getW(int layer);
     int getNlayers();
     std::string getModel();
@@ -85,10 +91,12 @@ class Soil {
     double getPsi(int layer);
     double getTheta(int layer);
     double getTemp(int layer);
-    double setPsi(int layer, double value);
-    double setTheta(int layer, double value);
-    double setW(int layer, double value);
-    double setTemp(int layer, double value);
+    double getWaterSAT(int layer);
+    double getWaterFC(int layer);
+    void setPsi(int layer, double value);
+    void setTheta(int layer, double value);
+    void setW(int layer, double value);
+    void setTemp(int layer, double value);
     
 };
 

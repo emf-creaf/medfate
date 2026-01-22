@@ -1595,128 +1595,10 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
     .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
-#' Hydraulic confuctance functions
-#' 
-#' Set of functions used in the calculation of soil and plant hydraulic conductance.
-#'
-#' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
-#' @param K Whole-plant relative conductance (0-1).
-#' @param psi_extract Soil water potential (in MPa) corresponding to 50% whole-plant relative transpiration.
-#' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
-#' @param v Proportion of fine roots within each soil layer.
-#' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-#' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-#' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
-#' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
-#' @param kxylem Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).
-#' @param pCrit Proportion of maximum conductance considered critical for hydraulic functioning.
-#' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50%, 88% and 12% percent conductance loss.
-#' @param temp Temperature (in degrees Celsius).
-#' 
-#' @details Details of plant hydraulic models are given the medfate book. 
-#' Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
-#' 
-#' @return
-#' Values returned for each function are:
-#' \itemize{
-#'   \item{\code{hydraulics_psi2K}: Whole-plant relative conductance (0-1).}
-#'   \item{\code{hydraulics_K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics_psi2K()}).}
-#'   \item{\code{hydraulics_averagePsi}: The average water potential (in MPa) across soil layers.}
-#'   \item{\code{hydraulics_vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
-#'   \item{\code{hydraulics_xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
-#'   \item{\code{hydraulics_xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
-#'   \item{\code{hydraulics_psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
-#' }
-#' 
-#' @references
-#' Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell and Environment 21:347–359.
-#' 
-#' Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' @seealso
-#' \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
-#' 
-#' @examples
-#' 
-#' #Manual display of vulnerability curve
-#' kstemmax = 4 # in mmol·m-2·s-1·MPa-1
-#' stemc = 3 
-#' stemd = -4 # in MPa
-#' psiVec = seq(-0.1, -7.0, by =-0.01)
-#' kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
-#' plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
-#'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
-#' 
-#' #Load example dataset
-#' data(exampleforest)
-#' 
-#' #Default species parameterization
-#' data(SpParamsMED)
-#' 
-#' #Initialize soil with default soil params (4 layers)
-#' examplesoil <- defaultSoilParams(4)
-#' 
-#' #Initialize control parameters
-#' control <- defaultControl("Granier")
-#' 
-#' #Switch to 'Sperry' transpiration mode
-#' control <- defaultControl("Sperry")
-#' 
-#' #Initialize input
-#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-#' 
-#' #Leaf vulnerability curves
-#' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
-#' 
-#' #Stem vulnerability curves
-#' hydraulics_vulnerabilityCurvePlot(x, type="stem")
-#'              
-#' @name hydraulics_conductancefunctions
-#' @keywords internal
-hydraulics_psi2K <- function(psi, psi_extract, exp_extract = 3.0) {
-    .Call(`_medfate_Psi2K`, psi, psi_extract, exp_extract)
-}
-
-#' @rdname hydraulics_conductancefunctions
-#' @keywords internal
-hydraulics_K2Psi <- function(K, psi_extract, exp_extract = 3.0) {
-    .Call(`_medfate_K2Psi`, K, psi_extract, exp_extract)
-}
-
 #' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_averagePsi <- function(psi, v, exp_extract, psi_extract) {
     .Call(`_medfate_averagePsi`, psi, v, exp_extract, psi_extract)
-}
-
-#' @rdname hydraulics_conductancefunctions
-hydraulics_xylemConductance <- function(psi, kxylemmax, c, d) {
-    .Call(`_medfate_xylemConductance`, psi, kxylemmax, c, d)
-}
-
-#' @rdname hydraulics_conductancefunctions
-hydraulics_xylemConductanceSigmoid <- function(psi, kxylemmax, P50, slope) {
-    .Call(`_medfate_xylemConductanceSigmoid`, psi, kxylemmax, P50, slope)
-}
-
-#' @rdname hydraulics_conductancefunctions
-#' @keywords internal
-hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
-    .Call(`_medfate_xylemPsi`, kxylem, kxylemmax, c, d)
-}
-
-#' @rdname hydraulics_conductancefunctions
-#' @keywords internal
-hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
-    .Call(`_medfate_psiCrit`, c, d, pCrit)
-}
-
-#' @rdname hydraulics_conductancefunctions
-#' @keywords internal
-hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
-    .Call(`_medfate_vanGenuchtenConductance`, psi, krhizomax, n, alpha)
 }
 
 #' @rdname hydraulics_conductancefunctions
@@ -2078,6 +1960,124 @@ hydraulics_proportionDefoliationSigmoid <- function(psiLeaf, P50, slope, PLC_cri
 #' @keywords internal
 hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, PLC_crit = 0.88, P50_cv = 10.0) {
     .Call(`_medfate_proportionDefoliationWeibull`, psiLeaf, c, d, PLC_crit, P50_cv)
+}
+
+#' Hydraulic conductance functions
+#' 
+#' Set of functions used in the calculation of soil and plant hydraulic conductance.
+#'
+#' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
+#' @param K Whole-plant relative conductance (0-1).
+#' @param psi_extract Soil water potential (in MPa) corresponding to 50% whole-plant relative transpiration.
+#' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
+#' @param v Proportion of fine roots within each soil layer.
+#' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
+#' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
+#' @param kxylem Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).
+#' @param pCrit Proportion of maximum conductance considered critical for hydraulic functioning.
+#' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50%, 88% and 12% percent conductance loss.
+#' @param temp Temperature (in degrees Celsius).
+#' 
+#' @details Details of plant hydraulic models are given the medfate book. 
+#' Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
+#' 
+#' @return
+#' Values returned for each function are:
+#' \itemize{
+#'   \item{\code{hydraulics_psi2K}: Whole-plant relative conductance (0-1).}
+#'   \item{\code{hydraulics_K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics_psi2K()}).}
+#'   \item{\code{hydraulics_averagePsi}: The average water potential (in MPa) across soil layers.}
+#'   \item{\code{hydraulics_vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
+#'   \item{\code{hydraulics_xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
+#'   \item{\code{hydraulics_xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
+#'   \item{\code{hydraulics_psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
+#' }
+#' 
+#' @references
+#' Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell and Environment 21:347–359.
+#' 
+#' Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
+#' 
+#' @examples
+#' 
+#' #Manual display of vulnerability curve
+#' kstemmax = 4 # in mmol·m-2·s-1·MPa-1
+#' stemc = 3 
+#' stemd = -4 # in MPa
+#' psiVec = seq(-0.1, -7.0, by =-0.01)
+#' kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
+#' plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
+#'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
+#' 
+#' #Load example dataset
+#' data(exampleforest)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil <- defaultSoilParams(4)
+#' 
+#' #Initialize control parameters
+#' control <- defaultControl("Granier")
+#' 
+#' #Switch to 'Sperry' transpiration mode
+#' control <- defaultControl("Sperry")
+#' 
+#' #Initialize input
+#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+#' 
+#' #Leaf vulnerability curves
+#' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
+#' 
+#' #Stem vulnerability curves
+#' hydraulics_vulnerabilityCurvePlot(x, type="stem")
+#'              
+#' @name hydraulics_conductancefunctions
+#' @keywords internal
+hydraulics_psi2K <- function(psi, psi_extract, exp_extract = 3.0) {
+    .Call(`_medfate_Psi2K`, psi, psi_extract, exp_extract)
+}
+
+#' @rdname hydraulics_conductancefunctions
+#' @keywords internal
+hydraulics_K2Psi <- function(K, psi_extract, exp_extract = 3.0) {
+    .Call(`_medfate_K2Psi`, K, psi_extract, exp_extract)
+}
+
+#' @rdname hydraulics_conductancefunctions
+hydraulics_xylemConductance <- function(psi, kxylemmax, c, d) {
+    .Call(`_medfate_xylemConductance`, psi, kxylemmax, c, d)
+}
+
+#' @rdname hydraulics_conductancefunctions
+hydraulics_xylemConductanceSigmoid <- function(psi, kxylemmax, P50, slope) {
+    .Call(`_medfate_xylemConductanceSigmoid`, psi, kxylemmax, P50, slope)
+}
+
+#' @rdname hydraulics_conductancefunctions
+#' @keywords internal
+hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
+    .Call(`_medfate_xylemPsi`, kxylem, kxylemmax, c, d)
+}
+
+#' @rdname hydraulics_conductancefunctions
+#' @keywords internal
+hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
+    .Call(`_medfate_psiCrit`, c, d, pCrit)
+}
+
+#' @rdname hydraulics_conductancefunctions
+#' @keywords internal
+hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
+    .Call(`_medfate_vanGenuchtenConductance`, psi, krhizomax, n, alpha)
 }
 
 #' @param month Month of the year (from 1 to 12).

@@ -1,16 +1,14 @@
 #include "medfate.h"
+#include "soil_c.h"
 
 #ifndef HYDROLOGY_C_H
 #define HYDROLOGY_C_H
 
 double soilEvaporationAmount_c(double DEF,double PETs, double Gsoil);
-double soilEvaporation_c(std::vector<double>& W, 
-                         const std::vector<double>& widths,
-                         const std::vector<double>& waterFC,
-                         const std::vector<double>& psiSoil,  
+double soilEvaporation_c(Soil& soil,  
                          double snowpack, 
                          double pet, double LgroundSWR,
-                         bool modifySoil = true);
+                         bool modifySoil);
 double interceptionGashDay_c(double Rainfall, double Cm, double p, double ER=0.05);
 double interceptionLiuDay_c(double Rainfall, double Cm, double p, double ER=0.05);
 double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation);

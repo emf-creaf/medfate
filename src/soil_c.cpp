@@ -3,55 +3,57 @@
 #include "soil_c.h"
 
 
-
-Soil::Soil(int nlayers, 
-                   std::string& model,
-                   std::vector<double>& widths,
-                   std::vector<double>& clay,
-                   std::vector<double>& sand,
-                   std::vector<double>& om,
-                   std::vector<double>& nitrogen,
-                   std::vector<double>& ph,
-                   std::vector<double>& bd,
-                   std::vector<double>& rfc,
-                   std::vector<double>& macro,
-                   std::vector<double>& Ksat,
-                   std::vector<double>& VG_alpha,
-                   std::vector<double>& VG_n,
-                   std::vector<double>& VG_theta_res,
-                   std::vector<double>& VG_theta_sat,
-                   std::vector<std::string>& usda_type,
-                   std::vector<double>& theta_SAT,
-                   std::vector<double>& theta_FC,
-                   std::vector<double>& W,
-                   std::vector<double>& psi,
-                   std::vector<double>& theta,
-                   std::vector<double>& Temp,
-                   ClappHornberger& clapp_hornberger)  { 
-  nlayers = nlayers;
-  model = model;
-  widths = widths;
-  clay = clay;
-  sand = sand;
-  om = om;
-  nitrogen = nitrogen;
-  ph = ph;
-  bd = bd;
-  rfc = rfc;
-  macro = macro;
-  Ksat = Ksat;
-  VG_alpha = VG_alpha;
-  VG_n = VG_n;
-  VG_theta_res = VG_theta_res;
-  VG_theta_sat = VG_theta_sat;
-  usda_type = usda_type;
-  theta_SAT = theta_SAT;
-  theta_FC = theta_FC;
-  W = W;
-  psi = psi;
-  theta = theta;
-  Temp = Temp;
-  clapp_hornberger = clapp_hornberger;
+/*=============================================================================
+ * Implementation of Soil class
+ *=============================================================================**/
+Soil::Soil(int nlayersIn, 
+           std::string& modelIn,
+           std::vector<double>& widthsIn,
+           std::vector<double>& clayIn,
+           std::vector<double>& sandIn,
+           std::vector<double>& omIn,
+           std::vector<double>& nitrogenIn,
+           std::vector<double>& phIn,
+           std::vector<double>& bdIn,
+           std::vector<double>& rfcIn,
+           std::vector<double>& macroIn,
+           std::vector<double>& KsatIn,
+           std::vector<double>& VG_alphaIn,
+           std::vector<double>& VG_nIn,
+           std::vector<double>& VG_theta_resIn,
+           std::vector<double>& VG_theta_satIn,
+           std::vector<std::string>& usda_typeIn,
+           std::vector<double>& theta_SATIn,
+           std::vector<double>& theta_FCIn,
+           std::vector<double>& WIn,
+           std::vector<double>& psiIn,
+           std::vector<double>& thetaIn,
+           std::vector<double>& TempIn,
+           ClappHornberger& clapp_hornbergerIn)  { 
+  nlayers = nlayersIn;
+  model = modelIn;
+  widths = widthsIn;
+  clay = clayIn;
+  sand = sandIn;
+  om = omIn;
+  nitrogen = nitrogenIn;
+  ph = phIn;
+  bd = bdIn;
+  rfc = rfcIn;
+  macro = macroIn;
+  Ksat = KsatIn;
+  VG_alpha = VG_alphaIn;
+  VG_n = VG_nIn;
+  VG_theta_res = VG_theta_resIn;
+  VG_theta_sat = VG_theta_satIn;
+  usda_type = usda_typeIn;
+  theta_SAT = theta_SATIn;
+  theta_FC = theta_FCIn;
+  W = WIn;
+  psi = psiIn;
+  theta = thetaIn;
+  Temp = TempIn;
+  clapp_hornberger = clapp_hornbergerIn;
 }
 
 double Soil::getW(int layer) {return W[layer];}
@@ -77,11 +79,45 @@ double Soil::getThetaSAT(int layer) {return theta_SAT[layer]; }
 double Soil::getThetaFC(int layer) {return theta_FC[layer]; }
 double Soil::getPsi(int layer) {return psi[layer]; }
 double Soil::getTheta(int layer) {return theta[layer]; }
+double Soil::getWaterSAT(int layer) {
+  double water_SAT = widths[layer]*theta_SAT[layer]*(1.0-(rfc[layer]/100.0));
+  return(water_SAT);
+}
+double Soil::getWaterFC(int layer) {
+  double water_FC = widths[layer]*theta_FC[layer]*(1.0-(rfc[layer]/100.0));
+  return(water_FC);
+}
 double Soil::getTemp(int layer) {return Temp[layer]; }
-double Soil::setPsi(int layer, double value) {return psi[layer] = value; }
-double Soil::setTheta(int layer, double value) {return theta[layer] = value; }
-double Soil::setW(int layer, double value) {return W[layer] = value; }
-double Soil::setTemp(int layer, double value) {return Temp[layer] = value; }
+void Soil::setPsi(int layer, double value) {
+  psi[layer] = value; 
+  if(model=="VG") {
+    theta[layer] = psi2thetaVanGenuchten(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], psi[layer]);
+  } else {
+    theta[layer] = psi2thetaSaxton(clay[layer], sand[layer], psi[layer], om[layer]);
+  }
+  W[layer] = theta[layer]/theta_FC[layer];
+}
+void Soil::setTheta(int layer, double value) {
+  theta[layer] = value; 
+  W[layer] = theta[layer]/theta_FC[layer];
+  if(model=="VG") {
+    psi[layer] = theta2psiVanGenuchten(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], theta[layer]);
+  } else {
+    psi[layer] = theta2psiSaxton(clay[layer], sand[layer], theta[layer], om[layer]);
+  }
+}
+void Soil::setW(int layer, double value) {
+  W[layer] = value; 
+  theta[layer] = W[layer]*theta_FC[layer];
+  if(model=="VG") {
+    psi[layer] = theta2psiVanGenuchten(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], theta[layer]);
+  } else {
+    psi[layer] = theta2psiSaxton(clay[layer], sand[layer], theta[layer], om[layer]);
+  }
+}
+void Soil::setTemp(int layer, double value) {
+  Temp[layer] = value; 
+}
 
 
 /*=============================================================================

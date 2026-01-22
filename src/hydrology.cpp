@@ -6,6 +6,7 @@
 #include "soil_c.h"
 #include "root.h"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "hydrology_c.h"
 #include "communication_structures.h"
 #include "biophysicsutils.h"
@@ -65,20 +66,14 @@ double rainfallIntensity(int month, double prec, NumericVector rainfallIntensity
 double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true) {
-  NumericVector W = soil["W"]; //Access to soil state variable
-  NumericVector widths = soil["widths"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector psiSoil = psi(soil, soilFunctions);
+  Soil soil_c = soilDataFrameToStructure(soil, soilFunctions);
 
-  std::vector<double> W_c = as<std::vector<double> >(W);
-  std::vector<double> widths_c = as<std::vector<double> >(widths);
-  std::vector<double> Water_FC_c = as<std::vector<double> >(Water_FC);
-  std::vector<double> psiSoil_c = as<std::vector<double> >(psiSoil);
-  double Esoil = soilEvaporation_c(W_c, widths_c, Water_FC_c, psiSoil_c, 
-                                  snowpack, pet, LgroundSWR, modifySoil);
+  double Esoil = soilEvaporation_c(soil_c, 
+                                   snowpack, pet, LgroundSWR, modifySoil);
   if(modifySoil) {
+    NumericVector W = soil["W"];
     for(int l=0;l<W.size();l++) {
-      W[l] = W_c[l];
+      W[l] = soil_c.getW(l);
     }
   }
                                                               

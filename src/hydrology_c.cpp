@@ -2,6 +2,7 @@
 #include <vector>
 #include <meteoland.h>
 #include "soil_c.h"
+#include "hydraulics_c.h"
 
 /*=============================================================================
  * Implementation of hydrology routines using C++ code
@@ -23,25 +24,48 @@ double soilEvaporationAmount_c(double DEF,double PETs, double Gsoil){
   return(Esoil);
 }
 
-
-double soilEvaporation_c(std::vector<double>& W, 
-                         const std::vector<double>& widths,
-                         const std::vector<double>& waterFC,
-                         const std::vector<double>& psiSoil,  
+double soilEvaporation_c(Soil& soil,  
                          double snowpack, 
                          double pet, double LgroundSWR,
                          bool modifySoil = true) {
+  
+  
   double Esoil = 0.0;
   if(snowpack == 0.0) {
     double PETsoil = pet*(LgroundSWR/100.0);
     double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
+    double W0 = soil.getW(0);
+    double water_FC0 = soil.getWaterFC(0);
+    double psi0 = soil.getPsi(0);
     // Allow evaporation only if water potential is higher than -2 MPa
-    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount_c((waterFC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    if(psi0 > -2.0) Esoil = soilEvaporationAmount_c((water_FC0*(1.0 - W0)), PETsoil, Gsoil);
     if(modifySoil){
-      W[0] = W[0] - (Esoil/waterFC[0]);
+      soil.setW(0, W0 - (Esoil/water_FC0));
     }
   }
   return(Esoil);
+}
+
+
+std::vector<double> herbaceousTranspiration_c(double pet, double LherbSWR, 
+                                  double herbLAI,
+                                  std::vector<double> V,
+                                  Soil& soil, std::string soilFunctions, bool modifySoil = true){
+  int nlayers = soil.getNlayers();
+  std::vector<double> EherbVec(nlayers);
+  for(int i=0;i<nlayers;i++) EherbVec[i] = 0.0;
+  if(!std::isnan(herbLAI)) {
+    double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
+    // NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
+    double psi0 = soil.getPsi(0);
+    for(int l=0;l<nlayers;l++) {
+      EherbVec[l] = V[l]*Tmax_herb*Psi2K(psi0, -1.5, 2.0); 
+      if(modifySoil) {
+        soil.setW(0, soil.getW(l) - (EherbVec[l]/soil.getWaterFC(l)));
+      }
+    }
+  }
+  return(EherbVec);
 }
 
 //Old defaults
