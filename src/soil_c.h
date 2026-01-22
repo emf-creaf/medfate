@@ -121,21 +121,21 @@ const double fieldCapacityPsi = -0.033; // -33 kPa
 /**
  * Saxton et al. (1986) pedotransfer functions
  */
-double saturatedConductivitySaxton(double clay, double sand, double bd, double om, bool mmol);
-double unsaturatedConductivitySaxton(double theta, double clay, double sand, double bd, double om, bool mmol);
-double theta2psiSaxton(double clay, double sand, double theta, double om);
-double psi2thetaSaxton(double clay, double sand, double psi, double om);
-double thetaSATSaxton(double clay, double sand, double om);
+double saturatedConductivitySaxton_c(double clay, double sand, double bd, double om, bool mmol);
+double unsaturatedConductivitySaxton_c(double theta, double clay, double sand, double bd, double om, bool mmol);
+double theta2psiSaxton_c(double clay, double sand, double theta, double om);
+double psi2thetaSaxton_c(double clay, double sand, double psi, double om);
+double thetaSATSaxton_c(double clay, double sand, double om);
 
 /**
  * Van Genuchten-Mualem pedotransfer functions
  */
-double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
-double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
-double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi);
-double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double theta_res, double theta_sat, 
+double theta2psiVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double theta);
+double psi2thetaVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi);
+double psi2kVanGenuchten_c(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi);
+double psi2kVanGenuchtenMicropores_c(double k_b, double n, double alpha, double theta_res, double theta_sat, 
                                    double psi, double psi_b);
-double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
+double psi2DVanGenuchten_c(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
                          double psi);
-double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
+double psi2cVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi);
 #endif

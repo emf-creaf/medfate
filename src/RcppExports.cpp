@@ -5038,9 +5038,9 @@ RcppExport SEXP _medfate_testSoilDataFrameToStructure(SEXP xSEXP, SEXP modelSEXP
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// saturatedConductivitySaxton
-double saturatedConductivitySaxton(double clay, double sand, double bd, double om, bool mmol);
-RcppExport SEXP _medfate_saturatedConductivitySaxton(SEXP claySEXP, SEXP sandSEXP, SEXP bdSEXP, SEXP omSEXP, SEXP mmolSEXP) {
+// saturatedConductivitySaxton_c
+double saturatedConductivitySaxton_c(double clay, double sand, double bd, double om, bool mmol);
+RcppExport SEXP _medfate_saturatedConductivitySaxton_c(SEXP claySEXP, SEXP sandSEXP, SEXP bdSEXP, SEXP omSEXP, SEXP mmolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5049,13 +5049,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type bd(bdSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
     Rcpp::traits::input_parameter< bool >::type mmol(mmolSEXP);
-    rcpp_result_gen = Rcpp::wrap(saturatedConductivitySaxton(clay, sand, bd, om, mmol));
+    rcpp_result_gen = Rcpp::wrap(saturatedConductivitySaxton_c(clay, sand, bd, om, mmol));
     return rcpp_result_gen;
 END_RCPP
 }
-// unsaturatedConductivitySaxton
-double unsaturatedConductivitySaxton(double theta, double clay, double sand, double bd, double om, bool mmol);
-RcppExport SEXP _medfate_unsaturatedConductivitySaxton(SEXP thetaSEXP, SEXP claySEXP, SEXP sandSEXP, SEXP bdSEXP, SEXP omSEXP, SEXP mmolSEXP) {
+// unsaturatedConductivitySaxton_c
+double unsaturatedConductivitySaxton_c(double theta, double clay, double sand, double bd, double om, bool mmol);
+RcppExport SEXP _medfate_unsaturatedConductivitySaxton_c(SEXP thetaSEXP, SEXP claySEXP, SEXP sandSEXP, SEXP bdSEXP, SEXP omSEXP, SEXP mmolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5065,26 +5065,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type bd(bdSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
     Rcpp::traits::input_parameter< bool >::type mmol(mmolSEXP);
-    rcpp_result_gen = Rcpp::wrap(unsaturatedConductivitySaxton(theta, clay, sand, bd, om, mmol));
+    rcpp_result_gen = Rcpp::wrap(unsaturatedConductivitySaxton_c(theta, clay, sand, bd, om, mmol));
     return rcpp_result_gen;
 END_RCPP
 }
-// thetaSATSaxton
-double thetaSATSaxton(double clay, double sand, double om);
-RcppExport SEXP _medfate_thetaSATSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
+// thetaSATSaxton_c
+double thetaSATSaxton_c(double clay, double sand, double om);
+RcppExport SEXP _medfate_thetaSATSaxton_c(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type clay(claySEXP);
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    rcpp_result_gen = Rcpp::wrap(thetaSATSaxton(clay, sand, om));
+    rcpp_result_gen = Rcpp::wrap(thetaSATSaxton_c(clay, sand, om));
     return rcpp_result_gen;
 END_RCPP
 }
-// theta2psiSaxton
-double theta2psiSaxton(double clay, double sand, double theta, double om);
-RcppExport SEXP _medfate_theta2psiSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP, SEXP omSEXP) {
+// theta2psiSaxton_c
+double theta2psiSaxton_c(double clay, double sand, double theta, double om);
+RcppExport SEXP _medfate_theta2psiSaxton_c(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP, SEXP omSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5092,13 +5092,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    rcpp_result_gen = Rcpp::wrap(theta2psiSaxton(clay, sand, theta, om));
+    rcpp_result_gen = Rcpp::wrap(theta2psiSaxton_c(clay, sand, theta, om));
     return rcpp_result_gen;
 END_RCPP
 }
-// psi2thetaSaxton
-double psi2thetaSaxton(double clay, double sand, double psi, double om);
-RcppExport SEXP _medfate_psi2thetaSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP psiSEXP, SEXP omSEXP) {
+// psi2thetaSaxton_c
+double psi2thetaSaxton_c(double clay, double sand, double psi, double om);
+RcppExport SEXP _medfate_psi2thetaSaxton_c(SEXP claySEXP, SEXP sandSEXP, SEXP psiSEXP, SEXP omSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5106,13 +5106,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    rcpp_result_gen = Rcpp::wrap(psi2thetaSaxton(clay, sand, psi, om));
+    rcpp_result_gen = Rcpp::wrap(psi2thetaSaxton_c(clay, sand, psi, om));
     return rcpp_result_gen;
 END_RCPP
 }
-// psi2kVanGenuchten
-double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi);
-RcppExport SEXP _medfate_psi2kVanGenuchten(SEXP ksatSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
+// psi2kVanGenuchten_c
+double psi2kVanGenuchten_c(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi);
+RcppExport SEXP _medfate_psi2kVanGenuchten_c(SEXP ksatSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5122,13 +5122,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
     Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    rcpp_result_gen = Rcpp::wrap(psi2kVanGenuchten(ksat, n, alpha, theta_res, theta_sat, psi));
+    rcpp_result_gen = Rcpp::wrap(psi2kVanGenuchten_c(ksat, n, alpha, theta_res, theta_sat, psi));
     return rcpp_result_gen;
 END_RCPP
 }
-// psi2cVanGenuchten
-double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
-RcppExport SEXP _medfate_psi2cVanGenuchten(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
+// psi2cVanGenuchten_c
+double psi2cVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi);
+RcppExport SEXP _medfate_psi2cVanGenuchten_c(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5137,13 +5137,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
     Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    rcpp_result_gen = Rcpp::wrap(psi2cVanGenuchten(n, alpha, theta_res, theta_sat, psi));
+    rcpp_result_gen = Rcpp::wrap(psi2cVanGenuchten_c(n, alpha, theta_res, theta_sat, psi));
     return rcpp_result_gen;
 END_RCPP
 }
-// psi2thetaVanGenuchten
-double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
-RcppExport SEXP _medfate_psi2thetaVanGenuchten(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
+// psi2thetaVanGenuchten_c
+double psi2thetaVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi);
+RcppExport SEXP _medfate_psi2thetaVanGenuchten_c(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5152,13 +5152,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
     Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    rcpp_result_gen = Rcpp::wrap(psi2thetaVanGenuchten(n, alpha, theta_res, theta_sat, psi));
+    rcpp_result_gen = Rcpp::wrap(psi2thetaVanGenuchten_c(n, alpha, theta_res, theta_sat, psi));
     return rcpp_result_gen;
 END_RCPP
 }
-// theta2psiVanGenuchten
-double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
-RcppExport SEXP _medfate_theta2psiVanGenuchten(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP thetaSEXP) {
+// theta2psiVanGenuchten_c
+double theta2psiVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double theta);
+RcppExport SEXP _medfate_theta2psiVanGenuchten_c(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5167,7 +5167,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
     Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(theta2psiVanGenuchten(n, alpha, theta_res, theta_sat, theta));
+    rcpp_result_gen = Rcpp::wrap(theta2psiVanGenuchten_c(n, alpha, theta_res, theta_sat, theta));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6360,15 +6360,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_soilInit", (DL_FUNC) &_medfate_soilInit, 2},
     {"_medfate_modifySoilLayerParam", (DL_FUNC) &_medfate_modifySoilLayerParam, 5},
     {"_medfate_testSoilDataFrameToStructure", (DL_FUNC) &_medfate_testSoilDataFrameToStructure, 2},
-    {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 5},
-    {"_medfate_unsaturatedConductivitySaxton", (DL_FUNC) &_medfate_unsaturatedConductivitySaxton, 6},
-    {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
-    {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
-    {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
-    {"_medfate_psi2kVanGenuchten", (DL_FUNC) &_medfate_psi2kVanGenuchten, 6},
-    {"_medfate_psi2cVanGenuchten", (DL_FUNC) &_medfate_psi2cVanGenuchten, 5},
-    {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},
-    {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
+    {"_medfate_saturatedConductivitySaxton_c", (DL_FUNC) &_medfate_saturatedConductivitySaxton_c, 5},
+    {"_medfate_unsaturatedConductivitySaxton_c", (DL_FUNC) &_medfate_unsaturatedConductivitySaxton_c, 6},
+    {"_medfate_thetaSATSaxton_c", (DL_FUNC) &_medfate_thetaSATSaxton_c, 3},
+    {"_medfate_theta2psiSaxton_c", (DL_FUNC) &_medfate_theta2psiSaxton_c, 4},
+    {"_medfate_psi2thetaSaxton_c", (DL_FUNC) &_medfate_psi2thetaSaxton_c, 4},
+    {"_medfate_psi2kVanGenuchten_c", (DL_FUNC) &_medfate_psi2kVanGenuchten_c, 6},
+    {"_medfate_psi2cVanGenuchten_c", (DL_FUNC) &_medfate_psi2cVanGenuchten_c, 5},
+    {"_medfate_psi2thetaVanGenuchten_c", (DL_FUNC) &_medfate_psi2thetaVanGenuchten_c, 5},
+    {"_medfate_theta2psiVanGenuchten_c", (DL_FUNC) &_medfate_theta2psiVanGenuchten_c, 5},
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
     {"_medfate_temperatureGradient", (DL_FUNC) &_medfate_temperatureGradient, 2},

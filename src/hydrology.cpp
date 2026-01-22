@@ -577,26 +577,26 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
       Ksat[l] = Ksat_ori[l]*lambda[l];//Multiply K for the space available for water movement
       Ksat_ms[l] = 0.01*waterFluidity[l]*Ksat[l]/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
       if(soilDomains=="single") {
-        Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]);
-        C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-        K[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-        Kbc[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_bc);
+        Psi[l] = theta2psiVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]);
+        C[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+        K[l] = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+        Kbc[l] = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_bc);
       } else {
         theta_sat_fict[l] = theta_sat[l] - macro[l];
         //Matching theta point and theta partitioning
         //This ensures theta_b < theta_sat - macro & e_macro > macro
-        theta_b[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat_fict[l], Psi_b);
+        theta_b[l] = psi2thetaVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat_fict[l], Psi_b);
         e_macro[l] = theta_sat[l] - theta_b[l];
         // Rcout<<e_macro[l]<< " "<< macro[l]<<"\n";
-        Ksat_b[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_b);
+        Ksat_b[l] = psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_b);
         theta_micro[l] = std::min(Theta[l], theta_b[l]);
         theta_macro[l] = std::max(Theta[l] - theta_b[l], 0.0);
         //Water potential, conductivity and capacitance in the micropore domain according to the modified retention
-        Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat_fict[l], theta_micro[l]);
-        C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
-        K[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+        Psi[l] = theta2psiVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat_fict[l], theta_micro[l]);
+        C[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
+        K[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                             Psi[l], Psi_b);
-        Kbc[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+        Kbc[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                               Psi_bc, Psi_b); 
         //Effective saturation and conductivity in the macropore domain
         S_macro[l] = theta_macro[l]/e_macro[l];
@@ -763,12 +763,12 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             if(prop_saturated[l]>0.0) {
               double theta_l= 0.0, quasi_sat_theta_l = 0.0;
               if(soilDomains =="single") {
-                theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
-                quasi_sat_theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
+                theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+                quasi_sat_theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
                 saturated_matrix_correction_m3s[l] = std::max(0.0, ((prop_saturated[l]*quasi_sat_theta_l - theta_l)*lambda[l]*widths[l]*0.001)/tsubstep);
               } else {
-                theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
-                quasi_sat_theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
+                theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+                quasi_sat_theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
                 saturated_matrix_correction_m3s[l] = std::max(0.0, ((prop_saturated[l]*theta_b[l] - theta_l)*lambda[l]*widths[l]*0.001)/tsubstep);
                 saturated_macropore_correction_m3s[l] = std::max(0.0, ((1.0 - S_macro_step[l])*(prop_saturated[l]*quasi_sat_theta_l - theta_b[l])*lambda[l]*widths[l]*0.001)/tsubstep);
               }
@@ -783,11 +783,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             if(micropore_imbibition) {
               for(int l=0;l<nlayers;l++) {
                 //Update imbibition rate (m3s)
-                double Ksat_fict_ms = psi2kVanGenuchtenMicropores(Ksat_b_ms[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                double Ksat_fict_ms = psi2kVanGenuchtenMicropores_c(Ksat_b_ms[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                                   0.0, Psi_b);
-                double D_theta_b_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                double D_theta_b_m2s = psi2DVanGenuchten_c(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                          Psi_b);
-                double D_theta_micro_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                double D_theta_micro_m2s = psi2DVanGenuchten_c(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                              Psi_step[l]);
                 //Calculate imbibition rate in m3/m3/s = s-1
                 double imbibitionRate = microporeImbibitionRate_c(theta_b[l], theta_micro_step[l], 
@@ -865,11 +865,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
           //Calculate K and C at t05
           for(int l=0;l<nlayers;l++) {
             if(soilDomains=="single") {
-              C_step_05 = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
-              K_step_05 = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
+              C_step_05 = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
+              K_step_05 = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
             } else {
-              C_step_05 = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step_t05[l]);
-              K_step_05 = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+              C_step_05 = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step_t05[l]);
+              K_step_05 = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                                        Psi_step_t05[l], Psi_b);
             }
             K_step_ms05[l] = 0.01*K_step_05/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
@@ -951,11 +951,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             double new_theta, quasi_sat_theta;
             //Calculate new and sat theta depending on soilDomains
             if(soilDomains=="single") {
-              new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
-              quasi_sat_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
+              new_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+              quasi_sat_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
             } else {
-              new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
-              quasi_sat_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
+              new_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+              quasi_sat_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
             }
             //Correct for positive psi
             if(Psi_step[l] > 0.0) {
@@ -977,16 +977,16 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
               Psi_step[l] = Psi_quasi_sat;
             } else { // Update psi
               if(soilDomains=="single") {
-                Psi_step[l] = theta2psiVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], new_theta);
+                Psi_step[l] = theta2psiVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], new_theta);
               } else {
-                Psi_step[l] = theta2psiVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l],new_theta);
+                Psi_step[l] = theta2psiVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l],new_theta);
               }
             }
             // Rcout<<" step "<<s<<" layer " <<l<< " final "<< Psi_step[l]<<"\n";
             //If dual model, update theta and manage excess to macropores
             if((soilDomains=="dual")) {
               //Update theta_micro for the next substep
-              theta_micro_step[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+              theta_micro_step[l] = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
               //If needed, add exceeding moisture to the macropores and correct Psi
               double excess_theta_step = 0.0, excess_to_macro= 0.0;
               if(theta_micro_step[l] > theta_b[l]) {
@@ -1015,11 +1015,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
           //Update (micropore) capacitances and conductances for next substep 
           for(int l=0;l<nlayers;l++) {
             if(soilDomains=="single") {
-              C_step[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
-              K_step[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+              C_step[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+              K_step[l] = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
             } else {
-              C_step[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
-              K_step[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+              C_step[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+              K_step[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                                        Psi_step[l], Psi_b);
             }
             Psi_step_m[l]= Psi_step[l]/mTOMPa; // MPa to m
@@ -1123,7 +1123,7 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
         Vfin_macro_mm = 0.0;
         for(int l=0;l<nlayers;l++) {
           if(soilDomains=="single") {
-            Theta[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+            Theta[l] = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
           } else {
             Theta[l] = theta_micro_step[l] + theta_macro_step[l];
             Vfin_micro_mm += theta_micro_step[l]*widths[l]*lambda[l];

@@ -1557,12 +1557,12 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
   if(!plantWaterPools) {
     for(int l=0;l<nlayers;l++) {
       //Estimate current soil layer volume, subtract cumulative extraction and update psiSoil
-      double theta_l = psi2thetaVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoil[l]);
+      double theta_l = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoil[l]);
       double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
       // Rcout<< n << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
       water_l -= innerSoilExtraction[l];
       theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
-      psiSoil[l] = theta2psiVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
+      psiSoil[l] = theta2psiVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
       // Rcout<< " Psi new " << psiSoil[l] << "\n";
       //Update psi soil and soil conductivity in networks
       for(int c=0; c<numCohorts;c++) {
@@ -1582,12 +1582,12 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
     //Estimate current pool soil layer volume, subtract cumulative extraction and update psiSoilM
     for(int c=0;c<numCohorts;c++) {
       for(int l=0;l<nlayers;l++) {
-        double theta_l = psi2thetaVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoilM(c,l));
+        double theta_l = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoilM(c,l));
         double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
         // Rcout<< n << ":"<< c << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
         water_l -= (innerSoilPoolExtraction(c,l)/poolProportions[c]);
         theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
-        psiSoilM(c,l) = theta2psiVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
+        psiSoilM(c,l) = theta2psiVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
         // Rcout<< " Psi new " << psiSoilM(c,l) << "\n";
       }
     }

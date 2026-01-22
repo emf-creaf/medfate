@@ -3746,56 +3746,56 @@ soil <- function(x, VG_PTF = "Toth") {
 #' @name soil_texture
 #' @keywords internal
 soil_saturatedConductivitySX <- function(clay, sand, bd, om, mmol = TRUE) {
-    .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, bd, om, mmol)
+    .Call(`_medfate_saturatedConductivitySaxton_c`, clay, sand, bd, om, mmol)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_unsaturatedConductivitySX <- function(theta, clay, sand, bd, om, mmol = TRUE) {
-    .Call(`_medfate_unsaturatedConductivitySaxton`, theta, clay, sand, bd, om, mmol)
+    .Call(`_medfate_unsaturatedConductivitySaxton_c`, theta, clay, sand, bd, om, mmol)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_thetaSATSX <- function(clay, sand, om) {
-    .Call(`_medfate_thetaSATSaxton`, clay, sand, om)
+    .Call(`_medfate_thetaSATSaxton_c`, clay, sand, om)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_theta2psiSX <- function(clay, sand, theta, om) {
-    .Call(`_medfate_theta2psiSaxton`, clay, sand, theta, om)
+    .Call(`_medfate_theta2psiSaxton_c`, clay, sand, theta, om)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_psi2thetaSX <- function(clay, sand, psi, om) {
-    .Call(`_medfate_psi2thetaSaxton`, clay, sand, psi, om)
+    .Call(`_medfate_psi2thetaSaxton_c`, clay, sand, psi, om)
 }
 
 #' @rdname soil_texture
 #' @param ksat saturated hydraulic conductance
 #' @keywords internal
 soil_psi2kVG <- function(ksat, n, alpha, theta_res, theta_sat, psi) {
-    .Call(`_medfate_psi2kVanGenuchten`, ksat, n, alpha, theta_res, theta_sat, psi)
+    .Call(`_medfate_psi2kVanGenuchten_c`, ksat, n, alpha, theta_res, theta_sat, psi)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_psi2cVG <- function(n, alpha, theta_res, theta_sat, psi) {
-    .Call(`_medfate_psi2cVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
+    .Call(`_medfate_psi2cVanGenuchten_c`, n, alpha, theta_res, theta_sat, psi)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_psi2thetaVG <- function(n, alpha, theta_res, theta_sat, psi) {
-    .Call(`_medfate_psi2thetaVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
+    .Call(`_medfate_psi2thetaVanGenuchten_c`, n, alpha, theta_res, theta_sat, psi)
 }
 
 #' @rdname soil_texture
 #' @keywords internal
 soil_theta2psiVG <- function(n, alpha, theta_res, theta_sat, theta) {
-    .Call(`_medfate_theta2psiVanGenuchten`, n, alpha, theta_res, theta_sat, theta)
+    .Call(`_medfate_theta2psiVanGenuchten_c`, n, alpha, theta_res, theta_sat, theta)
 }
 
 #' Soil thermodynamic functions

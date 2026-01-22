@@ -91,9 +91,9 @@ double Soil::getTemp(int layer) {return Temp[layer]; }
 void Soil::setPsi(int layer, double value) {
   psi[layer] = value; 
   if(model=="VG") {
-    theta[layer] = psi2thetaVanGenuchten(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], psi[layer]);
+    theta[layer] = psi2thetaVanGenuchten_c(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], psi[layer]);
   } else {
-    theta[layer] = psi2thetaSaxton(clay[layer], sand[layer], psi[layer], om[layer]);
+    theta[layer] = psi2thetaSaxton_c(clay[layer], sand[layer], psi[layer], om[layer]);
   }
   W[layer] = theta[layer]/theta_FC[layer];
 }
@@ -101,18 +101,18 @@ void Soil::setTheta(int layer, double value) {
   theta[layer] = value; 
   W[layer] = theta[layer]/theta_FC[layer];
   if(model=="VG") {
-    psi[layer] = theta2psiVanGenuchten(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], theta[layer]);
+    psi[layer] = theta2psiVanGenuchten_c(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], theta[layer]);
   } else {
-    psi[layer] = theta2psiSaxton(clay[layer], sand[layer], theta[layer], om[layer]);
+    psi[layer] = theta2psiSaxton_c(clay[layer], sand[layer], theta[layer], om[layer]);
   }
 }
 void Soil::setW(int layer, double value) {
   W[layer] = value; 
   theta[layer] = W[layer]*theta_FC[layer];
   if(model=="VG") {
-    psi[layer] = theta2psiVanGenuchten(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], theta[layer]);
+    psi[layer] = theta2psiVanGenuchten_c(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], theta[layer]);
   } else {
-    psi[layer] = theta2psiSaxton(clay[layer], sand[layer], theta[layer], om[layer]);
+    psi[layer] = theta2psiSaxton_c(clay[layer], sand[layer], theta[layer], om[layer]);
   }
 }
 void Soil::setTemp(int layer, double value) {
@@ -209,7 +209,7 @@ void Soil::setTemp(int layer, double value) {
 //' @name soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_saturatedConductivitySX")]]
-double saturatedConductivitySaxton(double clay, double sand, double bd, double om, bool mmol = true) {
+double saturatedConductivitySaxton_c(double clay, double sand, double bd, double om, bool mmol = true) {
   double Ksat;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -248,7 +248,7 @@ double saturatedConductivitySaxton(double clay, double sand, double bd, double o
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_unsaturatedConductivitySX")]]
-double unsaturatedConductivitySaxton(double theta, double clay, double sand, double bd, double om, bool mmol = true) {
+double unsaturatedConductivitySaxton_c(double theta, double clay, double sand, double bd, double om, bool mmol = true) {
   double Kunsat;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -289,7 +289,7 @@ double unsaturatedConductivitySaxton(double theta, double clay, double sand, dou
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_thetaSATSX")]]
-double thetaSATSaxton(double clay, double sand, double om) {
+double thetaSATSaxton_c(double clay, double sand, double om) {
   double theta_sat;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -315,7 +315,7 @@ double thetaSATSaxton(double clay, double sand, double om) {
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_theta2psiSX")]]
-double theta2psiSaxton(double clay, double sand, double theta, double om) {
+double theta2psiSaxton_c(double clay, double sand, double theta, double om) {
   double A;
   double B;
   double psi;
@@ -326,7 +326,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om) {
     B = -3.140 - (0.00222*pow(clay,2.0)) - (0.00003484*pow(sand,2.0)*(clay));
     psi = A*pow(theta,B);
     if(psi > -0.01) { // If calculated psi > -10 KPa use linear part
-      double theta_sat = thetaSATSaxton(clay, sand, om);
+      double theta_sat = thetaSATSaxton_c(clay, sand, om);
       double psi_e = -0.1*(-0.108+(0.341*theta_sat));//air-entry tension in MPa
       double theta_10 = pow(-0.01/A, 1.0/B);//exp((2.302-log(A))/B);
       psi = -0.01 - ((theta-theta_10)*(-0.01 - psi_e)/(theta_sat - theta_10));
@@ -373,7 +373,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om) {
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_psi2thetaSX")]]
-double psi2thetaSaxton(double clay, double sand, double psi, double om) {
+double psi2thetaSaxton_c(double clay, double sand, double psi, double om) {
   double A;
   double B;
   double theta;
@@ -385,7 +385,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om) {
     if(psi< -0.01) {
       theta = pow(psi/A, 1.0/B);
     } else { //Linear part of the relationship (from -10 kPa to air entry tension)
-      double theta_sat = thetaSATSaxton(clay, sand, om);
+      double theta_sat = thetaSATSaxton_c(clay, sand, om);
       double psi_e = -0.1*(-0.108+(0.341*theta_sat));//air-entry tension in MPa
       double theta_10 = pow(-0.01/A, 1.0/B);//exp((2.302-log(A))/B);
       psi = std::min(psi,psi_e); //Truncate to air entry tension
@@ -428,14 +428,14 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om) {
 //' @param ksat saturated hydraulic conductance
 //' @keywords internal
 // [[Rcpp::export("soil_psi2kVG")]]
-double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi){
+double psi2kVanGenuchten_c(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi){
   double m = 1.0 - (1.0/n);
   double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
   double k = ksat*pow(Se,0.5)*pow(1.0 - pow(1.0 - pow(Se, 1.0/m), m), 2.0);
   return(k);
 }
 
-double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double theta_res, double theta_sat, 
+double psi2kVanGenuchtenMicropores_c(double k_b, double n, double alpha, double theta_res, double theta_sat, 
                                    double psi, double psi_b){
   double m = 1.0 - (1.0/n);
   double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
@@ -447,8 +447,8 @@ double psi2kVanGenuchtenMicropores(double k_b, double n, double alpha, double th
 }
 
 //From Larsbo et al. (2005) eq. 8
-double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
-                         double psi){
+double psi2DVanGenuchten_c(double k_sat, double n, double alpha, double theta_res, double theta_sat, 
+                           double psi){
   double m = 1.0 - (1.0/n);
   double l = 0.5;
   double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
@@ -463,7 +463,7 @@ double psi2DVanGenuchten(double k_sat, double n, double alpha, double theta_res,
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_psi2cVG")]]
-double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi){
+double psi2cVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi){
   double m = 1.0 - (1.0/n);
   double num = alpha*m*n*(theta_sat - theta_res)*pow(alpha*std::abs(psi), n - 1.0);
   double den = pow(1.0 + pow(alpha*std::abs(psi),n),m + 1.0);
@@ -478,7 +478,7 @@ double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_psi2thetaVG")]]
-double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi) {
+double psi2thetaVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi) {
   double m = 1.0 - (1.0/n);
   double T = pow(1.0  + pow(alpha*std::abs(psi),n),-m);
   return(theta_res+T*(theta_sat-theta_res));
@@ -491,7 +491,7 @@ double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double th
 //' @rdname soil_texture
 //' @keywords internal
 // [[Rcpp::export("soil_theta2psiVG")]]
-double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta) {
+double theta2psiVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double theta) {
   //if theta > theta_sat then psi = 0
   theta = std::min(theta, theta_sat);
   theta = std::max(theta, theta_res);

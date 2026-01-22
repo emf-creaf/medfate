@@ -47,7 +47,7 @@ NumericVector psi2thetasoil(DataFrame soil, NumericVector psi, String model="SX"
     NumericVector sand = soil["sand"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      theta[l] = psi2thetaSaxton(clay[l], sand[l], psi[l], om[l]); 
+      theta[l] = psi2thetaSaxton_c(clay[l], sand[l], psi[l], om[l]); 
     }
   } else if(model=="VG") {
     NumericVector n =soil["VG_n"];
@@ -55,7 +55,7 @@ NumericVector psi2thetasoil(DataFrame soil, NumericVector psi, String model="SX"
     NumericVector theta_res = soil["VG_theta_res"];
     NumericVector theta_sat = soil["VG_theta_sat"];
     for(int l=0;l<nlayers;l++) {
-      theta[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], psi[l]); 
+      theta[l] = psi2thetaVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat[l], psi[l]); 
     }
   }
   return(theta);
@@ -70,7 +70,7 @@ NumericVector psi2thetasoil(DataFrame soil, double psi, String model="SX") {
     NumericVector sand = soil["sand"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      theta[l] = psi2thetaSaxton(clay[l], sand[l], psi, om[l]); 
+      theta[l] = psi2thetaSaxton_c(clay[l], sand[l], psi, om[l]); 
     }
   } else if(model=="VG") {
     NumericVector n =soil["VG_n"];
@@ -78,7 +78,7 @@ NumericVector psi2thetasoil(DataFrame soil, double psi, String model="SX") {
     NumericVector theta_res = soil["VG_theta_res"];
     NumericVector theta_sat = soil["VG_theta_sat"];
     for(int l=0;l<nlayers;l++) {
-      theta[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], psi); 
+      theta[l] = psi2thetaVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat[l], psi); 
     }
   }
   return(theta);
@@ -132,7 +132,7 @@ NumericVector thetaSAT(DataFrame soil, String model="SX") {
     NumericVector sand = soil["sand"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      Theta_Sat[l] = thetaSATSaxton(clay[l], sand[l], om[l]); 
+      Theta_Sat[l] = thetaSATSaxton_c(clay[l], sand[l], om[l]); 
     }
   } else if(model=="VG") {
     NumericVector theta_sat = soil["VG_theta_sat"];
@@ -291,7 +291,7 @@ NumericVector psi(DataFrame soil, String model="SX") {
     NumericVector sand = soil["sand"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      psi[l] = theta2psiSaxton(clay[l], sand[l], Theta[l], om[l]);
+      psi[l] = theta2psiSaxton_c(clay[l], sand[l], Theta[l], om[l]);
     }
   } else if(model=="VG") {
     NumericVector n =soil["VG_n"];
@@ -299,7 +299,7 @@ NumericVector psi(DataFrame soil, String model="SX") {
     NumericVector theta_res = soil["VG_theta_res"];
     NumericVector theta_sat = soil["VG_theta_sat"];
     for(int l=0;l<nlayers;l++) {
-      psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
+      psi[l] = theta2psiVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
     }
   }
   return(psi);
@@ -319,7 +319,7 @@ NumericVector conductivity(DataFrame soil, String model="SX", bool mmol = true) 
     NumericVector bd = soil["bd"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      K[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], bd[l], om[l], mmol);
+      K[l] = unsaturatedConductivitySaxton_c(Theta[l], clay[l], sand[l], bd[l], om[l], mmol);
     }
   } else {
     NumericVector psiSoil = psi(soil, model);
@@ -329,7 +329,7 @@ NumericVector conductivity(DataFrame soil, String model="SX", bool mmol = true) 
       NumericVector alpha = soil["VG_alpha"];
       NumericVector theta_res = soil["VG_theta_res"];
       NumericVector theta_sat = soil["VG_theta_sat"];
-      K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
+      K[l] = psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
       // mmolH20·m-1·s-1·MPa-1 to cm/day
       if(!mmol) K[l] = K[l]/cmdTOmmolm2sMPa;
     }
@@ -354,7 +354,7 @@ NumericVector conductivity(DataFrame soil, String model="SX", bool mmol = true) 
        NumericVector alpha = soil["VG_alpha"];
        NumericVector theta_res = soil["VG_theta_res"];
        NumericVector theta_sat = soil["VG_theta_sat"];
-       C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
+       C[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
      }
    } 
    return(C);
@@ -606,7 +606,7 @@ DataFrame soilInit(DataFrame x, String VG_PTF = "Toth") {
       //Use non-top soil equation for all layers
       vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], false);
       if(NumericVector::is_na(Ksat[l])) {
-        Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l], true); 
+        Ksat[l] = saturatedConductivitySaxton_c(clay[l], sand[l], bd[l], om[l], true); 
       }
     } else {
       stop("Wrong value for 'VG_PTF'");
@@ -681,7 +681,7 @@ void modifySoilLayerParam(DataFrame soil, String paramName, int layer, double ne
     VG_theta_sat[l] = vgl[3];
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l], true);
+    Ksat[l] = saturatedConductivitySaxton_c(clay[l], sand[l], bd[l], om[l], true);
   }
 }
 
@@ -718,11 +718,11 @@ Soil soilDataFrameToStructure(DataFrame x, String model = "VG") {
     String usda = USDAType(clay[l], sand[l]);
     usda_type[l] = usda.get_cstring();
     if(model=="SX") {
-      theta_SAT[l] = thetaSATSaxton(clay[l], sand[l], om[l]); 
-      theta_FC[l] = psi2thetaSaxton(clay[l], sand[l], fieldCapacityPsi, om[l]); 
+      theta_SAT[l] = thetaSATSaxton_c(clay[l], sand[l], om[l]); 
+      theta_FC[l] = psi2thetaSaxton_c(clay[l], sand[l], fieldCapacityPsi, om[l]); 
     } else if(model=="VG") {
       theta_SAT[l] = VG_theta_sat[l]; 
-      theta_FC[l] = psi2thetaVanGenuchten(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], fieldCapacityPsi); 
+      theta_FC[l] = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], fieldCapacityPsi); 
     }
     if(l == 0) {
       NumericVector cp = campbellParamsClappHornberger(usda);
