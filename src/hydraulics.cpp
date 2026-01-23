@@ -1,6 +1,7 @@
 #include "Rcpp.h"
 #include "root.h"
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "tissuemoisture_c.h"
 #include "hydraulics_c.h"
 #include "incgamma_c.h"
@@ -53,12 +54,6 @@ double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double exp_extr
 }
 
 
-
-//' @rdname hydraulics_conductancefunctions
-// [[Rcpp::export("hydraulics_correctConductanceForViscosity")]]
-double correctConductanceForViscosity(double kxylem, double temp) {
-  return(kxylem/waterDynamicViscosity(temp));
-}
 
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal

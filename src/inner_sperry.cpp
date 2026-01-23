@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 #include "photosynthesis.h"
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
 #include "soil.h"
@@ -558,7 +559,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         List PMSunlit = profitMaximization2(sFunctionAbove, iPMSunlit[c], 
                                             Cair[iLayerSunlit[c]], Patm,
                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
-                                            SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux(PAR_SL(c,n)), 
+                                            SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda), 
                                             Vmax298_SL(c,n), Jmax298_SL(c,n), leafWidth[c], LAI_SL(c,n),
                                             gmin_SL, Gswmax[c]);
         NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
@@ -566,7 +567,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         List PMShade = profitMaximization2(sFunctionAbove, iPMShade[c], 
                                            Cair[iLayerShade[c]], Patm,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
-                                           SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
+                                           SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda), 
                                            Vmax298_SH(c,n), Jmax298_SH(c,n), leafWidth[c], LAI_SH(c,n),
                                            gmin_SH, Gswmax[c]);    
         if(!sunlitShade) PMShade = PMSunlit;
@@ -582,14 +583,14 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], 
                                                             zWind[iLayerSunlit[c]], 
                                                             SWR_SL(c,n), LWR_SL(c,n), 
-                                                            irradianceToPhotonFlux(PAR_SL(c,n)), 
+                                                            irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda), 
                                                             Vmax298_SL(c,n), Jmax298_SL(c,n), 
                                                             leafWidth[c], LAI_SL(c,n));
             outPhotoShade[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerShade[c]], Patm,
                                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
                                                            zWind[iLayerShade[c]], 
                                                            SWR_SH(c,n), LWR_SH(c,n), 
-                                                           irradianceToPhotonFlux(PAR_SH(c,n)),
+                                                           irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda),
                                                            Vmax298_SH(c,n), Jmax298_SH(c,n), 
                                                            leafWidth[c], LAI_SH(c,n));
             outPMSunlit[c] = PMSunlit;

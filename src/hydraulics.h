@@ -12,7 +12,6 @@ NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract= 3
 double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract);
 double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcoh, double exp_extract, double psi_extract);
 
-double correctConductanceForViscosity(double kxylem, double temp);
 
 double taperFactorSavage(double height);
 double terminalConduitRadius(double height);

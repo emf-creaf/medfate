@@ -1,3 +1,4 @@
+// [[Rcpp::interfaces(r,cpp)]]
 #include <cmath>
 #include <vector>
 #include <meteoland.h>

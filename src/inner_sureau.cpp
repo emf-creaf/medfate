@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 #include "struct_sureau.h"
 #include "photosynthesis.h"
-#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
 #include "soil.h"
@@ -496,7 +496,7 @@ double gsJarvis(SureauParams &params, double PAR, double Temp, int option = 1){
     gsMax2    = std::max(0.0, gsMax);
     gsNight2  = std::max(0.0, gsNight);
   }
-  double Q = irradianceToPhotonFlux(PAR); //From W m-2 to micromol s-1 m-2
+  double Q = irradianceToPhotonFlux_c(PAR, defaultLambda); //From W m-2 to micromol s-1 m-2
   double gs_bound = gsNight2 + (gsMax2 - gsNight2) * (1.0 - exp(-1.0*JarvisPAR*Q));
   return(gs_bound);
 }
@@ -1282,18 +1282,18 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           if(NumericVector::is_na(Elim_SH)) Elim_SH = Elim * (LAI_SH(c,n)/LAI);
           if(!sunlitShade) Elim_SH = Elim_SL;
           
-          Temp_SL(c,n) = leafTemperature2(SWR_SL(c,n)/LAI_SL(c,n), LWR_SL(c,n)/LAI_SL(c,n), 
+          Temp_SL(c,n) = leafTemperature2_c(SWR_SL(c,n)/LAI_SL(c,n), LWR_SL(c,n)/LAI_SL(c,n), 
                   Tair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                               Elim_SL,  LeafWidth[c]);
-          Temp_SH(c,n) = leafTemperature2(SWR_SH(c,n)/LAI_SH(c,n), LWR_SH(c,n)/LAI_SH(c,n), 
+          Temp_SH(c,n) = leafTemperature2_c(SWR_SH(c,n)/LAI_SH(c,n), LWR_SH(c,n)/LAI_SH(c,n), 
                   Tair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                              Elim_SH,  LeafWidth[c]);
           if(!sunlitShade) Temp_SH(c,n) = Temp_SL(c,n);
           
           //VPD
           double VPD_air = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
-          VPD_SL(c,n) = std::max(0.0,leafVapourPressure(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
-          VPD_SH(c,n) = std::max(0.0,leafVapourPressure(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
+          VPD_SL(c,n) = std::max(0.0,leafVapourPressure_c(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
+          VPD_SH(c,n) = std::max(0.0,leafVapourPressure_c(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
           if(!sunlitShade) VPD_SH(c,n) = VPD_SL(c,n);
           // Rcout<< "  AirT "<< Tair[iLayerCohort[c]] << " LT_SL "<< Temp_SL(c,n)<< " LT_SH "<< Temp_SH(c,n)<<"\n";
           // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
@@ -1329,7 +1329,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
             gs_SH = gs_SH * regul;
           } else {
             photosynthesisBaldocchi_inner(PB_SL, 
-                                          irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
+                                          irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda)/LAI_SL(c,n), 
                                           Cair[iLayerSunlit[c]], 
                                           std::max(0.0,Temp_SL(c,n)), 
                                           zWind[iLayerCohort[c]],
@@ -1342,7 +1342,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
             gs_SL = std::max(gsNight, gs_SL)*regul;
             // Rcout<<c << " "<<n << " Bald gs: "<< PB_SL.Gsw << " regul: "<< regul << " gs_SL: "<< gs_SL<<"\n";
             photosynthesisBaldocchi_inner(PB_SH, 
-                                          irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
+                                          irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda)/LAI_SH(c,n), 
                                           Cair[iLayerSunlit[c]], 
                                           std::max(0.0,Temp_SH(c,n)), 
                                           zWind[iLayerCohort[c]],
@@ -1368,11 +1368,11 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           //Photosynthesis
           double Gwdiff_all_SL = 1.0/(1.0/gCR + 1.0/(gs_SL + gmin_SL) + 1.0/gBL); 
           double Gwdiff_all_SH = 1.0/(1.0/gCR + 1.0/(gs_SH + gmin_SH) + 1.0/gBL); 
-          NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
+          NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda)/LAI_SL(c,n), 
                                                    Cair[iLayerSunlit[c]], Gwdiff_all_SL/(1000.0*1.6), //From mmol to mol 
                                                    std::max(0.0,Temp_SL(c,n)), 
                                                    Vmax298_SL(c,n)/LAI_SL(c,n), Jmax298_SL(c,n)/LAI_SL(c,n));
-          NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
+          NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda)/LAI_SH(c,n), 
                                                    Cair[iLayerShade[c]], Gwdiff_all_SH/(1000.0*1.6), //From mmol to mol
                                                    std::max(0.0,Temp_SH(c,n)), 
                                                    Vmax298_SH(c,n)/LAI_SH(c,n), Jmax298_SH(c,n)/LAI_SH(c,n));

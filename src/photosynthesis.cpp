@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
-#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "struct_photosynthesis.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -425,8 +425,8 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, dou
   NumericVector Ag(nsteps), An(nsteps);
   double Gwdiff, Gbound;
   for(int i=0;i<nsteps;i++){
-    leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, E[i], leafWidth);
-    leafVPD[i] = std::max(0.0,leafVapourPressure(leafTemp[i], psiLeaf[i]) - vpa);
+    leafTemp[i] = leafTemperature_c(absRad/refLeafArea, Tair, u, E[i], leafWidth);
+    leafVPD[i] = std::max(0.0,leafVapourPressure_c(leafTemp[i], psiLeaf[i]) - vpa);
     // Separates diffusive conductance into stomatal and boundary layer conductance
     Gwdiff = Patm*(E[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
     Gbound = gLeafBoundary(u, leafWidth); // mol boundary layer conductance
@@ -452,8 +452,8 @@ NumericVector leafPhotosynthesisOneFunction2(double E, double psiLeaf, double Ca
   double leafTemp, leafVPD, Gsw, Ci;
   double Ag, An;
   double Gwdiff, Gbound;
-  leafTemp = leafTemperature2(SWRabs/refLeafArea, LWRnet/refLeafArea, Tair, u, E, leafWidth);
-  leafVPD = std::max(0.0,leafVapourPressure(leafTemp, psiLeaf) - vpa);
+  leafTemp = leafTemperature2_c(SWRabs/refLeafArea, LWRnet/refLeafArea, Tair, u, E, leafWidth);
+  leafVPD = std::max(0.0,leafVapourPressure_c(leafTemp, psiLeaf) - vpa);
   // Separates diffusive conductance into stomatal and boundary layer conductance
   Gwdiff = Patm*(E/1000.0)/leafVPD; //Transform flow from mmol to mol
   Gbound = gLeafBoundary(u, leafWidth); // mol boundary layer conductance
@@ -546,9 +546,9 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, NumericVector psiLeaf,
     Ag[i]=0.0;
     An[i]=0.0;
     //From rad per ground area to rad per leaf area
-    leafT = leafTemperature(absRadSL/SLarea, Tair, u, E[i], leafWidth);
+    leafT = leafTemperature_c(absRadSL/SLarea, Tair, u, E[i], leafWidth);
     leafTSL[i]= leafT;
-    leafVPDSL[i] = std::max(0.0,leafVapourPressure(leafT, psiLeaf[i]) - vpa);
+    leafVPDSL[i] = std::max(0.0,leafVapourPressure_c(leafT, psiLeaf[i]) - vpa);
     // Assumes infinite boundary layer conductance (well-coupling) so that stomatal conductance equals diffusive conductance
     // Gw = Patm*(E[i]/1000.0)/leafVPDSL[i];
     // Gw = Gw*SLarea; //From Gw per leaf area to Gw per ground area
@@ -567,9 +567,9 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, NumericVector psiLeaf,
     }
     //SHADE leaves
     //From rad per ground area to rad per leaf area
-    leafT = leafTemperature(absRadSH/SHarea, Tair, u, E[i], leafWidth);
+    leafT = leafTemperature_c(absRadSH/SHarea, Tair, u, E[i], leafWidth);
     leafTSH[i]= leafT;
-    leafVPDSH[i] = std::max(0.0,leafVapourPressure(leafT, psiLeaf[i]) - vpa);
+    leafVPDSH[i] = std::max(0.0,leafVapourPressure_c(leafT, psiLeaf[i]) - vpa);
     // leafVPDSH[i] = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
     // Assumes infinite boundary layer conductance (well-coupling) so that stomatal conductance equals diffusive conductance
     // Gw = Patm*(E[i]/1000.0)/leafVPDSH[i];
@@ -619,8 +619,8 @@ DataFrame multilayerPhotosynthesisFunction(NumericVector E, NumericVector psiLea
     An[i]=0.0;
     for(int j=0;j<nlayers;j++) {
       //Sunlit leaves
-      leafT = leafTemperature(absRadSL[j], Tair, u[j], E[i], leafWidth);
-      leafVPD = std::max(0.0,leafVapourPressure(leafT, psiLeaf[i]) - vpa);
+      leafT = leafTemperature_c(absRadSL[j], Tair, u[j], E[i], leafWidth);
+      leafVPD = std::max(0.0,leafVapourPressure_c(leafT, psiLeaf[i]) - vpa);
       // leafVPD = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
       // Assumes infinite boundary layer conductance (well-coupling) so that stomatal conductance equals diffusive conductance
       // Gw = Patm*(E[i]/1000.0)/leafVPD;
@@ -637,8 +637,8 @@ DataFrame multilayerPhotosynthesisFunction(NumericVector E, NumericVector psiLea
         An[i]+=Anj*SLarea[j];
       }
       //SHADE leaves
-      leafT = leafTemperature(absRadSH[j], Tair, u[j], E[i], leafWidth);
-      leafVPD = std::max(0.0,leafVapourPressure(leafT, psiLeaf[i]) - vpa);
+      leafT = leafTemperature_c(absRadSH[j], Tair, u[j], E[i], leafWidth);
+      leafVPD = std::max(0.0,leafVapourPressure_c(leafT, psiLeaf[i]) - vpa);
       // leafVPD = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
       // Assumes infinite boundary layer conductance (well-coupling) so that stomatal conductance equals diffusive conductance
       // Gw = Patm*(E[i]/1000.0)/leafVPD;

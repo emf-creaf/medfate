@@ -1,13 +1,14 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
+#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "windextinction_c.h"
 #include "windKatul.h"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
-#include "biophysicsutils.h"
 #include "phenology.h"
 #include "forestutils.h"
 #include "tissuemoisture_c.h"
@@ -317,8 +318,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     double rootCrownPsi = NA_REAL;
     
     //Cuticular transpiration    
-    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    double lvp_tmax = leafVapourPressure_c(tmax,  PlantPsi[c]);
+    double lvp_tmin = leafVapourPressure_c(tmin,  PlantPsi[c]);
     double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
     double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
     double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2

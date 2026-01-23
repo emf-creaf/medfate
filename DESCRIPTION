@@ -29,6 +29,7 @@ Depends: R (>= 3.5.0)
 Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.0.0), Rcpp (>= 1.0.6), shiny, units
 Suggests: 
     testthat (>= 3.0.0),
+    rlang,
     knitr,
     rmarkdown
 LinkingTo: Rcpp, meteoland

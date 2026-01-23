@@ -5,6 +5,7 @@
 #include "root.h"
 #include "spwb.h"
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "hydrology.h"
 #include "hydrology_c.h"

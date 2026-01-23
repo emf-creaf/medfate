@@ -4,6 +4,7 @@
 #include <numeric>
 #include <math.h>
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"

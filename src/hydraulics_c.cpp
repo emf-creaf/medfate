@@ -1,4 +1,5 @@
 #include "hydraulics_c.h"
+#include "biophysicsutils_c.h"
 #include <cmath>
 
 
@@ -158,4 +159,11 @@ double psiCrit_c(double c, double d, double pCrit = 0.001) {
 double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double alpha) {
   double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
   return(krhizomax*pow(v,(n-1.0)/(2.0*n))*pow(pow((1.0-v),(n-1.0)/n)-1.0,2.0));
+}
+
+
+//' @rdname hydraulics_conductancefunctions
+// [[Rcpp::export("hydraulics_correctConductanceForViscosity")]]
+double correctConductanceForViscosity_c(double kxylem, double temp) {
+  return(kxylem/waterDynamicViscosity_c(temp));
 }

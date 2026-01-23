@@ -3,6 +3,7 @@
 #include "tissuemoisture_c.h"
 #include "forestutils.h"
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 using namespace Rcpp;
 
 const double carbonMolarMass = 12.0107; //g*mol-1
@@ -154,7 +155,7 @@ double relativeSapViscosity(double sugarConc, double temp) {
   double Ea = 2.61; //kJ*mol-1 energy of activation
   double va = x/(q0a*exp(-1.0*Ea/(Rn*Tkelvin)));
   double relVisc = exp(va/(1.0 + q1*va)); // relative viscosity
-  double relWat = waterDynamicViscosity(temp); 
+  double relWat = waterDynamicViscosity_c(temp); 
   return(relWat*relVisc);
 }
 

@@ -3,6 +3,7 @@
 #include <Rcpp.h>
 #include <numeric>
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "carbon.h"
 #include "communication_structures.h"
 #include "forestutils.h"

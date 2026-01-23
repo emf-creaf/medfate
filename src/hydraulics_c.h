@@ -16,4 +16,6 @@ double psiCrit_c(double c, double d, double pCrit);
 double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double alpha);
 double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope);
 
+double correctConductanceForViscosity_c(double kxylem, double temp);
+
 #endif

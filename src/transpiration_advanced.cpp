@@ -1,6 +1,7 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
@@ -8,7 +9,6 @@
 #include "windKatul.h"
 #include "hydraulics.h"
 #include "hydrology.h"
-#include "biophysicsutils.h"
 #include "phenology.h"
 #include "forestutils.h"
 #include "tissuemoisture_c.h"
@@ -22,10 +22,6 @@
 #include "inner_sureau.h"
 #include <meteoland.h>
 using namespace Rcpp;
-
-const double SIGMA_Wm2 = 5.67*1e-8;
-const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
-const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 
 // SCHEDULE - Following steps for one day, given a weather vector:
 //
@@ -532,7 +528,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     //From solar hour (radians) to seconds from sunrise
     double Tsunrise = (solarHour[n]*43200.0/M_PI)+ (tauday/2.0) +(tstep/2.0); 
     //Calculate instantaneous temperature and light conditions
-    Tatm[n] = temperatureDiurnalPattern(Tsunrise, tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
+    Tatm[n] = temperatureDiurnalPattern_c(Tsunrise, tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
     //Longwave sky diffuse radiation (W/m2)
     lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
   }
@@ -593,7 +589,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
 
   //Average sap fluidity
   double sapFluidityDay = 1.0;
-  if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
+  if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
   
   //Hydraulics: Define supply functions
   SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];

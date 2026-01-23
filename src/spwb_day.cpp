@@ -3,13 +3,14 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
+#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
 #include "windextinction_c.h"
 #include "hydraulics.h"
 #include "hydrology.h"
-#include "biophysicsutils.h"
 #include "forestutils.h"
 #include "modelInput.h"
 #include "photosynthesis.h"

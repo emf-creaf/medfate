@@ -5,11 +5,12 @@
 #include "soil.h"
 #include "soil_c.h"
 #include "root.h"
+#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
 #include "hydrology_c.h"
 #include "communication_structures.h"
-#include "biophysicsutils.h"
 #include "numerical_solving.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -569,7 +570,7 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
       waterFluidity[l] = 1.0;
       if(!NumericVector::is_na(Tsoil[l])) {
         if(Tsoil[l]>0) {
-          waterFluidity[l] = 1.0/waterDynamicViscosity(Tsoil[l]); 
+          waterFluidity[l] = 1.0/waterDynamicViscosity_c(Tsoil[l]); 
         } else {
           waterFluidity[l] = 0.0;
         }

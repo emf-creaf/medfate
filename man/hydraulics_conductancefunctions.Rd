@@ -3,7 +3,6 @@
 %   R/hydraulics_vulnerabilityCurvePlot.R
 \name{hydraulics_averagePsi}
 \alias{hydraulics_averagePsi}
-\alias{hydraulics_correctConductanceForViscosity}
 \alias{hydraulics_psi2Weibull}
 \alias{hydraulics_conductancefunctions}
 \alias{hydraulics_psi2K}
@@ -13,12 +12,11 @@
 \alias{hydraulics_xylemPsi}
 \alias{hydraulics_psiCrit}
 \alias{hydraulics_vanGenuchtenConductance}
+\alias{hydraulics_correctConductanceForViscosity}
 \alias{hydraulics_vulnerabilityCurvePlot}
 \title{Hydraulic conductance functions}
 \usage{
 hydraulics_averagePsi(psi, v, exp_extract, psi_extract)
-
-hydraulics_correctConductanceForViscosity(kxylem, temp)
 
 hydraulics_psi2Weibull(psi50, psi88 = NA_real_, psi12 = NA_real_)
 
@@ -35,6 +33,8 @@ hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
 hydraulics_psiCrit(c, d, pCrit = 0.001)
 
 hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)
+
+hydraulics_correctConductanceForViscosity(kxylem, temp)
 
 hydraulics_vulnerabilityCurvePlot(
   x,
@@ -59,10 +59,6 @@ hydraulics_vulnerabilityCurvePlot(
 
 \item{psi_extract}{Soil water potential (in MPa) corresponding to 50\% whole-plant relative transpiration.}
 
-\item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
-
-\item{temp}{Temperature (in degrees Celsius).}
-
 \item{psi50, psi88, psi12}{Water potentials (in MPa) corresponding to 50\%, 88\% and 12\% percent conductance loss.}
 
 \item{K}{Whole-plant relative conductance (0-1).}
@@ -71,11 +67,15 @@ hydraulics_vulnerabilityCurvePlot(
 
 \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
 
+\item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
+
 \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
 
 \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
 
 \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
+
+\item{temp}{Temperature (in degrees Celsius).}
 
 \item{x}{An object of class \code{\link{spwbInput}}.}
 

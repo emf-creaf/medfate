@@ -120,7 +120,7 @@ aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_r
 #' @name biophysics
 #' @keywords internal
 biophysics_radiationDiurnalPattern <- function(t, daylength) {
-    .Call(`_medfate_radiationDiurnalPattern`, t, daylength)
+    .Call(`_medfate_radiationDiurnalPattern_c`, t, daylength)
 }
 
 #' @rdname biophysics
@@ -128,7 +128,7 @@ biophysics_radiationDiurnalPattern <- function(t, daylength) {
 #' @param tminPrev,tmaxPrev,tminNext Maximum and minimum daily temperatures of the previous and following day (ºC).
 #' @keywords internal
 biophysics_temperatureDiurnalPattern <- function(t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength) {
-    .Call(`_medfate_temperatureDiurnalPattern`, t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength)
+    .Call(`_medfate_temperatureDiurnalPattern_c`, t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength)
 }
 
 #' @rdname biophysics
@@ -141,7 +141,7 @@ biophysics_temperatureDiurnalPattern <- function(t, tmin, tmax, tminPrev, tmaxPr
 #' 
 #' @keywords internal
 biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth = 1.0) {
-    .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
+    .Call(`_medfate_leafTemperature_c`, absRad, airTemperature, u, E, leafWidth)
 }
 
 #' @rdname biophysics
@@ -149,7 +149,7 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
 #' @param LWRnet Net long-wave radiation balance (in W·m-2).
 #' @keywords internal
 biophysics_leafTemperature2 <- function(SWRabs, LWRnet, airTemperature, u, E, leafWidth = 1.0) {
-    .Call(`_medfate_leafTemperature2`, SWRabs, LWRnet, airTemperature, u, E, leafWidth)
+    .Call(`_medfate_leafTemperature2_c`, SWRabs, LWRnet, airTemperature, u, E, leafWidth)
 }
 
 #' @rdname biophysics
@@ -157,7 +157,7 @@ biophysics_leafTemperature2 <- function(SWRabs, LWRnet, airTemperature, u, E, le
 #' @param leafPsi Leaf water potential (MPa).
 #' @keywords internal
 biophysics_leafVapourPressure <- function(leafTemp, leafPsi) {
-    .Call(`_medfate_leafVapourPressure`, leafTemp, leafPsi)
+    .Call(`_medfate_leafVapourPressure_c`, leafTemp, leafPsi)
 }
 
 #' @rdname biophysics
@@ -165,14 +165,14 @@ biophysics_leafVapourPressure <- function(leafTemp, leafPsi) {
 #' @param lambda Wavelength (in nm).
 #' @keywords internal
 biophysics_irradianceToPhotonFlux <- function(I, lambda = 546.6507) {
-    .Call(`_medfate_irradianceToPhotonFlux`, I, lambda)
+    .Call(`_medfate_irradianceToPhotonFlux_c`, I, lambda)
 }
 
 #' @rdname biophysics
 #' @param temp Temperature (ºC).
 #' @keywords internal
 biophysics_waterDynamicViscosity <- function(temp) {
-    .Call(`_medfate_waterDynamicViscosity`, temp)
+    .Call(`_medfate_waterDynamicViscosity_c`, temp)
 }
 
 #' Carbon-related functions
@@ -1601,11 +1601,6 @@ hydraulics_averagePsi <- function(psi, v, exp_extract, psi_extract) {
 }
 
 #' @rdname hydraulics_conductancefunctions
-hydraulics_correctConductanceForViscosity <- function(kxylem, temp) {
-    .Call(`_medfate_correctConductanceForViscosity`, kxylem, temp)
-}
-
-#' @rdname hydraulics_conductancefunctions
 #' @keywords internal
 hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
     .Call(`_medfate_psi2Weibull`, psi50, psi88, psi12)
@@ -2077,6 +2072,11 @@ hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
 #' @keywords internal
 hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
     .Call(`_medfate_vanGenuchtenConductance_c`, psi, krhizomax, n, alpha)
+}
+
+#' @rdname hydraulics_conductancefunctions
+hydraulics_correctConductanceForViscosity <- function(kxylem, temp) {
+    .Call(`_medfate_correctConductanceForViscosity_c`, kxylem, temp)
 }
 
 #' @param month Month of the year (from 1 to 12).
