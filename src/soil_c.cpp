@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 #include "soil_c.h"
+#include "Rcpp.h"
 
 
 /*=============================================================================
@@ -56,6 +57,46 @@ Soil::Soil(int nlayersIn,
   clapp_hornberger = clapp_hornbergerIn;
 }
 
+Soil::Soil(Rcpp::DataFrame x, Rcpp::String model = "VG") {
+  nlayers = x.nrow();
+  model = model.get_cstring();
+  
+  widths = Rcpp::as< std::vector<double> >(x["widths"]);
+  clay = Rcpp::as< std::vector<double> >(x["clay"]);
+  sand = Rcpp::as< std::vector<double> >(x["sand"]);
+  om = Rcpp::as< std::vector<double> >(x["om"]);
+  ph = std::vector<double>(nlayers);
+  if(x.containsElementNamed("ph")) ph = Rcpp::as< std::vector<double> >(x["ph"]);
+  nitrogen = std::vector<double>(nlayers);
+  if(x.containsElementNamed("nitrogen")) nitrogen = Rcpp::as< std::vector<double> >(x["nitrogen"]);
+  bd = Rcpp::as< std::vector<double> >(x["bd"]);
+  rfc = Rcpp::as< std::vector<double> >(x["rfc"]);
+  macro = Rcpp::as< std::vector<double> >(x["macro"]);
+  Ksat = Rcpp::as< std::vector<double> >(x["Ksat"]);
+  VG_alpha = Rcpp::as< std::vector<double> >(x["VG_alpha"]);
+  VG_n = Rcpp::as< std::vector<double> >(x["VG_n"]);
+  VG_theta_res = Rcpp::as< std::vector<double> >(x["VG_theta_res"]);
+  VG_theta_sat = Rcpp::as< std::vector<double> >(x["VG_theta_sat"]);
+  usda_type = std::vector<std::string>(nlayers);
+  theta_FC = std::vector<double>(nlayers);
+  theta_SAT = std::vector<double>(nlayers);
+  W  = Rcpp::as< std::vector<double> >(x["W"]);
+  psi = std::vector<double>(nlayers);
+  theta = std::vector<double>(nlayers);
+  Temp= Rcpp::as< std::vector<double> >(x["Temp"]);
+  for(int l=0;l<nlayers;l++) {
+    setW(l, W[l]); // this fills psi and theta based on W
+    usda_type[l] = USDAType_c(clay[l], sand[l]);
+    if(model=="SX") {
+      theta_SAT[l] = thetaSATSaxton_c(clay[l], sand[l], om[l]); 
+      theta_FC[l] = psi2thetaSaxton_c(clay[l], sand[l], fieldCapacityPsi, om[l]); 
+    } else if(model=="VG") {
+      theta_SAT[l] = VG_theta_sat[l]; 
+      theta_FC[l] = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], fieldCapacityPsi); 
+    }
+  }
+  clapp_hornberger = ClappHornberger(usda_type[0]);
+}
 double Soil::getW(int layer) {return W[layer];}
 int Soil::getNlayers() {return nlayers; }
 std::string Soil::getModel() {return model; }
@@ -125,6 +166,22 @@ void Soil::setTemp(int layer, double value) {
  *=============================================================================*/
 
 
+std::string USDAType_c(double clay, double sand) {
+  double silt = 100 - clay - sand;
+  if((silt+1.5*clay)<15) return("Sand");
+  else if(((silt+1.5*clay)>=15) && ((silt + 2.0*clay)<30)) return("Loamy sand");
+  else if(((clay>=7) && (clay<20) && (sand>52) && ((silt + 2.0*clay)>=30)) || ((clay < 7) && (silt < 50) && ((silt + 2.0*clay)>=30))) return("Sandy loam");
+  else if(((clay>=7) && (clay<27)) && ((silt>=28) && (silt<50)) && (sand<=52)) return("Loam");
+  else if(((silt>=50) && ((clay>=12) && (clay<27))) || ((silt>=50) && (silt<80) && (clay <12))) return("Silt loam");
+  else if((silt>=80) && (clay<12)) return("Silt");
+  else if(((clay>=20) && (clay<35)) && (silt<28) && (sand>45)) return("Sandy clay loam");
+  else if(((clay>=27) && (clay<40)) && ((sand>20) && (sand<=45))) return("Clay loam");
+  else if(((clay>=27) && (clay<40)) && (sand<=20)) return("Silty clay loam");
+  else if((clay>=35) && (sand>45)) return("Sandy clay");
+  else if((clay>=40) && (silt>=40)) return("Silty clay");
+  else if((clay>=40) && (sand<=45) && (silt<40)) return("Clay");
+  return("Unknown");
+}
 /**
  * Saturated conductivity (mmolH20·m-1·s-1·MPa-1)
  */

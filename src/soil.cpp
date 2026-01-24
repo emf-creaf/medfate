@@ -22,20 +22,7 @@ CharacterVector layerNames(int nlayers) {
 //' @keywords internal
 // [[Rcpp::export("soil_USDAType")]]
 String USDAType(double clay, double sand) {
-  double silt = 100 - clay - sand;
-  if((silt+1.5*clay)<15) return("Sand");
-  else if(((silt+1.5*clay)>=15) && ((silt + 2.0*clay)<30)) return("Loamy sand");
-  else if(((clay>=7) && (clay<20) && (sand>52) && ((silt + 2.0*clay)>=30)) || ((clay < 7) && (silt < 50) && ((silt + 2.0*clay)>=30))) return("Sandy loam");
-  else if(((clay>=7) && (clay<27)) && ((silt>=28) && (silt<50)) && (sand<=52)) return("Loam");
-  else if(((silt>=50) && ((clay>=12) && (clay<27))) || ((silt>=50) && (silt<80) && (clay <12))) return("Silt loam");
-  else if((silt>=80) && (clay<12)) return("Silt");
-  else if(((clay>=20) && (clay<35)) && (silt<28) && (sand>45)) return("Sandy clay loam");
-  else if(((clay>=27) && (clay<40)) && ((sand>20) && (sand<=45))) return("Clay loam");
-  else if(((clay>=27) && (clay<40)) && (sand<=20)) return("Silty clay loam");
-  else if((clay>=35) && (sand>45)) return("Sandy clay");
-  else if((clay>=40) && (silt>=40)) return("Silty clay");
-  else if((clay>=40) && (sand<=45) && (silt<40)) return("Clay");
-  return("Unknown");
+  return(String(USDAType_c(clay, sand)));
 }
 
 NumericVector psi2thetasoil(DataFrame soil, NumericVector psi, String model="SX") {
@@ -425,21 +412,15 @@ NumericVector vanGenuchtenParamsCarsel(String soilType) {
 // [[Rcpp::export("soil_campbellParamsClappHornberger")]]
 NumericVector campbellParamsClappHornberger(String soilType) {
    NumericVector cp(4,NA_REAL);
-   if(soilType=="Sand") {cp[0]=0.395; cp[1]=-12.1; cp[2] = 4.05; cp[3]=63.36;}
-   else if(soilType=="Loamy sand") {cp[0]=0.410; cp[1]=-9.1;cp[2] = 4.38; cp[3]=56.28;}
-   else if(soilType=="Sandy loam") {cp[0]=0.435; cp[1]=-21.8; cp[2] = 4.90; cp[3]=12.48;}
-   else if(soilType=="Silt loam") {cp[0]=0.485; cp[1]=-78.6; cp[2] = 5.30; cp[3]=2.59;}
-   else if(soilType=="Loam") {cp[0]=0.451; cp[1]=-47.8; cp[2] = 5.39; cp[3]=2.50;}
-   else if(soilType=="Silt") {cp[0]=0.485; cp[1]=-78.6; cp[2] = 5.30; cp[3]=2.59;} // EQUAL TO SILT LOAM
-   else if(soilType=="Sandy clay loam") {cp[0]=0.420; cp[1]=-29.9; cp[2] = 7.12; cp[3]=2.27;}
-   else if(soilType=="Silty clay loam") {cp[0]=0.477; cp[1]=-35.6; cp[2] = 7.75; cp[3]=0.61;}
-   else if(soilType=="Clay loam") {cp[0]=0.476; cp[1]=-63.0; cp[2] = 8.52; cp[3]=0.88;}
-   else if(soilType=="Sandy clay") {cp[0]=0.426; cp[1]=-15.3; cp[2] = 10.4; cp[3]=0.38;}
-   else if(soilType=="Silty clay") {cp[0]=0.492; cp[1]=-49.0; cp[2] = 10.4; cp[3]=0.37;}
-   else if(soilType=="Clay") {cp[0]=0.482; cp[1]=-40.5; cp[2] = 11.4; cp[3]=0.46;}
+   ClappHornberger clapp = ClappHornberger(soilType.get_cstring());
+   cp[0] = clapp.theta_sat;
+   cp[1] = clapp.psi_sat_cm;
+   cp[2] = clapp.b;
+   cp[3] = clapp.K_sat_cm_h;
    cp.attr("names") = CharacterVector::create("theta_sat", "psi_sat_cm", "b", "K_sat_cm_h");
    return(cp);
  }
+
 /* 
  * Parameters for the Van Genuchten-Mualem equations, taken from:
  * Tóth, B., Weynants, M., Nemes, A., Makó, A., Bilas, G., & Tóth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
@@ -685,71 +666,9 @@ void modifySoilLayerParam(DataFrame soil, String paramName, int layer, double ne
   }
 }
 
-// Copies Rcpp soil dataframe to Soil class
-Soil soilDataFrameToStructure(DataFrame x, String model = "VG") {
-  int nlayers = x.nrow();
-  ClappHornberger clapp_hornberger;
-  std::vector<double> widths = as< std::vector<double> >(x["widths"]);
-  std::vector<double> clay = as< std::vector<double> >(x["clay"]);
-  std::vector<double> sand = as< std::vector<double> >(x["sand"]);
-  std::vector<double> om = as< std::vector<double> >(x["om"]);
-  std::vector<double> ph(nlayers);
-  if(x.containsElementNamed("ph")) ph = as< std::vector<double> >(x["ph"]);
-  std::vector<double> nitrogen(nlayers);
-  if(x.containsElementNamed("nitrogen")) nitrogen = as< std::vector<double> >(x["nitrogen"]);
-  std::vector<double> bd = as< std::vector<double> >(x["bd"]);
-  std::vector<double> rfc = as< std::vector<double> >(x["rfc"]);
-  std::vector<double> macro = as< std::vector<double> >(x["macro"]);
-  std::vector<double> Ksat = as< std::vector<double> >(x["Ksat"]);
-  std::vector<double> VG_alpha = as< std::vector<double> >(x["VG_alpha"]);
-  std::vector<double> VG_n = as< std::vector<double> >(x["VG_n"]);
-  std::vector<double> VG_theta_res = as< std::vector<double> >(x["VG_theta_res"]);
-  std::vector<double> VG_theta_sat = as< std::vector<double> >(x["VG_theta_sat"]);
-  std::vector<std::string> usda_type(nlayers);
-  std::vector<double> theta_FC(nlayers);
-  std::vector<double> theta_SAT(nlayers);
-  std::vector<double> W  = as< std::vector<double> >(x["W"]);
-  NumericVector psiVec = psi(x, model);
-  std::vector<double> psi  = as< std::vector<double> >(psiVec);
-  NumericVector thetaVec = theta(x, model);
-  std::vector<double> theta = as< std::vector<double> >(thetaVec);
-  std::vector<double> Temp= as< std::vector<double> >(x["Temp"]);
-  for(int l=0;l<nlayers;l++) {
-    String usda = USDAType(clay[l], sand[l]);
-    usda_type[l] = usda.get_cstring();
-    if(model=="SX") {
-      theta_SAT[l] = thetaSATSaxton_c(clay[l], sand[l], om[l]); 
-      theta_FC[l] = psi2thetaSaxton_c(clay[l], sand[l], fieldCapacityPsi, om[l]); 
-    } else if(model=="VG") {
-      theta_SAT[l] = VG_theta_sat[l]; 
-      theta_FC[l] = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], fieldCapacityPsi); 
-    }
-    if(l == 0) {
-      NumericVector cp = campbellParamsClappHornberger(usda);
-      clapp_hornberger.b = cp["b"];
-      clapp_hornberger.psi_sat_cm = cp["psi_sat_cm"];
-      clapp_hornberger.theta_sat = cp["theta_sat"];
-      clapp_hornberger.K_sat_cm_h = cp["K_sat_cm_h"];
-    }
-  }
-  W = as< std::vector<double> >(x["W"]);
-  Temp = as< std::vector<double> >(x["Temp"]);
-  
-  std::string modelString = model.get_cstring();
-  Soil soil(nlayers, modelString,
-                widths, clay, sand, om, nitrogen,
-                ph, bd, rfc,
-                macro, Ksat,
-                VG_alpha, VG_n, VG_theta_res, VG_theta_sat,
-                usda_type, theta_SAT, theta_FC, 
-                W, psi, theta, Temp,
-                clapp_hornberger);
-  return(soil);
-}
-
 // [[Rcpp::export(.testSoilDataFrameToStructure)]]
 NumericVector testSoilDataFrameToStructure(DataFrame x, String model = "VG") {
-  Soil soil = soilDataFrameToStructure(x, model);
+  Soil soil(x, model);
   NumericVector sizes = {sizeof(x),sizeof(soil)};
   return(sizes);
 }

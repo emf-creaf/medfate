@@ -67,7 +67,7 @@ double rainfallIntensity(int month, double prec, NumericVector rainfallIntensity
 double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true) {
-  Soil soil_c = soilDataFrameToStructure(soil, soilFunctions);
+  Soil soil_c = Soil(soil, soilFunctions);
 
   double Esoil = soilEvaporation_c(soil_c, 
                                    snowpack, pet, LgroundSWR, modifySoil);
@@ -92,7 +92,7 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
   NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
   int nlayers = widths.size();
   NumericVector EherbVec(nlayers,0.0);
-  Soil soil_c = soilDataFrameToStructure(soil, soilFunctions);
+  Soil soil_c = Soil(soil, soilFunctions);
   std::vector<double> EherbVec_c = as<std::vector<double> >(EherbVec);
   herbaceousTranspiration_c(EherbVec_c, 
                             soil_c, 
@@ -194,7 +194,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFr
   if(model!="GreenAmpt1911" && model!="Boughton1989") {
     stop("Wrong infiltration model!");
   }
-  Soil soil_c = soilDataFrameToStructure(soil, soilFunctions);
+  Soil soil_c = Soil(soil, soilFunctions);
   std::string model_string = model.get_cstring();
   return(infiltrationAmount_c(rainfallInput, rainfallIntensity, 
                               soil_c, 

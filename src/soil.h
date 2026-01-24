@@ -34,6 +34,5 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 NumericVector campbellParamsClappHornberger(String soilType);
 
 DataFrame soilInit(DataFrame x, String VG_PTF);
-Soil soilDataFrameToStructure(DataFrame x, String model);
 
 #endif

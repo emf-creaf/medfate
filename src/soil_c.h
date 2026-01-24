@@ -1,4 +1,5 @@
 #include "medfate.h"
+#include "Rcpp.h"
 
 #ifndef SOIL_C_H
 #define SOIL_C_H
@@ -11,6 +12,21 @@ struct ClappHornberger{
   double psi_sat_cm;
   double b;
   double K_sat_cm_h;
+  ClappHornberger() : theta_sat(0.0), psi_sat_cm(0.0), b(0.0), K_sat_cm_h(0.0) {}
+  ClappHornberger(std::string soilType) {
+    if(soilType=="Sand") {theta_sat=0.395; psi_sat_cm=-12.1; b = 4.05; K_sat_cm_h=63.36;}
+    else if(soilType=="Loamy sand") {theta_sat=0.410; psi_sat_cm=-9.1;b = 4.38; K_sat_cm_h=56.28;}
+    else if(soilType=="Sandy loam") {theta_sat=0.435; psi_sat_cm=-21.8; b = 4.90; K_sat_cm_h=12.48;}
+    else if(soilType=="Silt loam") {theta_sat=0.485; psi_sat_cm=-78.6; b = 5.30; K_sat_cm_h=2.59;}
+    else if(soilType=="Loam") {theta_sat=0.451; psi_sat_cm=-47.8; b = 5.39; K_sat_cm_h=2.50;}
+    else if(soilType=="Silt") {theta_sat=0.485; psi_sat_cm=-78.6; b = 5.30; K_sat_cm_h=2.59;} // EQUAL TO SILT LOAM
+    else if(soilType=="Sandy clay loam") {theta_sat=0.420; psi_sat_cm=-29.9; b = 7.12; K_sat_cm_h=2.27;}
+    else if(soilType=="Silty clay loam") {theta_sat=0.477; psi_sat_cm=-35.6; b = 7.75; K_sat_cm_h=0.61;}
+    else if(soilType=="Clay loam") {theta_sat=0.476; psi_sat_cm=-63.0; b = 8.52; K_sat_cm_h=0.88;}
+    else if(soilType=="Sandy clay") {theta_sat=0.426; psi_sat_cm=-15.3; b = 10.4; K_sat_cm_h=0.38;}
+    else if(soilType=="Silty clay") {theta_sat=0.492; psi_sat_cm=-49.0; b = 10.4; K_sat_cm_h=0.37;}
+    else if(soilType=="Clay") {theta_sat=0.482; psi_sat_cm=-40.5; b = 11.4; K_sat_cm_h=0.46;}
+  }
 };
 
 //*
@@ -67,6 +83,8 @@ class Soil {
              std::vector<double>& thetaIn,
              std::vector<double>& TempIn,
              ClappHornberger& clapp_hornbergerIn);
+    Soil(Rcpp::DataFrame x, Rcpp::String model);
+    
     double getW(int layer);
     int getNlayers();
     std::string getModel();
@@ -117,6 +135,8 @@ const double mTOMPa = 0.009804139432;//1/9.804139*0.000001;
 
 const double minimumPsi = -40.0;
 const double fieldCapacityPsi = -0.033; // -33 kPa
+
+std::string USDAType_c(double clay, double sand);
 
 /**
  * Saxton et al. (1986) pedotransfer functions

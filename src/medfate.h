@@ -29,6 +29,8 @@ namespace medfate {
         return message.c_str();
       }
     };      
+    
+    
 }
 
 #endif
