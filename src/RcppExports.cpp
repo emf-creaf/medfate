@@ -6212,6 +6212,8 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     return R_NilValue;
 }
 
+RcppExport SEXP _rcpp_module_boot_mod_medfate();
+
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_aspwbInput", (DL_FUNC) &_medfate_aspwbInput, 3},
     {"_medfate_aspwb_day_inner", (DL_FUNC) &_medfate_aspwb_day_inner, 12},
@@ -6536,6 +6538,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_temperature_function", (DL_FUNC) &_medfate_temperature_function, 5},
     {"_medfate_relative_expansion_rate", (DL_FUNC) &_medfate_relative_expansion_rate, 6},
     {"_medfate_grow_ring", (DL_FUNC) &_medfate_grow_ring, 11},
+    {"_rcpp_module_boot_mod_medfate", (DL_FUNC) &_rcpp_module_boot_mod_medfate, 0},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

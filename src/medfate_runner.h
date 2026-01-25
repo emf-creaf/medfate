@@ -6,5 +6,5 @@ private:
   Soil soil;
 public:
   MedfateRunner(Rcpp::DataFrame soilParams, Rcpp::String soilFunctions);
-  void run_simulation();
+  double run_soil_evaporation(double snowpack, double pet, double LgroundSWR, bool modifySoil);
 };

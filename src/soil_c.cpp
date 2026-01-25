@@ -85,7 +85,6 @@ Soil::Soil(Rcpp::DataFrame x, Rcpp::String model = "VG") {
   theta = std::vector<double>(nlayers);
   Temp= Rcpp::as< std::vector<double> >(x["Temp"]);
   for(int l=0;l<nlayers;l++) {
-    setW(l, W[l]); // this fills psi and theta based on W
     usda_type[l] = USDAType_c(clay[l], sand[l]);
     if(model=="SX") {
       theta_SAT[l] = thetaSATSaxton_c(clay[l], sand[l], om[l]); 
@@ -94,6 +93,7 @@ Soil::Soil(Rcpp::DataFrame x, Rcpp::String model = "VG") {
       theta_SAT[l] = VG_theta_sat[l]; 
       theta_FC[l] = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], fieldCapacityPsi); 
     }
+    setW(l, W[l]); // this fills psi and theta based on W
   }
   clapp_hornberger = ClappHornberger(usda_type[0]);
 }
@@ -155,6 +155,7 @@ void Soil::setW(int layer, double value) {
   } else {
     psi[layer] = theta2psiSaxton_c(clay[layer], sand[layer], theta[layer], om[layer]);
   }
+  // Rcpp::Rcout<< " setW layer "<< layer << " W "<< W[layer]<<" theta "<< theta[layer]<<" psi "<< psi[layer]<<"\n";
 }
 void Soil::setTemp(int layer, double value) {
   Temp[layer] = value; 
