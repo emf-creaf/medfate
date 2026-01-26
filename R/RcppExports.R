@@ -3047,6 +3047,10 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_modifyInputParam`, x, paramType, paramName, cohort, newValue, message))
 }
 
+.testModelInputToStructure <- function(x) {
+    .Call(`_medfate_testModelInputToStructure`, x)
+}
+
 .checkSpeciesParameters <- function(SpParams, params) {
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }

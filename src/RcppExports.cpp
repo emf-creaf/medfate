@@ -3801,6 +3801,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// testModelInputToStructure
+NumericVector testModelInputToStructure(List x);
+RcppExport SEXP _medfate_testModelInputToStructure(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(testModelInputToStructure(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkSpeciesParameters
 void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
 RcppExport SEXP _medfate_checkSpeciesParameters(SEXP SpParamsSEXP, SEXP paramsSEXP) {
@@ -6433,6 +6444,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_updateBelow", (DL_FUNC) &_medfate_updateBelow, 1},
     {"_medfate_multiplyInputParam", (DL_FUNC) &_medfate_multiplyInputParam, 6},
     {"_medfate_modifyInputParam", (DL_FUNC) &_medfate_modifyInputParam, 6},
+    {"_medfate_testModelInputToStructure", (DL_FUNC) &_medfate_testModelInputToStructure, 1},
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
     {"_medfate_speciesNumericParameterFromIndex", (DL_FUNC) &_medfate_speciesNumericParameterFromIndex, 3},
     {"_medfate_speciesCharacterParameterFromIndex", (DL_FUNC) &_medfate_speciesCharacterParameterFromIndex, 3},

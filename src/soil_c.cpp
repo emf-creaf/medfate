@@ -97,6 +97,11 @@ Soil::Soil(Rcpp::DataFrame x, Rcpp::String model = "VG") {
   }
   clapp_hornberger = ClappHornberger(usda_type[0]);
 }
+
+Soil::Soil() {
+  nlayers = 0;
+  model = "VG";
+}
 double Soil::getW(int layer) {return W[layer];}
 int Soil::getNlayers() {return nlayers; }
 std::string Soil::getModel() {return model; }

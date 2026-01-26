@@ -2,159 +2,161 @@
 #include "control.h"
 using namespace Rcpp;
 
-// Copies Rcpp control list to ControlParameters
-ControlParameters controlListToStructure(List x) {
-  ControlParameters ctl;
-  ctl.verbose = as<bool>(x["verbose"]);
-  ctl.transpirationMode = as<std::string>(x["transpirationMode"]);
-  ctl.soilDomains = as<std::string>(x["soilDomains"]);
-  ctl.rhizosphereOverlap = as<std::string>(x["rhizosphereOverlap"]);
+/**
+ * Implementation of ControlParameters class
+ */
+ControlParameters::ControlParameters(){
   
-  ctl.fillMissing.fillMissingRootParams = as<bool>(x["fillMissingRootParams"]);
-  ctl.fillMissing.fillMissingSpParams = as<bool>(x["fillMissingSpParams"]);
-  ctl.fillMissing.fillMissingWithGenusParams = as<bool>(x["fillMissingWithGenusParams"]);
+}
+ControlParameters::ControlParameters(List x) {
+  verbose = as<bool>(x["verbose"]);
+  transpirationMode = as<std::string>(x["transpirationMode"]);
+  soilDomains = as<std::string>(x["soilDomains"]);
+  rhizosphereOverlap = as<std::string>(x["rhizosphereOverlap"]);
   
-  ctl.results.subdailyResults = as<bool>(x["subdailyResults"]);
-  ctl.results.standResults = as<bool>(x["standResults"]);
-  ctl.results.soilResults = as<bool>(x["soilResults"]);
-  ctl.results.soilPoolResults = as<bool>(x["soilPoolResults"]);
-  ctl.results.snowResults = as<bool>(x["snowResults"]);
-  ctl.results.plantResults = as<bool>(x["plantResults"]);
-  ctl.results.labileCarbonBalanceResults = as<bool>(x["labileCarbonBalanceResults"]);
-  ctl.results.plantStructureResults = as<bool>(x["plantStructureResults"]);
-  ctl.results.growthMortalityResults = as<bool>(x["growthMortalityResults"]);
-  ctl.results.decompositionPoolResults = as<bool>(x["decompositionPoolResults"]);
-  ctl.results.leafResults = as<bool>(x["leafResults"]);
-  ctl.results.temperatureResults = as<bool>(x["temperatureResults"]);
-  ctl.results.fireHazardResults = as<bool>(x["fireHazardResults"]);
+  fillMissing.fillMissingRootParams = as<bool>(x["fillMissingRootParams"]);
+  fillMissing.fillMissingSpParams = as<bool>(x["fillMissingSpParams"]);
+  fillMissing.fillMissingWithGenusParams = as<bool>(x["fillMissingWithGenusParams"]);
   
-  ctl.fireHazard.standardWind = as<double>(x["fireHazardStandardWind"]);
-  ctl.fireHazard.standardDFMC = as<double>(x["fireHazardStandardDFMC"]);
+  results.subdailyResults = as<bool>(x["subdailyResults"]);
+  results.standResults = as<bool>(x["standResults"]);
+  results.soilResults = as<bool>(x["soilResults"]);
+  results.soilPoolResults = as<bool>(x["soilPoolResults"]);
+  results.snowResults = as<bool>(x["snowResults"]);
+  results.plantResults = as<bool>(x["plantResults"]);
+  results.labileCarbonBalanceResults = as<bool>(x["labileCarbonBalanceResults"]);
+  results.plantStructureResults = as<bool>(x["plantStructureResults"]);
+  results.growthMortalityResults = as<bool>(x["growthMortalityResults"]);
+  results.decompositionPoolResults = as<bool>(x["decompositionPoolResults"]);
+  results.leafResults = as<bool>(x["leafResults"]);
+  results.temperatureResults = as<bool>(x["temperatureResults"]);
+  results.fireHazardResults = as<bool>(x["fireHazardResults"]);
+  
+  fireHazard.standardWind = as<double>(x["fireHazardStandardWind"]);
+  fireHazard.standardDFMC = as<double>(x["fireHazardStandardDFMC"]);
   
   
-  ctl.weather.windMeasurementHeight = as<double>(x["windMeasurementHeight"]);
-  ctl.weather.defaultWindSpeed = as<double>(x["defaultWindSpeed"]);
-  ctl.weather.defaultCO2 = as<double>(x["defaultCO2"]);
-  ctl.weather.defaultRainfallIntensityPerMonth = as< std::vector<double> >(x["defaultRainfallIntensityPerMonth"]);
+  weather.windMeasurementHeight = as<double>(x["windMeasurementHeight"]);
+  weather.defaultWindSpeed = as<double>(x["defaultWindSpeed"]);
+  weather.defaultCO2 = as<double>(x["defaultCO2"]);
+  weather.defaultRainfallIntensityPerMonth = as< std::vector<double> >(x["defaultRainfallIntensityPerMonth"]);
   
-  ctl.phenology.leafPhenology = as<bool>(x["leafPhenology"]);
-  ctl.phenology.unfoldingDD = as<double>(x["unfoldingDD"]);
+  phenology.leafPhenology = as<bool>(x["leafPhenology"]);
+  phenology.unfoldingDD = as<double>(x["unfoldingDD"]);
   
-  ctl.fireHazard.lfmcComponent = as<std::string>(x["lfmcComponent"]);
+  fireHazard.lfmcComponent = as<std::string>(x["lfmcComponent"]);
 
-  ctl.commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
-  ctl.commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);
-  ctl.commonWB.soilFunctions = as<std::string>(x["soilFunctions"]);
-  ctl.commonWB.VG_PTF = as<std::string>(x["VG_PTF"]);
-  ctl.commonWB.max_nsubsteps_soil = as<int>(x["max_nsubsteps_soil"]);
-  ctl.commonWB.infiltrationCorrection = as<double>(x["infiltrationCorrection"]);
-  ctl.commonWB.verticalLayerSize = as<double>(x["verticalLayerSize"]);
-  ctl.commonWB.bareSoilEvaporation = as<bool>(x["bareSoilEvaporation"]);
-  ctl.commonWB.unlimitedSoilWater = as<bool>(x["unlimitedSoilWater"]);
-  ctl.commonWB.interceptionMode = as<std::string>(x["interceptionMode"]);
-  ctl.commonWB.infiltrationMode = as<std::string>(x["infiltrationMode"]);
-  ctl.commonWB.cavitationRecoveryMaximumRate = as<double>(x["cavitationRecoveryMaximumRate"]);
-  ctl.commonWB.stemCavitationRecovery = as<std::string>(x["stemCavitationRecovery"]);
-  ctl.commonWB.leafCavitationRecovery = as<std::string>(x["leafCavitationRecovery"]);
-  ctl.commonWB.segmentedXylemVulnerability = as<bool>(x["segmentedXylemVulnerability"]);
+  commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
+  commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);
+  commonWB.soilFunctions = as<std::string>(x["soilFunctions"]);
+  commonWB.VG_PTF = as<std::string>(x["VG_PTF"]);
+  commonWB.max_nsubsteps_soil = as<int>(x["max_nsubsteps_soil"]);
+  commonWB.infiltrationCorrection = as<double>(x["infiltrationCorrection"]);
+  commonWB.verticalLayerSize = as<double>(x["verticalLayerSize"]);
+  commonWB.bareSoilEvaporation = as<bool>(x["bareSoilEvaporation"]);
+  commonWB.unlimitedSoilWater = as<bool>(x["unlimitedSoilWater"]);
+  commonWB.interceptionMode = as<std::string>(x["interceptionMode"]);
+  commonWB.infiltrationMode = as<std::string>(x["infiltrationMode"]);
+  commonWB.cavitationRecoveryMaximumRate = as<double>(x["cavitationRecoveryMaximumRate"]);
+  commonWB.stemCavitationRecovery = as<std::string>(x["stemCavitationRecovery"]);
+  commonWB.leafCavitationRecovery = as<std::string>(x["leafCavitationRecovery"]);
+  commonWB.segmentedXylemVulnerability = as<bool>(x["segmentedXylemVulnerability"]);
 
-  ctl.basicWB.hydraulicRedistributionFraction = as<double>(x["hydraulicRedistributionFraction"]);
+  basicWB.hydraulicRedistributionFraction = as<double>(x["hydraulicRedistributionFraction"]);
   
-  ctl.advancedWB.nsubsteps_canopy = as<int>(x["nsubsteps_canopy"]);
-  ctl.advancedWB.ndailysteps = as<int>(x["ndailysteps"]);
-  ctl.advancedWB.taper = as<bool>(x["taper"]);
-  ctl.advancedWB.multiLayerBalance = as<bool>(x["multiLayerBalance"]);
-  ctl.advancedWB.sapFluidityVariation = as<bool>(x["sapFluidityVariation"]);
-  ctl.advancedWB.TPhase_gmin = as<double>(x["TPhase_gmin"]);
-  ctl.advancedWB.Q10_1_gmin = as<double>(x["Q10_1_gmin"]);
-  ctl.advancedWB.Q10_2_gmin = as<double>(x["Q10_2_gmin"]);
-  ctl.advancedWB.rootRadialConductance = as<double>(x["rootRadialConductance"]);
-  ctl.advancedWB.averageFracRhizosphereResistance = as<double>(x["averageFracRhizosphereResistance"]);
-  ctl.advancedWB.thermalCapacityLAI = as<double>(x["thermalCapacityLAI"]);
-  ctl.advancedWB.boundaryLayerSize = as<double>(x["boundaryLayerSize"]);
-  ctl.advancedWB.sunlitShade = as<bool>(x["sunlitShade"]);
+  advancedWB.nsubsteps_canopy = as<int>(x["nsubsteps_canopy"]);
+  advancedWB.ndailysteps = as<int>(x["ndailysteps"]);
+  advancedWB.taper = as<bool>(x["taper"]);
+  advancedWB.multiLayerBalance = as<bool>(x["multiLayerBalance"]);
+  advancedWB.sapFluidityVariation = as<bool>(x["sapFluidityVariation"]);
+  advancedWB.TPhase_gmin = as<double>(x["TPhase_gmin"]);
+  advancedWB.Q10_1_gmin = as<double>(x["Q10_1_gmin"]);
+  advancedWB.Q10_2_gmin = as<double>(x["Q10_2_gmin"]);
+  advancedWB.rootRadialConductance = as<double>(x["rootRadialConductance"]);
+  advancedWB.averageFracRhizosphereResistance = as<double>(x["averageFracRhizosphereResistance"]);
+  advancedWB.thermalCapacityLAI = as<double>(x["thermalCapacityLAI"]);
+  advancedWB.boundaryLayerSize = as<double>(x["boundaryLayerSize"]);
+  advancedWB.sunlitShade = as<bool>(x["sunlitShade"]);
 
   
-  ctl.sperry.leafCavitationEffects = as<bool>(x["leafCavitationEffects"]);
-  ctl.sperry.stemCavitationEffects = as<bool>(x["stemCavitationEffects"]);
+  sperry.leafCavitationEffects = as<bool>(x["leafCavitationEffects"]);
+  sperry.stemCavitationEffects = as<bool>(x["stemCavitationEffects"]);
   List numericParams = x["numericParams"];
-  ctl.sperry.maxNsteps = as<int>(numericParams["maxNsteps"]);
-  ctl.sperry.ntrial = as<int>(numericParams["ntrial"]);
-  ctl.sperry.psiTol = as<double>(numericParams["psiTol"]);
-  ctl.sperry.ETol = as<double>(numericParams["ETol"]);
+  sperry.maxNsteps = as<int>(numericParams["maxNsteps"]);
+  sperry.ntrial = as<int>(numericParams["ntrial"]);
+  sperry.psiTol = as<double>(numericParams["psiTol"]);
+  sperry.ETol = as<double>(numericParams["ETol"]);
   
-  ctl.sureau.stomatalSubmodel = as<std::string>(x["stomatalSubmodel"]);
-  ctl.sureau.plantCapacitance = as<bool>(x["plantCapacitance"]);
-  ctl.sureau.cavitationFlux = as<bool>(x["cavitationFlux"]);
-  ctl.sureau.leafCuticularTranspiration = as<bool>(x["leafCuticularTranspiration"]);
-  ctl.sureau.stemCuticularTranspiration = as<bool>(x["stemCuticularTranspiration"]);
-  ctl.sureau.C_SApoInit = as<double>(x["C_SApoInit"]);
-  ctl.sureau.C_LApoInit = as<double>(x["C_LApoInit"]);
-  ctl.sureau.k_SSym = as<double>(x["k_SSym"]);
-  ctl.sureau.fractionLeafSymplasm = as<double>(x["fractionLeafSymplasm"]);
-  ctl.sureau.gs_NightFrac = as<double>(x["gs_NightFrac"]);
-  ctl.sureau.JarvisPAR = as<double>(x["JarvisPAR"]);
-  ctl.sureau.fTRBToLeaf = as<double>(x["fTRBToLeaf"]);
+  sureau.stomatalSubmodel = as<std::string>(x["stomatalSubmodel"]);
+  sureau.plantCapacitance = as<bool>(x["plantCapacitance"]);
+  sureau.cavitationFlux = as<bool>(x["cavitationFlux"]);
+  sureau.leafCuticularTranspiration = as<bool>(x["leafCuticularTranspiration"]);
+  sureau.stemCuticularTranspiration = as<bool>(x["stemCuticularTranspiration"]);
+  sureau.C_SApoInit = as<double>(x["C_SApoInit"]);
+  sureau.C_LApoInit = as<double>(x["C_LApoInit"]);
+  sureau.k_SSym = as<double>(x["k_SSym"]);
+  sureau.fractionLeafSymplasm = as<double>(x["fractionLeafSymplasm"]);
+  sureau.gs_NightFrac = as<double>(x["gs_NightFrac"]);
+  sureau.JarvisPAR = as<double>(x["JarvisPAR"]);
+  sureau.fTRBToLeaf = as<double>(x["fTRBToLeaf"]);
   
-  ctl.growth.subdailyCarbonBalance = as<bool>(x["subdailyCarbonBalance"]);
-  ctl.growth.allowDessication = as<bool>(x["allowDessication"]);
-  ctl.growth.allowStarvation = as<bool>(x["allowStarvation"]);
-  ctl.growth.sinkLimitation = as<bool>(x["sinkLimitation"]);
-  ctl.growth.shrubDynamics = as<bool>(x["shrubDynamics"]);
-  ctl.growth.herbDynamics = as<bool>(x["herbDynamics"]);
-  ctl.growth.allocationStrategy = as<std::string>(x["allocationStrategy"]);
-  ctl.growth.phloemConductanceFactor = as<double>(x["phloemConductanceFactor"]);
-  ctl.growth.nonSugarConcentration = as<double>(x["nonSugarConcentration"]);
+  growth.subdailyCarbonBalance = as<bool>(x["subdailyCarbonBalance"]);
+  growth.allowDessication = as<bool>(x["allowDessication"]);
+  growth.allowStarvation = as<bool>(x["allowStarvation"]);
+  growth.sinkLimitation = as<bool>(x["sinkLimitation"]);
+  growth.shrubDynamics = as<bool>(x["shrubDynamics"]);
+  growth.herbDynamics = as<bool>(x["herbDynamics"]);
+  growth.allocationStrategy = as<std::string>(x["allocationStrategy"]);
+  growth.phloemConductanceFactor = as<double>(x["phloemConductanceFactor"]);
+  growth.nonSugarConcentration = as<double>(x["nonSugarConcentration"]);
   
   List eqOsmConcs = x["equilibriumOsmoticConcentration"];
-  ctl.growth.equilibriumOsmoticConcentration.leaf = as<double>(eqOsmConcs["leaf"]);
-  ctl.growth.equilibriumOsmoticConcentration.sapwood = as<double>(eqOsmConcs["sapwood"]);
-  ctl.growth.minimumRelativeStarchForGrowth = as<double>(x["minimumRelativeStarchForGrowth"]);
+  growth.equilibriumOsmoticConcentration.leaf = as<double>(eqOsmConcs["leaf"]);
+  growth.equilibriumOsmoticConcentration.sapwood = as<double>(eqOsmConcs["sapwood"]);
+  growth.minimumRelativeStarchForGrowth = as<double>(x["minimumRelativeStarchForGrowth"]);
   List constructionCosts = x["constructionCosts"];
-  ctl.growth.constructionCosts.leaf = as<double>(constructionCosts["leaf"]);
-  ctl.growth.constructionCosts.sapwood = as<double>(constructionCosts["sapwood"]);
-  ctl.growth.constructionCosts.fineroot = as<double>(constructionCosts["fineroot"]);
+  growth.constructionCosts.leaf = as<double>(constructionCosts["leaf"]);
+  growth.constructionCosts.sapwood = as<double>(constructionCosts["sapwood"]);
+  growth.constructionCosts.fineroot = as<double>(constructionCosts["fineroot"]);
   List senescenceRates = x["senescenceRates"];
-  ctl.growth.senescenceRates.sapwood = as<double>(senescenceRates["sapwood"]);
-  ctl.growth.senescenceRates.fineroot = as<double>(senescenceRates["fineroot"]);
+  growth.senescenceRates.sapwood = as<double>(senescenceRates["sapwood"]);
+  growth.senescenceRates.fineroot = as<double>(senescenceRates["fineroot"]);
   List maximumRelativeGrowthRates = x["maximumRelativeGrowthRates"];
-  ctl.growth.maximumRelativeGrowthRates.leaf = as<double>(maximumRelativeGrowthRates["leaf"]);
-  ctl.growth.maximumRelativeGrowthRates.cambium = as<double>(maximumRelativeGrowthRates["cambium"]);
-  ctl.growth.maximumRelativeGrowthRates.sapwood = as<double>(maximumRelativeGrowthRates["sapwood"]);
-  ctl.growth.maximumRelativeGrowthRates.fineroot = as<double>(maximumRelativeGrowthRates["fineroot"]);
+  growth.maximumRelativeGrowthRates.leaf = as<double>(maximumRelativeGrowthRates["leaf"]);
+  growth.maximumRelativeGrowthRates.cambium = as<double>(maximumRelativeGrowthRates["cambium"]);
+  growth.maximumRelativeGrowthRates.sapwood = as<double>(maximumRelativeGrowthRates["sapwood"]);
+  growth.maximumRelativeGrowthRates.fineroot = as<double>(maximumRelativeGrowthRates["fineroot"]);
   
-  ctl.mortality.mortalityMode = as<std::string>(x["mortalityMode"]);
-  ctl.mortality.mortalityBaselineRate = as<double>(x["mortalityBaselineRate"]);
-  ctl.mortality.mortalityRelativeSugarThreshold = as<double>(x["mortalityRelativeSugarThreshold"]);
-  ctl.mortality.mortalityRWCThreshold = as<double>(x["mortalityRWCThreshold"]);
+  mortality.mortalityMode = as<std::string>(x["mortalityMode"]);
+  mortality.mortalityBaselineRate = as<double>(x["mortalityBaselineRate"]);
+  mortality.mortalityRelativeSugarThreshold = as<double>(x["mortalityRelativeSugarThreshold"]);
+  mortality.mortalityRWCThreshold = as<double>(x["mortalityRWCThreshold"]);
   
-  ctl.recruitment.recrTreeDBH = as<double>(x["recrTreeDBH"]);
-  ctl.recruitment.recrTreeDensity = as<double>(x["recrTreeDensity"]);
-  ctl.recruitment.ingrowthTreeDBH = as<double>(x["ingrowthTreeDBH"]);
-  ctl.recruitment.ingrowthTreeDensity = as<double>(x["ingrowthTreeDensity"]);
+  recruitment.recrTreeDBH = as<double>(x["recrTreeDBH"]);
+  recruitment.recrTreeDensity = as<double>(x["recrTreeDensity"]);
+  recruitment.ingrowthTreeDBH = as<double>(x["ingrowthTreeDBH"]);
+  recruitment.ingrowthTreeDensity = as<double>(x["ingrowthTreeDensity"]);
 
   NumericVector decompRates = x["decompositionAnnualBaseRates"];  
-  ctl.decomposition.decompositionAnnualTurnoverRate = as<double>(x["decompositionAnnualTurnoverRate"]);
-  ctl.decomposition.annualBaseRates.SurfaceMetabolic = decompRates["SurfaceMetabolic"];
-  ctl.decomposition.annualBaseRates.SoilMetabolic = decompRates["SoilMetabolic"];
-  ctl.decomposition.annualBaseRates.Leaves = decompRates["Leaves"];
-  ctl.decomposition.annualBaseRates.FineRoots = decompRates["FineRoots"];
-  ctl.decomposition.annualBaseRates.Twigs = decompRates["Twigs"];
-  ctl.decomposition.annualBaseRates.SmallBranches = decompRates["SmallBranches"];
-  ctl.decomposition.annualBaseRates.LargeWood = decompRates["LargeWood"];
-  ctl.decomposition.annualBaseRates.CoarseRoots = decompRates["CoarseRoots"];
-  ctl.decomposition.annualBaseRates.SurfaceActive = decompRates["SurfaceActive"];
-  ctl.decomposition.annualBaseRates.SurfaceSlow = decompRates["SurfaceSlow"];
-  ctl.decomposition.annualBaseRates.SoilActive = decompRates["SoilActive"];
-  ctl.decomposition.annualBaseRates.SoilSlow = decompRates["SoilSlow"];
-  ctl.decomposition.annualBaseRates.SoilPassive = decompRates["SoilPassive"];  
-  
-  return(ctl);
+  decomposition.decompositionAnnualTurnoverRate = as<double>(x["decompositionAnnualTurnoverRate"]);
+  decomposition.annualBaseRates.SurfaceMetabolic = decompRates["SurfaceMetabolic"];
+  decomposition.annualBaseRates.SoilMetabolic = decompRates["SoilMetabolic"];
+  decomposition.annualBaseRates.Leaves = decompRates["Leaves"];
+  decomposition.annualBaseRates.FineRoots = decompRates["FineRoots"];
+  decomposition.annualBaseRates.Twigs = decompRates["Twigs"];
+  decomposition.annualBaseRates.SmallBranches = decompRates["SmallBranches"];
+  decomposition.annualBaseRates.LargeWood = decompRates["LargeWood"];
+  decomposition.annualBaseRates.CoarseRoots = decompRates["CoarseRoots"];
+  decomposition.annualBaseRates.SurfaceActive = decompRates["SurfaceActive"];
+  decomposition.annualBaseRates.SurfaceSlow = decompRates["SurfaceSlow"];
+  decomposition.annualBaseRates.SoilActive = decompRates["SoilActive"];
+  decomposition.annualBaseRates.SoilSlow = decompRates["SoilSlow"];
+  decomposition.annualBaseRates.SoilPassive = decompRates["SoilPassive"];  
 }
 
 // [[Rcpp::export(.testControlListToStructure)]]
 int testControlListToStructure(List x) {
-  ControlParameters ctl = controlListToStructure(x);
-  // Rcout << ctl.sureau.fTRBToLeaf << "\n";
+  ControlParameters ctl = ControlParameters(x);
+  // Rcout << sureau.fTRBToLeaf << "\n";
   return(sizeof(ctl));
 }

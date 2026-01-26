@@ -7,6 +7,7 @@
 #include "photosynthesis.h"
 #include "woodformation.h"
 #include "forestutils.h"
+#include "modelInput_c.h"
 #include "paramutils.h"
 #include "tissuemoisture.h"
 #include "tissuemoisture_c.h"
@@ -2463,4 +2464,11 @@ void modifyInputParam(List x, String paramType, String paramName,
                                      paramsGrowthdf,
                                      control);
   }
+}
+
+// [[Rcpp::export(.testModelInputToStructure)]]
+NumericVector testModelInputToStructure(List x) {
+  ModelInput input(x);
+  NumericVector sizes = {sizeof(x),sizeof(input)};
+  return(sizes);
 }

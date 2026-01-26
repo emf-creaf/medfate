@@ -59,6 +59,7 @@ class Soil {
   std::vector<double> theta;
   std::vector<double> Temp;
   public:
+    Soil();
     Soil(int nlayersIn, 
              std::string& modelIn,
              std::vector<double>& widthsIn,

@@ -1,4 +1,5 @@
 #include "medfate.h"
+#include "Rcpp.h"
 
 #ifndef CONTROL_H
 #define CONTROL_H
@@ -32,7 +33,7 @@ struct WeatherParams {
   std::vector<double> defaultRainfallIntensityPerMonth;
 };
 
-struct PhenologyParams {
+struct PhenoParams {
   bool leafPhenology;
   double unfoldingDD;
 };
@@ -192,7 +193,7 @@ struct ControlParameters {
   std::string rhizosphereOverlap;
   
   WeatherParams weather;
-  PhenologyParams phenology;
+  PhenoParams phenology;
   CommonWBParams commonWB;
   BasicWBParams basicWB;
   AdvancedWBParams advancedWB;
@@ -203,7 +204,11 @@ struct ControlParameters {
   MortalityParams mortality;
   RecruitmentParams recruitment;
   DecompositionParams decomposition;
+  
+  ControlParameters();
+  ControlParameters(Rcpp::List x);
 };
+
 #endif
 
 

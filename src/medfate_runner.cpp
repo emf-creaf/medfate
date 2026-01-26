@@ -6,10 +6,11 @@
 #include "soil.h"
 using namespace Rcpp;
 
-MedfateRunner::MedfateRunner(Rcpp::DataFrame soilParams, String soilFunctions) : soil(soilParams, soilFunctions) {
+MedfateRunner::MedfateRunner(Rcpp::List x) : input(x) {
 }
+
 double MedfateRunner::run_soil_evaporation(double snowpack, double pet, double LgroundSWR, bool modifySoil) {
-  double Esoil = soilEvaporation_c(soil, 
+  double Esoil = soilEvaporation_c(input.soil, 
                                    snowpack, pet, LgroundSWR, modifySoil);
   Rcout<< snowpack << " " << pet << " " << LgroundSWR << " " << Esoil<< "\n";
   return(Esoil);
@@ -17,7 +18,7 @@ double MedfateRunner::run_soil_evaporation(double snowpack, double pet, double L
 
 RCPP_MODULE(mod_medfate) {
   class_<MedfateRunner>( "MedfateRunner" )
-  .constructor<Rcpp::DataFrame, Rcpp::String>()
+  .constructor<Rcpp::List>()
   .method( "run_soil_evaporation", &MedfateRunner::run_soil_evaporation )
   ;
 }
