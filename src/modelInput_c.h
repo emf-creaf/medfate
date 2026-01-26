@@ -6,6 +6,17 @@
 #ifndef MODELINPUT_C_H
 #define MODELINPUT_C_H
 
+struct CanopyParams {
+  std::vector<double> zlow;
+  std::vector<double> zmid;
+  std::vector<double> zup;
+  std::vector<double> LAIlive;
+  std::vector<double> LAIexpanded;
+  std::vector<double> LAIdead;
+  std::vector<double> Tair;
+  std::vector<double> Cair;
+  std::vector<double> VPair;
+};
 struct PhenologyParams {
   std::vector<std::string> phenoType;
   std::vector<double> leafDuration;
@@ -121,6 +132,20 @@ struct InternalPhenology {
   std::vector<double> phi;
 };
 
+struct InternalWater {
+  std::vector<double> Einst;
+  std::vector<double> Elim;
+  std::vector<double> Emin_L;
+  std::vector<double> Emin_S;
+  std::vector<double> PlantPsi;
+  std::vector<double> RootCrownPsi;
+  std::vector<double> LeafPsi;
+  std::vector<double> StemPsi;
+  std::vector<double> LeafSympPsi;
+  std::vector<double> StemSympPsi;
+  std::vector<double> LeafPLC;
+  std::vector<double> StemPLC;
+};
 
 struct InternalCarbon {
   std::vector<double> sugarLeaf;
@@ -154,6 +179,15 @@ struct InternalAllocation {
   std::vector<double> crownBudPercent;
 };
 
+struct InternalSnags {
+  std::vector<std::string> Species;
+  std::vector<double> DBH;
+  std::vector<double> Height;
+  std::vector<double> DeathAge;
+  std::vector<double> SmallBranches;
+  std::vector<double> LargeWood;
+};
+
 struct InternalLitter {
   std::vector<std::string> Species;
   std::vector<double> Leaves;
@@ -163,6 +197,50 @@ struct InternalLitter {
   std::vector<double> CoarseRoots;
   std::vector<double> FineRoots;
 };
+
+struct InternalSOC {
+  double SurfaceMetabolic;
+  double SoilMetabolic;
+  double SurfaceActive;
+  double SoilActive;
+  double SurfaceSlow;
+  double SoilSlow;
+  double SoilPassive;
+};
+
+struct InternalLAIDistribution{
+  std::vector<double> PrevLAIexpanded;
+  std::vector<double> PrevLAIdead;
+  std::vector<double> PARcohort;
+  medfate::Matrix<double> live;
+  medfate::Matrix<double> expanded;
+  medfate::Matrix<double> dead;
+};
+
+struct InternalFCCS {
+  std::vector<double> w;
+  std::vector<double> cover;
+  std::vector<double> hbc;
+  std::vector<double> htc;
+  std::vector<double> habc;
+  std::vector<double> hatc;
+  std::vector<double> delta;
+  std::vector<double> rhob;
+  std::vector<double> rhop;
+  std::vector<double> PV;
+  std::vector<double> beta;
+  std::vector<double> betarel;
+  std::vector<double> etabetarel;
+  std::vector<double> sigma;
+  std::vector<double> pDead;
+  std::vector<double> FAI;
+  std::vector<double> h;
+  std::vector<double> RV;
+  std::vector<double> MinFMC;
+  std::vector<double> MaxFMC;
+  std::vector<double> ActFMC;
+};
+
 /**
  * Internal C++ representation of the model input data structure
  */
@@ -171,6 +249,7 @@ class ModelInput {
     ControlParameters control;
     Soil soil;
     double snowpack;
+    CanopyParams canopy;
     double herbLAI;
     double herbLAImax;
     PhenologyParams paramsPhenology;
@@ -180,10 +259,17 @@ class ModelInput {
     TranspirationParams paramsTranspiration;
     
     InternalPhenology internalPhenology;
+    InternalWater internalWater;
     InternalCarbon internalCarbon;
     InternalMortality internalMortality;
     InternalAllocation internalAllocation;
+    InternalSnags internalSnags;
     InternalLitter internalLitter;
+    InternalSOC internalSOC;
+    InternalLAIDistribution internalLAIDistribution;
+    InternalFCCS internalFCCS;
+    
+    std::string version;
     
     ModelInput(Rcpp::List x);
 };
