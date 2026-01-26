@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef FIREBEHAVIOUR_H
 #define FIREBEHAVIOUR_H

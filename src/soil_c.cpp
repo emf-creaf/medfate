@@ -1,7 +1,7 @@
 #include <cmath>
 #include <vector>
 #include "soil_c.h"
-#include "Rcpp.h"
+#include "RcppArmadillo.h"
 
 
 /*=============================================================================

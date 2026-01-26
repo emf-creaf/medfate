@@ -32,7 +32,7 @@ Suggests:
     rlang,
     knitr,
     rmarkdown
-LinkingTo: Rcpp, meteoland
+LinkingTo: Rcpp, RcppArmadillo, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
 RoxygenNote: 7.3.3

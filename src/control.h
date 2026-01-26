@@ -1,5 +1,5 @@
 #include "medfate.h"
-#include "Rcpp.h"
+#include "RcppArmadillo.h"
 
 #ifndef CONTROL_H
 #define CONTROL_H

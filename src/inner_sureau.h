@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "struct_sureau.h"
 
 #ifndef INNER_COCHARD_H

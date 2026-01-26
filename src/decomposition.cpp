@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "fuelmoisture.h"
 #include "communication_structures.h"
 using namespace Rcpp;

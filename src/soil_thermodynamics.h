@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef SOIL_THERMODYNAMICS_H
 #define SOIL_THERMODYNAMICS_H

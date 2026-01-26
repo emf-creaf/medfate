@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef ROOT_H
 #define ROOT_H

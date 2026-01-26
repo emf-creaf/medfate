@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "medfate.h"
 
 #ifndef CARBON_H

@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef LIGHTEXTINCTION_BASIC_H
 #define LIGHTEXTINCTION_BASIC_H

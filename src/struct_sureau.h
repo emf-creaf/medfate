@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef STRUCT_SUREAU_H
 #define STRUCT_SUREAU_H

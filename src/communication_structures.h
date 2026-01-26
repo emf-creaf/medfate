@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef COMMUNICATION_STRUCTURES_H
 #define COMMUNICATION_STRUCTURES_H

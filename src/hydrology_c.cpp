@@ -1,6 +1,7 @@
 // [[Rcpp::interfaces(r,cpp)]]
 #include <cmath>
 #include <vector>
+#include <RcppArmadillo.h>
 #include <meteoland.h>
 #include "soil_c.h"
 #include "hydraulics_c.h"

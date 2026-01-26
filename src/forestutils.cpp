@@ -1,6 +1,6 @@
 #define STRICT_R_HEADERS
 #include <numeric>
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <string.h>
 #include <stdio.h>
 #include "paramutils.h"

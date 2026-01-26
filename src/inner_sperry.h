@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef INNER_SPERRY_H
 #define INNER_SPERRY_H

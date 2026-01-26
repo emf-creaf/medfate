@@ -1,4 +1,4 @@
-#include "Rcpp.h"
+#include "RcppArmadillo.h"
 #include "root.h"
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"

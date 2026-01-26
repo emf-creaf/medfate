@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef GROWTH_DAY_H
 #define GROWTH_DAY_H

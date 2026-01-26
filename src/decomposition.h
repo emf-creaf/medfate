@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef DECOMPOSITION_H
 #define DECOMPOSITION_H

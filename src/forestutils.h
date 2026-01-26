@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef FORESTUTILS_H
 #define FORESTUTILS_H

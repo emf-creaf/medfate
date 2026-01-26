@@ -1,6 +1,6 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 using namespace Rcpp;
 
 // a,b,c,d are input vectors

@@ -1,6 +1,6 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "soil.h"
 #include "numerical_solving.h"
 #include "communication_structures.h"

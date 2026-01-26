@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "hydraulics.h"
 #include "forestutils.h"
 #include "tissuemoisture.h"

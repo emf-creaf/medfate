@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include "RcppArmadillo.h"
 #include "soil_c.h"
 
 #ifndef SOIL_H

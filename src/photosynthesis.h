@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "struct_photosynthesis.h"
 
 #ifndef PHOTOSYNTHESIS_H

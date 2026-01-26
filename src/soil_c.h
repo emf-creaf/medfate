@@ -1,5 +1,5 @@
 #include "medfate.h"
-#include "Rcpp.h"
+#include "RcppArmadillo.h"
 
 #ifndef SOIL_C_H
 #define SOIL_C_H

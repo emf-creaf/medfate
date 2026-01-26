@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef HYDROLOGY_H
 #define HYDROLOGY_H

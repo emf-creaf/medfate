@@ -1,4 +1,4 @@
-#include "Rcpp.h"
+#include "RcppArmadillo.h"
 #include "medfate.h"
 #include "modelInput_c.h"
 #include "soil_c.h"

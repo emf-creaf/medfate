@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef FUELSTRUCTURE_H
 #define FUELSTRUCTURE_H

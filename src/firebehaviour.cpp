@@ -1,6 +1,6 @@
 // [[Rcpp::depends(meteoland)]]
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
 #include <math.h>
 #include "forestutils.h"

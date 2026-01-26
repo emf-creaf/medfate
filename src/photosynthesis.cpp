@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
 #include <math.h>
 #include "biophysicsutils_c.h"

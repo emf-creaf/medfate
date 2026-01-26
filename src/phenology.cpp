@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "carbon.h"
 #include "decomposition.h"
 using namespace Rcpp;

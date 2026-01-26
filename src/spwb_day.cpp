@@ -1,6 +1,6 @@
 // [[Rcpp::interfaces(r,cpp)]]
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
 #include <math.h>
 #include "biophysicsutils.h"

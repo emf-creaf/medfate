@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef HYDRAULICS_H
 #define HYDRAULICS_H

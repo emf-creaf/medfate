@@ -1,7 +1,7 @@
+#include "RcppArmadillo.h"
 #include "medfate.h"
 #include "control.h"
 #include "soil_c.h"
-#include "Rcpp.h"
 
 #ifndef MODELINPUT_C_H
 #define MODELINPUT_C_H
@@ -212,9 +212,9 @@ struct InternalLAIDistribution{
   std::vector<double> PrevLAIexpanded;
   std::vector<double> PrevLAIdead;
   std::vector<double> PARcohort;
-  medfate::Matrix<double> live;
-  medfate::Matrix<double> expanded;
-  medfate::Matrix<double> dead;
+  arma::mat live;
+  arma::mat expanded;
+  arma::mat dead;
 };
 
 struct InternalFCCS {

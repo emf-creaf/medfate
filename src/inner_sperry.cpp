@@ -1,5 +1,5 @@
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "photosynthesis.h"
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"

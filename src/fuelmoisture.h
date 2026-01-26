@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef FUELMOISTURE_H
 #define FUELMOISTURE_H

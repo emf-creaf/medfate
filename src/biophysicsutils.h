@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef BIOPHYSICS_UTILS_H
 #define BIOPHYSICS_UTILS_H

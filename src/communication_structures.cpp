@@ -1,5 +1,5 @@
 // [[Rcpp::interfaces(r,cpp)]]
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 using namespace Rcpp;
 
 List communicationLongWaveRadiation(int ncanlayers) {

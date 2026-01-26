@@ -1,5 +1,6 @@
 // [[Rcpp::interfaces(r,cpp)]]
 #define STRICT_R_HEADERS
+#include <RcppArmadillo.h>
 #include <meteoland.h>
 #include "soil.h"
 #include "root.h"

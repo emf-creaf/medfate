@@ -1,6 +1,6 @@
 #include "modelInput_c.h"
 #include "control.h"
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 /**
  * Implementation of ModelInput class
@@ -154,11 +154,9 @@ ModelInput::ModelInput(Rcpp::List x) {
     Rcpp::NumericMatrix liveMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["live"]);
     Rcpp::NumericMatrix expandedMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["expanded"]);
     Rcpp::NumericMatrix deadMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["dead"]);
-    internalLAIDistribution.live = std::vector< std::vector<double> >(liveMat.nrow(), std::vector<double>(liveMat.ncol()));
-    internalLAIDistribution.live = std::vector< std::vector<double> >(expandedMat.nrow(), std::vector<double>(expandedMat.ncol()));
-    internalLAIDistribution.live = std::vector< std::vector<double> >(deadMat.nrow(), std::vector<double>(deadMat.ncol()));
-    // internalLAIDistribution.expanded = Rcpp::as< std::vector< std::vector<double> > >(intLAIDist["expanded"]);
-    // internalLAIDistribution.dead = Rcpp::as< std::vector< std::vector<double> > >(intLAIDist["dead"]);
+    internalLAIDistribution.live = Rcpp::as<arma::mat>(liveMat);
+    internalLAIDistribution.dead = Rcpp::as<arma::mat>(deadMat);
+    internalLAIDistribution.expanded = Rcpp::as<arma::mat>(expandedMat);
   }
   //Internal water variables
   if(x.containsElementNamed("internalWater")) {

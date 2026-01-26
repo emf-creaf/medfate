@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef WOODFORMATION_H
 #define WOODFORMATION_H

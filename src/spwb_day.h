@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef SPWB_DAY_H
 #define SPWB_DAY_H

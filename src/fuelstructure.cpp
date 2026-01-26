@@ -1,5 +1,5 @@
 #include <numeric>
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "forestutils.h"
 #include "paramutils.h"
 #include "fuelmoisture.h"
