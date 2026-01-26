@@ -6,6 +6,44 @@
 #ifndef MODELINPUT_C_H
 #define MODELINPUT_C_H
 
+struct Cohorts {
+  std::vector<int> SP;
+  std::vector<std::string> Name;
+};
+
+struct Above {
+  std::vector<double> N;
+  std::vector<double> DBH;
+  std::vector<double> Cover;
+  std::vector<double> H;
+  std::vector<double> CR;
+  std::vector<double> SA;
+  std::vector<double> LAI_live;
+  std::vector<double> LAI_expanded;
+  std::vector<double> LAI_dead;
+  std::vector<double> LAI_nocomp;
+  std::vector<double> Loading;
+  std::vector<double> Age;
+  std::vector<std::string> ObsID;
+};
+
+struct Below {
+  std::vector<double> Z50;
+  std::vector<double> Z95;
+  std::vector<double> Z100;
+  std::vector<double> fineRootBiomass;
+  std::vector<double> coarseRootSoilVolume;
+};
+
+struct BelowLayers {
+  arma::mat V;
+  arma::mat L;
+  arma::mat VGrhizo_kmax;
+  arma::mat VCroot_kmax;
+  arma::mat Wpool;
+  arma::mat RhizoPsi;
+};
+
 struct CanopyParams {
   std::vector<double> zlow;
   std::vector<double> zmid;
@@ -121,6 +159,68 @@ struct TranspirationParams {
   std::vector<double> FR_root;
   
 };
+
+struct GrowthParams {
+  std::vector<double> RERleaf;
+  std::vector<double> RERsapwood;
+  std::vector<double> RERfineroot;
+  std::vector<double> CCleaf;
+  std::vector<double> CCsapwood;
+  std::vector<double> CCfineroot;
+  std::vector<double> RGRleafmax;
+  std::vector<double> RGRsapwoodmax;
+  std::vector<double> RGRcambiummax;
+  std::vector<double> RGRfinerootmax;
+  std::vector<double> SRsapwood;
+  std::vector<double> SRfineroot;
+  std::vector<double> RSSG;
+  std::vector<double> fHDmin;
+  std::vector<double> fHDmax;
+  std::vector<double> WoodC;
+};
+
+struct MortalityRegenerationParams {
+  std::vector<double> MortalityBaselineRate;
+  std::vector<double> SurvivalModelStep;
+  std::vector<double> SurvivalB0;
+  std::vector<double> SurvivalB1;
+  std::vector<double> RecrTreeDensity;
+  std::vector<double> RecrTreeDBH;
+  std::vector<double> IngrowthTreeDensity;
+  std::vector<double> IngrowthTreeDBH;
+  std::vector<double> RespDist;
+  std::vector<double> RespFire;
+};
+
+struct AllometryParams {
+  std::vector<double> Afbt;
+  std::vector<double> Bfbt;
+  std::vector<double> Cfbt;
+  std::vector<double> Aash;
+  std::vector<double> Bash;
+  std::vector<double> Absh;
+  std::vector<double> Bbsh;
+  std::vector<double> BTsh;
+  std::vector<double> Acr;
+  std::vector<double> B1cr;
+  std::vector<double> B2cr;
+  std::vector<double> B3cr;
+  std::vector<double> C1cr;
+  std::vector<double> C2cr;
+  std::vector<double> Acw;
+  std::vector<double> Bcw;
+  std::vector<double> Abt;
+  std::vector<double> Bbt;  
+};
+
+struct LitterDecompositionParams {
+  std::vector<std::string> Species;
+  std::vector<double> LeafLignin;
+  std::vector<double> Nleaf;
+  std::vector<double> Nsapwood;
+  std::vector<double> Nfineroot;  
+};
+
 
 struct InternalPhenology {
   std::vector<double> gdd;
@@ -252,12 +352,24 @@ class ModelInput {
     CanopyParams canopy;
     double herbLAI;
     double herbLAImax;
-    PhenologyParams paramsPhenology;
-    InterceptionParams paramsInterception;
-    AnatomyParams paramsAnatomy;
-    WaterStorageParams paramsWaterStorage;
-    TranspirationParams paramsTranspiration;
     
+    Cohorts cohorts;
+    Above above;
+    Below below;
+    BelowLayers belowLayers;
+    
+    //Parameters
+    PhenologyParams paramsPhenology;
+    AnatomyParams paramsAnatomy;
+    InterceptionParams paramsInterception;
+    TranspirationParams paramsTranspiration;
+    WaterStorageParams paramsWaterStorage;
+    GrowthParams paramsGrowth;
+    MortalityRegenerationParams paramsMortalityRegeneration;
+    AllometryParams paramsAllometry;
+    LitterDecompositionParams paramsLitterDecomposition;
+    
+    //Internal state variables
     InternalPhenology internalPhenology;
     InternalWater internalWater;
     InternalCarbon internalCarbon;

@@ -33,7 +33,7 @@ struct WeatherParams {
   std::vector<double> defaultRainfallIntensityPerMonth;
 };
 
-struct PhenoParams {
+struct PhenologyControlParams {
   bool leafPhenology;
   double unfoldingDD;
 };
@@ -129,7 +129,7 @@ struct MaximumRelativeGrowthRates {
   double fineroot;
 };
 
-struct GrowthParams {
+struct GrowthControlParams {
   bool subdailyCarbonBalance;
   bool allowDessication;
   bool allowStarvation;
@@ -193,14 +193,14 @@ struct ControlParameters {
   std::string rhizosphereOverlap;
   
   WeatherParams weather;
-  PhenoParams phenology;
+  PhenologyControlParams phenology;
   CommonWBParams commonWB;
   BasicWBParams basicWB;
   AdvancedWBParams advancedWB;
   SperryWBParams sperry;
   SureauWBParams sureau;
   FireHazardParams fireHazard;
-  GrowthParams growth;
+  GrowthControlParams growth;
   MortalityParams mortality;
   RecruitmentParams recruitment;
   DecompositionParams decomposition;
