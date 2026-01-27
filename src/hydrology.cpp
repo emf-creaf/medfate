@@ -1036,7 +1036,7 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
               }
               //Find solution for half substep
               double S_t1 = rootFindingMacropores_c(S_macro_step[l], K_up, ksat_i, ksat_b_i, kin_exp,
-                                                    e_macro[l], lambda[l], dZ_m[l], sourceSink_macro_m3s, tsubstep);
+                                                    e_macro[l], lambda[l], dZ_m[l], sourceSink_macro_m3s, tsubstep, 100);
               // Rcout << "S " << S_macro_step[l] << " source/sink step " << sourceSink_macro_m3s<< " S1 "<< S_t1<<"\n";
               // 
               //Update macropore conductances for next step (sets K_up for next layer)
@@ -1361,11 +1361,42 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
-  List SWBcommunication = communicationSoilWaterBalance(soil.nrow());
-  NumericVector res = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions, 
-                                             rainfallInput, rainfallIntensity, snowmelt, sourceSink, 
-                                             runon, lateralFlows, waterTableDepth,
-                                             infiltrationMode, infiltrationCorrection, soilDomains, 
-                                             nsteps, max_nsubsteps, modifySoil);
+  Rcout<<soil.nrow()<<"\n";
+  SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow());
+  SoilWaterBalance_RESULT SWBres;
+  Soil soil_c = Soil(soil, soilFunctions);
+  std::vector<double> lateralFlows_c(soil.nrow(), 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
+  std::vector<double> sourceSink_c= Rcpp::as< std::vector<double> >(sourceSink);
+  std::string infiltrationMode_str = infiltrationMode.get_cstring();
+  std::string soilDomains_str = soilDomains.get_cstring();
+  soilWaterBalance_inner_c(SWBres, SWBcomm, soil_c,
+                           rainfallInput, rainfallIntensity, snowmelt, sourceSink_c,
+                           runon, lateralFlows_c, waterTableDepth,
+                           infiltrationMode_str, infiltrationCorrection,
+                           soilDomains_str,
+                           nsteps, max_nsubsteps);
+  NumericVector res;
+  if(soilDomains== "buckets") {
+    res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+                                _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+                                _["Infiltration"] = SWBres.infiltration_mm,
+                                _["InfiltrationExcess"] = SWBres.infiltrationExcess_mm,
+                                _["SaturationExcess"] = SWBres.saturationExcess_mm,
+                                _["Runoff"] = SWBres.runoff_mm,
+                                _["DeepDrainage"] = SWBres.deepDrainage_mm);
+  }
+  if(modifySoil) {
+    NumericVector W = soil["W"];
+    for(int l=0;l<W.size();l++) {
+      W[l] = soil_c.getW(l);
+    }
+  }
   return(res);
 }

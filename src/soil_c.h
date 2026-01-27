@@ -116,6 +116,25 @@ class Soil {
     void setTheta(int layer, double value);
     void setW(int layer, double value);
     void setTemp(int layer, double value);
+    // Gets read-only access to vectors
+    const std::vector<double>& getWidths() const {return widths;}
+    const std::vector<double>& getClay() const {return clay;}
+    const std::vector<double>& getSand() const {return sand;}
+    const std::vector<double>& getOM() const {return om;}
+    const std::vector<double>& getNitrogen() const {return nitrogen;}
+    const std::vector<double>& getPH() const {return ph;}
+    const std::vector<double>& getBD() const {return bd;}
+    const std::vector<double>& getRFC() const {return rfc;}
+    const std::vector<double>& getMacro() const {return macro;}
+    const std::vector<double>& getKsat() const {return Ksat;}
+    const std::vector<double>& getVG_alpha() const {return VG_alpha;}
+    const std::vector<double>& getVG_n() const {return VG_n;}
+    const std::vector<double>& getVG_theta_res() const {return VG_theta_res;}
+    const std::vector<double>& getVG_theta_sat() const {return VG_theta_sat;}
+    const std::vector<std::string>& getUSDAType() const {return usda_type;}
+    const std::vector<double>& getThetaSAT() const {return theta_SAT;}
+    const std::vector<double>& getThetaFC() const {return theta_FC;}
+    
     
 };
 
