@@ -273,7 +273,7 @@ NumericVector waterInputs(List x,
 
 
 
-
+// TO BE DELETED WHEN TRANSITION TO C++ IS COMPLETE
 NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, String soilFunctions, 
                                      double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                      double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
@@ -1361,7 +1361,6 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
-  Rcout<<soil.nrow()<<"\n";
   SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow());
   SoilWaterBalance_RESULT SWBres;
   Soil soil_c = Soil(soil, soilFunctions);
@@ -1391,6 +1390,37 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                 _["SaturationExcess"] = SWBres.saturationExcess_mm,
                                 _["Runoff"] = SWBres.runoff_mm,
                                 _["DeepDrainage"] = SWBres.deepDrainage_mm);
+  } else if(soilDomains == "single") {
+    res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+                                _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+                                _["Infiltration"] = SWBres.infiltration_mm,
+                                _["InfiltrationExcess"] = SWBres.infiltrationExcess_mm,
+                                _["SaturationExcess"] = SWBres.saturationExcess_mm,
+                                _["Runoff"] = SWBres.runoff_mm,
+                                _["DeepDrainage"] = SWBres.deepDrainage_mm,
+                                _["CapillarityRise"] = SWBres.capillarityRise_mm,
+                                _["Correction"] = SWBres.correction_mm,
+                                _["VolumeChange"] = SWBres.volumeChange_mm,
+                                _["Substeps"] = SWBres.substeps);
+  } else if(soilDomains == "dual") {
+    // res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+    //                             _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+    //                             _["Matrix-macropore flow"] = SWBres.matrixMacroporeFlows_mm,
+    //                             _["InfiltrationMatrix"] = SWBres.infiltrationMatrix_mm,
+    //                             _["InfiltrationMacropores"] = SWBres.infiltrationMacropores_mm,
+    //                             _["InfiltrationExcessMatrix"] = SWBres.infiltrationExcessMatrix_mm,
+    //                             _["InfiltrationExcessMacropores"] = SWBres.infiltrationExcessMacropores_mm,
+    //                             _["SaturationExcessMatrix"] = SWBres.saturationExcessMatrix_mm,
+    //                             _["SaturationExcessMacropores"] = SWBres.saturationExcessMacropores_mm,
+    //                             _["DrainageMatrix"] = SWBres.drainageMatrix_mm,
+    //                             _["DrainageMacropores"] = SWBres.drainageMacropores_mm,
+    //                             _["CapillarityMatrix"] = SWBres.capillarityMatrix_mm,
+    //                             _["CapillarityMacropores"] = SWBres.capillarityMacropores_mm,
+    //                             _["CorrectionMatrix"] = SWBres.correctionMatrix_mm,
+    //                             _["CorrectionMacropores"] = SWBres.correctionMacropores_mm,
+    //                             _["MatrixVolumeChange"] = SWBres.matrixVolumeChange_mm,
+    //                             _["MacroporeVolumeChange"] = SWBres.macroporeVolumeChange_mm
+    //                             );
   }
   if(modifySoil) {
     NumericVector W = soil["W"];

@@ -15,6 +15,9 @@ struct SoilWaterBalance_RESULT {
   double runoff_mm;
   double deepDrainage_mm;
   double capillarityRise_mm;
+  double correction_mm;
+  double volumeChange_mm;
+  int substeps;
 };
 
 double soilEvaporationAmount_c(double DEF,double PETs, double Gsoil);

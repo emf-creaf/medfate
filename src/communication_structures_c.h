@@ -54,6 +54,7 @@ struct SoilWaterBalance_COMM {
   std::vector<double> C;
   std::vector<double> C_m;
   std::vector<double> C_step;
+  std::vector<double> C_step_m;
   std::vector<double> C_step_m05;
   
   // Macro-porosity
@@ -61,6 +62,7 @@ struct SoilWaterBalance_COMM {
   std::vector<double> e_macro;
   std::vector<double> S_macro_step;
   std::vector<double> theta_macro_step;
+  std::vector<double> Kmacro_step_ms;
   
   // Polytelnyic coefficients
   std::vector<double> a;
@@ -108,10 +110,12 @@ struct SoilWaterBalance_COMM {
     C = std::vector<double>(n, medfate::NA_DOUBLE);
     C_m = std::vector<double>(n, medfate::NA_DOUBLE);
     C_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    C_step_m = std::vector<double>(n, medfate::NA_DOUBLE);
     C_step_m05 = std::vector<double>(n, medfate::NA_DOUBLE);
     S_macro = std::vector<double>(n, medfate::NA_DOUBLE);
     e_macro = std::vector<double>(n, medfate::NA_DOUBLE);
     S_macro_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    Kmacro_step_ms = std::vector<double>(n, medfate::NA_DOUBLE);
     theta_macro_step = std::vector<double>(n, medfate::NA_DOUBLE);
     a = std::vector<double>(n, medfate::NA_DOUBLE);
     b = std::vector<double>(n, medfate::NA_DOUBLE);
