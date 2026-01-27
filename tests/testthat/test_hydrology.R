@@ -4,6 +4,10 @@ df_soil <- defaultSoilParams()
 # Initializes soil
 s <- soil(df_soil)
 
+#Initialize input
+control <- defaultControl("Granier")
+x1 <- spwbInput(exampleforest,s, SpParamsMED, control)
+
 test_that("rainfall intensity routine", {
   control <- defaultControl()
   expect_type(hydrology_rainfallIntensity(10, 5, control$defaultRainfallIntensityPerMonth), "double")
@@ -37,4 +41,13 @@ test_that("snow melting routine", {
   expect_type(hydrology_snowMelt(5, 2, 100,100), "double")
   expect_error(hydrology_snowMelt(5, NA, 100,100))
   expect_error(hydrology_snowMelt(5, 2, 100,NA))
+})
+
+test_that("water inputs routine", {
+  x1$snowpack <- 5
+  snowpack_ini <- x1$snowpack
+  expect_type(hydrology_waterInputs(x1, 10, 4, 10, 15, 30, 100, 2, 100, 100, FALSE), "double")
+  expect_equal(x1$snowpack, snowpack_ini) # Check that snowpack has not changed
+  expect_type(hydrology_waterInputs(x1, 10, 4, 10, 15, 30, 100, 2, 100, 100, TRUE), "double")
+  expect_false(x1$snowpack == snowpack_ini) # Check that snowpack has changed
 })

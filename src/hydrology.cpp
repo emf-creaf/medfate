@@ -254,49 +254,19 @@ NumericVector waterInputs(List x,
                           double pet, double tday, double rad, double elevation,
                           double Cm, double LgroundPAR, double LgroundSWR, 
                           bool modifyInput = true) {
-  //Soil input
-  List control = x["control"];
-  String soilFunctions = control["soilFunctions"];
-  String interceptionMode = control["interceptionMode"];
-  double swe = x["snowpack"]; //snow pack
-  double er = pet/(24.0*rainfallIntensity);
-  
-  //Snow pack dynamics
-  double snow = 0.0, rain=0.0;
-  double melt = 0.0;
-  //Turn rain into snow and add it into the snow pack
-  if(tday < 0.0) { 
-    snow = prec; 
-    swe = swe + snow;
-  } else {
-    rain = prec;
-  }
-  //Apply snow melting
-  if(swe > 0.0) {
-    melt = std::min(swe, snowMelt_c(tday, rad, LgroundSWR, elevation));
-    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-    swe = swe-melt;
-  }
-  
-  //Hydrologic input
-  double NetRain = 0.0, Interception = 0.0;
-  if(rain>0.0)  {
-    if(interceptionMode=="Gash1995") {
-      Interception = interceptionGashDay_c(rain,Cm,LgroundPAR/100.0,er);
-    } else if(interceptionMode =="Liu2001") {
-      Interception = interceptionLiuDay_c(rain,Cm,LgroundPAR/100.0,er);
-    } else {
-      stop("Wrong interception model!");
-    }
-    NetRain = rain - Interception; 
-  }
-  if(modifyInput) {
-    x["snowpack"] = swe;
-  }
-  NumericVector WI = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
-                                           _["Interception"] = Interception,
-                                           _["NetRain"] = NetRain, 
-                                           _["Snowmelt"] = melt);
+
+  std::vector<double> waterInputs(5,0.0);
+  ModelInput x_c = ModelInput(x);
+  waterInputs_c(waterInputs, x_c,
+                 prec, rainfallIntensity,
+                 pet, tday, rad, elevation,
+                 Cm, LgroundPAR, LgroundSWR, 
+                 modifyInput);
+  x["snowpack"] = x_c.snowpack;
+  NumericVector WI = NumericVector::create(_["Rain"] = waterInputs[0], _["Snow"] = waterInputs[1],
+                                           _["Interception"] = waterInputs[2],
+                                           _["NetRain"] = waterInputs[3], 
+                                           _["Snowmelt"] = waterInputs[4]);
   return(WI);
 }
 

@@ -3,6 +3,7 @@
 #include <vector>
 #include <RcppArmadillo.h>
 #include <meteoland.h>
+#include "modelInput_c.h"
 #include "soil_c.h"
 #include "hydraulics_c.h"
 
@@ -212,6 +213,60 @@ double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation) 
   double ren = (rad*(LgroundSWR/100.0))*(0.1); //90% albedo of snow
   double melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
   return(melt);
+}
+
+
+void waterInputs_c(std::vector<double>& waterInputs,
+                   ModelInput& x,
+                   double prec, double rainfallIntensity,
+                   double pet, double tday, double rad, double elevation,
+                   double Cm, double LgroundPAR, double LgroundSWR, 
+                   bool modifyInput = true) {
+  
+  //Soil input
+  std::string soilFunctions = x.control.commonWB.soilFunctions; 
+  std::string interceptionMode = x.control.commonWB.interceptionMode;
+  
+  double swe = x.snowpack; //snow pack
+  double er = pet/(24.0*rainfallIntensity);
+  
+  //Snow pack dynamics
+  double snow = 0.0, rain=0.0;
+  double melt = 0.0;
+  //Turn rain into snow and add it into the snow pack
+  if(tday < 0.0) { 
+    snow = prec; 
+    swe = swe + snow;
+  } else {
+    rain = prec;
+  }
+  //Apply snow melting
+  if(swe > 0.0) {
+    melt = std::min(swe, snowMelt_c(tday, rad, LgroundSWR, elevation));
+    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
+    swe = swe-melt;
+  }
+  
+  //Hydrologic input
+  double NetRain = 0.0, Interception = 0.0;
+  if(rain>0.0)  {
+    if(interceptionMode=="Gash1995") {
+      Interception = interceptionGashDay_c(rain,Cm,LgroundPAR/100.0,er);
+    } else if(interceptionMode =="Liu2001") {
+      Interception = interceptionLiuDay_c(rain,Cm,LgroundPAR/100.0,er);
+    } else {
+      throw medfate::MedfateInternalError("Wrong interception model!");
+    }
+    NetRain = rain - Interception; 
+  }
+  waterInputs[0] = rain;
+  waterInputs[1] = snow;
+  waterInputs[2] = Interception;
+  waterInputs[3] = NetRain;
+  waterInputs[4] = melt;
+  if(modifyInput) {
+    x.snowpack = swe;
+  }
 }
 
 //Imbitition from macropores to micropores following Larsbo et al. 2005, eq. 6-7

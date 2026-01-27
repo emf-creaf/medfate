@@ -1,4 +1,5 @@
 #include "medfate.h"
+#include "modelInput_c.h"
 #include "soil_c.h"
 
 #ifndef HYDROLOGY_C_H
@@ -28,6 +29,12 @@ void infiltrationRepartition_c(double I,
                                double a, double b);
 double infiltrationAmount_c(double rainfallInput, double rainfallIntensity, Soil& soil, 
                             std::string model, double K_correction);
+void waterInputs_c(std::vector<double>& waterInputs,
+                   ModelInput& x,
+                   double prec, double rainfallIntensity,
+                   double pet, double tday, double rad, double elevation,
+                   double Cm, double LgroundPAR, double LgroundSWR, 
+                   bool modifyInput);
 double microporeImbibitionRate_c(double theta_b, double theta_micro, 
                                  double D_theta_b, double D_theta_micro,
                                  double S_macro);
