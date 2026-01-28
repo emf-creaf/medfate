@@ -47,7 +47,8 @@ ControlParameters::ControlParameters(List x) {
   fireHazard.lfmcComponent = as<std::string>(x["lfmcComponent"]);
 
   if(x.containsElementNamed("truncateRootDistribution")) commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
-  commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);
+  commonWB.fullRhizosphereOverlapConductivity = 0.01;
+  if(x.containsElementNamed("fullRhizosphereOverlapConductivity")) commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);
   commonWB.soilFunctions = as<std::string>(x["soilFunctions"]);
   commonWB.VG_PTF = as<std::string>(x["VG_PTF"]);
   commonWB.max_nsubsteps_soil = as<int>(x["max_nsubsteps_soil"]);

@@ -17,53 +17,13 @@
 #include "root.h"
 #include "soil.h"
 #include "soil_c.h"
+#include "transpiration_basic_c.h"
 #include "spwb.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
-struct ParamsVolume{
-  double leafpi0;
-  double leafeps;
-  double leafaf;
-  double stempi0;
-  double stemeps;
-  double stem_c;
-  double stem_d;
-  double stemaf;
-  double Vsapwood;
-  double Vleaf;
-  double LAI;
-  double LAIlive;
-}; 
 
-//Plant volume in l·m-2 ground = mm
-double plantVol(double plantPsi, ParamsVolume pars) {
-  
-  double leafrwc = tissueRelativeWaterContent_c(plantPsi, pars.leafpi0, pars.leafeps, 
-                                              plantPsi, pars.stem_c, pars.stem_d, 
-                                              pars.leafaf);
-  double stemrwc = tissueRelativeWaterContent_c(plantPsi, pars.stempi0, pars.stemeps, 
-                                              plantPsi, pars.stem_c, pars.stem_d, 
-                                              pars.stemaf);
-  return((pars.Vleaf * leafrwc * pars.LAI) + (pars.Vsapwood * stemrwc * pars.LAIlive));
-}
-
-
-double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double rootCrownPsi,
-                                ParamsVolume parsVol){
-  if(plantPsi==rootCrownPsi) return(plantPsi);
-  double V = plantVol(plantPsi, parsVol);
-  //More negative rootCrownPsi causes increased flow due to water being removed
-  double psiStep = rootCrownPsi - plantPsi;
-  double Vnew = plantVol(plantPsi + psiStep, parsVol);
-  while(std::abs(Vnew - V) > flowFromRoots) {
-    psiStep = psiStep/2.0;
-    Vnew = plantVol(plantPsi + psiStep, parsVol);
-  }
-  return(plantPsi+psiStep);
-}
-
-
+// TO BE DELETED WHEN EVERYTHING IS MOVED TO C++
 void transpirationBasic(List transpOutput, List x, NumericVector meteovec,  
                         double elevation, bool modifyInput = true) {
   
@@ -385,7 +345,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     }
 
 
-    double oldVol = plantVol(PlantPsi[c], parsVol); 
+    double oldVol = plantVol_c(PlantPsi[c], parsVol); 
     
     //Transpiration is the maximum of predicted extraction and cuticular transpiration
     double ext_sum = sum(outputExtraction(c,_));
@@ -395,7 +355,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     // if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;
     PlantPsi[c] = rootCrownPsi;
     // PlantPsi[c] = rootCrownPsi;
-    double newVol = plantVol(PlantPsi[c], parsVol);
+    double newVol = plantVol_c(PlantPsi[c], parsVol);
     
     double volDiff = newVol - oldVol;
     //Plant transpiration and water balance
@@ -782,25 +742,35 @@ List transpirationGranier(List x, DataFrame meteo, int day,
                              tmin, tmax, rhmin, rhmax, rad, wind);
   
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
-  NumericVector meteovec = NumericVector::create(
-    Named("tmax") = tmax,
-    Named("tmin") = tmin,
-    Named("rhmin") = rhmin, 
-    Named("rhmax") = rhmax,
-    Named("tday") = tday, 
-    Named("pet") = pet,
-    Named("Catm") = Catm,
-    Named("Patm") = Patm[day-1]);
   
+  WeatherInputVector meteovec;
+  meteovec.tmax = tmax,
+  meteovec.tmin = tmin,
+  meteovec.rhmin = rhmin, 
+  meteovec.rhmax = rhmax,
+  meteovec.tday = tday, 
+  meteovec.pet = pet,
+  meteovec.Catm = Catm,
+  meteovec.Patm = Patm[day-1];
+  
+  ModelInput x_c = ModelInput(x);
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  int nlayers = soil.nrow();
-  int numCohorts = cohorts.nrow();
-  List transpOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
-  transpirationBasic(transpOutput, x, meteovec, elevation, modifyInput);
+  int nlayers = x_c.soil.getNlayers();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  
+  //Create comunication structures
+  BasicTranspirationOutput transpOutput_c = BasicTranspirationOutput(numCohorts, nlayers);
+  
+  //Perform simulation
+  transpirationBasic_c(transpOutput_c, x_c, meteovec, elevation);
 
-  List transpBasic = copyBasicTranspirationOutput(transpOutput, x);
+  //Copy output to Rcpp structures
+  List transpBasic = copyBasicTranspirationOutput_c(transpOutput_c, x_c);
     
+  if(modifyInput) {
+    // TO DO: Modify all state variables of input object from structure
+  }
   return(transpBasic);
 } 
 

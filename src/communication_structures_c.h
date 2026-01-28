@@ -1,4 +1,5 @@
 #include "medfate.h"
+#include "modelInput_c.h"
 #include <RcppArmadillo.h>
 #include <vector>
 #include <string>
@@ -7,6 +8,72 @@
 
 #ifndef COMMUNICATION_STRUCTURES_C_H
 #define COMMUNICATION_STRUCTURES_C_H
+
+
+// ----------------------------------------------------------------------------
+// Basic Transpiration Output Structure
+// ----------------------------------------------------------------------------
+struct PlantsBasicTranspirationOutput {
+  std::vector<double> LAI;
+  std::vector<double> LAIlive;
+  std::vector<double> FPAR;
+  std::vector<double> AbsorbedSWRFraction;
+  std::vector<double> Extraction;
+  std::vector<double> Transpiration;
+  std::vector<double> GrossPhotosynthesis;
+  std::vector<double> PlantPsi;
+  std::vector<double> DDS;
+  std::vector<double> StemRWC;
+  std::vector<double> LeafRWC;
+  std::vector<double> LFMC;
+  std::vector<double> StemPLC;
+  std::vector<double> LeafPLC;
+  std::vector<double> WaterBalance;
+  
+  PlantsBasicTranspirationOutput(size_t numCohorts = 0) {
+    LAI = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    LAIlive = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    FPAR = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    AbsorbedSWRFraction = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    Extraction = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    Transpiration = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    GrossPhotosynthesis = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    PlantPsi = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    DDS = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    StemRWC = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    LeafRWC = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    LFMC = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    StemPLC = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    LeafPLC = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    WaterBalance = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+  }
+};
+struct StandBasicTranspirationOutput {
+  double LAI;
+  double LAIlive;
+  double LAIexpanded;
+  double LAIdead;
+};
+struct BasicTranspirationOutput {
+  // Stand-level (4 fields)
+  StandBasicTranspirationOutput stand;
+  
+  // Plants data frame
+  PlantsBasicTranspirationOutput plants;
+  
+  // Extraction matrices
+  arma::mat extraction;
+  std::vector<arma::mat> extractionPools;
+  
+  BasicTranspirationOutput(size_t numCohorts = 0, size_t nlayers = 0) : 
+    plants(numCohorts), 
+    extraction(numCohorts, nlayers, arma::fill::zeros),
+    extractionPools(numCohorts) {
+      for(size_t c = 0; c < numCohorts; c++) {
+        extractionPools[c] = arma::mat(numCohorts, nlayers, arma::fill::zeros);
+      }
+  }
+};
 
 
 // ----------------------------------------------------------------------------
@@ -224,4 +291,5 @@ struct SoilEnergyBalance {
   }
 };
 
+Rcpp::List copyBasicTranspirationOutput_c(const BasicTranspirationOutput& btc, ModelInput& x);
 #endif

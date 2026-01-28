@@ -33,6 +33,12 @@ ModelInput::ModelInput(Rcpp::List x) {
   canopy.Cair = Rcpp::as< std::vector<double> >(canopyDF["Cair"]);
   canopy.VPair = Rcpp::as< std::vector<double> >(canopyDF["VPair"]);
   
+  //Cohorts
+  Rcpp::DataFrame cohortsDF = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  cohorts.SpeciesIndex = Rcpp::as< std::vector<int> >(cohortsDF["SP"]);
+  cohorts.SpeciesName = Rcpp::as< std::vector<std::string> >(cohortsDF["Name"]);
+  cohorts.CohortCode = Rcpp::as< std::vector<std::string> >(cohortsDF.attr("row.names"));
+  
   //Phenology parameters
   Rcpp::DataFrame phenoDF = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   paramsPhenology.phenoType = Rcpp::as< std::vector<std::string> >(phenoDF["PhenologyType"]);
