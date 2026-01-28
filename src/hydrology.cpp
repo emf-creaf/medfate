@@ -1361,7 +1361,9 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
-  SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow());
+  std::string infiltrationMode_str = infiltrationMode.get_cstring();
+  std::string soilDomains_str = soilDomains.get_cstring();
+  SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow(), soilDomains_str);
   SoilWaterBalance_RESULT SWBres;
   Soil soil_c = Soil(soil, soilFunctions);
   std::vector<double> lateralFlows_c(soil.nrow(), 0.0);
@@ -1373,8 +1375,6 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     }
   }
   std::vector<double> sourceSink_c= Rcpp::as< std::vector<double> >(sourceSink);
-  std::string infiltrationMode_str = infiltrationMode.get_cstring();
-  std::string soilDomains_str = soilDomains.get_cstring();
   soilWaterBalance_inner_c(SWBres, SWBcomm, soil_c,
                            rainfallInput, rainfallIntensity, snowmelt, sourceSink_c,
                            runon, lateralFlows_c, waterTableDepth,
