@@ -1403,24 +1403,32 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                 _["VolumeChange"] = SWBres.volumeChange_mm,
                                 _["Substeps"] = SWBres.substeps);
   } else if(soilDomains == "dual") {
-    // res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
-    //                             _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
-    //                             _["Matrix-macropore flow"] = SWBres.matrixMacroporeFlows_mm,
-    //                             _["InfiltrationMatrix"] = SWBres.infiltrationMatrix_mm,
-    //                             _["InfiltrationMacropores"] = SWBres.infiltrationMacropores_mm,
-    //                             _["InfiltrationExcessMatrix"] = SWBres.infiltrationExcessMatrix_mm,
-    //                             _["InfiltrationExcessMacropores"] = SWBres.infiltrationExcessMacropores_mm,
-    //                             _["SaturationExcessMatrix"] = SWBres.saturationExcessMatrix_mm,
-    //                             _["SaturationExcessMacropores"] = SWBres.saturationExcessMacropores_mm,
-    //                             _["DrainageMatrix"] = SWBres.drainageMatrix_mm,
-    //                             _["DrainageMacropores"] = SWBres.drainageMacropores_mm,
-    //                             _["CapillarityMatrix"] = SWBres.capillarityMatrix_mm,
-    //                             _["CapillarityMacropores"] = SWBres.capillarityMacropores_mm,
-    //                             _["CorrectionMatrix"] = SWBres.correctionMatrix_mm,
-    //                             _["CorrectionMacropores"] = SWBres.correctionMacropores_mm,
-    //                             _["MatrixVolumeChange"] = SWBres.matrixVolumeChange_mm,
-    //                             _["MacroporeVolumeChange"] = SWBres.macroporeVolumeChange_mm
-    //                             );
+    res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+                                _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+                                _["Matrix-macropore flow"] = SWBres.matrixMacroporeFlow_mm,
+                                _["InfiltrationMatrix"] = SWBres.infiltrationMatrix_mm,
+                                _["InfiltrationMacropores"] = SWBres.infiltrationMacropores_mm,
+                                _["InfiltrationExcessMatrix"] = SWBres.infiltrationExcessMatrix_mm,
+                                _["InfiltrationExcessMacropores"] = SWBres.infiltrationExcessMacropores_mm,
+                                _["SaturationExcessMatrix"] = SWBres.saturationExcessMatrix_mm,
+                                _["SaturationExcessMacropores"] = SWBres.saturationExcessMacropores_mm,
+                                _["DrainageMatrix"] = SWBres.drainageMatrix_mm,
+                                _["DrainageMacropores"] = SWBres.drainageMacropores_mm,
+                                _["CapillarityMatrix"] = SWBres.capillarityMatrix_mm,
+                                _["CapillarityMacropores"] = SWBres.capillarityMacropores_mm,
+                                _["CorrectionMatrix"] = SWBres.correctionMatrix_mm,
+                                _["CorrectionMacropores"] = SWBres.correctionMacropores_mm,
+                                _["MatrixVolumeChange"] = SWBres.matrixVolumeChange_mm,
+                                _["MacroporeVolumeChange"] = SWBres.macroporeVolumeChange_mm,
+                                _["Infiltration"] = SWBres.infiltration_mm,
+                                _["InfiltrationExcess"] = SWBres.infiltrationExcess_mm);
+    res.push_back(SWBres.saturationExcess_mm, "SaturationExcess");
+    res.push_back(SWBres.runoff_mm, "Runoff");
+    res.push_back(SWBres.deepDrainage_mm, "DeepDrainage");
+    res.push_back(SWBres.capillarityRise_mm, "CapillarityRise");
+    res.push_back(SWBres.correction_mm, "Correction");
+    res.push_back(SWBres.volumeChange_mm, "VolumeChange");
+    res.push_back((double) SWBres.substeps, "Substeps");
   }
   if(modifySoil) {
     NumericVector W = soil["W"];

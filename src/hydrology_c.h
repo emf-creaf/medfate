@@ -10,13 +10,28 @@ struct SoilWaterBalance_RESULT {
   double localSourceSinks_mm;
   double lateralSourceSinks_mm;
   double infiltration_mm;
+  double infiltrationMatrix_mm;
+  double infiltrationMacropores_mm;
   double infiltrationExcess_mm;
+  double infiltrationExcessMatrix_mm;
+  double infiltrationExcessMacropores_mm;
   double saturationExcess_mm;
+  double saturationExcessMatrix_mm;
+  double saturationExcessMacropores_mm;
   double runoff_mm;
   double deepDrainage_mm;
+  double drainageMatrix_mm;
+  double drainageMacropores_mm;
   double capillarityRise_mm;
+  double capillarityMatrix_mm;
+  double capillarityMacropores_mm;
   double correction_mm;
+  double correctionMatrix_mm;
+  double correctionMacropores_mm;
   double volumeChange_mm;
+  double matrixVolumeChange_mm;
+  double macroporeVolumeChange_mm;
+  double matrixMacroporeFlow_mm;
   int substeps;
 };
 

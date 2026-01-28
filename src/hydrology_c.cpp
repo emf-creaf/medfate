@@ -1281,37 +1281,38 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
 
     //Output
     if(soilDomains=="dual") {
-  //     double drainage_macropores_mm = drainage_macropores_m3*1000.0; //m3/m2 to mm/m2
-  //     double dif_mm = std::min(capillarity_macropores_mm,  drainage_macropores_mm);
-  //     capillarity_macropores_mm -= dif_mm;
-  //     drainage_macropores_mm  -= dif_mm;
-  //     double runoff_mm = infiltration_target_macropores_mm + infiltration_excess_macropores_mm + saturation_excess_matrix_mm + saturation_excess_macropores_mm;
-  //     res = NumericVector::create(_["Local source/sinks"] = sum(sourceSink),
-  //                                 _["Lateral source/sinks"] = sum(lateralFlows_mm),
-  //                                 _["Matrix-macropore flow"] = sum(matrix_macropore_flows_mm),
-  //                                 _["InfiltrationMatrix"] = infiltration_matrix_mm,
-  //                                 _["InfiltrationMacropores"] = infiltration_macropores_mm,
-  //                                 _["InfiltrationExcessMatrix"] = infiltration_target_macropores_mm,
-  //                                 _["InfiltrationExcessMacropores"] = infiltration_excess_macropores_mm,
-  //                                 _["SaturationExcessMatrix"] = saturation_excess_matrix_mm,
-  //                                 _["SaturationExcessMacropores"] = saturation_excess_macropores_mm,
-  //                                 _["DrainageMatrix"] = drainage_matrix_mm,
-  //                                 _["DrainageMacropores"] = drainage_macropores_mm,
-  //                                 _["CapillarityMatrix"] = capillarity_matrix_mm,
-  //                                 _["CapillarityMacropores"] = capillarity_macropores_mm,
-  //                                 _["CorrectionMatrix"] = matrix_correction_mm,
-  //                                 _["CorrectionMacropores"] = macropore_correction_mm,
-  //                                 _["MatrixVolumeChange"] = Vfin_micro_mm - Vini0_micro_mm,
-  //                                 _["MacroporeVolumeChange"] = Vfin_macro_mm - Vini0_macro_mm,
-  //                                 _["Infiltration"] = infiltration_matrix_mm + infiltration_macropores_mm,
-  //                                 _["InfiltrationExcess"] = infiltration_target_macropores_mm + infiltration_excess_macropores_mm);
-  //     res.push_back(saturation_excess_macropores_mm + saturation_excess_matrix_mm, "SaturationExcess");
-  //     res.push_back(runoff_mm, "Runoff");
-  //     res.push_back(drainage_macropores_mm + drainage_matrix_mm, "DeepDrainage");
-  //     res.push_back(capillarity_matrix_mm + capillarity_macropores_mm, "CapillarityRise");
-  //     res.push_back(matrix_correction_mm + macropore_correction_mm, "Correction");
-  //     res.push_back(Vfin_micro_mm - Vini0_micro_mm  + Vfin_macro_mm - Vini0_macro_mm, "VolumeChange");
-  //     res.push_back((double) total_nsubsteps, "Substeps");
+      double drainage_macropores_mm = drainage_macropores_m3*1000.0; //m3/m2 to mm/m2
+      double dif_mm = std::min(capillarity_macropores_mm,  drainage_macropores_mm);
+      capillarity_macropores_mm -= dif_mm;
+      drainage_macropores_mm  -= dif_mm;
+      double runoff_mm = infiltration_target_macropores_mm + infiltration_excess_macropores_mm + saturation_excess_matrix_mm + saturation_excess_macropores_mm;
+      SWBres.localSourceSinks_mm = std::accumulate(sourceSink.begin(), sourceSink.end(), 0.0);
+      SWBres.lateralSourceSinks_mm = std::accumulate(lateralFlows.begin(), lateralFlows.end(), 0.0);
+      SWBres.runoff_mm = runoff_mm;
+      SWBres.matrixMacroporeFlow_mm = std::accumulate(matrix_macropore_flows_mm.begin(), matrix_macropore_flows_mm.end(), 0.0);;
+      SWBres.infiltrationMatrix_mm = infiltration_matrix_mm;
+      SWBres.infiltrationMacropores_mm = infiltration_macropores_mm;
+      SWBres.infiltration_mm = infiltration_matrix_mm + infiltration_macropores_mm;
+      SWBres.infiltrationExcessMatrix_mm = infiltration_excess_matrix_mm;
+      SWBres.infiltrationExcessMacropores_mm = infiltration_excess_macropores_mm;
+      SWBres.infiltrationExcess_mm = infiltration_target_macropores_mm + infiltration_excess_macropores_mm;
+      SWBres.saturationExcessMatrix_mm = saturation_excess_matrix_mm;
+      SWBres.saturationExcessMacropores_mm = saturation_excess_macropores_mm;
+      SWBres.saturationExcess_mm = saturation_excess_matrix_mm + saturation_excess_macropores_mm;
+      SWBres.drainageMatrix_mm = drainage_matrix_mm;
+      SWBres.drainageMacropores_mm = drainage_macropores_mm;
+      SWBres.deepDrainage_mm = drainage_matrix_mm + drainage_macropores_mm;
+      SWBres.runoff_mm = runoff_mm;
+      SWBres.capillarityMatrix_mm = capillarity_matrix_mm;
+      SWBres.capillarityMacropores_mm = capillarity_macropores_mm;
+      SWBres.capillarityRise_mm = capillarity_matrix_mm + capillarity_macropores_mm;
+      SWBres.correctionMatrix_mm = matrix_correction_mm;
+      SWBres.correctionMacropores_mm = macropore_correction_mm;
+      SWBres.correction_mm = matrix_correction_mm + macropore_correction_mm;
+      SWBres.matrixVolumeChange_mm = Vfin_micro_mm - Vini0_micro_mm;
+      SWBres.macroporeVolumeChange_mm = Vfin_macro_mm - Vini0_macro_mm;
+      SWBres.volumeChange_mm = Vfin_micro_mm - Vini0_micro_mm  + Vfin_macro_mm - Vini0_macro_mm;
+      SWBres.substeps = total_nsubsteps;
     } else if(soilDomains=="single") {
       double runoff_mm = infiltration_excess_matrix_mm  + saturation_excess_matrix_mm;
       SWBres.localSourceSinks_mm = std::accumulate(sourceSink.begin(), sourceSink.end(), 0.0);
