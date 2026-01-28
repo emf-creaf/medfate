@@ -25,6 +25,7 @@ struct SoilWaterBalance_COMM {
   std::vector<double> lambda;
   
   // Water content states
+  std::vector<double> Theta;
   std::vector<double> theta_micro;
   std::vector<double> theta_b;
   std::vector<double> theta_macro;
@@ -89,6 +90,7 @@ struct SoilWaterBalance_COMM {
     dZUp = std::vector<double>(n, medfate::NA_DOUBLE);
     dZDown = std::vector<double>(n, medfate::NA_DOUBLE);
     lambda = std::vector<double>(n, medfate::NA_DOUBLE);
+    Theta = std::vector<double>(n, medfate::NA_DOUBLE);
     theta_micro = std::vector<double>(n, medfate::NA_DOUBLE);
     theta_b = std::vector<double>(n, medfate::NA_DOUBLE);
     theta_macro = std::vector<double>(n, medfate::NA_DOUBLE);

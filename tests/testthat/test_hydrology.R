@@ -66,10 +66,10 @@ test_that("soil water balance routine (buckets)", {
 test_that("soil water balance routine (single)", {
   s <- soil(df_soil)
   W_ini <- rlang::duplicate(s$W)
-  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1),
                                          soilDomains = "single", modifySoil = FALSE), "double")
   expect_equal(s$W, W_ini) # Check that soil water content has not changed
-  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1),
                                          soilDomains = "single", modifySoil = TRUE), "double")
   expect_false(all(s$W == W_ini)) # Check that soil water content has changed
 })
@@ -77,10 +77,10 @@ test_that("soil water balance routine (single)", {
 test_that("soil water balance routine (dual)", {
   s <- soil(df_soil)
   W_ini <- rlang::duplicate(s$W)
-  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1),
                                          soilDomains = "dual", modifySoil = FALSE), "double")
   expect_equal(s$W, W_ini) # Check that soil water content has not changed
-  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
+  expect_type(hydrology_soilWaterBalance(s, "VG", 10, 5, 0, c(-1,-1,-1,-1),
                                          soilDomains = "dual", modifySoil = TRUE), "double")
   expect_false(all(s$W == W_ini)) # Check that soil water content has changed
 })

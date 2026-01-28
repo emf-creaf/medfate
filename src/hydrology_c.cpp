@@ -354,9 +354,11 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   
   if((soilDomains!="single") && (soilDomains!="dual")  && (soilDomains!="buckets") ) throw medfate::MedfateInternalError("Unrecognized soilDomain value");
 
-  const std::vector<double> widths = soil.getWidths();
-  const std::vector<double> macro = soil.getMacro();
-  const std::vector<double> rfc = soil.getRFC();
+  const std::vector<double>& widths = soil.getWidths();
+  const std::vector<double>& macro = soil.getMacro();
+  const std::vector<double>& rfc = soil.getRFC();
+  const std::vector<double>& Ksat_ori = soil.getKsat();
+  
   
   int nlayers = soil.getNlayers();
   double soilDepth = std::accumulate(widths.begin(), widths.end(), 0.0);
@@ -397,7 +399,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   for(int l=0;l<nlayers;l++) {
     source_sink_def_mm[l] = sourceSink[l];
   }
-
+  
   //Add infiltration to matrix def source/sinks
   if(soilDomains!="dual") {
     std::vector<double> IVec(nlayers, 0.0); 
@@ -410,6 +412,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   } else {
     source_sink_def_mm[0] += infiltration_matrix_mm;
   }
+  
   //Add lateral flows to matrix def source/sinks
   for(int l=0;l<nlayers;l++) {
     if(!std::isnan(lateralFlows[l])) source_sink_def_mm[l] += lateralFlows[l];
@@ -417,7 +420,6 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   
   //Main soil water balance calculation
   if(soilDomains == "buckets") {
-    const std::vector<double> Ksat = soil.getKsat();
     
     std::vector<double> Water_FC(nlayers);
     std::vector<double> Water_SAT(nlayers);
@@ -462,7 +464,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
     if(head>0.0) {
       // Saturated vertical hydraulic conductivity (mm/day)
       double cmdTOmmolm2sMPa = 655.2934;
-      double Kdrain = 10.0*(Ksat[nlayers-1]*(1.0 - (rfc[nlayers-1]/100.0))/cmdTOmmolm2sMPa);
+      double Kdrain = 10.0*(Ksat_ori[nlayers-1]*(1.0 - (rfc[nlayers-1]/100.0))/cmdTOmmolm2sMPa);
       double maxDrainage = Kdrain;
       // Rcout<<head<< " "<< maxDrainage <<"\n";
       for(int l=0;l<nlayers;l++) {
@@ -506,12 +508,12 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
     std::vector<double> saturated_matrix_correction_m3s(nlayers, 0.0);
     std::vector<double> saturated_macropore_correction_m3s(nlayers, 0.0);
 
-    std::vector<double> dZ_m = SWBcomm.dZ_m;
+    std::vector<double>& dZ_m = SWBcomm.dZ_m;
     for(int l=0;l<nlayers;l++) dZ_m[l] = widths[l]*0.001; //mm to m
-    std::vector<double>  dZUp = SWBcomm.dZUp;
-    std::vector<double> dZDown = SWBcomm.dZDown;
-    std::vector<double> lambda = SWBcomm.lambda;
-
+    std::vector<double>&  dZUp = SWBcomm.dZUp;
+    std::vector<double>& dZDown = SWBcomm.dZDown;
+    std::vector<double>& lambda = SWBcomm.lambda;
+    
     //Estimate layer interfaces
     for(int l=0;l<nlayers;l++) {
       lambda[l] = 1.0 - (rfc[l]/100.0);
@@ -526,7 +528,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
         dZDown[l] = dZ_m[l]/2.0;
       }
     }
-
+    
     std::vector<double> prop_saturated(nlayers, 0.0);
     int num_saturated = 0;
     double freeDrainage = true;
@@ -550,37 +552,39 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
     double kin_exp = 2.23; //Kinematic exponent reflecting macropore size distribution and tortuosity
 
     //Retrieve VG parameters
-    const std::vector<double>  Ksat_ori = soil.getKsat();
-    const std::vector<double>  n = soil.getVG_n();
-    const std::vector<double>  alpha = soil.getVG_alpha();
-    const std::vector<double>  theta_res = soil.getVG_theta_res();
-    const std::vector<double>  theta_sat = soil.getVG_theta_sat();
+    const std::vector<double>&  n = soil.getVG_n();
+    const std::vector<double>&  alpha = soil.getVG_alpha();
+    const std::vector<double>&  theta_res = soil.getVG_theta_res();
+    const std::vector<double>&  theta_sat = soil.getVG_theta_sat();
     
     //Get initial theta and psi state
-    std::vector<double>  Theta(nlayers, 0.0);
+    std::vector<double>& Theta = SWBcomm.Theta;
+    std::vector<double>& Psi = SWBcomm.Psi;
     for(int l=0;l<nlayers;l++) {
       Theta[l] = soil.getTheta(l);
+      Psi[l] = soil.getPsi(l);
     }
     
-    //Estimate Psi, C, K
-
     //Microporosity or single domain
-    std::vector<double> theta_micro = SWBcomm.theta_micro;
-    std::vector<double> theta_b = SWBcomm.theta_b;
-    std::vector<double> theta_macro = SWBcomm.theta_macro;
-    std::vector<double> theta_sat_fict = SWBcomm.theta_sat_fict;
-    std::vector<double> Ksat_b = SWBcomm.Ksat_b;
-    std::vector<double> Ksat_b_ms = SWBcomm.Ksat_b_ms;
-    std::vector<double> Ksat = SWBcomm.Ksat;
-    std::vector<double> Ksat_ms = SWBcomm.Ksat_ms;
-    std::vector<double> Psi = SWBcomm.Psi;
-    std::vector<double> K = SWBcomm.K;
-    std::vector<double> C = SWBcomm.C;
-    std::vector<double> Psi_m = SWBcomm.Psi_m;
-    std::vector<double> K_ms = SWBcomm.K_ms;
-    std::vector<double> Kbc = SWBcomm.Kbc;
-    std::vector<double> Kbc_ms = SWBcomm.Kbc_ms;
-    std::vector<double> C_m = SWBcomm.C_m;
+    std::vector<double>& theta_micro = SWBcomm.theta_micro;
+    std::vector<double>& theta_b = SWBcomm.theta_b;
+    std::vector<double>& theta_macro = SWBcomm.theta_macro;
+    std::vector<double>& theta_sat_fict = SWBcomm.theta_sat_fict;
+    std::vector<double>& Ksat_b = SWBcomm.Ksat_b;
+    std::vector<double>& Ksat_b_ms = SWBcomm.Ksat_b_ms;
+    std::vector<double>& Ksat = SWBcomm.Ksat;
+    std::vector<double>& Ksat_ms = SWBcomm.Ksat_ms;
+    std::vector<double>& K = SWBcomm.K;
+    std::vector<double>& C = SWBcomm.C;
+    std::vector<double>& Psi_m = SWBcomm.Psi_m;
+    std::vector<double>& K_ms = SWBcomm.K_ms;
+    std::vector<double>& Kbc = SWBcomm.Kbc;
+    std::vector<double>& Kbc_ms = SWBcomm.Kbc_ms;
+    std::vector<double>& C_m = SWBcomm.C_m;
+    std::vector<double>& S_macro = SWBcomm.S_macro;
+    std::vector<double>& e_macro = SWBcomm.e_macro;
+    std::vector<double>& Kmacro_ms = SWBcomm.Kmacro_ms;
+    
     for(int l=0;l<nlayers;l++) {
       theta_micro[l] = 0.0;
       theta_b[l] = 0.0;
@@ -589,7 +593,6 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       Ksat_b[l] = 0.0;
       Ksat_b_ms[l] = 0.0;
       Ksat[l] = 0.0;
-      Psi[l] = 0.0;
       K[l] = 0.0;
       C[l] = 0.0;
       Psi_m[l] = 0.0;
@@ -597,22 +600,14 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       Kbc[l] = 0.0;
       Kbc_ms[l] = 0.0;
       C_m[l] = 0.0;
-    }
-
-    //Macroporosity domain
-    std::vector<double> S_macro, e_macro, Kmacro_ms;
-    if(soilDomains=="dual") {
-      S_macro = SWBcomm.S_macro;
-      e_macro = SWBcomm.e_macro;
-      Kmacro_ms = SWBcomm.Kmacro_ms;
-      for(int l=0;l<nlayers;l++) {
+      if(soilDomains=="dual") {
         S_macro[l] = 0.0;
         e_macro[l] = 0.0;
         Kmacro_ms[l] = 0.0;
       }
     }
 
-    std::vector<double> waterFluidity = SWBcomm.waterFluidity;
+    std::vector<double>& waterFluidity = SWBcomm.waterFluidity;
     for(int l=0;l<nlayers;l++) {
       waterFluidity[l] = 1.0;
       double temp = soil.getTemp(l);
@@ -695,26 +690,29 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
 
     double C_step_05, K_step_05;
 
-    std::vector<double> a = SWBcomm.a;
-    std::vector<double> b = SWBcomm.b;
-    std::vector<double> c = SWBcomm.c;
-    std::vector<double> d = SWBcomm.d;
-    std::vector<double> e = SWBcomm.e;
-    std::vector<double> f = SWBcomm.f;
-    std::vector<double> Psi_step_t1(nlayers), Psi_step_t05(nlayers);
-
-    std::vector<double> K_step_ms05 = SWBcomm.K_step_ms05;
-    std::vector<double> C_step_m05 = SWBcomm.C_step_m05;
-    std::vector<double> C_step = SWBcomm.C_step;
-    std::vector<double> C_step_m = SWBcomm.C_step_m;
-    std::vector<double> K_step_ms = SWBcomm.K_step_ms;
-    std::vector<double> K_step = SWBcomm.K_step;
-    std::vector<double> Psi_step = SWBcomm.Psi_step;
-    std::vector<double> Psi_step_m = SWBcomm.Psi_step_m;
-    std::vector<double> S_macro_step = SWBcomm.S_macro_step;
-    std::vector<double> Kmacro_step_ms = SWBcomm.Kmacro_step_ms;
-    std::vector<double> theta_macro_step = SWBcomm.theta_macro_step;
-    std::vector<double> theta_micro_step = SWBcomm.theta_micro_step;
+    std::vector<double>& a = SWBcomm.a;
+    std::vector<double>& b = SWBcomm.b;
+    std::vector<double>& c = SWBcomm.c;
+    std::vector<double>& d = SWBcomm.d;
+    std::vector<double>& e = SWBcomm.e;
+    std::vector<double>& f = SWBcomm.f;
+    std::vector<double>& K_step_ms05 = SWBcomm.K_step_ms05;
+    std::vector<double>& C_step_m05 = SWBcomm.C_step_m05;
+    std::vector<double>& C_step = SWBcomm.C_step;
+    std::vector<double>& C_step_m = SWBcomm.C_step_m;
+    std::vector<double>& K_step_ms = SWBcomm.K_step_ms;
+    std::vector<double>& K_step = SWBcomm.K_step;
+    std::vector<double>& Psi_step = SWBcomm.Psi_step;
+    std::vector<double>& Psi_step_m = SWBcomm.Psi_step_m;
+    std::vector<double>& S_macro_step = SWBcomm.S_macro_step;
+    std::vector<double>& Kmacro_step_ms = SWBcomm.Kmacro_step_ms;
+    std::vector<double>& theta_macro_step = SWBcomm.theta_macro_step;
+    std::vector<double>& theta_micro_step = SWBcomm.theta_micro_step;
+    std::vector<double>& finalSourceSinks_m3s = SWBcomm.finalSourceSinks_m3s;
+    std::vector<double>& capill_below = SWBcomm.capill_below;
+    std::vector<double>& drain_above = SWBcomm.drain_above;
+    std::vector<double>& drain_below = SWBcomm.drain_below;
+    std::vector<double>& lateral_flows_step_mm = SWBcomm.lateral_flows_step_mm;
     for(int l=0;l<nlayers;l++) {
       K_step_ms05[l] = 0.0;
       C_step_m05[l] = 0.0;
@@ -728,20 +726,15 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       Kmacro_step_ms[l] = 0.0;
       theta_macro_step[l] = 0.0;
       theta_micro_step[l] = 0.0;
-    }
-    std::vector<double> finalSourceSinks_m3s = SWBcomm.finalSourceSinks_m3s;
-    std::vector<double> capill_below = SWBcomm.capill_below;
-    std::vector<double> drain_above = SWBcomm.drain_above;
-    std::vector<double> drain_below = SWBcomm.drain_below;
-    std::vector<double> lateral_flows_step_mm = SWBcomm.lateral_flows_step_mm;
-    for(int l=0;l<nlayers;l++) {
       finalSourceSinks_m3s[l] = 0.0;
       capill_below[l] = 0.0;
       drain_above[l] = 0.0;
       drain_below[l] = 0.0;
       lateral_flows_step_mm[l] = 0.0;
     }
-
+    
+    std::vector<double> Psi_step_t1(nlayers), Psi_step_t05(nlayers);
+    
     double drainage_matrix_step_m3 = 0.0;
     double drainage_macropores_step_m3 = 0.0;
     double capillarity_matrix_step_m3 = 0.0;
@@ -1269,6 +1262,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
     double capillarity_macropores_mm = capillarity_macropores_m3*1000.0; //m3/m2 to mm/m2
 
 
+    // This effectively changes soil moisture states in the soil object
     for(int l=0; l< nlayers;l++) {
       soil.setW(l,Theta[l]/soil.getThetaFC(l));
       //   Rcout << "Final "<<l<< " W " << W[l]<<" Theta " << Theta[l]<< " theta_sat "<< theta_sat[l] <<" theta_micro "<< theta_micro[l] << " theta_b "<< theta_b[l] << " theta_macro "<< theta_macro[l] << " S " << S_macro[l]<<"\n";
