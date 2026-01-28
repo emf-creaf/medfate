@@ -1,5 +1,5 @@
 #include "modelInput_c.h"
-#include "control.h"
+#include "control_c.h"
 #include <RcppArmadillo.h>
 
 /**
@@ -271,5 +271,5 @@ ModelInput::ModelInput(Rcpp::List x) {
     }
   }
   
-  version = Rcpp::as<std::string>(x["version"]);
+  if(x.containsElementNamed("version")) version = Rcpp::as<std::string>(x["version"]);
 }

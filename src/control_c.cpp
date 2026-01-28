@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-#include "control.h"
+#include "control_c.h"
 using namespace Rcpp;
 
 /**
@@ -27,7 +27,7 @@ ControlParameters::ControlParameters(List x) {
   results.labileCarbonBalanceResults = as<bool>(x["labileCarbonBalanceResults"]);
   results.plantStructureResults = as<bool>(x["plantStructureResults"]);
   results.growthMortalityResults = as<bool>(x["growthMortalityResults"]);
-  results.decompositionPoolResults = as<bool>(x["decompositionPoolResults"]);
+  if(x.containsElementNamed("decompositionPoolResults")) results.decompositionPoolResults = as<bool>(x["decompositionPoolResults"]);
   results.leafResults = as<bool>(x["leafResults"]);
   results.temperatureResults = as<bool>(x["temperatureResults"]);
   results.fireHazardResults = as<bool>(x["fireHazardResults"]);
@@ -46,7 +46,7 @@ ControlParameters::ControlParameters(List x) {
   
   fireHazard.lfmcComponent = as<std::string>(x["lfmcComponent"]);
 
-  commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
+  if(x.containsElementNamed("truncateRootDistribution")) commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
   commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);
   commonWB.soilFunctions = as<std::string>(x["soilFunctions"]);
   commonWB.VG_PTF = as<std::string>(x["VG_PTF"]);
@@ -137,21 +137,23 @@ ControlParameters::ControlParameters(List x) {
   recruitment.ingrowthTreeDBH = as<double>(x["ingrowthTreeDBH"]);
   recruitment.ingrowthTreeDensity = as<double>(x["ingrowthTreeDensity"]);
 
-  NumericVector decompRates = x["decompositionAnnualBaseRates"];  
-  decomposition.decompositionAnnualTurnoverRate = as<double>(x["decompositionAnnualTurnoverRate"]);
-  decomposition.annualBaseRates.SurfaceMetabolic = decompRates["SurfaceMetabolic"];
-  decomposition.annualBaseRates.SoilMetabolic = decompRates["SoilMetabolic"];
-  decomposition.annualBaseRates.Leaves = decompRates["Leaves"];
-  decomposition.annualBaseRates.FineRoots = decompRates["FineRoots"];
-  decomposition.annualBaseRates.Twigs = decompRates["Twigs"];
-  decomposition.annualBaseRates.SmallBranches = decompRates["SmallBranches"];
-  decomposition.annualBaseRates.LargeWood = decompRates["LargeWood"];
-  decomposition.annualBaseRates.CoarseRoots = decompRates["CoarseRoots"];
-  decomposition.annualBaseRates.SurfaceActive = decompRates["SurfaceActive"];
-  decomposition.annualBaseRates.SurfaceSlow = decompRates["SurfaceSlow"];
-  decomposition.annualBaseRates.SoilActive = decompRates["SoilActive"];
-  decomposition.annualBaseRates.SoilSlow = decompRates["SoilSlow"];
-  decomposition.annualBaseRates.SoilPassive = decompRates["SoilPassive"];  
+  if(x.containsElementNamed("decompositionAnnualBaseRates")) {
+    NumericVector decompRates = x["decompositionAnnualBaseRates"];  
+    decomposition.decompositionAnnualTurnoverRate = as<double>(x["decompositionAnnualTurnoverRate"]);
+    decomposition.annualBaseRates.SurfaceMetabolic = decompRates["SurfaceMetabolic"];
+    decomposition.annualBaseRates.SoilMetabolic = decompRates["SoilMetabolic"];
+    decomposition.annualBaseRates.Leaves = decompRates["Leaves"];
+    decomposition.annualBaseRates.FineRoots = decompRates["FineRoots"];
+    decomposition.annualBaseRates.Twigs = decompRates["Twigs"];
+    decomposition.annualBaseRates.SmallBranches = decompRates["SmallBranches"];
+    decomposition.annualBaseRates.LargeWood = decompRates["LargeWood"];
+    decomposition.annualBaseRates.CoarseRoots = decompRates["CoarseRoots"];
+    decomposition.annualBaseRates.SurfaceActive = decompRates["SurfaceActive"];
+    decomposition.annualBaseRates.SurfaceSlow = decompRates["SurfaceSlow"];
+    decomposition.annualBaseRates.SoilActive = decompRates["SoilActive"];
+    decomposition.annualBaseRates.SoilSlow = decompRates["SoilSlow"];
+    decomposition.annualBaseRates.SoilPassive = decompRates["SoilPassive"];  
+  }
 }
 
 // [[Rcpp::export(.testControlListToStructure)]]

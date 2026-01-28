@@ -1,6 +1,6 @@
 #include "RcppArmadillo.h"
 #include "medfate.h"
-#include "control.h"
+#include "control_c.h"
 #include "soil_c.h"
 
 #ifndef MODELINPUT_C_H
