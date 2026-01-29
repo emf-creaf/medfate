@@ -398,6 +398,8 @@ class ModelInput {
     std::string version;
     
     ModelInput(Rcpp::List x);
+    
+    void copyStateToList(Rcpp::List x);
 };
 
 #endif

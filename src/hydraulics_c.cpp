@@ -188,7 +188,7 @@ double averagePsiPool_c(const arma::mat& Psi, const arma::mat& RHOPcohV, double 
   for(int j =0;j<numCohorts;j++) {
     for(int l=0;l<nlayers;l++) {
       K = exp(-0.6931472*pow(std::abs(Psi(j,l)/psi_extract),exp_extract)); 
-      sumKv += RHOPcohV(j,l);
+      sumKv += K*RHOPcohV(j,l);
     } 
   }
   double psires =  psi_extract*pow(log(sumKv)/(-0.6931472),1.0/exp_extract);

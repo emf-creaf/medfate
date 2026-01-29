@@ -771,7 +771,8 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   List transpBasic = copyBasicTranspirationOutput_c(BTres, x_c);
     
   if(modifyInput) {
-    // TO DO: Modify all state variables of input object from structure
+    // Modify all state variables of input object from structure
+    x_c.copyStateToList(x);
   }
   return(transpBasic);
 } 

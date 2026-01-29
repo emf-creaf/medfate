@@ -317,3 +317,252 @@ ModelInput::ModelInput(Rcpp::List x) {
   
   if(x.containsElementNamed("version")) version = Rcpp::as<std::string>(x["version"]);
 }
+
+// Assumes that x was the original list from which the struct was generated
+void ModelInput::copyStateToList(Rcpp::List x) {
+  //Soil
+  Rcpp::DataFrame soilDF = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  Rcpp::NumericVector W = soilDF["W"];
+  Rcpp::NumericVector Temp = soilDF["Temp"];
+  int nlayers = W.size();
+  for(int l=0;l<nlayers; l++) {
+    W[l] = soil.getW(l);
+    Temp[l] = soil.getTemp(l);
+  }
+  
+  //Above
+  Rcpp::DataFrame aboveDF = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  int numCohorts = aboveDF.nrows();
+  Rcpp::NumericVector H = aboveDF["H"];
+  Rcpp::NumericVector CR = aboveDF["CR"];
+  Rcpp::NumericVector LAI_live = aboveDF["LAI_live"];
+  Rcpp::NumericVector LAI_dead = aboveDF["LAI_dead"];
+  Rcpp::NumericVector LAI_expanded = aboveDF["LAI_expanded"];
+  for(int c = 0;c < numCohorts; c++) {
+    H[c] = above.H[c];
+    CR[c] = above.CR[c];
+    LAI_live[c] = above.LAI_live[c];
+    LAI_dead[c] = above.LAI_dead[c];
+    LAI_expanded[c] = above.LAI_expanded[c];
+  }
+  if(aboveDF.containsElementNamed("LAI_nocomp")) {
+    Rcpp::NumericVector LAI_nocomp = aboveDF["LAI_nocomp"];
+    for(int c = 0;c < numCohorts; c++) LAI_nocomp[c] = above.LAI_nocomp[c];
+  }
+  if(aboveDF.containsElementNamed("N")) {
+    Rcpp::NumericVector N = aboveDF["N"];
+    for(int c = 0;c < numCohorts; c++) N[c] = above.N[c];
+  }
+  if(aboveDF.containsElementNamed("DBH")) {
+    Rcpp::NumericVector DBH = aboveDF["DBH"];
+    for(int c = 0;c < numCohorts; c++) DBH[c] = above.DBH[c];
+  }
+  if(aboveDF.containsElementNamed("SA")) {
+    Rcpp::NumericVector SA = aboveDF["SA"];
+    for(int c = 0;c < numCohorts; c++) SA[c] = above.SA[c];
+  }
+  if(aboveDF.containsElementNamed("Loading")) {
+    Rcpp::NumericVector Loading = aboveDF["Loading"];
+    for(int c = 0;c < numCohorts; c++) Loading[c] = above.Loading[c];
+  }
+  if(aboveDF.containsElementNamed("Age")) {
+    Rcpp::NumericVector Age = aboveDF["Age"];
+    for(int c = 0;c < numCohorts; c++) Age[c] = above.Age[c];
+  }
+  if(aboveDF.containsElementNamed("ObsID")) {
+    Rcpp::CharacterVector ObsID = aboveDF["ObsID"];
+    for(int c = 0;c < numCohorts; c++) ObsID[c] = above.ObsID[c];
+  }
+
+  //Below
+  Rcpp::DataFrame belowDF = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  Rcpp::NumericVector Z50 = belowDF["Z50"];
+  Rcpp::NumericVector Z95 = belowDF["Z95"];
+  for(int c = 0;c < numCohorts; c++) {
+    Z50[c] = below.Z50[c];
+    Z95[c] = below.Z95[c];
+  }
+  if(belowDF.containsElementNamed("Z100")) {
+    Rcpp::NumericVector Z100 = belowDF["Z100"];
+    for(int c = 0;c < numCohorts; c++) Z100[c] = below.Z100[c];
+  }
+  if(belowDF.containsElementNamed("fineRootBiomass")) {
+    Rcpp::NumericVector fineRootBiomass = belowDF["fineRootBiomass"];
+    for(int c = 0;c < numCohorts; c++) fineRootBiomass[c] = below.fineRootBiomass[c];
+  }
+  if(belowDF.containsElementNamed("coarseRootSoilVolume")) {
+    Rcpp::NumericVector coarseRootSoilVolume = belowDF["coarseRootSoilVolume"];
+    for(int c = 0;c < numCohorts; c++) coarseRootSoilVolume[c] = below.coarseRootSoilVolume[c];
+  }
+  if(belowDF.containsElementNamed("poolProportions")) {
+    Rcpp::NumericVector poolProportions = belowDF["poolProportions"];
+    for(int c = 0;c < numCohorts; c++) poolProportions[c] = below.poolProportions[c];
+  }
+  
+  // //BelowLayers
+  // Rcpp::List belowLayersList = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  // belowLayers.V = Rcpp::as<arma::mat>(belowLayersList["V"]);
+  // belowLayers.L = Rcpp::as<arma::mat>(belowLayersList["L"]);
+  // if(belowLayersList.containsElementNamed("Wpool")) belowLayers.Wpool = Rcpp::as<arma::mat>(belowLayersList["Wpool"]);
+  // if(belowLayersList.containsElementNamed("VGrhizo_kmax")) belowLayers.VGrhizo_kmax = Rcpp::as<arma::mat>(belowLayersList["VGrhizo_kmax"]);
+  // if(belowLayersList.containsElementNamed("RhizoPsi")) belowLayers.RhizoPsi = Rcpp::as<arma::mat>(belowLayersList["RhizoPsi"]);
+  // if(belowLayersList.containsElementNamed("RHOP")) {
+  //   Rcpp::List RHOPList = belowLayersList["RHOP"];
+  //   belowLayers.RHOP = std::vector<arma::mat>(RHOPList.size());
+  //   for(int c = 0; c < RHOPList.size(); c++) {
+  //     belowLayers.RHOP[c] = Rcpp::as<arma::mat>(RHOPList[c]);
+  //   }
+  // }
+  
+  
+  //Internal phenology variables
+  Rcpp::DataFrame internalPhenoDF = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
+  Rcpp::NumericVector gdd = internalPhenoDF["gdd"];
+  Rcpp::NumericVector sen = internalPhenoDF["sen"];
+  Rcpp::LogicalVector budFormation = internalPhenoDF["budFormation"];
+  Rcpp::LogicalVector leafUnfolding = internalPhenoDF["leafUnfolding"];
+  Rcpp::LogicalVector leafSenescence = internalPhenoDF["leafSenescence"];
+  Rcpp::LogicalVector leafDormancy = internalPhenoDF["leafDormancy"];
+  Rcpp::NumericVector phi = internalPhenoDF["phi"];
+  for(int c = 0;c < numCohorts; c++) {
+    gdd[c] = internalPhenology.gdd[c];
+    sen[c] = internalPhenology.sen[c];
+    budFormation[c] = internalPhenology.budFormation[c];
+    leafUnfolding[c] = internalPhenology.leafUnfolding[c];
+    leafSenescence[c] = internalPhenology.leafSenescence[c];
+    leafDormancy[c] = internalPhenology.leafDormancy[c];
+    phi[c] = internalPhenology.phi[c];
+  }
+  //Internal LAI distribution
+  // if(x.containsElementNamed("internalLAIDistribution")){
+  //   Rcpp::List intLAIDist = x["internalLAIDistribution"];
+  //   internalLAIDistribution.PrevLAIdead = Rcpp::as< std::vector<double> >(intLAIDist["PrevLAIdead"]);
+  //   internalLAIDistribution.PrevLAIexpanded = Rcpp::as< std::vector<double> >(intLAIDist["PrevLAIexpanded"]);
+  //   internalLAIDistribution.PARcohort = Rcpp::as< std::vector<double> >(intLAIDist["PARcohort"]);
+  //   Rcpp::NumericMatrix liveMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["live"]);
+  //   Rcpp::NumericMatrix expandedMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["expanded"]);
+  //   Rcpp::NumericMatrix deadMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["dead"]);
+  //   internalLAIDistribution.live = Rcpp::as<arma::mat>(liveMat);
+  //   internalLAIDistribution.dead = Rcpp::as<arma::mat>(deadMat);
+  //   internalLAIDistribution.expanded = Rcpp::as<arma::mat>(expandedMat);
+  // }
+  //Internal water variables
+  // if(x.containsElementNamed("internalWater")) {
+  //   Rcpp::DataFrame internalWaterDF = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  //   if(internalWaterDF.containsElementNamed("Einst")) internalWater.Einst = Rcpp::as< std::vector<double> >(internalWaterDF["Einst"]);
+  //   if(internalWaterDF.containsElementNamed("Elim")) internalWater.Elim = Rcpp::as< std::vector<double> >(internalWaterDF["Elim"]);
+  //   if(internalWaterDF.containsElementNamed("Emin_L")) internalWater.Emin_L = Rcpp::as< std::vector<double> >(internalWaterDF["Emin_L"]);
+  //   if(internalWaterDF.containsElementNamed("Emin_S")) internalWater.Emin_S = Rcpp::as< std::vector<double> >(internalWaterDF["Emin_S"]);
+  //   if(internalWaterDF.containsElementNamed("PlantPsi")) internalWater.PlantPsi = Rcpp::as< std::vector<double> >(internalWaterDF["PlantPsi"]);
+  //   if(internalWaterDF.containsElementNamed("RootCrownPsi")) internalWater.RootCrownPsi = Rcpp::as< std::vector<double> >(internalWaterDF["RootCrownPsi"]);
+  //   if(internalWaterDF.containsElementNamed("LeafPsi")) internalWater.LeafPsi = Rcpp::as< std::vector<double> >(internalWaterDF["LeafPsi"]);
+  //   if(internalWaterDF.containsElementNamed("StemPsi")) internalWater.StemPsi = Rcpp::as< std::vector<double> >(internalWaterDF["StemPsi"]);
+  //   if(internalWaterDF.containsElementNamed("LeafSympPsi")) internalWater.LeafSympPsi = Rcpp::as< std::vector<double> >(internalWaterDF["LeafSympPsi"]);
+  //   if(internalWaterDF.containsElementNamed("StemSympPsi")) internalWater.StemSympPsi = Rcpp::as< std::vector<double> >(internalWaterDF["StemSympPsi"]);
+  //   if(internalWaterDF.containsElementNamed("LeafPLC")) internalWater.LeafPLC = Rcpp::as< std::vector<double> >(internalWaterDF["LeafPLC"]);
+  //   if(internalWaterDF.containsElementNamed("StemPLC")) internalWater.StemPLC = Rcpp::as< std::vector<double> >(internalWaterDF["StemPLC"]);
+  // }
+  
+  //Internal carbon variables
+  if(x.containsElementNamed("internalCarbon")) {
+    Rcpp::DataFrame internalCarbonDF = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
+    Rcpp::NumericVector sugarLeaf = internalCarbonDF["sugarLeaf"];
+    Rcpp::NumericVector starchLeaf = internalCarbonDF["starchLeaf"];
+    Rcpp::NumericVector sugarSapwood = internalCarbonDF["sugarSapwood"];
+    Rcpp::NumericVector starchSapwood = internalCarbonDF["starchSapwood"];
+    for(int c = 0;c < numCohorts; c++) {
+      sugarLeaf[c] = internalCarbon.sugarLeaf[c];
+      starchLeaf[c] = internalCarbon.starchLeaf[c];
+      sugarSapwood[c] = internalCarbon.sugarSapwood[c];
+      starchSapwood[c] = internalCarbon.starchSapwood[c];
+    }
+  }
+  // //Internal mortality variables
+  // if(x.containsElementNamed("internalMortality")) {
+  //   Rcpp::DataFrame internalMortalityDF = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
+  //   internalMortality.N_dead = Rcpp::as< std::vector<double> >(internalMortalityDF["N_dead"]);
+  //   internalMortality.N_starvation = Rcpp::as< std::vector<double> >(internalMortalityDF["N_starvation"]);
+  //   internalMortality.N_dessication = Rcpp::as< std::vector<double> >(internalMortalityDF["N_dessication"]);
+  //   internalMortality.N_burnt = Rcpp::as< std::vector<double> >(internalMortalityDF["N_burnt"]);
+  //   internalMortality.N_resprouting_stumps = Rcpp::as< std::vector<double> >(internalMortalityDF["N_resprouting_stumps"]);
+  //   internalMortality.Cover_dead = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_dead"]);
+  //   internalMortality.Cover_starvation = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_starvation"]);
+  //   internalMortality.Cover_dessication = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_dessication"]);
+  //   internalMortality.Cover_burnt = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_burnt"]);
+  //   internalMortality.Cover_resprouting_stumps = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_resprouting_stumps"]);
+  //   if(internalMortalityDF.containsElementNamed("Snag_smallbranches")) internalMortality.Snag_smallbranches = Rcpp::as< std::vector<double> >(internalMortalityDF["Snag_smallbranches"]);
+  //   if(internalMortalityDF.containsElementNamed("Snag_largewood")) internalMortality.Snag_largewood = Rcpp::as< std::vector<double> >(internalMortalityDF["Snag_largewood"]);
+  // }
+  // 
+  // //Internal allocation variables
+  // if(x.containsElementNamed("internalAllocation")) {
+  //   Rcpp::DataFrame internalAllocationDF = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
+  //   internalAllocation.allocationTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["allocationTarget"]);
+  //   internalAllocation.leafAreaTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["leafAreaTarget"]);
+  //   internalAllocation.sapwoodAreaTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["sapwoodAreaTarget"]);
+  //   internalAllocation.fineRootBiomassTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["fineRootBiomassTarget"]);
+  //   internalAllocation.crownBudPercent = Rcpp::as< std::vector<double> >(internalAllocationDF["crownBudPercent"]);
+  // }
+  // 
+  // //Internal snag variables
+  // if(x.containsElementNamed("internalSnags")) {
+  //   Rcpp::DataFrame internalSnagDF = Rcpp::as<Rcpp::DataFrame>(x["internalSnags"]);
+  //   internalSnags.Species = Rcpp::as< std::vector<std::string> >(internalSnagDF["Species"]);
+  //   internalSnags.DBH = Rcpp::as< std::vector<double> >(internalSnagDF["DBH"]);
+  //   internalSnags.Height = Rcpp::as< std::vector<double> >(internalSnagDF["Height"]);
+  //   internalSnags.SmallBranches = Rcpp::as< std::vector<double> >(internalSnagDF["SmallBranches"]);
+  //   internalSnags.LargeWood = Rcpp::as< std::vector<double> >(internalSnagDF["LargeWood"]);
+  // }
+  // 
+  // //Internal litter variables
+  // if(x.containsElementNamed("internalLitter")) {
+  //   Rcpp::DataFrame internalLitterDF = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
+  //   internalLitter.Species = Rcpp::as< std::vector<std::string> >(internalLitterDF["Species"]);
+  //   internalLitter.Leaves = Rcpp::as< std::vector<double> >(internalLitterDF["Leaves"]);
+  //   internalLitter.Twigs = Rcpp::as< std::vector<double> >(internalLitterDF["Twigs"]);
+  //   internalLitter.SmallBranches = Rcpp::as< std::vector<double> >(internalLitterDF["SmallBranches"]);
+  //   internalLitter.LargeWood = Rcpp::as< std::vector<double> >(internalLitterDF["LargeWood"]);
+  //   internalLitter.CoarseRoots = Rcpp::as< std::vector<double> >(internalLitterDF["CoarseRoots"]);
+  //   internalLitter.FineRoots = Rcpp::as< std::vector<double> >(internalLitterDF["FineRoots"]);
+  // }
+  // //Internal SOC variables
+  // if(x.containsElementNamed("internalSOC")) {
+  //   Rcpp::NumericVector internalSOCDF = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
+  //   internalSOC.SurfaceMetabolic = Rcpp::as<double>(internalSOCDF["SurfaceMetabolic"]);
+  //   internalSOC.SoilMetabolic = Rcpp::as<double>(internalSOCDF["SoilMetabolic"]);
+  //   internalSOC.SurfaceActive = Rcpp::as<double>(internalSOCDF["SurfaceActive"]);
+  //   internalSOC.SoilActive = Rcpp::as<double>(internalSOCDF["SoilActive"]);
+  //   internalSOC.SurfaceSlow = Rcpp::as<double>(internalSOCDF["SurfaceSlow"]);
+  //   internalSOC.SoilSlow = Rcpp::as<double>(internalSOCDF["SoilSlow"]);
+  //   internalSOC.SoilPassive = Rcpp::as<double>(internalSOCDF["SoilPassive"]);
+  // }
+  
+  // //Internal FCCS variables
+  // if(x.containsElementNamed("internalFCCS")) {
+  //   Rcpp::DataFrame fccsDF = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
+  //   if(fccsDF.nrows()>0) {
+  //     internalFCCS.w = Rcpp::as< std::vector<double> >(fccsDF["w"]);
+  //     internalFCCS.cover = Rcpp::as< std::vector<double> >(fccsDF["cover"]);
+  //     internalFCCS.hbc = Rcpp::as< std::vector<double> >(fccsDF["hbc"]);
+  //     internalFCCS.htc = Rcpp::as< std::vector<double> >(fccsDF["htc"]);
+  //     internalFCCS.habc = Rcpp::as< std::vector<double> >(fccsDF["habc"]);
+  //     internalFCCS.hatc = Rcpp::as< std::vector<double> >(fccsDF["hatc"]);
+  //     internalFCCS.delta = Rcpp::as< std::vector<double> >(fccsDF["delta"]);
+  //     internalFCCS.rhob = Rcpp::as< std::vector<double> >(fccsDF["rhob"]);
+  //     internalFCCS.rhop = Rcpp::as< std::vector<double> >(fccsDF["rhop"]);
+  //     internalFCCS.PV = Rcpp::as< std::vector<double> >(fccsDF["PV"]);
+  //     internalFCCS.beta = Rcpp::as< std::vector<double> >(fccsDF["beta"]);
+  //     internalFCCS.betarel = Rcpp::as< std::vector<double> >(fccsDF["betarel"]);
+  //     internalFCCS.etabetarel = Rcpp::as< std::vector<double> >(fccsDF["etabetarel"]);
+  //     internalFCCS.sigma = Rcpp::as< std::vector<double> >(fccsDF["sigma"]);
+  //     internalFCCS.pDead = Rcpp::as< std::vector<double> >(fccsDF["pDead"]);
+  //     internalFCCS.FAI = Rcpp::as< std::vector<double> >(fccsDF["FAI"]);
+  //     internalFCCS.h = Rcpp::as< std::vector<double> >(fccsDF["h"]);
+  //     internalFCCS.RV = Rcpp::as< std::vector<double> >(fccsDF["RV"]);
+  //     internalFCCS.MinFMC = Rcpp::as< std::vector<double> >(fccsDF["MinFMC"]);
+  //     internalFCCS.MaxFMC = Rcpp::as< std::vector<double> >(fccsDF["MaxFMC"]);
+  //     internalFCCS.ActFMC = Rcpp::as< std::vector<double> >(fccsDF["ActFMC"]);
+  //   }
+  // }
+  
+}
