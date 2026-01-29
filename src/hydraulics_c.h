@@ -1,3 +1,5 @@
+#include "RcppArmadillo.h"
+
 #ifndef HYDRAULICS_C_H
 #define HYDRAULICS_C_H
 
@@ -17,5 +19,7 @@ double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double 
 double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope);
 
 double correctConductanceForViscosity_c(double kxylem, double temp);
+
+double averagePsi_c(const std::vector<double>& psi, const std::vector<double>& v, double exp_extract, double psi_extract);
 
 #endif

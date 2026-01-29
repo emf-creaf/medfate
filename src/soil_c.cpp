@@ -125,6 +125,17 @@ double Soil::getThetaSAT(int layer) {return theta_SAT[layer]; }
 double Soil::getThetaFC(int layer) {return theta_FC[layer]; }
 double Soil::getPsi(int layer) {return psi[layer]; }
 double Soil::getTheta(int layer) {return theta[layer]; }
+double Soil::getWater(int layer) {return widths[layer]*theta[layer]*(1.0-(rfc[layer]/100.0));}
+double Soil::getConductivity(int layer, bool mmol) {
+  double K;
+  if(model =="SX") {
+    K = unsaturatedConductivitySaxton_c(theta[layer], clay[layer], sand[layer], bd[layer], om[layer], mmol);
+  } else {
+    K = psi2kVanGenuchten_c(Ksat[layer], VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], psi[layer]);
+    if(!mmol) K = K/cmdTOmmolm2sMPa;
+  }
+  return(K);
+}
 double Soil::getWaterSAT(int layer) {
   double water_SAT = widths[layer]*theta_SAT[layer]*(1.0-(rfc[layer]/100.0));
   return(water_SAT);

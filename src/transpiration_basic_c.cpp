@@ -67,6 +67,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
   //Soil
   Soil& soil = x.soil;
+  int nlayers = soil.getNlayers();
 
   //Meteo input
   double pet = meteovec.pet;
@@ -153,7 +154,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>& PARcohort = x.internalLAIDistribution.PARcohort;
 
   
-  // Communication vectors
+  // Internal communication vectors
   std::vector<double>& CohASWRF = BT_comm.CohASWRF;
   std::vector<double>& Tmax = BT_comm.Tmax;
   std::vector<double>& TmaxCoh = BT_comm.TmaxCoh;
@@ -163,6 +164,16 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     TmaxCoh[c] = 0.0;
   }
   
+  //Output vectors
+  std::vector<double>&  Eplant = outputPlants.Transpiration;
+  std::vector<double>&  Agplant = outputPlants.GrossPhotosynthesis;
+  std::vector<double>&  DDS = outputPlants.DDS;
+  std::vector<double>&  LFMC = outputPlants.LFMC;
+  std::vector<double>&  StemRWC = outputPlants.StemRWC;
+  std::vector<double>&  LeafRWC = outputPlants.LeafRWC;
+  std::vector<double>&  PWB = outputPlants.WaterBalance;
+  std::vector<double>&  Extraction = outputPlants.Extraction;
+
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
   double sum_abs_exp = 0.0, sum_abs_dead = 0.0;
@@ -206,7 +217,6 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   for(int c=0;c<numCohorts;c++) {
     CohASWRF[c] = pow(CohASWRF[c], 0.75);
   }
-  Rcpp::stop("kk");
   
   //Apply fractions to potential evapotranspiration
   //Maximum canopy transpiration
@@ -214,27 +224,18 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   for(int c=0;c<numCohorts;c++) {
     Tmax[c] = pet*(Tmax_LAIsq[c]*(LAIcell*LAIcell)+ Tmax_LAI[c]*LAIcell); //From Granier (1999)
   }
+  
+  //Fraction of Tmax attributed to each plant cohort
+  double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
+  if(pabs>0.0) {
+    for(int c=0;c<numCohorts;c++) {
+      TmaxCoh[c] = Tmax[c]*(CohASWRF[c]/pabs); 
+    }
+  }
 
-  // //Fraction of Tmax attributed to each plant cohort
-  // double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
-  // NumericVector TmaxCoh(numCohorts,0.0);
-  // if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
-  // 
-  // //Actual plant transpiration
-  // int nlayers = Wpool.ncol();
-  // 
-  // NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
-  // NumericVector DDS(numCohorts, 0.0), LFMC(numCohorts, 0.0);
-  // NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
-  // NumericVector PWB(numCohorts,0.0);
-  // NumericVector Kl, epc, Vl;
-  // 
-  // //Calculate unsaturated conductivity (mmolH20·m-1·s-1·MPa-1)
-  // NumericVector Kunsat = conductivity(soil, soilFunctions, true);
-  // //Calculate soil water potential
-  // NumericVector psiSoil = psi(soil,soilFunctions);
-  // 
-  // 
+
+
+  //Actual plant transpiration
   // NumericMatrix WaterM(numCohorts, nlayers);
   // NumericMatrix KunsatM(numCohorts, nlayers);
   // NumericMatrix psiSoilM(numCohorts, nlayers);
@@ -253,54 +254,60 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   //     WaterM(j,_) = water(soil_pool, soilFunctions);
   //   }
   // }
-  // // for(int i= 0;i<psiSoil.size();i++) Rcout<< "S "<<i<<" "<<psiSoil[i]<<"\n";
-  // 
-  // ParamsVolume parsVol;
-  // 
-  // for(int c=0;c<numCohorts;c++) {
-  //   
-  //   parsVol.stem_c = VCstem_c[c];
-  //   parsVol.stem_d = VCstem_d[c];
-  //   parsVol.leafpi0 = LeafPI0[c];
-  //   parsVol.leafeps = LeafEPS[c];
-  //   parsVol.leafaf = LeafAF[c];
-  //   parsVol.stempi0 = StemPI0[c];
-  //   parsVol.stemeps = StemEPS[c];
-  //   parsVol.stemaf = StemAF[c];
-  //   parsVol.Vsapwood = Vsapwood[c];
-  //   parsVol.Vleaf = Vleaf[c];
-  //   parsVol.LAI = LAIphe[c];
-  //   parsVol.LAIlive = LAIlive[c];
-  //   
-  //   double rootCrownPsi = NA_REAL;
-  //   
-  //   //Cuticular transpiration    
-  //   double lvp_tmax = leafVapourPressure_c(tmax,  PlantPsi[c]);
-  //   double lvp_tmin = leafVapourPressure_c(tmin,  PlantPsi[c]);
-  //   double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-  //   double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-  //   double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-  //   double E_gmin_day = E_gmin*LAIphe[c]*(24.0*3600.0*0.018); //L·d-1·m-2 = mm·d-1
-  //   
-  //   //Extraction from soil (can later be modified if there are changes in plant water content)
-  //   if(!plantWaterPools) {
-  //     NumericVector Klc(nlayers);
-  //     NumericVector Kunlc(nlayers);
-  //     for(int l=0;l<nlayers;l++) {
-  //       Klc[l] = Psi2K_c(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
-  //       //Limit Mean Kl due to previous cavitation
-  //       if(stemCavitationRecovery!="total") {
-  //         Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
-  //       }
-  //       Kunlc[l] = std::sqrt(Kunsat[l])*V(c,l);
-  //     }
-  //     double sumKunlc = sum(Kunlc);
-  //     double Klcmean = sum(Klc*V(c,_));
-  //     for(int l=0;l<nlayers;l++) {
-  //       outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
-  //     }
-  //     rootCrownPsi = averagePsi(psiSoil, V(c,_), Exp_Extract[c], Psi_Extract[c]);
-  //   } else {
+  // for(int i= 0;i<psiSoil.size();i++) Rcout<< "S "<<i<<" "<<psiSoil[i]<<"\n";
+
+  ParamsVolume parsVol;
+  for(int c=0;c<numCohorts;c++) {
+    parsVol.stem_c = VCstem_c[c];
+    parsVol.stem_d = VCstem_d[c];
+    parsVol.leafpi0 = LeafPI0[c];
+    parsVol.leafeps = LeafEPS[c];
+    parsVol.leafaf = LeafAF[c];
+    parsVol.stempi0 = StemPI0[c];
+    parsVol.stemeps = StemEPS[c];
+    parsVol.stemaf = StemAF[c];
+    parsVol.Vsapwood = Vsapwood[c];
+    parsVol.Vleaf = Vleaf[c];
+    parsVol.LAI = LAIphe[c];
+    parsVol.LAIlive = LAIlive[c];
+
+    double rootCrownPsi = NA_REAL;
+
+    //Cuticular transpiration
+    double lvp_tmax = leafVapourPressure_c(tmax,  PlantPsi[c]);
+    double lvp_tmin = leafVapourPressure_c(tmin,  PlantPsi[c]);
+    double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    double E_gmin_day = E_gmin*LAIphe[c]*(24.0*3600.0*0.018); //L·d-1·m-2 = mm·d-1
+
+    //Extraction from soil (can later be modified if there are changes in plant water content)
+    if(!plantWaterPools) {
+      std::vector<double> psiSoil(nlayers);
+      std::vector<double> V_c(nlayers, 0.0);
+      double* Klc = new double[nlayers];
+      double* Kunlc = new double[nlayers];
+      double Klcmean = 0.0;
+      double sumKunlc = 0.0;
+      for(int l=0;l<nlayers;l++) {
+        psiSoil[l] = soil.getPsi(l);
+        V_c[l] = V(c,l);
+        Klc[l] = Psi2K_c(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
+        //Limit Mean Kl due to previous cavitation
+        if(stemCavitationRecovery!="total") {
+          Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]);
+        }
+        Klcmean += Klc[l]*V_c[l];
+        Kunlc[l] = std::sqrt(soil.getConductivity(l,true))*V_c[l];
+        sumKunlc += Kunlc[l];
+      }
+      for(int l=0;l<nlayers;l++) {
+        outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
+      }
+      rootCrownPsi = averagePsi_c(psiSoil, V_c, Exp_Extract[c], Psi_Extract[c]);
+      delete[] Klc;
+      delete[] Kunlc;
+    } else {
   //     NumericMatrix ExtractionPoolsCoh = outputExtractionPools[c]; //this is used to store extraction of a SINGLE plant cohort from all pools
   //     
   //     NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
@@ -339,103 +346,116 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   //     rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
   //     // Rcout<< c << " : "<< psiSoilM(c,0) << " " << psiSoilM(c,1) << " " << psiSoilM(c,2) << " " << psiSoilM(c,3) << " " << rootCrownPsi<<"\n";
   //     // Rcout<< c << " : "<< RHOPcohV(c,0) << " " << RHOPcohV(c,1) << " " << RHOPcohV(c,2) << " " << RHOPcohV(c,3) << " " << rootCrownPsi<<"\n";
-  //   }
-  // 
-  // 
-  //   double oldVol = plantVol(PlantPsi[c], parsVol); 
-  //   
-  //   //Transpiration is the maximum of predicted extraction and cuticular transpiration
-  //   double ext_sum = sum(outputExtraction(c,_));
-  //   Eplant[c] = ext_sum;
-  //   // PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
-  //   //For deciduous species, make water potential follow soil during winter
-  //   // if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;
-  //   PlantPsi[c] = rootCrownPsi;
-  //   // PlantPsi[c] = rootCrownPsi;
-  //   double newVol = plantVol(PlantPsi[c], parsVol);
-  //   
-  //   double volDiff = newVol - oldVol;
-  //   //Plant transpiration and water balance
-  //   PWB[c] = volDiff;
-  //   
-  //   //Photosynthesis
-  //   double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
-  //   double fco2 = (1.0 - exp((-1.0)*WUE_co2[c]*Catm));
-  //   double fvpd = pow(vpd, WUE_vpd[c]);
-  //   if(vpd < 0.25) fvpd = 2.5 - (2.5 - pow(0.25, WUE_vpd[c]))*(vpd/0.25);
-  //   // Rcout<<fpar<<" "<< fco2 << " "<< fvpd<< " "<< WUE[c]*fpar*fco2*fvpd<<"\n";
-  //   Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2*fvpd;
-  // }
-  // 
-  // //Plant water status (StemPLC, RWC, DDS)
-  // for(int c=0;c<numCohorts;c++) {
-  //   if(stemCavitationRecovery!="total") {
-  //     StemPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
-  //   } else {
-  //     StemPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
-  //   }
-  //   if(leafCavitationRecovery!="total") {
-  //     LeafPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
-  //   } else {
-  //     LeafPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
-  //   }
-  //   
-  //   //Relative water content and fuel moisture from plant water potential
-  //   RWClm[c] =  tissueRelativeWaterContent_c(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
-  //                                          PlantPsi[c], VCstem_c[c], VCstem_d[c], 
-  //                                          LeafAF[c]);
-  //   RWCsm[c] =  tissueRelativeWaterContent_c(PlantPsi[c], StemPI0[c], StemEPS[c], 
-  //                                          PlantPsi[c], VCstem_c[c], VCstem_d[c], 
-  //                                          StemAF[c]);
-  //   // The fraction of leaves will decrease due to phenology or processes leading to defoliation
-  //   double fleaf = (1.0/r635[c])*(LAIphe[c]/LAIlive[c]);
-  //   if(lfmcComponent=="fine") { //fine fuel moisture
-  //     LFMC[c] = maxMCleaf[c]*RWClm[c]*fleaf + maxMCstem[c]*RWCsm[c]*(1.0 - fleaf);
-  //   } else { //"leaf"
-  //     LFMC[c] = maxFMC[c]*RWClm[c];
-  //   }
-  //   
-  //   //Daily drought stress from plant WP
-  //   DDS[c] = (1.0 - Psi2K_c(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
-  //   if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
-  //     
-  //   double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-  //   double r = cavitationRecoveryMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
-  //   if(stemCavitationRecovery=="rate") {
-  //     StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
-  //   }
-  //   if(leafCavitationRecovery=="rate") {
-  //     LeafPLC[c] = std::max(0.0, LeafPLC[c] - (r/SAmax));
-  //   }
-  // }
-  // 
-  // //Atempt to implement hydraulic redistribution
-  // if(hydraulicRedistributionFraction > 0.0) {
-  //   if(!plantWaterPools) {
-  //     for(int c=0;c<numCohorts;c++) {
-  //       double redAmount = Eplant[c]*hydraulicRedistributionFraction;
-  //       // Rcout<<c<< "red amount"<< redAmount;
-  //       NumericVector Ws = soil["W"];
-  //       NumericVector SW = water(soil, soilFunctions);
-  //       double soilRWC = sum(Ws*SW)/sum(SW);
-  //       NumericVector WDiff = Ws - soilRWC; 
-  //       NumericVector DonorDiff = pmax(0.0, WDiff);
-  //       NumericVector ReceiverDiff = pmax(0.0, -WDiff);
-  //       NumericVector HD(nlayers,0.0);
-  //       if(sum(DonorDiff)>0.0) {
-  //         for(int l=0;l<nlayers;l++) {
-  //           if(WDiff[l]>0.0) {
-  //             HD[l] = redAmount*DonorDiff[l]/sum(DonorDiff);
-  //           } else{
-  //             HD[l] = -redAmount*ReceiverDiff[l]/sum(ReceiverDiff);
-  //           }
-  //           // Rcout<<" "<<l<<" "<<HD[l];
-  //           outputExtraction(c,l) += HD[l];
-  //         }
-  //       }
-  //       // Rcout<< "\n";
-  //     }
-  //   } else {
+    }
+
+
+    double oldVol = plantVol_c(PlantPsi[c], parsVol);
+
+    //Transpiration is now equal to extraction
+    Extraction[c] = arma::sum(outputExtraction.row(c));
+    Eplant[c] = Extraction[c];
+    //For deciduous species, make water potential follow soil during winter
+    PlantPsi[c] = rootCrownPsi;
+    double newVol = plantVol_c(PlantPsi[c], parsVol);
+
+    double volDiff = newVol - oldVol;
+    //Plant transpiration and water balance
+    PWB[c] = volDiff;
+
+    //Photosynthesis
+    double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
+    double fco2 = (1.0 - exp((-1.0)*WUE_co2[c]*Catm));
+    double fvpd = pow(vpd, WUE_vpd[c]);
+    if(vpd < 0.25) fvpd = 2.5 - (2.5 - pow(0.25, WUE_vpd[c]))*(vpd/0.25);
+    // Rcout<<fpar<<" "<< fco2 << " "<< fvpd<< " "<< WUE[c]*fpar*fco2*fvpd<<"\n";
+    Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2*fvpd;
+  }
+  
+  //Plant water status (StemPLC, RWC, DDS)
+  for(int c=0;c<numCohorts;c++) {
+    if(stemCavitationRecovery!="total") {
+      StemPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
+    } else {
+      StemPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
+    }
+    if(leafCavitationRecovery!="total") {
+      LeafPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
+    } else {
+      LeafPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
+    }
+
+    //Relative water content and fuel moisture from plant water potential
+    LeafRWC[c] =  tissueRelativeWaterContent_c(PlantPsi[c], LeafPI0[c], LeafEPS[c],
+                                               PlantPsi[c], VCstem_c[c], VCstem_d[c],
+                                               LeafAF[c]);
+    StemRWC[c] =  tissueRelativeWaterContent_c(PlantPsi[c], StemPI0[c], StemEPS[c],
+                                               PlantPsi[c], VCstem_c[c], VCstem_d[c],
+                                               StemAF[c]);
+    // The fraction of leaves will decrease due to phenology or processes leading to defoliation
+    double fleaf = (1.0/r635[c])*(LAIphe[c]/LAIlive[c]);
+    if(lfmcComponent=="fine") { //fine fuel moisture
+      LFMC[c] = maxMCleaf[c]*LeafRWC[c]*fleaf + maxMCstem[c]*StemRWC[c]*(1.0 - fleaf);
+    } else { //"leaf"
+      LFMC[c] = maxFMC[c]*LeafRWC[c];
+    }
+
+    //Daily drought stress from plant WP
+    DDS[c] = (1.0 - Psi2K_c(PlantPsi[c],Psi_Extract[c],Exp_Extract[c]));
+    if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
+
+    double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
+    double r = cavitationRecoveryMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
+    if(stemCavitationRecovery=="rate") {
+      StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
+    }
+    if(leafCavitationRecovery=="rate") {
+      LeafPLC[c] = std::max(0.0, LeafPLC[c] - (r/SAmax));
+    }
+  }
+
+  //Atempt to implement hydraulic redistribution
+  if(hydraulicRedistributionFraction > 0.0) {
+    if(!plantWaterPools) {
+      double* W = new double[nlayers];
+      double* WDiff = new double[nlayers];
+      double* DonorDiff = new double[nlayers];
+      double* ReceiverDiff = new double[nlayers];
+      double sumWater = 0.0;
+      double sumWaterW = 0.0;
+      double water_l = 0.0;
+      for(int l=0;l<nlayers;l++) {
+        water_l = soil.getWater(l);
+        W[l] = soil.getW(l);
+        sumWater += water_l;
+        sumWaterW += water_l*W[l];
+      }
+      double soilWaverage = sumWaterW/sumWater;
+      double sumDonor = 0.0;
+      double sumReceiver = 0.0;
+      for(int l=0;l<nlayers;l++) {
+        WDiff[l] = W[l] - soilWaverage;
+        DonorDiff[l] = std::max(0.0, WDiff[l]);
+        ReceiverDiff[l] = std::max(0.0, -WDiff[l]);
+        sumDonor += DonorDiff[l];
+        sumReceiver += ReceiverDiff[l];
+      }
+      if(sumDonor>0.0) {
+        for(int c=0;c<numCohorts;c++) {
+          double redAmount = Eplant[c]*hydraulicRedistributionFraction;
+          for(int l=0;l<nlayers;l++) {
+            if(WDiff[l]>0.0) {
+              outputExtraction(c,l) += redAmount*DonorDiff[l]/sumDonor;
+            } else{
+              outputExtraction(c,l) += -redAmount*ReceiverDiff[l]/sumReceiver;
+            }
+          }
+        }
+      }
+      delete[] W;
+      delete[] WDiff;
+      delete[] DonorDiff;
+      delete[] ReceiverDiff;
+    } else {
   //     for(int c=0;c<numCohorts;c++) {
   //       NumericMatrix ExtractionPoolsCoh = outputExtractionPools[c];
   //       for(int j=0;j<numCohorts;j++) {
@@ -460,50 +480,26 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   //         }
   //       }
   //     }
-  //   }
-  // }
-  // 
-  // 
-  // // Copy output stand
-  // outputStand["LAI"] = LAIcell;
-  // outputStand["LAIlive"] = LAIcelllive;
-  // outputStand["LAIexpanded"] = LAIcellexpanded;
-  // outputStand["LAIdead"] = LAIcelldead;
-  // 
-  // // Copy output plants
-  // NumericVector outputLAI = outputPlants["LAI"];
-  // NumericVector outputLAIlive = outputPlants["LAIlive"];
-  // NumericVector outputFPAR = outputPlants["FPAR"];
-  // NumericVector outputAbsorbedSWRFraction = outputPlants["AbsorbedSWRFraction"];
-  // NumericVector outputExtractionByPlants = outputPlants["Extraction"];
-  // NumericVector outputTranspirationByPlants = outputPlants["Transpiration"];
-  // NumericVector outputGrossPhotosynthesis = outputPlants["GrossPhotosynthesis"];
-  // NumericVector outputPlantPsi = outputPlants["PlantPsi"];
-  // NumericVector outputDDS = outputPlants["DDS"];
-  // NumericVector outputStemRWC = outputPlants["StemRWC"];
-  // NumericVector outputLeafRWC = outputPlants["LeafRWC"];
-  // NumericVector outputLFMC = outputPlants["LFMC"];
-  // NumericVector outputStemPLC = outputPlants["StemPLC"];
-  // NumericVector outputLeafPLC = outputPlants["LeafPLC"];
-  // NumericVector outputWaterBalance = outputPlants["WaterBalance"];
-  // for(int c =0;c<numCohorts;c++) {
-  //   outputLAI[c] = LAIphe[c];
-  //   outputLAIlive[c] = LAIlive[c];
-  //   outputFPAR[c] = PARcohort[c];
-  //   outputAbsorbedSWRFraction[c] = 100.0*CohASWRF[c];
-  //   outputExtractionByPlants[c] = sum(outputExtraction(c,_));
-  //   outputTranspirationByPlants[c] = Eplant[c];
-  //   outputGrossPhotosynthesis[c] = Agplant[c];
-  //   outputPlantPsi[c] = PlantPsi[c];
-  //   outputDDS[c] = DDS[c];
-  //   outputStemRWC[c] = RWCsm[c];
-  //   outputLeafRWC[c] = RWClm[c];
-  //   outputLFMC[c] = LFMC[c];
-  //   outputStemPLC[c] = StemPLC[c];
-  //   outputLeafPLC[c] = LeafPLC[c];
-  //   outputWaterBalance[c] = PWB[c];
-  // }
+    }
+  }
 
+
+  // Copy output stand
+  outputStand.LAI = LAIcell;
+  outputStand.LAIlive = LAIcelllive;
+  outputStand.LAIexpanded = LAIcellexpanded;
+  outputStand.LAIdead = LAIcelldead;
+
+  // Copy output plants
+  for(int c =0;c<numCohorts;c++) {
+    outputPlants.LAI[c] = LAIphe[c];
+    outputPlants.LAIlive[c] = LAIlive[c];
+    outputPlants.FPAR[c] = PARcohort[c];
+    outputPlants.AbsorbedSWRFraction[c] = 100.0*CohASWRF[c];
+    outputPlants.PlantPsi[c] = PlantPsi[c];
+    outputPlants.LeafPLC[c] = LeafPLC[c];
+    outputPlants.StemPLC[c] = StemPLC[c];
+  }
 }
 
 

@@ -109,9 +109,11 @@ class Soil {
     double getThetaFC(int layer);
     double getPsi(int layer);
     double getTheta(int layer);
+    double getWater(int layer);
     double getTemp(int layer);
     double getWaterSAT(int layer);
     double getWaterFC(int layer);
+    double getConductivity(int layer, bool mmol = true);
     void setPsi(int layer, double value);
     void setTheta(int layer, double value);
     void setW(int layer, double value);

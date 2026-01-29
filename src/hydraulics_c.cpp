@@ -86,7 +86,7 @@
 //' @keywords internal
 // [[Rcpp::export("hydraulics_psi2K")]]
 double Psi2K_c(double psi, double psi_extract, double exp_extract = 3.0) {
-  return(exp(-0.6931472*pow(std::abs(psi/psi_extract),exp_extract)));
+  return(std::exp(-0.6931472*std::pow(std::abs(psi/psi_extract),exp_extract)));
 }
 
 /**
@@ -166,4 +166,17 @@ double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double 
 // [[Rcpp::export("hydraulics_correctConductanceForViscosity")]]
 double correctConductanceForViscosity_c(double kxylem, double temp) {
   return(kxylem/waterDynamicViscosity_c(temp));
+}
+
+
+double averagePsi_c(const std::vector<double>& psi, const std::vector<double>& v, double exp_extract, double psi_extract) {
+  int nlayers = psi.size();
+  double K = 0.0, sumKv = 0.0;
+  for(int l=0;l<nlayers;l++) {
+    K= exp(-0.6931472*pow(std::abs(psi[l]/psi_extract),exp_extract));
+    sumKv += K*v[l];
+  }
+  double psires =  psi_extract*pow(log(sumKv)/(-0.6931472),1.0/exp_extract);
+  psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
+  return(psires);
 }
