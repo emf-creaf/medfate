@@ -152,6 +152,17 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>& PrevLAIdead = x.internalLAIDistribution.PrevLAIdead;
   std::vector<double>& PARcohort = x.internalLAIDistribution.PARcohort;
 
+  
+  // Communication vectors
+  std::vector<double>& CohASWRF = BT_comm.CohASWRF;
+  std::vector<double>& Tmax = BT_comm.Tmax;
+  std::vector<double>& TmaxCoh = BT_comm.TmaxCoh;
+  for(int c=0;c<numCohorts;c++) {
+    CohASWRF[c] = 0.0;
+    Tmax[c] = 0.0;
+    TmaxCoh[c] = 0.0;
+  }
+  
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
   double sum_abs_exp = 0.0, sum_abs_dead = 0.0;
@@ -189,14 +200,21 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       updateLAIdistributionVectors_c(LAImd, z, LAIdead, H, CR);
     }
   }
-  // NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
-  // CohASWRF = pow(CohASWRF, 0.75);
-  // 
-  // //Apply fractions to potential evapotranspiration
-  // //Maximum canopy transpiration
-  // //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
-  // NumericVector Tmax = pet*(Tmax_LAIsq*(LAIcell*LAIcell)+ Tmax_LAI*LAIcell); //From Granier (1999)
-  // 
+  
+  //Cohort absorbed fraction
+  cohortAbsorbedSWRFraction_c(CohASWRF, BT_comm.AbSWRcomm, LAIme, LAImd, kSWR);
+  for(int c=0;c<numCohorts;c++) {
+    CohASWRF[c] = pow(CohASWRF[c], 0.75);
+  }
+  Rcpp::stop("kk");
+  
+  //Apply fractions to potential evapotranspiration
+  //Maximum canopy transpiration
+  //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
+  for(int c=0;c<numCohorts;c++) {
+    Tmax[c] = pet*(Tmax_LAIsq[c]*(LAIcell*LAIcell)+ Tmax_LAI[c]*LAIcell); //From Granier (1999)
+  }
+
   // //Fraction of Tmax attributed to each plant cohort
   // double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   // NumericVector TmaxCoh(numCohorts,0.0);

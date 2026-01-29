@@ -43,10 +43,10 @@ void layerAbsorbedSWRFractionIncident_c(std::vector<double>& f,
                                         const arma::mat& LAIme, 
                                         const arma::mat& LAImd, 
                                         const std::vector<double>& kSWR) {
-  int nlayer = LAIme.n_rows;
+  int ncanlayers = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
   double s;
-  for(int l = 0;l<nlayer;l++) {
+  for(int l = 0;l<ncanlayers;l++) {
     s = 0.0;
     for(int c=0;c<ncoh; c++) s+=kSWR[c]*(LAIme(l,c)+LAImd(l,c));
     f[l] = 1.0 - exp(-1.0*s);
@@ -61,10 +61,10 @@ void cohortLayerAbsorbedSWRFractionIncident_c(arma::mat& fij,
                                               const arma::mat& LAIme, 
                                               const arma::mat& LAImd, 
                                               const std::vector<double>& kSWR) {
-  int nlayer = LAIme.n_rows;
+  int ncanlayers = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
   double s = 0.0;
-  for(int l = 0;l<nlayer;l++) {
+  for(int l = 0;l<ncanlayers;l++) {
     s = 0.0;
     for(int c=0;c<ncoh; c++) s+=kSWR[c]*(LAIme(l,c)+LAImd(l,c));
     if(s>0.0) {
@@ -77,30 +77,26 @@ void cohortLayerAbsorbedSWRFractionIncident_c(arma::mat& fij,
  * Fraction of the SWR radiation that is absorbed by each cohort
  */
 void cohortAbsorbedSWRFraction_c(std::vector<double>& SWRfraction, 
+                                 AbsorbedSWR_COMM& AbSWRcomm,
                                  const arma::mat& LAIme, 
                                  const arma::mat& LAImd, 
                                  const std::vector<double>& kSWR) {
   int ncoh = LAIme.n_cols;
-  int nlayer = LAIme.n_rows;
+  int ncanlayers = LAIme.n_rows;
   
-  // TO DO: INCLUDE IN COMMUNICATION STRUCTURES
-  std::vector<double> fi(nlayer,0.0); 
-  arma::mat fij(nlayer, ncoh); 
-  std::vector<double> rem(nlayer);
-  
-  layerAbsorbedSWRFractionIncident_c(fi, LAIme, LAImd, kSWR);
-  cohortLayerAbsorbedSWRFractionIncident_c(fij, fi, LAIme, LAImd, kSWR);
-  for(int i = 0;i<nlayer;i++) {
-    rem[i] = 1.0;
-    for(int h = (nlayer-1);h>i;h--) {
-      rem[i] = rem[i]*(1.0-fi[h]);
+  layerAbsorbedSWRFractionIncident_c(AbSWRcomm.fi, LAIme, LAImd, kSWR);
+  cohortLayerAbsorbedSWRFractionIncident_c(AbSWRcomm.fij, AbSWRcomm.fi, LAIme, LAImd, kSWR);
+  for(int i = 0;i<ncanlayers;i++) {
+    AbSWRcomm.rem[i] = 1.0;
+    for(int h = (ncanlayers-1);h>i;h--) {
+      AbSWRcomm.rem[i] = AbSWRcomm.rem[i]*(1.0-AbSWRcomm.fi[h]);
     }
   }
   double s;
   for(int j=0;j<ncoh;j++) {
     s = 0.0;
-    for(int i = 0;i<nlayer;i++) {
-      s = s + fij(i,j)*rem[i];
+    for(int i = 0;i<ncanlayers;i++) {
+      s = s + AbSWRcomm.fij(i,j)*AbSWRcomm.rem[i];
     }
     SWRfraction[j] = s;
   }

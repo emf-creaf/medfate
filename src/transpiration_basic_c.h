@@ -1,5 +1,6 @@
 #include "Rcpp.h"
 #include "communication_structures_c.h"
+#include "lightextinction_basic_c.h"
 #include "modelInput_c.h"
 
 #ifndef TRANSPIRATION_BASIC_C_H
@@ -75,10 +76,15 @@ struct BasicTranspiration_RESULT {
 // Basic Transpiration Communication Structure
 // ----------------------------------------------------------------------------
 struct BasicTranspiration_COMM {
-  // std::vector<double> PARcohort;
-  // BasicTranspiration_COMM(size_t numCohorts = 0) {
-  //   PARcohort = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
-  // }
+  AbsorbedSWR_COMM AbSWRcomm;
+  std::vector<double> CohASWRF;
+  std::vector<double> Tmax;
+  std::vector<double> TmaxCoh;
+  BasicTranspiration_COMM(size_t numCohorts = 0, size_t ncanlayers = 0) : 
+    AbSWRcomm(numCohorts, ncanlayers), 
+    CohASWRF(numCohorts),
+    Tmax(numCohorts),
+    TmaxCoh(numCohorts){}
 };
 
 

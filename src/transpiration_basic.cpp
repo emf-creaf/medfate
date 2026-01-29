@@ -758,11 +758,12 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   int nlayers = x_c.soil.getNlayers();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ncanlayers = x_c.canopy.zlow.size();
   
   //Create comunication structures
   BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
   
-  BasicTranspiration_COMM BTcomm;
+  BasicTranspiration_COMM BTcomm = BasicTranspiration_COMM(numCohorts, ncanlayers);
   
   //Perform simulation
   transpirationBasic_c(BTres, BTcomm, x_c, 
