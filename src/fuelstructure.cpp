@@ -1,6 +1,7 @@
 #include <numeric>
 #include <RcppArmadillo.h>
 #include "forestutils.h"
+#include "forestutils_c.h"
 #include "paramutils.h"
 #include "fuelmoisture.h"
 using namespace Rcpp;
@@ -44,7 +45,7 @@ const double broadleavedRPR = 10.31; //unitless
  * Returns the proportion of the crown (Hbc - H) that lies within given interval (zLow-zHigh)
  */
 double crownProportionInLayer(double zLow, double zHigh, double H, double Hbc) {
-  return(leafAreaProportion(zLow, zHigh, Hbc, H));
+  return(leafAreaProportion_c(zLow, zHigh, Hbc, H));
 }
 /**
  * Returns the fuel loading (kg/m2) of the crown (Hbc - H) that lies within given interval (zLow-zHigh)

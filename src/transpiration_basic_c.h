@@ -75,8 +75,14 @@ struct BasicTranspiration_RESULT {
 // Basic Transpiration Communication Structure
 // ----------------------------------------------------------------------------
 struct BasicTranspiration_COMM {
-  
+  // std::vector<double> PARcohort;
+  // BasicTranspiration_COMM(size_t numCohorts = 0) {
+  //   PARcohort = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+  // }
 };
+
+
+
 struct ParamsVolume{
   double leafpi0;
   double leafeps;

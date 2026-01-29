@@ -3,10 +3,12 @@
 #include "control_c.h"
 #include "communication_structures_c.h"
 #include "windextinction_c.h"
+#include "forestutils_c.h"
 #include "modelInput_c.h"
 #include "hydraulics_c.h"
 #include "tissuemoisture_c.h"
 #include "transpiration_basic_c.h"
+#include "lightextinction_basic_c.h"
 #include "soil_c.h"
 #include <meteoland.h>
 
@@ -84,8 +86,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
 
   // Canopy
-  CanopyParams& canopyParams = x.canopy;
-  int ncanlayers = canopyParams.zlow.size();
+  int ncanlayers = x.canopy.zlow.size();
 
   //Vegetation input
   std::vector<double>& LAIlive = x.above.LAI_live;
@@ -104,92 +105,90 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>& poolProportions = x.below.poolProportions;
   
   //Phenology parameters
-  std::vector<std::string>& phenoType = x.paramsPhenology.phenoType;
+  const std::vector<std::string>& phenoType = x.paramsPhenology.phenoType;
 
   //Parameters
-  std::vector<double>& Al2As = x.paramsAnatomy.Al2As;
-  std::vector<double>& r635 = x.paramsAnatomy.r635;
-  std::vector<double>& kPAR = x.paramsInterception.kPAR;
-  std::vector<double>& kSWR = x.paramsInterception.kSWR;
-  std::vector<double>& Gswmin = x.paramsTranspiration.Gswmin;
-  std::vector<double>& Psi_Extract = x.paramsTranspiration.Psi_Extract;
-  std::vector<double>& Exp_Extract = x.paramsTranspiration.Exp_Extract;
-  std::vector<double>& VCstem_c = x.paramsTranspiration.VCstem_c;
-  std::vector<double>& VCstem_d = x.paramsTranspiration.VCstem_d;
-  std::vector<double>& VCleaf_c = x.paramsTranspiration.VCleaf_c;
-  std::vector<double>& VCleaf_d = x.paramsTranspiration.VCleaf_d;
-  std::vector<double>& WUE = x.paramsTranspiration.WUE;
-  std::vector<double>& WUE_par = x.paramsTranspiration.WUE_par;
-  std::vector<double>& WUE_co2 = x.paramsTranspiration.WUE_co2;
-  std::vector<double>& WUE_vpd = x.paramsTranspiration.WUE_vpd;
-  std::vector<double>& Tmax_LAI = x.paramsTranspiration.Tmax_LAI;
-  std::vector<double>& Tmax_LAIsq = x.paramsTranspiration.Tmax_LAIsq;
+  const std::vector<double>& Al2As = x.paramsAnatomy.Al2As;
+  const std::vector<double>& r635 = x.paramsAnatomy.r635;
   
-  // //Water storage parameters
-  // DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  // NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
-  // NumericVector maxMCstem = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCstem"]);
-  // NumericVector maxMCleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCleaf"]);
-  // NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-  // NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-  // NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  // NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-  // NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
-  // NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
-  // NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  // NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
-  // 
-  // //Communication vectors
-  // //Comunication with outside
-  // DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
-  // NumericVector phi = Rcpp::as<Rcpp::NumericVector>(internalPhenology["phi"]);
-  // DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  // NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
-  // NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-  // NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-  // //LAI distribution
-  // List internalLAIDistribution = x["internalLAIDistribution"];
-  // NumericMatrix LAIme = internalLAIDistribution["expanded"];
-  // NumericMatrix LAImd = internalLAIDistribution["dead"];
-  // NumericVector PrevLAIexpanded = internalLAIDistribution["PrevLAIexpanded"];
-  // NumericVector PrevLAIdead = internalLAIDistribution["PrevLAIdead"];
-  // NumericVector PARcohort = internalLAIDistribution["PARcohort"];
-  // 
-  // //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  // double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
-  // for(int c=0;c<numCohorts;c++) {
-  //   s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-  //   LAIcell += LAIphe[c]+LAIdead[c];
-  //   LAIcelldead += LAIdead[c];
-  //   LAIcellexpanded +=LAIphe[c];
-  //   LAIcelllive += LAIlive[c];
-  // }
-  // 
-  // 
-  // if(numCohorts>0) {
-  //   bool recalc_LAI = false;
-  //   if(NumericVector::is_na(PrevLAIexpanded[0]) || NumericVector::is_na(PrevLAIdead[0])) {
-  //     recalc_LAI = true; 
-  //   } else{
-  //     if(sum(abs(LAIphe - PrevLAIexpanded))>0.001) {
-  //       recalc_LAI = true; 
-  //     } else {
-  //       if(sum(abs(LAIdead - PrevLAIdead))>0.001) recalc_LAI = true;
-  //     }
-  //   }
-  //   if(recalc_LAI) {
-  //     NumericVector z(ncanlayers+1,0.0);
-  //     for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
-  //     for(int i=0; i<numCohorts;i++) {
-  //       PARcohort[i] = availableLight(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, kPAR, CR);
-  //       PrevLAIexpanded[i] = LAIphe[i];
-  //       PrevLAIdead[i] = LAIdead[i];
-  //     }
-  //     //Update LAI distribution if necessary
-  //     updateLAIdistributionVectors(LAIme, z, LAIphe, H, CR);
-  //     updateLAIdistributionVectors(LAImd, z, LAIdead, H, CR);
-  //   }
-  // }
+  const std::vector<double>& kPAR = x.paramsInterception.kPAR;
+  const std::vector<double>& kSWR = x.paramsInterception.kSWR;
+  
+  const std::vector<double>& Gswmin = x.paramsTranspiration.Gswmin;
+  const std::vector<double>& Psi_Extract = x.paramsTranspiration.Psi_Extract;
+  const std::vector<double>& Exp_Extract = x.paramsTranspiration.Exp_Extract;
+  const std::vector<double>& VCstem_c = x.paramsTranspiration.VCstem_c;
+  const std::vector<double>& VCstem_d = x.paramsTranspiration.VCstem_d;
+  const std::vector<double>& VCleaf_c = x.paramsTranspiration.VCleaf_c;
+  const std::vector<double>& VCleaf_d = x.paramsTranspiration.VCleaf_d;
+  const std::vector<double>& WUE = x.paramsTranspiration.WUE;
+  const std::vector<double>& WUE_par = x.paramsTranspiration.WUE_par;
+  const std::vector<double>& WUE_co2 = x.paramsTranspiration.WUE_co2;
+  const std::vector<double>& WUE_vpd = x.paramsTranspiration.WUE_vpd;
+  const std::vector<double>& Tmax_LAI = x.paramsTranspiration.Tmax_LAI;
+  const std::vector<double>& Tmax_LAIsq = x.paramsTranspiration.Tmax_LAIsq;
+  
+  const std::vector<double>& maxFMC = x.paramsWaterStorage.maxFMC;
+  const std::vector<double>& maxMCstem = x.paramsWaterStorage.maxMCstem;
+  const std::vector<double>& maxMCleaf = x.paramsWaterStorage.maxMCleaf;
+  const std::vector<double>& StemPI0 = x.paramsWaterStorage.StemPI0;
+  const std::vector<double>& StemEPS = x.paramsWaterStorage.StemEPS;
+  const std::vector<double>& StemAF = x.paramsWaterStorage.StemAF;
+  const std::vector<double>& Vsapwood = x.paramsWaterStorage.Vsapwood; //l·m-2 = mm
+  const std::vector<double>& LeafPI0 = x.paramsWaterStorage.LeafPI0;
+  const std::vector<double>& LeafEPS = x.paramsWaterStorage.LeafEPS;
+  const std::vector<double>& LeafAF = x.paramsWaterStorage.LeafAF;
+  const std::vector<double>& Vleaf = x.paramsWaterStorage.Vleaf; //l·m-2 = mm
+
+  
+  //Internal state variables
+  std::vector<double>& phi = x.internalPhenology.phi;
+  std::vector<double>& PlantPsi = x.internalWater.PlantPsi;
+  std::vector<double>& StemPLC = x.internalWater.StemPLC;
+  std::vector<double>& LeafPLC = x.internalWater.LeafPLC;
+  arma::mat& LAIme = x.internalLAIDistribution.expanded;
+  arma::mat& LAImd = x.internalLAIDistribution.dead;
+  std::vector<double>& PrevLAIexpanded = x.internalLAIDistribution.PrevLAIexpanded;
+  std::vector<double>& PrevLAIdead = x.internalLAIDistribution.PrevLAIdead;
+  std::vector<double>& PARcohort = x.internalLAIDistribution.PARcohort;
+
+  //Determine whether leaves are out (phenology) and the adjusted Leaf area
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
+  double sum_abs_exp = 0.0, sum_abs_dead = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+    LAIcell += LAIphe[c]+LAIdead[c];
+    LAIcelldead += LAIdead[c];
+    LAIcellexpanded +=LAIphe[c];
+    LAIcelllive += LAIlive[c];
+    sum_abs_exp += std::abs(LAIphe[c] - PrevLAIexpanded[c]);
+    sum_abs_dead += std::abs(LAIdead[c] - PrevLAIdead[c]);
+  }
+
+  if(numCohorts>0) {
+    bool recalc_LAI = false;
+    if(std::isnan(PrevLAIexpanded[0]) || std::isnan(PrevLAIdead[0])) {
+      recalc_LAI = true;
+    } else{
+      if(sum_abs_exp>0.001) {
+        recalc_LAI = true;
+      } else {
+        if(sum_abs_dead>0.001) recalc_LAI = true;
+      }
+    }
+    if(recalc_LAI) {
+      std::vector<double> z(ncanlayers+1,0.0);
+      for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
+      for(int i=0; i<numCohorts;i++) {
+        PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, kPAR, CR);
+        PrevLAIexpanded[i] = LAIphe[i];
+        PrevLAIdead[i] = LAIdead[i];
+      }
+      //Update LAI distribution if necessary
+      updateLAIdistributionVectors_c(LAIme, z, LAIphe, H, CR);
+      updateLAIdistributionVectors_c(LAImd, z, LAIdead, H, CR);
+    }
+  }
   // NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
   // CohASWRF = pow(CohASWRF, 0.75);
   // 

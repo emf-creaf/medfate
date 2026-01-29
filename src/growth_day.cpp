@@ -8,6 +8,7 @@
 #include "communication_structures.h"
 #include "decomposition.h"
 #include "forestutils.h"
+#include "forestutils_c.h"
 #include "fireseverity_c.h"
 #include "firebehaviour.h"
 #include "hydraulics.h"
@@ -1435,8 +1436,8 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           if(!NumericVector::is_na(Ib_surf) && !NumericVector::is_na(t_res_surf)) {
             Hn_leaves =100.0*necrosisHeight_c(Ib_surf, t_res_surf, foliar_factor, tmax, rho_air); //Necrosis height (cm)
             Hn_buds = 100.0*necrosisHeight_c(Ib_surf, t_res_surf, 0.130, tmax, rho_air); //Bud necrosis height (cm)
-            burnRatioLeaves = leafAreaProportion(0.0, Hn_leaves, cbh, H[j]);
-            burnRatioBuds = leafAreaProportion(0.0, Hn_buds, cbh, H[j]);
+            burnRatioLeaves = leafAreaProportion_c(0.0, Hn_leaves, cbh, H[j]);
+            burnRatioBuds = leafAreaProportion_c(0.0, Hn_buds, cbh, H[j]);
             // Rcout << " tmax " << tmax << " rho_air " << rho_air <<" foliar_factor "<< foliar_factor << " Ib_surf "<< Ib_surf << " t_res_surf " << t_res_surf<< " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
           }
           //Determine crown fire or torching effects
