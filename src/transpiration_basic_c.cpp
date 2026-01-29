@@ -10,6 +10,7 @@
 #include "soil_c.h"
 #include <meteoland.h>
 
+using namespace Rcpp;
 
 
 //Plant volume in l·m-2 ground = mm
@@ -40,15 +41,15 @@ double findNewPlantPsiConnected_c(double flowFromRoots, double plantPsi, double 
 }
 
 
-void transpirationBasic_c(BasicTranspirationOutput& transpOutput, ModelInput& x, 
+void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_COMM& BT_comm, ModelInput& x, 
                           const WeatherInputVector& meteovec,  const double elevation) {
   
   
   // Should have internal communication structures for output
-  StandBasicTranspirationOutput& outputStand = transpOutput.stand;
-  PlantsBasicTranspirationOutput& outputPlants = transpOutput.plants;
-  arma::mat& outputExtraction = transpOutput.extraction;
-  std::vector<arma::mat>& outputExtractionPools = transpOutput.extractionPools;
+  StandBasicTranspiration_RESULT& outputStand = BTres.stand;
+  PlantsBasicTranspiration_RESULT& outputPlants = BTres.plants;
+  arma::mat& outputExtraction = BTres.extraction;
+  std::vector<arma::mat>& outputExtractionPools = BTres.extractionPools;
 
   //Control parameters
   std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
@@ -82,79 +83,48 @@ void transpirationBasic_c(BasicTranspirationOutput& transpOutput, ModelInput& x,
   double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
 
 
-  // // Canopy
-  // DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  // int ncanlayers = canopyParams.nrow();
-  // 
-  // //Vegetation input
-  // DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  // DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  // NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
-  // NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  // NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
-  // NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
-  // NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  // int numCohorts = LAIphe.size();
-  // 
-  // //Root distribution input
-  // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  // NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
-  // 
-  // //Water pools
-  // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-  // List RHOP;
-  // NumericVector poolProportions(numCohorts);
-  // if(plantWaterPools) {
-  //   RHOP = belowLayers["RHOP"];
-  //   poolProportions = belowdf["poolProportions"];
-  // }
-  // 
-  // 
-  // 
-  // //Phenology parameters
-  // DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
-  // CharacterVector phenoType = paramsPhenology["PhenologyType"];
-  // 
-  // //Parameters  
-  // DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  // NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  // NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
-  // 
-  // DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  // NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
-  // NumericVector kSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kSWR"]);
-  // 
-  // DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  // NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
-  // NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-  // NumericVector Exp_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Exp_Extract"]);
-  // NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
-  // NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
-  // NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
-  // NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
-  // NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
-  // NumericVector WUE_par(numCohorts, 0.3643);
-  // NumericVector WUE_co2(numCohorts, 0.002757);
-  // NumericVector WUE_vpd(numCohorts, -0.4636);
-  // NumericVector Tmax_LAI(numCohorts, 0.134);
-  // NumericVector Tmax_LAIsq(numCohorts, -0.006);
-  // if(paramsTransp.containsElementNamed("Tmax_LAI")) {
-  //   Tmax_LAI = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAI"]);
-  //   Tmax_LAIsq = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAIsq"]);
-  // }
-  // if(paramsTransp.containsElementNamed("WUE_par")) {
-  //   WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
-  // }
-  // if(paramsTransp.containsElementNamed("WUE_decay")) { //For compatibility with previous versions (2.7.5)
-  //   WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
-  // }
-  // if(paramsTransp.containsElementNamed("WUE_co2")) {
-  //   WUE_co2 = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_co2"]);
-  // }
-  // if(paramsTransp.containsElementNamed("WUE_vpd")) {
-  //   WUE_vpd = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_vpd"]);
-  // }
+  // Canopy
+  CanopyParams& canopyParams = x.canopy;
+  int ncanlayers = canopyParams.zlow.size();
+
+  //Vegetation input
+  std::vector<double>& LAIlive = x.above.LAI_live;
+  std::vector<double>& LAIphe = x.above.LAI_expanded;
+  std::vector<double>& LAIdead = x.above.LAI_dead;
+  std::vector<double>& H = x.above.H;
+  std::vector<double>& CR = x.above.CR;
+  int numCohorts = LAIphe.size();
+
+  //Root distribution input
+  arma::mat& V = x.belowLayers.V;
+  
+  //Water pools
+  arma::mat& Wpool = x.belowLayers.Wpool;
+  std::vector<arma::mat>& RHOP = x.belowLayers.RHOP;
+  std::vector<double>& poolProportions = x.below.poolProportions;
+  
+  //Phenology parameters
+  std::vector<std::string>& phenoType = x.paramsPhenology.phenoType;
+
+  //Parameters
+  std::vector<double>& Al2As = x.paramsAnatomy.Al2As;
+  std::vector<double>& r635 = x.paramsAnatomy.r635;
+  std::vector<double>& kPAR = x.paramsInterception.kPAR;
+  std::vector<double>& kSWR = x.paramsInterception.kSWR;
+  std::vector<double>& Gswmin = x.paramsTranspiration.Gswmin;
+  std::vector<double>& Psi_Extract = x.paramsTranspiration.Psi_Extract;
+  std::vector<double>& Exp_Extract = x.paramsTranspiration.Exp_Extract;
+  std::vector<double>& VCstem_c = x.paramsTranspiration.VCstem_c;
+  std::vector<double>& VCstem_d = x.paramsTranspiration.VCstem_d;
+  std::vector<double>& VCleaf_c = x.paramsTranspiration.VCleaf_c;
+  std::vector<double>& VCleaf_d = x.paramsTranspiration.VCleaf_d;
+  std::vector<double>& WUE = x.paramsTranspiration.WUE;
+  std::vector<double>& WUE_par = x.paramsTranspiration.WUE_par;
+  std::vector<double>& WUE_co2 = x.paramsTranspiration.WUE_co2;
+  std::vector<double>& WUE_vpd = x.paramsTranspiration.WUE_vpd;
+  std::vector<double>& Tmax_LAI = x.paramsTranspiration.Tmax_LAI;
+  std::vector<double>& Tmax_LAIsq = x.paramsTranspiration.Tmax_LAIsq;
+  
   // //Water storage parameters
   // DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   // NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
@@ -519,3 +489,63 @@ void transpirationBasic_c(BasicTranspirationOutput& transpOutput, ModelInput& x,
 
 }
 
+
+Rcpp::List copyBasicTranspirationOutput_c(const BasicTranspiration_RESULT& btc, ModelInput& x) {
+  const std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
+  bool plantWaterPools = (rhizosphereOverlap!="total");
+  int nlayers = x.soil.getNlayers();
+  int numCohorts = x.cohorts.CohortCode.size();
+  
+  const arma::mat& extractionComm = btc.extraction;
+  Rcpp::NumericMatrix Extraction = copyNumericMatrix_c(extractionComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
+  Extraction.attr("dimnames") = Rcpp::List::create(x.cohorts.CohortCode, Rcpp::seq(1,nlayers));
+  
+  Rcpp::List ExtractionPools(numCohorts);
+  const std::vector< arma::mat>& ExtractionPoolsComm = btc.extractionPools;
+  if(plantWaterPools) {
+    for(int c=0;c<numCohorts;c++) {
+      const arma::mat& extractionPoolsCohComm = ExtractionPoolsComm[c];
+      Rcpp::NumericMatrix ExtractionPoolsCohComm_c = copyNumericMatrix_c(extractionPoolsCohComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
+      ExtractionPoolsCohComm_c.attr("dimnames") = Rcpp::List::create(x.cohorts.CohortCode, Rcpp::seq(1,nlayers));
+      ExtractionPools[c] = ExtractionPoolsCohComm_c;
+    }
+    ExtractionPools.attr("names") = x.cohorts.CohortCode;
+  }
+  
+  NumericVector standVEC = Rcpp::NumericVector::create(_["LAI"] = btc.stand.LAI,
+                                                 _["LAIlive"] = btc.stand.LAIlive, 
+                                                 _["LAIexpanded"] = btc.stand.LAIexpanded, 
+                                                 _["LAIdead"] = btc.stand.LAIdead);
+  
+  DataFrame cohortsDF = DataFrame::create(
+    _["SP"] = Rcpp::wrap(x.cohorts.SpeciesIndex),
+    _["Name"]= Rcpp::wrap(x.cohorts.SpeciesName)
+  );
+  cohortsDF.attr("row.names") = x.cohorts.CohortCode;
+  
+  DataFrame plantsDF = DataFrame::create(
+    _["LAI"] = Rcpp::wrap(btc.plants.LAI),
+    _["LAIlive"] = Rcpp::wrap(btc.plants.LAIlive),
+    _["FPAR"] = Rcpp::wrap(btc.plants.FPAR),
+    _["AbsorbedSWRFraction"] = Rcpp::wrap(btc.plants.AbsorbedSWRFraction),
+    _["Extraction"] = Rcpp::wrap(btc.plants.Extraction),
+    _["Transpiration"] = Rcpp::wrap(btc.plants.Transpiration),
+    _["GrossPhotosynthesis"] = Rcpp::wrap(btc.plants.GrossPhotosynthesis),
+    _["PlantPsi"] = Rcpp::wrap(btc.plants.PlantPsi),
+    _["DDS"] = Rcpp::wrap(btc.plants.DDS),
+    _["StemRWC"] = Rcpp::wrap(btc.plants.StemRWC),
+    _["LeafRWC"] = Rcpp::wrap(btc.plants.LeafRWC),
+    _["LFMC"] = Rcpp::wrap(btc.plants.LFMC),
+    _["StemPLC"] = Rcpp::wrap(btc.plants.StemPLC),
+    _["LeafPLC"] = Rcpp::wrap(btc.plants.LeafPLC),
+    _["WaterBalance"] = Rcpp::wrap(btc.plants.WaterBalance)
+  );
+  plantsDF.attr("row.names") = x.cohorts.CohortCode;
+  
+  List l = List::create(_["cohorts"] = cohortsDF,
+                        _["Stand"] = standVEC,
+                        _["Plants"] = plantsDF,
+                        _["Extraction"] = Extraction,
+                        _["ExtractionPools"] = ExtractionPools);
+  return(l);
+}

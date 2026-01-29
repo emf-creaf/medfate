@@ -38,7 +38,45 @@ ModelInput::ModelInput(Rcpp::List x) {
   cohorts.SpeciesIndex = Rcpp::as< std::vector<int> >(cohortsDF["SP"]);
   cohorts.SpeciesName = Rcpp::as< std::vector<std::string> >(cohortsDF["Name"]);
   cohorts.CohortCode = Rcpp::as< std::vector<std::string> >(cohortsDF.attr("row.names"));
+
+  //Above
+  Rcpp::DataFrame aboveDF = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  above.H = Rcpp::as< std::vector<double> >(aboveDF["H"]);
+  above.CR = Rcpp::as< std::vector<double> >(aboveDF["CR"]);
+  above.LAI_live = Rcpp::as< std::vector<double> >(aboveDF["LAI_live"]);
+  above.LAI_expanded = Rcpp::as< std::vector<double> >(aboveDF["LAI_expanded"]);
+  above.LAI_live = Rcpp::as< std::vector<double> >(aboveDF["LAI_live"]);
+  if(aboveDF.containsElementNamed("LAI_nocomp")) above.LAI_nocomp = Rcpp::as< std::vector<double> >(aboveDF["LAI_nocomp"]);
+  if(aboveDF.containsElementNamed("N")) above.N = Rcpp::as< std::vector<double> >(aboveDF["N"]);
+  if(aboveDF.containsElementNamed("DBH")) above.DBH = Rcpp::as< std::vector<double> >(aboveDF["DBH"]);
+  if(aboveDF.containsElementNamed("SA")) above.SA = Rcpp::as< std::vector<double> >(aboveDF["SA"]);
+  if(aboveDF.containsElementNamed("Loading")) above.Loading = Rcpp::as< std::vector<double> >(aboveDF["Loading"]);
+  if(aboveDF.containsElementNamed("Age")) above.Age = Rcpp::as< std::vector<double> >(aboveDF["Age"]);
+  if(aboveDF.containsElementNamed("ObsID")) above.ObsID = Rcpp::as< std::vector<std::string> >(aboveDF["ObsID"]);
   
+  //Below
+  Rcpp::DataFrame belowDF = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  below.Z50 = Rcpp::as< std::vector<double> >(belowDF["Z50"]);
+  below.Z95 = Rcpp::as< std::vector<double> >(belowDF["Z95"]);
+  if(belowDF.containsElementNamed("Z100")) below.Z100 = Rcpp::as< std::vector<double> >(belowDF["Z100"]);
+  if(belowDF.containsElementNamed("fineRootBiomass")) below.fineRootBiomass = Rcpp::as< std::vector<double> >(belowDF["fineRootBiomass"]);
+  if(belowDF.containsElementNamed("coarseRootSoilVolume")) below.coarseRootSoilVolume = Rcpp::as< std::vector<double> >(belowDF["coarseRootSoilVolume"]);
+  if(belowDF.containsElementNamed("poolProportions")) below.poolProportions = Rcpp::as< std::vector<double> >(belowDF["poolProportions"]);
+  
+  //BelowLayers
+  Rcpp::List belowLayersList = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  belowLayers.V = Rcpp::as<arma::mat>(belowLayersList["V"]);
+  belowLayers.L = Rcpp::as<arma::mat>(belowLayersList["L"]);
+  if(belowLayersList.containsElementNamed("Wpool")) belowLayers.Wpool = Rcpp::as<arma::mat>(belowLayersList["Wpool"]);
+  if(belowLayersList.containsElementNamed("VGrhizo_kmax")) belowLayers.VGrhizo_kmax = Rcpp::as<arma::mat>(belowLayersList["VGrhizo_kmax"]);
+  if(belowLayersList.containsElementNamed("RhizoPsi")) belowLayers.RhizoPsi = Rcpp::as<arma::mat>(belowLayersList["RhizoPsi"]);
+  if(belowLayersList.containsElementNamed("RHOP")) {
+    Rcpp::List RHOPList = belowLayersList["RHOP"];
+    belowLayers.RHOP = std::vector<arma::mat>(RHOPList.size());
+    for(int c = 0; c < RHOPList.size(); c++) {
+      belowLayers.RHOP[c] = Rcpp::as<arma::mat>(RHOPList[c]);
+    }
+  }
   //Phenology parameters
   Rcpp::DataFrame phenoDF = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   paramsPhenology.phenoType = Rcpp::as< std::vector<std::string> >(phenoDF["PhenologyType"]);

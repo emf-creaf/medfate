@@ -760,13 +760,16 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   
   //Create comunication structures
-  BasicTranspirationOutput transpOutput_c = BasicTranspirationOutput(numCohorts, nlayers);
+  BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
+  
+  BasicTranspiration_COMM BTcomm;
   
   //Perform simulation
-  transpirationBasic_c(transpOutput_c, x_c, meteovec, elevation);
+  transpirationBasic_c(BTres, BTcomm, x_c, 
+                       meteovec, elevation);
 
   //Copy output to Rcpp structures
-  List transpBasic = copyBasicTranspirationOutput_c(transpOutput_c, x_c);
+  List transpBasic = copyBasicTranspirationOutput_c(BTres, x_c);
     
   if(modifyInput) {
     // TO DO: Modify all state variables of input object from structure

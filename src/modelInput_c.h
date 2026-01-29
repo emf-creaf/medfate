@@ -45,6 +45,7 @@ struct Below {
   std::vector<double> Z100;
   std::vector<double> fineRootBiomass;
   std::vector<double> coarseRootSoilVolume;
+  std::vector<double> poolProportions;
 };
 
 struct BelowLayers {
@@ -54,6 +55,7 @@ struct BelowLayers {
   arma::mat VCroot_kmax;
   arma::mat Wpool;
   arma::mat RhizoPsi;
+  std::vector<arma::mat> RHOP;
 };
 
 struct CanopyParams {
