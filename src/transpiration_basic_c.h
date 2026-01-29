@@ -80,11 +80,13 @@ struct BasicTranspiration_COMM {
   std::vector<double> CohASWRF;
   std::vector<double> Tmax;
   std::vector<double> TmaxCoh;
-  BasicTranspiration_COMM(size_t numCohorts = 0, size_t ncanlayers = 0) : 
+  arma::mat RHOPCohDyn;
+  BasicTranspiration_COMM(size_t numCohorts = 0, size_t ncanlayers = 0, size_t nlayers= 0) : 
     AbSWRcomm(numCohorts, ncanlayers), 
     CohASWRF(numCohorts),
     Tmax(numCohorts),
-    TmaxCoh(numCohorts){}
+    TmaxCoh(numCohorts), 
+    RHOPCohDyn(numCohorts, nlayers){}
 };
 
 

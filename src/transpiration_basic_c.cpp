@@ -58,7 +58,6 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::string& stemCavitationRecovery = x.control.commonWB.stemCavitationRecovery;
   std::string& leafCavitationRecovery = x.control.commonWB.leafCavitationRecovery;
   double cavitationRecoveryMaximumRate = x.control.commonWB.cavitationRecoveryMaximumRate;
-  std::string& soilFunctions = x.control.commonWB.soilFunctions;
   double verticalLayerSize = x.control.commonWB.verticalLayerSize;
   double fullRhizosphereOverlapConductivity = x.control.commonWB.fullRhizosphereOverlapConductivity;
   bool plantWaterPools = (rhizosphereOverlap!="total");
@@ -103,8 +102,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   //Water pools
   arma::mat& Wpool = x.belowLayers.Wpool;
   std::vector<arma::mat>& RHOP = x.belowLayers.RHOP;
-  std::vector<double>& poolProportions = x.below.poolProportions;
-  
+
   //Phenology parameters
   const std::vector<std::string>& phenoType = x.paramsPhenology.phenoType;
 
@@ -158,6 +156,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>& CohASWRF = BT_comm.CohASWRF;
   std::vector<double>& Tmax = BT_comm.Tmax;
   std::vector<double>& TmaxCoh = BT_comm.TmaxCoh;
+  arma::mat& RHOPCohDyn = BT_comm.RHOPCohDyn;
   for(int c=0;c<numCohorts;c++) {
     CohASWRF[c] = 0.0;
     Tmax[c] = 0.0;
@@ -233,28 +232,34 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     }
   }
 
+  arma::mat WaterM;
+  arma::mat KunsatM;
+  arma::mat psiSoilM;
+  if(plantWaterPools) {
+    // Initialize psiSoilM, KunsatM, WaterM
+    WaterM = arma::mat(numCohorts, nlayers);
+    KunsatM = arma::mat(numCohorts, nlayers);
+    psiSoilM = arma::mat(numCohorts, nlayers);
+    //Store overall soil moisture in a backup copy
+    double* Wbackup = new double[nlayers];
+    for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
+    //   DataFrame soil_pool = clone(soil);
+    //   NumericVector Ws_pool = soil_pool["W"];
+    for(int j = 0; j<numCohorts;j++) {
+      //Copy values of soil moisture from pool of cohort j to general soil
+      for(int l = 0; l<nlayers;l++) {
+        soil.setW(l,Wpool(j,l)); // this updates psi, theta, ... 
+        psiSoilM(j,l) = soil.getPsi(l);
+        KunsatM(j,l) = soil.getConductivity(l, true);
+        WaterM(j,l) = soil.getWater(l);
+      }
+    }
+    //Restore soil moisture
+    for(int l = 0; l<nlayers;l++) soil.setW(l, Wbackup[l]);
+    //Delete backup
+    delete[] Wbackup;
+  }
 
-
-  //Actual plant transpiration
-  // NumericMatrix WaterM(numCohorts, nlayers);
-  // NumericMatrix KunsatM(numCohorts, nlayers);
-  // NumericMatrix psiSoilM(numCohorts, nlayers);
-  // if(plantWaterPools) {
-  //   DataFrame soil_pool = clone(soil);
-  //   NumericVector Ws_pool = soil_pool["W"];
-  //   for(int j = 0; j<numCohorts;j++) {
-  //     //Copy values of soil moisture from pool of cohort j
-  //     for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
-  //     //Calculate unsaturated conductivity (mmolH20·m-1·s-1·MPa-1)
-  //     KunsatM(j,_) = conductivity(soil_pool, soilFunctions, true);
-  //     //Calculate soil water potential
-  //     psiSoilM(j,_) = psi(soil_pool, soilFunctions);
-  //     // Rcout<< Ws_pool[3]<< " "<< psiSoilM(j,3)<<"\n";
-  //     //Calculate available water
-  //     WaterM(j,_) = water(soil_pool, soilFunctions);
-  //   }
-  // }
-  // for(int i= 0;i<psiSoil.size();i++) Rcout<< "S "<<i<<" "<<psiSoil[i]<<"\n";
 
   ParamsVolume parsVol;
   for(int c=0;c<numCohorts;c++) {
@@ -308,46 +313,46 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       delete[] Klc;
       delete[] Kunlc;
     } else {
-  //     NumericMatrix ExtractionPoolsCoh = outputExtractionPools[c]; //this is used to store extraction of a SINGLE plant cohort from all pools
-  //     
-  //     NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
-  //     NumericMatrix RHOPcohDyn(numCohorts, nlayers);
-  //     for(int l=0;l<nlayers;l++) {
-  //       RHOPcohDyn(c,l) = RHOPcoh(c,l);
-  //       for(int j=0; j<numCohorts;j++) {
-  //         if(j!=c) {
-  //           double overlapFactor = std::min(1.0, KunsatM(j,l)/(cmdTOmmolm2sMPa*fullRhizosphereOverlapConductivity));
-  //           RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
-  //           RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
-  //         } 
-  //       }
-  //     }
-  //     NumericMatrix Klc(numCohorts, nlayers);
-  //     NumericMatrix Kunlc(numCohorts, nlayers);
-  //     NumericMatrix RHOPcohV(numCohorts, nlayers);
-  //     for(int j = 0;j<numCohorts;j++) {
-  //       for(int l=0;l<nlayers;l++) {
-  //         RHOPcohV(j,l) = RHOPcohDyn(j,l)*V(c,l);
-  //         Klc(j,l) = Psi2K_c(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
-  //         //Limit Mean Kl due to previous cavitation
-  //         if(stemCavitationRecovery!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
-  //         Kunlc(j,l) = std::sqrt(KunsatM(j,l))*RHOPcohV(j,l);
-  //       }
-  //     }
-  //     double sumKunlc = sum(Kunlc);
-  //     double Klcmean = sum(Klc*RHOPcohV);
-  //     for(int l=0;l<nlayers;l++) {
-  //       for(int j = 0;j<numCohorts;j++) {
-  //         ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc(j,l)/sumKunlc);
-  //       }
-  //       outputExtraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
-  //     }
-  //     
-  //     rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
-  //     // Rcout<< c << " : "<< psiSoilM(c,0) << " " << psiSoilM(c,1) << " " << psiSoilM(c,2) << " " << psiSoilM(c,3) << " " << rootCrownPsi<<"\n";
-  //     // Rcout<< c << " : "<< RHOPcohV(c,0) << " " << RHOPcohV(c,1) << " " << RHOPcohV(c,2) << " " << RHOPcohV(c,3) << " " << rootCrownPsi<<"\n";
+      //Calculate dynamic overlap      
+      arma::mat& ExtractionPoolsCoh = outputExtractionPools[c]; //this is used to store extraction of a SINGLE plant cohort from all pools
+      arma::mat& RHOPcoh = RHOP[c];
+      for(int l=0;l<nlayers;l++) {
+        RHOPCohDyn(c,l) = RHOPcoh(c,l);
+        for(int j=0; j<numCohorts;j++) {
+          if(j!=c) {
+            double overlapFactor = std::min(1.0, KunsatM(j,l)/(cmdTOmmolm2sMPa*fullRhizosphereOverlapConductivity));
+            RHOPCohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
+            RHOPCohDyn(c,l) = RHOPCohDyn(c,l) + (RHOPcoh(j,l) - RHOPCohDyn(j,l));
+          }
+        }
+      }
+      arma::mat Klc(numCohorts, nlayers);
+      arma::mat Kunlc(numCohorts, nlayers);
+      arma::mat RHOPcohV(numCohorts, nlayers);
+      double Klcmean = 0.0;
+      double sumKunlc = 0.0;
+      for(int j = 0;j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          RHOPcohV(j,l) = RHOPCohDyn(j,l)*V(c,l);
+          Klc(j,l) = Psi2K_c(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
+          //Limit Mean Kl due to previous cavitation
+          if(stemCavitationRecovery!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]);
+          Klcmean += Klc(j,l)*RHOPcohV(j,l);
+          Kunlc(j,l) = std::sqrt(KunsatM(j,l))*RHOPcohV(j,l);
+          sumKunlc += Kunlc(j,l);
+        }
+      }
+      for(int l=0;l<nlayers;l++) {
+        outputExtraction(c,l) = 0.0;
+        for(int j = 0;j<numCohorts;j++) {
+          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc(j,l)/sumKunlc);
+          outputExtraction(c,l) += ExtractionPoolsCoh(j,l); // Sum extraction from all pools (layer l)
+        }
+      }
+      rootCrownPsi = averagePsiPool_c(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
+      // Rcout<< c << " : "<< psiSoilM(c,0) << " " << psiSoilM(c,1) << " " << psiSoilM(c,2) << " " << psiSoilM(c,3) << " " << rootCrownPsi<<"\n";
+      // Rcout<< c << " : "<< RHOPcohV(c,0) << " " << RHOPcohV(c,1) << " " << RHOPcohV(c,2) << " " << RHOPcohV(c,3) << " " << rootCrownPsi<<"\n";
     }
-
 
     double oldVol = plantVol_c(PlantPsi[c], parsVol);
 
@@ -415,11 +420,11 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
   //Atempt to implement hydraulic redistribution
   if(hydraulicRedistributionFraction > 0.0) {
+    double* WDiff = new double[nlayers];
+    double* DonorDiff = new double[nlayers];
+    double* ReceiverDiff = new double[nlayers];
     if(!plantWaterPools) {
       double* W = new double[nlayers];
-      double* WDiff = new double[nlayers];
-      double* DonorDiff = new double[nlayers];
-      double* ReceiverDiff = new double[nlayers];
       double sumWater = 0.0;
       double sumWaterW = 0.0;
       double water_l = 0.0;
@@ -442,45 +447,58 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       if(sumDonor>0.0) {
         for(int c=0;c<numCohorts;c++) {
           double redAmount = Eplant[c]*hydraulicRedistributionFraction;
+          double hrd = 0.0;
           for(int l=0;l<nlayers;l++) {
             if(WDiff[l]>0.0) {
-              outputExtraction(c,l) += redAmount*DonorDiff[l]/sumDonor;
+              hrd += redAmount*DonorDiff[l]/sumDonor;
             } else{
-              outputExtraction(c,l) += -redAmount*ReceiverDiff[l]/sumReceiver;
+              hrd += -redAmount*ReceiverDiff[l]/sumReceiver;
             }
+            outputExtraction(c,l) += hrd;
           }
         }
       }
       delete[] W;
-      delete[] WDiff;
-      delete[] DonorDiff;
-      delete[] ReceiverDiff;
     } else {
-  //     for(int c=0;c<numCohorts;c++) {
-  //       NumericMatrix ExtractionPoolsCoh = outputExtractionPools[c];
-  //       for(int j=0;j<numCohorts;j++) {
-  //         double redAmount = sum(ExtractionPoolsCoh(j,_))*hydraulicRedistributionFraction;
-  //         NumericVector Ws = Wpool(j,_);
-  //         NumericVector SW = WaterM(j,_);
-  //         double soilRWC = sum(Ws*SW)/sum(SW);
-  //         NumericVector WDiff = Ws - soilRWC; 
-  //         NumericVector DonorDiff = pmax(0.0, WDiff);
-  //         NumericVector ReceiverDiff = pmax(0.0, -WDiff);
-  //         NumericVector HD(nlayers,0.0);
-  //         if(sum(DonorDiff)>0.0) {
-  //           for(int l=0;l<nlayers;l++) {
-  //             if(WDiff[l]>0.0) {
-  //               HD[l] = redAmount*DonorDiff[l]/sum(DonorDiff);
-  //             } else{
-  //               HD[l] = -redAmount*ReceiverDiff[l]/sum(ReceiverDiff);
-  //             }
-  //             outputExtraction(c,l) += HD[l];
-  //             ExtractionPoolsCoh(j,l) += HD[l];
-  //           }
-  //         }
-  //       }
-  //     }
+      for(int c=0;c<numCohorts;c++) {
+        arma::mat& ExtractionPoolsCoh = outputExtractionPools[c]; //this is used to store extraction of a SINGLE plant cohort from all pools
+        for(int j=0;j<numCohorts;j++) {
+          double sumWater = 0.0;
+          double sumWaterW = 0.0;
+          for(int l=0;l<nlayers;l++) {
+            sumWater += WaterM(j,l);
+            sumWaterW += WaterM(j,l)*Wpool(j,l);
+          }
+          double soilWaverage = sumWaterW/sumWater;
+          double sumDonor = 0.0;
+          double sumReceiver = 0.0;
+          for(int l=0;l<nlayers;l++) {
+            WDiff[l] = Wpool(j,l) - soilWaverage;
+            DonorDiff[l] = std::max(0.0, WDiff[l]);
+            ReceiverDiff[l] = std::max(0.0, -WDiff[l]);
+            sumDonor += DonorDiff[l];
+            sumReceiver += ReceiverDiff[l];
+          }
+          double redAmount = 0.0;
+          for(int l=0;l<nlayers;l++) redAmount += ExtractionPoolsCoh(j,l)*hydraulicRedistributionFraction;
+          if(sumDonor>0.0) {
+            double hd = 0.0;
+            for(int l=0;l<nlayers;l++) {
+              if(WDiff[l]>0.0) {
+                hd = redAmount*DonorDiff[l]/sumDonor;
+              } else{
+                hd = -redAmount*ReceiverDiff[l]/sumReceiver;
+              }
+              outputExtraction(c,l) += hd;
+              ExtractionPoolsCoh(j,l) += hd;
+            }
+          }
+        }
+      }
     }
+    delete[] WDiff;
+    delete[] DonorDiff;
+    delete[] ReceiverDiff;
   }
 
 

@@ -180,3 +180,18 @@ double averagePsi_c(const std::vector<double>& psi, const std::vector<double>& v
   psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
   return(psires);
 }
+
+double averagePsiPool_c(const arma::mat& Psi, const arma::mat& RHOPcohV, double exp_extract, double psi_extract) {
+  int nlayers = Psi.n_cols;
+  int numCohorts = Psi.n_rows;
+  double K = 0.0, sumKv = 0.0;
+  for(int j =0;j<numCohorts;j++) {
+    for(int l=0;l<nlayers;l++) {
+      K = exp(-0.6931472*pow(std::abs(Psi(j,l)/psi_extract),exp_extract)); 
+      sumKv += RHOPcohV(j,l);
+    } 
+  }
+  double psires =  psi_extract*pow(log(sumKv)/(-0.6931472),1.0/exp_extract);
+  psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
+  return(psires);
+}

@@ -21,5 +21,5 @@ double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, doubl
 double correctConductanceForViscosity_c(double kxylem, double temp);
 
 double averagePsi_c(const std::vector<double>& psi, const std::vector<double>& v, double exp_extract, double psi_extract);
-
+double averagePsiPool_c(const arma::mat& Psi, const arma::mat& RHOPcohV, double exp_extract, double psi_extract);
 #endif

@@ -94,10 +94,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   List RHOP;
-  NumericVector poolProportions(numCohorts);
   if(plantWaterPools) {
     RHOP = belowLayers["RHOP"];
-    poolProportions = belowdf["poolProportions"];
   }
   
   
@@ -763,7 +761,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   //Create comunication structures
   BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
   
-  BasicTranspiration_COMM BTcomm = BasicTranspiration_COMM(numCohorts, ncanlayers);
+  BasicTranspiration_COMM BTcomm = BasicTranspiration_COMM(numCohorts, ncanlayers, nlayers);
   
   //Perform simulation
   transpirationBasic_c(BTres, BTcomm, x_c, 
