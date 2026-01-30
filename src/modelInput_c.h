@@ -6,22 +6,13 @@
 #ifndef MODELINPUT_C_H
 #define MODELINPUT_C_H
 
-struct WeatherInputVector {
-  double pet;
-  double rhmax;
-  double rhmin;
-  double tmax;
-  double tmin;
-  double tday;
-  double Catm;
-  double Patm;
-};
 
 struct Cohorts {
   std::vector<int> SpeciesIndex;
   std::vector<std::string> SpeciesName;
   std::vector<std::string> CohortCode;
 };
+Rcpp::DataFrame copyCohorts(const Cohorts& cohorts);
 
 struct Above {
   std::vector<double> N;

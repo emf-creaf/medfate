@@ -45,12 +45,15 @@ struct PlantsBasicTranspiration_RESULT {
     WaterBalance = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
   }
 };
+Rcpp::DataFrame copyPlantBasicTranspirationResult_c(const PlantsBasicTranspiration_RESULT& plants, ModelInput& x);
+
 struct StandBasicTranspiration_RESULT {
   double LAI;
   double LAIlive;
   double LAIexpanded;
   double LAIdead;
 };
+
 struct BasicTranspiration_RESULT {
   // Stand-level (4 fields)
   StandBasicTranspiration_RESULT stand;
@@ -71,6 +74,7 @@ struct BasicTranspiration_RESULT {
     }
   }
 };
+Rcpp::List copyBasicTranspirationResult_c(const BasicTranspiration_RESULT& BTres, ModelInput& x);
 
 // ----------------------------------------------------------------------------
 // Basic Transpiration Communication Structure
@@ -88,8 +92,6 @@ struct BasicTranspiration_COMM {
     TmaxCoh(numCohorts), 
     RHOPCohDyn(numCohorts, nlayers){}
 };
-
-
 
 struct ParamsVolume{
   double leafpi0;
@@ -113,6 +115,5 @@ double findNewPlantPsiConnected_c(double flowFromRoots, double plantPsi, double 
 void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_COMM& BT_comm, ModelInput& x, 
                           const WeatherInputVector& meteovec,  const double elevation);
 
-Rcpp::List copyBasicTranspirationOutput_c(const BasicTranspiration_RESULT& BTres, ModelInput& x);
 
 #endif

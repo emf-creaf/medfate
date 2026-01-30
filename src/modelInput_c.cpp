@@ -2,6 +2,7 @@
 #include "control_c.h"
 #include <RcppArmadillo.h>
 
+
 /**
  * Implementation of ModelInput class
  *
@@ -316,6 +317,16 @@ ModelInput::ModelInput(Rcpp::List x) {
   }
   
   if(x.containsElementNamed("version")) version = Rcpp::as<std::string>(x["version"]);
+}
+
+// Creates a data frame with cohort information
+Rcpp::DataFrame copyCohorts(const Cohorts& cohorts) {
+  Rcpp::DataFrame cohortsDF = Rcpp::DataFrame::create(
+    Rcpp::Named("SP") = Rcpp::wrap(cohorts.SpeciesIndex),
+    Rcpp::Named("Name") = Rcpp::wrap(cohorts.SpeciesName)
+  );
+  cohortsDF.attr("row.names") = cohorts.CohortCode;
+  return(cohortsDF);
 }
 
 // Assumes that x was the original list from which the struct was generated

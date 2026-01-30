@@ -768,7 +768,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
                        meteovec, elevation);
 
   //Copy output to Rcpp structures
-  List transpBasic = copyBasicTranspirationOutput_c(BTres, x_c);
+  List transpBasic = copyBasicTranspirationResult_c(BTres, x_c);
     
   if(modifyInput) {
     // Modify all state variables of input object from structure

@@ -520,8 +520,29 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   }
 }
 
+Rcpp::DataFrame copyPlantBasicTranspirationResult_c(const PlantsBasicTranspiration_RESULT& plants, ModelInput& x){
+  DataFrame plantsDF = DataFrame::create(
+    _["LAI"] = Rcpp::wrap(plants.LAI),
+    _["LAIlive"] = Rcpp::wrap(plants.LAIlive),
+    _["FPAR"] = Rcpp::wrap(plants.FPAR),
+    _["AbsorbedSWRFraction"] = Rcpp::wrap(plants.AbsorbedSWRFraction),
+    _["Extraction"] = Rcpp::wrap(plants.Extraction),
+    _["Transpiration"] = Rcpp::wrap(plants.Transpiration),
+    _["GrossPhotosynthesis"] = Rcpp::wrap(plants.GrossPhotosynthesis),
+    _["PlantPsi"] = Rcpp::wrap(plants.PlantPsi),
+    _["DDS"] = Rcpp::wrap(plants.DDS),
+    _["StemRWC"] = Rcpp::wrap(plants.StemRWC),
+    _["LeafRWC"] = Rcpp::wrap(plants.LeafRWC),
+    _["LFMC"] = Rcpp::wrap(plants.LFMC),
+    _["StemPLC"] = Rcpp::wrap(plants.StemPLC),
+    _["LeafPLC"] = Rcpp::wrap(plants.LeafPLC),
+    _["WaterBalance"] = Rcpp::wrap(plants.WaterBalance)
+  );
+  plantsDF.attr("row.names") = x.cohorts.CohortCode;
+  return(plantsDF);
+}
 
-Rcpp::List copyBasicTranspirationOutput_c(const BasicTranspiration_RESULT& btc, ModelInput& x) {
+Rcpp::List copyBasicTranspirationResult_c(const BasicTranspiration_RESULT& btc, ModelInput& x) {
   const std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
   bool plantWaterPools = (rhizosphereOverlap!="total");
   int nlayers = x.soil.getNlayers();
@@ -544,38 +565,13 @@ Rcpp::List copyBasicTranspirationOutput_c(const BasicTranspiration_RESULT& btc, 
   }
   
   NumericVector standVEC = Rcpp::NumericVector::create(_["LAI"] = btc.stand.LAI,
-                                                 _["LAIlive"] = btc.stand.LAIlive, 
-                                                 _["LAIexpanded"] = btc.stand.LAIexpanded, 
-                                                 _["LAIdead"] = btc.stand.LAIdead);
+                                                       _["LAIlive"] = btc.stand.LAIlive, 
+                                                       _["LAIexpanded"] = btc.stand.LAIexpanded, 
+                                                       _["LAIdead"] = btc.stand.LAIdead);
   
-  DataFrame cohortsDF = DataFrame::create(
-    _["SP"] = Rcpp::wrap(x.cohorts.SpeciesIndex),
-    _["Name"]= Rcpp::wrap(x.cohorts.SpeciesName)
-  );
-  cohortsDF.attr("row.names") = x.cohorts.CohortCode;
-  
-  DataFrame plantsDF = DataFrame::create(
-    _["LAI"] = Rcpp::wrap(btc.plants.LAI),
-    _["LAIlive"] = Rcpp::wrap(btc.plants.LAIlive),
-    _["FPAR"] = Rcpp::wrap(btc.plants.FPAR),
-    _["AbsorbedSWRFraction"] = Rcpp::wrap(btc.plants.AbsorbedSWRFraction),
-    _["Extraction"] = Rcpp::wrap(btc.plants.Extraction),
-    _["Transpiration"] = Rcpp::wrap(btc.plants.Transpiration),
-    _["GrossPhotosynthesis"] = Rcpp::wrap(btc.plants.GrossPhotosynthesis),
-    _["PlantPsi"] = Rcpp::wrap(btc.plants.PlantPsi),
-    _["DDS"] = Rcpp::wrap(btc.plants.DDS),
-    _["StemRWC"] = Rcpp::wrap(btc.plants.StemRWC),
-    _["LeafRWC"] = Rcpp::wrap(btc.plants.LeafRWC),
-    _["LFMC"] = Rcpp::wrap(btc.plants.LFMC),
-    _["StemPLC"] = Rcpp::wrap(btc.plants.StemPLC),
-    _["LeafPLC"] = Rcpp::wrap(btc.plants.LeafPLC),
-    _["WaterBalance"] = Rcpp::wrap(btc.plants.WaterBalance)
-  );
-  plantsDF.attr("row.names") = x.cohorts.CohortCode;
-  
-  List l = List::create(_["cohorts"] = cohortsDF,
+  List l = List::create(_["cohorts"] = copyCohorts(x.cohorts),
                         _["Stand"] = standVEC,
-                        _["Plants"] = plantsDF,
+                        _["Plants"] = copyPlantBasicTranspirationResult_c(btc.plants, x),
                         _["Extraction"] = Extraction,
                         _["ExtractionPools"] = ExtractionPools);
   return(l);
