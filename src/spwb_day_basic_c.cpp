@@ -5,6 +5,7 @@
 #include "communication_structures_c.h"
 #include "lightextinction_basic_c.h"
 #include "windextinction_c.h"
+#include "firebehaviour_c.h"
 #include "hydraulics_c.h"
 #include "hydrology_c.h"
 #include "forestutils_c.h"
@@ -337,7 +338,8 @@ Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x
                                     _["Soil"] = copySoilResult_c(BSPWBres.Soil),
                                     _["Stand"] = copyStandResult_c(BSPWBres.Stand),
                                     _["Plants"] = copyPlantBasicTranspirationResult_c(BSPWBres.Plants, x));
-  
-  // l.push_back(communicationFireHazard(), "FireHazard");
+  if(x.control.results.fireHazardResults) {
+    l.push_back(copyFCCSResult_c(BSPWBres.fccs), "FireHazard");
+  }
   l.attr("class") = CharacterVector::create("spwb_day","list");
 }

@@ -11,6 +11,7 @@
 #include "forestutils_c.h"
 #include "fireseverity_c.h"
 #include "firebehaviour.h"
+#include "firebehaviour_c.h"
 #include "hydraulics.h"
 #include "hydrology.h"
 #include "lightextinction_basic.h"
@@ -1443,7 +1444,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           //Determine crown fire or torching effects
           if(!NumericVector::is_na(Ib_surf)) {
             double canopyFMC = (LFMC[j]*(1.0 - StemPLC[j]) + fm_dead*StemPLC[j]);
-            double Ib_crit = criticalFirelineIntensity(cbh/100.0, canopyFMC);
+            double Ib_crit = criticalFirelineIntensity_c(cbh/100.0, canopyFMC);
             // Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
             if((Ic_ratio > 1.0) || (Ib_surf > Ib_crit)) {
               burnRatioLeaves = 1.0;

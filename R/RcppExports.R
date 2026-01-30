@@ -530,10 +530,6 @@ decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition,
     .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
-.criticalFirelineIntensity <- function(CBH, M) {
-    .Call(`_medfate_criticalFirelineIntensity`, CBH, M)
-}
-
 #' Fire behaviour functions
 #' 
 #' Function \code{fire_FCCS()} implements a modification of the fire behavior models 
@@ -638,6 +634,10 @@ fire_FCCS <- function(FCCSpropsSI, MliveSI = as.numeric( c(90, 90, 60)), MdeadSI
 #' 
 fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect) {
     .Call(`_medfate_rothermel`, modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect)
+}
+
+.criticalFirelineIntensity <- function(CBH, M) {
+    .Call(`_medfate_criticalFirelineIntensity_c`, CBH, M)
 }
 
 #' Fire severity functions

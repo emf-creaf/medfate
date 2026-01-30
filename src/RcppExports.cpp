@@ -889,18 +889,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// criticalFirelineIntensity
-double criticalFirelineIntensity(double CBH, double M);
-RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type CBH(CBHSEXP);
-    Rcpp::traits::input_parameter< double >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(criticalFirelineIntensity(CBH, M));
-    return rcpp_result_gen;
-END_RCPP
-}
 // FCCSbehaviour
 List FCCSbehaviour(DataFrame FCCSpropsSI, NumericVector MliveSI, NumericVector MdeadSI, double slope, double windSpeedSI);
 RcppExport SEXP _medfate_FCCSbehaviour(SEXP FCCSpropsSISEXP, SEXP MliveSISEXP, SEXP MdeadSISEXP, SEXP slopeSEXP, SEXP windSpeedSISEXP) {
@@ -934,6 +922,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     rcpp_result_gen = Rcpp::wrap(rothermel(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect));
+    return rcpp_result_gen;
+END_RCPP
+}
+// criticalFirelineIntensity_c
+double criticalFirelineIntensity_c(double CBH, double M);
+RcppExport SEXP _medfate_criticalFirelineIntensity_c(SEXP CBHSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type CBH(CBHSEXP);
+    Rcpp::traits::input_parameter< double >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(criticalFirelineIntensity_c(CBH, M));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6274,9 +6274,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 5},
     {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},
     {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 16},
-    {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
+    {"_medfate_criticalFirelineIntensity_c", (DL_FUNC) &_medfate_criticalFirelineIntensity_c, 2},
     {"_medfate_plumeTemperature_c", (DL_FUNC) &_medfate_plumeTemperature_c, 4},
     {"_medfate_barkThermalDiffusivity_c", (DL_FUNC) &_medfate_barkThermalDiffusivity_c, 3},
     {"_medfate_radialBoleNecrosis_c", (DL_FUNC) &_medfate_radialBoleNecrosis_c, 5},
