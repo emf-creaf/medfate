@@ -342,4 +342,5 @@ Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x
     l.push_back(copyFCCSResult_c(BSPWBres.fccs), "FireHazard");
   }
   l.attr("class") = CharacterVector::create("spwb_day","list");
+  return(l);
 }
