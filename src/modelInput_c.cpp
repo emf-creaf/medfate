@@ -320,12 +320,12 @@ ModelInput::ModelInput(Rcpp::List x) {
 }
 
 // Creates a data frame with cohort information
-Rcpp::DataFrame copyCohorts(const Cohorts& cohorts) {
+Rcpp::DataFrame copyCohorts_c(const Cohorts& cohorts) {
   Rcpp::DataFrame cohortsDF = Rcpp::DataFrame::create(
     Rcpp::Named("SP") = Rcpp::wrap(cohorts.SpeciesIndex),
     Rcpp::Named("Name") = Rcpp::wrap(cohorts.SpeciesName)
   );
-  cohortsDF.attr("row.names") = cohorts.CohortCode;
+  cohortsDF.attr("row.names") = Rcpp::wrap(cohorts.CohortCode);
   return(cohortsDF);
 }
 

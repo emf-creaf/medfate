@@ -332,12 +332,19 @@ void spwbDay_basic_c(List internalCommunication, List x, NumericVector meteovec,
 }
 
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x) {
-  Rcpp::List l = Rcpp::List::create(_["topography"] = copyTopo_c(BSPWBres.topo),
+  Rcpp::List l = Rcpp::List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
+                                    _["topography"] = copyTopo_c(BSPWBres.topo),
                                     _["weather"] = copyWeather_c(BSPWBres.meteovec),
-                                    _["WaterBalance"] = copyWaterBalanceResult_c(BSPWBres.WaterBalance), 
-                                    _["Soil"] = copySoilResult_c(BSPWBres.Soil),
-                                    _["Stand"] = copyStandResult_c(BSPWBres.Stand),
-                                    _["Plants"] = copyPlantBasicTranspirationResult_c(BSPWBres.Plants, x));
+                                    _["WaterBalance"] = copyWaterBalanceResult_c(BSPWBres.WaterBalance));
+  if(x.control.results.soilResults) {
+    l.push_back(copySoilResult_c(BSPWBres.Soil), "Soil");
+  }
+  if(x.control.results.standResults) {
+    l.push_back(copyStandResult_c(BSPWBres.Stand), "Stand");
+  }
+  if(x.control.results.plantResults) {
+    l.push_back(copyPlantBasicTranspirationResult_c(BSPWBres.Plants, x), "Plants");
+  }
   if(x.control.results.fireHazardResults) {
     l.push_back(copyFCCSResult_c(BSPWBres.fccs), "FireHazard");
   }

@@ -569,7 +569,7 @@ Rcpp::List copyBasicTranspirationResult_c(const BasicTranspiration_RESULT& btc, 
                                                        _["LAIexpanded"] = btc.stand.LAIexpanded, 
                                                        _["LAIdead"] = btc.stand.LAIdead);
   
-  List l = List::create(_["cohorts"] = copyCohorts(x.cohorts),
+  List l = List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                         _["Stand"] = standVEC,
                         _["Plants"] = copyPlantBasicTranspirationResult_c(btc.plants, x),
                         _["Extraction"] = Extraction,

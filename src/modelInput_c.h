@@ -12,7 +12,7 @@ struct Cohorts {
   std::vector<std::string> SpeciesName;
   std::vector<std::string> CohortCode;
 };
-Rcpp::DataFrame copyCohorts(const Cohorts& cohorts);
+Rcpp::DataFrame copyCohorts_c(const Cohorts& cohorts);
 
 struct Above {
   std::vector<double> N;
