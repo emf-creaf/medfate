@@ -19,6 +19,7 @@
 #include "fuelstructure.h"
 #include "firebehaviour.h"
 #include "tissuemoisture.h"
+#include "spwb_day_basic_c.h"
 #include "soil.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -1024,4 +1025,133 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
    return(modelOutput);
  }
 
+// [[Rcpp::export("spwb_day_test")]]
+List spwbDay_test(List x, CharacterVector date, NumericVector meteovec, 
+               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+               bool modifyInput = true) {
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
 
+  double tmin = meteovec["MinTemperature"];
+  double tmax = meteovec["MaxTemperature"];
+  double prec = meteovec["Precipitation"];
+  if(std::isnan(prec)) stop("Missing precipitation value");
+  if(std::isnan(tmin)) stop("Missing minimum temperature value");
+  if(std::isnan(tmax)) stop("Missing maximum temperature value");
+  if(tmin > tmax) {
+    warning("tmin > tmax. Swapping values.");
+    double swap = tmin;
+    tmin = tmax;
+    tmax = swap;
+  }
+  double rhmin = meteovec["MinRelativeHumidity"];
+  double rhmax = meteovec["MaxRelativeHumidity"];
+  if(std::isnan(rhmax)) {
+    warning("Maximum relative humidity assumed 100");
+    rhmax = 100.0;
+  }
+  if(std::isnan(rhmin)) {
+    warning("Minimum relative humidity estimated from temperature range");
+    double vp_tmin = meteoland::utils_saturationVP(tmin);
+    double vp_tmax = meteoland::utils_saturationVP(tmax);
+    rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+  }
+  if(rhmin > rhmax) {
+    warning("rhmin > rhmax. Swapping values.");
+    double swap = rhmin;
+    rhmin = rhmax;
+    rhmax = swap;
+  }
+  double rad = meteovec["Radiation"];
+  double wind = NA_REAL;
+  if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
+  double Catm = NA_REAL; 
+  if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
+  double Patm = NA_REAL; 
+  if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+  double Rint = NA_REAL; 
+  if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
+  
+  ModelInput x_c = ModelInput(x);  
+  
+  std::string c = as<std::string>(date[0]);
+  int month = std::atoi(c.substr(5,2).c_str());
+  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = meteoland::radiation_solarDeclination(J);
+  double solarConstant = meteoland::radiation_solarConstant(J);
+  double latrad = latitude * (M_PI/180.0);
+  if(std::isnan(aspect)) aspect = 0.0;
+  if(std::isnan(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
+  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  if(std::isnan(rad)) {
+    warning("Estimating solar radiation");
+    double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+    rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+                                              slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                                              vpa, prec);
+  }
+  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  
+  //Derive doy from date  
+  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int doy = J - J0101+1;
+  
+  if(std::isnan(wind)) wind = x_c.control.weather.defaultWindSpeed; 
+  if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+  
+  std::vector<double> defaultRainfallIntensityPerMonth = x_c.control.weather.defaultRainfallIntensityPerMonth;
+  if(std::isnan(Rint)) Rint = rainfallIntensity_c(month, prec, defaultRainfallIntensityPerMonth);
+  
+  bool leafPhenology = x_c.control.phenology.leafPhenology;
+  if(std::isnan(Catm)) Catm = x_c.control.weather.defaultCO2;
+  
+  int nlayers = x_c.soil.getNlayers();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  
+  //Instance communication structures
+  BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
+  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
+  BasicSPWB_COMM BSPWB_comm(numCohorts,ncanlayers,nlayers,x_c.control.soilDomains);
+
+  std::vector<double> lateralFlows_c(nlayers, 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
+  
+  WeatherInputVector meteovec_c;
+  meteovec_c.tmax = tmax;
+  meteovec_c.tmin = tmin;
+  meteovec_c.tday = tday; 
+  meteovec_c.rhmin = rhmin; 
+  meteovec_c.rhmax = rhmax;
+  meteovec_c.wind = wind;
+  meteovec_c.rad = rad;
+  meteovec_c.pet = pet;
+  meteovec_c.Catm = Catm;
+  meteovec_c.Patm = Patm;
+  meteovec_c.rint = Rint;
+  meteovec_c.prec = prec;
+  
+  spwbDay_basic_c(BSPWBres, BSPWB_comm, x_c, 
+                  meteovec_c, 
+                  elevation, slope, aspect,
+                  runon, 
+                  lateralFlows_c, waterTableDepth);
+  
+  List modelOutput = copyBasicSPWBResult_c(BSPWBres, x_c);
+  
+  if(modifyInput) {
+    x_c.copyStateToList(x);
+  }
+  return(modelOutput);
+}

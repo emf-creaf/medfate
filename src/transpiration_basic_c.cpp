@@ -243,8 +243,6 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     //Store overall soil moisture in a backup copy
     double* Wbackup = new double[nlayers];
     for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
-    //   DataFrame soil_pool = clone(soil);
-    //   NumericVector Ws_pool = soil_pool["W"];
     for(int j = 0; j<numCohorts;j++) {
       //Copy values of soil moisture from pool of cohort j to general soil
       for(int l = 0; l<nlayers;l++) {

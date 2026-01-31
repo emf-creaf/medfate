@@ -11,12 +11,13 @@
 #include "forestutils_c.h"
 #include "modelInput_c.h"
 #include "phenology.h"
-#include "transpiration.h"
+#include "transpiration_basic_c.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
 #include "spwb_day_basic_c.h"
 #include "tissuemoisture.h"
 #include "soil.h"
+#include "root_c.h"
 #include <meteoland.h>
 
 // Soil water balance with simple hydraulic model
@@ -27,9 +28,11 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
                      const std::vector<double>& lateralFlows, const double waterTableDepth) {
   
   //Retrieve communication structures
-  SoilWaterBalance_COMM& SWBcomm = BSPWB_comm.SWBcomm;
   BasicTranspiration_COMM& BTcomm = BSPWB_comm.BTcomm;
-   
+  BasicTranspiration_RESULT& BTres = BSPWBres.BTres;
+  SoilWaterBalance_COMM& SWBcomm = BSPWB_comm.SWBcomm;
+  SoilWaterBalance_RESULT& SWBres = BSPWBres.SWBres;
+  
    
    //Meteo input
    double pet = meteovec.pet;
@@ -50,6 +53,21 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
    BSPWBres.topo.slope = slope;
    BSPWBres.topo.aspect = aspect;
    
+   //Store weather for output
+   BSPWBres.meteovec.pet = pet;
+   BSPWBres.meteovec.rhmax = rhmax;
+   BSPWBres.meteovec.rhmin = rhmin;
+   BSPWBres.meteovec.tmax = tmax;
+   BSPWBres.meteovec.tmin = tmin;
+   BSPWBres.meteovec.tday = tday;
+   BSPWBres.meteovec.prec = prec;
+   BSPWBres.meteovec.wind = wind;
+   BSPWBres.meteovec.rad = rad;
+   BSPWBres.meteovec.Catm = Catm;
+   BSPWBres.meteovec.Patm = Patm;
+   BSPWBres.meteovec.rint = rainfallIntensity;
+   
+   
   //Control parameters
   bool bareSoilEvaporation = x.control.commonWB.bareSoilEvaporation;
   std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
@@ -59,63 +77,30 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   std::string& soilDomains = x.control.soilDomains;
   int ndailysteps = x.control.advancedWB.ndailysteps; // MAYBE CHANGE TO COMMONWB parameters
   int max_nsubsteps_soil = x.control.commonWB.max_nsubsteps_soil;
+  bool fireHazardResults = x.control.results.fireHazardResults;
 
   //Soil
   Soil& soil = x.soil;
   int nlayers = soil.getNlayers();
+  
   
   //Set soil temperature to tday
   for(int l=0; l<nlayers; l++) soil.setTemp(l, tday);
   
   //Water pools
   arma::mat& Wpool = x.belowLayers.Wpool;
-  
-  // Canopy
-  int ncanlayers = x.canopy.zlow.size();
+  std::vector<double>& poolProportions = x.below.poolProportions;
   
   //Vegetation input
   std::vector<double>& LAIlive = x.above.LAI_live;
   std::vector<double>& LAIphe = x.above.LAI_expanded;
   std::vector<double>& LAIdead = x.above.LAI_dead;
-  std::vector<double>& H = x.above.H;
-  std::vector<double>& CR = x.above.CR;
   int numCohorts = LAIphe.size();
-  
-  
-  // //Soil parameters
-  // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  // 
-  // List belowLayers = x["belowLayers"];
-  // 
-  // 
-  // 
-  // //Vegetation input
-  // DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  // DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  // 
-  // 
   
   //Parameters
   const std::vector<double>& kPAR = x.paramsInterception.kPAR;
   const std::vector<double>& gRainIntercept = x.paramsInterception.g;
   
-  const std::vector<double>& Sgdd = x.paramsPhenology.Sgdd;
-  
-  // //Copy clone soil and copy from Wpool to soil pools
-  // List soilPools(numCohorts);
-  // if(plantWaterPools) {
-  //   for(int c=0;c<numCohorts;c++) {
-  //     //Clone soil and copy moisture values from x
-  //     List soil_c =  clone(soil);
-  //     NumericVector W_c = soil_c["W"];
-  //     for(int l=0;l<nlayers;l++) {
-  //       W_c[l] = Wpool(c,l); 
-  //     }
-  //     soilPools[c] = soil_c;
-  //   }
-  // }
-  
-
   //STEP 1 - Update leaf area values according to the phenology of species and recalculate radiation extinction
   double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
@@ -138,6 +123,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   double LgroundPAR = 100.0*exp((-1.0)*s);
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
 
+  
   //STEP 2 - Hidrological inputs (modifies snowpack)
   waterInputs_c(BSPWB_comm.waterInputs, x,
                 prec, rainfallIntensity,
@@ -149,188 +135,176 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
 
   //STEP 3 - Evaporation from bare soil and herbaceous transpiration
   double snowpack = x.snowpack;
-  std::vector<double> EherbVec(nlayers,0.0);
+  
   double Esoil = 0.0;
-  // NumericVector EsoilPools(numCohorts, 0.0);
-  // NumericMatrix EherbPools(numCohorts, nlayers);
+  std::vector<double> EsoilPools(numCohorts,0.0);
+  std::vector<double> EherbVec(nlayers,0.0);
+  std::vector<double> EherbVec_c(nlayers,0.0);
+  arma::mat EherbPools(numCohorts, nlayers);
+  EherbPools.fill(0.0);
+  std::vector<double> V(nlayers);
+  ldrRS_one_c(V, 50, 500, NA_REAL, soil.getWidths());
   if(!plantWaterPools) {
     //Evaporation from bare soil if there is no snow (do not yet modify soil)
     if(bareSoilEvaporation) Esoil = soilEvaporation_c(soil, snowpack, pet, LgroundSWR, false);
     //Herbaceous transpiration (do not yet modify soil)
-    // herbaceousTranspiration_c(EherbVec, soil, pet, LherbSWR, herbLAI,  false);
+    herbaceousTranspiration_c(EherbVec, soil, pet, LherbSWR, x.herbLAI,  V, false);
   } else {
-  //   NumericVector poolProportions = belowdf["poolProportions"];
-  //   for(int c=0;c<numCohorts;c++) {
-  //     //Get soil pool
-  //     List soil_c =  soilPools[c];
-  //     //Evaporation from bare soil_c (if there is no snow), do not modify soil
-  //     if(bareSoilEvaporation) {
-  //       EsoilPools[c] = soilEvaporation(soil_c, snowpack, soilFunctions, pet, LgroundSWR, false);
-  //       Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
-  //     }
-  //     //Herbaceous transpiration, do not modify soil
-  //     NumericVector EherbVec_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, false);
-  //     //Update average soil evaporation and herbaceous transpiration 
-  //     for(int l=0;l<nlayers;l++) {
-  //       EherbPools(c,l) = EherbVec_c[l];
-  //       EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l]; 
-  //     }
-  //   }
+    //Store overall soil moisture in a backup copy
+    double* Wbackup = new double[nlayers];
+    for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
+    
+    for(int c=0;c<numCohorts;c++) {
+      for(int l = 0; l<nlayers;l++) soil.setW(l,Wpool(c,l)); // this updates psi, theta, ... 
+      
+      //Evaporation from bare  (if there is no snow), do not modify soil
+      if(bareSoilEvaporation) {
+        EsoilPools[c] = soilEvaporation_c(soil, snowpack, pet, LgroundSWR, false);
+        Esoil = Esoil + poolProportions[c]*EsoilPools[c];
+      }
+      //Herbaceous transpiration, do not modify soil
+      herbaceousTranspiration_c(EherbVec_c, soil, pet, LherbSWR, x.herbLAI,  V, false);
+      //Update average soil evaporation and herbaceous transpiration
+      for(int l=0;l<nlayers;l++) {
+        EherbPools(c,l) = EherbVec_c[l];
+        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l];
+      }
+    }
+    //Restore soil moisture
+    for(int l = 0; l<nlayers;l++) soil.setW(l, Wbackup[l]);
+    delete[] Wbackup;
   }
-  // 
-  // //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
-  // transpirationBasic(transpOutput, x, meteovec, elevation, true);
-  // //Determine hydraulic redistribution and source sink for overall soil
-  // NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transpOutput["Extraction"]);
-  // NumericVector ExtractionVec(nlayers, 0.0);
-  // NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
-  // NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
-  // for(int l=0;l<nlayers;l++) {
-  //   for(int c=0;c<numCohorts;c++) {
-  //     soilHydraulicInput[l] += (-1.0)*std::min(soilLayerExtract(c,l),0.0);
-  //     soilHydraulicOutput[l] += std::max(soilLayerExtract(c,l),0.0);
-  //     ExtractionVec[l] += soilLayerExtract(c,l);
-  //   }
-  // }
-  // 
-  // //STEP 5 - Soil flows
-  // double DeepDrainage = 0.0;
-  // double Infiltration = 0.0;
-  // double InfiltrationExcess = 0.0;
-  // double SaturationExcess = 0.0;
-  // double Runoff = 0.0;
-  // double CapillarityRise = 0.0;
-  // NumericVector sourceSinkVec(nlayers, 0.0);
-  // for(int l=0;l<nlayers;l++) {
-  //   sourceSinkVec[l] -= (ExtractionVec[l] + EherbVec[l]);
-  //   if(l ==0) sourceSinkVec[l] -= Esoil;
-  // }
-  // 
-  // if(soilDomains != "none") {
-  //   if(!plantWaterPools) {
-  //     // determine water flows (no mass conservation)
-  //     NumericVector sf = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions,
-  //                                               RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec, 
-  //                                               runon, lateralFlows, waterTableDepth,
-  //                                               infiltrationMode, infiltrationCorrection, soilDomains, 
-  //                                               ndailysteps, max_nsubsteps_soil, true);
-  //     DeepDrainage = sf["DeepDrainage"];
-  //     Infiltration = sf["Infiltration"];
-  //     Runoff = sf["Runoff"];
-  //     InfiltrationExcess = sf["InfiltrationExcess"];
-  //     SaturationExcess = sf["SaturationExcess"];
-  //     CapillarityRise = sf["CapillarityRise"];
-  //   } else { //Apply soil flows to water pools
-  //     NumericVector poolProportions = belowdf["poolProportions"];
-  //     List ExtractionPools = Rcpp::as<Rcpp::List>(transpOutput["ExtractionPools"]);
-  //     // NumericVector sourceSinkCheck(nlayers, 0.0);
-  //     //Set Wsoil to zero
-  //     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
-  //     NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
-  //     ExtractionPoolMat.fill(0.0);
-  //     for(int c=0;c<numCohorts;c++) {
-  //       //this is used to store extraction of a SINGLE plant cohort from all pools
-  //       NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
-  //       for(int l=0;l<nlayers;l++) {
-  //         for(int c2=0;c2<numCohorts;c2++) {
-  //           ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
-  //         }
-  //       }
-  //     }
-  //     for(int c=0;c<numCohorts;c++) {
-  //       List soil_c = soilPools[c];
-  //       NumericVector sourceSinkPoolVec(nlayers, 0.0);
-  //       for(int l=0;l<nlayers;l++) {
-  //         sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
-  //         if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
-  //       }
-  //       NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
-  //                                                   RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
-  //                                                   runon, lateralFlows, waterTableDepth,
-  //                                                   infiltrationMode, infiltrationCorrection, soilDomains, 
-  //                                                   ndailysteps, max_nsubsteps_soil, true);
-  //       double DeepDrainage_c = sf_c["DeepDrainage"];
-  //       double Infiltration_c = sf_c["Infiltration"];
-  //       double InfiltrationExcess_c = sf_c["InfiltrationExcess"];
-  //       double Runoff_c = sf_c["Runoff"];
-  //       double SaturationExcess_c = sf_c["SaturationExcess"];
-  //       double CapillarityRise_c = sf_c["CapillarityRise"];
-  //       DeepDrainage += DeepDrainage_c*poolProportions[c]; 
-  //       Runoff += Runoff_c*poolProportions[c]; 
-  //       Infiltration += Infiltration_c*poolProportions[c]; 
-  //       SaturationExcess += SaturationExcess_c*poolProportions[c]; 
-  //       InfiltrationExcess += InfiltrationExcess_c*poolProportions[c];
-  //       CapillarityRise += CapillarityRise_c*poolProportions[c];
-  //       
-  //       //copy to Wpool and update Wsoil
-  //       NumericVector W_c = soil_c["W"];
-  //       for(int l=0;l<nlayers;l++) {
-  //         Wpool(c,l) = W_c[l];
-  //         Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
-  //       }
-  //     }
-  //     // for(int l=0; l<nlayers;l++) Rcout<< sourceSinkCheck[l] << " " << sourceSinkVec[l]<<"\n";
-  //   }
-  // }
-  // 
-  // //Calculate current soil water potential for output
-  // NumericVector psiVec = psi(soil, soilFunctions); 
-  // 
-  // //STEP 6 - Fire hazard
-  // bool fireHazardResults = control["fireHazardResults"];
-  // if(fireHazardResults) {
-  //   NumericVector fireHazard = modelOutputComm["FireHazard"];
-  //   fccsHazard(fireHazard, x, meteovec, transpOutput, slope);
-  // } 
-  // 
-  // // Arrange output
-  // NumericVector WaterBalance = modelOutputComm["WaterBalance"];
-  // WaterBalance["PET"] = pet;
-  // WaterBalance["Rain"] = hydroInputs["Rain"];
-  // WaterBalance["Snow"] = hydroInputs["Snow"]; 
-  // WaterBalance["NetRain"] = hydroInputs["NetRain"];
-  // WaterBalance["Snowmelt"] = Snowmelt;
-  // WaterBalance["Runon"] = runon; 
-  // WaterBalance["Infiltration"] = Infiltration; 
-  // WaterBalance["InfiltrationExcess"] = InfiltrationExcess;
-  // WaterBalance["SaturationExcess"] = SaturationExcess;
-  // WaterBalance["Runoff"] = Runoff; 
-  // WaterBalance["DeepDrainage"] = DeepDrainage;
-  // WaterBalance["CapillarityRise"] = CapillarityRise;
-  // WaterBalance["SoilEvaporation"] = Esoil;
-  // WaterBalance["HerbTranspiration"] = sum(EherbVec);
-  // WaterBalance["PlantExtraction"] = sum(ExtractionVec);
-  // DataFrame outputPlants = Rcpp::as<Rcpp::DataFrame>(transpOutput["Plants"]);
-  // NumericVector Eplant = Rcpp::as<Rcpp::NumericVector>(outputPlants["Transpiration"]);
-  // double Transpiration = 0.0;
-  // for(int c=0;c<numCohorts;c++) Transpiration += Eplant[c];
-  // WaterBalance["Transpiration"] = Transpiration;
-  // WaterBalance["HydraulicRedistribution"] = sum(soilHydraulicInput);
-  // 
-  // NumericVector Stand = modelOutputComm["Stand"];
-  // Stand["LAI"] = LAIcell;
-  // Stand["LAIherb"] = herbLAI; 
-  // Stand["LAIlive"] = LAIcelllive;
-  // Stand["LAIexpanded"] = LAIcellexpanded;
-  // Stand["LAIdead"] = LAIcelldead;
-  // Stand["Cm"] = Cm; 
-  // Stand["LgroundPAR"] = LgroundPAR; 
-  // Stand["LgroundSWR"] = LgroundSWR;
-  // 
-  // 
-  // DataFrame Soil = as<DataFrame>(modelOutputComm["Soil"]);
-  // NumericVector Psi = Soil["Psi"];
-  // NumericVector HerbTranspiration = Soil["HerbTranspiration"];
-  // NumericVector HydraulicInput = Soil["HydraulicInput"];
-  // NumericVector HydraulicOutput = Soil["HydraulicOutput"];
-  // NumericVector PlantExtraction = Soil["PlantExtraction"];
-  // for(int l=0;l<nlayers;l++) {
-  //   Psi[l] = psiVec[l];
-  //   HerbTranspiration[l] = EherbVec[l];
-  //   HydraulicInput[l] = soilHydraulicInput[l];
-  //   HydraulicOutput[l] = soilHydraulicOutput[l];
-  //   PlantExtraction[l] = ExtractionVec[l];
-  // }
+  
+  //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
+  transpirationBasic_c(BTres, BTcomm, x, meteovec, elevation);
+
+  //Determine hydraulic redistribution and source sink for overall soil
+  for(int l=0;l<nlayers;l++) {
+    BSPWBres.Soil.HerbTranspiration[l] = 0.0;
+    BSPWBres.Soil.HydraulicInput[l] = 0.0;
+    BSPWBres.Soil.HydraulicOutput[l] = 0.0;
+    BSPWBres.Soil.PlantExtraction[l] = 0.0;
+    for(int c=0;c<numCohorts;c++) {
+      BSPWBres.Soil.HydraulicInput[l] += (-1.0)*std::min(BTres.extraction(c,l),0.0);
+      BSPWBres.Soil.HydraulicOutput[l] += std::max(BTres.extraction(c,l),0.0);
+      BSPWBres.Soil.PlantExtraction[l] += BTres.extraction(c,l);
+    }
+  }
+
+  //STEP 5 - Soil flows
+  double DeepDrainage = 0.0;
+  double Infiltration = 0.0;
+  double InfiltrationExcess = 0.0;
+  double SaturationExcess = 0.0;
+  double Runoff = 0.0;
+  double CapillarityRise = 0.0;
+  std::vector<double> sourceSinkVec(nlayers, 0.0);
+
+  if(soilDomains != "none") {
+    if(!plantWaterPools) {
+      // determine water flows (no mass conservation)
+      for(int l=0;l<nlayers;l++) {
+        sourceSinkVec[l] -= (BSPWBres.Soil.PlantExtraction[l] + EherbVec[l]);
+        if(l ==0) sourceSinkVec[l] -= Esoil;
+      }
+      soilWaterBalance_inner_c(SWBres, SWBcomm, soil,
+                               RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                               runon, lateralFlows, waterTableDepth,
+                               infiltrationMode, infiltrationCorrection,
+                               soilDomains,
+                               ndailysteps, max_nsubsteps_soil);
+      DeepDrainage = SWBres.deepDrainage_mm;
+      Infiltration = SWBres.infiltration_mm;
+      Runoff = SWBres.runoff_mm;
+      InfiltrationExcess = SWBres.infiltrationExcess_mm;
+      SaturationExcess = SWBres.saturationExcess_mm;
+      CapillarityRise = SWBres.capillarityRise_mm;
+    } else { //Apply soil flows to water pools
+      arma::mat ExtractionPoolMat(numCohorts, nlayers);
+      ExtractionPoolMat.fill(0.0);
+      for(int c=0;c<numCohorts;c++) {
+        //this is used to store extraction of a SINGLE plant cohort from all pools
+        arma::mat& ExtractionPoolsCoh = BTres.extractionPools[c];
+        for(int l=0;l<nlayers;l++) {
+          for(int c2=0;c2<numCohorts;c2++) {
+            ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+          }
+        }
+      }
+      //Create vector to store averaged soil moisture
+      //Set Wsoil to zero
+      double* Wsoil = new double[nlayers];
+      for(int l = 0; l<nlayers;l++) Wsoil[l] = 0.0;
+      for(int c=0;c<numCohorts;c++) {
+        for(int l = 0; l<nlayers;l++) soil.setW(l,Wpool(c,l)); // this updates psi, theta, ... 
+        for(int l=0;l<nlayers;l++) {
+          sourceSinkVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
+          if(l ==0) sourceSinkVec[l] -= EsoilPools[c];
+        }
+        soilWaterBalance_inner_c(SWBres, SWBcomm, soil,
+                                 RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                                 runon, lateralFlows, waterTableDepth,
+                                 infiltrationMode, infiltrationCorrection,
+                                 soilDomains,
+                                 ndailysteps, max_nsubsteps_soil);
+
+        DeepDrainage +=  SWBres.deepDrainage_mm*poolProportions[c];
+        Runoff += SWBres.runoff_mm*poolProportions[c];
+        Infiltration += SWBres.infiltration_mm*poolProportions[c];
+        SaturationExcess += SWBres.saturationExcess_mm*poolProportions[c];
+        InfiltrationExcess += SWBres.infiltrationExcess_mm*poolProportions[c];
+        CapillarityRise += SWBres.capillarityRise_mm*poolProportions[c];
+
+        //copy to Wpool and update averaged soil moisture (Wsoil)
+        for(int l=0;l<nlayers;l++) {
+          Wpool(c,l) = soil.getW(l);
+          Wsoil[l] += soil.getW(l)*poolProportions[c];
+        }
+      }
+
+      //Copy averaged soil moisture
+      for(int l = 0; l<nlayers;l++) soil.setW(l, Wsoil[l]);
+      delete[] Wsoil;
+    }
+  }
+  //STEP 6 - Fire hazard
+  if(fireHazardResults) {
+    // NumericVector fireHazard = modelOutputComm["FireHazard"];
+    // fccsHazard_c(fireHazard, x, meteovec, transpOutput, slope);
+  }
+
+  // Arrange output
+  BSPWBres.WaterBalance.PET = pet;
+  BSPWBres.WaterBalance.Rain = BSPWB_comm.waterInputs.rain;
+  BSPWBres.WaterBalance.Snow = BSPWB_comm.waterInputs.snow;
+  BSPWBres.WaterBalance.NetRain = BSPWB_comm.waterInputs.netrain;
+  BSPWBres.WaterBalance.Snowmelt = Snowmelt;
+  BSPWBres.WaterBalance.Runon = runon;
+  BSPWBres.WaterBalance.Infiltration = Infiltration;
+  BSPWBres.WaterBalance.InfiltrationExcess = InfiltrationExcess;
+  BSPWBres.WaterBalance.SaturationExcess = SaturationExcess;
+  BSPWBres.WaterBalance.Runoff = Runoff;
+  BSPWBres.WaterBalance.DeepDrainage = DeepDrainage;
+  BSPWBres.WaterBalance.CapillarityRise = CapillarityRise;
+  BSPWBres.WaterBalance.SoilEvaporation = Esoil;
+  BSPWBres.WaterBalance.HerbTranspiration = std::accumulate(EherbVec.begin(), EherbVec.end(), 0.0);
+  BSPWBres.WaterBalance.PlantExtraction = std::accumulate(BSPWBres.Soil.PlantExtraction.begin(), BSPWBres.Soil.PlantExtraction.end(), 0.0);
+  BSPWBres.WaterBalance.Transpiration = std::accumulate(BTres.plants.Transpiration.begin(), BTres.plants.Transpiration.end(), 0.0);
+  BSPWBres.WaterBalance.HydraulicRedistribution =std::accumulate(BSPWBres.Soil.HydraulicInput.begin(), BSPWBres.Soil.HydraulicInput.end(), 0.0);
+  
+  BSPWBres.Stand.LAI = LAIcell;
+  BSPWBres.Stand.LAIherb = x.herbLAI; 
+  BSPWBres.Stand.LAIlive = LAIcelllive;
+  BSPWBres.Stand.LAIexpanded = LAIcellexpanded;
+  BSPWBres.Stand.LAIdead = LAIcelldead;
+  BSPWBres.Stand.Cm = Cm;
+  BSPWBres.Stand.LgroundPAR = LgroundPAR;
+  BSPWBres.Stand.LgroundSWR = LgroundSWR;
+  
+  //Copy final soil state to output
+  for(int l=0;l<nlayers;l++) {
+    BSPWBres.Soil.Psi[l] = soil.getPsi(l);
+  }
 }
 
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x) {
@@ -345,7 +319,7 @@ Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x
     l.push_back(copyStandResult_c(BSPWBres.Stand), "Stand");
   }
   if(x.control.results.plantResults) {
-    l.push_back(copyPlantBasicTranspirationResult_c(BSPWBres.Plants, x), "Plants");
+    l.push_back(copyPlantBasicTranspirationResult_c(BSPWBres.BTres.plants, x), "Plants");
   }
   if(x.control.results.fireHazardResults) {
     l.push_back(copyFCCSResult_c(BSPWBres.fccs), "FireHazard");

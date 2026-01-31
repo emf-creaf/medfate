@@ -15,19 +15,20 @@ struct BasicSPWB_RESULT {
   StandWB_RESULT WaterBalance;
   Soil_RESULT Soil;
   Stand_RESULT Stand;
-  PlantsBasicTranspiration_RESULT Plants;
+  SoilWaterBalance_RESULT SWBres;
+  BasicTranspiration_RESULT BTres;
   FCCS_RESULT fccs;
   
-  BasicSPWB_RESULT(PlantsBasicTranspiration_RESULT& PlantsIN, size_t nlayers) : Soil(nlayers) {
-    Plants = PlantsIN;
+  BasicSPWB_RESULT(BasicTranspiration_RESULT& BTresIN, size_t nlayers) : Soil(nlayers) {
+    BTres = BTresIN;
   }
 };
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x);
 
 struct BasicSPWB_COMM {
   WaterInputs_COMM waterInputs;
-  SoilWaterBalance_COMM SWBcomm;
   BasicTranspiration_COMM BTcomm;
+  SoilWaterBalance_COMM SWBcomm;
   BasicSPWB_COMM(size_t numCohorts = 0, size_t ncanlayers = 0, size_t nlayers= 0,
                  std::string soilDomains = "buckets") : 
     BTcomm(numCohorts, ncanlayers, nlayers),
@@ -35,7 +36,7 @@ struct BasicSPWB_COMM {
 };
 
 void spwbDay_basic_c(BasicSPWB_RESULT& BTres, BasicSPWB_COMM& BT_comm, ModelInput& x, 
-                     const std::vector<double>& meteovec, const double elevation, const double slope, const double aspect,
+                     const WeatherInputVector& meteovec, const double elevation, const double slope, const double aspect,
                      const double runon, 
                      const std::vector<double>& lateralFlows, const double waterTableDepth);
 
