@@ -17,6 +17,7 @@ struct BasicSPWB_RESULT {
   Stand_RESULT Stand;
   SoilWaterBalance_RESULT SWBres;
   BasicTranspiration_RESULT BTres;
+  FCCSBehaviour_RESULT fccsbeh;
   FCCS_RESULT fccs;
   
   BasicSPWB_RESULT(BasicTranspiration_RESULT& BTresIN, size_t nlayers) : Soil(nlayers) {

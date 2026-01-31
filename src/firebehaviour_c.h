@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "modelInput_c.h"
+#include "communication_structures_c.h"
 
 #ifndef FIREBEHAVIOUR_C_H
 #define FIREBEHAVIOUR_C_H
@@ -54,4 +55,10 @@ void FCCSbehaviour_c(FCCSBehaviour_RESULT& res,
                      std::vector<double>& MliveSI, 
                      std::vector<double>& MdeadSI, 
                      double slope, double windSpeedSI);
+
+void fccsHazard_c(FCCSBehaviour_RESULT& FCCSbehres, FCCS_RESULT& FCCSres, ModelInput& x, 
+                  const WeatherInputVector& meteovec, 
+                  const std::vector<double>& LFMC, 
+                  const std::vector<double>& PLC, 
+                  const double slope);
 #endif

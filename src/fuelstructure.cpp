@@ -4,61 +4,11 @@
 #include "forestutils_c.h"
 #include "paramutils.h"
 #include "fuelmoisture.h"
+#include "fuelstructure_c.h"
 using namespace Rcpp;
 
-const double woodyBulkDensity = 26.43; //kg/m3
-const double shortLinearBulkDensity = 26.43; //kg/m3
-const double longLinearBulkDensity = 26.43; //kg/m3
-const double scaleBulkDensity = 26.43; //kg/m3
-const double broadleavedBulkDensity = 13.30; //kg/m3
-
-const double defaultParticleDensity = 400.0; //kg/m3
-const double defaultLowHeatContent = 18608.0; //kJ/kg
-
-const double AET = 700; //mm (leads to k = 0.6837 for Lignin = 20)
-const double smallBranchDecompositionRate = 0.3336; //year^-1 (AET = 700, Lignin = 35)
-
-const double herbSAV = 11483.0; //m2/m3
-const double woodySAV = 1601.05; //m2/m3
-const double shortLinearSAV = 6562.0; //m2/m3
-const double longLinearSAV = 4921.0; //m2/m3
-const double scaleSAV = 2000.0; //m2/m3
-const double broadleavedSAV = 8202.0; //m2/m3
-
-const double shortLinearWmax = 0.3248; //kg/m2
-const double longLinearWmax = 0.6496; //kg/m2
-const double scaleWmax = 0.3248; //kg/m2
-const double broadleavedWmax = 0.3472; //kg/m2
-
-const double shortLinearReactionEfficiency = 0.18; //unitless
-const double longLinearReactionEfficiency = 0.27; //unitless
-const double scaleReactionEfficiency = 0.18; //unitless
-const double broadleavedReactionEfficiency = 0.11; //unitless
-
-const double shortLinearRPR = 8.03; //unitless
-const double longLinearRPR = 6.35; //unitless
-const double scaleRPR = 8.03; //unitless
-const double broadleavedRPR = 10.31; //unitless
 
 
-/**
- * Returns the proportion of the crown (Hbc - H) that lies within given interval (zLow-zHigh)
- */
-double crownProportionInLayer(double zLow, double zHigh, double H, double Hbc) {
-  return(leafAreaProportion_c(zLow, zHigh, Hbc, H));
-}
-/**
- * Returns the fuel loading (kg/m2) of the crown (Hbc - H) that lies within given interval (zLow-zHigh)
- */
-double crownFuelInLayer(double zLow, double zHigh, double fb, double H, double Hbc) {
-  return(fb*crownProportionInLayer(zLow, zHigh, H, Hbc));
-}
-/**
- * Returns the crown length (cm) of the crown (Hbc - H) that lies within given interval (zLow-zHigh)
- */
-double crownLengthInLayer(double zLow, double zHigh, double cl, double H, double Hbc) {
-  return(cl*crownProportionInLayer(zLow, zHigh, H, Hbc));
-}
 
 /**
  * Calculates fuel bulk density profile (kg/m3)
@@ -70,7 +20,7 @@ NumericVector woodyFuelProfile(NumericVector z, NumericVector fuelBiomass, Numer
   for(int ci=0;ci<ncoh;ci++) {
     double cbh = H[ci]*(1.0-CR[ci]);
     for(int hi=0;hi<(nh-1);hi++) {
-      wfp[hi] += crownFuelInLayer(z[hi], z[hi+1], fuelBiomass[ci], H[ci], cbh)/(z[hi+1]-z[hi]);
+      wfp[hi] += crownFuelInLayer_c(z[hi], z[hi+1], fuelBiomass[ci], H[ci], cbh)/(z[hi+1]-z[hi]);
     }
   }
   //Change units from kg/(m3*cm) to kg/m3
@@ -92,7 +42,7 @@ NumericVector layerCohortFuelLoading(double minHeight, double maxHeight, Numeric
   int nCoh = cohortLoading.size();
   NumericVector l(nCoh);
   for(int i=0;i<nCoh; i++) {
-    l[i] =crownFuelInLayer(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0- CR[i]));
+    l[i] =crownFuelInLayer_c(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0- CR[i]));
   }
   return(l);
 }
@@ -101,7 +51,7 @@ double layerFuelLoading(double minHeight, double maxHeight, NumericVector cohort
   double sum = 0.0;
   int nCoh = cohortLoading.size();
   for(int i=0;i<nCoh; i++) {
-    sum +=crownFuelInLayer(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0-CR[i]));
+    sum +=crownFuelInLayer_c(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0-CR[i]));
   }
   return(sum);
 }
@@ -110,7 +60,7 @@ double layerLAI(double minHeight, double maxHeight, NumericVector cohortLAI, Num
   double sum = 0.0;
   int nCoh = cohortLAI.size();
   for(int i=0;i<nCoh; i++) {
-    sum += cohortLAI[i]*crownProportionInLayer(minHeight, maxHeight, H[i], H[i]*(1.0-CR[i]));
+    sum += cohortLAI[i]*crownProportionInLayer_c(minHeight, maxHeight, H[i], H[i]*(1.0-CR[i]));
   }
   return(sum);
 }
@@ -123,7 +73,7 @@ double layerFuelAverageSpeciesParameter(String spParName, double minHeight, doub
   double num = 0.0, den = 0.0, cfl = 0.0;
   int nCoh = cohortLoading.size();
   for(int i=0;i<nCoh; i++) {
-    cfl = crownFuelInLayer(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0-CR[i]));
+    cfl = crownFuelInLayer_c(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0-CR[i]));
     num +=(parValues[i]*cfl);
     den += cfl;
   }
@@ -136,7 +86,7 @@ double layerFuelAverageParameter(double minHeight, double maxHeight, NumericVect
   double num = 0.0, den = 0.0, cfl = 0.0;
   int nCoh = cohortLoading.size();
   for(int i=0;i<nCoh; i++) {
-    cfl = crownFuelInLayer(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0 - CR[i]));
+    cfl = crownFuelInLayer_c(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0 - CR[i]));
     if(!NumericVector::is_na(cohortParameter[i])) {
       num +=(cohortParameter[i]*cfl);
       den += cfl;
@@ -150,8 +100,8 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
   double num = 0.0, den = 0.0, cf = 0.0, cl = 0.0;
   int nCoh = cohortLoading.size();
   for(int i=0;i<nCoh; i++) {
-    cf = crownFuelInLayer(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0 - CR[i]));
-    cl = crownLengthInLayer(minHeight, maxHeight, cohortCrownLength[i], H[i], H[i]*(1.0 - CR[i]));
+    cf = crownFuelInLayer_c(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0 - CR[i]));
+    cl = crownLengthInLayer_c(minHeight, maxHeight, cohortCrownLength[i], H[i], H[i]*(1.0 - CR[i]));
     num +=(cl*cf);
     den += cf;
   }

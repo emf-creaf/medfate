@@ -1,7 +1,11 @@
 #include "RcppArmadillo.h"
 #include "modelInput_c.h"
+#include "communication_structures_c.h"
 #include "firebehaviour_c.h"
+#include "fuelstructure_c.h"
 #include "windextinction_c.h"
+#include <meteoland.h>
+
 using namespace Rcpp;
 
 Rcpp::NumericVector copyFCCSResult_c(const FCCS_RESULT& fccs) {
@@ -358,6 +362,76 @@ void FCCSbehaviour_c(FCCSBehaviour_RESULT& res,
   delete[] hdef;
   delete[] RV;
 }
+
+
+void fccsHazard_c(FCCSBehaviour_RESULT& FCCSbehres, FCCS_RESULT& FCCSres, ModelInput& x, 
+                  const WeatherInputVector& meteovec, 
+                  const std::vector<double>& LFMC, 
+                  const std::vector<double>& PLC, 
+                  const double slope) {
+  
+  double fireHazardStandardWind = x.control.fireHazard.standardWind;
+  double fireHazardStandardDFMC = x.control.fireHazard.standardDFMC; 
+  
+  InternalFCCS& FCCSprops = x.internalFCCS;
+
+  
+  double fm_dead = NA_REAL;
+  if(!NumericVector::is_na(fireHazardStandardDFMC)) {
+    fm_dead = fireHazardStandardDFMC;
+  } else {
+    // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
+    double vp = meteoland::utils_averageDailyVP(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
+    double D = std::max(0.0, meteoland::utils_saturationVP(meteovec.tmax) - vp);
+    fm_dead = 5.43 + 52.91*exp(-0.64*D); 
+  }
+  double wind = meteovec.wind;
+  if(!std::isnan(fireHazardStandardWind)) wind = fireHazardStandardWind;
+  
+  int numCohorts = x.above.H.size();
+  //Calculate cohort canopy moisture to the average of canopy live and dead fuels, considering that a fraction of LAI is dead
+  //proportionally to stem PLC (Ruffault et al. 2023)
+  //Correct loading for phenology
+  std::vector<double> cohLoading(numCohorts);
+  std::vector<double> canopyFMC(numCohorts);
+  for(int i=0;i<numCohorts;i++){
+    canopyFMC[i] = (LFMC[i]*(1.0 - PLC[i]) + fm_dead*PLC[i]);
+    if(x.above.LAI_live[i]>0.0) cohLoading[i] = x.above.Loading[i]*(x.above.LAI_expanded[i]/x.above.LAI_live[i]);
+    else cohLoading[i] = 0.0;
+  }
+  
+  //Average canopy moisture in the crown and surface layers
+  if(FCCSprops.w[0] > 0.0) FCCSprops.ActFMC[0] = layerFuelAverageParameter_c(200.0, 10000.0, canopyFMC, cohLoading, x.above.H, x.above.CR);
+  if(FCCSprops.w[1] > 0.0) FCCSprops.ActFMC[1] = layerFuelAverageParameter_c(0.0, 200.0, canopyFMC, cohLoading, x.above.H, x.above.CR);
+  
+  std::vector<double> MdeadSI = {fm_dead, fm_dead, fm_dead, fm_dead, fm_dead}; 
+  std::vector<double> MliveSI = {90.0, 90.0, 60.0}; //Default values (not actually used if ActFMC is non-missing)
+  
+  FCCSbehaviour_c(FCCSbehres,
+                  FCCSprops,
+                  MliveSI, 
+                  MdeadSI, 
+                  slope, wind);
+  
+  //Copy results to fireBehavior vector
+  FCCSres.Loading_overstory = FCCSprops.w[0];
+  FCCSres.Loading_understory =  FCCSprops.w[1];
+  FCCSres.CFMC_overstory =  FCCSprops.ActFMC[0];
+  FCCSres.CFMC_understory = FCCSprops.ActFMC[1];
+  FCCSres.DFMC = fm_dead;
+  FCCSres.ROS_surface = FCCSbehres.surface.ROS;
+  FCCSres.I_b_surface = FCCSbehres.surface.I_b;
+  FCCSres.t_r_surface = FCCSbehres.surface.t_r;
+  FCCSres.FL_surface = FCCSbehres.surface.FL;
+  FCCSres.Ic_ratio = FCCSbehres.crown.Ic_ratio;
+  FCCSres.ROS_crown = FCCSbehres.crown.ROS_crown;
+  FCCSres.I_b_crown = FCCSbehres.crown.I_b_crown;
+  FCCSres.t_r_crown = FCCSbehres.crown.t_r_crown;
+  FCCSres.FL_crown = FCCSbehres.crown.FL_crown;
+  FCCSres.SFP = FCCSbehres.potentials.SFP;
+  FCCSres.CFP = FCCSbehres.potentials.CFP;
+}
+
 
 Rcpp::List copyFCCSBehaviour_Result_c(const FCCSBehaviour_RESULT& fccs) {
   List firePotentials=List::create(_["RP"] = fccs.potentials.RP,

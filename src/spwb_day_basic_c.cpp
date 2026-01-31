@@ -20,6 +20,7 @@
 #include "root_c.h"
 #include <meteoland.h>
 
+
 // Soil water balance with simple hydraulic model
 void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, ModelInput& x, 
                      const WeatherInputVector& meteovec, 
@@ -269,8 +270,11 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   }
   //STEP 6 - Fire hazard
   if(fireHazardResults) {
-    // NumericVector fireHazard = modelOutputComm["FireHazard"];
-    // fccsHazard_c(fireHazard, x, meteovec, transpOutput, slope);
+    fccsHazard_c(BSPWBres.fccsbeh, BSPWBres.fccs, x, 
+                 meteovec, 
+                 BTres.plants.LFMC,
+                 BTres.plants.StemPLC, 
+                 slope);
   }
 
   // Arrange output

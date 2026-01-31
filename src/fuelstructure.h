@@ -2,7 +2,6 @@
 
 #ifndef FUELSTRUCTURE_H
 #define FUELSTRUCTURE_H
-#endif
 using namespace Rcpp;
 
 List fuelLiveStratification(List x, DataFrame SpParams, double gdd = NA_REAL, 
@@ -16,3 +15,4 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
 double layerFuelAverageParameter(double minHeight, double maxHeight, NumericVector cohortParameter, NumericVector cohortLoading, NumericVector H, NumericVector CR);
 NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams,  
                                double gdd = NA_REAL);
+#endif

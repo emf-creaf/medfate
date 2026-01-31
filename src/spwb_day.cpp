@@ -25,6 +25,8 @@
 using namespace Rcpp;
 
 
+
+//TO BE DELETED AFTER CONVERSION
 void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List transpOutput, double slope) {
   List control = x["control"];
   
@@ -100,6 +102,8 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
   fireHazard["SFP"] = firePotentials["SFP"];
   fireHazard["CFP"] = firePotentials["CFP"];
 }
+
+
 
 
 // Soil water balance with simple hydraulic model
