@@ -19,6 +19,7 @@
 #include "modelInput.h"
 #include "phenology.h"
 #include "root.h"
+#include "root_c.h"
 #include "soil.h"
 #include "spwb.h"
 #include "spwb_day.h"
@@ -1317,7 +1318,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       //INDIVIDUAL-LEVEL OUTPUT
       FineRootBiomass[j] = fineRootBiomass[j];
       SapwoodArea[j] = SA[j];
-      FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
+      FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea_c(SRL[j], FineRootDensity[j])*1e-4;
       SapwoodBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
       LeafBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       SAgrowth[j] += deltaSAgrowth[j]; //Store sapwood area growth rate (cm2/day)
@@ -1325,7 +1326,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       LeafArea[j] = LAexpanded;
       HuberValue[j] = SA[j]/leafAreaTarget[j]; 
       RootAreaLeafArea[j] = FineRootArea[j]/leafAreaTarget[j]; 
-      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;//Store fine root area growth rate (m2·d-1)
+      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea_c(SRL[j], FineRootDensity[j])*1e-4;//Store fine root area growth rate (m2·d-1)
     }
   }
   ///// B15. UPDATE STRUCTURAL VARIABLES /////
@@ -1337,7 +1338,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     if((LAI_live[j]>0.0) && (N[j]>0.0)) {
       if(transpirationMode=="Granier") {
         sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j];
-        fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4);
+        fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea_c(SRL[j], FineRootDensity[j])*1e-4);
       } else {
         if(allocationStrategy == "Plant_kmax") {
           sapwoodAreaTarget[j] = 10000.0*(leafAreaTarget[j]/Al2As[j])*(allocationTarget[j]/Plant_kmax[j]);

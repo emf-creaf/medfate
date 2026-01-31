@@ -7,6 +7,14 @@
 
 
 
+struct WaterInputs_COMM {
+  double rain;
+  double snow;
+  double interception;
+  double netrain;
+  double melt;
+};
+
 // ----------------------------------------------------------------------------
 // Soil Water Balance Communication Structure
 // ----------------------------------------------------------------------------
@@ -240,7 +248,7 @@ void infiltrationRepartition_c(double I,
                                double a, double b);
 double infiltrationAmount_c(double rainfallInput, double rainfallIntensity, Soil& soil, 
                             std::string model, double K_correction);
-void waterInputs_c(std::vector<double>& waterInputs,
+void waterInputs_c(WaterInputs_COMM& waterInputs,
                    ModelInput& x,
                    double prec, double rainfallIntensity,
                    double pet, double tday, double rad, double elevation,

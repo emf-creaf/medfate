@@ -2,6 +2,7 @@
 #include <RcppArmadillo.h>
 #include <numeric>
 #include "hydraulics.h"
+#include "root_c.h"
 using namespace Rcpp;
 using namespace std;
 using std::exp;
@@ -14,26 +15,10 @@ using std::sqrt;
  *  Root distribution
  */
 NumericVector ldrRS_one(double Z50, double Z95, double Z100, NumericVector d){
-  int nlayer = d.size();
-  NumericVector dCum = clone(d);
-  NumericVector Vd(nlayer);
-  double c = 2.94/log(Z50/Z95);
-  Vd[0] = 1.0/(1.0+pow(d[0]/Z50,c));
-  for(int i=1;i<nlayer;i++) dCum[i] = dCum[i]+dCum[i-1];
-  for(int i=1;i<nlayer;i++){
-    Vd[i] = 1.0/(1.0+pow(dCum[i]/Z50,c)) -1.0/(1.0+pow(dCum[i-1]/Z50,c));
-  }
-  //Truncate distribution if cumulative depth of the previous layer is larger than maximum rooting depth
-  if(!NumericVector::is_na(Z100)) {
-    for(int i=1;i<nlayer;i++){
-      if(dCum[i-1]>Z100) Vd[i] = 0.0;
-    }
-  }
-  //Rescale proportions so that they sum 1
-  double Vtot = sum(Vd);
-  for(int i=0;i<nlayer; i++) {
-    Vd[i] = Vd[i]/Vtot;
-  }
+  std::vector<double> d_c = Rcpp::as<std::vector<double>>(d);
+  std::vector<double> lrd_c(d.size());
+  ldrRS_one_c(lrd_c, Z50, Z95, Z100, d_c);
+  NumericVector Vd = Rcpp::wrap(lrd_c);
   return(Vd);
 }
 NumericVector conicRS_one(double Zcone, NumericVector d){
@@ -316,27 +301,7 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
 
 
 
-/**
- *  specificRootSurfaceArea (SRSA; cm2/g) as function of: 
- *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
- *    . root tissue density (RTD; g/cm3) e.g. 0.165 g/cm3
- */
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_specificRootSurfaceArea")]]
-double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
-  return(2.0*sqrt(M_PI*specificRootLength/rootTissueDensity));
-}
 
-/**
- * Fine root radius in cm
- */
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_fineRootRadius")]]
-double fineRootRadius(double specificRootLength, double rootTissueDensity) {
-  return(sqrt(1.0/(M_PI*specificRootLength*rootTissueDensity)));
-}
 
 //' @rdname root
 //' @keywords internal
@@ -373,7 +338,7 @@ double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, do
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
   int numLayers = Ksoil.size();
   double frai = 0.0;
   for(int l=0;l<numLayers;l++) {
@@ -392,7 +357,7 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
   int numLayers = Ksoil.size();
   double frb = 0.0;
   for(int l=0;l<numLayers;l++) {
@@ -409,7 +374,7 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
 NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
   int numLayers = Ksoil.size();
   NumericVector krhizo(numLayers, 0.0);
   for(int l=0;l<numLayers;l++) {
@@ -420,18 +385,6 @@ NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector f
 }
 
 
-/**
- *   Estimates soil volume (m3) occupied with fine roots
- *    . fine root biomass (g dry)
- *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
- *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
- */
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_fineRootSoilVolume")]]
-double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity) {
-  return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
-}
 
 double frv(double vol, double B, NumericVector v, NumericVector ax, NumericVector ra) {
   int numLayers = ax.size();

@@ -255,7 +255,7 @@ NumericVector waterInputs(List x,
                           double Cm, double LgroundPAR, double LgroundSWR, 
                           bool modifyInput = true) {
 
-  std::vector<double> waterInputs(5,0.0);
+  WaterInputs_COMM waterInputs;
   ModelInput x_c = ModelInput(x);
   waterInputs_c(waterInputs, x_c,
                  prec, rainfallIntensity,
@@ -263,10 +263,10 @@ NumericVector waterInputs(List x,
                  Cm, LgroundPAR, LgroundSWR, 
                  modifyInput);
   x["snowpack"] = x_c.snowpack;
-  NumericVector WI = NumericVector::create(_["Rain"] = waterInputs[0], _["Snow"] = waterInputs[1],
-                                           _["Interception"] = waterInputs[2],
-                                           _["NetRain"] = waterInputs[3], 
-                                           _["Snowmelt"] = waterInputs[4]);
+  NumericVector WI = NumericVector::create(_["Rain"] = waterInputs.rain, _["Snow"] = waterInputs.snow,
+                                           _["Interception"] = waterInputs.interception,
+                                           _["NetRain"] = waterInputs.netrain, 
+                                           _["Snowmelt"] = waterInputs.melt);
   return(WI);
 }
 

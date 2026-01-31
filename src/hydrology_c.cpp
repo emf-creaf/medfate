@@ -221,7 +221,7 @@ double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation) 
 }
 
 
-void waterInputs_c(std::vector<double>& waterInputs,
+void waterInputs_c(WaterInputs_COMM& waterInputs,
                    ModelInput& x,
                    double prec, double rainfallIntensity,
                    double pet, double tday, double rad, double elevation,
@@ -264,11 +264,11 @@ void waterInputs_c(std::vector<double>& waterInputs,
     }
     NetRain = rain - Interception; 
   }
-  waterInputs[0] = rain;
-  waterInputs[1] = snow;
-  waterInputs[2] = Interception;
-  waterInputs[3] = NetRain;
-  waterInputs[4] = melt;
+  waterInputs.rain = rain;
+  waterInputs.snow = snow;
+  waterInputs.interception = Interception;
+  waterInputs.netrain = NetRain;
+  waterInputs.melt = melt;
   if(modifyInput) {
     x.snowpack = swe;
   }

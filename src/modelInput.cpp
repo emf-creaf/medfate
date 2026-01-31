@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 #include "carbon.h"
 #include "root.h"
+#include "root_c.h"
 #include "soil.h"
 #include "soil_c.h"
 #include "lightextinction_advanced.h"
@@ -591,7 +592,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
       //Assume fine root biomass is half leaf structural biomass
       double LA = leafArea(LAI_live[c], N[c]); //m2 leaf area per individual
       double fineRootArea = Ar2Al[c]*LA;//fine root area in m2
-      FRB[c] = fineRootArea/(specificRootSurfaceArea(SRL[c], FineRootDensity[c])*1e-4);
+      FRB[c] = fineRootArea/(specificRootSurfaceArea_c(SRL[c], FineRootDensity[c])*1e-4);
     }
     if(rhizosphereOverlap!="total") {
       belowdf = DataFrame::create(_["Z50"] = Z50,

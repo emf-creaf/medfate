@@ -3407,18 +3407,6 @@ root_individualRootedGroundArea <- function(VolInd, V, d, rfc) {
 
 #' @rdname root
 #' @keywords internal
-root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
-    .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
-}
-
-#' @rdname root
-#' @keywords internal
-root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
-    .Call(`_medfate_fineRootRadius`, specificRootLength, rootTissueDensity)
-}
-
-#' @rdname root
-#' @keywords internal
 root_fineRootHalfDistance <- function(rootLengthDensity) {
     .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
 }
@@ -3439,12 +3427,6 @@ root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, root
 #' @keywords internal
 root_rhizosphereMaximumConductance <- function(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_rhizosphereMaximumConductance`, Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
-}
-
-#' @rdname root
-#' @keywords internal
-root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
-    .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 
 #' @rdname root
@@ -3475,6 +3457,24 @@ root_coarseRootSoilVolume <- function(v, d, depthWidthRatio = 1.0) {
 #' @keywords internal
 root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
     .Call(`_medfate_horizontalProportions`, poolProportions, VolInd, N, V, d, rfc)
+}
+
+#' @rdname root
+#' @keywords internal
+root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_fineRootRadius_c`, specificRootLength, rootTissueDensity)
+}
+
+#' @rdname root
+#' @keywords internal
+root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_specificRootSurfaceArea_c`, specificRootLength, rootTissueDensity)
+}
+
+#' @rdname root
+#' @keywords internal
+root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
+    .Call(`_medfate_fineRootSoilVolume_c`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 
 #' @rdname soil_texture

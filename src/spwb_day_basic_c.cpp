@@ -20,87 +20,87 @@
 #include <meteoland.h>
 
 // Soil water balance with simple hydraulic model
-void spwbDay_basic_c(List internalCommunication, List x, NumericVector meteovec, 
-                     double elevation, double slope, double aspect,
-                     double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
-                     bool verbose = false) {
+void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, ModelInput& x, 
+                     const WeatherInputVector& meteovec, 
+                     const double elevation, const double slope, const double aspect,
+                     const double runon, 
+                     const std::vector<double>& lateralFlows, const double waterTableDepth) {
   
-  // //Retrieve communication structures
-  // List modelOutputComm = internalCommunication["basicSPWBOutput"];
-  // List transpOutput = internalCommunication["basicTranspirationOutput"];
-  // List SWBcommunication = internalCommunication["SWBcommunication"];
-  // 
-  // NumericVector weather = modelOutputComm["weather"];
-  // weather["tday"] = meteovec["tday"];
-  // weather["prec"] = meteovec["prec"];
-  // weather["tmin"] = meteovec["tmin"];
-  // weather["tmax"] = meteovec["tmax"];
-  // weather["rhmin"] = meteovec["rhmin"];
-  // weather["rhmax"] = meteovec["rhmax"];
-  // weather["rad"] = meteovec["rad"];
-  // weather["wind"] = meteovec["wind"];
-  // weather["Catm"] = meteovec["Catm"];
-  // weather["Patm"] = meteovec["Patm"];
-  // weather["pet"] = meteovec["pet"];
-  // weather["rint"] = meteovec["rint"];
-  // NumericVector topo = modelOutputComm["topography"];
-  // topo["elevation"] = elevation;
-  // topo["slope"] = slope;
-  // topo["aspect"] = aspect;
-  // 
-  // //Control parameters
-  // List control = x["control"];
-  // bool bareSoilEvaporation = control["bareSoilEvaporation"];
-  // String rhizosphereOverlap = control["rhizosphereOverlap"];
-  // bool plantWaterPools = (rhizosphereOverlap!="total");
-  // String soilFunctions = control["soilFunctions"];
-  // String infiltrationMode = control["infiltrationMode"];
-  // double infiltrationCorrection = control["infiltrationCorrection"];
-  // String soilDomains = control["soilDomains"];
-  // int ndailysteps = control["ndailysteps"];
-  // int max_nsubsteps_soil = control["max_nsubsteps_soil"];
-  // 
+  //Retrieve communication structures
+  SoilWaterBalance_COMM& SWBcomm = BSPWB_comm.SWBcomm;
+  BasicTranspiration_COMM& BTcomm = BSPWB_comm.BTcomm;
+   
+   
+   //Meteo input
+   double pet = meteovec.pet;
+   double rhmax = meteovec.rhmax;
+   double rhmin = meteovec.rhmin;
+   double tday = meteovec.tday;
+   double prec = meteovec.prec;
+   double tmax = meteovec.tmax;
+   double tmin = meteovec.tmin;
+   double Catm = meteovec.Catm;
+   double Patm = meteovec.Patm;
+   double rad = meteovec.rad;
+   double wind = meteovec.wind;
+   double rainfallIntensity = meteovec.rint;
+
+   //Store topography for output
+   BSPWBres.topo.elevation = elevation;
+   BSPWBres.topo.slope = slope;
+   BSPWBres.topo.aspect = aspect;
+   
+  //Control parameters
+  bool bareSoilEvaporation = x.control.commonWB.bareSoilEvaporation;
+  std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
+  bool plantWaterPools = (rhizosphereOverlap!="total");
+  std::string& infiltrationMode = x.control.commonWB.infiltrationMode;
+  double infiltrationCorrection = x.control.commonWB.infiltrationCorrection;
+  std::string& soilDomains = x.control.soilDomains;
+  int ndailysteps = x.control.advancedWB.ndailysteps; // MAYBE CHANGE TO COMMONWB parameters
+  int max_nsubsteps_soil = x.control.commonWB.max_nsubsteps_soil;
+
+  //Soil
+  Soil& soil = x.soil;
+  int nlayers = soil.getNlayers();
+  
+  //Set soil temperature to tday
+  for(int l=0; l<nlayers; l++) soil.setTemp(l, tday);
+  
+  //Water pools
+  arma::mat& Wpool = x.belowLayers.Wpool;
+  
+  // Canopy
+  int ncanlayers = x.canopy.zlow.size();
+  
+  //Vegetation input
+  std::vector<double>& LAIlive = x.above.LAI_live;
+  std::vector<double>& LAIphe = x.above.LAI_expanded;
+  std::vector<double>& LAIdead = x.above.LAI_dead;
+  std::vector<double>& H = x.above.H;
+  std::vector<double>& CR = x.above.CR;
+  int numCohorts = LAIphe.size();
+  
+  
   // //Soil parameters
-  // DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
   // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  // int nlayers = soil.nrow();
-  // NumericVector Wsoil = soil["W"];
-  // NumericVector Tsoil = soil["Temp"];
   // 
   // List belowLayers = x["belowLayers"];
-  // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   // 
-  // //Weather input
-  // double tday = meteovec["tday"];
-  // double pet = meteovec["pet"]; 
-  // double prec  = meteovec["prec"];
-  // double rainfallIntensity  = meteovec["rint"]; 
-  // double rad = NA_REAL; 
-  // if(meteovec.containsElementNamed("rad")) rad = meteovec["rad"];
   // 
-  // //Set soil temperature to tday
-  // for(int l=0; l<nlayers; l++) Tsoil[l] = tday;
   // 
   // //Vegetation input
   // DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   // DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  // NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
-  // NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  // NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
-  // NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
-  // NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  // int numCohorts = LAIphe.size();
   // 
   // 
-  // //Parameters  
-  // DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  // NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
-  // NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsInterception["g"]);
-  // 
-  // DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
-  // NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
-  // 
-  // 
+  
+  //Parameters
+  const std::vector<double>& kPAR = x.paramsInterception.kPAR;
+  const std::vector<double>& gRainIntercept = x.paramsInterception.g;
+  
+  const std::vector<double>& Sgdd = x.paramsPhenology.Sgdd;
+  
   // //Copy clone soil and copy from Wpool to soil pools
   // List soilPools(numCohorts);
   // if(plantWaterPools) {
@@ -114,49 +114,51 @@ void spwbDay_basic_c(List internalCommunication, List x, NumericVector meteovec,
   //     soilPools[c] = soil_c;
   //   }
   // }
-  // 
-  // //STEP 1 - Update leaf area values according to the phenology of species and recalculate radiation extinction 
-  // double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
-  // for(int c=0;c<numCohorts;c++) {
-  //   s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-  //   LAIcell += LAIphe[c]+LAIdead[c];
-  //   LAIcelldead += LAIdead[c];
-  //   LAIcelllive += LAIlive[c];
-  //   LAIcellexpanded +=LAIphe[c];
-  //   Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
-  // }
-  // //Percentage of irradiance reaching the herb layer
-  // double LherbSWR = 100.0*exp((-1.0)*s/1.35);
-  // //Herb layer effects on light extinction and interception
-  // double herbLAI = x["herbLAI"];
-  // s += 0.5*herbLAI;
-  // Cm += herbLAI*1.0;
-  // LAIcell += herbLAI;
-  // //Percentage of irradiance reaching the ground
-  // double LgroundPAR = 100.0*exp((-1.0)*s);
-  // double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
-  // 
-  // //STEP 2 - Hidrological inputs (modifies snowpack)
-  // NumericVector hydroInputs = waterInputs(x, 
-  //                                         prec, rainfallIntensity, 
-  //                                         pet, tday, rad, elevation,
-  //                                         Cm, LgroundPAR, LgroundSWR, 
-  //                                         true);
-  // double RainfallInput = hydroInputs["NetRain"];
-  // double Snowmelt = hydroInputs["Snowmelt"];
-  // 
-  // //STEP 3 - Evaporation from bare soil and herbaceous transpiration
-  // double snowpack = x["snowpack"];
-  // NumericVector EherbVec(nlayers,0.0);
-  // double Esoil = 0.0;
+  
+
+  //STEP 1 - Update leaf area values according to the phenology of species and recalculate radiation extinction
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+    LAIcell += LAIphe[c]+LAIdead[c];
+    LAIcelldead += LAIdead[c];
+    LAIcelllive += LAIlive[c];
+    LAIcellexpanded +=LAIphe[c];
+    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
+  }
+  
+  //Percentage of irradiance reaching the herb layer
+  double LherbSWR = 100.0*exp((-1.0)*s/1.35);
+  //Herb layer effects on light extinction and interception
+  s += 0.5*x.herbLAI;
+  Cm += x.herbLAI*1.0;
+  LAIcell += x.herbLAI;
+  
+  //Percentage of irradiance reaching the ground
+  double LgroundPAR = 100.0*exp((-1.0)*s);
+  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
+
+  //STEP 2 - Hidrological inputs (modifies snowpack)
+  waterInputs_c(BSPWB_comm.waterInputs, x,
+                prec, rainfallIntensity,
+                pet, tday, rad, elevation,
+                Cm, LgroundPAR, LgroundSWR,
+                true);
+  double RainfallInput = BSPWB_comm.waterInputs.netrain;
+  double Snowmelt = BSPWB_comm.waterInputs.melt;
+
+  //STEP 3 - Evaporation from bare soil and herbaceous transpiration
+  double snowpack = x.snowpack;
+  std::vector<double> EherbVec(nlayers,0.0);
+  double Esoil = 0.0;
   // NumericVector EsoilPools(numCohorts, 0.0);
   // NumericMatrix EherbPools(numCohorts, nlayers);
-  // if(!plantWaterPools) {
-  //   //Evaporation from bare soil if there is no snow (do not yet modify soil)
-  //   if(bareSoilEvaporation) Esoil = soilEvaporation(soil, snowpack, soilFunctions, pet, LgroundSWR, false);
-  //   //Herbaceous transpiration (do not yet modify soil)
-  //   EherbVec = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, false);
-  // } else {
+  if(!plantWaterPools) {
+    //Evaporation from bare soil if there is no snow (do not yet modify soil)
+    if(bareSoilEvaporation) Esoil = soilEvaporation_c(soil, snowpack, pet, LgroundSWR, false);
+    //Herbaceous transpiration (do not yet modify soil)
+    // herbaceousTranspiration_c(EherbVec, soil, pet, LherbSWR, herbLAI,  false);
+  } else {
   //   NumericVector poolProportions = belowdf["poolProportions"];
   //   for(int c=0;c<numCohorts;c++) {
   //     //Get soil pool
@@ -174,7 +176,7 @@ void spwbDay_basic_c(List internalCommunication, List x, NumericVector meteovec,
   //       EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l]; 
   //     }
   //   }
-  // }
+  }
   // 
   // //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
   // transpirationBasic(transpOutput, x, meteovec, elevation, true);
