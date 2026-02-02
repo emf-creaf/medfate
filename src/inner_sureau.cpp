@@ -1,6 +1,6 @@
 #define STRICT_R_HEADERS
 #include <RcppArmadillo.h>
-#include "struct_sureau.h"
+#include "inner_sureau_c.h"
 #include "photosynthesis.h"
 #include "biophysicsutils_c.h"
 #include "hydraulics.h"
@@ -318,34 +318,14 @@ SureauNetwork listToStruct(List network) {
   return(snetwork);
 }
 
-double PLC_derivative(double plc, double slope) {
-  return(-1.0*slope/25.0 * plc/100 * (1.0 - plc/100));
-}
-double PLC(double Pmin, double slope, double P50){
-  return (100.0 / (1.0 + exp(slope / 25.0 * (Pmin - P50))));
-}
-double invPLC(double plc, double slope, double P50){
-  return(P50 + log((100.0/plc)-1.0)*(25.0/slope));
-}
 double averagePsiSigmoid(NumericVector psi, NumericVector v, double slope, double P50) {
   int nlayers = psi.size();
   NumericVector K(nlayers);
-  for(int l=0;l<nlayers;l++) K[l]= PLC(psi[l], slope, P50);
-  double psires =  invPLC(sum(K*v), slope, P50);
+  for(int l=0;l<nlayers;l++) K[l]= PLC_c(psi[l], slope, P50);
+  double psires =  invPLC_c(sum(K*v), slope, P50);
   psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
   return(psires);
 }
-double RWC(double PiFT, double Esymp, double Pmin) {
-  double A = std::max((-1.0 * (Pmin + PiFT - Esymp) - sqrt(pow(Pmin + PiFT - Esymp, 2.0) + 4.0 * (Pmin * Esymp))) / (2.0 * Esymp), 1.0 - PiFT / Pmin);
-  return(A);
-}
-
-double Emin(double gmin, double gBL, double gCrown, 
-            double VPD, double airPressure =101.3) {
-  double gmintot = 1.0/(1.0/gmin+ 1.0/gBL + 1.0/gCrown);
-  return(gmintot * VPD /airPressure); 
-}
-
 // # Update plant conductances
 void update_conductances(SureauNetwork &network) {
   
@@ -400,7 +380,7 @@ void update_capacitances(SureauNetwork &network) {
   double PsiTLP_Stem = turgorLossPoint_c(PiFullTurgor_Stem, epsilonSym_Stem);
 
   //#----Compute the relative water content of the symplasm----
-  double RWC_LSym = 1.0 - RWC(PiFullTurgor_Leaf, epsilonSym_Leaf, Psi_LSym - dbxmin);
+  double RWC_LSym = 1.0 - RWC_c(PiFullTurgor_Leaf, epsilonSym_Leaf, Psi_LSym - dbxmin);
   //#----Compute the derivative of the relative water content of the symplasm----
   double RWC_LSym_prime;
   if(Psi_LSym > PsiTLP_Leaf) { //# FP derivative of -Pi0- Eps(1-RWC)+Pi0/RWC
@@ -417,7 +397,7 @@ void update_capacitances(SureauNetwork &network) {
   
   
   //#----Stem symplasmic canopy water content----
-  double RWC_SSym = 1.0 - RWC(PiFullTurgor_Stem, epsilonSym_Stem, Psi_SSym - dbxmin);
+  double RWC_SSym = 1.0 - RWC_c(PiFullTurgor_Stem, epsilonSym_Stem, Psi_SSym - dbxmin);
   
   //#----Compute the derivative of the relative water content of the symplasm----
   double RWC_SSym_prime;
@@ -434,9 +414,7 @@ void update_capacitances(SureauNetwork &network) {
   network.C_LApo = params.C_LApoInit;
 }
 
-double Turgor(double PiFT, double Esymp, double Rstemp) {
-  return(-1.0*PiFT - Esymp * Rstemp);
-}
+
 
 //Currently not called for optimization purposes
 // double regulFact(double psi, List params, String regulationType = "Sigmoid") {
@@ -649,8 +627,8 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
 
   network.Psi_SApo = StemPsiVEC[c]; 
   network.Psi_SSym = StemSympPsiVEC[c];
-  network.Psi_SApo_cav = std::min(0.0, invPLC(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c])); //Sureau operates with %
-  network.Psi_LApo_cav = std::min(0.0, invPLC(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c])); //Sureau operates with %
+  network.Psi_SApo_cav = std::min(0.0, invPLC_c(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c])); //Sureau operates with %
+  network.Psi_LApo_cav = std::min(0.0, invPLC_c(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c])); //Sureau operates with %
   
   //PLC levels
   network.PLC_Stem = StemPLCVEC[c]*100.0; //Sureau operates with %
@@ -904,9 +882,9 @@ void semi_implicit_integration_inner(SureauNetwork &network,
   double VCstem_P50 = params.VCstem_P50;
   
   //Compute K_L_Cav et K_S_Cav
-  double PLC_prime_L = PLC_derivative(PLC_Leaf, VCleaf_slope);
+  double PLC_prime_L = PLC_derivative_c(PLC_Leaf, VCleaf_slope);
   double K_L_Cav = -1.0 * Lcav * Q_LApo_sat_mmol_perLeafArea * PLC_prime_L / dt;  // avec WBveg$Q_LSym_sat en l/m2 sol # changed by NM (25/10/2021)
-  double PLC_prime_S = PLC_derivative(PLC_Stem, VCstem_slope);
+  double PLC_prime_S = PLC_derivative_c(PLC_Stem, VCstem_slope);
   double K_S_Cav = -1.0 * Scav * Q_SApo_sat_mmol_perLeafArea * PLC_prime_S / dt;  // opt$Scav * WBveg$K_S_Cav #FP corrected a bug sign herehanged by NM (25/10/2021)
   // Rcout<< "0 "<< PLC_prime_L << " "<<K_L_Cav<<" "<<PLC_prime_S<< " "<< K_S_Cav<<"\n";
   
@@ -1004,20 +982,20 @@ void semi_implicit_integration_inner(SureauNetwork &network,
   if(stemCavitationRecovery!="total") {
     if (psirefS < Psi_SApo_cav) {
       network.Psi_SApo_cav = psirefS;
-      network.PLC_Stem = PLC(psirefS, VCstem_slope, VCstem_P50);
+      network.PLC_Stem = PLC_c(psirefS, VCstem_slope, VCstem_P50);
     }
   } else { //Immediate refilling
     network.Psi_SApo_cav = psirefS;
-    network.PLC_Stem = PLC(psirefS, VCstem_slope, VCstem_P50);
+    network.PLC_Stem = PLC_c(psirefS, VCstem_slope, VCstem_P50);
   }
   if(leafCavitationRecovery!="total") {
     if(psirefL < Psi_LApo_cav) {
       network.Psi_LApo_cav = psirefL;
-      network.PLC_Leaf = PLC(psirefL, VCleaf_slope, VCleaf_P50);
+      network.PLC_Leaf = PLC_c(psirefL, VCleaf_slope, VCleaf_P50);
     }
   } else { //Immediate refilling
     network.Psi_LApo_cav = psirefL;
-    network.PLC_Leaf = PLC(psirefL, VCleaf_slope, VCleaf_P50);
+    network.PLC_Leaf = PLC_c(psirefL, VCleaf_slope, VCleaf_P50);
   }
 }
 
@@ -1307,13 +1285,13 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           //# Leaf cuticular conductances and cuticular transpiration
           double gmin_SL = gmin_c(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
           double gmin_SH = gmin_c(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-          double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm)*f_dry; //Add f_dry to decrease transpiration in rainy days
-          double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm)*f_dry;
+          double Emin_L_SL = Emin_c(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm)*f_dry; //Add f_dry to decrease transpiration in rainy days
+          double Emin_L_SH = Emin_c(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm)*f_dry;
           double Emin_L = ((Emin_L_SL*LAI_SL(c,n)) + (Emin_L_SH*LAI_SH(c,n)))/LAI; 
           network_n.Emin_L = Emin_L;
           
           //Compute stem cuticular transpiration
-          double Emin_S = fTRBToLeaf * Emin(gmin_S, gBL, gCR, VPD_air, Patm);
+          double Emin_S = fTRBToLeaf * Emin_c(gmin_S, gBL, gCR, VPD_air, Patm);
           network_n.Emin_S =  Emin_S*f_dry; //Add f_dry to decrease transpiration in rainy days
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
           

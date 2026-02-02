@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-#include "struct_sureau.h"
+#include "inner_sureau_c.h"
 
 #ifndef INNER_COCHARD_H
 #define INNER_COCHARD_H
