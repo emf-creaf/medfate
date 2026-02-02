@@ -1,11 +1,8 @@
 #define STRICT_R_HEADERS
 #include <RcppArmadillo.h>
 #include "inner_sureau_c.h"
-#include "photosynthesis.h"
 #include "biophysicsutils_c.h"
-#include "hydraulics.h"
 #include "hydraulics_c.h"
-#include "soil.h"
 #include "soil_c.h"
 #include "tissuemoisture_c.h"
 #include <meteoland.h>
@@ -36,11 +33,123 @@ double Turgor_c(double PiFT, double Esymp, double Rstemp) {
   return(-1.0*PiFT - Esymp * Rstemp);
 }
 
+
+// # Update plant conductances
+void update_conductances_c(SureauNetwork &network) {
+  
+  double* k_RCApoInit = network.params.k_RCApoInit;
+  double k_CSApoInit = network.params.k_CSApoInit;
+  double k_SLApoInit = network.params.k_SLApoInit;
+  double k_LSym = network.k_LSym;
+  double plc_leaf = network.PLC_Leaf;
+  double plc_stem = network.PLC_Stem;
+  
+  double*  k_RSApo = network.k_RSApo;
+  double*  k_SoilToStem = network.k_SoilToStem;
+  double*  k_Soil = network.k_Soil;
+  double*  k_RCApo = new double[network.params.npools];
+  
+  double k_SLApo = k_SLApoInit * (1.0 - (plc_leaf/100.0)); //Conductance from stem apo to leaf apo
+  network.k_SLApo  = k_SLApo;
+  double k_CSApo = k_CSApoInit * (1.0 - (plc_stem/100.0)); //conductance from root crown to stem apo
+  network.k_CSApo = k_CSApo;
+  double sum_k_RCApo = 0.0;
+  //# calculate k_SoilToStem and k_RSApo with cavitation
+  for(int i = 0;i<network.params.npools;i++) {
+    k_RCApo[i] = k_RCApoInit[i] * (1.0 - (plc_stem/100.0)); // conductance from root surface to root crown
+    k_RSApo[i] = 1.0/((1.0/k_RCApo[i]) + (1.0/k_CSApo)); // conductance from root surface to stem
+    //# Root from root length
+    k_SoilToStem[i] = 1.0/((1.0/k_Soil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to stem
+    sum_k_RCApo += k_RCApo[i];
+  }
+  delete[] k_RCApo;
+  
+  // Compute k_plant (from root to leaf) for diagnostic only
+  // Rcout << " PLCstem "<< ((double) network["PLC_Stem"]) << " PLCleaf "<< ((double) network["PLC_Leaf"]) << " "<< sum(k_RSApo) << " Leaf " << k_SLApoInit << "/"<<k_SLApo << " " << k_LSym<<"\n";
+  network.k_Plant =  1.0/ (1.0 /sum_k_RCApo + 1.0/k_CSApo + 1.0/k_SLApo + 1.0/k_LSym);
+}
+
+// # update symplasmic plant capacitances for Trunk and leaves
+void update_capacitances_c(SureauNetwork &network) {
+  SureauParams params = network.params;
+  double dbxmin = 1.0e-100; //# NM minimal double to avoid-INF
+  
+  double LAI = network.LAI;
+  double Psi_SSym = network.Psi_SSym;
+  double Psi_LSym = network.Psi_LSym;
+  double Q_LSym_sat_mmol_perLeafArea = network.Q_LSym_sat_mmol_perLeafArea;
+  // double Q_SSym_sat_mmol_perLeafArea = network["Q_SSym_sat_mmol_perLeafArea"]; //not used
+  
+  double epsilonSym_Leaf = params.epsilonSym_Leaf;
+  double PiFullTurgor_Leaf = params.PiFullTurgor_Leaf;
+  double epsilonSym_Stem = params.epsilonSym_Stem;
+  double PiFullTurgor_Stem = params.PiFullTurgor_Stem;
+  double PsiTLP_Leaf = turgorLossPoint_c(PiFullTurgor_Leaf, epsilonSym_Leaf);
+  double PsiTLP_Stem = turgorLossPoint_c(PiFullTurgor_Stem, epsilonSym_Stem);
+  
+  //#----Compute the relative water content of the symplasm----
+  double RWC_LSym = 1.0 - RWC_c(PiFullTurgor_Leaf, epsilonSym_Leaf, Psi_LSym - dbxmin);
+  //#----Compute the derivative of the relative water content of the symplasm----
+  double RWC_LSym_prime;
+  if(Psi_LSym > PsiTLP_Leaf) { //# FP derivative of -Pi0- Eps(1-RWC)+Pi0/RWC
+    RWC_LSym_prime = RWC_LSym / (-1.0*PiFullTurgor_Leaf - Psi_LSym - epsilonSym_Leaf + 2.0 * epsilonSym_Leaf * RWC_LSym);
+  } else {
+    RWC_LSym_prime = -1.0*PiFullTurgor_Leaf / pow(Psi_LSym, 2.0);// # FP derivative of Pi0/Psi
+  }
+  //# Compute the leaf capacitance (mmol/MPa/m2_sol)
+  if (LAI==0){
+    network.C_LSym = 0.0;
+  } else {
+    network.C_LSym = Q_LSym_sat_mmol_perLeafArea * RWC_LSym_prime;
+  } //# changed 25/10/2021 by NM
+  
+  
+  //#----Stem symplasmic canopy water content----
+  double RWC_SSym = 1.0 - RWC_c(PiFullTurgor_Stem, epsilonSym_Stem, Psi_SSym - dbxmin);
+  
+  //#----Compute the derivative of the relative water content of the symplasm----
+  double RWC_SSym_prime;
+  if (Psi_SSym > PsiTLP_Stem) {
+    RWC_SSym_prime = RWC_SSym / (-1.0* PiFullTurgor_Stem - Psi_SSym - epsilonSym_Stem + 2.0 * epsilonSym_Stem * RWC_SSym);
+  } else {
+    RWC_SSym_prime = -1.0* PiFullTurgor_Stem / pow(Psi_SSym, 2.0);
+  }
+  //# Compute the capacitance (mmol/MPa/m2_leaf)
+  network.C_SSym = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
+  // Rcout << "update "<< Psi_SSym <<  " " << Q_LSym_sat_mmol_perLeafArea << " " << RWC_SSym_prime << " C_SSym: " << network.C_SSym<<"\n";
+  // MIQUEL - we could use instead: network["C_SSym"] = Q_SSym_sat_mmol_perLeafArea * RWC_SSym_prime; 
+  network.C_SApo = params.C_SApoInit; //MIQUEL: Why are these not scaled?
+  network.C_LApo = params.C_LApoInit;
+}
+
+
+//# stomatal conductance calculation with Jarvis type formulations
+double gsJarvis_c(SureauParams &params, double PAR, double Temp, int option){
+  double JarvisPAR = params.JarvisPAR;
+  double gsMax = params.gsMax;
+  double gsNight = params.gsNight;
+  double Tgs_optim = params.Tgs_optim;
+  double Tgs_sens = params.Tgs_sens;
+  double gsMax2, gsNight2;
+  if (option == 1) { //# temperature effect on gs
+    double tempEff = 1.0/(1.0 + pow((Temp - Tgs_optim)/Tgs_sens, 2.0));
+    gsMax2    = std::max(0.0, gsMax * tempEff);
+    gsNight2  = std::max(0.0, gsNight * tempEff);
+  } else {
+    gsMax2    = std::max(0.0, gsMax);
+    gsNight2  = std::max(0.0, gsNight);
+  }
+  double Q = irradianceToPhotonFlux_c(PAR, defaultLambda); //From W m-2 to micromol s-1 m-2
+  double gs_bound = gsNight2 + (gsMax2 - gsNight2) * (1.0 - exp(-1.0*JarvisPAR*Q));
+  return(gs_bound);
+}
+
+
 void semi_implicit_integration_inner_c(SureauNetwork& network,
                                        double dt, 
                                        const SureauOpt& opt, 
-                                       const std::string& stemCavitationRecovery = "annual", 
-                                       const std::string& leafCavitationRecovery = "total") {
+                                       const std::string& stemCavitationRecovery, 
+                                       const std::string& leafCavitationRecovery) {
   
   const SureauParams& params = network.params;
   double* PsiSoil = network.PsiSoil;

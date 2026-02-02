@@ -10,6 +10,7 @@ struct SureauOpt {
   double CTapo;
   double Lcav;
   double Scav;
+  double Eord;
 };
 struct SureauParams { 
   int npools;
@@ -97,5 +98,14 @@ double RWC_c(double PiFT, double Esymp, double Pmin);
 double Emin_c(double gmin, double gBL, double gCrown, 
               double VPD, double airPressure =101.3);
 double Turgor_c(double PiFT, double Esymp, double Rstemp);
+void update_conductances_c(SureauNetwork &network);
+void update_capacitances_c(SureauNetwork &network);
+double gsJarvis_c(SureauParams &params, double PAR, double Temp, int option = 1);
+
+void semi_implicit_integration_inner_c(SureauNetwork& network,
+                                       double dt, 
+                                       const SureauOpt& opt, 
+                                       const std::string& stemCavitationRecovery, 
+                                       const std::string& leafCavitationRecovery);
 
 #endif
