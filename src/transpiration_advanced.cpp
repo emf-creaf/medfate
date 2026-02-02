@@ -20,6 +20,7 @@
 #include "soil_thermodynamics.h"
 #include "inner_sperry.h"
 #include "inner_sureau.h"
+#include "inner_sureau_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -1184,7 +1185,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   //Delete Sureau Networks
   if(transpirationMode == "Sureau") {
     for(int c=0;c<numCohorts;c++) {
-      deleteSureauNetworkPointers(sureauNetworks[c]);
+      deleteSureauNetworkPointers_c(sureauNetworks[c]);
     }
   }
   delete[] sureauNetworks;

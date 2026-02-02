@@ -12,6 +12,7 @@
 
 namespace medfate {
     constexpr double NA_DOUBLE = std::numeric_limits<double>::quiet_NaN();
+    constexpr int NA_INTEGER = std::numeric_limits<int>::quiet_NaN();
 
     inline bool is_na(double val) {
         return std::isnan(val);

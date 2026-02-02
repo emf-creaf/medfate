@@ -1,8 +1,10 @@
 #define STRICT_R_HEADERS
 #include <RcppArmadillo.h>
+#include "medfate.h"
 #include "inner_sureau_c.h"
 #include "biophysicsutils_c.h"
 #include "hydraulics_c.h"
+#include "modelInput_c.h"
 #include "soil_c.h"
 #include "tissuemoisture_c.h"
 #include <meteoland.h>
@@ -314,3 +316,259 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
     network.PLC_Leaf = PLC_c(psirefL, VCleaf_slope, VCleaf_P50);
   }
 }
+
+
+//Function to clone SureauParams object
+void copyParams_c(SureauParams& params, SureauParams& sinkParams) {
+  sinkParams.npools = params.npools;
+  sinkParams.TPhase_gmin = params.TPhase_gmin;
+  sinkParams.Q10_1_gmin = params.Q10_1_gmin;
+  sinkParams.Q10_2_gmin = params.Q10_2_gmin;
+  sinkParams.Gsw_AC_slope = params.Gsw_AC_slope;
+  sinkParams.fTRBToLeaf = params.fTRBToLeaf;
+  sinkParams.C_SApoInit = params.C_SApoInit;
+  sinkParams.C_LApoInit = params.C_LApoInit;
+  sinkParams.k_SLApoInit = params.k_SLApoInit;
+  sinkParams.k_CSApoInit = params.k_CSApoInit;
+  
+  for(int i=0;i<params.npools;i++) {
+    sinkParams.k_RCApoInit[i] = params.k_RCApoInit[i];
+    sinkParams.VGrhizo_kmax[i] = params.VGrhizo_kmax[i];
+  }
+  
+  sinkParams.slope_gs = params.slope_gs;
+  sinkParams.P50_gs = params.P50_gs;
+  sinkParams.Tgs_optim = params.Tgs_optim;
+  sinkParams.Tgs_sens = params.Tgs_sens;
+  sinkParams.JarvisPAR = params.JarvisPAR;
+  
+  sinkParams.gmin20 = params.gmin20;
+  sinkParams.gsMax = params.gsMax;
+  sinkParams.gmin_S = params.gmin_S;
+  sinkParams.gsNight = params.gsNight;
+  
+  sinkParams.VCleaf_P50 = params.VCleaf_P50; 
+  sinkParams.VCleaf_slope = params.VCleaf_slope; 
+  sinkParams.VCstem_P50 = params.VCstem_P50; 
+  sinkParams.VCstem_slope = params.VCstem_slope; 
+  sinkParams.VCroot_P50 = params.VCroot_P50; 
+  sinkParams.VCroot_slope = params.VCroot_slope; 
+  sinkParams.PiFullTurgor_Leaf = params.PiFullTurgor_Leaf; 
+  sinkParams.epsilonSym_Leaf = params.epsilonSym_Leaf;
+  sinkParams.PiFullTurgor_Stem = params.PiFullTurgor_Stem; 
+  sinkParams.epsilonSym_Stem = params.epsilonSym_Stem;
+}
+
+//Function to copy SureauNetwork object
+void copyNetwork_c(SureauNetwork& network, SureauNetwork& sinkNetwork) {
+  copyParams_c(network.params, sinkNetwork.params);
+  sinkNetwork.LAI = network.LAI;
+  sinkNetwork.Psi_LApo = network.Psi_LApo;
+  sinkNetwork.Psi_LSym = network.Psi_LSym;
+  sinkNetwork.Psi_RCApo = network.Psi_RCApo;
+  sinkNetwork.Psi_SApo = network.Psi_SApo;
+  sinkNetwork.Psi_SSym = network.Psi_SSym;
+  sinkNetwork.Psi_SApo_cav = network.Psi_SApo_cav;
+  sinkNetwork.Psi_LApo_cav = network.Psi_LApo_cav;
+  sinkNetwork.PLC_Stem = network.PLC_Stem;
+  sinkNetwork.PLC_Leaf = network.PLC_Leaf;                   
+  sinkNetwork.C_SApo = network.C_SApo;
+  sinkNetwork.C_LApo = network.C_LApo;
+  sinkNetwork.C_SSym = network.C_SSym;
+  sinkNetwork.C_LSym = network.C_LSym;
+  sinkNetwork.k_SLApo = network.k_SLApo;                     
+  sinkNetwork.k_CSApo = network.k_CSApo;
+  sinkNetwork.k_SSym = network.k_SSym;
+  sinkNetwork.k_LSym = network.k_LSym;
+  for(int i=0;i<network.params.npools;i++) {
+    sinkNetwork.k_RSApo[i] = network.k_RSApo[i];
+    sinkNetwork.k_SoilToStem[i] = network.k_SoilToStem[i];
+    sinkNetwork.k_Soil[i] = network.k_Soil[i];
+    sinkNetwork.PsiSoil[i] = network.PsiSoil[i];
+  }
+  
+  sinkNetwork.k_Plant = network.k_Plant;
+  
+  //Water content (mmol m-2)
+  sinkNetwork.Q_SApo_sat_mmol_perLeafArea = network.Q_SApo_sat_mmol_perLeafArea;
+  sinkNetwork.Q_LApo_sat_mmol_perLeafArea = network.Q_LApo_sat_mmol_perLeafArea;
+  sinkNetwork.Q_SSym_sat_mmol_perLeafArea = network.Q_SSym_sat_mmol_perLeafArea;
+  sinkNetwork.Q_LSym_sat_mmol_perLeafArea = network.Q_LSym_sat_mmol_perLeafArea;
+  
+  sinkNetwork.Einst = network.Einst;
+  sinkNetwork.Einst_SL = network.Einst_SL;
+  sinkNetwork.Einst_SH = network.Einst_SH;
+  sinkNetwork.Elim = network.Elim;
+  sinkNetwork.Elim_SL = network.Elim_SL;
+  sinkNetwork.Elim_SH = network.Elim_SH;
+  sinkNetwork.Emin_L = network.Emin_L;
+  sinkNetwork.Emin_L_SL = network.Emin_L_SL;
+  sinkNetwork.Emin_L_SH = network.Emin_L_SH;
+  sinkNetwork.Emin_S = network.Emin_S;
+  sinkNetwork.Diag_nwhile_cavit = network.Diag_nwhile_cavit;
+  sinkNetwork.Diag_deltaRegulMax = network.Diag_deltaRegulMax;
+  sinkNetwork.Diag_deltaPLCMax = network.Diag_deltaPLCMax;
+  sinkNetwork.Diag_timeStepInSeconds = network.Diag_timeStepInSeconds;
+}
+
+//Function to delete pointers
+void deleteSureauNetworkPointers_c(SureauNetwork &network) {
+  delete[] network.params.k_RCApoInit;
+  delete[] network.params.VGrhizo_kmax;
+  delete[] network.k_Soil;
+  delete[] network.PsiSoil;
+  delete[] network.k_RSApo;
+  delete[] network.k_SoilToStem;
+}
+
+
+
+void initSureauParams_inner_c(SureauParams& params, int c,
+                              InternalWater& internalWater, 
+                              TranspirationParams& paramsTranspiration, 
+                              WaterStorageParams& paramsWaterStorage,
+                              std::vector<double>& VCroot_kmax, 
+                              std::vector<double>& VGrhizo_kmax,
+                              ControlParameters& control, 
+                              double sapFluidityDay) {
+
+  //This will change depending on the layers connected
+  params.npools = VCroot_kmax.size();
+  params.TPhase_gmin = control.advancedWB.TPhase_gmin;
+  params.Q10_1_gmin = control.advancedWB.Q10_1_gmin;
+  params.Q10_2_gmin = control.advancedWB.Q10_2_gmin;
+  if(control.sureau.stomatalSubmodel=="Jarvis") {
+    params.Tgs_optim = paramsTranspiration.Gs_Toptim[c];
+    params.Tgs_sens = paramsTranspiration.Gs_Tsens[c];
+    params.JarvisPAR = control.sureau.JarvisPAR;
+  } else {
+    params.Gsw_AC_slope = paramsTranspiration.Gsw_AC_slope[c];
+  }
+  params.fTRBToLeaf = control.sureau.fTRBToLeaf;//ratio of bark area to leaf area
+  params.C_SApoInit = control.sureau.C_SApoInit; //Maximum capacitance of the stem apoplasm
+  params.C_LApoInit = control.sureau.C_LApoInit; //Maximum capacitance of the leaf apoplasm
+  params.k_SLApoInit = sapFluidityDay*paramsTranspiration.VCleafapo_kmax[c]; //Maximum conductance from trunk apoplasm to leaf apoplasm
+  params.k_CSApoInit = sapFluidityDay*paramsTranspiration.VCstem_kmax[c]; //Maximum conductance from root crown to stem apoplasm
+  // Rcout << "par init "<< c<< " VCstem_kmax[c]: "<<VCstem_kmax[c] << " sapfluidity: "<< sapFluidityDay<<" k_CSApoInit: " << params.k_CSApoInit<< "\n";
+  params.k_RCApoInit = new double [params.npools];
+  params.VGrhizo_kmax = new double [params.npools];
+  for(int l = 0;l<params.npools;l++)  {
+    params.k_RCApoInit[l] = sapFluidityDay*VCroot_kmax[l];
+    params.VGrhizo_kmax[l] = VGrhizo_kmax[l];
+  }
+  params.slope_gs = paramsTranspiration.Gs_slope[c];
+  params.P50_gs = paramsTranspiration.Gs_P50[c];
+  
+  //PLANT RELATED PARAMETERS
+  double gmin20 = paramsTranspiration.Gswmin[c]*1000.0; //Leaf cuticular transpiration
+  bool leafCuticularTranspiration = control.sureau.leafCuticularTranspiration;
+  if(!leafCuticularTranspiration) gmin20 = 0.0;
+  params.gmin20 = gmin20; //mol to mmol 
+  params.gsMax = paramsTranspiration.Gswmax[c]*1000.0; //mol to mmol 
+  bool stemCuticularTranspiration = control.sureau.stemCuticularTranspiration;
+  double gmin_S = paramsTranspiration.Gswmin[c]*1000.0;  // gmin for stem equal to leaf gmin, in mmol
+  if(!stemCuticularTranspiration) gmin_S = 0.0;
+  params.gmin_S = gmin_S;
+  double gs_NightFrac = control.sureau.gs_NightFrac;
+  params.gsNight = gs_NightFrac*paramsTranspiration.Gswmax[c]*1000.0; 
+  
+  params.VCleaf_P50 = paramsTranspiration.VCleaf_P50[c]; 
+  params.VCleaf_slope = paramsTranspiration.VCleaf_slope[c]; 
+  params.VCstem_P50 = paramsTranspiration.VCstem_P50[c]; 
+  params.VCstem_slope = paramsTranspiration.VCstem_slope[c]; 
+  params.VCroot_P50 = paramsTranspiration.VCroot_P50[c]; 
+  params.VCroot_slope = paramsTranspiration.VCroot_slope[c]; 
+  params.PiFullTurgor_Leaf = paramsWaterStorage.LeafPI0[c]; 
+  params.epsilonSym_Leaf = paramsWaterStorage.LeafEPS[c]; 
+  params.PiFullTurgor_Stem = paramsWaterStorage.StemPI0[c]; 
+  params.epsilonSym_Stem = paramsWaterStorage.StemEPS[c]; 
+  
+}
+
+void initSureauNetwork_inner_c(SureauNetwork& network, int c, 
+                               std::vector<double>& LAIphe,
+                               InternalWater& internalWater, 
+                               AnatomyParams& paramsAnatomy, 
+                               TranspirationParams& paramsTranspiration, 
+                               WaterStorageParams& paramsWaterStorage,
+                               std::vector<double>& VCroot_kmax, std::vector<double>& VGrhizo_kmax,
+                               std::vector<double>& PsiSoil, std::vector<double>& VG_n, std::vector<double>& VG_alpha,
+                               ControlParameters& control, double sapFluidityDay) {
+  
+  //Params
+  initSureauParams_inner_c(network.params, c, internalWater, 
+                           paramsTranspiration, paramsWaterStorage,
+                           VCroot_kmax, VGrhizo_kmax,
+                           control, sapFluidityDay);
+  
+  //LAI
+  network.LAI = LAIphe[c];
+  
+  //Water potentials
+  network.Psi_LApo = internalWater.LeafPsi[c]; 
+  network.Psi_LSym = internalWater.LeafSympPsi[c];
+  network.Psi_RCApo = internalWater.RootCrownPsi[c];
+  
+  network.Psi_SApo = internalWater.StemPsi[c]; 
+  network.Psi_SSym = internalWater.StemSympPsi[c];
+  network.Psi_SApo_cav = std::min(0.0, invPLC_c(internalWater.StemPLC[c]*100.0, paramsTranspiration.VCstem_slope[c], paramsTranspiration.VCstem_P50[c])); //Sureau operates with %
+  network.Psi_LApo_cav = std::min(0.0, invPLC_c(internalWater.LeafPLC[c]*100.0, paramsTranspiration.VCleaf_slope[c], paramsTranspiration.VCleaf_P50[c])); //Sureau operates with %
+  
+  //PLC levels
+  network.PLC_Stem = internalWater.StemPLC[c]*100.0; //Sureau operates with %
+  network.PLC_Leaf = internalWater.LeafPLC[c]*100.0; //Sureau operates with %
+  //Capacitances (mmol m-2 MPa-1)
+  network.C_SApo = medfate::NA_DOUBLE; //Capacitance of the stem apoplasm
+  network.C_LApo = medfate::NA_DOUBLE; //Capacitance of the leaf apoplasm
+  network.C_SSym = medfate::NA_DOUBLE; //Capacitance of the stem symplasm (HOW TO ESTIMATE THEM?)
+  network.C_LSym = medfate::NA_DOUBLE; //Capacitance of the leaf symplasm (HOW TO ESTIMATE THEM?)
+  //Conductances (mmol m-2 MPa-1 s-1)
+  network.k_SLApo = medfate::NA_DOUBLE; //Conductance from trunk apoplasm to leaf apoplasm
+  network.k_CSApo = medfate::NA_DOUBLE; //Conductance from root crown to trunk apoplasm
+  network.k_SSym = sapFluidityDay*paramsTranspiration.kstem_symp[c]; //Conductance from trunk apoplasm to trunk symplasm (CONTROL PARAMETER?)
+  network.k_LSym = sapFluidityDay*paramsTranspiration.kleaf_symp[c]; //Conductance from leaf apoplasm to leaf symplasm
+  
+  network.k_RSApo = new double[network.params.npools];
+  network.k_SoilToStem = new double[network.params.npools];
+  network.k_Soil = new double[network.params.npools];
+  network.PsiSoil = new double[network.params.npools];
+  for(int l=0;l < network.params.npools; l++) {
+    network.PsiSoil[l] = PsiSoil[l]; // Copies external soil Psi
+    network.k_SoilToStem[l] = medfate::NA_DOUBLE; //Conductance from soil to trunk apoplasm
+    network.k_RSApo[l] = medfate::NA_DOUBLE; //Conductance from rhizosphere surface to trunk apoplasm
+    network.k_Soil[l] = vanGenuchtenConductance_c(PsiSoil[l],
+                                                  VGrhizo_kmax[l], 
+                                                  VG_n[l], VG_alpha[l]); 
+  }
+  network.k_Plant = medfate::NA_DOUBLE; //Whole-plant conductance  = Plant_kmax
+  
+  //Water content (mmol m-2)
+  double l2mmol = 1.0e6/18.0;
+  network.Q_SApo_sat_mmol_perLeafArea = paramsWaterStorage.Vsapwood[c]*paramsWaterStorage.StemAF[c]*l2mmol; //Water content in stem apoplasm
+  network.Q_LApo_sat_mmol_perLeafArea = paramsWaterStorage.Vleaf[c]*paramsWaterStorage.LeafAF[c]*l2mmol; //Water content in leaf apoplasm
+  network.Q_SSym_sat_mmol_perLeafArea = paramsWaterStorage.Vsapwood[c]*(1.0 - paramsWaterStorage.StemAF[c])*l2mmol; //Water content in stem symplasm
+  network.Q_LSym_sat_mmol_perLeafArea = paramsWaterStorage.Vleaf[c]*(1.0 - paramsWaterStorage.LeafAF[c])*l2mmol; //Water content in leaf symplasm
+  
+  //Flows (mmol m-2 s-1)
+  network.Einst = internalWater.Einst[c]; //Total transpiration
+  network.Einst_SL = medfate::NA_DOUBLE; //Total transpiration (sunlit leaves)
+  network.Einst_SH = medfate::NA_DOUBLE; //Total transpiration (shade leaves)
+  network.Elim = internalWater.Elim[c]; //Stomatal transpiration
+  network.Elim_SL = medfate::NA_DOUBLE; //Stomatal transpiration (sunlit leaves)
+  network.Elim_SH = medfate::NA_DOUBLE; //Stomatal transpiration (shade leaves)
+  network.Emin_L = internalWater.Emin_L[c]; //Leaf cuticular transpiration
+  network.Emin_L_SL = medfate::NA_DOUBLE; //Leaf cuticular transpiration (sunlit leaves)
+  network.Emin_L_SH = medfate::NA_DOUBLE; //Leaf cuticular transpiration (shade leaves)
+  network.Emin_S = internalWater.Emin_S[c]; //Stem cuticular transpiration
+  
+  //Diagnostics
+  network.Diag_nwhile_cavit = medfate::NA_INTEGER;
+  network.Diag_deltaRegulMax = medfate::NA_DOUBLE;
+  network.Diag_deltaPLCMax = medfate::NA_DOUBLE;
+  network.Diag_timeStepInSeconds = medfate::NA_DOUBLE;
+  
+  // Update plant conductances and capacitances according to network status
+  update_conductances_c(network);
+  update_capacitances_c(network);
+}
+

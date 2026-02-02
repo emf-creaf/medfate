@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include "modelInput_c.h"
 
 #ifndef INNER_SUREAU_C_H
 #define INNER_SUREAU_C_H
@@ -107,5 +108,28 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
                                        const SureauOpt& opt, 
                                        const std::string& stemCavitationRecovery, 
                                        const std::string& leafCavitationRecovery);
+
+void copyParams_c(SureauParams& params, SureauParams& sinkParams);
+void copyNetwork_c(SureauNetwork& network, SureauNetwork& sinkNetwork);
+void deleteSureauNetworkPointers_c(SureauNetwork &network);
+
+void initSureauParams_inner_c(SureauParams& params, int c,
+                              InternalWater& internalWater, 
+                              TranspirationParams& paramsTranspiration, 
+                              WaterStorageParams& paramsWaterStorage,
+                              std::vector<double>& VCroot_kmax, 
+                              std::vector<double>& VGrhizo_kmax,
+                              ControlParameters& control, 
+                              double sapFluidityDay);
+
+void initSureauNetwork_inner_c(SureauNetwork& network, int c, 
+                               std::vector<double>& LAIphe,
+                               InternalWater& internalWater, 
+                               AnatomyParams& paramsAnatomy, 
+                               TranspirationParams& paramsTranspiration, 
+                               WaterStorageParams& paramsWaterStorage,
+                               std::vector<double>& VCroot_kmax, std::vector<double>& VGrhizo_kmax,
+                               std::vector<double>& PsiSoil, std::vector<double>& VG_n, std::vector<double>& VG_alpha,
+                               ControlParameters& control, double sapFluidityDay);
 
 #endif

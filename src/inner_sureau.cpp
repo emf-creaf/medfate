@@ -11,110 +11,8 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-//Function to clone SureauParams object
-void copyParams(SureauParams params, SureauParams &sinkParams) {
-  sinkParams.npools = params.npools;
-  sinkParams.TPhase_gmin = params.TPhase_gmin;
-  sinkParams.Q10_1_gmin = params.Q10_1_gmin;
-  sinkParams.Q10_2_gmin = params.Q10_2_gmin;
-  sinkParams.Gsw_AC_slope = params.Gsw_AC_slope;
-  sinkParams.fTRBToLeaf = params.fTRBToLeaf;
-  sinkParams.C_SApoInit = params.C_SApoInit;
-  sinkParams.C_LApoInit = params.C_LApoInit;
-  sinkParams.k_SLApoInit = params.k_SLApoInit;
-  sinkParams.k_CSApoInit = params.k_CSApoInit;
 
-  for(int i=0;i<params.npools;i++) {
-    sinkParams.k_RCApoInit[i] = params.k_RCApoInit[i];
-    sinkParams.VGrhizo_kmax[i] = params.VGrhizo_kmax[i];
-  }
-  
-  sinkParams.slope_gs = params.slope_gs;
-  sinkParams.P50_gs = params.P50_gs;
-  sinkParams.Tgs_optim = params.Tgs_optim;
-  sinkParams.Tgs_sens = params.Tgs_sens;
-  sinkParams.JarvisPAR = params.JarvisPAR;
-  
-  sinkParams.gmin20 = params.gmin20;
-  sinkParams.gsMax = params.gsMax;
-  sinkParams.gmin_S = params.gmin_S;
-  sinkParams.gsNight = params.gsNight;
-
-  sinkParams.VCleaf_P50 = params.VCleaf_P50; 
-  sinkParams.VCleaf_slope = params.VCleaf_slope; 
-  sinkParams.VCstem_P50 = params.VCstem_P50; 
-  sinkParams.VCstem_slope = params.VCstem_slope; 
-  sinkParams.VCroot_P50 = params.VCroot_P50; 
-  sinkParams.VCroot_slope = params.VCroot_slope; 
-  sinkParams.PiFullTurgor_Leaf = params.PiFullTurgor_Leaf; 
-  sinkParams.epsilonSym_Leaf = params.epsilonSym_Leaf;
-  sinkParams.PiFullTurgor_Stem = params.PiFullTurgor_Stem; 
-  sinkParams.epsilonSym_Stem = params.epsilonSym_Stem;
-}
-
-//Function to copy SureauNetwork object
-void copyNetwork(SureauNetwork network, SureauNetwork &sinkNetwork) {
-  copyParams(network.params, sinkNetwork.params);
-  sinkNetwork.LAI = network.LAI;
-  sinkNetwork.Psi_LApo = network.Psi_LApo;
-  sinkNetwork.Psi_LSym = network.Psi_LSym;
-  sinkNetwork.Psi_RCApo = network.Psi_RCApo;
-  sinkNetwork.Psi_SApo = network.Psi_SApo;
-  sinkNetwork.Psi_SSym = network.Psi_SSym;
-  sinkNetwork.Psi_SApo_cav = network.Psi_SApo_cav;
-  sinkNetwork.Psi_LApo_cav = network.Psi_LApo_cav;
-  sinkNetwork.PLC_Stem = network.PLC_Stem;
-  sinkNetwork.PLC_Leaf = network.PLC_Leaf;                   
-  sinkNetwork.C_SApo = network.C_SApo;
-  sinkNetwork.C_LApo = network.C_LApo;
-  sinkNetwork.C_SSym = network.C_SSym;
-  sinkNetwork.C_LSym = network.C_LSym;
-  sinkNetwork.k_SLApo = network.k_SLApo;                     
-  sinkNetwork.k_CSApo = network.k_CSApo;
-  sinkNetwork.k_SSym = network.k_SSym;
-  sinkNetwork.k_LSym = network.k_LSym;
-  for(int i=0;i<network.params.npools;i++) {
-    sinkNetwork.k_RSApo[i] = network.k_RSApo[i];
-    sinkNetwork.k_SoilToStem[i] = network.k_SoilToStem[i];
-    sinkNetwork.k_Soil[i] = network.k_Soil[i];
-    sinkNetwork.PsiSoil[i] = network.PsiSoil[i];
-  }
-  
-  sinkNetwork.k_Plant = network.k_Plant;
-  
-  //Water content (mmol m-2)
-  sinkNetwork.Q_SApo_sat_mmol_perLeafArea = network.Q_SApo_sat_mmol_perLeafArea;
-  sinkNetwork.Q_LApo_sat_mmol_perLeafArea = network.Q_LApo_sat_mmol_perLeafArea;
-  sinkNetwork.Q_SSym_sat_mmol_perLeafArea = network.Q_SSym_sat_mmol_perLeafArea;
-  sinkNetwork.Q_LSym_sat_mmol_perLeafArea = network.Q_LSym_sat_mmol_perLeafArea;
-
-  sinkNetwork.Einst = network.Einst;
-  sinkNetwork.Einst_SL = network.Einst_SL;
-  sinkNetwork.Einst_SH = network.Einst_SH;
-  sinkNetwork.Elim = network.Elim;
-  sinkNetwork.Elim_SL = network.Elim_SL;
-  sinkNetwork.Elim_SH = network.Elim_SH;
-  sinkNetwork.Emin_L = network.Emin_L;
-  sinkNetwork.Emin_L_SL = network.Emin_L_SL;
-  sinkNetwork.Emin_L_SH = network.Emin_L_SH;
-  sinkNetwork.Emin_S = network.Emin_S;
-  sinkNetwork.Diag_nwhile_cavit = network.Diag_nwhile_cavit;
-  sinkNetwork.Diag_deltaRegulMax = network.Diag_deltaRegulMax;
-  sinkNetwork.Diag_deltaPLCMax = network.Diag_deltaPLCMax;
-  sinkNetwork.Diag_timeStepInSeconds = network.Diag_timeStepInSeconds;
-}
-
-//Function to delete pointers
-void deleteSureauNetworkPointers(SureauNetwork &network) {
-  delete[] network.params.k_RCApoInit;
-  delete[] network.params.VGrhizo_kmax;
-  delete[] network.k_Soil;
-  delete[] network.PsiSoil;
-  delete[] network.k_RSApo;
-  delete[] network.k_SoilToStem;
-}
-
-List structToList(SureauNetwork snetwork) {
+List structToList(SureauNetwork& snetwork) {
   
   List network = List::create();
   //Params
@@ -597,7 +495,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
   
   List network = structToList(snetwork);
 
-  deleteSureauNetworkPointers(snetwork);
+  deleteSureauNetworkPointers_c(snetwork);
   return(network);
 }
 
@@ -944,7 +842,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
       
       while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
         //Copy values to temporary network
-        copyNetwork(networks[c], network_n); 
+        copyNetwork_c(networks[c], network_n); 
         
         regulationWellComputed = false;
         cavitationWellComputed = false;
@@ -1154,7 +1052,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
       
       
       // # B. SAVING SOLUTION AT NEXT TIME STEP IN ORIGINAL NETWORK
-      copyNetwork(network_n, networks[c]);
+      copyNetwork_c(network_n, networks[c]);
       
       //Store leaf values (final substep)
       E_SL(c,n) = networks[c].Einst_SL;
@@ -1231,7 +1129,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
       }
       
       //Delete pointers
-      deleteSureauNetworkPointers(network_n);
+      deleteSureauNetworkPointers_c(network_n);
     } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI (or completely embolized)
       E_SL(c,n) = 0.0;
       E_SH(c,n) = 0.0;
@@ -1351,7 +1249,7 @@ List semi_implicit_integration(List network, double dt, NumericVector opt,
   //Copy back values from SureauNetwork to List
   network = structToList(snetwork);
   //Free memory
-  deleteSureauNetworkPointers(snetwork);
+  deleteSureauNetworkPointers_c(snetwork);
   return(network);
 }
 
