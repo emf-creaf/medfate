@@ -21,6 +21,7 @@
 #include "inner_sperry.h"
 #include "inner_sureau.h"
 #include "inner_sureau_c.h"
+#include "transpiration_advanced_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -37,6 +38,7 @@ using namespace Rcpp;
 // STEP 5.2 Leaf energy balance, stomatal conductance and plant hydraulics  (Sperry or Sureau inner functions)
 // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
 // STEP 6. Update plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
+// TO BE DELETED WHEN EVERYTHING IS MOVED TO C++
 void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta,
@@ -1324,40 +1326,40 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
-  NumericVector meteovec = NumericVector::create(
-    Named("tmin") = tmin, 
-    Named("tmax") = tmax,
-    Named("tminPrev") = tminPrev, 
-    Named("tmaxPrev") = tmaxPrev, 
-    Named("tminNext") = tminNext, 
-    Named("prec") = prec,
-    Named("rhmin") = rhmin, 
-    Named("rhmax") = rhmax, 
-    Named("rad") = rad, 
-    Named("wind") = wind, 
-    Named("Catm") = Catm,
-    Named("Patm") = Patm[day-1],
-    Named("pet") = pet);
   
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
-  int nlayers = soil.nrow();
-  int numCohorts = cohorts.nrow();
-  int ntimesteps = control["ndailysteps"];
-  List SEBcommunication = communicationSoilEnergyBalance(nlayers);
-  List transpOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
+  WeatherInputVector meteovec;
+  meteovec.tmax = tmax;
+  meteovec.tmin = tmin;
+  meteovec.tminPrev = tminPrev;
+  meteovec.tmaxPrev = tmaxPrev;
+  meteovec.tminNext = tminNext;
+  meteovec.rhmin = rhmin; 
+  meteovec.rhmax = rhmax;
+  meteovec.pet = pet;
+  meteovec.wind = wind;
+  meteovec.rad = rad;
+  meteovec.prec = prec;
+  meteovec.Catm = Catm;
+  meteovec.Patm = Patm[day-1];
   
-  transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec,
-                        latitude, elevation, slope, aspect,
-                        solarConstant, delta,
-                        canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
-                        false, stepFunctions, 
-                        modifyInput);
+  ModelInput x_c = ModelInput(x);
+  int nlayers = x_c.soil.getNlayers();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
   
-  List transpAdvanced = copyAdvancedTranspirationOutput(transpOutput, x);
+  
+  AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
+  AdvancedTranspiration_COMM ATcomm(numCohorts, ncanlayers, nlayers);
+  
+  transpirationAdvanced_c(ATres, ATcomm, x_c, 
+                          meteovec,
+                          latitude, elevation, slope, aspect, 
+                          solarConstant, delta,
+                          canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, 
+                          stepFunctions);
+  
+  List transpAdvanced = copyAdvancedTranspirationResult_c(ATres, x_c);
   
   return(transpAdvanced);
 } 
@@ -1423,41 +1425,43 @@ List transpirationSureau(List x, DataFrame meteo, int day,
   
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
-  NumericVector meteovec = NumericVector::create(
-    Named("tmin") = tmin, 
-    Named("tmax") = tmax,
-    Named("tminPrev") = tminPrev, 
-    Named("tmaxPrev") = tmaxPrev, 
-    Named("tminNext") = tminNext, 
-    Named("prec") = prec,
-    Named("rhmin") = rhmin, 
-    Named("rhmax") = rhmax, 
-    Named("rad") = rad, 
-    Named("wind") = wind, 
-    Named("Catm") = Catm,
-    Named("Patm") = Patm[day-1],
-    Named("pet") = pet);
+  WeatherInputVector meteovec;
+  meteovec.tmax = tmax;
+  meteovec.tmin = tmin;
+  meteovec.tminPrev = tminPrev;
+  meteovec.tmaxPrev = tmaxPrev;
+  meteovec.tminNext = tminNext;
+  meteovec.rhmin = rhmin; 
+  meteovec.rhmax = rhmax;
+  meteovec.pet = pet;
+  meteovec.wind = wind;
+  meteovec.rad = rad;
+  meteovec.prec = prec;
+  meteovec.Catm = Catm;
+  meteovec.Patm = Patm[day-1];
   
+  ModelInput x_c = ModelInput(x);
+  int nlayers = x_c.soil.getNlayers();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
   
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  int ncanlayers = canopyParams.nrow(); //Number of canopy layers
-  int nlayers = soil.nrow();
-  int numCohorts = cohorts.nrow();
-  int ntimesteps = control["ndailysteps"];
-  List SEBcommunication = communicationSoilEnergyBalance(nlayers);
-  List transpOutput = advancedTranspirationCommunicationOutput(numCohorts, nlayers, ncanlayers, ntimesteps);
-  transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec,
-                        latitude, elevation, slope, aspect,
-                        solarConstant, delta,
-                        canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
-                        false, NA_INTEGER, 
-                        modifyInput);
+
+  AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
+  AdvancedTranspiration_COMM ATcomm(numCohorts, ncanlayers, nlayers);
   
-  List transpAdvanced = copyAdvancedTranspirationOutput(transpOutput, x);
-  
+  transpirationAdvanced_c(ATres, ATcomm, x_c, 
+                          meteovec,
+                          latitude, elevation, slope, aspect, 
+                          solarConstant, delta,
+                          canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, -1);
+    
+  List transpAdvanced = copyAdvancedTranspirationResult_c(ATres, x_c);
+
+  if(modifyInput) {
+    // Modify all state variables of input object from structure
+    x_c.copyStateToList(x);
+  }  
   return(transpAdvanced);
 } 
 

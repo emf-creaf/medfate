@@ -93,25 +93,25 @@ struct EnergyBalance_RESULT {
   arma::mat TemperatureLayers;
   arma::mat VaporPressureLayers;
   
-  EnergyBalance_RESULT(size_t nlayers = 0, size_t ncanlayers = 0, size_t nsubdailysteps = 0) : 
-    SoilTemperature(nsubdailysteps, nlayers, arma::fill::zeros),
-    TemperatureLayers(nsubdailysteps, ncanlayers, arma::fill::zeros),
-    VaporPressureLayers(nsubdailysteps, ncanlayers, arma::fill::zeros)
+  EnergyBalance_RESULT(size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
+    SoilTemperature(ntimesteps, nlayers, arma::fill::zeros),
+    TemperatureLayers(ntimesteps, ncanlayers, arma::fill::zeros),
+    VaporPressureLayers(ntimesteps, ncanlayers, arma::fill::zeros)
     {
-    SolarHour = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    Tatm = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    Tcan = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    SWRcan = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    LWRcan = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    LEVcan = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    LEFsnow = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    Hcan = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    Ebalcan = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    Hcansoil = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    LEVsoil = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    SWRsoil = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    LWRsoil = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
-    Ebalsoil = std::vector<double>(nsubdailysteps, medfate::NA_DOUBLE);
+    SolarHour = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    Tatm = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    Tcan = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    SWRcan = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    LWRcan = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    LEVcan = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    LEFsnow = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    Hcan = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    Ebalcan = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    Hcansoil = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    LEVsoil = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    SWRsoil = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    LWRsoil = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
+    Ebalsoil = std::vector<double>(ntimesteps, medfate::NA_DOUBLE);
 };
 };
 Rcpp::List copyEnergyBalanceResult_c(const EnergyBalance_RESULT& EBres, ModelInput& x);
@@ -135,13 +135,13 @@ struct AdvancedTranspiration_RESULT {
 
   arma::mat rhizoPsi;
   
-  AdvancedTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t nsubdailysteps = 0) : 
+  AdvancedTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
     plants(numCohorts), 
     sunlit(numCohorts),
     shade(numCohorts),
-    energy(nlayers, ncanlayers, nsubdailysteps),
+    energy(nlayers, ncanlayers, ntimesteps),
     extraction(numCohorts, nlayers, arma::fill::zeros),
-    extractionInst(nlayers, nsubdailysteps, arma::fill::zeros),
+    extractionInst(nlayers, ntimesteps, arma::fill::zeros),
     extractionPools(numCohorts),
     rhizoPsi(numCohorts, nlayers, arma::fill::zeros) {
     for(size_t c = 0; c < numCohorts; c++) {
@@ -169,7 +169,11 @@ struct AdvancedTranspiration_COMM {
 };
 
 void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTranspiration_COMM& BT_comm, ModelInput& x, 
-                             const WeatherInputVector& meteovec,  const double elevation);
+                             const WeatherInputVector& meteovec,
+                             const double latitude, double elevation, double slope, double aspect, 
+                             const double solarConstant, const double delta,
+                             const double canopyEvaporation, const double snowMelt, const double soilEvaporation, const double herbTranspiration, 
+                             int stepFunctions);
 
 
 #endif

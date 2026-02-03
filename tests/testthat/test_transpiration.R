@@ -44,3 +44,24 @@ test_that("transpiration granier can be run ",{
                                           modifyInput = TRUE), "list")
   expect_false(all(x1$internalWater$PlantPsi == Psi_ini)) # Check that psi has changed
 })
+
+test_that("transpiration sperry can be run ",{
+  control_sperry <- defaultControl("Sperry")
+  control_sperry$verbose <- FALSE
+  x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control_sperry)
+  Psi_ini <- rlang::duplicate(x1$internalWater$PlantPsi)
+  expect_type(transp_transpirationSperry(x1, examplemeteo, 1, 
+                                         latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                         modifyInput = FALSE), "list")
+  
+})
+test_that("transpiration sureau can be run ",{
+  control_sureau <- defaultControl("Sureau")
+  control_sureau$verbose <- FALSE
+  x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control_sureau)
+  Psi_ini <- rlang::duplicate(x1$internalWater$PlantPsi)
+  expect_type(transp_transpirationSureau(x1, examplemeteo, 1, 
+                                          latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                          modifyInput = FALSE), "list")
+  
+})

@@ -15,6 +15,9 @@ struct WeatherInputVector {
   double rhmin;
   double tmax;
   double tmin;
+  double tmaxPrev;
+  double tminPrev;
+  double tminNext;
   double tday;
   double Catm;
   double Patm;
@@ -28,6 +31,9 @@ struct WeatherInputVector {
     rhmin = medfate::NA_DOUBLE;
     tmax = medfate::NA_DOUBLE;
     tmin = medfate::NA_DOUBLE;
+    tmaxPrev = medfate::NA_DOUBLE;
+    tminPrev = medfate::NA_DOUBLE;
+    tminNext = medfate::NA_DOUBLE;
     tday = medfate::NA_DOUBLE;
     Catm = medfate::NA_DOUBLE;
     Patm = medfate::NA_DOUBLE;
