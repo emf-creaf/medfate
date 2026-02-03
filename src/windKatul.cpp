@@ -1,287 +1,29 @@
 #include <RcppArmadillo.h>
 #include "windKatul_c.h"
+#include "windKatul.h"
 #include <math.h> 
 using namespace Rcpp;
 
-/* K-Epsilon Models of Katul et al. (2004)
- * Code adapted from Matlab to Rcpp
- * www: https://nicholas.duke.edu/people/faculty/katul/k_epsilon_model.htm
-*/
-NumericVector thomas(NumericVector aa, NumericVector bb, NumericVector cc, NumericVector dd) {
-  int n=bb.length();
-  NumericVector bet(n);
-  NumericVector gam(n);
-  NumericVector q(n);
-  bet[0]=bb[0];
-  gam[0]=dd[0]/bb[0];
-  for(int i=1;i<n;i++){
-    bet[i]=bb[i]-(aa[i]*cc[i-1]/bet[i-1]);
-    gam[i]=(dd[i]-aa[i]*gam[i-1])/bet[i];
-  }
-  q[n-1]=gam[n-1];
-  for(int i=(n-2); i >=0;i--) {
-    q[i]=gam[i]-(cc[i]*q[i+1]/bet[i]);  
-  }
-  return(q);
-}
-
-// Generates a vector with linear spacing
-NumericVector linspace(double x1, double x2, int N) {
-  NumericVector v(N);
-  v[0] = x1;
-  double s = (x2 - x1)/((double)(N - 1));
-  for(int i=1;i<N;i++) {
-    v[i] = v[i-1] + s;
-  }
-  return(v);
-}
-// Implementation of R which
-IntegerVector which(LogicalVector l) {
-  int c = 0;
-  for(int i=0;i<l.size();i++) if(l[i]) c++;
-  IntegerVector w(c);
-  int cnt=0;
-  for(int i=0;i<l.size();i++) if(l[i]) {w[cnt] = i;cnt++;}
-  return(w);
-}
-
-NumericMatrix windCanopyTurbulenceModel_inner(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
-                                              String model = "k-epsilon") {
-  if(zm.size() != Cx.size()) stop("Height and effective drag vectors should have the same length!");
-  int N=zm.size();
-  double zmax=max(zm);
-  double dz=zm[1]-zm[0];
-  // ------- Define starting conditions for U/u*, k/(u*^2), epsilon/(u*3/h)
-  double Ulow=0.0;
-  double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
-  NumericVector U=linspace(Ulow,Uhigh,N);
-  
-  double khigh=0.5*((AAu*AAu) + (AAv*AAv) + (AAw*AAw));
-  double klow=0.001*khigh;
-  NumericVector k=linspace(klow,khigh,N);
-  
-  double epsilonhigh=(1.0/(kv*(zmax-d0)));
-  double epsilonlow=0.001*epsilonhigh;
-  NumericVector epsilon=linspace(epsilonlow,epsilonhigh,N);
-  
-  // Mixing Length model
-  double alpha = kv*(hm-d0)/hm;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
-  NumericVector Lmix(N, alpha*hm);
-  IntegerVector c1 = which(zm < hm);
-  int nn=max(c1);
-  for(int i=nn;i<N;i++) {
-    Lmix[i] = kv*(zm[i] - d0);
-  }
-  Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0;
-  
-  double am3=-(Aq*Aq*Aq)*((AAu*AAu)-(AAw*AAw))/((AAw*AAw)-(Aq*Aq)/3.0);
-  NumericVector lambda3=am3*Lmix;
-  
-  NumericVector y(N); 
-  NumericVector vt(N); //viscosity
-  NumericVector dvt(N); //derivative
-  NumericVector dU(N); //derivative
-  NumericVector upd(N), dia(N), lod(N);
-  NumericVector aa(N), bb(N), cc(N), dd(N);
-  NumericVector Su(N),Sk(N),Se1(N),Se2(N); 
-  NumericVector a1(N), a2(N), a3(N);
-  NumericVector uw(N);
-  double eps1=0.1;
-  double maxerr=9999.9;
-  
-  int cnt=0;
-  int maxcnt = 100;
-  while((maxerr>0.1) && (cnt < maxcnt)) {
-    // Viscocity (and derivative) Model
-    for(int i=0;i<N;i++) {
-      vt[i]=pow(Cu,1.0/4.0)*Lmix[i]*sqrt(std::abs(k[i])); 
-    }
-    for(int i=1;i<N;i++) {
-      y[i] = (vt[i] - vt[i-1])/dz;
-    }
-    y[0] = y[1];
-    for(int i=1;i<N;i++) {
-      dvt[i] = y[i];
-    }
-    //  dU/dz
-    for(int i=1;i<N;i++) {
-      y[i] = (U[i] - U[i-1])/dz;
-    }
-    y[0] = y[1];
-    for(int i=0;i<N;i++) {
-      dU[i] = y[i];
-    }
-    //  Compute the Reynolds stress
-    for(int i=0;i<N;i++) {
-      uw[i]= (-1.0)*vt[i]*dU[i];
-    }
-    uw[N-1]=uw[N-2];
-    uw[0]=uw[1];
-    if(model=="k-U") { // Estimate dissipation rate in k-U model
-      for(int i=0;i<N;i++) {
-        epsilon[i] = (3.0/3.0)*(pow(sqrt(2.0*k[i]),3.0)/lambda3[i]);
-      }
-    }
-    //   Set up coefficients for Mean Momentum ODE-------------------------------------------
-    for(int i=0;i<N;i++) {
-      a1[i]=vt[i];
-      a2[i]=dvt[i];
-      a3[i]=(-1.0)*Cx[i]*std::abs(U[i]);
-    }
-    double dx=dz;
-    //  ------ Set the elements of the Tri-diagonal Matrix
-    for(int i=0;i<N;i++) {
-      upd[i]=(a1[i]/(dx*dx)+a2[i]/(2.0*dx));
-      dia[i]=(a1[i]*(-2.0)/(dx*dx)+a3[i]);
-      lod[i]=(a1[i]/(dx*dx)-a2[i]/(2.0*dx));
-      aa[i]=lod[i];
-      bb[i]=dia[i];
-      cc[i]=upd[i];
-      dd[i] = 0.0;
-    }
-    aa[0]=0.0;
-    bb[0]=1.0;
-    cc[0]=-1.0;
-    dd[0]= 0.0;
-    aa[N-1]=0.0;
-    bb[N-1]=1.0;
-    cc[N-1]=0.0;
-    dd[N-1]=Uhigh;
-    //   Use the Thomas Algorithm to solve the tridiagonal matrix
-    NumericVector Un=thomas(aa,bb,cc,dd);
-    //   Use successive relaxations in iterations
-    for(int i=0;i<N;i++) {
-      U[i]=std::abs(eps1*Un[i]+(1.0-eps1)*U[i]);
-    }
-    //   Set up coefficients for TKE ODE------------------------------------------------------------
-    for(int i=0;i<N;i++) {
-      a1[i]=vt[i];
-      a2[i]=dvt[i];
-      a3[i]=(-1.0)*Bd*std::abs(U[i])*Cx[i];
-    }
-    dx=dz;
-    //  ------ Set the elements of the Tri-diagonal Matrix
-    for(int i=0;i<N;i++) {
-      upd[i]=(a1[i]/(dx*dx)+a2[i]/(2.0*dx));
-      dia[i]=(a1[i]*(-2.0)/(dx*dx)+a3[i]);
-      lod[i]=(a1[i]/(dx*dx)-a2[i]/(2.0*dx));
-      aa[i]=lod[i];
-      bb[i]=dia[i];
-      cc[i]=upd[i];
-      dd[i] = epsilon[i]-Cx[i]*Bp*pow(std::abs(U[i]),3.0)-vt[i]*(dU[i]*dU[i]);
-    }
-    aa[0]=0.0;
-    bb[0]=1.0;
-    cc[0]=-1.0;
-    dd[0]= 0.0;
-    aa[N-1]=0.0;
-    bb[N-1]=1.0;
-    cc[N-1]=0.0;
-    dd[N-1]=khigh;
-    
-    //   ------Use the Thomas Algorithm to solve the tridiagonal matrix
-    NumericVector Kn=thomas(aa,bb,cc,dd);
-    maxerr=max(abs(Kn-k));
-    // -----Use successive relaxations in iterations
-    for(int i=0;i<N;i++){
-      k[i]=std::abs(eps1*Kn[i]+(1.0-eps1)*k[i]);
-    }
-    
-    if(model=="k-epsilon") {
-      //   Set up coefficients for dissipation ODE ---------------------------------------------------------------------------------
-      for(int i=0;i<N;i++){
-        Su[i]=Cx[i]*(U[i]*U[i]); 
-        Sk[i]=Cx[i]*(Bp*(U[i]*U[i]*U[i])-Bd*U[i]*k[i]);
-        Se1[i]=(Ce4*epsilon[i]/k[i])*Sk[i];
-        Se2[i]=epsilon[i]*Cx[i]*((Ce4*Bp*(U[i]*U[i]*U[i])/k[i])-Bd*Ce5*U[i]);
-      }
-      for(int i=0;i<N;i++){
-        a1[i]=vt[i]/Pr;
-        a2[i]=dvt[i]/Pr;
-        a3[i]=((-1.0)*Ce2*epsilon[i]/k[i]);
-      }
-      dx=dz;
-      //  ------ Set the elements of the Tri-diagonal Matrix
-      for(int i=0;i<N;i++) {
-        upd[i]=(a1[i]/(dx*dx)+a2[i]/(2.0*dx));
-        dia[i]=(a1[i]*(-2.0)/(dx*dx)+a3[i]);
-        lod[i]=(a1[i]/(dx*dx)-a2[i]/(2.0*dx));
-        aa[i]=lod[i];
-        bb[i]=dia[i];
-        cc[i]=upd[i];
-        dd[i] = -Ce1*Cu*k[i]*(dU[i]*dU[i])-Se2[i];
-      }
-      aa[0]=0.0;
-      bb[0]=1.0;
-      cc[0]=-1.0;
-      dd[0]= 0.0;
-      aa[N-1]=0.0;
-      bb[N-1]=1.0;
-      cc[N-1]=0.0;
-      dd[N-1]=epsilonhigh;
-      //   Use the Thomas Algorithm to solve the tridiagonal matrix
-      NumericVector epsilonn=thomas(aa,bb,cc,dd);
-      //   Use successive relaxations in iterations
-      for(int i=0;i<N;i++) {
-        epsilon[i]=std::abs(eps1*epsilonn[i]+(1.0-eps1)*epsilon[i]);
-      }
-    }
-    cnt++;
-    if(cnt==maxcnt) warning("too many iterations in canopy turbulence model");
-  }
-  NumericMatrix res(zm.size(), 7);
-  res(_,0) = zm;
-  res(_,1) = U;
-  res(_,2) = dU;
-  res(_,3) = epsilon;
-  res(_,4) = k;
-  res(_,5) = uw/(abs(uw[N-1]));
-  res(_,6) = Lmix;  
-  res.attr("dimnames") = List::create(seq(1,zm.size()), 
-           CharacterVector::create("z1", "U1" ,"dU1", "epsilon1", "k1", "uw1", "Lmix1"));
-  return(res);
-}
 
 void windCanopyTurbulence_inner(DataFrame output, NumericVector zmid, NumericVector LAD, double canopyHeight,
                                 double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
-  
-  //z - height vector in m
-  NumericVector zm(zmid.size());
-  for(int i=0;i<zmid.size();i++) zm[i]= zmid[i]/100.0;
-  //Effective drag = Cd x leaf area density
-  NumericVector Cx(LAD.size());
-  for(int i=0;i<LAD.size();i++) Cx[i]= LAD[i]*0.2;
-  //hm - canopy height (m)
-  double hm = (canopyHeight/100.0);
-  //d0 - displacement height (m)
-  double d0 = 0.67*hm;
-  //z0 - Momentum roughness height (m)
-  double z0 = 0.08*hm;
-  
-  //u_f - Friction velocity
-  double u_f = u*kv/log(((hm + windMeasurementHeight/100.0)-d0)/z0);
-  NumericMatrix cmout = windCanopyTurbulenceModel_inner(zm, Cx, hm, d0, z0);
-  
-  //"z1", "U1" ,"dU1", "epsilon1", "k1", "uw1", "Lmix1"
-  NumericVector U1 = cmout(_,1); 
-  NumericVector dU1 = cmout(_,2);
-  NumericVector epsilon1 = cmout(_,3);
-  NumericVector k1 = cmout(_,4);
-  NumericVector uw1 = cmout(_,5);
-  NumericVector out_zmid = output["zmid"];
-  NumericVector out_u = output["u"];
-  NumericVector out_du = output["du"];
-  NumericVector out_epsilon = output["epsilon"];
-  NumericVector out_k = output["k"];
-  NumericVector out_uw = output["uw"];
-  for(int i=0;i<zmid.size();i++) {
-    out_zmid[i] = zmid[i];
-    out_u[i] = U1[i]*u_f;
-    out_du[i] = dU1[i]*u_f;
-    out_epsilon[i] = epsilon1[i]*((u_f*u_f*u_f)/hm);
-    out_k[i] = k1[i]*u_f*u_f;
-    out_uw[i] = uw1[i]*u_f*u_f;
-  }
+  int n = zmid.size();
+  CanopyTurbulence_RESULT res(n);
+  CanopyTurbulenceModel_RESULT comm(n);
+  std::vector<double> zmid_vec = as<std::vector<double>>(zmid);
+  std::vector<double> LAD_vec = as<std::vector<double>>(LAD);
+  windCanopyTurbulence_inner_c(res, comm, 
+                               zmid_vec, 
+                               LAD_vec, 
+                               canopyHeight,
+                               u, windMeasurementHeight, 
+                               model.get_cstring());
+  output["zmid"] = Rcpp::wrap(res.zmid);
+  output["u"] = Rcpp::wrap(res.u);
+  output["du"] = Rcpp::wrap(res.du);
+  output["epsilon"] = Rcpp::wrap(res.epsilon);
+  output["k"] = Rcpp::wrap(res.k);
+  output["uw"] = Rcpp::wrap(res.uw);
 }
 
 /* (C)
@@ -373,8 +115,15 @@ void windCanopyTurbulence_inner(DataFrame output, NumericVector zmid, NumericVec
 // [[Rcpp::export("wind_canopyTurbulenceModel")]]
 DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
                                         String model = "k-epsilon") {
-  NumericMatrix res = windCanopyTurbulenceModel_inner(zm, Cx, hm, d0, z0, model);
-  return(as<DataFrame>(res));
+  CanopyTurbulenceModel_RESULT comm(zm.size());
+  std::vector<double> zm_vec = as<std::vector<double>>(zm);
+  std::vector<double> Cx_vec = as<std::vector<double>>(Cx);
+  windCanopyTurbulenceModel_inner_c(comm, 
+                                    zm_vec, 
+                                    Cx_vec, 
+                                    hm, d0, z0,
+                                    model.get_cstring());
+  return(copyCanopyTurbulenceModelResult_c(comm));
 }
 /*
  *   zmid - Vector of mid heights for canopy layers (cm)
@@ -390,13 +139,15 @@ DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double can
                                 double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
   
   int n = zmid.size();
-  DataFrame output = DataFrame::create(Named("zmid") = NumericVector(n, NA_REAL),
-                    Named("u") = NumericVector(n, NA_REAL),
-                    Named("du") = NumericVector(n, NA_REAL),
-                    Named("epsilon") = NumericVector(n, NA_REAL),
-                    Named("k") = NumericVector(n, NA_REAL),
-                    Named("uw") = NumericVector(n, NA_REAL));
-  windCanopyTurbulence_inner(output, zmid, LAD, canopyHeight,
-                             u, windMeasurementHeight, model);
-  return(output);
+  CanopyTurbulence_RESULT res(n);
+  CanopyTurbulenceModel_RESULT comm(n);
+  std::vector<double> zmid_vec = as<std::vector<double>>(zmid);
+  std::vector<double> LAD_vec = as<std::vector<double>>(LAD);
+  windCanopyTurbulence_inner_c(res, comm, 
+                               zmid_vec, 
+                               LAD_vec, 
+                               canopyHeight,
+                               u, windMeasurementHeight, 
+                               model.get_cstring());
+  return(copyCanopyTurbulenceResult_c(res));
 }

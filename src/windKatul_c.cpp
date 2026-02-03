@@ -1,5 +1,4 @@
 #include <RcppArmadillo.h>
-#include "medfate.h"
 #include "windKatul_c.h"
 #include <math.h> 
 
@@ -24,6 +23,63 @@ Rcpp::DataFrame copyCanopyTurbulenceResult_c(const CanopyTurbulence_RESULT& cano
   return(output);
 }
   
+  
+/* K-Epsilon Models of Katul et al. (2004)
+ * Code adapted from Matlab to Rcpp
+ * www: https://nicholas.duke.edu/people/faculty/katul/k_epsilon_model.htm
+ */
+  
+/* (A)
+   *   
+   * Second order turbulence model closure constants for canopy-layer simulation.
+   * Revised by csz: Fri Mar 28 2003
+*/
+  
+//Rate of MKE lost by drag converted into TKE (in [0, 1])
+// (roughly-) Fitted value for canopy-layer velocity profile simulation
+const double Bp=1.0;
+// Mixing lenght constant (Seginer, 1974; Massman and Weil, 1999)
+// alpha=0.09 (Katul and Chang, 1999)
+const double alphaCNT=0.05;
+
+// ASL Values for sigma_u/u*, sigma_v/u*, sigma_w/u*
+// (set upper boundary condition on TKE)
+const double AAu=2.3;
+const double AAv=2.1;
+const double AAw=1.25;
+const double Aq=0.5*((AAu*AAu) + (AAv*AAv) + (AAw*AAw));
+
+// Determine the Kolmogorov constant from Au, Av, Aw
+// (constant for the turbulent viscocity)
+const double Cu=1.0/(Aq*Aq);
+
+// Von karman constant
+const double kv=0.4;
+
+// Constants for the dissipation budget (Launder and Spalding, 1974)
+const double Ce1=1.44;
+const double Ce2=1.92;
+
+// Prandtl numbers
+// Prandtl number (PrTKE = 1) for TKE hardwired in solver routines.
+const double PrTKE=1.0;
+// dissipation budget (Detering and Etling, 1974)
+const double Pr=(kv*kv)/(sqrt(Cu)*(Ce2-Ce1));
+
+// Wake TKE budget coefficients (Sanz, 2003)
+const double Cg=pow(2.0/alphaCNT,2.0/3.0);
+
+// Shortcircuit in Dissipation (linear in Bp)
+const double Bd=sqrt(Cu)*Cg*Bp + 3.0/PrTKE;
+
+// Dissipation budget (constant with alpha)
+const double Ce4=PrTKE*(2.0/Pr-sqrt(Cu)/6.0*Cg*(Ce2-Ce1));                
+
+// Ce5[=1.5]=Ce4 (Green, 1992), not [=0.6]!=Ce4 (Liu et al., 1996).
+// *** Proof: see ``A note on k-epsilon modelling...'' (Sanz, 2003)
+// *** The '1.5' value above for engineering (e.g. wind tunnel) flows (Cu=0.09)
+const double Ce5=Ce4;
+
 /* (B)
  * 
  * tri-diagonal solver needed for the implicit schemes used in solving the non-linear ODEs.

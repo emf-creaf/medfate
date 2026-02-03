@@ -487,7 +487,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     // Rcout<<canopyHeight<< " "<< lad[0] <<"\n";
     DataFrame canopyTurbulence = as<DataFrame>(transpOutput["CanopyTurbulence"]);
     windCanopyTurbulence_inner(canopyTurbulence, zmid, lad,  canopyHeight, 
-                               wind, windMeasurementHeight);
+                               wind, windMeasurementHeight, "k-epsilon");
     zWind = canopyTurbulence["u"]; 
     dU = canopyTurbulence["du"];
     uw = canopyTurbulence["uw"];
