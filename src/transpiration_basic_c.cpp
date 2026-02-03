@@ -540,6 +540,14 @@ Rcpp::DataFrame copyPlantBasicTranspirationResult_c(const PlantsBasicTranspirati
   return(plantsDF);
 }
 
+Rcpp::NumericVector copyStandBasicTranspirationResult_c(const StandBasicTranspiration_RESULT& stand) {
+  NumericVector standVEC = Rcpp::NumericVector::create(_["LAI"] = stand.LAI,
+                                                       _["LAIlive"] = stand.LAIlive, 
+                                                       _["LAIexpanded"] = stand.LAIexpanded, 
+                                                       _["LAIdead"] = stand.LAIdead);
+  return(standVEC);
+}
+
 Rcpp::List copyBasicTranspirationResult_c(const BasicTranspiration_RESULT& btc, ModelInput& x) {
   const std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
   bool plantWaterPools = (rhizosphereOverlap!="total");
@@ -562,10 +570,7 @@ Rcpp::List copyBasicTranspirationResult_c(const BasicTranspiration_RESULT& btc, 
     ExtractionPools.attr("names") = x.cohorts.CohortCode;
   }
   
-  NumericVector standVEC = Rcpp::NumericVector::create(_["LAI"] = btc.stand.LAI,
-                                                       _["LAIlive"] = btc.stand.LAIlive, 
-                                                       _["LAIexpanded"] = btc.stand.LAIexpanded, 
-                                                       _["LAIdead"] = btc.stand.LAIdead);
+  NumericVector standVEC = copyStandBasicTranspirationResult_c(btc.stand);
   
   List l = List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                         _["Stand"] = standVEC,

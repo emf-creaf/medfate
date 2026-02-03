@@ -53,6 +53,7 @@ struct StandBasicTranspiration_RESULT {
   double LAIexpanded;
   double LAIdead;
 };
+Rcpp::NumericVector copyStandBasicTranspirationResult_c(const StandBasicTranspiration_RESULT& stand);
 
 struct BasicTranspiration_RESULT {
   // Stand-level (4 fields)
