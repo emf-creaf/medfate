@@ -2,6 +2,7 @@
 #include "communication_structures_c.h"
 #include "transpiration_basic_c.h"
 #include "lightextinction_advanced_c.h"
+#include "soil_thermodynamics_c.h"
 #include "modelInput_c.h"
 #include "radiation_c.h"
 #include "windKatul_c.h"
@@ -244,10 +245,12 @@ struct AdvancedTranspiration_COMM {
   
   arma::mat RHOPCohDyn;
   CanopyTurbulenceModel_RESULT canopyTurbulenceModel;
+  SoilEnergyBalance_COMM SEBcomm;
   
   AdvancedTranspiration_COMM(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
     RHOPCohDyn(numCohorts, nlayers),
-    canopyTurbulenceModel(ncanlayers){}
+    canopyTurbulenceModel(ncanlayers),
+    SEBcomm(nlayers) {}
 };
 
 void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTranspiration_COMM& ATcomm, ModelInput& x, 

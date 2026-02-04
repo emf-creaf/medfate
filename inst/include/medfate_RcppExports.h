@@ -1155,6 +1155,26 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline void soil_temperatureGradient(std::vector<double>& gradTemp, const std::vector<double>& widths, const std::vector<double>& Temp) {
+        typedef SEXP(*Ptr_soil_temperatureGradient)(SEXP,SEXP,SEXP);
+        static Ptr_soil_temperatureGradient p_soil_temperatureGradient = NULL;
+        if (p_soil_temperatureGradient == NULL) {
+            validateSignature("void(*soil_temperatureGradient)(std::vector<double>&,const std::vector<double>&,const std::vector<double>&)");
+            p_soil_temperatureGradient = (Ptr_soil_temperatureGradient)R_GetCCallable("medfate", "_medfate_soil_temperatureGradient");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_temperatureGradient(Shield<SEXP>(Rcpp::wrap(gradTemp)), Shield<SEXP>(Rcpp::wrap(widths)), Shield<SEXP>(Rcpp::wrap(Temp)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+    }
+
     inline CharacterVector _getWeatherDates(DataFrame meteo) {
         typedef SEXP(*Ptr__getWeatherDates)(SEXP);
         static Ptr__getWeatherDates p__getWeatherDates = NULL;

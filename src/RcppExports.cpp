@@ -5465,6 +5465,41 @@ RcppExport SEXP _medfate_temperatureChange(SEXP widthsSEXP, SEXP TempSEXP, SEXP 
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// temperatureGradient_c
+void temperatureGradient_c(std::vector<double>& gradTemp, const std::vector<double>& widths, const std::vector<double>& Temp);
+static SEXP _medfate_temperatureGradient_c_try(SEXP gradTempSEXP, SEXP widthsSEXP, SEXP TempSEXP) {
+BEGIN_RCPP
+    Rcpp::traits::input_parameter< std::vector<double>& >::type gradTemp(gradTempSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type widths(widthsSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type Temp(TempSEXP);
+    temperatureGradient_c(gradTemp, widths, Temp);
+    return R_NilValue;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_temperatureGradient_c(SEXP gradTempSEXP, SEXP widthsSEXP, SEXP TempSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_temperatureGradient_c_try(gradTempSEXP, widthsSEXP, TempSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // getWeatherDates
 CharacterVector getWeatherDates(DataFrame meteo);
 static SEXP _medfate_getWeatherDates_try(SEXP meteoSEXP) {
@@ -6190,6 +6225,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_thermalConductivity)(DataFrame,String)");
         signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
         signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double,double)");
+        signatures.insert("void(*soil_temperatureGradient)(std::vector<double>&,const std::vector<double>&,const std::vector<double>&)");
         signatures.insert("CharacterVector(*.getWeatherDates)(DataFrame)");
         signatures.insert("List(*.defineSPWBDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillSPWBDailyOutput)(List,List,List,int)");
@@ -6258,6 +6294,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_thermalConductivity", (DL_FUNC)_medfate_thermalConductivity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_temperatureGradient", (DL_FUNC)_medfate_temperatureGradient_try);
     R_RegisterCCallable("medfate", "_medfate_soil_temperatureChange", (DL_FUNC)_medfate_temperatureChange_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_temperatureGradient", (DL_FUNC)_medfate_temperatureGradient_c_try);
     R_RegisterCCallable("medfate", "_medfate_.getWeatherDates", (DL_FUNC)_medfate_getWeatherDates_try);
     R_RegisterCCallable("medfate", "_medfate_.defineSPWBDailyOutput", (DL_FUNC)_medfate_defineSPWBDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_.fillSPWBDailyOutput", (DL_FUNC)_medfate_fillSPWBDailyOutput_try);
@@ -6567,6 +6604,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
     {"_medfate_temperatureGradient", (DL_FUNC) &_medfate_temperatureGradient, 2},
     {"_medfate_temperatureChange", (DL_FUNC) &_medfate_temperatureChange, 9},
+    {"_medfate_temperatureGradient_c", (DL_FUNC) &_medfate_temperatureGradient_c, 3},
     {"_medfate_getWeatherDates", (DL_FUNC) &_medfate_getWeatherDates, 1},
     {"_medfate_defineSPWBDailyOutput", (DL_FUNC) &_medfate_defineSPWBDailyOutput, 6},
     {"_medfate_fillSPWBDailyOutput", (DL_FUNC) &_medfate_fillSPWBDailyOutput, 4},

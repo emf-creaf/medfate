@@ -3874,6 +3874,12 @@ soil_temperatureChange <- function(widths, Temp, sand, clay, W, Theta_SAT, Theta
     .Call(`_medfate_temperatureChange`, widths, Temp, sand, clay, W, Theta_SAT, Theta_FC, Gdown, tstep)
 }
 
+#' @name soil_thermodynamics
+#' @keywords internal
+soil_temperatureGradient <- function(gradTemp, widths, Temp) {
+    invisible(.Call(`_medfate_temperatureGradient_c`, gradTemp, widths, Temp))
+}
+
 .getWeatherDates <- function(meteo) {
     .Call(`_medfate_getWeatherDates`, meteo)
 }

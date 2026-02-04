@@ -4,8 +4,10 @@
 #include "forestutils_c.h"
 #include "transpiration_advanced_c.h"
 #include "lightextinction_advanced_c.h"
+#include "tissuemoisture_c.h"
 #include "meteoland.h"
 #include "inner_sureau_c.h"
+#include "windextinction_c.h"
 #include "windKatul_c.h"
 using namespace Rcpp;
 
@@ -584,11 +586,19 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   std::fill(SoilExtractCoh.begin(), SoilExtractCoh.end(), 0.0);
   std::fill(outputExtraction.begin(), outputExtraction.end(), 0.0);
   std::fill(ATres.extractionInst.begin(), ATres.extractionInst.end(), 0.0);
+  std::fill(outputPlantsInst.E.begin(), outputPlantsInst.E.end(), 0.0);
   if(plantWaterPools) {
     for(int c=0;c<numCohorts;c++) {
       std::fill(ATres.extractionPools[c].begin(), ATres.extractionPools[c].end(), 0.0);
     }
   }
+  std::fill(Jmax298_SH.begin(), Jmax298_SH.end(), 0.0);
+  std::fill(Jmax298_SL.begin(), Jmax298_SL.end(), 0.0);
+  std::fill(Vmax298_SH.begin(), Vmax298_SH.end(), 0.0);
+  std::fill(Vmax298_SL.begin(), Vmax298_SL.end(), 0.0);
+  std::fill(LAI_SH.begin(), LAI_SH.end(), 0.0);
+  std::fill(LAI_SL.begin(), LAI_SL.end(), 0.0);
+  
   // std::fill(StemPLC.begin(), StemPLC.end(), NA_REAL);
   // std::fill(LeafPLC.begin(), LeafPLC.end(), NA_REAL);
   // std::fill(dEdPInst.begin(), dEdPInst.end(), NA_REAL);
@@ -597,7 +607,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // std::fill(RootPsiInst.begin(), RootPsiInst.end(), NA_REAL);
   // std::fill(LeafSympPsiInst.begin(), LeafSympPsiInst.end(), NA_REAL);
   // std::fill(StemSympPsiInst.begin(), StemSympPsiInst.end(), NA_REAL);
-  // std::fill(Einst.begin(), Einst.end(), NA_REAL);
   // std::fill(Aninst.begin(), Aninst.end(), NA_REAL);
   // std::fill(Aginst.begin(), Aginst.end(), NA_REAL);
   // std::fill(LeafRWCInst.begin(), LeafRWCInst.end(), NA_REAL);
@@ -625,12 +634,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // std::fill(PAR_SH.begin(), PAR_SH.end(), NA_REAL);
   // std::fill(LWR_SH.begin(), LWR_SH.end(), NA_REAL);
   // std::fill(PAR_SL.begin(), PAR_SL.end(), NA_REAL);
-  std::fill(Jmax298_SH.begin(), Jmax298_SH.end(), 0.0);
-  std::fill(Jmax298_SL.begin(), Jmax298_SL.end(), 0.0);
-  std::fill(Vmax298_SH.begin(), Vmax298_SH.end(), 0.0);
-  std::fill(Vmax298_SL.begin(), Vmax298_SL.end(), 0.0);
-  std::fill(LAI_SH.begin(), LAI_SH.end(), 0.0);
-  std::fill(LAI_SL.begin(), LAI_SL.end(), 0.0);
   // std::fill(SWR_SL.begin(), SWR_SL.end(), NA_REAL);
   // std::fill(SWR_SH.begin(), SWR_SH.end(), NA_REAL);
 
@@ -675,7 +678,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       //Update LAI distribution if necessary
       updateLAIdistributionVectors_c(LAIme, z, LAIphe, H, CR);
       updateLAIdistributionVectors_c(LAImd, z, LAIdead, H, CR);
-      updateLAIdistributionVectors_c(LAImx, z, LAIdead, H, CR);//Maximum leaf expansion
+      updateLAIdistributionVectors_c(LAImx, z, LAIlive, H, CR);//Maximum leaf expansion
       //Update LAI profile per layer
       for(int i=0;i<ncanlayers;i++) {
         LAIpx[i] = LAIpd[i] = LAIpe[i] = 0.0;
@@ -766,6 +769,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     denSum +=LAIpx[i];
   }
   Tcan[0] = numSum/denSum;
+  // Rcout <<ncanlayers << " "<< numSum<< " " <<  denSum << " "<< Tcan[0] << "\n";
   for(int j=0;j<ncanlayers; j++) {
     outputEnergyBalance.TemperatureLayers(0,j) = Tair[j];
     outputEnergyBalance.VaporPressureLayers(0,j) = VPair[j];
@@ -1118,148 +1122,157 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //                 verbose);
     }
 
-  //   for(int c=0;c<numCohorts;c++) {
-  //     if(LAIlive[c]>0.0 && (LeafPLCVEC[c] < 0.999)) {
-  //       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
-  //       StemPLC(c,n) = StemPLCVEC[c];
-  //       LeafPLC(c,n) = LeafPLCVEC[c];
-  //       StemSympRWCInst(c,n) = symplasticRelativeWaterContent_c(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
-  //       LeafSympRWCInst(c,n) = symplasticRelativeWaterContent_c(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
-  //       StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
-  //       LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
-  //       StemPsiInst(c,n) = StemPsiVEC[c]; 
-  //       LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
-  //       RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
-  //       LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
-  //       StemSympPsiInst(c,n) = StemSympPsiVEC[c];
-  //       
-  //       if(n==0) {
-  //         minGSW_SL[c] = GSW_SL(c,n);
-  //         minGSW_SH[c] = GSW_SH(c,n);
-  //         maxGSW_SL[c] = GSW_SL(c,n);
-  //         maxGSW_SH[c] = GSW_SH(c,n);
-  //         minTemp_SL[c] = Temp_SL(c,n);
-  //         minTemp_SH[c] = Temp_SH(c,n);
-  //         maxTemp_SL[c] = Temp_SL(c,n);
-  //         maxTemp_SH[c] = Temp_SH(c,n);
-  //         minLeafPsi_SL[c] = Psi_SL(c,n);
-  //         minLeafPsi_SH[c] = Psi_SH(c,n);
-  //         maxLeafPsi_SL[c] = Psi_SL(c,n);
-  //         maxLeafPsi_SH[c] = Psi_SH(c,n);
-  //         minLeafPsi[c] = LeafPsiInst(c,n);
-  //         maxLeafPsi[c] = LeafPsiInst(c,n);
-  //         minStemPsi[c] = StemPsiInst(c,n);
-  //         minRootPsi[c] = RootPsiInst(c,n);
-  //         for(int l=0;l<nlayers;l++) {
-  //           minPsiRhizo(c,l) = RhizoPsiMAT(c,l);
-  //         }
-  //       } else {
-  //         minGSW_SL[c] = std::min(minGSW_SL[c], GSW_SL(c,n));
-  //         minGSW_SH[c] = std::min(minGSW_SH[c], GSW_SH(c,n));
-  //         maxGSW_SL[c] = std::max(maxGSW_SL[c], GSW_SL(c,n));
-  //         maxGSW_SH[c] = std::max(maxGSW_SH[c], GSW_SH(c,n));
-  //         minTemp_SL[c] = std::min(minTemp_SL[c], Temp_SL(c,n));
-  //         minTemp_SH[c] = std::min(minTemp_SH[c], Temp_SH(c,n));
-  //         maxTemp_SL[c] = std::max(maxTemp_SL[c], Temp_SL(c,n));
-  //         maxTemp_SH[c] = std::max(maxTemp_SH[c], Temp_SH(c,n));
-  //         minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c], Psi_SL(c,n));
-  //         minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c], Psi_SH(c,n));
-  //         maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c], Psi_SL(c,n));
-  //         maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c], Psi_SH(c,n));
-  //         minLeafPsi[c] = std::min(minLeafPsi[c], LeafPsiInst(c,n));
-  //         maxLeafPsi[c] = std::max(maxLeafPsi[c], LeafPsiInst(c,n));
-  //         minStemPsi[c] = std::min(minStemPsi[c], StemPsiInst(c,n));
-  //         minRootPsi[c] = std::min(minRootPsi[c], RootPsiInst(c,n));
-  //         for(int l=0;l<nlayers;l++) {
-  //           minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
-  //         }
-  //       }
-  //     } else {
-  //       // Assume constant PLC (so that it can be decreased in the future)
-  //       StemPLC(c,n) = StemPLCVEC[c];
-  //       LeafPLC(c,n) = LeafPLCVEC[c];
-  //       StemPsiInst(c,n) = StemPsiVEC[c]; 
-  //       LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
-  //       RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
-  //       LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
-  //       StemSympPsiInst(c,n) = StemSympPsiVEC[c];
-  //       minLeafPsi[c] = LeafPsiVEC[c];
-  //       maxLeafPsi[c] = LeafPsiVEC[c];
-  //       minStemPsi[c] =  StemPsiVEC[c];
-  //       minRootPsi[c] = RootCrownPsiVEC[c];
-  //       minLeafPsi_SL[c] = LeafPsiVEC[c];
-  //       minLeafPsi_SH[c] = LeafPsiVEC[c];
-  //       maxLeafPsi_SL[c] = LeafPsiVEC[c];
-  //       maxLeafPsi_SH[c] = LeafPsiVEC[c];
-  //       StemSympRWCInst(c,n) = symplasticRelativeWaterContent_c(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
-  //       LeafSympRWCInst(c,n) = symplasticRelativeWaterContent_c(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
-  //       StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
-  //       LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
-  //       
-  //     }
-  //   }
-  //   
-  //   ////////////////////////////////////////
-  //   // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
-  //   ////////////////////////////////////////
-  //   
-  //   //Soil latent heat (soil evaporation)
-  //   //Latent heat (snow fusion) as J/m2/s
-  //   if(snowpack>0.0) {
-  //     abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present
-  //     net_LWR_soil[n] = 0.0; //Set net LWR to zero
-  //   } 
-  //   LEVsoil[n] = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
-  //   // Rcout<<n<<" "<<sum_abs_SWR_soil<<" "<<soilEvapStep << " "<<Tsoil[0]<<" " << LEVsoil[n]<<"\n";
-  //   LEFsnow[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
-  //   
-  //   //Herbaceous transpiration (mm) in the current step
-  //   double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum_abs_SWR_can);
-  //   
-  //   //Canopy convective heat exchange
-  //   double RAcan = aerodynamicResistance_c(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
-  //   Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
-  //   
-  //   if(!multiLayerBalance) {//Canopy balance assuming a single layer
-  //     //Soil-canopy turbulent heat exchange
-  //     double wind2m = windSpeedMassmanExtinction_c(200.0, wind, LAIcell, canopyHeight);
-  //     double RAsoil = aerodynamicResistance_c(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
-  //     if(snowpack==0.0) {
-  //       Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
-  //     } else {
-  //       Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
-  //     } 
-  //     //Latent heat (evaporation + transpiration)
-  //     double sum_Einst_n = 0.0;
-  //     for(int c=0;c<numCohorts;c++) sum_Einst_n +=Einst(c, n);
-  //     double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum_Einst_n + canEvapStep + herbTranspStep)/tstep;
-  //     LEVcan[n] = LEwat; 
-  //     //Canopy temperature changes
-  //     Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEVcan[n] - LEFsnow[n] - Hcan_heat[n] - Hcansoil[n];
-  //     double canopyAirThermalCapacity = meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG;
-  //     double canopyThermalCapacity =  canopyAirThermalCapacity + (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
-  //     double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*Ebal[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
-  //     if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
-  //     for(int i=0;i<ncanlayers;i++) Tair[i] = Tcannext;
-  //     
-  //     
-  //     //Soil energy balance including exchange with canopy
-  //     if(snowpack==0.0) {
-  //       Ebalsoil[n] = abs_SWR_soil[n] + net_LWR_soil[n] + Hcansoil[n] - LEVsoil[n]; //Here we use all energy escaping to atmosphere
-  //     } else {
-  //       //Heat conduction between soil and snow
-  //       double Hcond_snow = 0.05*(0.0 - Tsoil[0]);//0.05 Wm-1K-1 for fresh snow
-  //       Ebalsoil[n] = Hcond_snow - net_LWR_soil[n] - LEVsoil[n]; 
-  //     }
-  //     
-  //     //Soil temperature changes
-  //     NumericVector soilTchange = temperatureChange_inner(SEBcommunication, widths, Tsoil, sand, clay, Ws, Theta_SAT, Theta_FC, Ebalsoil[n], tstep);
-  //     for(int l=0;l<nlayers;l++) {
-  //       Tsoil[l] = Tsoil[l] + std::max(-3.0, std::min(3.0, soilTchange[l])); 
-  //       if(n<(ntimesteps-1)) Tsoil_mat(n+1,l)= Tsoil[l];
-  //     }
-  //     
-  //   } else { //Multilayer canopy balance
+    for(int c=0;c<numCohorts;c++) {
+      if(LAIlive[c]>0.0 && (x.internalWater.LeafPLC[c] < 0.999)) {
+        //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
+        outputPlantsInst.StemPLC(c,n) = x.internalWater.StemPLC[c];
+        outputPlantsInst.LeafPLC(c,n) = x.internalWater.LeafPLC[c];
+        outputPlantsInst.StemSympRWC(c,n) = symplasticRelativeWaterContent_c(x.internalWater.StemSympPsi[c], x.paramsWaterStorage.StemPI0[c], x.paramsWaterStorage.StemEPS[c]);
+        outputPlantsInst.LeafSympRWC(c,n) = symplasticRelativeWaterContent_c(x.internalWater.LeafSympPsi[c], x.paramsWaterStorage.LeafPI0[c], x.paramsWaterStorage.LeafEPS[c]);
+        outputPlantsInst.StemRWC(c,n) = outputPlantsInst.StemSympRWC(c,n)*(1.0 - x.paramsWaterStorage.StemAF[c]) + (1.0 - x.internalWater.StemPLC[c])*x.paramsWaterStorage.StemAF[c];
+        outputPlantsInst.LeafRWC(c,n) = outputPlantsInst.LeafSympRWC(c,n)*(1.0 - x.paramsWaterStorage.LeafAF[c]) + (1.0 - x.internalWater.LeafPLC[c])*x.paramsWaterStorage.LeafAF[c];
+        outputPlantsInst.StemPsi(c,n) = x.internalWater.StemPsi[c];
+        outputPlantsInst.LeafPsi(c,n) = x.internalWater.LeafPsi[c]; //Store instantaneous (average) leaf potential
+        outputPlantsInst.RootPsi(c,n) = x.internalWater.RootCrownPsi[c]; //Store instantaneous root crown potential
+        outputPlantsInst.LeafSympPsi(c,n) = x.internalWater.LeafSympPsi[c];
+        outputPlantsInst.StemSympPsi(c,n) = x.internalWater.StemSympPsi[c];
+
+        if(n==0) {
+          outputSunlit.GSWMin[c] = outputSunlitInst.Gsw(c,n);
+          outputShade.GSWMin[c] = outputShadeInst.Gsw(c,n);
+          outputSunlit.GSWMax[c] = outputSunlitInst.Gsw(c,n);
+          outputShade.GSWMax[c] = outputShadeInst.Gsw(c,n);
+          outputSunlit.TempMin[c] = outputSunlitInst.Temp(c,n);
+          outputShade.TempMin[c] = outputShadeInst.Temp(c,n);
+          outputSunlit.TempMax[c] = outputSunlitInst.Temp(c,n);
+          outputShade.TempMax[c] = outputShadeInst.Temp(c,n);
+          outputSunlit.LeafPsiMin[c] = outputSunlitInst.Psi(c,n);
+          outputShade.LeafPsiMin[c] = outputShadeInst.Psi(c,n);
+          outputSunlit.LeafPsiMax[c] = outputSunlitInst.Psi(c,n);
+          outputShade.LeafPsiMax[c] = outputShadeInst.Psi(c,n);
+          outputPlants.LeafPsiMin[c] = outputPlantsInst.LeafPsi(c,n);
+          outputPlants.LeafPsiMax[c] = outputPlantsInst.LeafPsi(c,n);
+          outputPlants.StemPsi[c] = outputPlantsInst.StemPsi(c,n);
+          outputPlants.RootPsi[c] = outputPlantsInst.RootPsi(c,n);
+          for(int l=0;l<nlayers;l++) {
+            ATres.rhizoPsi(c,l) = x.belowLayers.RhizoPsi(c,l);
+          }
+        } else {
+          outputSunlit.GSWMin[c] = std::min(outputSunlit.GSWMin[c], outputSunlitInst.Gsw(c,n));
+          outputShade.GSWMin[c] = std::min(outputShade.GSWMin[c], outputShadeInst.Gsw(c,n));
+          outputSunlit.GSWMax[c] = std::max(outputSunlit.GSWMax[c], outputSunlitInst.Gsw(c,n));
+          outputShade.GSWMax[c] = std::max(outputShade.GSWMax[c], outputShadeInst.Gsw(c,n));
+          outputSunlit.TempMin[c] = std::min(outputSunlit.TempMin[c], outputSunlitInst.Temp(c,n));
+          outputShade.TempMin[c] = std::min(outputShade.TempMin[c], outputShadeInst.Temp(c,n));
+          outputSunlit.TempMax[c] = std::max(outputSunlit.TempMax[c], outputSunlitInst.Temp(c,n));
+          outputShade.TempMax[c] = std::max(outputShade.TempMax[c], outputShadeInst.Temp(c,n));
+          outputSunlit.LeafPsiMin[c] = std::min(outputSunlit.LeafPsiMin[c], outputSunlitInst.Psi(c,n));
+          outputShade.LeafPsiMin[c] = std::min(outputShade.LeafPsiMin[c], outputShadeInst.Psi(c,n));
+          outputSunlit.LeafPsiMax[c] = std::max(outputSunlit.LeafPsiMax[c], outputSunlitInst.Psi(c,n));
+          outputShade.LeafPsiMax[c] = std::max(outputShade.LeafPsiMax[c], outputShadeInst.Psi(c,n));
+          outputPlants.LeafPsiMin[c] = std::min(outputPlants.LeafPsiMin[c], outputPlantsInst.LeafPsi(c,n));
+          outputPlants.LeafPsiMax[c] = std::max(outputPlants.LeafPsiMax[c], outputPlantsInst.LeafPsi(c,n));
+          outputPlants.StemPsi[c] = std::min(outputPlants.StemPsi[c], outputPlantsInst.StemPsi(c,n));
+          outputPlants.RootPsi[c] = std::min(outputPlants.RootPsi[c], outputPlantsInst.RootPsi(c,n));
+          
+          for(int l=0;l<nlayers;l++) {
+            ATres.rhizoPsi(c,l)  = std::min(ATres.rhizoPsi(c,l) , x.belowLayers.RhizoPsi(c,l));
+          }
+        }
+      } else {
+        // Assume constant PLC (so that it can be decreased in the future)
+        outputPlantsInst.StemPLC(c,n) = x.internalWater.StemPLC[c];
+        outputPlantsInst.LeafPLC(c,n) = x.internalWater.LeafPLC[c];
+        outputPlantsInst.StemPsi(c,n) = x.internalWater.StemPsi[c];
+        outputPlantsInst.LeafPsi(c,n) = x.internalWater.LeafPsi[c]; //Store instantaneous (average) leaf potential
+        outputPlantsInst.RootPsi(c,n) = x.internalWater.RootCrownPsi[c]; //Store instantaneous root crown potential
+        outputPlantsInst.LeafSympPsi(c,n) = x.internalWater.LeafSympPsi[c];
+        outputPlantsInst.StemSympPsi(c,n) = x.internalWater.StemSympPsi[c];
+        outputPlants.LeafPsiMin[c] = x.internalWater.LeafPsi[c];
+        outputPlants.LeafPsiMax[c] = x.internalWater.LeafPsi[c];
+        outputPlants.StemPsi[c] =  x.internalWater.StemPsi[c];
+        outputPlants.RootPsi[c] = x.internalWater.RootCrownPsi[c];
+        outputSunlit.LeafPsiMin[c] = x.internalWater.LeafPsi[c];
+        outputShade.LeafPsiMin[c] = x.internalWater.LeafPsi[c];
+        outputSunlit.LeafPsiMax[c] = x.internalWater.LeafPsi[c];
+        outputShade.LeafPsiMax[c] = x.internalWater.LeafPsi[c];
+        outputPlantsInst.StemSympRWC(c,n) = symplasticRelativeWaterContent_c(x.internalWater.StemSympPsi[c], x.paramsWaterStorage.StemPI0[c], x.paramsWaterStorage.StemEPS[c]);
+        outputPlantsInst.LeafSympRWC(c,n) = symplasticRelativeWaterContent_c(x.internalWater.LeafSympPsi[c], x.paramsWaterStorage.LeafPI0[c], x.paramsWaterStorage.LeafEPS[c]);
+        outputPlantsInst.StemRWC(c,n) = outputPlantsInst.StemSympRWC(c,n)*(1.0 - x.paramsWaterStorage.StemAF[c]) + (1.0 - x.internalWater.StemPLC[c])*x.paramsWaterStorage.StemAF[c];
+        outputPlantsInst.LeafRWC(c,n) = outputPlantsInst.LeafSympRWC(c,n)*(1.0 - x.paramsWaterStorage.LeafAF[c]) + (1.0 - x.internalWater.LeafPLC[c])*x.paramsWaterStorage.LeafAF[c];
+      }
+    }
+
+    ////////////////////////////////////////
+    // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
+    ////////////////////////////////////////
+
+    //Soil latent heat (soil evaporation)
+    //Latent heat (snow fusion) as J/m2/s
+    if(x.snowpack>0.0) {
+      outputEnergyBalance.SWRsoil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present
+      outputEnergyBalance.LWRsoil[n] = 0.0; //Set net LWR to zero
+    }
+    outputEnergyBalance.LEVsoil[n] = (1e6)*meteoland::utils_latentHeatVaporisation(x.soil.getTemp(0))*soilEvapStep/tstep;
+    // Rcout<<n<<" "<<sum_abs_SWR_soil<<" "<<soilEvapStep << " "<<Tsoil[0]<<" " << LEVsoil[n]<<"\n";
+    outputEnergyBalance.LEFsnow[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
+
+    //Herbaceous transpiration (mm) in the current step
+    double herbTranspStep = herbTranspiration*(outputEnergyBalance.SWRcan[n]/sum_abs_SWR_can);
+
+    //Canopy convective heat exchange
+    double RAcan = aerodynamicResistance_c(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
+    outputEnergyBalance.Hcan[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
+
+    if(!multiLayerBalance) {//Canopy balance assuming a single layer
+      //Soil-canopy turbulent heat exchange
+      double wind2m = windSpeedMassmanExtinction_c(200.0, wind, LAIcell, canopyHeight);
+      double RAsoil = aerodynamicResistance_c(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
+      if(x.snowpack==0.0) {
+        outputEnergyBalance.Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-x.soil.getTemp(0)))/RAsoil;
+      } else {
+        outputEnergyBalance.Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
+      }
+      //Latent heat (evaporation + transpiration)
+      double sum_Einst_n = 0.0;
+      for(int c=0;c<numCohorts;c++) sum_Einst_n += outputPlantsInst.E(c, n);
+      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum_Einst_n + canEvapStep + herbTranspStep)/tstep;
+      outputEnergyBalance.LEVcan[n] = LEwat;
+      // Rcout<< n <<" " << sum_Einst_n << " " << canEvapStep <<" "<< outputEnergyBalance.LEVcan[n]<<"\n";
+      
+      //Canopy temperature changes
+      outputEnergyBalance.Ebalcan[n] = outputEnergyBalance.SWRcan[n] + outputEnergyBalance.LWRcan[n] - outputEnergyBalance.LEVcan[n] - outputEnergyBalance.LEFsnow[n] - outputEnergyBalance.Hcan[n] - outputEnergyBalance.Hcansoil[n];
+      double canopyAirThermalCapacity = meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG;
+      double canopyThermalCapacity =  canopyAirThermalCapacity + (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
+      double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*outputEnergyBalance.Ebalcan[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
+      if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
+      for(int i=0;i<ncanlayers;i++) Tair[i] = Tcannext;
+
+      //Soil energy balance including exchange with canopy
+      if(x.snowpack==0.0) {
+        outputEnergyBalance.Ebalsoil[n] = outputEnergyBalance.SWRsoil[n] + outputEnergyBalance.LWRsoil[n] + outputEnergyBalance.Hcansoil[n] - outputEnergyBalance.LEVsoil[n]; //Here we use all energy escaping to atmosphere
+      } else {
+        //Heat conduction between soil and snow
+        double Hcond_snow = 0.05*(0.0 - x.soil.getTemp(0));//0.05 Wm-1K-1 for fresh snow
+        outputEnergyBalance.Ebalsoil[n] = Hcond_snow - outputEnergyBalance.LWRsoil[n] - outputEnergyBalance.LEVsoil[n];
+      }
+
+      //Soil temperature changes
+      std::vector<double> Ws(nlayers), Tsoil(nlayers);
+      for(int l=0;l<nlayers;l++) {
+        Ws[l] = x.soil.getW(l);
+        Tsoil[l] = x.soil.getTemp(l);
+      }
+      temperatureChange_inner_c(ATcomm.SEBcomm, 
+                                x.soil.getWidths(), 
+                                Tsoil, x.soil.getSand(), x.soil.getClay(), Ws, 
+                                x.soil.getThetaSAT(), x.soil.getThetaFC(), 
+                                outputEnergyBalance.Ebalsoil[n], tstep);
+      for(int l=0;l<nlayers;l++) {
+        x.soil.setTemp(l, x.soil.getTemp(l) + std::max(-3.0, std::min(3.0, ATcomm.SEBcomm.tempch[l])));
+        if(n<(ntimesteps-1)) outputEnergyBalance.SoilTemperature(n+1,l)= x.soil.getTemp(l);
+      }
+    } else { //Multilayer canopy balance
   //     double moistureAtm = 0.622*(vpatm/Patm)*meteoland::utils_airDensity(Tatm[n],Patm);
   //     double CO2Atm = 0.409*Catm*44.01; //mg/m3
   //     
@@ -1394,11 +1407,11 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //       Tcan[n+1] = sum(Tair*LAIpx)/sum(LAIpx); 
   //       Tsoil_mat(n+1,_)= Tsoil;
   //     }
-  //   }
-  //   if(n<(ntimesteps-1)) for(int i=0;i<ncanlayers;i++) {
-  //     Tcan_mat(n+1,i) = Tair[i];
-  //     VPcan_mat(n+1,i) = VPair[i];
-  //   }
+    }
+    if(n<(ntimesteps-1)) for(int i=0;i<ncanlayers;i++) {
+      outputEnergyBalance.TemperatureLayers(n+1,i) = Tair[i];
+      outputEnergyBalance.VaporPressureLayers(n+1,i) = VPair[i];
+    }
   } //End of timestep loop
 
   //Delete Sureau Networks
