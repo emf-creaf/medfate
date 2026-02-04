@@ -132,4 +132,5 @@ void initSureauNetwork_inner_c(SureauNetwork& network, int c,
                                std::vector<double>& PsiSoil, std::vector<double>& VG_n, std::vector<double>& VG_alpha,
                                ControlParameters& control, double sapFluidityDay);
 
+void innerSureau_c(ModelInput& x, SureauNetwork* networks, Rcpp::List input, Rcpp::List output, int n, double tstep);
 #endif

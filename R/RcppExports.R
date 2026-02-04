@@ -3145,6 +3145,44 @@ pheno_updateLeaves <- function(x, wind, fromGrowthModel) {
     invisible(.Call(`_medfate_updateLeaves`, x, wind, fromGrowthModel))
 }
 
+#' @rdname photo
+#' @keywords internal
+photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE) {
+    .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
+}
+
+#' @rdname photo
+#' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
+#' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+#' @keywords internal
+photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept) {
+    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept)
+}
+
+#' @rdname photo
+#' @keywords internal
+photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
+    .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
+}
+
+#' @rdname photo
+#' @keywords internal
+photo_leafPhotosynthesisFunction2 <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
+    .Call(`_medfate_leafPhotosynthesisFunction2`, E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
+}
+
+#' @rdname photo
+#' @keywords internal
+photo_sunshadePhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth = 1.0, verbose = FALSE) {
+    .Call(`_medfate_sunshadePhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose)
+}
+
+#' @rdname photo
+#' @keywords internal
+photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth = 1.0, verbose = FALSE) {
+    .Call(`_medfate_multilayerPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
+}
+
 #' Photosynthesis submodel functions
 #' 
 #' Set of functions used in the calculation of photosynthesis
@@ -3237,72 +3275,34 @@ pheno_updateLeaves <- function(x, wind, fromGrowthModel) {
 #' 
 #' @name photo
 photo_GammaTemp <- function(Tleaf) {
-    .Call(`_medfate_gammaTemp`, Tleaf)
+    .Call(`_medfate_gammaTemp_c`, Tleaf)
 }
 
 #' @rdname photo
-photo_KmTemp <- function(Tleaf, Oi = 209.0) {
-    .Call(`_medfate_KmTemp`, Tleaf, Oi)
+photo_KmTemp <- function(Tleaf, Oi) {
+    .Call(`_medfate_KmTemp_c`, Tleaf, Oi)
 }
 
 #' @rdname photo
 photo_VmaxTemp <- function(Vmax298, Tleaf) {
-    .Call(`_medfate_VmaxTemp`, Vmax298, Tleaf)
+    .Call(`_medfate_VmaxTemp_c`, Vmax298, Tleaf)
 }
 
 #' @rdname photo
 photo_JmaxTemp <- function(Jmax298, Tleaf) {
-    .Call(`_medfate_JmaxTemp`, Jmax298, Tleaf)
+    .Call(`_medfate_JmaxTemp_c`, Jmax298, Tleaf)
 }
 
 #' @rdname photo
 #' @keywords internal
 photo_electronLimitedPhotosynthesis <- function(Q, Ci, GT, Jmax) {
-    .Call(`_medfate_electronLimitedPhotosynthesis`, Q, Ci, GT, Jmax)
+    .Call(`_medfate_electronLimitedPhotosynthesis_c`, Q, Ci, GT, Jmax)
 }
 
 #' @rdname photo
 #' @keywords internal
 photo_rubiscoLimitedPhotosynthesis <- function(Ci, GT, Km, Vmax) {
-    .Call(`_medfate_rubiscoLimitedPhotosynthesis`, Ci, GT, Km, Vmax)
-}
-
-#' @rdname photo
-#' @keywords internal
-photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE) {
-    .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
-}
-
-#' @rdname photo
-#' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
-#' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
-#' @keywords internal
-photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept) {
-    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept)
-}
-
-#' @rdname photo
-#' @keywords internal
-photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
-    .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
-}
-
-#' @rdname photo
-#' @keywords internal
-photo_leafPhotosynthesisFunction2 <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
-    .Call(`_medfate_leafPhotosynthesisFunction2`, E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
-}
-
-#' @rdname photo
-#' @keywords internal
-photo_sunshadePhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth = 1.0, verbose = FALSE) {
-    .Call(`_medfate_sunshadePhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose)
-}
-
-#' @rdname photo
-#' @keywords internal
-photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth = 1.0, verbose = FALSE) {
-    .Call(`_medfate_multilayerPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
+    .Call(`_medfate_rubiscoLimitedPhotosynthesis_c`, Ci, GT, Km, Vmax)
 }
 
 #' Root functions

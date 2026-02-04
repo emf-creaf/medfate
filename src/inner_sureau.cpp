@@ -2,6 +2,7 @@
 #include <RcppArmadillo.h>
 #include "inner_sureau_c.h"
 #include "photosynthesis.h"
+#include "photosynthesis_c.h"
 #include "biophysicsutils_c.h"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
@@ -896,10 +897,10 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
           
           //gCR = g Crown
-          double gCR = 1000.0*gCrown(zWind[iLayerCohort[c]]); 
+          double gCR = 1000.0*gCrown_c(zWind[iLayerCohort[c]]); 
           //Assumes well coupled canopy (for compatibility with Sperry and leaf temperature balance)
           //gBL = g Boundary Layer
-          double gBL = 1000.0*gLeafBoundary(zWind[iLayerCohort[c]], LeafWidth[c]); // mmol boundary layer conductance
+          double gBL = 1000.0*gLeafBoundary_c(zWind[iLayerCohort[c]], LeafWidth[c]); // mmol boundary layer conductance
           
           //# Leaf cuticular conductances and cuticular transpiration
           double gmin_SL = gmin_c(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
@@ -925,7 +926,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
             gs_SL = gs_SL * regul;
             gs_SH = gs_SH * regul;
           } else {
-            photosynthesisBaldocchi_inner(PB_SL, 
+            photosynthesisBaldocchi_inner_c(PB_SL, 
                                           irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda)/LAI_SL(c,n), 
                                           Cair[iLayerSunlit[c]], 
                                           std::max(0.0,Temp_SL(c,n)), 
@@ -938,7 +939,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
             gs_SL = PB_SL.Gsw*1000.0; //From mmol to mol 
             gs_SL = std::max(gsNight, gs_SL)*regul;
             // Rcout<<c << " "<<n << " Bald gs: "<< PB_SL.Gsw << " regul: "<< regul << " gs_SL: "<< gs_SL<<"\n";
-            photosynthesisBaldocchi_inner(PB_SH, 
+            photosynthesisBaldocchi_inner_c(PB_SH, 
                                           irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda)/LAI_SH(c,n), 
                                           Cair[iLayerSunlit[c]], 
                                           std::max(0.0,Temp_SH(c,n)), 
@@ -978,8 +979,8 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           Ci_SH(c,n) = LP_SH[0];
           Ag_SL(c,n) = LP_SL[1];
           Ag_SH(c,n) = LP_SH[1];
-          An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298_SL(c,n)/LAI_SL(c,n), Temp_SL(c,n));
-          An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298_SH(c,n)/LAI_SH(c,n), Temp_SH(c,n));
+          An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp_c(Vmax298_SL(c,n)/LAI_SL(c,n), Temp_SL(c,n));
+          An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp_c(Vmax298_SH(c,n)/LAI_SH(c,n), Temp_SH(c,n));
           
           Agsum += Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n);
           Ansum += An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n);

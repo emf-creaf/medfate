@@ -3970,81 +3970,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// gammaTemp
-double gammaTemp(double Tleaf);
-RcppExport SEXP _medfate_gammaTemp(SEXP TleafSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
-    rcpp_result_gen = Rcpp::wrap(gammaTemp(Tleaf));
-    return rcpp_result_gen;
-END_RCPP
-}
-// KmTemp
-double KmTemp(double Tleaf, double Oi);
-RcppExport SEXP _medfate_KmTemp(SEXP TleafSEXP, SEXP OiSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
-    Rcpp::traits::input_parameter< double >::type Oi(OiSEXP);
-    rcpp_result_gen = Rcpp::wrap(KmTemp(Tleaf, Oi));
-    return rcpp_result_gen;
-END_RCPP
-}
-// VmaxTemp
-double VmaxTemp(double Vmax298, double Tleaf);
-RcppExport SEXP _medfate_VmaxTemp(SEXP Vmax298SEXP, SEXP TleafSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
-    rcpp_result_gen = Rcpp::wrap(VmaxTemp(Vmax298, Tleaf));
-    return rcpp_result_gen;
-END_RCPP
-}
-// JmaxTemp
-double JmaxTemp(double Jmax298, double Tleaf);
-RcppExport SEXP _medfate_JmaxTemp(SEXP Jmax298SEXP, SEXP TleafSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
-    rcpp_result_gen = Rcpp::wrap(JmaxTemp(Jmax298, Tleaf));
-    return rcpp_result_gen;
-END_RCPP
-}
-// electronLimitedPhotosynthesis
-double electronLimitedPhotosynthesis(double Q, double Ci, double GT, double Jmax);
-RcppExport SEXP _medfate_electronLimitedPhotosynthesis(SEXP QSEXP, SEXP CiSEXP, SEXP GTSEXP, SEXP JmaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< double >::type Ci(CiSEXP);
-    Rcpp::traits::input_parameter< double >::type GT(GTSEXP);
-    Rcpp::traits::input_parameter< double >::type Jmax(JmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(electronLimitedPhotosynthesis(Q, Ci, GT, Jmax));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rubiscoLimitedPhotosynthesis
-double rubiscoLimitedPhotosynthesis(double Ci, double GT, double Km, double Vmax);
-RcppExport SEXP _medfate_rubiscoLimitedPhotosynthesis(SEXP CiSEXP, SEXP GTSEXP, SEXP KmSEXP, SEXP VmaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Ci(CiSEXP);
-    Rcpp::traits::input_parameter< double >::type GT(GTSEXP);
-    Rcpp::traits::input_parameter< double >::type Km(KmSEXP);
-    Rcpp::traits::input_parameter< double >::type Vmax(VmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax));
-    return rcpp_result_gen;
-END_RCPP
-}
 // leafphotosynthesis
 NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose);
 RcppExport SEXP _medfate_leafphotosynthesis(SEXP QSEXP, SEXP CatmSEXP, SEXP GcSEXP, SEXP TleafSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
@@ -4183,6 +4108,81 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(multilayerPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gammaTemp_c
+double gammaTemp_c(double Tleaf);
+RcppExport SEXP _medfate_gammaTemp_c(SEXP TleafSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    rcpp_result_gen = Rcpp::wrap(gammaTemp_c(Tleaf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// KmTemp_c
+double KmTemp_c(double Tleaf, double Oi);
+RcppExport SEXP _medfate_KmTemp_c(SEXP TleafSEXP, SEXP OiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    Rcpp::traits::input_parameter< double >::type Oi(OiSEXP);
+    rcpp_result_gen = Rcpp::wrap(KmTemp_c(Tleaf, Oi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// VmaxTemp_c
+double VmaxTemp_c(double Vmax298, double Tleaf);
+RcppExport SEXP _medfate_VmaxTemp_c(SEXP Vmax298SEXP, SEXP TleafSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    rcpp_result_gen = Rcpp::wrap(VmaxTemp_c(Vmax298, Tleaf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// JmaxTemp_c
+double JmaxTemp_c(double Jmax298, double Tleaf);
+RcppExport SEXP _medfate_JmaxTemp_c(SEXP Jmax298SEXP, SEXP TleafSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    rcpp_result_gen = Rcpp::wrap(JmaxTemp_c(Jmax298, Tleaf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// electronLimitedPhotosynthesis_c
+double electronLimitedPhotosynthesis_c(double Q, double Ci, double GT, double Jmax);
+RcppExport SEXP _medfate_electronLimitedPhotosynthesis_c(SEXP QSEXP, SEXP CiSEXP, SEXP GTSEXP, SEXP JmaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< double >::type Ci(CiSEXP);
+    Rcpp::traits::input_parameter< double >::type GT(GTSEXP);
+    Rcpp::traits::input_parameter< double >::type Jmax(JmaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(electronLimitedPhotosynthesis_c(Q, Ci, GT, Jmax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rubiscoLimitedPhotosynthesis_c
+double rubiscoLimitedPhotosynthesis_c(double Ci, double GT, double Km, double Vmax);
+RcppExport SEXP _medfate_rubiscoLimitedPhotosynthesis_c(SEXP CiSEXP, SEXP GTSEXP, SEXP KmSEXP, SEXP VmaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Ci(CiSEXP);
+    Rcpp::traits::input_parameter< double >::type GT(GTSEXP);
+    Rcpp::traits::input_parameter< double >::type Km(KmSEXP);
+    Rcpp::traits::input_parameter< double >::type Vmax(VmaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(rubiscoLimitedPhotosynthesis_c(Ci, GT, Km, Vmax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6541,18 +6541,18 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},
     {"_medfate_updatePhenology", (DL_FUNC) &_medfate_updatePhenology, 4},
     {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 3},
-    {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
-    {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},
-    {"_medfate_VmaxTemp", (DL_FUNC) &_medfate_VmaxTemp, 2},
-    {"_medfate_JmaxTemp", (DL_FUNC) &_medfate_JmaxTemp, 2},
-    {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
-    {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
     {"_medfate_leafphotosynthesis", (DL_FUNC) &_medfate_leafphotosynthesis, 7},
     {"_medfate_photosynthesisBaldocchi", (DL_FUNC) &_medfate_photosynthesisBaldocchi, 9},
     {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
     {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 15},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
+    {"_medfate_gammaTemp_c", (DL_FUNC) &_medfate_gammaTemp_c, 1},
+    {"_medfate_KmTemp_c", (DL_FUNC) &_medfate_KmTemp_c, 2},
+    {"_medfate_VmaxTemp_c", (DL_FUNC) &_medfate_VmaxTemp_c, 2},
+    {"_medfate_JmaxTemp_c", (DL_FUNC) &_medfate_JmaxTemp_c, 2},
+    {"_medfate_electronLimitedPhotosynthesis_c", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis_c, 4},
+    {"_medfate_rubiscoLimitedPhotosynthesis_c", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis_c, 4},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 4},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
