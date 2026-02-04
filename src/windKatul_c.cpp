@@ -116,11 +116,12 @@ std::vector<double> linspace_c(double x1, double x2, int N) {
 }
 // Implementation of R which
 std::vector<int> which_c(std::vector<bool>& l) {
+  int n = l.size();
   int c = 0;
-  for(int i=0;i<l.size();i++) if(l[i]) c++;
+  for(int i=0;i<n;i++) if(l[i]) c++;
   std::vector<int> w(c);
   int cnt=0;
-  for(int i=0;i<l.size();i++) if(l[i]) {w[cnt] = i;cnt++;}
+  for(int i=0;i<n;i++) if(l[i]) {w[cnt] = i;cnt++;}
   return(w);
 }
 
@@ -155,7 +156,8 @@ void windCanopyTurbulenceModel_inner_c(CanopyTurbulenceModel_RESULT& comm,
   for(int i=0;i<N;i++) bw[i] = zm[i] < hm;
   std::vector<int> c1 = which_c(bw);
   int nn = 0;
-  for(int i=0;i<c1.size();i++) nn = std::max(nn, c1[i]);
+  int cN = c1.size();
+  for(int i=0;i<cN;i++) nn = std::max(nn, c1[i]);
   for(int i=nn;i<N;i++) {
     Lmix[i] = kv*(zm[i] - d0);
   }
@@ -339,11 +341,12 @@ void windCanopyTurbulence_inner_c(CanopyTurbulence_RESULT& output, CanopyTurbule
                                   std::string model = "k-epsilon") {
   
   //z - height vector in m
-  std::vector<double> zm(zmid.size());
-  for(int i=0;i<zmid.size();i++) zm[i]= zmid[i]/100.0;
+  int N = zmid.size();
+  std::vector<double> zm(N);
+  for(int i=0;i<N;i++) zm[i]= zmid[i]/100.0;
   //Effective drag = Cd x leaf area density
-  std::vector<double> Cx(LAD.size());
-  for(int i=0;i<LAD.size();i++) Cx[i]= LAD[i]*0.2;
+  std::vector<double> Cx(N);
+  for(int i=0;i<N;i++) Cx[i]= LAD[i]*0.2;
   //hm - canopy height (m)
   double hm = (canopyHeight/100.0);
   //d0 - displacement height (m)
@@ -356,7 +359,7 @@ void windCanopyTurbulence_inner_c(CanopyTurbulence_RESULT& output, CanopyTurbule
   
   windCanopyTurbulenceModel_inner_c(comm, zm, Cx, hm, d0, z0);
   
-  for(int i=0;i<zmid.size();i++) {
+  for(int i=0;i<N;i++) {
     output.zmid[i] = zmid[i];
     output.u[i] = comm.U1[i]*u_f;
     output.du[i] = comm.dU1[i]*u_f;

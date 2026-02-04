@@ -101,6 +101,7 @@ ModelInput::ModelInput(Rcpp::List x) {
   if(intercDF.containsElementNamed("kPAR")) paramsInterception.kPAR = Rcpp::as< std::vector<double> >(intercDF["kPAR"]);
   if(intercDF.containsElementNamed("kSWR")) paramsInterception.kSWR = Rcpp::as< std::vector<double> >(intercDF["kSWR"]);
   if(intercDF.containsElementNamed("alphaSWR")) paramsInterception.alphaSWR = Rcpp::as< std::vector<double> >(intercDF["alphaSWR"]);
+  if(intercDF.containsElementNamed("gammaSWR")) paramsInterception.gammaSWR = Rcpp::as< std::vector<double> >(intercDF["gammaSWR"]);
   if(intercDF.containsElementNamed("alphaLWR")) paramsInterception.alphaLWR = Rcpp::as< std::vector<double> >(intercDF["alphaLWR"]);
   if(intercDF.containsElementNamed("g")) paramsInterception.g = Rcpp::as< std::vector<double> >(intercDF["g"]);
   

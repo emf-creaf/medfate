@@ -1,6 +1,7 @@
 #include "RcppArmadillo.h"
 #include "communication_structures_c.h"
 #include "transpiration_basic_c.h"
+#include "lightextinction_advanced_c.h"
 #include "modelInput_c.h"
 #include "radiation_c.h"
 #include "windKatul_c.h"
@@ -57,6 +58,34 @@ struct PlantsAdvancedTranspiration_RESULT {
 };
 Rcpp::DataFrame copyPlantAdvancedTranspirationResult_c(const PlantsAdvancedTranspiration_RESULT& plants, ModelInput& x);
 
+
+struct PlantsAdvancedTranspirationInst_RESULT {
+  arma::mat E, Ag, An, dEdP, RootPsi, StemPsi, LeafPsi;
+  arma::mat StemSympPsi, LeafSympPsi, StemPLC, LeafPLC, StemRWC, LeafRWC, StemSympRWC, LeafSympRWC;
+  arma::mat PWB;
+  
+  PlantsAdvancedTranspirationInst_RESULT(size_t numCohorts, size_t ntimesteps) : 
+    E(numCohorts, ntimesteps),
+    Ag(numCohorts, ntimesteps),
+    An(numCohorts, ntimesteps),
+    dEdP(numCohorts, ntimesteps),
+    RootPsi(numCohorts, ntimesteps),
+    StemPsi(numCohorts, ntimesteps),
+    LeafPsi(numCohorts, ntimesteps),
+    StemSympPsi(numCohorts, ntimesteps),
+    LeafSympPsi(numCohorts, ntimesteps),
+    StemPLC(numCohorts, ntimesteps),
+    LeafPLC(numCohorts, ntimesteps),
+    StemRWC(numCohorts, ntimesteps),
+    LeafRWC(numCohorts, ntimesteps),
+    StemSympRWC(numCohorts, ntimesteps),
+    LeafSympRWC(numCohorts, ntimesteps),
+    PWB(numCohorts, ntimesteps) {
+    
+  }
+};
+Rcpp::DataFrame copyPlantAdvancedTranspirationInstResult_c(const PlantsAdvancedTranspirationInst_RESULT& plants, ModelInput& x);
+
 struct LeafAdvancedTranspiration_RESULT {
   std::vector<double> LeafPsiMin;
   std::vector<double> LeafPsiMax;
@@ -75,6 +104,42 @@ struct LeafAdvancedTranspiration_RESULT {
   }
 };
 Rcpp::DataFrame copyLeafAdvancedTranspirationResult_c(const LeafAdvancedTranspiration_RESULT& leaf, ModelInput& x);
+
+
+struct LeafAdvancedTranspirationInst_RESULT {
+  arma::mat LAI;
+  arma::mat Vmax298;
+  arma::mat Jmax298;
+  arma::mat Abs_SWR;
+  arma::mat Abs_PAR;
+  arma::mat Net_LWR;
+  arma::mat Ag;
+  arma::mat An;
+  arma::mat Ci;
+  arma::mat E;
+  arma::mat Gsw;
+  arma::mat VPD;
+  arma::mat Temp;
+  arma::mat Psi;
+  
+  LeafAdvancedTranspirationInst_RESULT(size_t numCohorts, size_t ntimesteps) : 
+    LAI(numCohorts, ntimesteps),
+    Vmax298(numCohorts, ntimesteps),
+    Jmax298(numCohorts, ntimesteps),
+    Abs_SWR(numCohorts, ntimesteps),
+    Abs_PAR(numCohorts, ntimesteps),
+    Net_LWR(numCohorts, ntimesteps),
+    Ag(numCohorts, ntimesteps),
+    An(numCohorts, ntimesteps),
+    Ci(numCohorts, ntimesteps),
+    E(numCohorts, ntimesteps),
+    Gsw(numCohorts, ntimesteps),
+    VPD(numCohorts, ntimesteps),
+    Temp(numCohorts, ntimesteps),
+    Psi(numCohorts, ntimesteps)
+    { }
+};
+Rcpp::List copyLeafAdvancedTranspirationInstResult_c(const LeafAdvancedTranspirationInst_RESULT& leaf_inst, ModelInput& x);
 
 struct EnergyBalance_RESULT {
   std::vector<double> SolarHour;
@@ -126,7 +191,11 @@ struct AdvancedTranspiration_RESULT {
   // Plants data frame
   PlantsAdvancedTranspiration_RESULT plants;
   
+  PlantsAdvancedTranspirationInst_RESULT plants_inst;
+  
   LeafAdvancedTranspiration_RESULT sunlit, shade;
+  
+  LeafAdvancedTranspirationInst_RESULT sunlit_inst, shade_inst;
   
   EnergyBalance_RESULT energy;
   
@@ -140,18 +209,27 @@ struct AdvancedTranspiration_RESULT {
   CanopyTurbulence_RESULT canopyTurbulence;
   
   DirectDiffuseDay_RESULT directDiffuseDay;
+
+  InstantaneousLightExtinctionAbsortion_RESULT lightExtinctionAbsortion;
+  
+  std::vector<LongWaveRadiation_RESULT> lwrExtinction;
   
   AdvancedTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
     plants(numCohorts), 
+    plants_inst(numCohorts, ntimesteps),
     sunlit(numCohorts),
     shade(numCohorts),
+    sunlit_inst(numCohorts, ntimesteps),
+    shade_inst(numCohorts, ntimesteps),
     energy(nlayers, ncanlayers, ntimesteps),
     extraction(numCohorts, nlayers, arma::fill::zeros),
     extractionInst(nlayers, ntimesteps, arma::fill::zeros),
     extractionPools(numCohorts),
     rhizoPsi(numCohorts, nlayers, arma::fill::zeros),
     canopyTurbulence(ncanlayers),
-    directDiffuseDay(ntimesteps){
+    directDiffuseDay(ntimesteps),
+    lightExtinctionAbsortion(numCohorts, ncanlayers, ntimesteps),
+    lwrExtinction(ntimesteps, LongWaveRadiation_RESULT(ncanlayers, numCohorts)) {
     for(size_t c = 0; c < numCohorts; c++) {
       extractionPools[c] = arma::mat(numCohorts, nlayers, arma::fill::zeros);
     }
@@ -164,18 +242,10 @@ Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT&
 // ----------------------------------------------------------------------------
 struct AdvancedTranspiration_COMM {
   
-  AbsorbedSWR_COMM AbSWRcomm;
-  std::vector<double> CohASWRF;
-  std::vector<double> Tmax;
-  std::vector<double> TmaxCoh;
   arma::mat RHOPCohDyn;
   CanopyTurbulenceModel_RESULT canopyTurbulenceModel;
   
-  AdvancedTranspiration_COMM(size_t numCohorts = 0, size_t ncanlayers = 0, size_t nlayers= 0) : 
-    AbSWRcomm(numCohorts, ncanlayers), 
-    CohASWRF(numCohorts),
-    Tmax(numCohorts),
-    TmaxCoh(numCohorts), 
+  AdvancedTranspiration_COMM(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
     RHOPCohDyn(numCohorts, nlayers),
     canopyTurbulenceModel(ncanlayers){}
 };

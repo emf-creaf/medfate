@@ -83,6 +83,7 @@ struct InterceptionParams {
   std::vector<double> kPAR;
   std::vector<double> kSWR;
   std::vector<double> alphaSWR;
+  std::vector<double> gammaSWR;
   std::vector<double> alphaLWR;
   std::vector<double> g;
 };

@@ -472,7 +472,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       }
     }
     // Add LAImax to leaf area density to have a wind speed profile in deciduous canopies
-    lad = 100.0*((0.9*LAIpe + 0.1*LAImx) + LAIpd)/verticalLayerSize;
+    lad = 100.0*((0.9*LAIpe + 0.1*LAIpx) + LAIpd)/verticalLayerSize;
     for(int i=0; i<numCohorts;i++) {
       outputFPAR[i] = PARcohort[i];
     }
@@ -1351,7 +1351,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   
   
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
-  AdvancedTranspiration_COMM ATcomm(numCohorts, ncanlayers, nlayers);
+  AdvancedTranspiration_COMM ATcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   
   transpirationAdvanced_c(ATres, ATcomm, x_c, 
                           meteovec,
@@ -1449,7 +1449,7 @@ List transpirationSureau(List x, DataFrame meteo, int day,
   
 
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
-  AdvancedTranspiration_COMM ATcomm(numCohorts, ncanlayers, nlayers);
+  AdvancedTranspiration_COMM ATcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   
   transpirationAdvanced_c(ATres, ATcomm, x_c, 
                           meteovec,

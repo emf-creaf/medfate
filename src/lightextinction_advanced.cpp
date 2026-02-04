@@ -4,6 +4,7 @@
 #include "incbeta_c.h"
 #include "biophysicsutils_c.h"
 #include "lightextinction_advanced_c.h"
+#include "radiation_c.h"
 #include <math.h>
 #include <meteoland.h>
 using namespace Rcpp;
@@ -114,24 +115,6 @@ NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix L
   return(Ifraction);
 }
 
-//TO BE DELETED
-double groundDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
-                                            NumericVector kb, NumericVector ClumpingIndex, 
-                                            NumericVector alpha, double trunkExtinctionFraction = 0.1) {
-  int nlayer = LAIme.nrow();
-  int ncoh = LAIme.ncol();
-  double s = 0.0;
-  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
-    //for subsequent layers increase s
-    //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
-    for(int j =0;j<ncoh;j++) {
-      s = s + (kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
-    }
-  }
-  return(exp(-1.0*s));
-}
-
-
 
 //' @rdname light_advanced
 //' @keywords internal
@@ -154,31 +137,6 @@ NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix 
    return(Ifraction);
  }
 
-//TO BE DELETED
-double groundDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
-                                       NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF,
-                                       NumericVector alpha, double trunkExtinctionFraction = 0.1) {
-  int nlayer = LAIme.nrow();
-  int ncoh = LAIme.ncol();
-  int nZ = ZF.size();
-  
-  double gif = 0.0; //Overall fraction of ground irradiance
-  for(int k = 0;k<nZ;k++) { //Sky fractions
-    double s = 0.0;
-    for(int i=nlayer-1;i>=0;i--) { //Start from top layer
-      //for subsequent layers increase s
-      //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
-      for(int j =0;j<ncoh;j++) {
-        s = s + (K(k,j)*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
-      }
-    }
-    // I fraction for the current layer (no extinction for top layer)
-    gif = gif + ZF[k]*exp(-1.0*s);
-  }
-  return(gif);
-}
-
-
 
 
 
@@ -195,13 +153,18 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
                                         NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
   int ncoh = alpha.size();
   int nlayer = LAIme.nrow();
-  CohortSunlitShadeAbsorbedRadiation_RESULT res(nlayer, ncoh);
-  cohortSunlitShadeAbsorbedRadiation_c(res, Ib0, Id0,
+  arma::mat I_sunlit(nlayer, ncoh);
+  arma::mat I_shade(nlayer, ncoh);
+  cohortSunlitShadeAbsorbedRadiation_c(I_sunlit, I_shade, 
+                                       Ib0, Id0,
                                        as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
                                        as<std::vector<double>>(kb), as<arma::mat>(K), as<std::vector<double>>(ClumpingIndex), as<std::vector<double>>(ZF), 
                                        as<std::vector<double>>(alpha), as<std::vector<double>>(gamma), 
                                        trunkExtinctionFraction);
-  return(copyCohortSunlitShadeAbsorvedRadiationResult_c(res));
+  return(Rcpp::List::create(
+      Rcpp::Named("I_sunlit") = Rcpp::wrap(I_sunlit), 
+      Rcpp::Named("I_shade") = Rcpp::wrap(I_shade)
+  ));
 }
 
 
@@ -214,7 +177,6 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
 // [[Rcpp::export("light_layerSunlitFraction")]]
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
                                   NumericVector kb, NumericVector ClumpingIndex) {
-  int ncoh = kb.size();
   int nlayer = LAIme.nrow();
   std::vector<double> fSL_vec(nlayer, 0.0);
   layerSunlitFraction_c(fSL_vec,
@@ -236,224 +198,51 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
                                            DataFrame ddd, int ntimesteps = 24, double trunkExtinctionFraction = 0.1) {
 
   int numCohorts = LAIme.ncol();
-  int nz = LAIme.nrow();
+  int ncanlayers = LAIme.nrow();
   
-  NumericVector solarElevation = ddd["SolarElevation"]; //in radians
-  NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
-  NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
-  NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
-  NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
+  InstantaneousLightExtinctionAbsortion_RESULT lightExtinctionAbsortion(numCohorts, ncanlayers, ntimesteps);
+  DirectDiffuseDay_RESULT directDiffuseDay(ntimesteps);
   
-  //Light PAR/SWR coefficients
-  NumericVector gammaPAR(numCohorts); //PAR albedo 
-  NumericVector gammaLWR(numCohorts, 0.03); //3% albedo of LWR
-  NumericVector alphaPAR(numCohorts), alphaLWR(numCohorts);
-  NumericVector kDIR(numCohorts, NA_REAL);
-  NumericVector ZF = NumericVector::create(0.178, 0.514, 0.308); //Standard overcast sky
-  NumericVector Zangles = NumericVector::create(15.0, 45.0, 75.0); 
-  int nZ = ZF.size(); 
-  NumericMatrix K9DIR(nZ, numCohorts); //Goudriaan 1988
-  for(int k=0;k<nZ;k++){
-    // Rcout<< k;
-    for(int c=0;c<numCohorts;c++) {
-      K9DIR(k,c) = directionalExtinctionCoefficient_c(p[c], q[c], Zangles[k]*(M_PI/180.0));
-      // Rcout<< " "<< K9DIR(k,c);
-    }
-    // Rcout<<"\n";
-  }
-  for(int c=0;c<numCohorts;c++) {
-    alphaPAR[c] = alphaSWR[c]*1.35;
-    gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
-    alphaLWR[c] = 0.97; //Longwave coefficients
-  }
-
-  // Rcout<<rad<<" "<< solarElevation[0]<<" "<<SWR_direct[0]<<"\n";
-  List fsunlit_list(ntimesteps);
+  directDiffuseDay.SolarElevation = as<std::vector<double>> (ddd["SolarElevation"]); //in radians
+  directDiffuseDay.SWR_direct = as<std::vector<double>> (ddd["SWR_direct"]); //in kW·m-2
+  directDiffuseDay.SWR_diffuse = as<std::vector<double>> (ddd["SWR_diffuse"]); //in kW·m-2
+  directDiffuseDay.PAR_direct = as<std::vector<double>> (ddd["PAR_direct"]); //in kW·m-2
+  directDiffuseDay.PAR_diffuse = as<std::vector<double>> (ddd["PAR_diffuse"]); //in kW·m-2
   
-  List abs_PAR_SL_COH_list(ntimesteps);
-  List abs_SWR_SL_COH_list(ntimesteps);
-  List abs_PAR_SH_COH_list(ntimesteps);
-  List abs_SWR_SH_COH_list(ntimesteps);
-  List abs_PAR_SL_ML_list(ntimesteps);
-  List abs_SWR_SL_ML_list(ntimesteps);
-  List abs_PAR_SH_ML_list(ntimesteps);
-  List abs_SWR_SH_ML_list(ntimesteps);
+  instantaneousLightExtinctionAbsortion_c(lightExtinctionAbsortion,
+                                          as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                          as<std::vector<double>>(p), as<std::vector<double>>(q), as<std::vector<double>>(ClumpingIndex),
+                                          as<std::vector<double>>(alphaSWR), as<std::vector<double>>(gammaSWR),
+                                          directDiffuseDay, ntimesteps, trunkExtinctionFraction);
   
-  NumericVector abs_SWR_can(ntimesteps,0.0), abs_LWR_can(ntimesteps,0.0);
-  NumericVector abs_SWR_soil(ntimesteps,0.0), abs_LWR_soil(ntimesteps,0.0);
-  NumericVector gbf(ntimesteps,0.0), gdf(ntimesteps,0.0);
-  for(int n=0;n<ntimesteps;n++) {
-    
-    // n = 8;
-    //Calculate direct beam extinction coefficients
-    for(int c=0;c<numCohorts;c++) {
-      kDIR[c] = directionalExtinctionCoefficient_c(p[c], q[c], std::max(0.0001, solarElevation[n]));
-      // Rcout<< n << " "<< c << " "<< solarElevation[n] << " "<< kDIR[c]<<"\n";
-    }
-
-    //Average sunlit fraction
-    NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kDIR, ClumpingIndex);
-    // for(int c=0;c<numCohorts;c++) Rcout<< n << " "<< c << " "<< fsunlit[c] << "\n";
-    fsunlit_list[n] = fsunlit;
-    
-    //Fraction of incoming diffuse/direct SWR radiation and LWR radiation reaching the ground
-    gbf[n] = groundDirectIrradianceFraction(LAIme,LAImd,LAImx, 
-                                            kDIR, ClumpingIndex, 
-                                            alphaSWR, trunkExtinctionFraction);
-    gdf[n] = groundDiffuseIrradianceFraction(LAIme,LAImd,LAImx, 
-                                             K9DIR, ClumpingIndex, ZF, 
-                                             alphaSWR, trunkExtinctionFraction);
-    // Rcout<< n << " "<< gbf[n] << " "<< gdf[n] << "\n";
-    
-    //Calculate PAR absorbed radiation for sunlit and shade leaves
-    List abs_PAR = cohortSunlitShadeAbsorbedRadiation(PAR_direct[n]*1000.0, PAR_diffuse[n]*1000.0, 
-                                                      LAIme, LAImd, LAImx,
-                                                      kDIR, K9DIR, ClumpingIndex, ZF,
-                                                      alphaPAR, gammaPAR);
-    // stop("");
-    //Calculate SWR absorbed radiation for sunlit and shade leaves
-    List abs_SWR = cohortSunlitShadeAbsorbedRadiation(SWR_direct[n]*1000.0, SWR_diffuse[n]*1000.0, 
-                                                      LAIme, LAImd, LAImx,
-                                                      kDIR, K9DIR, ClumpingIndex, ZF, 
-                                                      alphaSWR, gammaSWR);
-    
-    NumericMatrix mswrsl = abs_SWR["I_sunlit"];
-    NumericMatrix mswrsh = abs_SWR["I_shade"];
-    NumericMatrix mparsl = abs_PAR["I_sunlit"];
-    NumericMatrix mparsh = abs_PAR["I_shade"];
-
-    // Rcout << SWR_direct[n]*1000.0 << " "<< SWR_diffuse[n]*1000.0 << " " << LWR_diffuse[n] << "\n";
-    //Multiple layer
-    abs_PAR_SL_ML_list[n] = mparsl;
-    abs_PAR_SH_ML_list[n] = mparsh;
-    abs_SWR_SL_ML_list[n] = mswrsl;
-    abs_SWR_SH_ML_list[n] = mswrsh;
-    //Aggregate light (PAR, SWR, LWR) for sunlit leaves and shade leaves
-    NumericVector vparsl(numCohorts,0.0), vparsh(numCohorts,0.0);
-    NumericVector vswrsl(numCohorts,0.0), vswrsh(numCohorts,0.0);
-    for(int c=0;c<numCohorts;c++){
-      for(int i=0;i<nz;i++){
-        mparsl(i,c)=mparsl(i,c)*LAIme(i,c)*fsunlit[i];
-        mparsh(i,c)=mparsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
-        mswrsl(i,c)=mswrsl(i,c)*LAIme(i,c)*fsunlit[i];
-        mswrsh(i,c)=mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
-        vparsl[c]+=mparsl(i,c);
-        vparsh[c]+=mparsh(i,c);
-        vswrsl[c]+=mswrsl(i,c);
-        vswrsh[c]+=mswrsh(i,c);
-      }
-      // Rcout<<"Hola "<<vswrsl[c]<<" "<<vswrsh[c]<<" "<<vparsl[c]<<" "<<vparsh[c]<<"\n";
-    }
-    
-    abs_PAR_SL_COH_list[n] = vparsl;
-    abs_PAR_SH_COH_list[n] = vparsh;
-    abs_SWR_SL_COH_list[n] = vswrsl;
-    abs_SWR_SH_COH_list[n] = vswrsh;
-    //Calculate canopy absorbed radiation (includes absortion by trunks in winter)
-    double abs_dir_swr = SWR_direct[n]*1000.0*(1.0 - gbf[n]); //W/m2
-    double abs_dif_swr = SWR_diffuse[n]*1000.0*(1.0 - gdf[n]); //W/m2
-    abs_SWR_can[n] = abs_dir_swr+abs_dif_swr;
-    // Rcout<<n<<" "<< abs_SWR_can[n]<< " "<<abs_LWR_can[n]<<"\n";
-    //Calculate soil absorved radiation
-    abs_SWR_soil[n] = 0.90*((gbf[n]*SWR_direct[n]*1000.0)+(gdf[n]*SWR_diffuse[n]*1000.0)); //10% reflectance for SWR (Geiger, The climate near the ground)
-
-    // Rcout<<n<<" PAR : "<<(PAR_direct[n]*1000.0)+(PAR_diffuse[n]*1000.0)<<" SWR: "<<(SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) <<" can: "<< abs_SWR_can[n]<< " soil: "<< abs_SWR_soil[n]<<" LWR: "<< (LWR_diffuse[n]) <<" can: "<< abs_LWR_can[n]<< " soil: "<< abs_LWR_soil[n]<<"\n";
-  }
-  List multilayer = List::create(_["PAR_SL"] = abs_PAR_SL_ML_list,
-                                 _["PAR_SH"] = abs_PAR_SH_ML_list,
-                                 _["SWR_SL"] = abs_SWR_SL_ML_list,
-                                 _["SWR_SH"] = abs_SWR_SH_ML_list);
-  List sunshade = List::create(_["PAR_SL"] = abs_PAR_SL_COH_list,
-                               _["PAR_SH"] = abs_PAR_SH_COH_list,
-                               _["SWR_SL"] = abs_SWR_SL_COH_list,
-                               _["SWR_SH"] = abs_SWR_SH_COH_list);
-  List res = List::create(_["fsunlit"] = fsunlit_list,
-                          _["multilayer"] = multilayer,
-                          _["sunshade"] = sunshade,
-                          _["SWR_can"] = abs_SWR_can,
-                          _["SWR_soil"] = abs_SWR_soil,
-                          _["gbf"] = gbf, //ground direct SWR fraction
-                          _["gdf"] = gdf); //ground diffuse LWR fraction
-  return(res);
+  return(copyInstantaneousLightExtinctionAbsortionResult_c(lightExtinctionAbsortion));
 }
 
 void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                                  double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
-  int ncoh = LAIme.ncol();
-  int ncanlayers = Tair.size();
-  DataFrame LWR_layer = as<Rcpp::DataFrame>(internalLWR["LWR_layer"]);
-  
-  NumericVector Lup = as<NumericVector>(LWR_layer["Lup"]);
-  NumericVector Ldown = as<NumericVector>(LWR_layer["Ldown"]);
-  NumericVector Lnet = as<NumericVector>(LWR_layer["Lnet"]);
-  NumericVector tau = as<NumericVector>(LWR_layer["tau"]);
-  NumericVector sumTauComp = as<NumericVector>(LWR_layer["sumTauComp"]);
-  
-  NumericMatrix lai_ij(ncanlayers, ncoh);
-  NumericMatrix tauM(ncanlayers, ncoh);
-  NumericMatrix LnetM(ncanlayers, ncoh);
-  if(ncoh>0) LnetM.attr("dimnames") = List::create(seq(1,ncanlayers), seq(1,ncoh));
-  
-  double Kdlw = 0.7815; //Extinction coefficient fo LWR
-  double eps_c = 0.97;
-  double eps_g = 0.97;
-  
-  double sigma_pow_Tsoil = SIGMA_Wm2*pow(Tsoil+273.16,4.0);
-  
-  //Transmissivity
-  for(int i=0;i<ncanlayers;i++) {
-    double lai_layer = 0.0;
-    sumTauComp[i] = 0.0;
-    for(int j=0;j<ncoh;j++) {
-      lai_ij(i,j) = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j));
-      tauM(i,j) = exp(-Kdlw*lai_ij(i,j));
-      sumTauComp[i] += (1.0-tauM(i,j)); 
-      lai_layer +=lai_ij(i,j);
-    }
-    tau[i] = exp(-Kdlw*lai_layer);
-  }
-  //Downwards
-  for(int i=(ncanlayers-1);i>=0;i--) {
-    double Ldown_upper = 0.0;
-    if(i==(ncanlayers-1)) Ldown_upper = LWRatm;
-    else Ldown_upper = Ldown[i+1];
-    Ldown[i] = tau[i]*Ldown_upper + (1.0 - tau[i])*eps_c*SIGMA_Wm2*pow(Tair[i]+273.16,4.0);
-  }
-  //Upwards
-  double Lup_g = (1.0 - eps_g)*Ldown[0] + eps_g*sigma_pow_Tsoil;
-  for(int i=0;i<ncanlayers;i++) {
-    double Lup_lower = 0.0;
-    if(i==0) Lup_lower = Lup_g;
-    else Lup_lower = Lup[i-1];
-    Lup[i] = tau[i]*Lup_lower + (1.0 - tau[i])*eps_c*SIGMA_Wm2*pow(Tair[i]+273.16,4.0);
-  }
-  //Net
-  for(int i=0;i<ncanlayers;i++) {
-    double Lup_lower = 0.0;
-    if(i==0) Lup_lower = Lup_g;
-    else Lup_lower = Lup[i-1];
-    Lnet[i] = eps_c*(1.0 - tau[i])*(Ldown[i]+Lup_lower - 2.0*SIGMA_Wm2*pow(Tair[i]+273.16,4.0));
-    for(int j=0;j<ncoh;j++) {
-      LnetM(i,j) =0.0;
-      if(LAIme(i,j)>0.0) {
-        LnetM(i,j) =  Lnet[i]*((1.0-tauM(i,j))/sumTauComp[i]);
-        //Correct for the fact that extinction included all leaves and energy balance is on expanded leaves
-        LnetM(i,j) = LnetM(i,j)*(LAIme(i,j)/lai_ij(i,j)); 
-        
-      } 
-    }
-  }
-  double Lnet_g = eps_g*(Ldown[0] - sigma_pow_Tsoil);
-  double Lnet_c = 0.0;
-  for(int i=0;i<ncanlayers;i++) Lnet_c += Lnet[i];
 
-  internalLWR["Ldown_ground"] = Ldown[0];
-  internalLWR["Lup_ground"] = Lup_g;
-  internalLWR["Lnet_ground"] = Lnet_g;
-  internalLWR["Ldown_canopy"] = LWRatm;
-  internalLWR["Lup_canopy"] = Lup[(ncanlayers-1)];
-  internalLWR["Lnet_canopy"] = Lnet_c;
+  int ncanlayers = Tair.size();
+  int numCohorts = LAIme.ncol();
+  LongWaveRadiation_RESULT res(ncanlayers, numCohorts);
+  
+  longwaveRadiationSHAW_inner_c(res, 
+                                as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                LWRatm, Tsoil, as<std::vector<double>>(Tair), trunkExtinctionFraction);
+  Rcpp::NumericMatrix LnetM = Rcpp::wrap(res.Lnet_cohort_layer);
+  if(numCohorts>0) LnetM.attr("dimnames") =  Rcpp::List::create(Rcpp::seq(1,ncanlayers), Rcpp::seq(1,numCohorts));
+  Rcpp::DataFrame LWR_layer = Rcpp::DataFrame::create(Rcpp::Named("tau") = Rcpp::wrap(res.LWR_layer.tau),
+                                                      Rcpp::Named("sumTauComp") = Rcpp::wrap(res.LWR_layer.sumTauComp),
+                                                      Rcpp::Named("Ldown") = Rcpp::wrap(res.LWR_layer.Ldown), 
+                                                      Rcpp::Named("Lup") = Rcpp::wrap(res.LWR_layer.Lup),
+                                                      Rcpp::Named("Lnet") = Rcpp::wrap(res.LWR_layer.Lnet));
   internalLWR["Lnet_cohort_layer"] = LnetM;
+  internalLWR["LWR_layer"] = LWR_layer;
+  internalLWR["Ldown_ground"] = res.Ldown_ground;
+  internalLWR["Lup_ground"] = res.Lup_ground;
+  internalLWR["Lnet_ground"] = res.Lnet_ground;
+  internalLWR["Ldown_canopy"] = res.Ldown_canopy;
+  internalLWR["Lup_canopy"] = res.Lup_canopy;
+  internalLWR["Lnet_canopy"] = res.Lnet_canopy;
 }
 
 
@@ -469,23 +258,13 @@ void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericM
 List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                             double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
   int ncanlayers = Tair.size();
-  NumericVector Lup(ncanlayers, NA_REAL), Ldown(ncanlayers, NA_REAL), Lnet(ncanlayers, NA_REAL);
-  NumericVector tau(ncanlayers, NA_REAL), sumTauComp(ncanlayers, NA_REAL);
-  DataFrame LWR_layer = DataFrame::create(_["tau"] = tau,
-                                          _["sumTauComp"] = sumTauComp,
-                                          _["Ldown"] = Ldown, 
-                                          _["Lup"] = Lup,
-                                          _["Lnet"] = Lnet);
-  List lwr_struct = List::create(_["LWR_layer"] = LWR_layer,
-                                 _["Ldown_ground"] = NA_REAL,
-                                 _["Lup_ground"] = NA_REAL,
-                                 _["Lnet_ground"] = NA_REAL,
-                                 _["Ldown_canopy"] = NA_REAL,
-                                 _["Lup_canopy"] = NA_REAL,
-                                 _["Lnet_canopy"] = NA_REAL,
-                                 _["Lnet_cohort_layer"] = NA_REAL);
-   longwaveRadiationSHAW_inner(lwr_struct, LAIme, LAImd, LAImx,
-                               LWRatm, Tsoil, Tair, trunkExtinctionFraction);
-   return(lwr_struct);
- }
+  int numCohorts = LAIme.ncol();
+  LongWaveRadiation_RESULT LWRres(ncanlayers, numCohorts);
+
+  longwaveRadiationSHAW_inner_c(LWRres, 
+                                as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                LWRatm, Tsoil, as<std::vector<double>>(Tair), trunkExtinctionFraction);
+  
+  return(copyLongWaveRadiationResult_c(LWRres));
+}
 
