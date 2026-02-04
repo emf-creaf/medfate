@@ -10,6 +10,7 @@
 #include "communication_structures.h"
 #include "hydrology.h"
 #include "hydrology_c.h"
+#include "radiation_c.h"
 using namespace Rcpp;
 using namespace meteoland;
 
@@ -205,7 +206,7 @@ List aspwb_day_inner(List internalCommunication, List x, CharacterVector date, N
   
   std::string c = as<std::string>(date[0]);
   int month = std::atoi(c.substr(5,2).c_str());
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
@@ -611,7 +612,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
     if(julianday_input) J = JulianDay[i];
     if(IntegerVector::is_na(J)){
       std::string c = as<std::string>(dateStrings[i]);
-      J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
 
     double tmin = MinTemperature[i];

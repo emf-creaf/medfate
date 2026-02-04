@@ -11,6 +11,7 @@
 #include "hydrology.h"
 #include "modelInput.h"
 #include "phenology.h"
+#include "radiation_c.h"
 #include "spwb.h"
 #include "soil.h"
 #include "tissuemoisture.h"
@@ -889,10 +890,10 @@ List growth(List x, DataFrame meteo, double latitude,
     if(julianday_input) J = JulianDay[i];
     if(IntegerVector::is_na(J)){
       std::string c = as<std::string>(dateStrings[i]);
-      J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
-    double delta = meteoland::radiation_solarDeclination(J);
-    double solarConstant = meteoland::radiation_solarConstant(J);
+    double delta = solarDeclination_c(J);
+    double solarConstant = solarConstant_c(J);
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];

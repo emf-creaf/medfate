@@ -16,6 +16,7 @@
 #include "modelInput.h"
 #include "photosynthesis.h"
 #include "phenology.h"
+#include "radiation_c.h"
 #include "soil.h"
 #include "soil_c.h"
 #include "spwb_day.h"
@@ -1556,10 +1557,10 @@ List spwb(List x, DataFrame meteo,
       if(julianday_input) J = JulianDay[i];
       if(IntegerVector::is_na(J)){
         std::string c = as<std::string>(dateStrings[i]);
-        J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+        J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
       }
-      double delta = meteoland::radiation_solarDeclination(J);
-      double solarConstant = meteoland::radiation_solarConstant(J);
+      double delta = solarDeclination_c(J);
+      double solarConstant = solarConstant_c(J);
 
       double tmin = MinTemperature[i];
       double tmax = MaxTemperature[i];
@@ -1590,9 +1591,9 @@ List spwb(List x, DataFrame meteo,
       }
       if(NumericVector::is_na(rad)) {
         double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-        rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
-                                                  slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                                                  vpa, prec);
+        rad = RDay_c(solarConstant, latrad, elevation,
+                     slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                     vpa, prec);
       }
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                  tmin, tmax, rhmin, rhmax, rad, wind);
@@ -1942,10 +1943,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     if(julianday_input) J = JulianDay[i];
     if(IntegerVector::is_na(J)){
       std::string c = as<std::string>(dateStrings[i]);
-      J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
-    double delta = meteoland::radiation_solarDeclination(J);
-    double solarConstant = meteoland::radiation_solarConstant(J);
+    double delta = solarDeclination_c(J);
+    double solarConstant = solarConstant_c(J);
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
@@ -1976,9 +1977,9 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     }
     if(NumericVector::is_na(rad)) {
       double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-      rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
-                                                slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                                                vpa, prec);
+      rad = RDay_c(solarConstant, latrad, elevation,
+                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                   vpa, prec);
     }
     PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);

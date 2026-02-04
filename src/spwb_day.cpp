@@ -15,6 +15,7 @@
 #include "modelInput.h"
 #include "photosynthesis.h"
 #include "phenology.h"
+#include "radiation_c.h"
 #include "transpiration.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
@@ -794,15 +795,15 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   
   std::string c = as<std::string>(date[0]);
   int month = std::atoi(c.substr(5,2).c_str());
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = solarDeclination_c(J);
+  double solarConstant = solarConstant_c(J);
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
   double asprad = aspect * (M_PI/180.0);
   double slorad = slope * (M_PI/180.0);
-  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
+  double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   if(NumericVector::is_na(rad)) {
     warning("Estimating solar radiation");
@@ -814,7 +815,7 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
   //Derive doy from date  
-  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
   int doy = J - J0101+1;
   
   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
@@ -1082,27 +1083,27 @@ List spwbDay_test(List x, CharacterVector date, NumericVector meteovec,
   
   std::string c = as<std::string>(date[0]);
   int month = std::atoi(c.substr(5,2).c_str());
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = solarDeclination_c(J);
+  double solarConstant = solarConstant_c(J);
   double latrad = latitude * (M_PI/180.0);
   if(std::isnan(aspect)) aspect = 0.0;
   if(std::isnan(slope)) slope = 0.0;
   double asprad = aspect * (M_PI/180.0);
   double slorad = slope * (M_PI/180.0);
-  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
+  double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   if(std::isnan(rad)) {
     warning("Estimating solar radiation");
     double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
-                                              slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                                              vpa, prec);
+    rad = RDay_c(solarConstant, latrad, elevation,
+                 slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                 vpa, prec);
   }
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
   //Derive doy from date  
-  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
   int doy = J - J0101+1;
   
   if(std::isnan(wind)) wind = x_c.control.weather.defaultWindSpeed; 

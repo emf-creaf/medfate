@@ -14,6 +14,7 @@
 #include "tissuemoisture_c.h"
 #include "carbon.h"
 #include "spwb.h"
+#include "radiation_c.h"
 #include "root.h"
 #include "soil.h"
 #include "soil_c.h"
@@ -1297,9 +1298,9 @@ List transpirationSperry(List x, DataFrame meteo, int day,
 
   CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = solarDeclination_c(J);
+  double solarConstant = solarConstant_c(J);
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
@@ -1396,9 +1397,9 @@ List transpirationSureau(List x, DataFrame meteo, int day,
   
   CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = solarDeclination_c(J);
+  double solarConstant = solarConstant_c(J);
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;

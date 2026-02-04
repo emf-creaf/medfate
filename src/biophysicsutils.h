@@ -6,5 +6,6 @@ using namespace Rcpp;
 
 IntegerVector date2doy(CharacterVector dateStrings);
 NumericVector date2photoperiod(CharacterVector dateStrings, double latitude);
+IntegerVector dateStringToJulianDays(CharacterVector dateStrings);
 
 #endif

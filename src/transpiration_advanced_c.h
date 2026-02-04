@@ -2,6 +2,8 @@
 #include "communication_structures_c.h"
 #include "transpiration_basic_c.h"
 #include "modelInput_c.h"
+#include "radiation_c.h"
+#include "windKatul_c.h"
 
 #ifndef TRANSPIRATION_ADVANCED_C_H
 #define TRANSPIRATION_ADVANCED_C_H
@@ -135,6 +137,10 @@ struct AdvancedTranspiration_RESULT {
 
   arma::mat rhizoPsi;
   
+  CanopyTurbulence_RESULT canopyTurbulence;
+  
+  DirectDiffuseDay_RESULT directDiffuseDay;
+  
   AdvancedTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
     plants(numCohorts), 
     sunlit(numCohorts),
@@ -143,7 +149,9 @@ struct AdvancedTranspiration_RESULT {
     extraction(numCohorts, nlayers, arma::fill::zeros),
     extractionInst(nlayers, ntimesteps, arma::fill::zeros),
     extractionPools(numCohorts),
-    rhizoPsi(numCohorts, nlayers, arma::fill::zeros) {
+    rhizoPsi(numCohorts, nlayers, arma::fill::zeros),
+    canopyTurbulence(ncanlayers),
+    directDiffuseDay(ntimesteps){
     for(size_t c = 0; c < numCohorts; c++) {
       extractionPools[c] = arma::mat(numCohorts, nlayers, arma::fill::zeros);
     }
@@ -155,20 +163,24 @@ Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT&
 // Advanced Transpiration Communication Structures
 // ----------------------------------------------------------------------------
 struct AdvancedTranspiration_COMM {
+  
   AbsorbedSWR_COMM AbSWRcomm;
   std::vector<double> CohASWRF;
   std::vector<double> Tmax;
   std::vector<double> TmaxCoh;
   arma::mat RHOPCohDyn;
+  CanopyTurbulenceModel_RESULT canopyTurbulenceModel;
+  
   AdvancedTranspiration_COMM(size_t numCohorts = 0, size_t ncanlayers = 0, size_t nlayers= 0) : 
     AbSWRcomm(numCohorts, ncanlayers), 
     CohASWRF(numCohorts),
     Tmax(numCohorts),
     TmaxCoh(numCohorts), 
-    RHOPCohDyn(numCohorts, nlayers){}
+    RHOPCohDyn(numCohorts, nlayers),
+    canopyTurbulenceModel(ncanlayers){}
 };
 
-void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTranspiration_COMM& BT_comm, ModelInput& x, 
+void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTranspiration_COMM& ATcomm, ModelInput& x, 
                              const WeatherInputVector& meteovec,
                              const double latitude, double elevation, double slope, double aspect, 
                              const double solarConstant, const double delta,

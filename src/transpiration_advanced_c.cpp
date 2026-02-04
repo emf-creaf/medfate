@@ -1,8 +1,10 @@
 #include <RcppArmadillo.h>
+#include "biophysicsutils_c.h"
 #include "communication_structures_c.h"
 #include "forestutils_c.h"
 #include "transpiration_advanced_c.h"
 #include "meteoland.h"
+#include "windKatul_c.h"
 using namespace Rcpp;
 
 
@@ -86,18 +88,18 @@ Rcpp::List copyEnergyBalanceResult_c(const EnergyBalance_RESULT& EBres, ModelInp
   return(EnergyBalance);
 }
 
-Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT& BTres, ModelInput& x) {
+Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT& ATres, ModelInput& x) {
   const std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
   bool plantWaterPools = (rhizosphereOverlap!="total");
   int nlayers = x.soil.getNlayers();
   int numCohorts = x.cohorts.CohortCode.size();
   
-  const arma::mat& extractionComm = BTres.extraction;
+  const arma::mat& extractionComm = ATres.extraction;
   Rcpp::NumericMatrix Extraction = copyNumericMatrix_c(extractionComm, numCohorts, nlayers); // this is final extraction of each cohort from each layer
   Extraction.attr("dimnames") = Rcpp::List::create(x.cohorts.CohortCode, Rcpp::seq(1,nlayers));
   
   Rcpp::List ExtractionPools(numCohorts);
-  const std::vector< arma::mat>& ExtractionPoolsComm = BTres.extractionPools;
+  const std::vector< arma::mat>& ExtractionPoolsComm = ATres.extractionPools;
   if(plantWaterPools) {
     for(int c=0;c<numCohorts;c++) {
       const arma::mat& extractionPoolsCohComm = ExtractionPoolsComm[c];
@@ -108,23 +110,25 @@ Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT&
     ExtractionPools.attr("names") = x.cohorts.CohortCode;
   }
   
-  NumericVector standVEC = copyStandBasicTranspirationResult_c(BTres.stand);
+  NumericVector standVEC = copyStandBasicTranspirationResult_c(ATres.stand);
   
-  List EnergyBalance = copyEnergyBalanceResult_c(BTres.energy, x);
+  List EnergyBalance = copyEnergyBalanceResult_c(ATres.energy, x);
   
   List l = List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                         _["EnergyBalance"] = EnergyBalance,
                         _["Stand"] = standVEC,
-                        _["Plants"] = copyPlantAdvancedTranspirationResult_c(BTres.plants, x),
-                        _["SunlitLeaves"] = copyLeafAdvancedTranspirationResult_c(BTres.sunlit, x),
-                        _["ShadeLeaves"] = copyLeafAdvancedTranspirationResult_c(BTres.shade, x),
+                        _["Plants"] = copyPlantAdvancedTranspirationResult_c(ATres.plants, x),
+                        _["SunlitLeaves"] = copyLeafAdvancedTranspirationResult_c(ATres.sunlit, x),
+                        _["ShadeLeaves"] = copyLeafAdvancedTranspirationResult_c(ATres.shade, x),
                         _["Extraction"] = Extraction,
-                        _["ExtractionPools"] = ExtractionPools);
+                        _["ExtractionPools"] = ExtractionPools,
+                        _["CanopyTurbulence"] = copyCanopyTurbulenceResult_c(ATres.canopyTurbulence),
+                        _["RadiationInputInst"] = copyDirectDiffuseDayResult_c(ATres.directDiffuseDay));
   return(l);
 }
 
 
-void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTranspiration_COMM& BT_comm, ModelInput& x, 
+void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTranspiration_COMM& ATcomm, ModelInput& x, 
                              const WeatherInputVector& meteovec,
                              const double latitude, double elevation, double slope, double aspect, 
                              const double solarConstant, const double delta,
@@ -132,13 +136,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTransp
                              int stepFunctions = -1) {
   
   // Should have internal communication structures for output
-  StandBasicTranspiration_RESULT& outputStand = BTres.stand;
-  PlantsAdvancedTranspiration_RESULT& outputPlants = BTres.plants;
-  arma::mat& outputExtraction = BTres.extraction;
-  std::vector<arma::mat>& outputExtractionPools = BTres.extractionPools;
-  LeafAdvancedTranspiration_RESULT& outputSunlit = BTres.sunlit;
-  LeafAdvancedTranspiration_RESULT& outputShade = BTres.shade;
-  EnergyBalance_RESULT& outputEnergyBalance = BTres.energy;
+  StandBasicTranspiration_RESULT& outputStand = ATres.stand;
+  PlantsAdvancedTranspiration_RESULT& outputPlants = ATres.plants;
+  arma::mat& outputExtraction = ATres.extraction;
+  std::vector<arma::mat>& outputExtractionPools = ATres.extractionPools;
+  LeafAdvancedTranspiration_RESULT& outputSunlit = ATres.sunlit;
+  LeafAdvancedTranspiration_RESULT& outputShade = ATres.shade;
+  EnergyBalance_RESULT& outputEnergyBalance = ATres.energy;
   
   // DataFrame outputTemperatureInst =   as<DataFrame>(outputEnergyBalance["Temperature"]);
   // DataFrame outputCEBinst =  as<DataFrame>(outputEnergyBalance["CanopyEnergyBalance"]);
@@ -196,9 +200,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTransp
   
   int numCohorts = LAIlive.size();
 
-  // //Soil input
-  // DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  // int nlayers = soil.nrow();
+  //Soil input
+  Soil& soil = x.soil;
+  int nlayers = x.soil.getNlayers();
   // NumericVector widths = soil["widths"];
   // NumericVector Water_FC = waterFC(soil, soilFunctions);
   // NumericVector Theta_FC = thetaFC(soil, soilFunctions);
@@ -558,35 +562,33 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTransp
   }
   
   
-  // ////////////////////////////////////////
-  // // STEP 2. Determine vertical wind speed profile
-  // ////////////////////////////////////////
-  // if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
-  // wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
-  // NumericVector zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
-  // if(canopyHeight>0.0) {
-  //   // Rcout<<canopyHeight<< " "<< lad[0] <<"\n";
-  //   DataFrame canopyTurbulence = as<DataFrame>(transpOutput["CanopyTurbulence"]);
-  //   windCanopyTurbulence_inner(canopyTurbulence, zmid, lad,  canopyHeight, 
-  //                              wind, windMeasurementHeight);
-  //   zWind = canopyTurbulence["u"]; 
-  //   dU = canopyTurbulence["du"];
-  //   uw = canopyTurbulence["uw"];
-  // } 
-  // 
-  // ////////////////////////////////////////
-  // // STEP 3a. Direct and diffuse shorwave radiation for sub-steps
-  // ////////////////////////////////////////
-  // DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
-  //                                                       rad, clearday, ntimesteps);
-  // transpOutput["RadiationInputInst"] = ddd;
-  // 
-  // ////////////////////////////////////////
-  // // STEP 3b. Above-canopy air temperature and long-wave radiation emission for sub-steps
-  // ////////////////////////////////////////
+  ////////////////////////////////////////
+  // STEP 2. Determine vertical wind speed profile
+  ////////////////////////////////////////
+  if(std::isnan(wind)) wind = defaultWindSpeed; //set to default if missing
+  wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
+  std::vector<double> zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
+  if(canopyHeight>0.0) {
+    windCanopyTurbulence_inner_c(ATres.canopyTurbulence, ATcomm.canopyTurbulenceModel,
+                                 zmid, lad,  
+                                 canopyHeight,
+                                 wind, windMeasurementHeight,
+                                 "k-epsilon");
+    zWind = ATres.canopyTurbulence.u;
+    dU = ATres.canopyTurbulence.du;
+    uw = ATres.canopyTurbulence.uw;
+  }
+
+  ////////////////////////////////////////
+  // STEP 3a. Direct and diffuse shorwave radiation for sub-steps
+  ////////////////////////////////////////
+  directDiffuseDay_c(ATres.directDiffuseDay, solarConstant, latrad, slorad, asprad, delta,
+                     rad, clearday);
+  
+  ////////////////////////////////////////
+  // STEP 3b. Above-canopy air temperature and long-wave radiation emission for sub-steps
+  ////////////////////////////////////////
   // NumericVector solarHour = outputTemperatureInst["SolarHour"];
-  // NumericVector Tatm = outputTemperatureInst["Tatm"];
-  // NumericVector Tcan = outputTemperatureInst["Tcan"];
   // NumericVector Hcansoil = outputSEBinst["Hcansoil"];
   // NumericVector Ebalsoil = outputSEBinst["Ebalsoil"];
   // NumericVector LEVsoil = outputSEBinst["LEVsoil"];
@@ -601,38 +603,45 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& BTres, AdvancedTransp
   // NumericMatrix Tcan_mat = outputEnergyBalance["TemperatureLayers"];
   // NumericMatrix VPcan_mat = outputEnergyBalance["VaporPressureLayers"];
   // NumericMatrix Tsoil_mat = outputEnergyBalance["SoilTemperature"];
-  // 
-  // 
-  // NumericVector lwdr(ntimesteps, NA_REAL);
-  // //Daylength in seconds (assuming flat area because we want to model air temperature variation)
-  // double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
-  // NumericVector solarHour_ddd = ddd["SolarHour"]; //in radians
-  // for(int n=0;n<ntimesteps;n++) {
-  //   solarHour[n] = solarHour_ddd[n];
-  //   //From solar hour (radians) to seconds from sunrise
-  //   double Tsunrise = (solarHour[n]*43200.0/M_PI)+ (tauday/2.0) +(tstep/2.0); 
-  //   //Calculate instantaneous temperature and light conditions
-  //   Tatm[n] = temperatureDiurnalPattern_c(Tsunrise, tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
-  //   //Longwave sky diffuse radiation (W/m2)
-  //   lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
-  // }
-  // if(NumericVector::is_na(Tair[0])) {//If missing initialize canopy profile with atmospheric air temperature 
-  //   for(int i=0;i<ncanlayers;i++) Tair[i] = Tatm[0];
-  // }
-  // if(NumericVector::is_na(Tsoil[0])) {//If missing initialize soil temperature with atmospheric air temperature 
-  //   for(int l=0;l<nlayers; l++) Tsoil[l] = Tatm[0];
-  // }
-  // //Take initial canopy air temperature from previous day
-  // Tcan[0] = sum(Tair*LAIpx)/sum(LAIpx);
-  // for(int j=0;j<ncanlayers; j++) {
-  //   Tcan_mat(0,j) = Tair[j];
-  //   VPcan_mat(0,j) = VPair[j];
-  // }
-  // //Take temperature soil vector 
-  // for(int l=0;l<nlayers;l++) {
-  //   Tsoil_mat(0,l) = Tsoil[l]; 
-  // }
-  // 
+
+
+  std::vector<double>& Tatm = outputEnergyBalance.Tatm;
+  std::vector<double>& Tcan = outputEnergyBalance.Tcan;
+  std::vector<double> lwdr(ntimesteps, medfate::NA_DOUBLE);
+  //Daylength in seconds (assuming flat area because we want to model air temperature variation)
+  double tauday = daylengthseconds_c(latrad,0.0,0.0, delta);
+  for(int n=0;n<ntimesteps;n++) {
+    outputEnergyBalance.SolarHour[n] = ATres.directDiffuseDay.SolarHour[n];
+    //From solar hour (radians) to seconds from sunrise
+    double Tsunrise = (ATres.directDiffuseDay.SolarHour[n]*43200.0/M_PI)+ (tauday/2.0) +(tstep/2.0);
+    //Calculate instantaneous temperature and light conditions
+    Tatm[n] = temperatureDiurnalPattern_c(Tsunrise, tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
+    //Longwave sky diffuse radiation (W/m2)
+    lwdr[n] = skyLongwaveRadiation_c(Tatm[n], vpatm, cloudcover);
+  }
+  if(std::isnan(Tair[0])) {//If missing initialize canopy profile with atmospheric air temperature
+    for(int i=0;i<ncanlayers;i++) Tair[i] = Tatm[0];
+  }
+  if(std::isnan(x.soil.getTemp(0))) {//If missing initialize soil temperature with atmospheric air temperature
+    for(int l=0;l<nlayers; l++) x.soil.setTemp(l, Tatm[0]);
+  }
+  //Take initial canopy air temperature from previous day
+  double numSum = 0.0;
+  double denSum = 0.0;
+  for(int i=0;i<ncanlayers;i++) {
+    numSum +=Tair[i]*LAIpx[i];
+    denSum +=LAIpx[i];
+  }
+  Tcan[0] = numSum/denSum;
+  for(int j=0;j<ncanlayers; j++) {
+    outputEnergyBalance.TemperatureLayers(0,j) = Tair[j];
+    outputEnergyBalance.VaporPressureLayers(0,j) = VPair[j];
+  }
+  //Take temperature soil vector
+  for(int l=0;l<nlayers;l++) {
+    outputEnergyBalance.SoilTemperature(0,l) = x.soil.getTemp(l);
+  }
+
   // ////////////////////////////////////////
   // // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
   // ////////////////////////////////////////

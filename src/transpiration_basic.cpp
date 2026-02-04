@@ -14,6 +14,7 @@
 #include "tissuemoisture_c.h"
 #include "carbon.h"
 #include "photosynthesis.h"
+#include "radiation_c.h"
 #include "root.h"
 #include "soil.h"
 #include "soil_c.h"
@@ -725,7 +726,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   
   CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
 
   double tmin = MinTemperature[day-1];
   double tmax = MaxTemperature[day-1];

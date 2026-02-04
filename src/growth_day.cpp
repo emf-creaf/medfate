@@ -18,6 +18,7 @@
 #include "lightextinction_advanced.h"
 #include "modelInput.h"
 #include "phenology.h"
+#include "radiation_c.h"
 #include "root.h"
 #include "root_c.h"
 #include "soil.h"
@@ -1787,19 +1788,19 @@ void growthDay_inner(List internalCommunication, List x, CharacterVector date, N
    
    std::string c = as<std::string>(date[0]);
    int month = std::atoi(c.substr(5,2).c_str());
-   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-   double delta = meteoland::radiation_solarDeclination(J);
-   double solarConstant = meteoland::radiation_solarConstant(J);
+   int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+   double delta = solarDeclination_c(J);
+   double solarConstant = solarConstant_c(J);
    double latrad = latitude * (M_PI/180.0);
    if(NumericVector::is_na(aspect)) aspect = 0.0;
    if(NumericVector::is_na(slope)) slope = 0.0;
    double asprad = aspect * (M_PI/180.0);
    double slorad = slope * (M_PI/180.0);
-   double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
+   double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
    double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
    //Derive doy from date  
-   int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+   int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
    int doy = J - J0101+1;
    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
