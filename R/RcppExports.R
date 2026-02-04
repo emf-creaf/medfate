@@ -2606,20 +2606,8 @@ semi_implicit_integration <- function(network, dt, opt, stemCavitationRecovery =
 #' kd_SWR <- kd_PAR/1.35
 #' @name light_advanced
 #' @keywords internal
-light_leafAngleCDF <- function(leafAngle, p, q) {
-    .Call(`_medfate_leafAngleCDF`, leafAngle, p, q)
-}
-
-#' @rdname light_advanced
-#' @keywords internal
 light_leafAngleBetaParameters <- function(leafAngle, leafAngleSD) {
     .Call(`_medfate_leafAngleBetaParameters`, leafAngle, leafAngleSD)
-}
-
-#' @rdname light_advanced
-#' @keywords internal
-light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
-    .Call(`_medfate_directionalExtinctionCoefficient`, p, q, solarElevation)
 }
 
 #' @rdname light_advanced
@@ -2656,6 +2644,18 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, p, 
 #' @keywords internal
 light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
+}
+
+#' @name light_advanced
+#' @keywords internal
+light_leafAngleCDF <- function(leafAngle, p, q) {
+    .Call(`_medfate_leafAngleCDF_c`, leafAngle, p, q)
+}
+
+#' @rdname light_advanced
+#' @keywords internal
+light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
+    .Call(`_medfate_directionalExtinctionCoefficient_c`, p, q, solarElevation)
 }
 
 .parcohort <- function(SP, H, CR, LAI, SpParams) {

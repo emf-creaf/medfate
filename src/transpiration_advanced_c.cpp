@@ -642,9 +642,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     outputEnergyBalance.SoilTemperature(0,l) = x.soil.getTemp(l);
   }
 
-  // ////////////////////////////////////////
-  // // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
-  // ////////////////////////////////////////
+  ////////////////////////////////////////
+  // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
+  ////////////////////////////////////////
   // List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
   //                                                                       Beta_p, Beta_q, ClumpingIndex, 
   //                                                                       alphaSWR, gammaSWR,

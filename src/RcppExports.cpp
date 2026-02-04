@@ -3298,19 +3298,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// leafAngleCDF
-double leafAngleCDF(double leafAngle, double p, double q);
-RcppExport SEXP _medfate_leafAngleCDF(SEXP leafAngleSEXP, SEXP pSEXP, SEXP qSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type leafAngle(leafAngleSEXP);
-    Rcpp::traits::input_parameter< double >::type p(pSEXP);
-    Rcpp::traits::input_parameter< double >::type q(qSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafAngleCDF(leafAngle, p, q));
-    return rcpp_result_gen;
-END_RCPP
-}
 // leafAngleBetaParameters
 NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD);
 RcppExport SEXP _medfate_leafAngleBetaParameters(SEXP leafAngleSEXP, SEXP leafAngleSDSEXP) {
@@ -3320,19 +3307,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type leafAngle(leafAngleSEXP);
     Rcpp::traits::input_parameter< double >::type leafAngleSD(leafAngleSDSEXP);
     rcpp_result_gen = Rcpp::wrap(leafAngleBetaParameters(leafAngle, leafAngleSD));
-    return rcpp_result_gen;
-END_RCPP
-}
-// directionalExtinctionCoefficient
-double directionalExtinctionCoefficient(double p, double q, double solarElevation);
-RcppExport SEXP _medfate_directionalExtinctionCoefficient(SEXP pSEXP, SEXP qSEXP, SEXP solarElevationSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type p(pSEXP);
-    Rcpp::traits::input_parameter< double >::type q(qSEXP);
-    Rcpp::traits::input_parameter< double >::type solarElevation(solarElevationSEXP);
-    rcpp_result_gen = Rcpp::wrap(directionalExtinctionCoefficient(p, q, solarElevation));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3444,6 +3418,32 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type Tair(TairSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
     rcpp_result_gen = Rcpp::wrap(longwaveRadiationSHAW(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction));
+    return rcpp_result_gen;
+END_RCPP
+}
+// leafAngleCDF_c
+double leafAngleCDF_c(double leafAngle, double p, double q);
+RcppExport SEXP _medfate_leafAngleCDF_c(SEXP leafAngleSEXP, SEXP pSEXP, SEXP qSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type leafAngle(leafAngleSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double >::type q(qSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafAngleCDF_c(leafAngle, p, q));
+    return rcpp_result_gen;
+END_RCPP
+}
+// directionalExtinctionCoefficient_c
+double directionalExtinctionCoefficient_c(double p, double q, double solarElevation);
+RcppExport SEXP _medfate_directionalExtinctionCoefficient_c(SEXP pSEXP, SEXP qSEXP, SEXP solarElevationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double >::type q(qSEXP);
+    Rcpp::traits::input_parameter< double >::type solarElevation(solarElevationSEXP);
+    rcpp_result_gen = Rcpp::wrap(directionalExtinctionCoefficient_c(p, q, solarElevation));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6456,15 +6456,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_initSureauNetworks", (DL_FUNC) &_medfate_initSureauNetworks, 1},
     {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 5},
-    {"_medfate_leafAngleCDF", (DL_FUNC) &_medfate_leafAngleCDF, 3},
     {"_medfate_leafAngleBetaParameters", (DL_FUNC) &_medfate_leafAngleBetaParameters, 2},
-    {"_medfate_directionalExtinctionCoefficient", (DL_FUNC) &_medfate_directionalExtinctionCoefficient, 3},
     {"_medfate_layerDirectIrradianceFraction", (DL_FUNC) &_medfate_layerDirectIrradianceFraction, 8},
     {"_medfate_layerDiffuseIrradianceFraction", (DL_FUNC) &_medfate_layerDiffuseIrradianceFraction, 9},
     {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 12},
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 4},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 11},
     {"_medfate_longwaveRadiationSHAW", (DL_FUNC) &_medfate_longwaveRadiationSHAW, 7},
+    {"_medfate_leafAngleCDF_c", (DL_FUNC) &_medfate_leafAngleCDF_c, 3},
+    {"_medfate_directionalExtinctionCoefficient_c", (DL_FUNC) &_medfate_directionalExtinctionCoefficient_c, 3},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 3},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 4},
