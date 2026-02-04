@@ -69,6 +69,7 @@ ModelInput::ModelInput(Rcpp::List x) {
   belowLayers.V = Rcpp::as<arma::mat>(belowLayersList["V"]);
   belowLayers.L = Rcpp::as<arma::mat>(belowLayersList["L"]);
   if(belowLayersList.containsElementNamed("Wpool")) belowLayers.Wpool = Rcpp::as<arma::mat>(belowLayersList["Wpool"]);
+  if(belowLayersList.containsElementNamed("VCroot_kmax")) belowLayers.VCroot_kmax = Rcpp::as<arma::mat>(belowLayersList["VCroot_kmax"]);
   if(belowLayersList.containsElementNamed("VGrhizo_kmax")) belowLayers.VGrhizo_kmax = Rcpp::as<arma::mat>(belowLayersList["VGrhizo_kmax"]);
   if(belowLayersList.containsElementNamed("RhizoPsi")) belowLayers.RhizoPsi = Rcpp::as<arma::mat>(belowLayersList["RhizoPsi"]);
   if(belowLayersList.containsElementNamed("RHOP")) {

@@ -5,6 +5,7 @@
 #include "transpiration_advanced_c.h"
 #include "lightextinction_advanced_c.h"
 #include "meteoland.h"
+#include "inner_sureau_c.h"
 #include "windKatul_c.h"
 using namespace Rcpp;
 
@@ -218,6 +219,13 @@ Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT&
     ExtractionPools.attr("names") = x.cohorts.CohortCode;
   }
   
+  NumericMatrix extractionInst = copyNumericMatrix_c(ATres.extractionInst, nlayers, ntimesteps);
+  extractionInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
+  
+  NumericMatrix rhizoPsi = copyNumericMatrix_c(ATres.rhizoPsi, numCohorts, nlayers);
+  rhizoPsi.attr("dimnames") = List::create(x.cohorts.CohortCode, seq(1,nlayers));
+  
+  
   NumericVector standVEC = copyStandBasicTranspirationResult_c(ATres.stand);
   
   List EnergyBalance = copyEnergyBalanceResult_c(ATres.energy, x);
@@ -229,12 +237,14 @@ Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT&
   
   List l = List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                         _["EnergyBalance"] = EnergyBalance,
+                        _["Extraction"] = Extraction,
+                        _["ExtractionPools"] = ExtractionPools,
+                        _["RhizoPsi"] = rhizoPsi,
                         _["Stand"] = standVEC,
                         _["Plants"] = copyPlantAdvancedTranspirationResult_c(ATres.plants, x),
                         _["SunlitLeaves"] = copyLeafAdvancedTranspirationResult_c(ATres.sunlit, x),
                         _["ShadeLeaves"] = copyLeafAdvancedTranspirationResult_c(ATres.shade, x),
-                        _["Extraction"] = Extraction,
-                        _["ExtractionPools"] = ExtractionPools,
+                        _["ExtractionInst"] = extractionInst,
                         _["RadiationInputInst"] = copyDirectDiffuseDayResult_c(ATres.directDiffuseDay),
                         _["PlantsInst"] = copyPlantsAdvancedTranspirationInstResult_c(ATres.plants_inst, x),
                         _["SunlitLeavesInst"] = copyLeafAdvancedTranspirationInstResult_c(ATres.sunlit_inst, x),
@@ -273,21 +283,19 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // Should have internal communication structures for output
   StandBasicTranspiration_RESULT& outputStand = ATres.stand;
   PlantsAdvancedTranspiration_RESULT& outputPlants = ATres.plants;
+  PlantsAdvancedTranspirationInst_RESULT& outputPlantsInst = ATres.plants_inst;
   arma::mat& outputExtraction = ATres.extraction;
   std::vector<arma::mat>& outputExtractionPools = ATres.extractionPools;
   LeafAdvancedTranspiration_RESULT& outputSunlit = ATres.sunlit;
   LeafAdvancedTranspiration_RESULT& outputShade = ATres.shade;
-  EnergyBalance_RESULT& outputEnergyBalance = ATres.energy;
   LeafAdvancedTranspirationInst_RESULT& outputSunlitInst = ATres.sunlit_inst;
   LeafAdvancedTranspirationInst_RESULT& outputShadeInst = ATres.shade_inst;
+  EnergyBalance_RESULT& outputEnergyBalance = ATres.energy;
 
   // DataFrame outputTemperatureInst =   as<DataFrame>(outputEnergyBalance["Temperature"]);
   // DataFrame outputCEBinst =  as<DataFrame>(outputEnergyBalance["CanopyEnergyBalance"]);
   // DataFrame outputSEBinst =  as<DataFrame>(outputEnergyBalance["SoilEnergyBalance"]);
   
-  // List outputPlantsInst = transpOutput["PlantsInst"];
-  // List outputEnergyBalance = transpOutput["EnergyBalance"];
-  // List lwrExtinctionList = transpOutput["LWRExtinction"];
   // List supply = transpOutput["SupplyFunctions"]; 
 
   //Control parameters
@@ -487,7 +495,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // NumericMatrix minPsiRhizo = transpOutput["RhizoPsi"];
   // 
   // NumericVector outputFPAR = outputPlants["FPAR"];
-  // NumericVector SoilExtractCoh = outputPlants["Extraction"];
+  arma::mat& SoilExtractCoh = ATres.extraction;
   // NumericVector DDS = outputPlants["DDS"];
   // NumericVector LFMC = outputPlants["LFMC"];
   // NumericVector Eplant = outputPlants["Transpiration"];
@@ -568,22 +576,19 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // IntegerVector iPMSunlit(numCohorts,0), iPMShade(numCohorts,0); //Initial values set to closed stomata
   // 
   // 
-  // //Reset output data
-  // std::fill(Eplant.begin(), Eplant.end(), 0.0);
-  // std::fill(Agplant.begin(), Agplant.end(), 0.0);
-  // std::fill(Anplant.begin(), Anplant.end(), 0.0);
-  // std::fill(PWB.begin(), PWB.end(), 0.0);
-  // std::fill(SoilExtractCoh.begin(), SoilExtractCoh.end(), 0.0);
-  // std::fill(outputExtraction.begin(), outputExtraction.end(), 0.0);
-  // NumericMatrix soilLayerExtractInst = transpOutput["ExtractionInst"];
-  // std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
-  // if(plantWaterPools) {
-  //   List ExtractionPools = transpOutput["ExtractionPools"];
-  //   for(int c=0;c<numCohorts;c++) {
-  //     NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
-  //     std::fill(ExtractionPoolsCoh.begin(), ExtractionPoolsCoh.end(), 0.0);
-  //   }
-  // }
+  //Reset output data
+  std::fill(outputPlants.Transpiration.begin(), outputPlants.Transpiration.end(), 0.0);
+  std::fill(outputPlants.GrossPhotosynthesis.begin(), outputPlants.GrossPhotosynthesis.end(), 0.0);
+  std::fill(outputPlants.NetPhotosynthesis.begin(), outputPlants.NetPhotosynthesis.end(), 0.0);
+  std::fill(outputPlants.WaterBalance.begin(), outputPlants.WaterBalance.end(), 0.0);
+  std::fill(SoilExtractCoh.begin(), SoilExtractCoh.end(), 0.0);
+  std::fill(outputExtraction.begin(), outputExtraction.end(), 0.0);
+  std::fill(ATres.extractionInst.begin(), ATres.extractionInst.end(), 0.0);
+  if(plantWaterPools) {
+    for(int c=0;c<numCohorts;c++) {
+      std::fill(ATres.extractionPools[c].begin(), ATres.extractionPools[c].end(), 0.0);
+    }
+  }
   // std::fill(StemPLC.begin(), StemPLC.end(), NA_REAL);
   // std::fill(LeafPLC.begin(), LeafPLC.end(), NA_REAL);
   // std::fill(dEdPInst.begin(), dEdPInst.end(), NA_REAL);
@@ -796,61 +801,59 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     sum_abs_SWR_soil += ATres.lightExtinctionAbsortion.SWR_soil[n];
   }
 
-  // ////////////////////////////////////////
-  // //  STEP 4. Hydraulics: determine layers where the plant is connected 
-  // //          and supply functions (Sperry transpiration mode)
-  // ////////////////////////////////////////
-  // IntegerVector nlayerscon(numCohorts,0);
-  // LogicalMatrix layerConnected(numCohorts, nlayers);
-  // List layerConnectedPools(numCohorts);
-  // 
-  // 
-  // 
-  // //Average sap fluidity
-  // double sapFluidityDay = 1.0;
-  // if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
-  // 
-  // //Hydraulics: Define supply functions
-  // SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
+  ////////////////////////////////////////
+  //  STEP 4. Hydraulics: determine layers where the plant is connected
+  //          and supply functions (Sperry transpiration mode)
+  ////////////////////////////////////////
+  std::vector<int> nlayerscon(numCohorts,0);
+  arma::Mat<uint8_t> layerConnected(numCohorts, nlayers);
+  // std::vector<arma::umat> layerConnectedPools(numCohorts);
+
+
+  //Average sap fluidity
+  double sapFluidityDay = 1.0;
+  if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
+
+  //Hydraulics: Define supply functions
+  SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
   // List supplyAboveground(numCohorts);
-  // for(int c=0;c<numCohorts;c++) {
-  //   
-  //   if(!plantWaterPools) {
-  //     //Determine connected layers (non-zero fine root abundance)
-  //     nlayerscon[c] = 0;
-  //     for(int l=0;l<nlayers;l++) {
-  //       if(V(c,l)>0.0) {
-  //         layerConnected(c,l)= true;
-  //         nlayerscon[c]=nlayerscon[c]+1;
-  //       } else {
-  //         layerConnected(c,l) = false;
-  //       }
-  //     }
-  //     // Rcout<<c<<" "<< nlayerscon[c]<<"\n";
-  //     if(nlayerscon[c]==0) stop("Plant cohort not connected to any soil layer!");
-  //     
-  //     // Copy values from connected layers
-  //     NumericVector Vc = NumericVector(nlayerscon[c]);
-  //     NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
-  //     NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
-  //     NumericVector psic = NumericVector(nlayerscon[c]);
-  //     NumericVector VG_nc = NumericVector(nlayerscon[c]);
-  //     NumericVector VG_alphac= NumericVector(nlayerscon[c]);
-  //     int cnt=0;
-  //     for(int l=0;l<nlayers;l++) {
-  //       if(layerConnected(c,l)) {
-  //         Vc[cnt] = V(c,l);
-  //         VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
-  //         VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
-  //         psic[cnt] = psiSoil[l];
-  //         VG_nc[cnt] = VG_n[l];
-  //         VG_alphac[cnt] = VG_alpha[l];
-  //         cnt++;
-  //       }
-  //     }
-  //     
-  //     //Build supply function networks (Sperry transpiration mode)
-  //     if(transpirationMode=="Sperry") {
+  for(int c=0;c<numCohorts;c++) {
+    if(!plantWaterPools) {
+      //Determine connected layers (non-zero fine root abundance)
+      nlayerscon[c] = 0;
+      for(int l=0;l<nlayers;l++) {
+        if(x.belowLayers.V(c,l)>0.0) {
+          layerConnected(c,l)= 1;
+          nlayerscon[c]=nlayerscon[c]+1;
+        } else {
+          layerConnected(c,l) = 0;
+        }
+      }
+      // Rcout<<c<<" "<< nlayerscon[c]<<"\n";
+      if(nlayerscon[c]==0) throw medfate::MedfateInternalError("Plant cohort not connected to any soil layer!");
+      
+      // Copy values from connected layers
+      std::vector<double> Vc(nlayerscon[c]);
+      std::vector<double> VCroot_kmaxc(nlayerscon[c]);
+      std::vector<double> VGrhizo_kmaxc(nlayerscon[c]);
+      std::vector<double> psic(nlayerscon[c]);
+      std::vector<double> VG_nc(nlayerscon[c]);
+      std::vector<double> VG_alphac(nlayerscon[c]);
+      int cnt=0;
+      for(int l=0;l<nlayers;l++) {
+        if(layerConnected(c,l)==1) {
+          Vc[cnt] = x.belowLayers.V(c,l);
+          VCroot_kmaxc[cnt] = x.belowLayers.VCroot_kmax(c,l);
+          VGrhizo_kmaxc[cnt] = x.belowLayers.VGrhizo_kmax(c,l);
+          psic[cnt] = x.soil.getPsi(l);
+          VG_nc[cnt] = x.soil.getVG_n(l);
+          VG_alphac[cnt] = x.soil.getVG_alpha(l);
+          cnt++;
+        }
+      }
+      
+      //Build supply function networks (Sperry transpiration mode)
+      if(transpirationMode=="Sperry") {
   //       List HN = initSperryNetwork(c,
   //                                   internalWater, paramsTranspiration, paramsWaterStorage,
   //                                   VCroot_kmaxc, VGrhizo_kmaxc,
@@ -858,16 +861,16 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //                                   control,
   //                                   sapFluidityDay);
   //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
-  //     } else if(transpirationMode == "Sureau") {
-  //       initSureauNetwork_inner(sureauNetworks[c], c, LAIphe,
-  //                               internalWater, 
-  //                               paramsAnatomy, paramsTranspiration, paramsWaterStorage,
-  //                               VCroot_kmaxc, VGrhizo_kmaxc,
-  //                               psic, VG_nc, VG_alphac,
-  //                               control, sapFluidityDay);
-  //     }
-  //     
-  //   } else {
+      } else if(transpirationMode == "Sureau") {
+        initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
+                                  x.internalWater,
+                                  x.paramsAnatomy, x.paramsTranspiration, x.paramsWaterStorage,
+                                  VCroot_kmaxc, VGrhizo_kmaxc,
+                                  psic, VG_nc, VG_alphac,
+                                  x.control, sapFluidityDay);
+      }
+
+    } else {
   //     //Determine connected layers (non-zero fine root abundance)
   //     NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
   //     LogicalMatrix layerConnectedCoh(numCohorts, nlayers);
@@ -935,11 +938,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //                               psic, VG_nc, VG_alphac,
   //                               control, sapFluidityDay);
   //     }
-  //   }
-  // }
-  // 
-  // 
-  // 
+    }
+  }
+
   // ////////////////////////////////
   // // Create input and output objects to be filled in inner functions
   // ////////////////////////////////
@@ -1048,7 +1049,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
 
   //   List innerInput;
-  //   if(transpirationMode =="Sperry") {
+    if(transpirationMode =="Sperry") {
   //     innerInput = List::create(_["Patm"] = Patm,
   //                               _["zWind"] = zWind,
   //                               _["f_dry"] = f_dry,
@@ -1061,7 +1062,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //                               _["layerConnected"] = layerConnected,
   //                               _["layerConnectedPools"] = layerConnectedPools,
   //                               _["supply"] = supply);
-  //   } else if(transpirationMode =="Sureau") {
+    } else if(transpirationMode =="Sureau") {
   //     //To do, create initial plant state
   //     innerInput = List::create(_["Patm"] = Patm,
   //                               _["zWind"] = zWind,
@@ -1074,8 +1075,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //                               _["layerConnectedPools"] = layerConnectedPools,
   //                               _["psiSoil"] = psiSoil,
   //                               _["psiSoilM"] = psiSoilM);
-  //   }
-  //   
+    }
+
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
@@ -1086,37 +1087,37 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     outputEnergyBalance.LWRcan[n]= ATres.lwrExtinction[n].Lnet_canopy; 
     arma::mat& Lnet_cohort_layer = ATres.lwrExtinction[n].Lnet_cohort_layer;
 
-  //   ////////////////////////////////////////
-  //   // STEP 5.2 Sunlit/shade leaf energy balance, stomatal conductance and plant hydraulics
-  //   ////////////////////////////////////////
-  //   for(int c=0;c<numCohorts;c++) {
-  //     //default values
-  //     dEdPInst(c,n) = NA_REAL;
-  //     Einst(c,n) = 0.0;
-  //     Aginst(c,n) = 0.0;
-  //     Aninst(c,n) = 0.0;
-  //     if(LAIphe[c]>0.0) {
-  //       PAR_SL(c,n) = absPAR_SL_COH[c];
-  //       PAR_SH(c,n) = absPAR_SH_COH[c];
-  //       SWR_SL(c,n) = absSWR_SL_COH[c];
-  //       SWR_SH(c,n) = absSWR_SH_COH[c];
-  //       LWR_SL(c,n) = 0.0;
-  //       LWR_SH(c,n) = 0.0;
-  //       for(int i=0;i<ncanlayers;i++) {
-  //         LWR_SL(c,n) += Lnet_cohort_layer(i,c)*fsunlit[i];
-  //         LWR_SH(c,n) += Lnet_cohort_layer(i,c)*(1.0 - fsunlit[i]);
-  //       }
-  //     }
-  //   }
-  //   
-  //   if(transpirationMode == "Sperry") {
+    ////////////////////////////////////////
+    // STEP 5.2 Sunlit/shade leaf energy balance, stomatal conductance and plant hydraulics
+    ////////////////////////////////////////
+    for(int c=0;c<numCohorts;c++) {
+      //default values
+      outputPlantsInst.dEdP(c,n) = medfate::NA_DOUBLE;
+      outputPlantsInst.E(c,n) = 0.0;
+      outputPlantsInst.Ag(c,n) = 0.0;
+      outputPlantsInst.An(c,n) = 0.0;
+      if(LAIphe[c]>0.0) {
+        outputSunlitInst.Abs_PAR(c,n) = absPAR_SL_COH[c];
+        outputShadeInst.Abs_PAR(c,n) = absPAR_SH_COH[c];
+        outputSunlitInst.Abs_SWR(c,n) = absSWR_SL_COH[c];
+        outputShadeInst.Abs_SWR(c,n) = absSWR_SH_COH[c];
+        outputSunlitInst.Net_LWR(c,n) = 0.0;
+        outputShadeInst.Net_LWR(c,n) = 0.0;
+        for(int i=0;i<ncanlayers;i++) {
+          outputSunlitInst.Net_LWR(c,n) += Lnet_cohort_layer(i,c)*fsunlit[i];
+          outputShadeInst.Net_LWR(c,n) += Lnet_cohort_layer(i,c)*(1.0 - fsunlit[i]);
+        }
+      }
+    }
+
+    if(transpirationMode == "Sperry") {
   //     innerSperry(x, innerInput, innerOutput, n, tstep, 
   //                 verbose, stepFunctions);
-  //   } else if(transpirationMode == "Sureau"){
+    } else if(transpirationMode == "Sureau"){
   //     innerSureau(x, sureauNetworks, innerInput, innerOutput, n, tstep,
   //                 verbose);
-  //   }
-  //   
+    }
+
   //   for(int c=0;c<numCohorts;c++) {
   //     if(LAIlive[c]>0.0 && (LeafPLCVEC[c] < 0.999)) {
   //       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
@@ -1398,66 +1399,64 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //     Tcan_mat(n+1,i) = Tair[i];
   //     VPcan_mat(n+1,i) = VPair[i];
   //   }
-  // } //End of timestep loop
-  // 
-  // //Delete Sureau Networks
-  // if(transpirationMode == "Sureau") {
-  //   for(int c=0;c<numCohorts;c++) {
-  //     deleteSureauNetworkPointers_c(sureauNetworks[c]);
-  //   }
+  } //End of timestep loop
+
+  //Delete Sureau Networks
+  if(transpirationMode == "Sureau") {
+    for(int c=0;c<numCohorts;c++) {
+      deleteSureauNetworkPointers_c(sureauNetworks[c]);
+    }
   }
-  // delete[] sureauNetworks;
-  // 
-  // ////////////////////////////////////////
-  // // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
-  // ////////////////////////////////////////
-  // for(int c=0;c<numCohorts;c++) {
-  //   SoilExtractCoh[c] = 0.0;
-  //   for(int l=0;l<nlayers;l++) {
-  //     SoilExtractCoh[c] += outputExtraction(c,l);
-  //   }
-  //   PLCsm[c] = 0.0;
-  //   PLClm[c] = 0.0;
-  //   RWCsm[c] = 0.0;
-  //   RWClm[c] = 0.0;
-  //   dEdPm[c] = 0.0;
-  //   for(int n=0;n<ntimesteps;n++) {
-  //     PLCsm[c] += StemPLC(c,n);
-  //     PLClm[c] += LeafPLC(c,n);
-  //     RWCsm[c] += StemRWCInst(c,n);
-  //     RWClm[c] += LeafRWCInst(c,n);
-  //     dEdPm[c] += dEdPInst(c,n);
-  //   }
-  //   PLCsm[c] = PLCsm[c]/((double) ntimesteps);
-  //   PLClm[c] = PLClm[c]/((double) ntimesteps);
-  //   RWCsm[c] = RWCsm[c]/((double) ntimesteps);
-  //   RWClm[c] = RWClm[c]/((double) ntimesteps);
-  //   dEdPm[c] = dEdPm[c]/((double) ntimesteps);
-  //   // The fraction of leaves will decrease due to phenology or processes leading to defoliation
-  //   double fleaf = (1.0/r635[c])*(LAIphe[c]/LAIlive[c]);
-  //   if(lfmcComponent=="fine") { //fine fuel moisture
-  //     LFMC[c] = maxMCleaf[c]*RWClm[c]*fleaf + maxMCstem[c]*RWCsm[c]*(1.0 - fleaf);
-  //   } else { //"leaf"
-  //     LFMC[c] = maxFMC[c]*RWClm[c];
-  //   }
-  //   
-  //   DDS[c] = (1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
-  //   if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") {
-  //     DDS[c] = phi[c]*DDS[c];
-  //     if(phi[c] == 0.0) DDS[c] = 0.0;
-  //   }
-  //   
-  //   double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-  //   double r = cavitationRecoveryMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
-  //   if(stemCavitationRecovery=="rate") {
-  //     StemPLCVEC[c] = std::max(0.0, StemPLCVEC[c] - (r/SAmax));
-  //   }
-  //   if(leafCavitationRecovery=="rate") {
-  //     LeafPLCVEC[c] = std::max(0.0, LeafPLCVEC[c] - (r/SAmax));
-  //   }
-  // }
-  // 
-  // 
+  delete[] sureauNetworks;
+
+  ////////////////////////////////////////
+  // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
+  ////////////////////////////////////////
+  for(int c=0;c<numCohorts;c++) {
+    SoilExtractCoh[c] = 0.0;
+    for(int l=0;l<nlayers;l++) {
+      SoilExtractCoh[c] += outputExtraction(c,l);
+    }
+    outputPlants.StemPLC[c] = 0.0;
+    outputPlants.LeafPLC[c] = 0.0;
+    outputPlants.StemRWC[c] = 0.0;
+    outputPlants.LeafRWC[c] = 0.0;
+    outputPlants.dEdP[c] = 0.0;
+    for(int n=0;n<ntimesteps;n++) {
+      outputPlants.StemPLC[c] += outputPlantsInst.StemPLC(c,n);
+      outputPlants.LeafPLC[c] += outputPlantsInst.LeafPLC(c,n);
+      outputPlants.StemRWC[c] += outputPlantsInst.StemRWC(c,n);
+      outputPlants.LeafRWC[c] += outputPlantsInst.LeafRWC(c,n);
+      outputPlants.dEdP[c] += outputPlantsInst.dEdP(c,n);
+    }
+    outputPlants.StemPLC[c] = outputPlants.StemPLC[c]/((double) ntimesteps);
+    outputPlants.LeafPLC[c] = outputPlants.LeafPLC[c]/((double) ntimesteps);
+    outputPlants.StemRWC[c] = outputPlants.StemRWC[c]/((double) ntimesteps);
+    outputPlants.LeafRWC[c] = outputPlants.LeafRWC[c]/((double) ntimesteps);
+    outputPlants.dEdP[c] = outputPlants.dEdP[c]/((double) ntimesteps);
+    // The fraction of leaves will decrease due to phenology or processes leading to defoliation
+    double fleaf = (1.0/x.paramsAnatomy.r635[c])*(LAIphe[c]/LAIlive[c]);
+    if(lfmcComponent=="fine") { //fine fuel moisture
+      outputPlants.LFMC[c] = x.paramsWaterStorage.maxMCleaf[c]*outputPlants.LeafRWC[c]*fleaf + x.paramsWaterStorage.maxMCstem[c]*outputPlants.StemRWC[c]*(1.0 - fleaf);
+    } else { //"leaf"
+      outputPlants.LFMC[c] = x.paramsWaterStorage.maxFMC[c]*outputPlants.LeafRWC[c];
+    }
+
+    outputPlants.DDS[c] = (1.0 - (outputPlants.dEdP[c]/(sapFluidityDay*x.paramsTranspiration.Plant_kmax[c])));
+    if(x.paramsPhenology.phenoType[c] == "winter-deciduous" || x.paramsPhenology.phenoType[c] == "winter-semideciduous") {
+      outputPlants.DDS[c] = x.internalPhenology.phi[c]*outputPlants.DDS[c];
+      if(x.internalPhenology.phi[c] == 0.0) outputPlants.DDS[c] = 0.0;
+    }
+
+    double SAmax = 10e4/x.paramsAnatomy.Al2As[c]; //cm2·m-2 of leaf area
+    double r = cavitationRecoveryMaximumRate*std::max(0.0, (x.internalWater.StemSympPsi[c] + 1.5)/1.5);
+    if(stemCavitationRecovery=="rate") {
+      x.internalWater.StemPLC[c] = std::max(0.0, x.internalWater.StemPLC[c] - (r/SAmax));
+    }
+    if(leafCavitationRecovery=="rate") {
+      x.internalWater.LeafPLC[c] = std::max(0.0, x.internalWater.LeafPLC[c] - (r/SAmax));
+    }
+  }
   
   // Copy output stand
   outputStand.LAI = LAIcell;
