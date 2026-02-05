@@ -1,4 +1,5 @@
 #include <numeric>
+#include "modelInput_c.h"
 #include <math.h>
 
 
@@ -108,4 +109,35 @@ double tissueRelativeWaterContent_c(double psiSym, double pi0, double epsilon,
   double sym_rwc = symplasticRelativeWaterContent_c(psiSym, pi0, epsilon);
   double apo_rwc = apoplasticRelativeWaterContent_c(psiApo, c, d); //Water content cannot be higher than the fraction of non-embolized conduits
   return(sym_rwc*(1.0-af)+apo_rwc*af);
+}
+
+std::vector<double> plantWaterContent_c(ModelInput& x) {
+  int numCohorts = x.cohorts.CohortCode.size();
+  std::vector<double> vol(numCohorts);
+  
+  if(x.control.transpirationMode == "Granier") {
+    for(int c = 0;c< numCohorts;c++) {
+      double leafrwc = tissueRelativeWaterContent_c(x.internalWater.PlantPsi[c], x.paramsWaterStorage.LeafPI0[c], x.paramsWaterStorage.LeafEPS[c], 
+                                                    x.internalWater.PlantPsi[c], x.paramsTranspiration.VCstem_c[c], x.paramsTranspiration.VCstem_d[c], 
+                                                    x.paramsWaterStorage.LeafAF[c]);
+      
+      double stemrwc = tissueRelativeWaterContent_c(x.internalWater.PlantPsi[c], x.paramsWaterStorage.StemPI0[c], x.paramsWaterStorage.StemEPS[c], 
+                                                    x.internalWater.PlantPsi[c], x.paramsTranspiration.VCstem_c[c], x.paramsTranspiration.VCstem_d[c], 
+                                                    x.paramsWaterStorage.StemAF[c]);
+      vol[c] = ((x.paramsWaterStorage.Vleaf[c] * leafrwc) + (x.paramsWaterStorage.Vsapwood[c] * stemrwc))*x.above.LAI_live[c];
+    }
+  } else {
+    for(int c = 0;c< numCohorts;c++) {
+      double leaf_sym_rwc = symplasticRelativeWaterContent_c(x.internalWater.LeafSympPsi[c], x.paramsWaterStorage.LeafPI0[c], x.paramsWaterStorage.LeafEPS[c]);
+      double leaf_apo_rwc = (1.0 - x.internalWater.LeafPLC[c]); 
+      double leafrwc =(leaf_sym_rwc*(1.0-x.paramsWaterStorage.LeafAF[c])+leaf_apo_rwc*x.paramsWaterStorage.LeafAF[c]);
+      
+      double stem_sym_rwc = symplasticRelativeWaterContent_c(x.internalWater.StemSympPsi[c], x.paramsWaterStorage.StemPI0[c], x.paramsWaterStorage.StemEPS[c]);
+      double stem_apo_rwc = (1.0 - x.internalWater.StemPLC[c]); 
+      double stemrwc =(stem_sym_rwc*(1.0-x.paramsWaterStorage.StemAF[c])+stem_apo_rwc*x.paramsWaterStorage.StemAF[c]);
+      
+      vol[c] = ((x.paramsWaterStorage.Vleaf[c] * leafrwc) + (x.paramsWaterStorage.Vsapwood[c] * stemrwc))*x.above.LAI_live[c];
+    }
+  }
+  return(vol);
 }

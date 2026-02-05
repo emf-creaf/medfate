@@ -16,12 +16,15 @@
 #include "modelInput.h"
 #include "photosynthesis.h"
 #include "phenology.h"
+#include "phenology_c.h"
 #include "radiation_c.h"
 #include "soil.h"
 #include "soil_c.h"
 #include "spwb_day.h"
+#include "spwb_day_c.h"
 #include "transpiration.h"
 #include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "windextinction_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -1677,6 +1680,349 @@ List spwb(List x, DataFrame meteo,
   return(outputList);
 }
 
+// [[Rcpp::export("spwb_c")]]
+List spwb_c(List x, DataFrame meteo, 
+            double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+            NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
+  
+  //Clone input
+  x = clone(x);
+  
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  String soilFunctions = control["soilFunctions"];
+  String stemCavitationRecovery = control["stemCavitationRecovery"];
+  String leafCavitationRecovery = control["leafCavitationRecovery"];
+  bool verbose = control["verbose"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  
+  bool leafPhenology = control["leafPhenology"];
+  bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  checkspwbInput(x,transpirationMode, soilFunctions);
+  
+  
+  //Meteorological input    
+  NumericVector MinTemperature, MaxTemperature;
+  NumericVector MinRelativeHumidity, MaxRelativeHumidity;
+  NumericVector Radiation;
+  
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+  
+  
+  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
+  NumericVector Precipitation = meteo["Precipitation"];
+  int numDays = Precipitation.size();
+  NumericVector WindSpeed(numDays, NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+  
+  NumericVector PET(numDays, NA_REAL);
+  
+  
+  if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+  
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
+  Radiation = meteo["Radiation"];
+  
+  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation' are not allowed");
+  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature' are not allowed");
+  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature' are not allowed");
+  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
+  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
+  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
+  
+  NumericVector CO2(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("CO2")) {
+    CO2 = meteo["CO2"];
+    if(verbose) {
+      Rcout<<"CO2 taken from input column 'CO2'\n";
+    }
+    if(any(is_na(CO2))) stop("Missing values in 'CO2'");
+  }
+  NumericVector Patm(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) {
+    Patm = meteo["Patm"];
+    if(verbose) {
+      Rcout<<"Patm taken from input column 'Patm'\n";
+    }
+  }
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
+  
+  IntegerVector DOY, JulianDay;
+  NumericVector Photoperiod;
+  bool doy_input = false, photoperiod_input = false, julianday_input = false;
+  if(meteo.containsElementNamed("DOY")) {
+    DOY = meteo["DOY"];
+    doy_input = true;
+    if(verbose) {
+      Rcout<<"DOY taken from input column 'DOY'\n";
+    }
+  }
+  if(meteo.containsElementNamed("Photoperiod")) {
+    Photoperiod = meteo["Photoperiod"];
+    photoperiod_input = true;
+    if(verbose) {
+      Rcout<<"Photoperiod taken from input column 'Photoperiod'\n";
+    }
+  }
+  if(meteo.containsElementNamed("JulianDay")) {
+    JulianDay = meteo["JulianDay"];
+    julianday_input = true;
+    if(verbose) {
+      Rcout<<"Julian day taken from input column 'JulianDay'\n";
+    }
+  }
+  
+  // Dates
+  CharacterVector dateStrings = getWeatherDates(meteo);
+  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
+  
+  //Soil
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  
+  //Define output list
+  List outputList = defineSPWBDailyOutput(latitude, elevation, slope, aspect,
+                                          dateStrings, x);
+  outputList["weather"] = clone(meteo);
+  
+
+  
+  //Initial soil status
+  NumericVector initialSoilContent = water(soil, soilFunctions);
+  NumericVector initialPlantContent = plantWaterContent(x);
+  double initialSnowContent = x["snowpack"];
+  if(verbose) {
+    Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
+    Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
+    Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
+  }
+  
+  
+  bool error_occurence = false;
+  if(verbose) Rcout << "Performing daily simulations\n";
+
+  //Internal object
+  ModelInput x_c(x);
+  
+  // Build communication structures
+  int nlayers = x_c.soil.getNlayers();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
+  std::string& soilDomains = x_c.control.soilDomains;
+  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps, soilDomains);
+  
+  std::string yearString;
+  std::vector<double> lateralFlows(nlayers, 0.0);
+  for(int i=0;(i<numDays) && (!error_occurence);i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    yearString = c.substr(0, 4);
+    if(verbose) {
+      if(DOY[i]==1 || i==0) {
+        Rcout<<"\n [Year "<< yearString << "]:";
+      } 
+      else if(i%30 == 0) Rcout<<".";//<<i;
+    } 
+    
+    double wind = WindSpeed[i];
+    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
+    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+    
+    
+    double Catm = CO2[i];
+    //If missing, use
+    if(NumericVector::is_na(Catm)) {
+      if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
+    }
+    //If still missing, use default control value
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["defaultCO2"];
+    }
+    
+    double Rint = RainfallIntensity[i];
+    if(NumericVector::is_na(Rint)) {
+      int month = std::atoi(c.substr(5,2).c_str());
+      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
+    }
+    
+    //If DOY == 1 reset PLC (Growth assumed)
+    if(stemCavitationRecovery=="annual") {
+      if(DOY[i]==1) {
+        for(int j=0;j<numCohorts;j++) x_c.internalWater.StemPLC[j] = 0.0;
+        if(transpirationMode =="Sureau") {
+          for(int j=0;j<numCohorts;j++) {
+            x_c.internalWater.StemPsi[j] = fieldCapacityPsi;
+            x_c.internalWater.StemSympPsi[j] = fieldCapacityPsi;
+          } 
+        }
+      }
+    }
+    if(leafCavitationRecovery=="annual") {
+      if(DOY[i]==1) {
+        for(int j=0;j<numCohorts;j++) x_c.internalWater.LeafPLC[j] = 0.0;
+        if(transpirationMode =="Sureau") {
+          for(int j=0;j<numCohorts;j++) {
+            x_c.internalWater.LeafPsi[j] = fieldCapacityPsi;
+            x_c.internalWater.LeafSympPsi[j] = fieldCapacityPsi;
+          }
+        }
+      }
+    }
+    
+    if(unlimitedSoilWater) {
+      for(int h=0;h<nlayers;h++) x_c.soil.setW(h, 1.0);
+    }
+    
+    
+    //Julian day from either input column or date
+    int J = NA_INTEGER;
+    if(julianday_input) J = JulianDay[i];
+    if(IntegerVector::is_na(J)){
+      std::string c = as<std::string>(dateStrings[i]);
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+    }
+    double delta = solarDeclination_c(J);
+    double solarConstant = solarConstant_c(J);
+    
+    double tmin = MinTemperature[i];
+    double tmax = MaxTemperature[i];
+    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double rhmin = MinRelativeHumidity[i];
+    double rhmax = MaxRelativeHumidity[i];
+    double prec = Precipitation[i];
+    double rad = Radiation[i];
+    if(tmin > tmax) {
+      warning("tmin > tmax. Swapping values.");
+      double swap = tmin;
+      tmin = tmax;
+      tmax = swap;
+    }
+    if(NumericVector::is_na(rhmax)) {
+      rhmax = 100.0;
+    }
+    if(NumericVector::is_na(rhmin)) {
+      double vp_tmin = meteoland::utils_saturationVP(tmin);
+      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
+    if(rhmin > rhmax) {
+      warning("rhmin > rhmax. Swapping values.");
+      double swap = rhmin;
+      rhmin = rhmax;
+      rhmax = swap;
+    }
+    if(NumericVector::is_na(rad)) {
+      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+      rad = RDay_c(solarConstant, latrad, elevation,
+                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                   vpa, prec);
+    }
+    PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+                               tmin, tmax, rhmin, rhmax, rad, wind);
+    
+    //1. Phenology and leaf fall
+    if(leafPhenology) {
+      updatePhenology_c(x_c, DOY[i], Photoperiod[i], tday);
+      updateLeaves_c(x_c, wind, false);
+    }
+    
+    //2. Water balance and photosynthesis
+    if(transpirationMode=="Granier") {
+      WeatherInputVector meteovec;
+      meteovec.tday = tday;
+      meteovec.tmax = tmax;
+      meteovec.tmin = tmin;
+      meteovec.prec = prec;
+      meteovec.rhmin = rhmin;
+      meteovec.rhmax = rhmax;
+      meteovec.rad = rad; 
+      meteovec.wind = wind; 
+      meteovec.Catm = Catm;
+      meteovec.Patm = Patm[i];
+      meteovec.pet = PET[i];
+      meteovec.rint = Rint;
+      try{
+        spwbDay_basic_c(SPWBcomm.BSPWBres, SPWBcomm.BSPWBcomm, x_c, 
+                        meteovec, 
+                        elevation, slope, aspect,
+                        0.0, lateralFlows, waterTableDepth);
+        // fillSPWBDailyOutput(outputList, x, internalCommunication["basicSPWBOutput"],i);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
+    } else {
+      double tmaxPrev = tmax;
+      double tminPrev = tmin;
+      double tminNext = tmin;
+      if(i>0) {
+        tmaxPrev = MaxTemperature[i-1];
+        tminPrev = MinTemperature[i-1];
+      }
+      if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
+      
+      WeatherInputVector meteovec;
+      meteovec.tmax = tmax;
+      meteovec.tmin = tmin;
+      meteovec.tminPrev = tminPrev;
+      meteovec.tminNext = tminNext;
+      meteovec.tmaxPrev = tmaxPrev;
+      meteovec.prec = Precipitation[i];
+      meteovec.rhmin = rhmin;
+      meteovec.rhmax = rhmax;
+      meteovec.rad = rad; 
+      meteovec.wind = wind; 
+      meteovec.Catm = Catm;
+      meteovec.Patm = Patm[i];
+      meteovec.pet = PET[i];
+      meteovec.rint = Rint;
+      try{
+        spwbDay_advanced_c(SPWBcomm.ASPWBres, SPWBcomm.ASPWBcomm, x_c, 
+                           meteovec, 
+                           latitude, elevation, slope, aspect,
+                           solarConstant, delta, 
+                           0.0, 
+                           lateralFlows, waterTableDepth);
+        // fillSPWBDailyOutput(outputList, x, internalCommunication["advancedSPWBOutput"],i);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
+    }
+  }
+  if(verbose) Rcout << "\n\n";
+
+  x_c.copyStateToList(x);  
+  if(verbose) {
+    printWaterBalanceResult(outputList, x,
+                            initialPlantContent, initialSoilContent, initialSnowContent,
+                            transpirationMode);
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
+    }
+  }
+  
+  return(outputList);
+}
 
 //' Plant water balance
 //' 

@@ -1,3 +1,4 @@
+#include "modelInput_c.h"
 #ifndef TISSUEMOISTURE_C_H
 #define TISSUEMOISTURE_C_H
 
@@ -13,4 +14,5 @@ double tissueRelativeWaterContent_c(double psiSym, double pi0, double epsilon,
 
 double turgorLossPoint_c(double pi0, double epsilon);
 
+std::vector<double> plantWaterContent_c(ModelInput& x);
 #endif
