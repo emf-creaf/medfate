@@ -1362,6 +1362,10 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   
   List transpAdvanced = copyAdvancedTranspirationResult_c(ATres, x_c);
   
+  if(modifyInput) {
+    x_c.copyStateToList(x);
+  }
+  
   return(transpAdvanced);
 } 
 
