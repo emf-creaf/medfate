@@ -4,7 +4,7 @@
 #include <RcppArmadillo.h>
 #include <meteoland.h>
 #include "modelInput_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "soil_c.h"
 #include "hydraulics_c.h"
 #include "hydrology_c.h"

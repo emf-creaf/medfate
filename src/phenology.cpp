@@ -1,5 +1,7 @@
 #include <RcppArmadillo.h>
 #include "carbon.h"
+#include "phenology.h"
+#include "phenology_c.h"
 #include "decomposition.h"
 using namespace Rcpp;
 
@@ -17,20 +19,6 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
     if(DOY[i] >= 365) cum = 0.0;
   }
   return(GDD);
-}
-
-double leafDevelopmentStatus(double Sgdd, double gdd, double unfoldingDD = 300.0) {
-  double ds = 0.0;
-  if(Sgdd>0.0) {
-    if(gdd>Sgdd) ds = std::min(1.0, (gdd - Sgdd)/unfoldingDD);
-  } else {
-    ds = 1.0;
-  }
-  return(ds);
-}
-bool leafSenescenceStatus(double Ssen, double sen) {
-  if(sen>Ssen) return(true);
-  return false;
 }
 
 //' Leaf phenology
@@ -63,7 +51,7 @@ bool leafSenescenceStatus(double Ssen, double sen) {
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
 NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD = 300.0) {
   NumericVector phe(Sgdd.size());
-  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus(Sgdd[i], gdd[i], unfoldingDD);
+  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus_c(Sgdd[i], gdd[i], unfoldingDD);
   return(phe);
 }
 
@@ -74,7 +62,7 @@ NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, doubl
 // [[Rcpp::export("pheno_leafSenescenceStatus")]]
 LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
   LogicalVector phe(Ssen.size());
-  for(int i=0;i<Ssen.size();i++) phe[i] = leafSenescenceStatus(Ssen[i], sen[i]);
+  for(int i=0;i<Ssen.size();i++) phe[i] = leafSenescenceStatus_c(Ssen[i], sen[i]);
   return(phe);
 }
 
@@ -136,7 +124,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
               rsen = pow(Tbsen[j]-tmean, xsen[j])*pow(photoperiod/Phsen[j], ysen[j]);
             }
             sen[j] = sen[j] + rsen;
-            leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
+            leafSenescence[j] = leafSenescenceStatus_c(Ssen[j],sen[j]);
             leafDormancy[j] = leafSenescence[j];
           }
           if(leafDormancy[j]) phi[j] = 0.0;
@@ -148,7 +136,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         budFormation[j] = false;
         leafSenescence[j] = false;
         if((tmean-Tbgdd[j]>0.0) && (doy >= ((int) t0gdd[j]))) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
-        phi[j] = leafDevelopmentStatus(Sgdd[j], gdd[j], unfoldingDD);
+        phi[j] = leafDevelopmentStatus_c(Sgdd[j], gdd[j], unfoldingDD);
         leafUnfolding[j] = (phi[j]>0.0);
         leafDormancy[j] = (phi[j]==0.0);
         // Rcout << doy<< " "<< photoperiod<<" "<< gdd[j]<<" "<<  leafUnfolding[j] << "\n";
@@ -170,7 +158,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
             // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Phsen[j],2.0);
           }
           sen[j] = sen[j] + rsen;
-          leafDormancy[j] = leafSenescenceStatus(Ssen[j],sen[j]);
+          leafDormancy[j] = leafSenescenceStatus_c(Ssen[j],sen[j]);
           budFormation[j] = !leafDormancy[j];
         }
       } else if (doy<=200) { //Only increase in the first part of the year
@@ -178,7 +166,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         budFormation[j] = false;
         if(!leafUnfolding[j]) { //Check until unfolding starts
           if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
-          double ph = leafDevelopmentStatus(Sgdd[j], gdd[j],unfoldingDD);
+          double ph = leafDevelopmentStatus_c(Sgdd[j], gdd[j],unfoldingDD);
           leafSenescence[j] = (ph>0.0);
           leafUnfolding[j] = (ph>0.0);
           leafDormancy[j] = (ph==0.0);

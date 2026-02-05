@@ -1,7 +1,7 @@
 #include <RcppArmadillo.h>
 #include "biophysicsutils_c.h"
 #include "control_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "windextinction_c.h"
 #include "forestutils_c.h"
 #include "modelInput_c.h"

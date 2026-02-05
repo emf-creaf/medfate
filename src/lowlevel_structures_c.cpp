@@ -1,7 +1,7 @@
 // [[Rcpp::interfaces(r,cpp)]]
 #include <RcppArmadillo.h>
 #include "modelInput_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 using namespace Rcpp;
 
 Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo) {

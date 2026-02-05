@@ -6,8 +6,8 @@
 #include <limits>
 #include <cmath>
 
-#ifndef COMMUNICATION_STRUCTURES_C_H
-#define COMMUNICATION_STRUCTURES_C_H
+#ifndef LOWLEVEL_STRUCTURES_C_H
+#define LOWLEVEL_STRUCTURES_C_H
 
 struct WeatherInputVector {
   double pet;
@@ -41,6 +41,20 @@ struct WeatherInputVector {
     prec = medfate::NA_DOUBLE;
     wind = medfate::NA_DOUBLE;
     rad = medfate::NA_DOUBLE;
+  }
+  WeatherInputVector(Rcpp::NumericVector meteovec) {
+    if(meteovec.containsElementNamed("MinTemperature")) tmax = meteovec["MinTemperature"];
+    if(meteovec.containsElementNamed("MaxTemperature")) tmin = meteovec["MaxTemperature"];
+    if(meteovec.containsElementNamed("Precipitation")) prec = meteovec["Precipitation"];
+    if(meteovec.containsElementNamed("MaxRelativeHumidity")) rhmax = meteovec["MaxRelativeHumidity"];
+    if(meteovec.containsElementNamed("MinRelativeHumidity")) rhmin = meteovec["MinRelativeHumidity"];
+    if(meteovec.containsElementNamed("Radiation")) rad = meteovec["Radiation"];
+    if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
+    if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
+    if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+    if(meteovec.containsElementNamed("RainfallIntensity")) rint = meteovec["RainfallIntensity"];
+    if(meteovec.containsElementNamed("PET")) pet = meteovec["PET"];
+    
   }
 };
 Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo);

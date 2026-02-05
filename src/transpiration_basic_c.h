@@ -1,5 +1,5 @@
 #include "Rcpp.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "lightextinction_basic_c.h"
 #include "modelInput_c.h"
 

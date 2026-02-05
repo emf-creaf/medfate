@@ -1,6 +1,6 @@
 #include "RcppArmadillo.h"
 #include "modelInput_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "firebehaviour_c.h"
 #include "fuelstructure_c.h"
 #include "windextinction_c.h"

@@ -1,5 +1,5 @@
 #include "RcppArmadillo.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "transpiration_basic_c.h"
 #include "lightextinction_advanced_c.h"
 #include "soil_thermodynamics_c.h"

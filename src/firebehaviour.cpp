@@ -559,7 +559,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
 //       canopyFMC[i] = fine1hFMC[i];
 //     } else if(liveFMCmode =="swb") {
 //       //Level of physiological activity is defined in terms of growth degree days
-//       double act = leafDevelopmentStatus(200.0, GDD[i]);
+//       double act = leafDevelopmentStatus_c(200.0, GDD[i]);
 //       //In winter, herbaceous FMC is modelled as fine (1h) dead fuels
 //       //When physiologically active, FMC is modelled as function of water content in the topsoil
 //       fMoisture[3] = act*std::max(30.0, 200.0+20*(psi[0]/1000.0))+(1.0-act)*fine1hFMC[i]; 

@@ -1,6 +1,6 @@
 #include <RcppArmadillo.h>
 #include "modelInput_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 
 #ifndef FIREBEHAVIOUR_C_H
 #define FIREBEHAVIOUR_C_H

@@ -2,7 +2,7 @@
 #include <numeric>
 #include <math.h>
 #include "biophysicsutils_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "lightextinction_basic_c.h"
 #include "windextinction_c.h"
 #include "firebehaviour_c.h"
@@ -10,7 +10,7 @@
 #include "hydrology_c.h"
 #include "forestutils_c.h"
 #include "modelInput_c.h"
-#include "phenology.h"
+#include "phenology_c.h"
 #include "transpiration_basic_c.h"
 #include "transpiration_advanced_c.h"
 #include "fuelstructure.h"
@@ -677,4 +677,98 @@ Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelIn
   }
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
+}
+
+void spwbDay_inner_c(SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
+                     std::string date,
+                     WeatherInputVector meteovec, 
+                     double latitude, double elevation, double slope, double aspect,
+                     const double runon, 
+                     const std::vector<double>& lateralFlows, const double waterTableDepth) {
+  
+  if(std::isnan(meteovec.prec)) throw medfate::MedfateInternalError("Missing precipitation value");
+  if(std::isnan(meteovec.tmin)) throw medfate::MedfateInternalError("Missing minimum temperature value");
+  if(std::isnan(meteovec.tmax)) throw medfate::MedfateInternalError("Missing maximum temperature value");
+  if(meteovec.tmin > meteovec.tmax) {
+    double swap = meteovec.tmin;
+    meteovec.tmin = meteovec.tmax;
+    meteovec.tmax = swap;
+  }
+  if(std::isnan(meteovec.rhmax)) {
+    meteovec.rhmax = 100.0;
+  }
+  if(std::isnan(meteovec.rhmin)) {
+    double vp_tmin = meteoland::utils_saturationVP(meteovec.tmin);
+    double vp_tmax = meteoland::utils_saturationVP(meteovec.tmax);
+    meteovec.rhmin = std::min(meteovec.rhmax, 100.0*(vp_tmin/vp_tmax));
+  }
+  if(meteovec.rhmin > meteovec.rhmax) {
+    // warning("rhmin > rhmax. Swapping values.");
+    double swap = meteovec.rhmin;
+    meteovec.rhmin = meteovec.rhmax;
+    meteovec.rhmax = swap;
+  }
+  if(std::isnan(meteovec.wind)) meteovec.wind = x.control.weather.defaultWindSpeed; 
+  if(meteovec.wind<0.1) meteovec.wind = 0.1; //Minimum windspeed abovecanopy
+
+  if(std::isnan(meteovec.Catm)) meteovec.Catm = x.control.weather.defaultCO2;
+  
+  int month = std::atoi(date.substr(5,2).c_str());
+  int J = julianDay_c(std::atoi(date.substr(0, 4).c_str()),std::atoi(date.substr(5,2).c_str()),std::atoi(date.substr(8,2).c_str()));
+  double delta = solarDeclination_c(J);
+  double solarConstant = solarConstant_c(J);
+  double latrad = latitude * (M_PI/180.0);
+  if(std::isnan(aspect)) aspect = 0.0;
+  if(std::isnan(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+  double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
+  if(std::isnan(meteovec.tday)) {
+    meteovec.tday = meteoland::utils_averageDaylightTemperature(meteovec.tmin, meteovec.tmax);
+  }
+  if(std::isnan(meteovec.rad)) {
+    // warning("Estimating solar radiation");
+    double vpa = meteoland::utils_averageDailyVP(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
+    meteovec.rad = RDay_c(solarConstant, latrad, elevation,
+                          slorad, asprad, delta, meteovec.tmax -meteovec.tmin, meteovec.tmax-meteovec.tmin,
+                          vpa, meteovec.prec);
+  }
+  if(std::isnan(meteovec.pet)) {
+    meteovec.pet = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+                                     meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax, meteovec.rad, meteovec.wind);
+  }
+  
+  //Derive doy from date  
+  int J0101 = julianDay_c(std::atoi(date.substr(0, 4).c_str()),1,1);
+  int doy = J - J0101+1;
+  
+  std::vector<double> defaultRainfallIntensityPerMonth = x.control.weather.defaultRainfallIntensityPerMonth;
+  if(std::isnan(meteovec.rint)) meteovec.rint = rainfallIntensity_c(month, meteovec.prec, defaultRainfallIntensityPerMonth);
+  
+  bool leafPhenology = x.control.phenology.leafPhenology;
+  
+  //Update phenology
+  if(leafPhenology) {
+    updatePhenology_c(x, doy, photoperiod, meteovec.tday);
+    updateLeaves_c(x, meteovec.wind, false);
+  }
+  
+  meteovec.tminPrev = meteovec.tmin;
+  meteovec.tmaxPrev = meteovec.tmax;
+  meteovec.tminNext = meteovec.tmin;
+
+  if(x.control.transpirationMode=="Granier") {
+    spwbDay_basic_c(SPWBcomm.BSPWBres, SPWBcomm.BSPWBcomm, x, 
+                    meteovec, 
+                    elevation, slope, aspect,
+                    runon, 
+                    lateralFlows, waterTableDepth);
+  } else {
+    spwbDay_advanced_c(SPWBcomm.ASPWBres, SPWBcomm.ASPWBcomm, x, 
+                       meteovec, 
+                       latitude, elevation, slope, aspect,
+                       solarConstant, delta,
+                       runon, 
+                       lateralFlows, waterTableDepth);
+  }
 }

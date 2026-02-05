@@ -1,6 +1,6 @@
 #include <RcppArmadillo.h>
 #include "biophysicsutils_c.h"
-#include "communication_structures_c.h"
+#include "lowlevel_structures_c.h"
 #include "forestutils_c.h"
 #include "transpiration_advanced_c.h"
 #include "lightextinction_advanced_c.h"

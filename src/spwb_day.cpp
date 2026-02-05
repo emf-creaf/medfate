@@ -1032,113 +1032,27 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
 
 // [[Rcpp::export("spwb_day_test")]]
 List spwbDay_test(List x, CharacterVector date, NumericVector meteovec, 
-               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
-               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-               bool modifyInput = true) {
+                  double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+                  double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                  bool modifyInput = true) {
   
   //Check if input version is lower than current medfate version. If so, try to complete fields
   if(isLowerVersion(x)) spwbInputVersionUpdate(x);
 
-  double tmin = meteovec["MinTemperature"];
-  double tmax = meteovec["MaxTemperature"];
-  double prec = meteovec["Precipitation"];
-  if(std::isnan(prec)) stop("Missing precipitation value");
-  if(std::isnan(tmin)) stop("Missing minimum temperature value");
-  if(std::isnan(tmax)) stop("Missing maximum temperature value");
-  if(tmin > tmax) {
-    warning("tmin > tmax. Swapping values.");
-    double swap = tmin;
-    tmin = tmax;
-    tmax = swap;
-  }
-  double rhmin = meteovec["MinRelativeHumidity"];
-  double rhmax = meteovec["MaxRelativeHumidity"];
-  if(std::isnan(rhmax)) {
-    warning("Maximum relative humidity assumed 100");
-    rhmax = 100.0;
-  }
-  if(std::isnan(rhmin)) {
-    warning("Minimum relative humidity estimated from temperature range");
-    double vp_tmin = meteoland::utils_saturationVP(tmin);
-    double vp_tmax = meteoland::utils_saturationVP(tmax);
-    rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
-  }
-  if(rhmin > rhmax) {
-    warning("rhmin > rhmax. Swapping values.");
-    double swap = rhmin;
-    rhmin = rhmax;
-    rhmax = swap;
-  }
-  double rad = meteovec["Radiation"];
-  double wind = NA_REAL;
-  if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
-  double Catm = NA_REAL; 
-  if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
-  double Patm = NA_REAL; 
-  if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
-  double Rint = NA_REAL; 
-  if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
+  WeatherInputVector meteovec_c(meteovec);
+  ModelInput x_c(x);  
+
   
-  ModelInput x_c = ModelInput(x);  
   
-  std::string c = as<std::string>(date[0]);
-  int month = std::atoi(c.substr(5,2).c_str());
-  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = solarDeclination_c(J);
-  double solarConstant = solarConstant_c(J);
-  double latrad = latitude * (M_PI/180.0);
-  if(std::isnan(aspect)) aspect = 0.0;
-  if(std::isnan(slope)) slope = 0.0;
-  double asprad = aspect * (M_PI/180.0);
-  double slorad = slope * (M_PI/180.0);
-  double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  if(std::isnan(rad)) {
-    warning("Estimating solar radiation");
-    double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    rad = RDay_c(solarConstant, latrad, elevation,
-                 slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                 vpa, prec);
-  }
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
-  
-  //Derive doy from date  
-  int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
-  int doy = J - J0101+1;
-  
-  if(std::isnan(wind)) wind = x_c.control.weather.defaultWindSpeed; 
-  if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
-  
-  std::vector<double> defaultRainfallIntensityPerMonth = x_c.control.weather.defaultRainfallIntensityPerMonth;
-  if(std::isnan(Rint)) Rint = rainfallIntensity_c(month, prec, defaultRainfallIntensityPerMonth);
-  
-  bool leafPhenology = x_c.control.phenology.leafPhenology;
-  if(std::isnan(Catm)) Catm = x_c.control.weather.defaultCO2;
-  
+  // Build communication structures
   int nlayers = x_c.soil.getNlayers();
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
-  
-  
-  WeatherInputVector meteovec_c;
-  meteovec_c.tmax = tmax;
-  meteovec_c.tmin = tmin;
-  meteovec_c.tminPrev = tmin;
-  meteovec_c.tmaxPrev = tmax;
-  meteovec_c.tminNext = tmin;
-  meteovec_c.tday = tday; 
-  meteovec_c.rhmin = rhmin; 
-  meteovec_c.rhmax = rhmax;
-  meteovec_c.wind = wind;
-  meteovec_c.rad = rad;
-  meteovec_c.pet = pet;
-  meteovec_c.Catm = Catm;
-  meteovec_c.Patm = Patm;
-  meteovec_c.rint = Rint;
-  meteovec_c.prec = prec;
+  std::string& soilDomains = x_c.control.soilDomains;
+  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps, soilDomains);
 
-  
+  // Prepare lateral flows
   std::vector<double> lateralFlows_c(nlayers, 0.0);
   NumericVector lateralFlows_mm;
   if(lateralFlows.isNotNull()) {
@@ -1148,35 +1062,20 @@ List spwbDay_test(List x, CharacterVector date, NumericVector meteovec,
     }
   }
   
+  // Call simulation
+  spwbDay_inner_c(SPWBcomm, x_c, 
+                  as<std::string>(date[0]),
+                  meteovec_c, 
+                  latitude, elevation, slope, aspect,
+                  runon, 
+                  lateralFlows_c, waterTableDepth);
+    
+  // Extract output
   List modelOutput;
-  
   if(x_c.control.transpirationMode=="Granier") {
-    //Instance communication structures
-    BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
-    BasicSPWB_RESULT BSPWBres(BTres, nlayers);
-    BasicSPWB_COMM BSPWB_comm(numCohorts,ncanlayers,nlayers,x_c.control.soilDomains);
-    
-    spwbDay_basic_c(BSPWBres, BSPWB_comm, x_c, 
-                    meteovec_c, 
-                    elevation, slope, aspect,
-                    runon, 
-                    lateralFlows_c, waterTableDepth);
-    
-    modelOutput = copyBasicSPWBResult_c(BSPWBres, x_c);
+    modelOutput = copyBasicSPWBResult_c(SPWBcomm.BSPWBres, x_c);
   } else {
-    //Instance communication structures
-    AdvancedTranspiration_RESULT ATres = AdvancedTranspiration_RESULT(numCohorts, nlayers, ncanlayers, ntimesteps);
-    AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
-    AdvancedSPWB_COMM ASPWB_comm(numCohorts,nlayers, ncanlayers,ntimesteps, x_c.control.soilDomains);
-    
-    spwbDay_advanced_c(ASPWBres, ASPWB_comm, x_c, 
-                       meteovec_c, 
-                       latitude, elevation, slope, aspect,
-                       solarConstant, delta,
-                       runon, 
-                       lateralFlows_c, waterTableDepth);
-    
-    modelOutput = copyAdvancedSPWBResult_c(ASPWBres, x_c);
+    modelOutput = copyAdvancedSPWBResult_c(SPWBcomm.ASPWBres, x_c);
   }
   
   if(modifyInput) {

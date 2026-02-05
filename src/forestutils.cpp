@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "forestutils_c.h"
 #include "paramutils.h"
-#include "phenology.h"
+#include "phenology_c.h"
 #include "root.h"
 #include "soil.h"
 #include "decomposition.h"
@@ -257,7 +257,7 @@ NumericVector treeFoliarBiomassAllometric(IntegerVector SP, NumericVector N, Num
   if(!NumericVector::is_na(gdd)) {
     NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd", true, true);
     for(int i=0;i<ncoh;i++) {
-      if(!NumericVector::is_na(SP[i])) lb[i] = lb[i]*leafDevelopmentStatus(Sgdd[i], gdd);
+      if(!NumericVector::is_na(SP[i])) lb[i] = lb[i]*leafDevelopmentStatus_c(Sgdd[i], gdd);
     }
   }
   
@@ -291,7 +291,7 @@ NumericVector shrubFoliarBiomassAllometric(IntegerVector SP, NumericVector Cover
         if(competitionEffect) fb[i] = fb[i]*exp(-0.235*treeLAI); //Correct depending on tree leaf area
         // Rcout<<Cover[i]<<" "<<(Cover[i]/(100*areaind))<<" "<< W<< " "<< fb[i]<<"\n";
         if(!NumericVector::is_na(gdd)) { //Apply phenology correction to foliar fuels
-          fb[i] = fb[i]*leafDevelopmentStatus(Sgdd[i], gdd); 
+          fb[i] = fb[i]*leafDevelopmentStatus_c(Sgdd[i], gdd); 
         } 
       }
     }
@@ -383,7 +383,7 @@ NumericVector treeFuelAllometric(IntegerVector SP, NumericVector FB,
       ftf = FB[i]; //Foliar biomass (kg per m2)
       btf = ftf*(fTreeFuel[i]-1.0); // Small branch fuels (proportion of foliar fuels)
       if(!NumericVector::is_na(gdd)) { //Apply phenology correction to foliar fuels
-        ftf = ftf*leafDevelopmentStatus(Sgdd[i], gdd); 
+        ftf = ftf*leafDevelopmentStatus_c(Sgdd[i], gdd); 
       } 
       fuel[i] =  ftf + btf; //Tree fuel (kg per m2) is sum of both fuels
       if(includeDead) {
@@ -408,7 +408,7 @@ NumericVector shrubFuelAllometric(IntegerVector SP, NumericVector FB, DataFrame 
     //Remove (if necessary), the weight due to leaves that are not there
     if(!NumericVector::is_na(gdd)) {
       double bsf = W[i] - FB[i]; //branch biomass
-      W[i] = bsf + FB[i]*leafDevelopmentStatus(Sgdd[i], gdd); 
+      W[i] = bsf + FB[i]*leafDevelopmentStatus_c(Sgdd[i], gdd); 
     }
   }
   return(W);
@@ -993,7 +993,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
       }
       if(!NumericVector::is_na(gdd)) {
         for(int i=0;i<tFB.size();i++) {
-          tFB[i] = tFB[i]*leafDevelopmentStatus(tSgdd[i], gdd);
+          tFB[i] = tFB[i]*leafDevelopmentStatus_c(tSgdd[i], gdd);
         }
       }
     } else if(treeData.containsElementNamed("LAI")) {
@@ -1004,7 +1004,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
       }
       if(!NumericVector::is_na(gdd)) {
         for(int i=0;i<tLAI.size();i++) {
-          tFB[i] = tFB[i]*leafDevelopmentStatus(tSgdd[i], gdd);
+          tFB[i] = tFB[i]*leafDevelopmentStatus_c(tSgdd[i], gdd);
         }
       }
     } 
@@ -1015,7 +1015,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
         tFB[i] = tFBAllom[i];
         tLAI[i] = tFB[i]*tSLA[i];
         if(!NumericVector::is_na(gdd)) {
-          tFB[i] = tFB[i]*leafDevelopmentStatus(tSgdd[i], gdd);
+          tFB[i] = tFB[i]*leafDevelopmentStatus_c(tSgdd[i], gdd);
         }
       }
     }
@@ -1033,7 +1033,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
       shFB = shrubData["FoliarBiomass"];
       if(!NumericVector::is_na(gdd)) {
         for(int i=0;i<nshrub;i++) {
-          shFB[i] = shFB[i]*leafDevelopmentStatus(shSgdd[i], gdd);
+          shFB[i] = shFB[i]*leafDevelopmentStatus_c(shSgdd[i], gdd);
         }
       }
     } else if(shrubData.containsElementNamed("LAI")) {
@@ -1044,7 +1044,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
       }
       if(!NumericVector::is_na(gdd)) {
         for(int i=0;i<nshrub;i++) {
-          shFB[i] = shFB[i]*leafDevelopmentStatus(shSgdd[i], gdd);
+          shFB[i] = shFB[i]*leafDevelopmentStatus_c(shSgdd[i], gdd);
         }
       }
     } 
@@ -1055,7 +1055,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
     for(int i=0;i<nshrub;i++) {
       if(NumericVector::is_na(shFB[i])) {
         shFB[i] = shFBAllom[i];
-        if(!NumericVector::is_na(gdd)) shFB[i] = shFB[i]*leafDevelopmentStatus(shSgdd[i], gdd);
+        if(!NumericVector::is_na(gdd)) shFB[i] = shFB[i]*leafDevelopmentStatus_c(shSgdd[i], gdd);
       }
     }
   }
@@ -1081,7 +1081,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
         hFB = herbData["FoliarBiomass"];
         if(!NumericVector::is_na(gdd)) {
           for(int i=0;i<nherb;i++) {
-            hFB[i] = hFB[i]*leafDevelopmentStatus(hSgdd[i], gdd);
+            hFB[i] = hFB[i]*leafDevelopmentStatus_c(hSgdd[i], gdd);
           }
         }
       } else if(herbData.containsElementNamed("LAI")) {
@@ -1092,7 +1092,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
         }
         if(!NumericVector::is_na(gdd)) {
           for(int i=0;i<nherb;i++) {
-            hFB[i] = hFB[i]*leafDevelopmentStatus(hSgdd[i], gdd);
+            hFB[i] = hFB[i]*leafDevelopmentStatus_c(hSgdd[i], gdd);
           }
         }
       } 
@@ -1101,7 +1101,7 @@ NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_RE
       for(int i=0;i<nherb;i++) {
         if(NumericVector::is_na(hFB[i])) {
           hFB[i] = hFBAllom[i];
-          if(!NumericVector::is_na(gdd)) hFB[i] = hFB[i]*leafDevelopmentStatus(hSgdd[i], gdd);
+          if(!NumericVector::is_na(gdd)) hFB[i] = hFB[i]*leafDevelopmentStatus_c(hSgdd[i], gdd);
         }
       }
     }
@@ -1391,7 +1391,7 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL,
     if(!NumericVector::is_na(gdd)) {
       NumericVector tSgdd = speciesNumericParameterWithImputation(treeSP, SpParams, "Sgdd", true, true);
       for(int i=0;i<ntree;i++) {
-        tLAI[i] = tLAI[i]*leafDevelopmentStatus(tSgdd[i], gdd);
+        tLAI[i] = tLAI[i]*leafDevelopmentStatus_c(tSgdd[i], gdd);
       }
     }
   }
@@ -1435,7 +1435,7 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL,
     if(!NumericVector::is_na(gdd)) {
       NumericVector shSgdd = speciesNumericParameterWithImputation(shrubSP, SpParams, "Sgdd", true, true);
       for(int i=0;i<nshrub;i++) {
-        shLAI[i] = shLAI[i]*leafDevelopmentStatus(shSgdd[i], gdd);
+        shLAI[i] = shLAI[i]*leafDevelopmentStatus_c(shSgdd[i], gdd);
       }
     }
   }
@@ -1483,7 +1483,7 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL,
       if(!NumericVector::is_na(gdd)) {
         NumericVector hSgdd = speciesNumericParameterWithImputation(herbSP, SpParams, "Sgdd", true, true);
         for(int i=0;i<nherb;i++) {
-          hLAI[i] = hLAI[i]*leafDevelopmentStatus(hSgdd[i], gdd);
+          hLAI[i] = hLAI[i]*leafDevelopmentStatus_c(hSgdd[i], gdd);
         }
       }
     }
