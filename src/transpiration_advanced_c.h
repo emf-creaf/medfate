@@ -238,6 +238,8 @@ struct AdvancedTranspiration_RESULT {
 };
 Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT& BTres, ModelInput& x);
 
+
+
 // ----------------------------------------------------------------------------
 // Advanced Transpiration Communication Structures
 // ----------------------------------------------------------------------------
@@ -252,6 +254,40 @@ struct AdvancedTranspiration_COMM {
     canopyTurbulenceModel(ncanlayers),
     SEBcomm(nlayers) {}
 };
+
+
+struct InnerTranspirationInput_COMM {
+  double Patm;
+  std::vector<double> zWind;
+  double f_dry;
+  std::vector<int> iLayerCohort, iLayerSunlit, iLayerShade;
+  std::vector<int> iPMSunlit, iPMShade;
+  std::vector<int> nlayerscon;
+  arma::Mat<uint8_t> layerConnected;
+  std::vector<arma::Mat<uint8_t>> layerConnectedPools;
+  std::vector<double> psiSoil;
+  arma::mat psiSoilM;
+  arma::mat KunsatM;
+  
+  InnerTranspirationInput_COMM(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0) {
+    zWind = std::vector<double>(ncanlayers, medfate::NA_DOUBLE);
+    iLayerCohort = std::vector<int>(numCohorts, medfate::NA_INTEGER);
+    iLayerSunlit = std::vector<int>(numCohorts, medfate::NA_INTEGER);
+    iLayerShade = std::vector<int>(numCohorts, medfate::NA_INTEGER);
+    iPMSunlit = std::vector<int>(numCohorts, 0); //Initial values set to closed stomata
+    iPMShade = std::vector<int>(numCohorts, 0);
+    nlayerscon = std::vector<int>(numCohorts, 0);
+    layerConnected = arma::Mat<uint8_t>(numCohorts, nlayers);
+    layerConnectedPools = std::vector<arma::Mat<uint8_t>>(numCohorts);
+    for(size_t c = 0; c<numCohorts; c++) {
+      layerConnectedPools[c] = arma::Mat<uint8_t>(numCohorts, nlayers);
+    }
+    psiSoil = std::vector<double>(nlayers, medfate::NA_DOUBLE);
+    psiSoilM = arma::mat(numCohorts, nlayers);
+    KunsatM = arma::mat(numCohorts, nlayers);
+  }
+};
+
 
 void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTranspiration_COMM& ATcomm, ModelInput& x, 
                              const WeatherInputVector& meteovec,

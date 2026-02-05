@@ -287,13 +287,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   PlantsAdvancedTranspiration_RESULT& outputPlants = ATres.plants;
   PlantsAdvancedTranspirationInst_RESULT& outputPlantsInst = ATres.plants_inst;
   arma::mat& outputExtraction = ATres.extraction;
-  std::vector<arma::mat>& outputExtractionPools = ATres.extractionPools;
   LeafAdvancedTranspiration_RESULT& outputSunlit = ATres.sunlit;
   LeafAdvancedTranspiration_RESULT& outputShade = ATres.shade;
   LeafAdvancedTranspirationInst_RESULT& outputSunlitInst = ATres.sunlit_inst;
   LeafAdvancedTranspirationInst_RESULT& outputShadeInst = ATres.shade_inst;
   EnergyBalance_RESULT& outputEnergyBalance = ATres.energy;
-
+  arma::mat& RHOPCohDyn = ATcomm.RHOPCohDyn;
+  
   // DataFrame outputTemperatureInst =   as<DataFrame>(outputEnergyBalance["Temperature"]);
   // DataFrame outputCEBinst =  as<DataFrame>(outputEnergyBalance["CanopyEnergyBalance"]);
   // DataFrame outputSEBinst =  as<DataFrame>(outputEnergyBalance["SoilEnergyBalance"]);
@@ -470,26 +470,36 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   if(prec >0.0) cloudcover = 1.0;
   bool clearday = (prec==0);
 
-  // ////////////////////////////////////////
-  // // INITIAL SOIL STATE (from previous step)
-  // ////////////////////////////////////////
-  // NumericVector psiSoil = psi(soil, soilFunctions); //Get soil water potential
-  // NumericMatrix psiSoilM(numCohorts, nlayers);
-  // NumericMatrix KunsatM(numCohorts, nlayers);
-  // if(plantWaterPools){
-  //   //Copy soil water potentials from pools
-  //   List soil_pool = clone(soil);
-  //   NumericVector Ws_pool = soil_pool["W"];
-  //   for(int j = 0; j<numCohorts;j++) {
-  //     //Copy values of soil moisture from pool of cohort j
-  //     for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
-  //     //Calculate unsaturated conductivity (mmolH20·m-1·s-1·MPa-1)
-  //     KunsatM(j,_) = conductivity(soil_pool, soilFunctions, true);
-  //     //Calculate soil water potential
-  //     psiSoilM(j,_) = psi(soil_pool, soilFunctions);
-  //   }
-  // }
-  // 
+  ////////////////////////////////////////
+  // CREATE COMMUNICATION INPUT OBJECT
+  ////////////////////////////////////////
+  InnerTranspirationInput_COMM input(numCohorts, nlayers, ncanlayers);
+  input.Patm = Patm;
+  
+  ////////////////////////////////////////
+  // INITIAL SOIL STATE (from previous step)
+  ////////////////////////////////////////
+  for(int l = 0; l<nlayers;l++) {
+    input.psiSoil[l] = x.soil.getPsi(l);
+  }
+  if(plantWaterPools){
+    //Store overall soil moisture in a backup copy
+    double* Wbackup = new double[nlayers];
+    for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
+    for(int j = 0; j<numCohorts;j++) {
+      //Copy values of soil moisture from pool of cohort j to general soil
+      for(int l = 0; l<nlayers;l++) {
+        soil.setW(l,x.belowLayers.Wpool(j,l)); // this updates psi, theta, ... 
+        input.psiSoilM(j,l) = soil.getPsi(l);
+        input.KunsatM(j,l) = soil.getConductivity(l, true);
+      }
+    }
+    //Restore soil moisture
+    for(int l = 0; l<nlayers;l++) soil.setW(l, Wbackup[l]);
+    //Delete backup
+    delete[] Wbackup;
+  }
+
   // ////////////////////////////////////////
   // // DEFINE OUTPUT
   // ////////////////////////////////////////
@@ -575,9 +585,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // NumericMatrix Psi_SH = outputShadeInst["Psi"];
   // 
   // 
-  // IntegerVector iPMSunlit(numCohorts,0), iPMShade(numCohorts,0); //Initial values set to closed stomata
-  // 
-  // 
   //Reset output data
   std::fill(outputPlants.Transpiration.begin(), outputPlants.Transpiration.end(), 0.0);
   std::fill(outputPlants.GrossPhotosynthesis.begin(), outputPlants.GrossPhotosynthesis.end(), 0.0);
@@ -654,7 +661,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     if((canopyHeight<H[c]) && ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
 
-  
   std::vector<double> lad(ncanlayers,0.0);
   if(numCohorts>0) {
     bool recalc_LAI = false;
@@ -703,14 +709,14 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   ////////////////////////////////////////
   if(std::isnan(wind)) wind = defaultWindSpeed; //set to default if missing
   wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
-  std::vector<double> zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
+  std::vector<double> dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
   if(canopyHeight>0.0) {
     windCanopyTurbulence_inner_c(ATres.canopyTurbulence, ATcomm.canopyTurbulenceModel,
                                  zmid, lad,  
                                  canopyHeight,
                                  wind, windMeasurementHeight,
                                  "k-epsilon");
-    zWind = ATres.canopyTurbulence.u;
+    for(int i=0;i<ncanlayers;i++) input.zWind[i] = ATres.canopyTurbulence.u[i];
     dU = ATres.canopyTurbulence.du;
     uw = ATres.canopyTurbulence.uw;
   }
@@ -809,43 +815,40 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //  STEP 4. Hydraulics: determine layers where the plant is connected
   //          and supply functions (Sperry transpiration mode)
   ////////////////////////////////////////
-  std::vector<int> nlayerscon(numCohorts,0);
-  arma::Mat<uint8_t> layerConnected(numCohorts, nlayers);
-  // std::vector<arma::umat> layerConnectedPools(numCohorts);
-
 
   //Average sap fluidity
   double sapFluidityDay = 1.0;
   if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
 
+  
   //Hydraulics: Define supply functions
   SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
   // List supplyAboveground(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     if(!plantWaterPools) {
       //Determine connected layers (non-zero fine root abundance)
-      nlayerscon[c] = 0;
+      input.nlayerscon[c] = 0;
       for(int l=0;l<nlayers;l++) {
         if(x.belowLayers.V(c,l)>0.0) {
-          layerConnected(c,l)= 1;
-          nlayerscon[c]=nlayerscon[c]+1;
+          input.layerConnected(c,l)= 1;
+          input.nlayerscon[c]=input.nlayerscon[c]+1;
         } else {
-          layerConnected(c,l) = 0;
+          input.layerConnected(c,l) = 0;
         }
       }
       // Rcout<<c<<" "<< nlayerscon[c]<<"\n";
-      if(nlayerscon[c]==0) throw medfate::MedfateInternalError("Plant cohort not connected to any soil layer!");
+      if(input.nlayerscon[c]==0) throw medfate::MedfateInternalError("Plant cohort not connected to any soil layer!");
       
       // Copy values from connected layers
-      std::vector<double> Vc(nlayerscon[c]);
-      std::vector<double> VCroot_kmaxc(nlayerscon[c]);
-      std::vector<double> VGrhizo_kmaxc(nlayerscon[c]);
-      std::vector<double> psic(nlayerscon[c]);
-      std::vector<double> VG_nc(nlayerscon[c]);
-      std::vector<double> VG_alphac(nlayerscon[c]);
+      std::vector<double> Vc(input.nlayerscon[c]);
+      std::vector<double> VCroot_kmaxc(input.nlayerscon[c]);
+      std::vector<double> VGrhizo_kmaxc(input.nlayerscon[c]);
+      std::vector<double> psic(input.nlayerscon[c]);
+      std::vector<double> VG_nc(input.nlayerscon[c]);
+      std::vector<double> VG_alphac(input.nlayerscon[c]);
       int cnt=0;
       for(int l=0;l<nlayers;l++) {
-        if(layerConnected(c,l)==1) {
+        if(input.layerConnected(c,l)==1) {
           Vc[cnt] = x.belowLayers.V(c,l);
           VCroot_kmaxc[cnt] = x.belowLayers.VCroot_kmax(c,l);
           VGrhizo_kmaxc[cnt] = x.belowLayers.VGrhizo_kmax(c,l);
@@ -875,58 +878,56 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       }
 
     } else {
-  //     //Determine connected layers (non-zero fine root abundance)
-  //     NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
-  //     LogicalMatrix layerConnectedCoh(numCohorts, nlayers);
-  //     NumericMatrix RHOPcohDyn(numCohorts, nlayers);
-  //     nlayerscon[c] = 0;
-  //     for(int l=0;l<nlayers;l++) {
-  //       RHOPcohDyn(c,l) = RHOPcoh(c,l);
-  //       for(int j=0; j<numCohorts;j++) {
-  //         if(j!=c) {
-  //           double overlapFactor = std::min(1.0, KunsatM(j,l)/(cmdTOmmolm2sMPa*fullRhizosphereOverlapConductivity));
-  //           RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
-  //           RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
-  //         } 
-  //       }
-  //     }
-  //     for(int j=0; j<numCohorts;j++) {
-  //       for(int l=0;l<nlayers;l++) {
-  //         if((V(c,l)>0.0) && (RHOPcohDyn(j,l)>0.0)) {
-  //           layerConnectedCoh(j,l)= true;
-  //           nlayerscon[c]=nlayerscon[c] + 1;
-  //         } else {
-  //           layerConnectedCoh(j,l) = false;
-  //         }
-  //       }
-  //     }
-  //     if(nlayerscon[c]==0) stop("Plant cohort not connected to any soil layer!");
-  //     //Store in list
-  //     layerConnectedPools[c] = layerConnectedCoh; 
-  //     
-  //     // Copy values from connected layers
-  //     NumericVector Vc = NumericVector(nlayerscon[c]);
-  //     NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
-  //     NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
-  //     NumericVector psic = NumericVector(nlayerscon[c]);
-  //     NumericVector VG_nc = NumericVector(nlayerscon[c]);
-  //     NumericVector VG_alphac= NumericVector(nlayerscon[c]);
-  //     int cnt=0;
-  //     for(int j=0; j<numCohorts;j++) {
-  //       for(int l=0;l<nlayers;l++) {
-  //         if(layerConnectedCoh(j,l)) {
-  //           Vc[cnt] = V(c,l)*RHOPcohDyn(j,l);
-  //           VCroot_kmaxc[cnt] = VCroot_kmax(c,l)*RHOPcohDyn(j,l);
-  //           VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l)*RHOPcohDyn(j,l);
-  //           psic[cnt] = psiSoilM(j,l);
-  //           VG_nc[cnt] = VG_n[l];
-  //           VG_alphac[cnt] = VG_alpha[l];
-  //           cnt++;
-  //         }
-  //       }
-  //     }
-  //     //Build supply function networks (Sperry transpiration mode)
-  //     if(transpirationMode == "Sperry") {
+      //Calculate dynamic overlap  
+      arma::mat& RHOPcoh = x.belowLayers.RHOP[c];
+      for(int l=0;l<nlayers;l++) {
+        RHOPCohDyn(c,l) = RHOPcoh(c,l);
+        for(int j=0; j<numCohorts;j++) {
+          if(j!=c) {
+            double overlapFactor = std::min(1.0, input.KunsatM(j,l)/(cmdTOmmolm2sMPa*fullRhizosphereOverlapConductivity));
+            RHOPCohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
+            RHOPCohDyn(c,l) = RHOPCohDyn(c,l) + (RHOPcoh(j,l) - RHOPCohDyn(j,l));
+          }
+        }
+      }
+      //Determine connected layers (non-zero fine root abundance)
+      arma::Mat<uint8_t>& layerConnectedCoh = input.layerConnectedPools[c];
+      input.nlayerscon[c] = 0;
+      for(int j=0; j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          if((x.belowLayers.V(c,l)>0.0) && (RHOPCohDyn(j,l)>0.0)) {
+            layerConnectedCoh(j,l) = 1;
+            input.nlayerscon[c]=input.nlayerscon[c] + 1;
+          } else {
+            layerConnectedCoh(j,l) = 0;
+          }
+        }
+      }
+      if(input.nlayerscon[c]==0) throw medfate::MedfateInternalError("Plant cohort not connected to any soil layer!");
+
+      // Copy values from connected layers
+      std::vector<double> Vc(input.nlayerscon[c]);
+      std::vector<double> VCroot_kmaxc(input.nlayerscon[c]);
+      std::vector<double> VGrhizo_kmaxc(input.nlayerscon[c]);
+      std::vector<double> psic(input.nlayerscon[c]);
+      std::vector<double> VG_nc(input.nlayerscon[c]);
+      std::vector<double> VG_alphac(input.nlayerscon[c]);
+      int cnt=0;
+      for(int j=0; j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          if(layerConnectedCoh(j,l)) {
+            Vc[cnt] = x.belowLayers.V(c,l)*RHOPCohDyn(j,l);
+            VCroot_kmaxc[cnt] = x.belowLayers.VCroot_kmax(c,l)*RHOPCohDyn(j,l);
+            VGrhizo_kmaxc[cnt] = x.belowLayers.VGrhizo_kmax(c,l)*RHOPCohDyn(j,l);
+            psic[cnt] = input.psiSoilM(j,l);
+            VG_nc[cnt] = x.soil.getVG_n(l);
+            VG_alphac[cnt] = x.soil.getVG_alpha(l);
+            cnt++;
+          }
+        }
+      }
+      //Build supply function networks (Sperry transpiration mode)
+      if(transpirationMode == "Sperry") {
   //       List HN = initSperryNetwork(c,
   //                                   internalWater, paramsTranspiration, paramsWaterStorage,
   //                                   VCroot_kmaxc, VGrhizo_kmaxc,
@@ -934,41 +935,45 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //                                   control, 
   //                                   sapFluidityDay);
   //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
-  //     } else if(transpirationMode == "Sureau") {
-  //       initSureauNetwork_inner(sureauNetworks[c], c, LAIphe,
-  //                               internalWater, 
-  //                               paramsAnatomy, paramsTranspiration, paramsWaterStorage,
-  //                               VCroot_kmaxc, VGrhizo_kmaxc,
-  //                               psic, VG_nc, VG_alphac,
-  //                               control, sapFluidityDay);
-  //     }
+      } else if(transpirationMode == "Sureau") {
+        initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
+                                  x.internalWater,
+                                  x.paramsAnatomy, x.paramsTranspiration, x.paramsWaterStorage,
+                                  VCroot_kmaxc, VGrhizo_kmaxc,
+                                  psic, VG_nc, VG_alphac,
+                                  x.control, sapFluidityDay);
+      }
     }
   }
 
-  // ////////////////////////////////
-  // // Create input and output objects to be filled in inner functions
-  // ////////////////////////////////
-  // 
+  ////////////////////////////////
+  // Create input and output objects to be filled in inner functions
+  ////////////////////////////////
+
+  
+  // InnerTranspirationOutput_COMM innerOutput;
+  // innerOutput.extraction = outputExtraction;
+
   // List innerOutput = List::create(
   //   _["Extraction"] = outputExtraction,
   //   _["ExtractionPools"] = transpOutput["ExtractionPools"],
-  //                                      _["ExtractionInst"] = transpOutput["ExtractionInst"],
-  //                                                                        _["RhizoPsi"] = minPsiRhizo,
-  //                                                                        _["Plants"] = outputPlants,
-  //                                                                        _["SunlitLeaves"] = transpOutput["SunlitLeaves"],
-  //                                                                                                        _["ShadeLeaves"] = transpOutput["ShadeLeaves"],
-  //                                                                                                                                       _["PlantsInst"] = transpOutput["PlantsInst"],
-  //                                                                                                                                                                     _["SunlitLeavesInst"] = transpOutput["SunlitLeavesInst"],
-  //                                                                                                                                                                                                         _["ShadeLeavesInst"] = transpOutput["ShadeLeavesInst"],
-  //                                                                                                                                                                                                                                            _["LightExtinction"] = lightExtinctionAbsortion,
-  //                                                                                                                                                                                                                                            _["LWRExtinction"] = lwrExtinctionList,
-  //                                                                                                                                                                                                                                            _["SupplyFunctions"] = supply,
-  //                                                                                                                                                                                                                                            _["PhotoSunlitFunctions"] = transpOutput["PhotoSunlitFunctions"],
-  //                                                                                                                                                                                                                                                                                    _["PhotoShadeFunctions"] = transpOutput["PhotoShadeFunctions"],
-  //                                                                                                                                                                                                                                                                                                                           _["PMSunlitFunctions"] = transpOutput["PMSunlitFunctions"],
-  //                                                                                                                                                                                                                                                                                                                                                                _["PMShadeFunctions"] = transpOutput["PMShadeFunctions"]);
-  // 
-  // 
+  //  _["ExtractionInst"] = transpOutput["ExtractionInst"],
+  //  _["RhizoPsi"] = minPsiRhizo,
+  //   _["Plants"] = outputPlants,
+  //  _["SunlitLeaves"] = transpOutput["SunlitLeaves"],
+  //  _["ShadeLeaves"] = transpOutput["ShadeLeaves"],
+  //  _["PlantsInst"] = transpOutput["PlantsInst"],
+  //  _["SunlitLeavesInst"] = transpOutput["SunlitLeavesInst"],
+  //  _["ShadeLeavesInst"] = transpOutput["ShadeLeavesInst"],
+  //  _["LightExtinction"] = lightExtinctionAbsortion,
+  //  _["LWRExtinction"] = lwrExtinctionList)
+  // _["SupplyFunctions"] = supply,
+  // _["PhotoSunlitFunctions"] = transpOutput["PhotoSunlitFunctions"],
+  // _["PhotoShadeFunctions"] = transpOutput["PhotoShadeFunctions"],
+  // _["PMSunlitFunctions"] = transpOutput["PMSunlitFunctions"],
+  // _["PMShadeFunctions"] = transpOutput["PMShadeFunctions"]);
+                                       
+                                       
   ////////////////////////////////////////
   // STEP 5. Sub-daily (e.g. hourly) loop
   ////////////////////////////////////////
@@ -980,9 +985,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     //Canopy evaporation (mm) in the current step and fraction of dry canopy
     double canEvapStep = canopyEvaporation*(outputEnergyBalance.SWRcan[n]/sum_abs_SWR_can);
     if(sum_abs_SWR_can==0.0) canEvapStep = 0.0;
-    double f_dry = 1.0;
     if(canEvapStep>0.0) {
-      f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
+      input.f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
     }
     if(sum_abs_SWR_soil==0.0) { // avoid zero sums
       soilEvapStep = 0.0;
@@ -990,7 +994,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
     if(sum_abs_SWR_can==0.0) { // avoid zero sums
       canEvapStep = 0.0;
-      f_dry = 1.0;
+      input.f_dry = 1.0;
     }
 
     //Retrieve fraction of sunlit and short-wave radiation absorbed for the current time step
@@ -1031,7 +1035,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
 
     //Determine canopy vertical layer corresponding to cohort canopy, sunlit and shade leaves for each cohort
-    std::vector<int> iLayerCohort(numCohorts), iLayerSunlit(numCohorts), iLayerShade(numCohorts);
     for(int c=0;c<numCohorts;c++) {
       double num = 0.0, den = 0.0, numsl=0.0, densl =0.0, numsh = 0.0, densh=0.0;
       for(int i=0;i<ncanlayers;i++) {
@@ -1046,9 +1049,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       double hc_sh = numsh/densh;
       double hc  = num/den;
       for(int i=0;i<ncanlayers;i++) {
-        if((hc > zlow[i]) && (hc <=zup[i])) iLayerCohort[c] = i;
-        if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) iLayerSunlit[c] = i;
-        if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) iLayerShade[c] = i;
+        if((hc > zlow[i]) && (hc <=zup[i])) input.iLayerCohort[c] = i;
+        if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) input.iLayerSunlit[c] = i;
+        if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) input.iLayerShade[c] = i;
       }
     }
 
@@ -1057,29 +1060,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //     innerInput = List::create(_["Patm"] = Patm,
   //                               _["zWind"] = zWind,
   //                               _["f_dry"] = f_dry,
-  //                               _["iLayerCohort"] = iLayerCohort,
-  //                               _["iLayerSunlit"] = iLayerSunlit,
-  //                               _["iLayerShade"] = iLayerShade,
   //                               _["iPMSunlit"] = iPMSunlit,
   //                               _["iPMShade"] = iPMShade,
   //                               _["nlayerscon"] = nlayerscon,
   //                               _["layerConnected"] = layerConnected,
   //                               _["layerConnectedPools"] = layerConnectedPools,
   //                               _["supply"] = supply);
-    } else if(transpirationMode =="Sureau") {
-  //     //To do, create initial plant state
-  //     innerInput = List::create(_["Patm"] = Patm,
-  //                               _["zWind"] = zWind,
-  //                               _["f_dry"] = f_dry,
-  //                               _["iLayerCohort"] = iLayerCohort,
-  //                               _["iLayerSunlit"] = iLayerSunlit,
-  //                               _["iLayerShade"] = iLayerShade,
-  //                               _["nlayerscon"] = nlayerscon,
-  //                               _["layerConnected"] = layerConnected,
-  //                               _["layerConnectedPools"] = layerConnectedPools,
-  //                               _["psiSoil"] = psiSoil,
-  //                               _["psiSoilM"] = psiSoilM);
-    }
+    } 
 
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
@@ -1118,8 +1105,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //     innerSperry(x, innerInput, innerOutput, n, tstep, 
   //                 verbose, stepFunctions);
     } else if(transpirationMode == "Sureau"){
-  //     innerSureau(x, sureauNetworks, innerInput, innerOutput, n, tstep,
-  //                 verbose);
+      innerSureau_c(x, sureauNetworks, input, ATres , n, tstep);
     }
 
     for(int c=0;c<numCohorts;c++) {
@@ -1328,7 +1314,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       moistureET[0] += soilEvapStep/(deltaZ*tstep); //kg/m3/s
 
       for(int s=0;s<nsubsteps;s++) {
-        double RAsoil = aerodynamicResistance_c(200.0, std::max(zWind[0],1.0)); //Aerodynamic resistance to convective heat transfer from soil
+        double RAsoil = aerodynamicResistance_c(200.0, std::max(input.zWind[0],1.0)); //Aerodynamic resistance to convective heat transfer from soil
         double Hcansoils = Cp_JKG*meteoland::utils_airDensity(Tair[0],Patm)*(Tair[0] - x.soil.getTemp(0))/RAsoil;
         // double Hcan_heats = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tair[ncanlayers-1]-Tatm[n]))/RAcan;
         for(int i=0;i<ncanlayers;i++) {
@@ -1353,7 +1339,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           }
           Hleaflayer[i] = 0.0;
           for(int c=0;c<numCohorts;c++) {
-            double gHa = 0.189*pow(std::max(zWind[i],0.1)/(x.paramsAnatomy.LeafWidth[c]*0.0072), 0.5);
+            double gHa = 0.189*pow(std::max(input.zWind[i],0.1)/(x.paramsAnatomy.LeafWidth[c]*0.0072), 0.5);
             double Hsunlit = 2.0*Cp_Jmol*rho[i]*(outputSunlitInst.Temp(c, n)-Tair[i])*gHa;
             double Hshade = 2.0*Cp_Jmol*rho[i]*(outputShadeInst.Temp(c, n)-Tair[i])*gHa;
             // Rcout<<c<<" " << Hsunlit<< " "<<Hshade<<" \n";

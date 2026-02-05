@@ -8,6 +8,7 @@
 #include "modelInput_c.h"
 #include "soil_c.h"
 #include "tissuemoisture_c.h"
+#include "transpiration_advanced_c.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -574,7 +575,11 @@ void initSureauNetwork_inner_c(SureauNetwork& network, int c,
 }
 
 
-void innerSureau_c(ModelInput& x, SureauNetwork* networks, Rcpp::List input, Rcpp::List output, int n, double tstep) {
+void innerSureau_c(ModelInput& x, 
+                   SureauNetwork* networks, 
+                   InnerTranspirationInput_COMM& input, 
+                   AdvancedTranspiration_RESULT& output, 
+                   int n, double tstep) {
   
   // // Communication structures
   // BaldocchiPhoto PB_SL, PB_SH;
