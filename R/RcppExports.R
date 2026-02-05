@@ -4342,8 +4342,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
     .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
-spwb_day_test <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_spwbDay_test`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+spwb_day_c <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_spwbDay_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 #' Tissue moisture functions

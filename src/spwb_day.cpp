@@ -1030,11 +1030,11 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
    return(modelOutput);
  }
 
-// [[Rcpp::export("spwb_day_test")]]
-List spwbDay_test(List x, CharacterVector date, NumericVector meteovec, 
-                  double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
-                  double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-                  bool modifyInput = true) {
+// [[Rcpp::export("spwb_day_c")]]
+List spwbDay_c(List x, CharacterVector date, NumericVector meteovec, 
+               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+               bool modifyInput = true) {
   
   //Check if input version is lower than current medfate version. If so, try to complete fields
   if(isLowerVersion(x)) spwbInputVersionUpdate(x);
