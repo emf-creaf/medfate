@@ -574,6 +574,71 @@ void initSureauNetwork_inner_c(SureauNetwork& network, int c,
   update_capacitances_c(network);
 }
 
+double averagePsiSigmoid_c(const std::vector<double>& psi, 
+                           const std::vector<double>& v, double slope, double P50) {
+  int nlayers = psi.size();
+  double sumKv = 0.0;
+  for(int l=0;l<nlayers;l++) {
+    sumKv += (v[l]*PLC_c(psi[l], slope, P50));
+  } 
+  double psires =  invPLC_c(sumKv, slope, P50);
+  psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
+  return(psires);
+}
+void calculateRhizoPsi_inner_c(int c, int nlayers,
+                               SureauNetwork network, 
+                               arma::mat& RhizoPsiMAT,
+                               const arma::Mat<uint8_t>& layerConnected, 
+                               const std::vector<arma::mat>& RHOP, 
+                               const std::vector<arma::Mat<uint8_t>>& layerConnectedPools,
+                               bool plantWaterPools) {
+  int numCohorts = layerConnected.n_rows;
+  double* k_SoilToStem = network.k_SoilToStem;
+  double* k_Soil = network.k_Soil;
+  double* PsiSoil = network.PsiSoil;
+  SureauParams params = network.params;
+  double VCroot_slope = params.VCroot_slope;
+  double VCroot_P50 = params.VCroot_P50;
+  
+  double Psi_SApo = network.Psi_SApo;
+  if(!plantWaterPools) {
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      if(layerConnected(c,l)==1) {
+        double fluxSoilToStem_mmolm2s = k_SoilToStem[cl]*(PsiSoil[cl] - Psi_SApo);
+        RhizoPsiMAT(c,l) = PsiSoil[cl] - fluxSoilToStem_mmolm2s/k_Soil[cl];
+        // Rcout<< c << l <<" "<< fluxSoilToStem_mmolm2s<<" " << PsiSoil[cl]<< " "<< RhizoPsiMAT(c,l)<<"\n";
+        cl++;
+      } 
+    }
+  } else {
+    const arma::mat& RHOPcoh = RHOP[c];
+    const arma::Mat<uint8_t>& layerConnectedCoh = layerConnectedPools[c];
+    std::vector<double> rplv(numCohorts);
+    std::vector<double> vplv(numCohorts);
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      int clj = 0;
+      for(int j=0;j<numCohorts;j++) {
+        if(layerConnectedCoh(j,l)==1) {
+          double fluxSoilToStem_mmolm2s = k_SoilToStem[cl]*(PsiSoil[cl] - Psi_SApo);
+          rplv[clj] = PsiSoil[cl] - fluxSoilToStem_mmolm2s/k_Soil[cl];
+          vplv[clj] = RHOPcoh(j,l);
+          cl++;
+          clj++;
+        }
+      }
+      std::vector<double> pv(clj);
+      std::vector<double> vv(clj,NA_REAL);
+      for(int j=0;j<clj;j++) {
+        pv[j] = rplv[j];
+        vv[j] = vplv[j];
+      }
+      RhizoPsiMAT(c,l) = averagePsiSigmoid_c(pv, vv, VCroot_slope, VCroot_P50);
+    }
+  }
+}
+
 
 void innerSureau_c(ModelInput& x, 
                    SureauNetwork* networks, 
@@ -581,72 +646,57 @@ void innerSureau_c(ModelInput& x,
                    AdvancedTranspiration_RESULT& output, 
                    int n, double tstep) {
   
-  // // Communication structures
-  // BaldocchiPhoto PB_SL, PB_SH;
-  // 
-  // IntegerVector nsmalltimesteps = IntegerVector::create(6,12, 24, 60);
-  // 
-  // 
-  // 
-  // // IntegerVector nsmalltimesteps = IntegerVector::create(2,4, 8, 16);
-  // SureauOpt opt_c;
-  // opt_c.Lsym = 1.0;
-  // opt_c.Ssym = 1.0;
-  // opt_c.Eord = 1.0;
-  // opt_c.Lcav = 1.0;
-  // opt_c.Scav = 1.0;
-  // opt_c.CLapo = 1.0;
-  // opt_c.CTapo = 1.0;
-  // 
-  // // Extract control variables
-  // List control = x["control"];
-  // String soilFunctions = control["soilFunctions"];
-  // String stemCavitationRecovery = control["stemCavitationRecovery"];
-  // String leafCavitationRecovery = control["leafCavitationRecovery"];
-  // std::string stemCavitationRecovery_str = stemCavitationRecovery.get_cstring();
-  // std::string leafCavitationRecovery_str = leafCavitationRecovery.get_cstring();
-  // 
-  // String rhizosphereOverlap = control["rhizosphereOverlap"];
-  // bool plantWaterPools = (rhizosphereOverlap!="total");
-  // bool plantCapacitance = control["plantCapacitance"];
-  // bool cavitationFlux = control["cavitationFlux"];
-  // String stomatalSubmodel = control["stomatalSubmodel"];
-  // bool sunlitShade = control["sunlitShade"];
-  // if(!cavitationFlux) {
-  //   opt_c.Lcav = 0.0;
-  //   opt_c.Scav = 0.0;
-  // }
-  // if(!plantCapacitance) {
-  //   opt_c.CLapo = 0.0;
-  //   opt_c.CTapo = 0.0;
-  //   opt_c.Lsym = 0.0;
-  //   opt_c.Ssym = 0.0;
-  // }
-  // 
-  // DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  // int numCohorts = cohorts.nrow();
-  // DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  // NumericVector VG_n = soil["VG_n"];
-  // NumericVector VG_alpha = soil["VG_alpha"];
-  // NumericVector VG_theta_sat = soil["VG_theta_sat"];
-  // NumericVector VG_theta_res = soil["VG_theta_res"];
-  // NumericVector widths = soil["widths"];
-  // NumericVector rfc = soil["rfc"];
-  // int nlayers = soil.nrow();
-  // 
-  // DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  // NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  // NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
-  // 
-  // // Extract parameters
-  // // Rcout<<"params\n";
-  // DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  // NumericVector zlow = canopyParams["zlow"];
-  // NumericVector zmid = canopyParams["zmid"];
-  // NumericVector zup = canopyParams["zup"];
-  // NumericVector Tair = canopyParams["Tair"];
-  // NumericVector VPair = canopyParams["VPair"];
-  // NumericVector Cair = canopyParams["Cair"];
+  // Communication structures
+  BaldocchiPhoto PB_SL, PB_SH;
+  
+  std::vector<int> nsmalltimesteps = {6,12, 24, 60};
+
+  SureauOpt opt_c;
+  opt_c.Lsym = 1.0;
+  opt_c.Ssym = 1.0;
+  opt_c.Eord = 1.0;
+  opt_c.Lcav = 1.0;
+  opt_c.Scav = 1.0;
+  opt_c.CLapo = 1.0;
+  opt_c.CTapo = 1.0;
+
+  // Extract control variables
+  std::string stemCavitationRecovery = x.control.commonWB.stemCavitationRecovery;
+  std::string leafCavitationRecovery = x.control.commonWB.leafCavitationRecovery;
+  std::string rhizosphereOverlap =  x.control.rhizosphereOverlap;
+  bool plantWaterPools = (rhizosphereOverlap!="total");
+  bool plantCapacitance = x.control.sureau.plantCapacitance;
+  bool cavitationFlux = x.control.sureau.cavitationFlux;
+  std::string stomatalSubmodel = x.control.sureau.stomatalSubmodel;
+  bool sunlitShade = x.control.advancedWB.sunlitShade;
+  if(!cavitationFlux) {
+    opt_c.Lcav = 0.0;
+    opt_c.Scav = 0.0;
+  }
+  if(!plantCapacitance) {
+    opt_c.CLapo = 0.0;
+    opt_c.CTapo = 0.0;
+    opt_c.Lsym = 0.0;
+    opt_c.Ssym = 0.0;
+  }
+
+  int numCohorts = x.cohorts.CohortCode.size();
+  int nlayers = x.soil.getNlayers();
+  
+  const std::vector<double>& VG_n = x.soil.getVG_n();
+  const std::vector<double>& VG_alpha = x.soil.getVG_alpha();
+  const std::vector<double>& VG_theta_sat = x.soil.getVG_theta_sat();
+  const std::vector<double>& VG_theta_res = x.soil.getVG_theta_res();
+  const std::vector<double>& widths = x.soil.getWidths();
+  const std::vector<double>& rfc = x.soil.getRFC();
+
+  const std::vector<double>& LAIphe = x.above.LAI_expanded;
+  const std::vector<double>& LAIlive = x.above.LAI_live;
+
+  // Extract parameters
+  const std::vector<double>& Tair = x.canopy.Tair;
+  const std::vector<double>& VPair = x.canopy.VPair;
+  const std::vector<double>& Cair = x.canopy.Cair;
   // 
   // DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   // NumericVector LeafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
@@ -769,44 +819,45 @@ void innerSureau_c(ModelInput& x,
   // NumericVector psiSoil = input["psiSoil"];
   // NumericVector psiSoilM = input["psiSoilM"];
   // 
-  // NumericVector innerSoilExtraction(nlayers, 0.0);
-  // NumericMatrix innerSoilPoolExtraction(numCohorts, nlayers);
-  // innerSoilPoolExtraction.fill(0.0);
-  // 
-  // for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-  //   // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
-  //   if(LAIphe[c]>0.0 && LeafPLCVEC[c] < 0.999) {
-  //     //Init temporary variables
-  //     SureauNetwork network_n;
-  //     network_n.params.VGrhizo_kmax = new double[networks[c].params.npools];
-  //     network_n.params.k_RCApoInit = new double[networks[c].params.npools];
-  //     network_n.k_RSApo = new double[networks[c].params.npools];
-  //     network_n.k_SoilToStem = new double[networks[c].params.npools];
-  //     network_n.k_Soil = new double[networks[c].params.npools];
-  //     network_n.PsiSoil = new double[networks[c].params.npools];
-  //     NumericVector ElayersVEC(networks[c].params.npools,0.0); //Instantaneous flow rate
-  //     NumericVector fluxSoilToStem_mm(networks[c].params.npools, 0.0); //Cummulative flow
-  //     
-  //     // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
-  //     bool regulationWellComputed = false;
-  //     bool cavitationWellComputed = false;
-  //     
-  //     double gmin_S = networks[c].params.gmin_S;
-  //     double gmin20 = networks[c].params.gmin20;
-  //     double TPhase_gmin = networks[c].params.TPhase_gmin;
-  //     double Q10_1_gmin = networks[c].params.Q10_1_gmin;
-  //     double Q10_2_gmin = networks[c].params.Q10_2_gmin;
-  //     double fTRBToLeaf = networks[c].params.fTRBToLeaf;
-  //     double Gsw_AC_slope = networks[c].params.Gsw_AC_slope;
-  //     double gsNight = networks[c].params.gsNight;
-  //     double slope_gs = networks[c].params.slope_gs;
-  //     double P50_gs = networks[c].params.P50_gs;
-  //     double LAI = networks[c].LAI;
-  //     
-  //     int nwhilecomp = 0;
-  //     
-  //     double Agsum = 0.0, Ansum = 0.0;
-  //     
+  std::vector<double> innerSoilExtraction(nlayers, 0.0);
+  arma::mat innerSoilPoolExtraction(numCohorts, nlayers);
+  innerSoilPoolExtraction.fill(0.0);
+
+  for(int c=0;c<numCohorts;c++) { //Plant cohort loop
+    // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
+    if(LAIphe[c]>0.0 && x.internalWater.LeafPLC[c] < 0.999) {
+      //Init temporary variables
+      SureauNetwork network_n;
+      network_n.params.VGrhizo_kmax = new double[networks[c].params.npools];
+      network_n.params.k_RCApoInit = new double[networks[c].params.npools];
+      network_n.k_RSApo = new double[networks[c].params.npools];
+      network_n.k_SoilToStem = new double[networks[c].params.npools];
+      network_n.k_Soil = new double[networks[c].params.npools];
+      network_n.PsiSoil = new double[networks[c].params.npools];
+      
+      std::vector<double> ElayersVEC(networks[c].params.npools,0.0); //Instantaneous flow rate
+      std::vector<double> fluxSoilToStem_mm(networks[c].params.npools, 0.0); //Cummulative flow
+
+      // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
+      bool regulationWellComputed = false;
+      bool cavitationWellComputed = false;
+
+      double gmin_S = networks[c].params.gmin_S;
+      double gmin20 = networks[c].params.gmin20;
+      double TPhase_gmin = networks[c].params.TPhase_gmin;
+      double Q10_1_gmin = networks[c].params.Q10_1_gmin;
+      double Q10_2_gmin = networks[c].params.Q10_2_gmin;
+      double fTRBToLeaf = networks[c].params.fTRBToLeaf;
+      double Gsw_AC_slope = networks[c].params.Gsw_AC_slope;
+      double gsNight = networks[c].params.gsNight;
+      double slope_gs = networks[c].params.slope_gs;
+      double P50_gs = networks[c].params.P50_gs;
+      double LAI = networks[c].LAI;
+
+      int nwhilecomp = 0;
+
+      double Agsum = 0.0, Ansum = 0.0;
+
   //     while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
   //       //Copy values to temporary network
   //       copyNetwork_c(networks[c], network_n); 
@@ -1015,164 +1066,159 @@ void innerSureau_c(ModelInput& x,
   //       nwhilecomp = nwhilecomp + 1;
   //     } //# end while
   //     // Rcout<<"End while\n";
-  //     
-  //     
-  //     
-  //     // # B. SAVING SOLUTION AT NEXT TIME STEP IN ORIGINAL NETWORK
-  //     copyNetwork_c(network_n, networks[c]);
-  //     
-  //     //Store leaf values (final substep)
-  //     E_SL(c,n) = networks[c].Einst_SL;
-  //     E_SH(c,n) = networks[c].Einst_SH;
-  //     Psi_SH(c,n) = networks[c].Psi_LSym;
-  //     Psi_SL(c,n) = networks[c].Psi_LSym;
-  //     dEdPInst(c,n) = networks[c].k_Plant;
-  //     
-  //     //Store state
-  //     LeafPsiVEC[c] = networks[c].Psi_LApo;
-  //     LeafSympPsiVEC[c] = networks[c].Psi_LSym;
-  //     StemPsiVEC[c] = networks[c].Psi_SApo;
-  //     StemSympPsiVEC[c] = networks[c].Psi_SSym;
-  //     RootCrownPsiVEC[c] = networks[c].Psi_RCApo;
-  //     StemPLCVEC[c] = networks[c].PLC_Stem/100.0;
-  //     LeafPLCVEC[c] = networks[c].PLC_Leaf/100.0;
-  //     
-  //     // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
-  //     //Get leaf status
-  //     
-  //     //Scale photosynthesis
-  //     Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
-  //     Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
-  //     
-  //     //Scale from instantaneous flow to water volume in the time step
-  //     Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
-  //     
-  //     //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
-  //     calculateRhizoPsi_inner(c, nlayers,
-  //                             networks[c], RhizoPsiMAT,
-  //                             layerConnected,
-  //                             RHOP, layerConnectedPools,
-  //                             plantWaterPools);
-  //     
-  //     //Balance between extraction and transpiration
-  //     PWBinst(c,n) = sum(fluxSoilToStem_mm) - Einst(c,n);
-  //     
-  //     //Add step transpiration to daily plant cohort transpiration
-  //     Eplant[c] += Einst(c,n);
-  //     Anplant[c] += Aninst(c,n);
-  //     Agplant[c] += Aginst(c,n);
-  //     //Add PWB
-  //     PWB[c] += PWBinst(c,n);
-  //     
-  //     
-  //     //Copy transpiration and from connected layers to transpiration from soil layers
-  //     //Soil water potential will not be internally updated until all cohorts are processed (and externally the next day!)
-  //     if(!plantWaterPools) {
-  //       int cl = 0;
-  //       for(int l=0;l<nlayers;l++) {
-  //         if(layerConnected(c,l)) {
-  //           SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
-  //           soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
-  //           innerSoilExtraction[l] += fluxSoilToStem_mm[cl];
-  //           cl++;
-  //         }
-  //       }
-  //     } else {
-  //       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
-  //       LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
-  //       int cl = 0;
-  //       for(int j = 0;j<numCohorts;j++) {
-  //         NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[j]);
-  //         for(int l=0;l<nlayers;l++) {
-  //           if(layerConnectedCoh(j,l)) {
-  //             SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
-  //             soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
-  //             ExtractionPoolsCoh(c,l) += fluxSoilToStem_mm[cl];
-  //             innerSoilPoolExtraction(c,l) += fluxSoilToStem_mm[cl];
-  //             cl++;
-  //           }
-  //         }
-  //       }
-  //     }
-  //     
-  //     //Delete pointers
-  //     deleteSureauNetworkPointers_c(network_n);
-  //   } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI (or completely embolized)
-  //     E_SL(c,n) = 0.0;
-  //     E_SH(c,n) = 0.0;
-  //     Psi_SH(c,n) = networks[c].Psi_LSym;
-  //     Psi_SL(c,n) = networks[c].Psi_LSym;
-  //     dEdPInst(c,n) = networks[c].k_Plant;
-  //     LeafPsiVEC[c] = networks[c].Psi_LApo;
-  //     LeafSympPsiVEC[c] = networks[c].Psi_LSym;
-  //     StemPsiVEC[c] = networks[c].Psi_SApo;
-  //     StemSympPsiVEC[c] = networks[c].Psi_SSym;
-  //     RootCrownPsiVEC[c] = networks[c].Psi_RCApo;
-  //     StemPLCVEC[c] = networks[c].PLC_Stem/100.0;
-  //     LeafPLCVEC[c] = networks[c].PLC_Leaf/100.0;
-  //     Aginst(c,n) = 0.0;
-  //     Aninst(c,n) = 0.0;
-  //     Einst(c,n) = 0.0;
-  //     PWBinst(c,n) = 0.0;
-  //   }
-  // }
-  // 
-  // 
-  // //Update soil internally (only for next subdaily time steps, and does not affect external soil)
-  // if(!plantWaterPools) {
-  //   for(int l=0;l<nlayers;l++) {
-  //     //Estimate current soil layer volume, subtract cumulative extraction and update psiSoil
-  //     double theta_l = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoil[l]);
-  //     double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
-  //     // Rcout<< n << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
-  //     water_l -= innerSoilExtraction[l];
-  //     theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
-  //     psiSoil[l] = theta2psiVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
-  //     // Rcout<< " Psi new " << psiSoil[l] << "\n";
-  //     //Update psi soil and soil conductivity in networks
-  //     for(int c=0; c<numCohorts;c++) {
-  //       int cnt = 0;
-  //       for(int l=0;l<nlayers;l++) {
-  //         if(layerConnected(c,l)) {
-  //           networks[c].PsiSoil[cnt] = psiSoil[l];
-  //           networks[c].k_Soil[cnt] = vanGenuchtenConductance_c(psiSoil[l],
-  //                                                               networks[c].params.VGrhizo_kmax[cnt], 
-  //                                                                                              VG_n[l], VG_alpha[l]);
-  //           cnt++;
-  //         }
-  //       }
-  //     }
-  //   }
-  // } else {
-  //   //Estimate current pool soil layer volume, subtract cumulative extraction and update psiSoilM
-  //   for(int c=0;c<numCohorts;c++) {
-  //     for(int l=0;l<nlayers;l++) {
-  //       double theta_l = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], psiSoilM(c,l));
-  //       double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
-  //       // Rcout<< n << ":"<< c << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
-  //       water_l -= (innerSoilPoolExtraction(c,l)/poolProportions[c]);
-  //       theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
-  //       psiSoilM(c,l) = theta2psiVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
-  //       // Rcout<< " Psi new " << psiSoilM(c,l) << "\n";
-  //     }
-  //   }
-  //   //Update psi soil and soil conductivity in networks
-  //   for(int c=0;c<numCohorts;c++) {
-  //     LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
-  //     int cnt = 0;
-  //     for(int j = 0;j<numCohorts;j++) {
-  //       for(int l=0;l<nlayers;l++) {
-  //         if(layerConnectedCoh(j,l)) {
-  //           networks[c].PsiSoil[cnt] = psiSoilM(j,l);
-  //           networks[c].k_Soil[cnt] = vanGenuchtenConductance_c(psiSoilM(j,l),
-  //                                                               networks[c].params.VGrhizo_kmax[cnt], 
-  //                                                                                              VG_n[l], VG_alpha[l]);
-  //           // if(c==0) Rcout<< n << ":"<< l << ":"<< cnt << " "<< " psi " <<networks[c].PsiSoil[cnt]<<"\n";
-  //           cnt++;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   
-  // }
+
+      // # B. SAVING SOLUTION AT NEXT TIME STEP IN ORIGINAL NETWORK
+      copyNetwork_c(network_n, networks[c]);
+
+      //Store instantaneous leaf values (final substep)
+      output.sunlit_inst.E(c,n) = networks[c].Einst_SL;
+      output.shade_inst.E(c,n) = networks[c].Einst_SH;
+      output.sunlit_inst.Psi(c,n) = networks[c].Psi_LSym;
+      output.shade_inst.Psi(c,n) = networks[c].Psi_LSym;
+      output.plants_inst.dEdP(c,n) = networks[c].k_Plant;
+
+      //Store state
+      x.internalWater.LeafPsi[c] = networks[c].Psi_LApo;
+      x.internalWater.LeafSympPsi[c] = networks[c].Psi_LSym;
+      x.internalWater.StemPsi[c] = networks[c].Psi_SApo;
+      x.internalWater.StemSympPsi[c] = networks[c].Psi_SSym;
+      x.internalWater.RootCrownPsi[c] = networks[c].Psi_RCApo;
+      x.internalWater.StemPLC[c] = networks[c].PLC_Stem/100.0;
+      x.internalWater.LeafPLC[c] = networks[c].PLC_Leaf/100.0;
+
+      // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
+      //Get leaf status
+      //Scale photosynthesis
+      output.plants_inst.Ag(c,n) = (1e-6)*12.01017*Agsum*tstep;
+      output.plants_inst.An(c,n) = (1e-6)*12.01017*Ansum*tstep;
+
+      //Scale from instantaneous flow to water volume in the time step
+      output.plants_inst.E(c,n) = x.internalWater.Einst[c]*0.001*0.01802*LAIphe[c]*tstep;
+
+      //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
+      calculateRhizoPsi_inner_c(c, nlayers,
+                                networks[c], x.belowLayers.RhizoPsi,
+                                input.layerConnected,
+                                x.belowLayers.RHOP, input.layerConnectedPools,
+                                plantWaterPools);
+      
+      //Balance between extraction and transpiration
+      output.plants_inst.PWB(c,n) = std::accumulate(fluxSoilToStem_mm.begin(), fluxSoilToStem_mm.end(), 0.0) - output.plants_inst.E(c,n);
+
+      //Add step transpiration to daily plant cohort transpiration
+      output.plants.Transpiration[c] += output.plants_inst.E(c,n);
+      output.plants.NetPhotosynthesis[c] += output.plants_inst.An(c,n);
+      output.plants.GrossPhotosynthesis[c] += output.plants_inst.Ag(c,n);
+      //Add PWB
+      output.plants.WaterBalance[c] += output.plants_inst.PWB(c,n);
+
+      //Copy transpiration and from connected layers to transpiration from soil layers
+      //Soil water potential will not be internally updated until all cohorts are processed (and externally the next day!)
+      if(!plantWaterPools) {
+        int cl = 0;
+        for(int l=0;l<nlayers;l++) {
+          if(input.layerConnected(c,l)==1) {
+            output.extraction(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
+            output.extractionInst(l,n) += fluxSoilToStem_mm[cl];
+            innerSoilExtraction[l] += fluxSoilToStem_mm[cl];
+            cl++;
+          }
+        }
+      } else {
+        const arma::mat& RHOPcoh = x.belowLayers.RHOP[c];
+        arma::Mat<uint8_t>& layerConnectedCoh = input.layerConnectedPools[c];
+        int cl = 0;
+        for(int j = 0;j<numCohorts;j++) {
+          arma::mat& ExtractionPoolsCoh = output.extractionPools[j];
+          for(int l=0;l<nlayers;l++) {
+            if(layerConnectedCoh(j,l)==1) {
+              output.extraction(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
+              output.extractionInst(l,n) += fluxSoilToStem_mm[cl];
+              ExtractionPoolsCoh(c,l) += fluxSoilToStem_mm[cl];
+              innerSoilPoolExtraction(c,l) += fluxSoilToStem_mm[cl];
+              cl++;
+            }
+          }
+        }
+      }
+
+      //Delete pointers
+      deleteSureauNetworkPointers_c(network_n);
+    } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI (or completely embolized)
+      output.sunlit_inst.E(c,n) = 0.0;
+      output.shade_inst.E(c,n) = 0.0;
+      output.shade_inst.Psi(c,n) = networks[c].Psi_LSym;
+      output.sunlit_inst.Psi(c,n) = networks[c].Psi_LSym;
+      output.plants_inst.dEdP(c,n) = networks[c].k_Plant;
+      x.internalWater.LeafPsi[c] = networks[c].Psi_LApo;
+      x.internalWater.LeafSympPsi[c] = networks[c].Psi_LSym;
+      x.internalWater.StemPsi[c] = networks[c].Psi_SApo;
+      x.internalWater.StemSympPsi[c] = networks[c].Psi_SSym;
+      x.internalWater.RootCrownPsi[c] = networks[c].Psi_RCApo;
+      x.internalWater.StemPLC[c] = networks[c].PLC_Stem/100.0;
+      x.internalWater.LeafPLC[c] = networks[c].PLC_Leaf/100.0;
+      output.plants_inst.Ag(c,n) = 0.0;
+      output.plants_inst.An(c,n) = 0.0;
+      output.plants_inst.E(c,n) = 0.0;
+      output.plants_inst.PWB(c,n) = 0.0;
+    }
+  }
+
+
+  //Update soil internally (only for next subdaily time steps, and does not affect external soil)
+  if(!plantWaterPools) {
+    for(int l=0;l<nlayers;l++) {
+      //Estimate current soil layer volume, subtract cumulative extraction and update psiSoil
+      double theta_l = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], input.psiSoil[l]);
+      double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
+      // Rcout<< n << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
+      water_l -= innerSoilExtraction[l];
+      theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
+      input.psiSoil[l] = theta2psiVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
+      // Rcout<< " Psi new " << psiSoil[l] << "\n";
+      //Update psi soil and soil conductivity in networks
+      for(int c=0; c<numCohorts;c++) {
+        int cnt = 0;
+        for(int l=0;l<nlayers;l++) {
+          if(input.layerConnected(c,l)==1) {
+            networks[c].PsiSoil[cnt] = input.psiSoil[l];
+            networks[c].k_Soil[cnt] = vanGenuchtenConductance_c(input.psiSoil[l],
+                                                                networks[c].params.VGrhizo_kmax[cnt],
+                                                                VG_n[l], VG_alpha[l]);
+            cnt++;
+          }
+        }
+      }
+    }
+  } else {
+    //Estimate current pool soil layer volume, subtract cumulative extraction and update psiSoilM
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        double theta_l = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], input.psiSoilM(c,l));
+        double water_l = widths[l]*theta_l*(1.0-(rfc[l]/100.0));
+        // Rcout<< n << ":"<< c << ":"<< l << " "<< " water "<< water_l << " ext: "<< innerSoilExtraction[l];
+        water_l -= (innerSoilPoolExtraction(c,l)/x.below.poolProportions[c]);
+        theta_l = water_l/(widths[l]*(1.0-(rfc[l]/100.0)));
+        input.psiSoilM(c,l) = theta2psiVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], theta_l);
+        // Rcout<< " Psi new " << psiSoilM(c,l) << "\n";
+      }
+    }
+    //Update psi soil and soil conductivity in networks
+    for(int c=0;c<numCohorts;c++) {
+      const arma::Mat<uint8_t>& layerConnectedCoh = input.layerConnectedPools[c];
+      int cnt = 0;
+      for(int j = 0;j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          if(layerConnectedCoh(j,l)==1) {
+            networks[c].PsiSoil[cnt] = input.psiSoilM(j,l);
+            networks[c].k_Soil[cnt] = vanGenuchtenConductance_c(input.psiSoilM(j,l),
+                                                                networks[c].params.VGrhizo_kmax[cnt],
+                                                                VG_n[l], VG_alpha[l]);
+            // if(c==0) Rcout<< n << ":"<< l << ":"<< cnt << " "<< " psi " <<networks[c].PsiSoil[cnt]<<"\n";
+            cnt++;
+          }
+        }
+      }
+    }
+  }
 }

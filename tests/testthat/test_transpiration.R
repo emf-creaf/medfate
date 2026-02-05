@@ -62,12 +62,14 @@ test_that("transpiration sureau can be run ",{
   control_sureau <- defaultControl("Sureau")
   control_sureau$verbose <- FALSE
   x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control_sureau)
-  expect_type(transp_transpirationSureau(x1, examplemeteo, 1, 
-                                          latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
-                                          modifyInput = FALSE), "list")
+  t1 <- transp_transpirationSureau(x1, examplemeteo, 1, 
+                                   latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                   modifyInput = FALSE)
+  expect_type(t1, "list")
   control_sureau$rhizosphereOverlap <- "partial" 
   x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control_sureau)
-  expect_type(transp_transpirationSureau(x1, examplemeteo, 1, 
-                                         latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
-                                         modifyInput = FALSE), "list")
+  t1 <- transp_transpirationSureau(x1, examplemeteo, 1, 
+                                   latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                   modifyInput = FALSE)
+  expect_type(t1, "list")
 })

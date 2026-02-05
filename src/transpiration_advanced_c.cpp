@@ -507,7 +507,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // NumericMatrix minPsiRhizo = transpOutput["RhizoPsi"];
   // 
   // NumericVector outputFPAR = outputPlants["FPAR"];
-  arma::mat& SoilExtractCoh = ATres.extraction;
+  // arma::mat& SoilExtractCoh = ATres.extraction;
   // NumericVector DDS = outputPlants["DDS"];
   // NumericVector LFMC = outputPlants["LFMC"];
   // NumericVector Eplant = outputPlants["Transpiration"];
@@ -590,7 +590,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   std::fill(outputPlants.GrossPhotosynthesis.begin(), outputPlants.GrossPhotosynthesis.end(), 0.0);
   std::fill(outputPlants.NetPhotosynthesis.begin(), outputPlants.NetPhotosynthesis.end(), 0.0);
   std::fill(outputPlants.WaterBalance.begin(), outputPlants.WaterBalance.end(), 0.0);
-  std::fill(SoilExtractCoh.begin(), SoilExtractCoh.end(), 0.0);
+  std::fill(outputPlants.Extraction.begin(), outputPlants.Extraction.end(), 0.0);
   std::fill(outputExtraction.begin(), outputExtraction.end(), 0.0);
   std::fill(ATres.extractionInst.begin(), ATres.extractionInst.end(), 0.0);
   std::fill(outputPlantsInst.E.begin(), outputPlantsInst.E.end(), 0.0);
@@ -1429,9 +1429,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
   ////////////////////////////////////////
   for(int c=0;c<numCohorts;c++) {
-    SoilExtractCoh[c] = 0.0;
+    outputPlants.Extraction[c] = 0.0;
     for(int l=0;l<nlayers;l++) {
-      SoilExtractCoh[c] += outputExtraction(c,l);
+      outputPlants.Extraction[c] += outputExtraction(c,l);
     }
     outputPlants.StemPLC[c] = 0.0;
     outputPlants.LeafPLC[c] = 0.0;
