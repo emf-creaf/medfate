@@ -7,6 +7,7 @@
 #include "tissuemoisture_c.h"
 #include "meteoland.h"
 #include "inner_sureau_c.h"
+#include "inner_sperry_c.h"
 #include "windextinction_c.h"
 #include "windKatul_c.h"
 using namespace Rcpp;
@@ -821,8 +822,11 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
 
   
-  //Hydraulics: Define supply functions
+  //Define inner networks
   SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
+  SperryNetwork* sperryNetworks = new SperryNetwork[numCohorts];
+  
+  //Hydraulics: Define supply functions
   // List supplyAboveground(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     if(!plantWaterPools) {
@@ -861,13 +865,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode=="Sperry") {
-  //       List HN = initSperryNetwork(c,
-  //                                   internalWater, paramsTranspiration, paramsWaterStorage,
-  //                                   VCroot_kmaxc, VGrhizo_kmaxc,
-  //                                   psic, VG_nc, VG_alphac,
-  //                                   control,
-  //                                   sapFluidityDay);
-  //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
+        initSperryNetwork_inner_c(sperryNetworks[c], c,
+                                  x.internalWater, x.paramsTranspiration, x.paramsWaterStorage,
+                                  VCroot_kmaxc, VGrhizo_kmaxc,
+                                  psic, VG_nc, VG_alphac,
+                                  x.control,
+                                  sapFluidityDay);
+        //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
         initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
                                   x.internalWater,
@@ -928,12 +932,12 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       }
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode == "Sperry") {
-  //       List HN = initSperryNetwork(c,
-  //                                   internalWater, paramsTranspiration, paramsWaterStorage,
-  //                                   VCroot_kmaxc, VGrhizo_kmaxc,
-  //                                   psic, VG_nc, VG_alphac,
-  //                                   control, 
-  //                                   sapFluidityDay);
+        initSperryNetwork_inner_c(sperryNetworks[c], c,
+                                  x.internalWater, x.paramsTranspiration, x.paramsWaterStorage,
+                                  VCroot_kmaxc, VGrhizo_kmaxc,
+                                  psic, VG_nc, VG_alphac,
+                                  x.control,
+                                  sapFluidityDay);
   //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
         initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
@@ -949,11 +953,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   ////////////////////////////////
   // Create input and output objects to be filled in inner functions
   ////////////////////////////////
-
-  
-  // InnerTranspirationOutput_COMM innerOutput;
-  // innerOutput.extraction = outputExtraction;
-
   // List innerOutput = List::create(
   //   _["Extraction"] = outputExtraction,
   //   _["ExtractionPools"] = transpOutput["ExtractionPools"],
@@ -1425,7 +1424,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
   }
   delete[] sureauNetworks;
-
+  delete[] sperryNetworks;
+  
   ////////////////////////////////////////
   // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
   ////////////////////////////////////////

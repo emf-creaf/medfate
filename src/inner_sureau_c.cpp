@@ -699,57 +699,7 @@ void innerSureau_c(ModelInput& x,
   const std::vector<double>& VPair = x.canopy.VPair;
   const std::vector<double>& Cair = x.canopy.Cair;
   
-  // DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  // NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-  // NumericVector ElimVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Elim"]);
-  // NumericVector Emin_LVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Emin_L"]);
-  // NumericVector Emin_SVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Emin_S"]);
-  // NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-  // NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-  // NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-  // NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
-  // NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
-  // NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
-  // NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
-  // 
-  
-  // //Extract output to be filled
-  // 
-  // NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
-  // List ExtractionPools = Rcpp::as<Rcpp::List>(output["ExtractionPools"]);
-  // NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);
-  // NumericMatrix minPsiRhizo = Rcpp::as<Rcpp::NumericMatrix>(output["RhizoPsi"]);
-  // List Plants = output["Plants"];
-  // NumericVector PWB = Plants["WaterBalance"];
-  // NumericVector Eplant = Plants["Transpiration"];
-  // NumericVector Agplant = Plants["GrossPhotosynthesis"];
-  // NumericVector Anplant = Plants["NetPhotosynthesis"];
-  // NumericVector minLeafPsi = Plants["LeafPsiMin"];
-  // NumericVector maxLeafPsi = Plants["LeafPsiMax"];
-  // NumericVector minStemPsi = Plants["StemPsi"];
-  // NumericVector minRootPsi = Plants["RootPsi"];
-  // 
-  // List PlantsInst = output["PlantsInst"];
-  // NumericMatrix Einst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["E"]);
-  // NumericMatrix Aginst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
-  // NumericMatrix Aninst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
-  // NumericMatrix dEdPInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["dEdP"]);
-  // NumericMatrix PWBinst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["PWB"]);
-  // NumericMatrix StemSympRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
-  // NumericMatrix LeafSympRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympRWC"]);
-  // NumericMatrix StemRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemRWC"]);
-  // NumericMatrix LeafRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafRWC"]);
-  // NumericMatrix StemPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPsi"]);
-  // NumericMatrix LeafPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafPsi"]);
-  // NumericMatrix RootPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["RootPsi"]);
-  // NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPLC"]);
-  // NumericMatrix LeafPLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafPLC"]);
-  // NumericMatrix StemSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
-  // NumericMatrix LeafSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
-  // List ShadeInst = output["ShadeLeavesInst"];
-  // NumericMatrix E_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["E"]);
-  // NumericMatrix Psi_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Psi"]);
-  // List SunlitInst = output["SunlitLeavesInst"];
+  //Extract output to be filled
   arma::mat& Temp_SH = output.shade_inst.Temp;
   arma::mat& Temp_SL = output.sunlit_inst.Temp;
   arma::mat& VPD_SH = output.shade_inst.VPD;
@@ -763,11 +713,11 @@ void innerSureau_c(ModelInput& x,
   arma::mat& Ci_SH = output.shade_inst.Ci;
   arma::mat& Ci_SL = output.sunlit_inst.Ci;
   
+  //Extract output to be queried
   const arma::mat& LAI_SL = output.sunlit_inst.LAI;
   const arma::mat& SWR_SL = output.sunlit_inst.Abs_SWR;
   const arma::mat& PAR_SL = output.sunlit_inst.Abs_PAR;
   const arma::mat& LWR_SL = output.sunlit_inst.Net_LWR;
-  
   const arma::mat& LAI_SH = output.shade_inst.LAI;
   const arma::mat& SWR_SH = output.shade_inst.Abs_SWR;
   const arma::mat& PAR_SH = output.shade_inst.Abs_PAR;
@@ -778,24 +728,11 @@ void innerSureau_c(ModelInput& x,
   const arma::mat& Vmax298_SH = output.shade_inst.Vmax298;
   const arma::mat& Jmax298_SH = output.shade_inst.Jmax298;
   
-  // NumericMatrix E_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["E"]);
-  // NumericMatrix Psi_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Psi"]);
-
   //Extract input
-  // // Rcout<<"input\n";
   std::vector<double>& zWind = input.zWind;
   double Patm = input.Patm;
   double f_dry = input.f_dry;
-  // 
-  // IntegerVector iLayerCohort = input["iLayerCohort"];
-  // IntegerVector iLayerSunlit = input["iLayerSunlit"];
-  // IntegerVector iLayerShade = input["iLayerShade"];
-  // IntegerVector nlayerscon = input["nlayerscon"];
-  // LogicalMatrix layerConnected = input["layerConnected"];
-  // List layerConnectedPools = input["layerConnectedPools"];
-  // NumericVector psiSoil = input["psiSoil"];
-  // NumericVector psiSoilM = input["psiSoilM"];
-  // 
+
   std::vector<double> innerSoilExtraction(nlayers, 0.0);
   arma::mat innerSoilPoolExtraction(numCohorts, nlayers);
   innerSoilPoolExtraction.fill(0.0);
@@ -1102,7 +1039,6 @@ void innerSureau_c(ModelInput& x,
           }
         }
       } else {
-        const arma::mat& RHOPcoh = x.belowLayers.RHOP[c];
         arma::Mat<uint8_t>& layerConnectedCoh = input.layerConnectedPools[c];
         int cl = 0;
         for(int j = 0;j<numCohorts;j++) {

@@ -6,8 +6,8 @@
 #include "firebehaviour_c.h"
 #include "hydrology_c.h"
 
-#ifndef SPWB_DAY_BASIC_C_H
-#define SPWB_DAY_BASIC_C_H
+#ifndef SPWB_DAY_C_H
+#define SPWB_DAY_C_H
 
 struct BasicSPWB_RESULT {
   Topography topo;

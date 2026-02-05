@@ -20,7 +20,7 @@
 #include "fuelstructure.h"
 #include "firebehaviour.h"
 #include "tissuemoisture.h"
-#include "spwb_day_basic_c.h"
+#include "spwb_day_c.h"
 #include "soil.h"
 #include <meteoland.h>
 using namespace Rcpp;

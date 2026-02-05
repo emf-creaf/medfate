@@ -14,7 +14,7 @@
 #include "transpiration_basic_c.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
-#include "spwb_day_basic_c.h"
+#include "spwb_day_c.h"
 #include "tissuemoisture.h"
 #include "soil.h"
 #include "root_c.h"
