@@ -985,6 +985,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     //Canopy evaporation (mm) in the current step and fraction of dry canopy
     double canEvapStep = canopyEvaporation*(outputEnergyBalance.SWRcan[n]/sum_abs_SWR_can);
     if(sum_abs_SWR_can==0.0) canEvapStep = 0.0;
+    input.f_dry = 1.0;
     if(canEvapStep>0.0) {
       input.f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
     }
