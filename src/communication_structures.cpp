@@ -1335,6 +1335,8 @@ List copyAdvancedSPWBOutput(List aoc, List x) {
   l.push_back(clone(as<List>(aoc["LightExtinction"])), "LightExtinction");
   l.push_back(lwrExtinctionList, "LWRExtinction");
   l.push_back(copyDataFrame(as<DataFrame>(aoc["CanopyTurbulence"]), ncanlayers), "CanopyTurbulence");
+  
+  if(control["fireHazardResults"]) l.push_back(aoc["FireHazard"], "FireHazard");
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }

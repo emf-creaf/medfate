@@ -1118,24 +1118,15 @@ List spwbDay_test(List x, CharacterVector date, NumericVector meteovec,
   int nlayers = x_c.soil.getNlayers();
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
   
-  //Instance communication structures
-  BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
-  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
-  BasicSPWB_COMM BSPWB_comm(numCohorts,ncanlayers,nlayers,x_c.control.soilDomains);
-
-  std::vector<double> lateralFlows_c(nlayers, 0.0);
-  NumericVector lateralFlows_mm;
-  if(lateralFlows.isNotNull()) {
-    lateralFlows_mm = NumericVector(lateralFlows);
-    for(int l=0;l<lateralFlows_mm.size();l++) {
-      lateralFlows_c[l] = lateralFlows_mm[l];
-    }
-  }
   
   WeatherInputVector meteovec_c;
   meteovec_c.tmax = tmax;
   meteovec_c.tmin = tmin;
+  meteovec_c.tminPrev = tmin;
+  meteovec_c.tmaxPrev = tmax;
+  meteovec_c.tminNext = tmin;
   meteovec_c.tday = tday; 
   meteovec_c.rhmin = rhmin; 
   meteovec_c.rhmax = rhmax;
@@ -1146,14 +1137,47 @@ List spwbDay_test(List x, CharacterVector date, NumericVector meteovec,
   meteovec_c.Patm = Patm;
   meteovec_c.rint = Rint;
   meteovec_c.prec = prec;
+
   
-  spwbDay_basic_c(BSPWBres, BSPWB_comm, x_c, 
-                  meteovec_c, 
-                  elevation, slope, aspect,
-                  runon, 
-                  lateralFlows_c, waterTableDepth);
+  std::vector<double> lateralFlows_c(nlayers, 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
   
-  List modelOutput = copyBasicSPWBResult_c(BSPWBres, x_c);
+  List modelOutput;
+  
+  if(x_c.control.transpirationMode=="Granier") {
+    //Instance communication structures
+    BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
+    BasicSPWB_RESULT BSPWBres(BTres, nlayers);
+    BasicSPWB_COMM BSPWB_comm(numCohorts,ncanlayers,nlayers,x_c.control.soilDomains);
+    
+    spwbDay_basic_c(BSPWBres, BSPWB_comm, x_c, 
+                    meteovec_c, 
+                    elevation, slope, aspect,
+                    runon, 
+                    lateralFlows_c, waterTableDepth);
+    
+    modelOutput = copyBasicSPWBResult_c(BSPWBres, x_c);
+  } else {
+    //Instance communication structures
+    AdvancedTranspiration_RESULT ATres = AdvancedTranspiration_RESULT(numCohorts, nlayers, ncanlayers, ntimesteps);
+    AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
+    AdvancedSPWB_COMM ASPWB_comm(numCohorts,nlayers, ncanlayers,ntimesteps, x_c.control.soilDomains);
+    
+    spwbDay_advanced_c(ASPWBres, ASPWB_comm, x_c, 
+                       meteovec_c, 
+                       latitude, elevation, slope, aspect,
+                       solarConstant, delta,
+                       runon, 
+                       lateralFlows_c, waterTableDepth);
+    
+    modelOutput = copyAdvancedSPWBResult_c(ASPWBres, x_c);
+  }
   
   if(modifyInput) {
     x_c.copyStateToList(x);

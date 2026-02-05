@@ -85,7 +85,7 @@ struct PlantsAdvancedTranspirationInst_RESULT {
     
   }
 };
-Rcpp::DataFrame copyPlantAdvancedTranspirationInstResult_c(const PlantsAdvancedTranspirationInst_RESULT& plants, ModelInput& x);
+Rcpp::List copyPlantAdvancedTranspirationInstResult_c(const PlantsAdvancedTranspirationInst_RESULT& plants, ModelInput& x);
 
 struct LeafAdvancedTranspiration_RESULT {
   std::vector<double> LeafPsiMin;

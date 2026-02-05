@@ -168,5 +168,21 @@ test_that("spwb_day can be run after reorganizing code",{
   expect_equal(x1$internalWater$PlantPsi, Psi_ini) # Check that psi has not changed
   expect_s3_class(medfate::spwb_day_test(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
   expect_false(all(x1$internalWater$PlantPsi == Psi_ini)) # Check that psi has changed
+  
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  Psi_ini <- rlang::duplicate(x1$internalWater$PlantPsi)
+  expect_s3_class(medfate::spwb_day_test(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
+  expect_equal(x1$internalWater$PlantPsi, Psi_ini) # Check that psi has not changed
+  expect_s3_class(medfate::spwb_day_test(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
+  expect_false(all(x1$internalWater$PlantPsi == Psi_ini)) # Check that psi has changed
+  
+  control_sureau$rhizosphereOverlap <- "partial"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  Psi_ini <- rlang::duplicate(x1$internalWater$PlantPsi)
+  expect_s3_class(medfate::spwb_day_test(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
+  expect_equal(x1$internalWater$PlantPsi, Psi_ini) # Check that psi has not changed
+  expect_s3_class(medfate::spwb_day_test(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
+  expect_false(all(x1$internalWater$PlantPsi == Psi_ini)) # Check that psi has changed
+  
 })
   

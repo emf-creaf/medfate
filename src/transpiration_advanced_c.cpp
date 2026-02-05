@@ -39,7 +39,7 @@ Rcpp::DataFrame copyPlantAdvancedTranspirationResult_c(const PlantsAdvancedTrans
   return(plantsDF);
 }
 
-Rcpp::List copyPlantsAdvancedTranspirationInstResult_c(const PlantsAdvancedTranspirationInst_RESULT plants_inst, ModelInput& x) {
+Rcpp::List copyPlantAdvancedTranspirationInstResult_c(const PlantsAdvancedTranspirationInst_RESULT& plants_inst, ModelInput& x) {
   int numCohorts = x.cohorts.CohortCode.size();
   int ntimesteps = x.control.advancedWB.ndailysteps;
   
@@ -249,7 +249,7 @@ Rcpp::List copyAdvancedTranspirationResult_c(const AdvancedTranspiration_RESULT&
                         _["ShadeLeaves"] = copyLeafAdvancedTranspirationResult_c(ATres.shade, x),
                         _["ExtractionInst"] = extractionInst,
                         _["RadiationInputInst"] = copyDirectDiffuseDayResult_c(ATres.directDiffuseDay),
-                        _["PlantsInst"] = copyPlantsAdvancedTranspirationInstResult_c(ATres.plants_inst, x),
+                        _["PlantsInst"] = copyPlantAdvancedTranspirationInstResult_c(ATres.plants_inst, x),
                         _["SunlitLeavesInst"] = copyLeafAdvancedTranspirationInstResult_c(ATres.sunlit_inst, x),
                         _["ShadeLeavesInst"] = copyLeafAdvancedTranspirationInstResult_c(ATres.shade_inst, x),
                         _["LightExtinction"] = copyInstantaneousLightExtinctionAbsortionResult_c(ATres.lightExtinctionAbsortion),
