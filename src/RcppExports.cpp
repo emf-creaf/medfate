@@ -2043,154 +2043,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Egamma
-double Egamma(double psi, double kxylemmax, double c, double d, double psiCav);
-RcppExport SEXP _medfate_Egamma(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
-    rcpp_result_gen = Rcpp::wrap(Egamma(psi, kxylemmax, c, d, psiCav));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Egammainv
-double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav);
-RcppExport SEXP _medfate_Egammainv(SEXP EgSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Eg(EgSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
-    rcpp_result_gen = Rcpp::wrap(Egammainv(Eg, kxylemmax, c, d, psiCav));
-    return rcpp_result_gen;
-END_RCPP
-}
-// EXylem
-double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux, double psiCav);
-RcppExport SEXP _medfate_EXylem(SEXP psiPlantSEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP allowNegativeFluxSEXP, SEXP psiCavSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psiPlant(psiPlantSEXP);
-    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< bool >::type allowNegativeFlux(allowNegativeFluxSEXP);
-    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
-    rcpp_result_gen = Rcpp::wrap(EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav));
-    return rcpp_result_gen;
-END_RCPP
-}
-// E2psiXylem
-double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav);
-RcppExport SEXP _medfate_E2psiXylem(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type E(ESEXP);
-    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiCav));
-    return rcpp_result_gen;
-END_RCPP
-}
-// E2psiXylemUp
-double E2psiXylemUp(double E, double psiDownstream, double kxylemmax, double c, double d, double psiCav);
-RcppExport SEXP _medfate_E2psiXylemUp(SEXP ESEXP, SEXP psiDownstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type E(ESEXP);
-    Rcpp::traits::input_parameter< double >::type psiDownstream(psiDownstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiXylemUp(E, psiDownstream, kxylemmax, c, d, psiCav));
-    return rcpp_result_gen;
-END_RCPP
-}
-// EVanGenuchten
-double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double l);
-RcppExport SEXP _medfate_EVanGenuchten(SEXP psiRhizoSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP lSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psiRhizo(psiRhizoSEXP);
-    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
-    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
-    Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< double >::type l(lSEXP);
-    rcpp_result_gen = Rcpp::wrap(EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, l));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ECrit
-double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit);
-RcppExport SEXP _medfate_ECrit(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
-    rcpp_result_gen = Rcpp::wrap(ECrit(psiUpstream, kxylemmax, c, d, pCrit));
-    return rcpp_result_gen;
-END_RCPP
-}
-// E2psiVanGenuchten
-double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, double alpha, double psiStep, double psiMax);
-RcppExport SEXP _medfate_E2psiVanGenuchten(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type E(ESEXP);
-    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
-    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
-    Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
-    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, psiStep, psiMax));
-    return rcpp_result_gen;
-END_RCPP
-}
-// E2psiTwoElements
-double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav, double psiStep, double psiMax);
-RcppExport SEXP _medfate_E2psiTwoElements(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type E(ESEXP);
-    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
-    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
-    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
-    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
-    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax));
-    return rcpp_result_gen;
-END_RCPP
-}
 // E2psiBelowground
 List E2psiBelowground(double E, List hydraulicNetwork, NumericVector psiIni);
 RcppExport SEXP _medfate_E2psiBelowground(SEXP ESEXP, SEXP hydraulicNetworkSEXP, SEXP psiIniSEXP) {
@@ -2679,6 +2531,154 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kxylem(kxylemSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
     rcpp_result_gen = Rcpp::wrap(correctConductanceForViscosity_c(kxylem, temp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Egamma_c
+double Egamma_c(double psi, double kxylemmax, double c, double d, double psiCav);
+RcppExport SEXP _medfate_Egamma_c(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(Egamma_c(psi, kxylemmax, c, d, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Egammainv_c
+double Egammainv_c(double Eg, double kxylemmax, double c, double d, double psiCav);
+RcppExport SEXP _medfate_Egammainv_c(SEXP EgSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Eg(EgSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(Egammainv_c(Eg, kxylemmax, c, d, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
+// EXylem_c
+double EXylem_c(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux, double psiCav);
+RcppExport SEXP _medfate_EXylem_c(SEXP psiPlantSEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP allowNegativeFluxSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiPlant(psiPlantSEXP);
+    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< bool >::type allowNegativeFlux(allowNegativeFluxSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(EXylem_c(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
+// E2psiXylem_c
+double E2psiXylem_c(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav);
+RcppExport SEXP _medfate_E2psiXylem_c(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiXylem_c(E, psiUpstream, kxylemmax, c, d, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
+// E2psiXylemUp_c
+double E2psiXylemUp_c(double E, double psiDownstream, double kxylemmax, double c, double d, double psiCav);
+RcppExport SEXP _medfate_E2psiXylemUp_c(SEXP ESEXP, SEXP psiDownstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiDownstream(psiDownstreamSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiXylemUp_c(E, psiDownstream, kxylemmax, c, d, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
+// EVanGenuchten_c
+double EVanGenuchten_c(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double l);
+RcppExport SEXP _medfate_EVanGenuchten_c(SEXP psiRhizoSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP lSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiRhizo(psiRhizoSEXP);
+    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type l(lSEXP);
+    rcpp_result_gen = Rcpp::wrap(EVanGenuchten_c(psiRhizo, psiSoil, krhizomax, n, alpha, l));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ECrit_c
+double ECrit_c(double psiUpstream, double kxylemmax, double c, double d, double pCrit);
+RcppExport SEXP _medfate_ECrit_c(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
+    rcpp_result_gen = Rcpp::wrap(ECrit_c(psiUpstream, kxylemmax, c, d, pCrit));
+    return rcpp_result_gen;
+END_RCPP
+}
+// E2psiVanGenuchten_c
+double E2psiVanGenuchten_c(double E, double psiSoil, double krhizomax, double n, double alpha, double psiStep, double psiMax);
+RcppExport SEXP _medfate_E2psiVanGenuchten_c(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiVanGenuchten_c(E, psiSoil, krhizomax, n, alpha, psiStep, psiMax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// E2psiTwoElements_c
+double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav, double psiStep, double psiMax);
+RcppExport SEXP _medfate_E2psiTwoElements_c(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiTwoElements_c(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6431,15 +6431,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 11},
     {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
     {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 3},
-    {"_medfate_Egamma", (DL_FUNC) &_medfate_Egamma, 5},
-    {"_medfate_Egammainv", (DL_FUNC) &_medfate_Egammainv, 5},
-    {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
-    {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 6},
-    {"_medfate_E2psiXylemUp", (DL_FUNC) &_medfate_E2psiXylemUp, 6},
-    {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 6},
-    {"_medfate_ECrit", (DL_FUNC) &_medfate_ECrit, 5},
-    {"_medfate_E2psiVanGenuchten", (DL_FUNC) &_medfate_E2psiVanGenuchten, 7},
-    {"_medfate_E2psiTwoElements", (DL_FUNC) &_medfate_E2psiTwoElements, 11},
     {"_medfate_E2psiBelowground", (DL_FUNC) &_medfate_E2psiBelowground, 3},
     {"_medfate_E2psiAboveground", (DL_FUNC) &_medfate_E2psiAboveground, 3},
     {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 3},
@@ -6471,6 +6462,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psiCrit_c", (DL_FUNC) &_medfate_psiCrit_c, 3},
     {"_medfate_vanGenuchtenConductance_c", (DL_FUNC) &_medfate_vanGenuchtenConductance_c, 4},
     {"_medfate_correctConductanceForViscosity_c", (DL_FUNC) &_medfate_correctConductanceForViscosity_c, 2},
+    {"_medfate_Egamma_c", (DL_FUNC) &_medfate_Egamma_c, 5},
+    {"_medfate_Egammainv_c", (DL_FUNC) &_medfate_Egammainv_c, 5},
+    {"_medfate_EXylem_c", (DL_FUNC) &_medfate_EXylem_c, 7},
+    {"_medfate_E2psiXylem_c", (DL_FUNC) &_medfate_E2psiXylem_c, 6},
+    {"_medfate_E2psiXylemUp_c", (DL_FUNC) &_medfate_E2psiXylemUp_c, 6},
+    {"_medfate_EVanGenuchten_c", (DL_FUNC) &_medfate_EVanGenuchten_c, 6},
+    {"_medfate_ECrit_c", (DL_FUNC) &_medfate_ECrit_c, 5},
+    {"_medfate_E2psiVanGenuchten_c", (DL_FUNC) &_medfate_E2psiVanGenuchten_c, 7},
+    {"_medfate_E2psiTwoElements_c", (DL_FUNC) &_medfate_E2psiTwoElements_c, 11},
     {"_medfate_rainfallIntensity", (DL_FUNC) &_medfate_rainfallIntensity, 3},
     {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 6},
     {"_medfate_herbaceousTranspiration", (DL_FUNC) &_medfate_herbaceousTranspiration, 6},

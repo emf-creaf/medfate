@@ -22,4 +22,21 @@ double correctConductanceForViscosity_c(double kxylem, double temp);
 
 double averagePsi_c(const std::vector<double>& psi, const std::vector<double>& v, double exp_extract, double psi_extract);
 double averagePsiPool_c(const arma::mat& Psi, const arma::mat& RHOPcohV, double exp_extract, double psi_extract);
+
+double Egamma_c(double psi, double kxylemmax, double c, double d, double psiCav = 0.0);
+double Egammainv_c(double Eg, double kxylemmax, double c, double d, double psiCav = 0.0);
+double EXylem_c(double psiPlant, double psiUpstream, 
+                double kxylemmax, double c, double d, 
+                bool allowNegativeFlux = true, double psiCav = 0.0);
+double E2psiXylem_c(double E, double psiUpstream, 
+                    double kxylemmax, double c, double d, double psiCav = 0.0);
+double E2psiXylemUp_c(double E, double psiDownstream, 
+                      double kxylemmax, double c, double d, double psiCav = 0.0);
+double EVanGenuchten_c(double psiRhizo, double psiSoil, double krhizomax, 
+                       double n, double alpha, double l = 0.5);
+double ECrit_c(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001);
+double E2psiVanGenuchten_c(double E, double psiSoil, double krhizomax, double n, double alpha, 
+                           double psiStep = -0.0001, double psiMax = -10.0);
+double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
+                          double psiStep = -0.0001, double psiMax = -10.0);
 #endif

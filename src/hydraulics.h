@@ -2,7 +2,6 @@
 
 #ifndef HYDRAULICS_H
 #define HYDRAULICS_H
-#endif
 using namespace Rcpp;
 
 NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extract= 3.0);
@@ -38,14 +37,6 @@ double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope,
 double proportionDefoliationWeibull(double psiLeaf, double c, double d, 
                                     double PLC_crit = 0.88, double P50_cv = 10.0);
 
-double EXylem(double psiPlant, double psiUpstream, 
-              double kxylemmax, double c, double d, 
-              bool allowNegativeFlux = true, double psiCav = 0.0);
-
-double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0);
-double E2psiXylemUp(double E, double psiDownstream, double kxylemmax, double c, double d, double psiCav = 0.0);
-
-
 
 List E2psiBelowground(double E, List hydraulicNetwork,
                       NumericVector psiIni = NumericVector::create(0));
@@ -68,3 +59,4 @@ List supplyFunctionBelowground(List hydraulicNetwork,
 List supplyFunctionNetwork(List hydraulicNetwork,
                            double minFlow = 0.0,
                            double pCrit = 0.001);
+#endif
