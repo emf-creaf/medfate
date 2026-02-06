@@ -298,6 +298,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       }
       double sumKunlc = sum(Kunlc);
       double Klcmean = sum(Klc*V(c,_));
+      Rcout<< c << " : TmaxCoh[c] = "<< TmaxCoh[c]<<  " sumKunlc = "  <<sumKunlc<<"  Klcmean = " << Klcmean<< "\n";
+      
       for(int l=0;l<nlayers;l++) {
         outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
       }
@@ -330,6 +332,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
         }
       }
       double sumKunlc = sum(Kunlc);
+      
       double Klcmean = sum(Klc*RHOPcohV);
       for(int l=0;l<nlayers;l++) {
         for(int j = 0;j<numCohorts;j++) {
@@ -349,6 +352,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     //Transpiration is the maximum of predicted extraction and cuticular transpiration
     double ext_sum = sum(outputExtraction(c,_));
     Eplant[c] = ext_sum;
+    Rcout<< c << " : E = "  <<ext_sum<<"\n";
+    
     // PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
     //For deciduous species, make water potential follow soil during winter
     // if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;

@@ -1363,7 +1363,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
   std::string infiltrationMode_str = infiltrationMode.get_cstring();
   std::string soilDomains_str = soilDomains.get_cstring();
-  SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow(), soilDomains_str);
+  SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow());
   SoilWaterBalance_RESULT SWBres;
   Soil soil_c = Soil(soil, soilFunctions);
   std::vector<double> lateralFlows_c(soil.nrow(), 0.0);

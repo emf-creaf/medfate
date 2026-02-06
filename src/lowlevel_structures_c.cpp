@@ -4,20 +4,42 @@
 #include "lowlevel_structures_c.h"
 using namespace Rcpp;
 
-Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo) {
-  NumericVector meteovec = NumericVector::create(
-    Named("tday") = meteo.tday, 
-    Named("prec") = meteo.prec,
-    Named("tmin") = meteo.tmin, 
-    Named("tmax") = meteo.tmax,
-    Named("rhmin") = meteo.rhmin, 
-    Named("rhmax") = meteo.rhmax, 
-    Named("rad") = meteo.rad, 
-    Named("wind") = meteo.wind, 
-    Named("Catm") = meteo.Catm,
-    Named("Patm") = meteo.Patm,
-    Named("pet") = meteo.pet,
-    Named("rint") = meteo.rint);
+Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo, const std::string& transpirationMode) {
+  NumericVector meteovec;
+  if(transpirationMode=="Granier") {
+    meteovec = NumericVector::create(
+      Named("tday") = meteo.tday, 
+      Named("prec") = meteo.prec,
+      Named("tmin") = meteo.tmin, 
+      Named("tmax") = meteo.tmax,
+      Named("rhmin") = meteo.rhmin, 
+      Named("rhmax") = meteo.rhmax, 
+      Named("rad") = meteo.rad, 
+      Named("wind") = meteo.wind, 
+      Named("Catm") = meteo.Catm,
+      Named("Patm") = meteo.Patm,
+      Named("pet") = meteo.pet,
+      Named("rint") = meteo.rint);
+    
+  } else {
+    meteovec = NumericVector::create(
+      Named("tmin") = meteo.tmin, 
+      Named("tmax") = meteo.tmax,
+      Named("tminPrev") = meteo.tminPrev, 
+      Named("tmaxPrev") = meteo.tmaxPrev, 
+      Named("tminNext") = meteo.tminPrev, 
+      Named("prec") = meteo.prec,
+      Named("rhmin") = meteo.rhmin, 
+      Named("rhmax") = meteo.rhmax, 
+      Named("rad") = meteo.rad, 
+      Named("wind") = meteo.wind, 
+      Named("Catm") = meteo.Catm,
+      Named("Patm") = meteo.Patm,
+      Named("pet") = meteo.pet,
+      Named("rint") = meteo.rint);
+    
+  }
+  
   return(meteovec);
 }
 

@@ -12,7 +12,7 @@ data(SpParamsMED)
 # Define soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("SPWBrunner initializes correctly", {
+test_that("SPWBrunner initializes and runs correctly", {
   controlGranier <- defaultControl("Granier")
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
   mfr <- new(SPWBrunner, x1, 41.82592, 100, 0, 0)

@@ -1050,7 +1050,7 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
   std::string& soilDomains = x_c.control.soilDomains;
-  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps, soilDomains);
+  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
 
   // Prepare lateral flows
   std::vector<double> lateralFlows_c(nlayers, 0.0);

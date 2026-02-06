@@ -49,7 +49,8 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
    double rad = meteovec.rad;
    double wind = meteovec.wind;
    double rainfallIntensity = meteovec.rint;
-
+   BSPWBres.meteovec = meteovec; //store as result
+   
    //Store topography for output
    BSPWBres.topo.elevation = elevation;
    BSPWBres.topo.slope = slope;
@@ -315,7 +316,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x) {
   Rcpp::List l = Rcpp::List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                                     _["topography"] = copyTopo_c(BSPWBres.topo),
-                                    _["weather"] = copyWeather_c(BSPWBres.meteovec),
+                                    _["weather"] = copyWeather_c(BSPWBres.meteovec, x.control.transpirationMode),
                                     _["WaterBalance"] = copyWaterBalanceResult_c(BSPWBres.WaterBalance));
   if(x.control.results.soilResults) {
     l.push_back(copySoilResult_c(BSPWBres.Soil), "Soil");
@@ -362,6 +363,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
   double rad = meteovec.rad;
   double wind = meteovec.wind;
   double rainfallIntensity = meteovec.rint;
+  ASPWBres.meteovec = meteovec; //store as result
   
   //Store topography for output
   ASPWBres.topo.elevation = elevation;
@@ -636,7 +638,7 @@ Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelIn
   
   Rcpp::List l = Rcpp::List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                                     _["topography"] = copyTopo_c(ASPWBres.topo),
-                                    _["weather"] = copyWeather_c(ASPWBres.meteovec),
+                                    _["weather"] = copyWeather_c(ASPWBres.meteovec, x.control.transpirationMode),
                                     _["WaterBalance"] = copyWaterBalanceResult_c(ASPWBres.WaterBalance));
   if(x.control.results.soilResults) {
     l.push_back(copySoilResult_c(ASPWBres.Soil), "Soil");
@@ -676,6 +678,18 @@ Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelIn
     l.push_back(copyFCCSResult_c(ASPWBres.fccs), "FireHazard");
   }
   l.attr("class") = CharacterVector::create("spwb_day","list");
+  return(l);
+}
+
+Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x) {
+  Rcpp::List l;
+  try {
+    auto& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(SPWBres);
+    l = copyBasicSPWBResult_c(BSPWBres, x);
+  } catch(const std::bad_cast&) {
+    auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(SPWBres);
+    l = copyAdvancedSPWBResult_c(ASPWBres, x);
+  }
   return(l);
 }
 
@@ -771,4 +785,5 @@ void spwbDay_inner_c(SPWBCommunicationStructures& SPWBcomm, ModelInput& x,
                        runon, 
                        lateralFlows, waterTableDepth);
   }
+  
 }

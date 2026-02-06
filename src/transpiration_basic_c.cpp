@@ -304,8 +304,11 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
         Kunlc[l] = std::sqrt(soil.getConductivity(l,true))*V_c[l];
         sumKunlc += Kunlc[l];
       }
+      Rcout<< c << " : Tmax[c] = " << Tmax[c]<<" TmaxCoh[c] = "<< TmaxCoh[c]<<  " sumKunlc = "  <<sumKunlc<<"  Klcmean = " << Klcmean<< "\n";
+      
       for(int l=0;l<nlayers;l++) {
         outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
+        Rcout<< c << "-" << l <<" : E = "  <<outputExtraction(c,l)<<"\n";
       }
       rootCrownPsi = averagePsi_c(psiSoil, V_c, Exp_Extract[c], Psi_Extract[c]);
       delete[] Klc;
@@ -357,6 +360,8 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     //Transpiration is now equal to extraction
     Extraction[c] = arma::sum(outputExtraction.row(c));
     Eplant[c] = Extraction[c];
+    Rcout<< c << " : E = "  <<Extraction[c]<<"\n";
+    
     //For deciduous species, make water potential follow soil during winter
     PlantPsi[c] = rootCrownPsi;
     double newVol = plantVol_c(PlantPsi[c], parsVol);

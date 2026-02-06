@@ -43,21 +43,47 @@ struct WeatherInputVector {
     rad = medfate::NA_DOUBLE;
   }
   WeatherInputVector(Rcpp::NumericVector meteovec) {
-    if(meteovec.containsElementNamed("MinTemperature")) tmax = meteovec["MinTemperature"];
-    if(meteovec.containsElementNamed("MaxTemperature")) tmin = meteovec["MaxTemperature"];
+    if(meteovec.containsElementNamed("MinTemperature")) tmin = meteovec["MinTemperature"];
+    else tmin = medfate::NA_DOUBLE;
+  
+    if(meteovec.containsElementNamed("MaxTemperature")) tmax = meteovec["MaxTemperature"];
+    else tmax = medfate::NA_DOUBLE;
+  
+    tminNext = medfate::NA_DOUBLE;
+    tminPrev = medfate::NA_DOUBLE;
+    tmaxPrev = medfate::NA_DOUBLE;
+    tday = medfate::NA_DOUBLE;
+    
     if(meteovec.containsElementNamed("Precipitation")) prec = meteovec["Precipitation"];
+    else prec = medfate::NA_DOUBLE;
+  
     if(meteovec.containsElementNamed("MaxRelativeHumidity")) rhmax = meteovec["MaxRelativeHumidity"];
+    else rhmax = medfate::NA_DOUBLE;
+  
     if(meteovec.containsElementNamed("MinRelativeHumidity")) rhmin = meteovec["MinRelativeHumidity"];
+    else rhmin = medfate::NA_DOUBLE;
+  
     if(meteovec.containsElementNamed("Radiation")) rad = meteovec["Radiation"];
+    else rad = medfate::NA_DOUBLE;
+  
     if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
+    else wind = medfate::NA_DOUBLE;
+  
     if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
+    else Catm = medfate::NA_DOUBLE;
+    
     if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+    else Patm = medfate::NA_DOUBLE;
+    
     if(meteovec.containsElementNamed("RainfallIntensity")) rint = meteovec["RainfallIntensity"];
+    else rint = medfate::NA_DOUBLE;
+    
     if(meteovec.containsElementNamed("PET")) pet = meteovec["PET"];
+    else pet = medfate::NA_DOUBLE;
     
   }
 };
-Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo);
+Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo, const std::string& transpirationMode);
 
 struct Topography {
   double elevation;

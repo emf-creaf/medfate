@@ -1,5 +1,6 @@
 import(ggplot2)
 import(shiny)
+importFrom("RcppParallel", "RcppParallelLibs")
 importFrom("meteoland", "utils_atmosphericPressure", "utils_averageDailyVP",
            "utils_saturationVP", "penman")
 importFrom("stats", "aggregate","filter","median",

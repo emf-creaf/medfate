@@ -20,8 +20,7 @@ struct WaterInputs_COMM {
 // ----------------------------------------------------------------------------
 
 struct SoilWaterBalance_COMM {
-  size_t nlayers;
-  
+
   // Layer dimensions
   std::vector<double> dZ_m;
   std::vector<double> dZUp;
@@ -104,76 +103,72 @@ struct SoilWaterBalance_COMM {
   std::vector<double> theta_micro_step;
   
   // Constructor
-  SoilWaterBalance_COMM(size_t n = 0, std::string soilDomains = "buckets") : nlayers(n) {
+  SoilWaterBalance_COMM(size_t n = 0) {
     dZ_m = std::vector<double>(n, medfate::NA_DOUBLE);
     dZUp = std::vector<double>(n, medfate::NA_DOUBLE);
     dZDown = std::vector<double>(n, medfate::NA_DOUBLE);
     lambda = std::vector<double>(n, medfate::NA_DOUBLE);
     
-    if(soilDomains == "dual" || soilDomains == "single") {
-      // Water content states
-      Theta = std::vector<double>(n, medfate::NA_DOUBLE);
-      theta_micro = std::vector<double>(n, medfate::NA_DOUBLE);
-      theta_b = std::vector<double>(n, medfate::NA_DOUBLE);
-      theta_macro = std::vector<double>(n, medfate::NA_DOUBLE);
-      theta_sat_fict = std::vector<double>(n, medfate::NA_DOUBLE);
-      prop_saturated = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      // Saturated conductivity
-      Ksat_b = std::vector<double>(n, medfate::NA_DOUBLE);
-      Ksat_b_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      Ksat = std::vector<double>(n, medfate::NA_DOUBLE);
-      Ksat_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      // Water potential
-      Psi = std::vector<double>(n, medfate::NA_DOUBLE);
-      Psi_m = std::vector<double>(n, medfate::NA_DOUBLE);
-      Psi_step = std::vector<double>(n, medfate::NA_DOUBLE);
-      Psi_step_m = std::vector<double>(n, medfate::NA_DOUBLE);
-      Psi_step_t1 = std::vector<double>(n, medfate::NA_DOUBLE);
-      Psi_step_t05 = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      // Conductivity
-      K = std::vector<double>(n, medfate::NA_DOUBLE);
-      K_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      Kbc = std::vector<double>(n, medfate::NA_DOUBLE);
-      Kbc_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      K_step = std::vector<double>(n, medfate::NA_DOUBLE);
-      K_step_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      //Capacitance
-      C = std::vector<double>(n, medfate::NA_DOUBLE);
-      C_m = std::vector<double>(n, medfate::NA_DOUBLE);
-      C_step = std::vector<double>(n, medfate::NA_DOUBLE);
-      C_step_m = std::vector<double>(n, medfate::NA_DOUBLE);
-      C_step_m05 = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      // Macro-porosity
-      S_macro = std::vector<double>(n, medfate::NA_DOUBLE);
-      e_macro = std::vector<double>(n, medfate::NA_DOUBLE);
-      S_macro_step = std::vector<double>(n, medfate::NA_DOUBLE);
-      Kmacro_step_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      theta_macro_step = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      // Polytelnyic coefficients
-      a = std::vector<double>(n, medfate::NA_DOUBLE);
-      b = std::vector<double>(n, medfate::NA_DOUBLE);
-      c = std::vector<double>(n, medfate::NA_DOUBLE);
-      d = std::vector<double>(n, medfate::NA_DOUBLE);
-      e = std::vector<double>(n, medfate::NA_DOUBLE);
-      f = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-      // Additional properties
-      Kmacro_ms = std::vector<double>(n, medfate::NA_DOUBLE);
-      K_step_ms05 = std::vector<double>(n, medfate::NA_DOUBLE);
-      waterFluidity = std::vector<double>(n, medfate::NA_DOUBLE);
-      capill_below = std::vector<double>(n, medfate::NA_DOUBLE);
-      drain_above = std::vector<double>(n, medfate::NA_DOUBLE);
-      drain_below = std::vector<double>(n, medfate::NA_DOUBLE);
-      theta_micro_step = std::vector<double>(n, medfate::NA_DOUBLE);
-      
-    }
+    // Water content states
+    Theta = std::vector<double>(n, medfate::NA_DOUBLE);
+    theta_micro = std::vector<double>(n, medfate::NA_DOUBLE);
+    theta_b = std::vector<double>(n, medfate::NA_DOUBLE);
+    theta_macro = std::vector<double>(n, medfate::NA_DOUBLE);
+    theta_sat_fict = std::vector<double>(n, medfate::NA_DOUBLE);
+    prop_saturated = std::vector<double>(n, medfate::NA_DOUBLE);
     
+    // Saturated conductivity
+    Ksat_b = std::vector<double>(n, medfate::NA_DOUBLE);
+    Ksat_b_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    Ksat = std::vector<double>(n, medfate::NA_DOUBLE);
+    Ksat_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    
+    // Water potential
+    Psi = std::vector<double>(n, medfate::NA_DOUBLE);
+    Psi_m = std::vector<double>(n, medfate::NA_DOUBLE);
+    Psi_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    Psi_step_m = std::vector<double>(n, medfate::NA_DOUBLE);
+    Psi_step_t1 = std::vector<double>(n, medfate::NA_DOUBLE);
+    Psi_step_t05 = std::vector<double>(n, medfate::NA_DOUBLE);
+    
+    // Conductivity
+    K = std::vector<double>(n, medfate::NA_DOUBLE);
+    K_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    Kbc = std::vector<double>(n, medfate::NA_DOUBLE);
+    Kbc_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    K_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    K_step_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    
+    //Capacitance
+    C = std::vector<double>(n, medfate::NA_DOUBLE);
+    C_m = std::vector<double>(n, medfate::NA_DOUBLE);
+    C_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    C_step_m = std::vector<double>(n, medfate::NA_DOUBLE);
+    C_step_m05 = std::vector<double>(n, medfate::NA_DOUBLE);
+    
+    // Macro-porosity
+    S_macro = std::vector<double>(n, medfate::NA_DOUBLE);
+    e_macro = std::vector<double>(n, medfate::NA_DOUBLE);
+    S_macro_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    Kmacro_step_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    theta_macro_step = std::vector<double>(n, medfate::NA_DOUBLE);
+    
+    // Polytelnyic coefficients
+    a = std::vector<double>(n, medfate::NA_DOUBLE);
+    b = std::vector<double>(n, medfate::NA_DOUBLE);
+    c = std::vector<double>(n, medfate::NA_DOUBLE);
+    d = std::vector<double>(n, medfate::NA_DOUBLE);
+    e = std::vector<double>(n, medfate::NA_DOUBLE);
+    f = std::vector<double>(n, medfate::NA_DOUBLE);
+    
+    // Additional properties
+    Kmacro_ms = std::vector<double>(n, medfate::NA_DOUBLE);
+    K_step_ms05 = std::vector<double>(n, medfate::NA_DOUBLE);
+    waterFluidity = std::vector<double>(n, medfate::NA_DOUBLE);
+    capill_below = std::vector<double>(n, medfate::NA_DOUBLE);
+    drain_above = std::vector<double>(n, medfate::NA_DOUBLE);
+    drain_below = std::vector<double>(n, medfate::NA_DOUBLE);
+    theta_micro_step = std::vector<double>(n, medfate::NA_DOUBLE);
     
     // Inputs/Outputs
     source_sink_def_mm = std::vector<double>(n, medfate::NA_DOUBLE);
