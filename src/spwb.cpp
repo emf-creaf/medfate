@@ -13,6 +13,7 @@
 #include "hydrology.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
+#include "lowlevel_structures_c.h"
 #include "modelInput.h"
 #include "photosynthesis.h"
 #include "phenology.h"
@@ -608,6 +609,48 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   Evapotranspiration[iday] = Transpiration[iday] + SoilEvaporation[iday] + HerbTranspiration[iday] + Interception[iday];
 }
 
+void fillWaterBalanceDailyOutput_c(DataFrame DWB, StandWB_RESULT& db, int iday) {
+  NumericVector PET = DWB["PET"];
+  NumericVector Precipitation = DWB["Precipitation"];
+  NumericVector DeepDrainage = DWB["DeepDrainage"];
+  NumericVector Infiltration = DWB["Infiltration"];
+  NumericVector InfiltrationExcess = DWB["InfiltrationExcess"];
+  NumericVector SaturationExcess = DWB["SaturationExcess"];
+  NumericVector CapillarityRise = DWB["CapillarityRise"];
+  NumericVector Runoff = DWB["Runoff"];
+  NumericVector Rain = DWB["Rain"];
+  NumericVector Snow = DWB["Snow"];
+  NumericVector Snowmelt = DWB["Snowmelt"];
+  NumericVector NetRain = DWB["NetRain"];
+  NumericVector PlantExtraction = DWB["PlantExtraction"];
+  NumericVector Transpiration = DWB["Transpiration"];
+  NumericVector SoilEvaporation = DWB["SoilEvaporation"];
+  NumericVector HerbTranspiration = DWB["HerbTranspiration"];
+  NumericVector Interception = DWB["Interception"];
+  NumericVector Evapotranspiration = DWB["Evapotranspiration"];
+  NumericVector HydraulicRedistribution = DWB["HydraulicRedistribution"];
+  
+  DeepDrainage[iday] = db.DeepDrainage;
+  Infiltration[iday] = db.Infiltration;
+  InfiltrationExcess[iday] = db.InfiltrationExcess;
+  SaturationExcess[iday] = db.SaturationExcess;
+  CapillarityRise[iday] = db.CapillarityRise;
+  Runoff[iday] = db.Runoff;
+  Rain[iday] = db.Rain;
+  Snow[iday] = db.Snow;
+  Precipitation[iday] = Rain[iday]+Snow[iday];
+  PET[iday] = db.PET;
+  Snowmelt[iday] = db.Snowmelt;
+  NetRain[iday] = db.NetRain;
+  PlantExtraction[iday] = db.PlantExtraction;
+  HydraulicRedistribution[iday] = db.HydraulicRedistribution;
+  Transpiration[iday] = db.Transpiration;
+  SoilEvaporation[iday] = db.SoilEvaporation;
+  HerbTranspiration[iday] = db.HerbTranspiration;
+  Interception[iday] = Rain[iday]-NetRain[iday];
+  Evapotranspiration[iday] = Transpiration[iday] + SoilEvaporation[iday] + HerbTranspiration[iday] + Interception[iday];
+}
+
 void fillStandDailyOutput(DataFrame Stand, List sDay, int iday) {
   List stand = sDay["Stand"];
   NumericVector LgroundPAR = Stand["LgroundPAR"];
@@ -628,7 +671,25 @@ void fillStandDailyOutput(DataFrame Stand, List sDay, int iday) {
   LAIdead[iday] = stand["LAIdead"];
   Cm[iday] = stand["Cm"];
 }
-
+void fillStandDailyOutput_c(DataFrame Stand, Stand_RESULT& stand, int iday) {
+  NumericVector LgroundPAR = Stand["LgroundPAR"];
+  NumericVector LgroundSWR = Stand["LgroundSWR"];
+  NumericVector LAI = Stand["LAI"];
+  NumericVector LAIherb = Stand["LAIherb"];
+  NumericVector LAIexpanded = Stand["LAIexpanded"];
+  NumericVector LAIlive = Stand["LAIlive"];
+  NumericVector LAIdead = Stand["LAIdead"];
+  NumericVector Cm = Stand["Cm"];
+  
+  LgroundPAR[iday] = stand.LgroundPAR;
+  LgroundSWR[iday] = stand.LgroundSWR;
+  LAI[iday] = stand.LAI;
+  LAIherb[iday] = stand.LAIherb;
+  LAIexpanded[iday] = stand.LAIexpanded;
+  LAIlive[iday] = stand.LAIlive;
+  LAIdead[iday] = stand.LAIdead;
+  Cm[iday] = stand.Cm;
+}
 void fillSoilDailyOutput(List SWB, DataFrame soil, List sDay, 
                          int iday, int numDays, String soilFunctions,
                          bool includePlants = true) {
@@ -697,6 +758,10 @@ void fillSoilPoolDailyOutput(List soilPools, DataFrame soil, NumericMatrix Wpool
 void fillSnowDailyOutput(DataFrame Snow, List x, int iday) {
   NumericVector SWE = Snow["SWE"];
   SWE[iday] = x["snowpack"];
+}
+void fillSnowDailyOutput_c(DataFrame Snow, ModelInput& x, int iday) {
+  NumericVector SWE = Snow["SWE"];
+  SWE[iday] = x.snowpack;
 }
 void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday, int ntimesteps) {
   List EB = Rcpp::as<Rcpp::List>(sDay["EnergyBalance"]);
@@ -1014,6 +1079,77 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   if(control["subdailyResults"]) {
     List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
     subdailyRes[iday] = copyAdvancedSPWBOutput(sDay, x); //Clones subdaily results because they are communication structures
+  }
+}
+
+void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWBCommunicationStructures& sDay, int iday) {
+  bool plantWaterPools = (x.control.rhizosphereOverlap!="total");
+  bool basic = x.control.transpirationMode=="Granier";
+  
+  DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
+  int numDays = DWB.nrow();
+  if(basic) {
+    fillWaterBalanceDailyOutput_c(DWB, sDay.BSPWBres.WaterBalance, iday);
+  } else {
+    fillWaterBalanceDailyOutput_c(DWB, sDay.ASPWBres.WaterBalance, iday);
+  }
+  
+  if(x.control.results.soilResults) {
+    List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+    // fillSoilDailyOutput(Soil, x_c.soil, sDay, 
+    //                     iday, numDays, soilFunctions,
+    //                     true);
+  }
+  if(x.control.results.soilPoolResults && plantWaterPools) {
+    List soilPools = Rcpp::as<Rcpp::List>(l["SoilPools"]);
+    // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+    // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
+    // fillSoilPoolDailyOutput(soilPools, soil, Wpool, iday, soilFunctions);
+  }
+  if(x.control.results.snowResults) {
+    DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
+    fillSnowDailyOutput_c(Snow, x, iday);
+  }
+  if(x.control.results.standResults) {
+    DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
+    if(basic) {
+      fillStandDailyOutput_c(Stand, sDay.BSPWBres.Stand, iday);
+    } else {
+      fillStandDailyOutput_c(Stand, sDay.ASPWBres.Stand, iday);
+    }
+  }
+  if(x.control.results.plantResults) {
+    List plantDWOL = l["Plants"];
+    // fillPlantWaterDailyOutput(plantDWOL, sDay, iday, transpirationMode); 
+    if(x.control.transpirationMode!= "Granier") {
+      if(x.control.results.leafResults) {
+        List sunlitDO = l["SunlitLeaves"];
+        List shadeDO = l["ShadeLeaves"];
+        // fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday, numCohorts); 
+      }
+    } 
+  }
+  if(x.control.transpirationMode!= "Granier") {
+    List DEB = l["EnergyBalance"];
+    // fillEnergyBalanceDailyOutput(DEB,sDay, iday, ntimesteps);
+    
+    if(x.control.results.temperatureResults) {
+      List DT = l["Temperature"];
+      // fillTemperatureDailyOutput(DT,sDay, iday, ntimesteps);
+      if(x.control.advancedWB.multiLayerBalance) {
+        NumericMatrix DLT = l["TemperatureLayers"];
+        // fillTemperatureLayersDailyOutput(DLT,sDay, iday, ncanlayers, ntimesteps);
+      }
+    }
+  } 
+  if(x.control.results.fireHazardResults) {
+    DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
+    // fillFireHazardOutput(fireHazard, sDay, iday);
+  }
+  
+  if(x.control.results.subdailyResults) {
+    List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
+    // subdailyRes[iday] = copyAdvancedSPWBOutput(sDay, x); //Clones subdaily results because they are communication structures
   }
 }
 
@@ -1965,7 +2101,7 @@ List spwb_c(List x, DataFrame meteo,
                         meteovec, 
                         elevation, slope, aspect,
                         0.0, lateralFlows, waterTableDepth);
-        // fillSPWBDailyOutput(outputList, x, internalCommunication["basicSPWBOutput"],i);
+        fillSPWBDailyOutput_c(outputList, x_c, SPWBcomm ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
