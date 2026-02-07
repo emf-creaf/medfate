@@ -4,8 +4,7 @@
 #include "firebehaviour_c.h"
 #include "fuelstructure_c.h"
 #include "windextinction_c.h"
-#include <meteoland.h>
-
+#include "biophysicsutils_c.h"
 using namespace Rcpp;
 
 Rcpp::NumericVector copyFCCSResult_c(const FCCS_RESULT& fccs) {
@@ -381,8 +380,8 @@ void fccsHazard_c(FCCSBehaviour_RESULT& FCCSbehres, FCCS_RESULT& FCCSres, ModelI
     fm_dead = fireHazardStandardDFMC;
   } else {
     // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
-    double vp = meteoland::utils_averageDailyVP(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
-    double D = std::max(0.0, meteoland::utils_saturationVP(meteovec.tmax) - vp);
+    double vp = averageDailyVapourPressure_c(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
+    double D = std::max(0.0, saturationVapourPressure_c(meteovec.tmax) - vp);
     fm_dead = 5.43 + 52.91*exp(-0.64*D); 
   }
   double wind = meteovec.wind;

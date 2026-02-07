@@ -889,7 +889,7 @@ void innerSureau(List x, SureauNetwork* networks, List input, List output, int n
           if(!sunlitShade) Temp_SH(c,n) = Temp_SL(c,n);
           
           //VPD
-          double VPD_air = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
+          double VPD_air = saturationVapourPressure_c(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
           VPD_SL(c,n) = std::max(0.0,leafVapourPressure_c(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
           VPD_SH(c,n) = std::max(0.0,leafVapourPressure_c(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
           if(!sunlitShade) VPD_SH(c,n) = VPD_SL(c,n);

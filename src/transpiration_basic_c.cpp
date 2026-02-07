@@ -10,7 +10,6 @@
 #include "transpiration_basic_c.h"
 #include "lightextinction_basic_c.h"
 #include "soil_c.h"
-#include <meteoland.h>
 
 using namespace Rcpp;
 
@@ -78,11 +77,11 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   double Patm = meteovec.Patm;
 
   //Atmospheric pressure (if missing)
-  if(std::isnan(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  if(std::isnan(Patm)) Patm = atmosphericPressure_c(elevation);
 
   //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-  double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
+  double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+  double vpd = std::max(0.0, saturationVapourPressure_c((tmin+tmax)/2.0) - vpatm);
 
 
   // Canopy
@@ -304,11 +303,11 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
         Kunlc[l] = std::sqrt(soil.getConductivity(l,true))*V_c[l];
         sumKunlc += Kunlc[l];
       }
-      Rcout<< c << " : Tmax[c] = " << Tmax[c]<<" TmaxCoh[c] = "<< TmaxCoh[c]<<  " sumKunlc = "  <<sumKunlc<<"  Klcmean = " << Klcmean<< "\n";
+      // Rcout<< c << " : Tmax[c] = " << Tmax[c]<<" TmaxCoh[c] = "<< TmaxCoh[c]<<  " sumKunlc = "  <<sumKunlc<<"  Klcmean = " << Klcmean<< "\n";
       
       for(int l=0;l<nlayers;l++) {
         outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
-        Rcout<< c << "-" << l <<" : E = "  <<outputExtraction(c,l)<<"\n";
+        // Rcout<< c << "-" << l <<" : E = "  <<outputExtraction(c,l)<<"\n";
       }
       rootCrownPsi = averagePsi_c(psiSoil, V_c, Exp_Extract[c], Psi_Extract[c]);
       delete[] Klc;
@@ -360,7 +359,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     //Transpiration is now equal to extraction
     Extraction[c] = arma::sum(outputExtraction.row(c));
     Eplant[c] = Extraction[c];
-    Rcout<< c << " : E = "  <<Extraction[c]<<"\n";
+    // Rcout<< c << " : E = "  <<Extraction[c]<<"\n";
     
     //For deciduous species, make water potential follow soil during winter
     PlantPsi[c] = rootCrownPsi;

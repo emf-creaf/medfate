@@ -2,7 +2,6 @@
 #include <cmath>
 #include <vector>
 #include <RcppArmadillo.h>
-#include <meteoland.h>
 #include "modelInput_c.h"
 #include "lowlevel_structures_c.h"
 #include "soil_c.h"
@@ -213,7 +212,7 @@ double snowMelt_c(double tday, double rad, double LgroundSWR, double elevation) 
   //missing data checks
   if(std::isnan(rad)) Rcpp::stop("Missing radiation data for snow melt!\n");
   if(std::isnan(elevation)) Rcpp::stop("Missing elevation data for snow melt!\n");
-  double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
+  double rho = airDensity_c(tday, atmosphericPressure_c(elevation));
   double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
   double ren = (rad*(LgroundSWR/100.0))*(0.1); //90% albedo of snow
   double melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values

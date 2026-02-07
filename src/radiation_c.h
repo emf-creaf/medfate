@@ -1,5 +1,5 @@
-#include "medfate.h"
 #include "RcppArmadillo.h"
+#include "medfate.h"
 
 #ifndef RADIATION_C_H
 #define RADIATION_C_H
@@ -50,6 +50,7 @@ double solarElevation_c(double latrad, double delta, double hrad);
 double solarConstant_c(int J);
 double daylength_c(double latrad, double slorad, double asprad, double delta);
 double daylengthseconds_c(double latrad, double slorad, double asprad, double delta);
+double RpotDay_c(double solarConstant, double latrad,  double slorad, double asprad, double delta);
 double RDay_c(double solarConstant, double latrad, double elevation, double slorad, double asprad, double delta,
               double diffTemp, double diffTempMonth, double vpa, double precipitation);
 double skyLongwaveRadiation_c(double Tair, double vpa, double c = 0);
@@ -57,6 +58,14 @@ double skyLongwaveRadiation_c(double Tair, double vpa, double c = 0);
 void directDiffuseDay_c(DirectDiffuseDay_RESULT& res, 
                         double solarConstant, double latrad, double slorad, double asprad, double delta,
                         double R_s, bool clearday);
+
+double outgoingLongwaveRadiation_c(double solarConstant, double latrad, double elevation,  double slorad,  double asprad, double delta,
+                                   double vpa, double tmin, double tmax, double R_s);
+
+double netRadiation_c(double solarConstant, double latrad,  double elevation, double slorad, double asprad, double delta,
+                      double vpa, double tmin, double tmax, double R_s,
+                      double alpha = 0.08);
+
 Rcpp::DataFrame copyDirectDiffuseDayResult_c(const DirectDiffuseDay_RESULT& ddd);
 
 #endif

@@ -384,3 +384,25 @@ Rcpp::DataFrame copyDirectDiffuseDayResult_c(const DirectDiffuseDay_RESULT& ddd)
                                                 Rcpp::Named("PAR_diffuse") = Rcpp::wrap(ddd.PAR_diffuse));
   return(res);
 }
+
+double outgoingLongwaveRadiation_c(double solarConstant, double latrad, double elevation,  double slorad,  double asprad, double delta,
+                                 double vpa, double tmin, double tmax, double R_s){
+  double R_a = RpotDay_c(solarConstant, latrad,  slorad, asprad, delta); //Extraterrestrial (potential) radiation
+  double R_so = (0.75 + (2.0 * 0.00001) * elevation) * R_a; //Clear sky radiation
+  // Rcout<<R_s<<" "<<R_so<<" "<<R_s/R_so<<"\n";
+  //Net outgoing longwave radiation (MJ.m^-2.day^-1)
+  double R_nl = SIGMA_MJ_day * (0.34 - 0.14 * sqrt(vpa)) * (pow(tmax + 273.2,4.0) + pow(tmin + 273.2,4.0))/2.0 * (1.35 * std::min(R_s/R_so,1.0) - 0.35);
+  return(R_nl);
+}
+double netRadiation_c(double solarConstant, double latrad,  double elevation, double slorad, double asprad, double delta,
+                      double vpa, double tmin, double tmax, double R_s,
+                      double alpha) {
+  
+  //Net outgoing longwave radiation (MJ.m^-2.day^-1)
+  double R_nl = outgoingLongwaveRadiation_c(solarConstant, latrad, elevation, slorad, asprad, delta,
+                                          vpa, tmin, tmax, R_s);
+  //Net incoming shortwave radiation (MJ.m^-2.day^-1, after acounting for surface albedo)
+  double R_ns = (1.0 - alpha) * R_s;
+  //Net radiation
+  return(std::max(0.0,R_ns - R_nl));
+}

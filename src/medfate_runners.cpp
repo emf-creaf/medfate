@@ -114,7 +114,6 @@ void SPWB_multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteov
   }
   std::string date_str = Rcpp::as<std::string>(date[0]);
   if(parallelize) {
-    Rcout<<"going parallel\n";
     //build worker
     SPWB_worker worker(SPWBcomm,
                        date_str, 

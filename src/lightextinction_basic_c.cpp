@@ -1,7 +1,6 @@
 #include "lightextinction_basic_c.h"
 #include "forestutils_c.h"
 #include <math.h>
-#include <meteoland.h>
 
 /***
  * FUNCTIONS FOR LIGHT EXTINCTION (BASIC)

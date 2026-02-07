@@ -1,7 +1,100 @@
 #include <numeric>
 #include <math.h>
-#include <meteoland.h>
+#include "radiation_c.h"
 #include "biophysicsutils_c.h"
+
+double airDensity_c(double temperature, double Patm) {
+  return((Patm/(1.01*(temperature+273.16)*0.287)));
+}
+
+double saturationVapourPressure_c(double temperature) {
+  return(0.61078 * exp(17.269 * temperature/(temperature + 237.3)));
+}
+double saturationVaporPressureCurveSlope_c(double temperature) {
+  return(4098.0 * (0.6108 * exp((17.27 * temperature)/(temperature + 237.3)))/pow(temperature + 237.3,2.0));
+}
+
+double averageDailyVapourPressure_c(double Tmin, double Tmax, double RHmin, double RHmax) {
+  double vs_Tmax = saturationVapourPressure_c(Tmax);
+  double vs_Tmin = saturationVapourPressure_c(Tmin);
+  return((vs_Tmin * (RHmax/100.0) + vs_Tmax * (RHmin/100.0))/2.0);
+}
+double averageDaylightTemperature_c(double Tmin, double Tmax) {
+  return(0.606*Tmax + 0.394*Tmin);
+}
+
+double atmosphericPressure_c(double elevation) {
+  return(101.32500*pow(1.0-2.2569*pow(10.0,-5)*elevation,5.2353));
+}
+
+double latentHeatVaporisation_c(double temperature) {
+  return(2.5023 - 0.00243054*temperature);
+}
+
+double latentHeatVaporisationMol_c(double temperature) {
+  return(latentHeatVaporisation_c(temperature)*pow(10.0,6.0)*0.018);
+}
+
+double psychrometricConstant_c(double temperature, double Patm) {
+  return((0.00163*Patm)/latentHeatVaporisation_c(temperature));
+}
+double PenmanPET_c(double latrad, double elevation, double slorad, double asprad, int J,
+                   double Tmin, double Tmax, double RHmin, double RHmax, double R_s,
+                   double u, double z, double z0,
+                   double alpha, std::string windfun) {
+  double Tday = (Tmax + Tmin)/2.0;
+  double RHmean = (RHmax + RHmin)/2.0;
+  //Atmospheric pressure kPa
+  double Patm = atmosphericPressure_c(elevation);
+  //Slope of the saturation vapor pressure curve kPa.Celsius^-1
+  double delta = saturationVaporPressureCurveSlope_c(Tday);
+  //Latent heat of vaporisation MJ.kg^-1
+  double lambda = latentHeatVaporisation_c(Tday);
+  //Psychrometric constant kPa.Celsius^-1
+  double gamma = psychrometricConstant_c(Tday, Patm);
+  //Solar declination
+  double delta2 =  solarDeclination_c(J);
+  //Solar constant
+  double Gsc = solarConstant_c(J);
+  // double d_r2 = 1.0 + 0.033 * cos(2.0 * PI/365.0 * ((double)J));
+  // double w_s = acos(-tan(latitude) * tan(delta2));
+  // double N = 24.0/PI*w_s; (N not used)
+  
+  double PET = 0.0;
+  if(!std::isnan(u)) {
+    double u2 = u * log(2.0/z0)/log(z/z0);
+    double vs_Tmax = saturationVapourPressure_c(Tmax);
+    double vs_Tmin = saturationVapourPressure_c(Tmin);
+    double vas = (vs_Tmax + vs_Tmin)/2.0;
+    double vpa = (vs_Tmin * (RHmax/100.0) + vs_Tmax * (RHmin/100.0))/2.0;
+    double R_n = netRadiation_c(Gsc, latrad, elevation, slorad, asprad, delta2,
+                                vpa, Tmin, Tmax, R_s,
+                                alpha);//Net radiation
+    double Ea = (vas - vpa); //Saturation vapor deficit
+    if(windfun == "1956") {
+      Ea = Ea*(1.313 + 1.381 * u2);
+    } else if(windfun == "1948") {
+      Ea = Ea*(2.626 + 1.381*u2);
+    }
+    PET = delta/(delta + gamma) * (R_n/lambda) + gamma/(delta + gamma) * Ea;
+  } else {
+    //Equation by Valiantzas (2006, eq 33) for situations where wind is not available
+    //Valiantzas JD (2006) Simplified versions for the Penman evaporation equation using routine weather data. Journal of Hydrology 331, 690–702. doi:10.1016/j.jhydrol.2006.06.012.
+    double R_a = RpotDay_c(Gsc, latrad,  slorad, asprad, delta2); //Extraterrestrial (potential) radiation
+    double R_ratio = R_s/R_a;
+    if(R_a==0.0) R_ratio = 0.0;
+    R_ratio = std::min(std::max(R_ratio, 0.0), 1.0);
+    double wf = 0.09;
+    if(windfun == "1956") {
+      wf = 0.06;
+    } else if(windfun == "1948") {
+      wf = 0.09;
+    }
+    PET = 0.047 * R_s * sqrt(Tday + 9.5) - 2.4 * pow(R_ratio,2.0) + wf * (Tday + 20.0) * (1.0 - RHmean/100.0);
+  }
+  if(PET<0.0) PET = 0.0;
+  return(PET);
+}
 
 
 //' Physical and biophysical utility functions
@@ -107,7 +200,7 @@ double temperatureDiurnalPattern_c(double t, double tmin, double tmax,
 //' @keywords internal
 // [[Rcpp::export("biophysics_leafTemperature")]]
 double leafTemperature_c(double absRad, double airTemperature, double u, double E,  double leafWidth = 1.0) {
-  double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
+  double lambda = latentHeatVaporisationMol_c(airTemperature);
   u = std::max(u, 0.1);//Force minimum wind speed to avoid excessive heating
   double gHa = 0.189*pow(u/(leafWidth*0.0072), 0.5);
   double gr = 4.0*0.97*SIGMA_Wm2*pow(273.16+airTemperature,3.0)/Cp_Jmol;
@@ -123,7 +216,7 @@ double leafTemperature_c(double absRad, double airTemperature, double u, double 
 double leafTemperature2_c(double SWRabs, double LWRnet, double airTemperature, double u, double E,  double leafWidth = 1.0) {
   if(std::isnan(SWRabs)) SWRabs = 0.0;
   if(std::isnan(LWRnet)) LWRnet = 0.0;
-  double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
+  double lambda = latentHeatVaporisationMol_c(airTemperature);
   u = std::max(u, 0.1);//Force minimum wind speed to avoid excessive heating
   double gHa = 0.189*pow(u/(leafWidth*0.0072), 0.5);
   double gr = 4.0*0.97*SIGMA_Wm2*pow(273.16+airTemperature,3.0)/Cp_Jmol;
@@ -140,7 +233,7 @@ double leafTemperature2_c(double SWRabs, double LWRnet, double airTemperature, d
 //' @keywords internal
 // [[Rcpp::export("biophysics_leafVapourPressure")]]
 double leafVapourPressure_c(double leafTemp,  double leafPsi) {
-  double vpsl = meteoland::utils_saturationVP(std::max(0.0,leafTemp));
+  double vpsl = saturationVapourPressure_c(std::max(0.0,leafTemp));
   double vpl = vpsl*exp((2.17*leafPsi)/(leafTemp+273.15));
   return(vpl);
 }
@@ -174,3 +267,4 @@ double irradianceToPhotonFlux_c(double I, double lambda = 546.6507) {
 double waterDynamicViscosity_c(double temp) {
   return(exp(-3.7188+(578.919/(-137.546+ temp + 273.15))));
 }
+

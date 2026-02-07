@@ -13,13 +13,8 @@
 #include "phenology_c.h"
 #include "transpiration_basic_c.h"
 #include "transpiration_advanced_c.h"
-#include "fuelstructure.h"
-#include "firebehaviour.h"
 #include "spwb_day_c.h"
-#include "tissuemoisture.h"
-#include "soil.h"
 #include "root_c.h"
-#include <meteoland.h>
 
 
 // Soil water balance with basic hydraulic model
@@ -712,8 +707,8 @@ void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm
     meteovec.rhmax = 100.0;
   }
   if(std::isnan(meteovec.rhmin)) {
-    double vp_tmin = meteoland::utils_saturationVP(meteovec.tmin);
-    double vp_tmax = meteoland::utils_saturationVP(meteovec.tmax);
+    double vp_tmin = saturationVapourPressure_c(meteovec.tmin);
+    double vp_tmax = saturationVapourPressure_c(meteovec.tmax);
     meteovec.rhmin = std::min(meteovec.rhmax, 100.0*(vp_tmin/vp_tmax));
   }
   if(meteovec.rhmin > meteovec.rhmax) {
@@ -738,18 +733,18 @@ void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm
   double slorad = slope * (M_PI/180.0);
   double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
   if(std::isnan(meteovec.tday)) {
-    meteovec.tday = meteoland::utils_averageDaylightTemperature(meteovec.tmin, meteovec.tmax);
+    meteovec.tday = averageDaylightTemperature_c(meteovec.tmin, meteovec.tmax);
   }
   if(std::isnan(meteovec.rad)) {
     // warning("Estimating solar radiation");
-    double vpa = meteoland::utils_averageDailyVP(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
+    double vpa = averageDailyVapourPressure_c(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
     meteovec.rad = RDay_c(solarConstant, latrad, elevation,
                           slorad, asprad, delta, meteovec.tmax -meteovec.tmin, meteovec.tmax-meteovec.tmin,
                           vpa, meteovec.prec);
   }
   if(std::isnan(meteovec.pet)) {
-    meteovec.pet = meteoland::penman(latrad, elevation, slorad, asprad, J, 
-                                     meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax, meteovec.rad, meteovec.wind);
+    meteovec.pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
+                               meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax, meteovec.rad, meteovec.wind);
   }
   
   //Derive doy from date  

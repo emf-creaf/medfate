@@ -5,7 +5,6 @@
 #include "transpiration_advanced_c.h"
 #include "lightextinction_advanced_c.h"
 #include "tissuemoisture_c.h"
-#include "meteoland.h"
 #include "inner_sureau_c.h"
 #include "inner_sperry_c.h"
 #include "windextinction_c.h"
@@ -335,7 +334,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   double wind = meteovec.wind;
 
   //Atmospheric pressure (if missing)
-  if(std::isnan(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  if(std::isnan(Patm)) Patm = atmosphericPressure_c(elevation);
 
   //Vegetation input
   std::vector<double>& LAIlive = x.above.LAI_live;
@@ -461,7 +460,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   double tstep = 86400.0/((double) ntimesteps);
 
   //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
+  double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin,rhmax);
   //If canopy VP is missing or not multilayer initiate it to vpatm
   if(std::isnan(VPair[0]) || (!multiLayerBalance)){
     for(int i=0;i<ncanlayers;i++) VPair[i] = vpatm;
@@ -1199,7 +1198,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       outputEnergyBalance.SWRsoil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present
       outputEnergyBalance.LWRsoil[n] = 0.0; //Set net LWR to zero
     }
-    outputEnergyBalance.LEVsoil[n] = (1e6)*meteoland::utils_latentHeatVaporisation(x.soil.getTemp(0))*soilEvapStep/tstep;
+    outputEnergyBalance.LEVsoil[n] = (1e6)*latentHeatVaporisation_c(x.soil.getTemp(0))*soilEvapStep/tstep;
     // Rcout<<n<<" "<<sum_abs_SWR_soil<<" "<<soilEvapStep << " "<<Tsoil[0]<<" " << LEVsoil[n]<<"\n";
     outputEnergyBalance.LEFsnow[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
 
@@ -1208,27 +1207,27 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
 
     //Canopy convective heat exchange
     double RAcan = aerodynamicResistance_c(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
-    outputEnergyBalance.Hcan[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
+    outputEnergyBalance.Hcan[n] = (airDensity_c(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
 
     if(!multiLayerBalance) {//Canopy balance assuming a single layer
       //Soil-canopy turbulent heat exchange
       double wind2m = windSpeedMassmanExtinction_c(200.0, wind, LAIcell, canopyHeight);
       double RAsoil = aerodynamicResistance_c(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
       if(x.snowpack==0.0) {
-        outputEnergyBalance.Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-x.soil.getTemp(0)))/RAsoil;
+        outputEnergyBalance.Hcansoil[n] = (airDensity_c(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-x.soil.getTemp(0)))/RAsoil;
       } else {
-        outputEnergyBalance.Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
+        outputEnergyBalance.Hcansoil[n] = (airDensity_c(Tcan[n],Patm)*Cp_JKG*(Tcan[n] - 0.0))/RAsoil; //Assumes a zero degree for soil surface (snow)
       }
       //Latent heat (evaporation + transpiration)
       double sum_Einst_n = 0.0;
       for(int c=0;c<numCohorts;c++) sum_Einst_n += outputPlantsInst.E(c, n);
-      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum_Einst_n + canEvapStep + herbTranspStep)/tstep;
+      double LEwat = (1e6)*latentHeatVaporisation_c(Tcan[n])*(sum_Einst_n + canEvapStep + herbTranspStep)/tstep;
       outputEnergyBalance.LEVcan[n] = LEwat;
       // Rcout<< n <<" " << sum_Einst_n << " " << canEvapStep <<" "<< outputEnergyBalance.LEVcan[n]<<"\n";
       
       //Canopy temperature changes
       outputEnergyBalance.Ebalcan[n] = outputEnergyBalance.SWRcan[n] + outputEnergyBalance.LWRcan[n] - outputEnergyBalance.LEVcan[n] - outputEnergyBalance.LEFsnow[n] - outputEnergyBalance.Hcan[n] - outputEnergyBalance.Hcansoil[n];
-      double canopyAirThermalCapacity = meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG;
+      double canopyAirThermalCapacity = airDensity_c(Tcan[n],Patm)*Cp_JKG;
       double canopyThermalCapacity =  canopyAirThermalCapacity + (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
       double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*outputEnergyBalance.Ebalcan[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
       if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
@@ -1259,7 +1258,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         if(n<(ntimesteps-1)) outputEnergyBalance.SoilTemperature(n+1,l)= x.soil.getTemp(l);
       }
     } else { //Multilayer canopy balance
-      double moistureAtm = 0.622*(vpatm/Patm)*meteoland::utils_airDensity(Tatm[n],Patm);
+      double moistureAtm = 0.622*(vpatm/Patm)*airDensity_c(Tatm[n],Patm);
       double CO2Atm = 0.409*Catm*44.01; //mg/m3
 
       double tsubstep = tstep/((double) nsubsteps);
@@ -1275,7 +1274,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       std::vector<double> moistureET(ncanlayers), rho(ncanlayers), moistureLayer(ncanlayers), moistureLayernext(ncanlayers);
       std::vector<double> CO2An(ncanlayers), CO2Layer(ncanlayers), CO2Layernext(ncanlayers);
       for(int i=0;i<ncanlayers;i++) {
-        rho[i] = meteoland::utils_airDensity(Tair[i],Patm);
+        rho[i] = airDensity_c(Tair[i],Patm);
         absSWRlayer[i] = 0.0;
         for(int c; c< numCohorts; c++) absSWRlayer[i] += absSWR_SL_ML(i,c) + absSWR_SH_ML(i,c);
         //Radiation balance
@@ -1295,7 +1294,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         double Anlayer = 0.0;
         for(int c; c< numCohorts; c++) Anlayer += (1e-3)*44.01*LAIme(i,c)*(outputSunlitInst.An(c,n)*fsunlit[i] + outputShadeInst.An(c,n)*(1.0-fsunlit[i]));
         // 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer);
-        double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(ElayerInst + layerEvapInst+ herbTranspInst);
+        double LEwat = (1e6)*latentHeatVaporisation_c(Tair[i])*(ElayerInst + layerEvapInst+ herbTranspInst);
         LElayer[i] = LEwat; //Energy spent in vaporisation
         if(i==0) LElayer[i] = LElayer[i] - outputEnergyBalance.LEFsnow[n]; //Add latent heat of fusion to first layer
         outputEnergyBalance.LEVcan[n] = LElayer[i];
@@ -1315,8 +1314,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
 
       for(int s=0;s<nsubsteps;s++) {
         double RAsoil = aerodynamicResistance_c(200.0, std::max(input.zWind[0],1.0)); //Aerodynamic resistance to convective heat transfer from soil
-        double Hcansoils = Cp_JKG*meteoland::utils_airDensity(Tair[0],Patm)*(Tair[0] - x.soil.getTemp(0))/RAsoil;
-        // double Hcan_heats = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tair[ncanlayers-1]-Tatm[n]))/RAcan;
+        double Hcansoils = Cp_JKG*airDensity_c(Tair[0],Patm)*(Tair[0] - x.soil.getTemp(0))/RAsoil;
+        // double Hcan_heats = (airDensity_c(Tatm[n],Patm)*Cp_JKG*(Tair[ncanlayers-1]-Tatm[n]))/RAcan;
         for(int i=0;i<ncanlayers;i++) {
           double deltaH = 0.0;
           double deltaMoisture = 0.0;

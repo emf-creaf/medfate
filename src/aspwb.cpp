@@ -617,7 +617,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
 
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
-    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double tday = averageDaylightTemperature_c(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];

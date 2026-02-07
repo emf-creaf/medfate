@@ -812,7 +812,7 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
                                               slorad, asprad, delta, tmax -tmin, tmax-tmin,
                                               vpa, prec);
   }
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  double pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
   //Derive doy from date  
   int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
