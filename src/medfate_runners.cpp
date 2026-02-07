@@ -123,7 +123,7 @@ void SPWB_multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteov
                        weather_vec,
                        SPWB_res_vec);
     // call it with parallelFor
-    parallelFor(0, x_vec.size(), worker);
+    parallelFor(0, x_vec.size(), worker, std::min(100, (int) x_vec.size()));
   } else {
     for(size_t i=0;i<x_vec.size();i++) {
       std::vector<double> lateralFlows_c(x_vec[i]->soil.getNlayers(), 0.0);

@@ -25,9 +25,9 @@ test_that("SPWB_runner initializes and runs correctly", {
 })
 
 test_that("SPWB_multiple_runner initializes and runs correctly", {
-  controlSureau <- defaultControl("Granier")
+  controlSureau <- defaultControl("Sureau")
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
-  n = 10;
+  n = 10000;
   x_vec <- vector("list", n)
   for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
   latitude_vec <- rep(41, n)
