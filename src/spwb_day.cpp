@@ -1049,7 +1049,6 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
-  std::string& soilDomains = x_c.control.soilDomains;
   SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
 
   // Prepare lateral flows
@@ -1061,25 +1060,40 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
       lateralFlows_c[l] = lateralFlows_mm[l];
     }
   }
+  List l;
   
-  // Call simulation
-  spwbDay_inner_c(SPWBcomm, x_c, 
-                  as<std::string>(date[0]),
-                  meteovec_c, 
-                  latitude, elevation, slope, aspect,
-                  runon, 
-                  lateralFlows_c, waterTableDepth);
-    
-  // Extract output
-  List modelOutput;
   if(x_c.control.transpirationMode=="Granier") {
-    modelOutput = copyBasicSPWBResult_c(SPWBcomm.BSPWBres, x_c);
+    //Initialises a result
+    BasicTranspiration_RESULT BTres(numCohorts, nlayers);
+    BasicSPWB_RESULT BSPWBres(BTres);
+    Rcout<< "pointer set to basic result\n";
+    // Calls simulation
+    spwbDay_inner_c(BSPWBres, SPWBcomm, x_c, 
+                    as<std::string>(date[0]),
+                    meteovec_c, 
+                    latitude, elevation, slope, aspect,
+                    runon, 
+                    lateralFlows_c, waterTableDepth);
+    //Copies result
+    l = copySPWBResult_c(BSPWBres, x_c);
   } else {
-    modelOutput = copyAdvancedSPWBResult_c(SPWBcomm.ASPWBres, x_c);
+    //Initialises a result
+    AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
+    AdvancedSPWB_RESULT ASPWBres(ATres);
+    Rcout<< "pointer set to advanced result\n";
+    // Calls simulation
+    spwbDay_inner_c(ASPWBres, SPWBcomm, x_c, 
+                    as<std::string>(date[0]),
+                    meteovec_c, 
+                    latitude, elevation, slope, aspect,
+                    runon, 
+                    lateralFlows_c, waterTableDepth);
+    //Copies result
+    l = copySPWBResult_c(ASPWBres, x_c);
   }
-  
-  if(modifyInput) {
-    x_c.copyStateToList(x);
-  }
-  return(modelOutput);
+
+  //Modifies input list, if required  
+  if(modifyInput) x_c.copyStateToList(x);
+
+  return(l);
 }

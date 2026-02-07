@@ -693,7 +693,7 @@ Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x) {
   return(l);
 }
 
-void spwbDay_inner_c(SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
+void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
                      std::string date,
                      WeatherInputVector meteovec, 
                      double latitude, double elevation, double slope, double aspect,
@@ -772,18 +772,27 @@ void spwbDay_inner_c(SPWBCommunicationStructures& SPWBcomm, ModelInput& x,
   meteovec.tminNext = meteovec.tmin;
 
   if(x.control.transpirationMode=="Granier") {
-    spwbDay_basic_c(SPWBcomm.BSPWBres, SPWBcomm.BSPWBcomm, x, 
-                    meteovec, 
-                    elevation, slope, aspect,
-                    runon, 
-                    lateralFlows, waterTableDepth);
+    try {
+      BasicSPWB_RESULT& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(SPWBres);
+      spwbDay_basic_c(BSPWBres, SPWBcomm.BSPWBcomm, x, 
+                      meteovec, 
+                      elevation, slope, aspect,
+                      runon, 
+                      lateralFlows, waterTableDepth);
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to basic(granier) but result object is not basic");
+    }
   } else {
-    spwbDay_advanced_c(SPWBcomm.ASPWBres, SPWBcomm.ASPWBcomm, x, 
+    try {
+      auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(SPWBres);
+      spwbDay_advanced_c(ASPWBres, SPWBcomm.ASPWBcomm, x, 
                        meteovec, 
                        latitude, elevation, slope, aspect,
                        solarConstant, delta,
                        runon, 
                        lateralFlows, waterTableDepth);
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+    }
   }
-  
 }

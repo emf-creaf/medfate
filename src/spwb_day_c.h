@@ -21,23 +21,23 @@ struct SPWB_RESULT {
   FCCSBehaviour_RESULT fccsbeh;
   FCCS_RESULT fccs;
   
+  SPWB_RESULT() : Soil(0) {}
   SPWB_RESULT(size_t nlayers) : Soil(nlayers) {}
-  
   virtual ~SPWB_RESULT() = default;
 };
-Rcpp::List copySPWBResult_c(const SPWB_RESULT& SPWBres, ModelInput& x);
+Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x);
 
 struct BasicSPWB_RESULT : SPWB_RESULT {
   BasicTranspiration_RESULT BTres;
   
-  BasicSPWB_RESULT(BasicTranspiration_RESULT& BTres, size_t nlayers) : SPWB_RESULT(nlayers), BTres(BTres) {}
+  BasicSPWB_RESULT(BasicTranspiration_RESULT& BTres) : SPWB_RESULT(BTres.nlayers), BTres(BTres) {}
 };
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x);
 
 struct AdvancedSPWB_RESULT : SPWB_RESULT {
   AdvancedTranspiration_RESULT ATres;
   
-  AdvancedSPWB_RESULT(AdvancedTranspiration_RESULT& ATresIN, size_t nlayers) : SPWB_RESULT(nlayers), ATres(ATresIN) {}
+  AdvancedSPWB_RESULT(AdvancedTranspiration_RESULT& ATresIN) : SPWB_RESULT(ATresIN.nlayers), ATres(ATresIN) {}
 };
 Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelInput& x);
 
@@ -76,28 +76,21 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
 struct SPWBCommunicationStructures {
   
   SoilWaterBalance_COMM SWBcomm;
-  BasicTranspiration_RESULT BTres;
   BasicTranspiration_COMM BTcomm;
-  AdvancedTranspiration_RESULT ATres;
   AdvancedTranspiration_COMM ATcomm;
-  BasicSPWB_RESULT BSPWBres;
-  AdvancedSPWB_RESULT ASPWBres;
   BasicSPWB_COMM BSPWBcomm;
   AdvancedSPWB_COMM ASPWBcomm;
-  
+
   SPWBCommunicationStructures(size_t numCohorts, size_t nlayers, size_t ncanlayers, size_t ntimesteps) :
     SWBcomm(nlayers),
-    BTres(numCohorts, nlayers),
     BTcomm(numCohorts, ncanlayers, nlayers),
-    ATres(numCohorts, nlayers, ncanlayers, ntimesteps),
     ATcomm(numCohorts, nlayers, ncanlayers, ntimesteps),
-    BSPWBres(BTres, nlayers),
-    ASPWBres(ATres, nlayers),
     BSPWBcomm(SWBcomm, BTcomm),
-    ASPWBcomm(SWBcomm, ATcomm) {} 
+    ASPWBcomm(SWBcomm, ATcomm)
+     {} 
 };
 
-void spwbDay_inner_c(SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
+void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
                      std::string date,
                      WeatherInputVector meteovec, 
                      double latitude, double elevation, double slope, double aspect,

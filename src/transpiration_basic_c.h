@@ -56,6 +56,9 @@ struct StandBasicTranspiration_RESULT {
 Rcpp::NumericVector copyStandBasicTranspirationResult_c(const StandBasicTranspiration_RESULT& stand);
 
 struct BasicTranspiration_RESULT {
+  size_t numCohorts;
+  size_t nlayers;
+  
   // Stand-level (4 fields)
   StandBasicTranspiration_RESULT stand;
   
@@ -67,6 +70,8 @@ struct BasicTranspiration_RESULT {
   std::vector<arma::mat> extractionPools;
   
   BasicTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0) : 
+    numCohorts(numCohorts),
+    nlayers(nlayers),
     plants(numCohorts), 
     extraction(numCohorts, nlayers, arma::fill::zeros),
     extractionPools(numCohorts) {

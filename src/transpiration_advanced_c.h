@@ -186,6 +186,11 @@ Rcpp::List copyEnergyBalanceResult_c(const EnergyBalance_RESULT& EBres, ModelInp
 
 
 struct AdvancedTranspiration_RESULT {
+  size_t numCohorts;
+  size_t nlayers;
+  size_t ncanlayers;
+  size_t ntimesteps;
+  
   // Stand-level (4 fields)
   StandBasicTranspiration_RESULT stand;
   
@@ -216,6 +221,10 @@ struct AdvancedTranspiration_RESULT {
   std::vector<LongWaveRadiation_RESULT> lwrExtinction;
   
   AdvancedTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0, size_t ncanlayers = 0, size_t ntimesteps = 0) : 
+    numCohorts(numCohorts),
+    nlayers(nlayers),
+    ncanlayers(ncanlayers),
+    ntimesteps(ntimesteps),
     plants(numCohorts), 
     plants_inst(numCohorts, ntimesteps),
     sunlit(numCohorts),

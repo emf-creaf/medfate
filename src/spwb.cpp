@@ -1082,16 +1082,16 @@ void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   }
 }
 
-void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWBCommunicationStructures& sDay, int iday) {
+void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWB_RESULT& sDay, int iday) {
   bool plantWaterPools = (x.control.rhizosphereOverlap!="total");
   bool basic = x.control.transpirationMode=="Granier";
   
   DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
-  int numDays = DWB.nrow();
+  // int numDays = DWB.nrow();
   if(basic) {
-    fillWaterBalanceDailyOutput_c(DWB, sDay.BSPWBres.WaterBalance, iday);
+    fillWaterBalanceDailyOutput_c(DWB, sDay.WaterBalance, iday);
   } else {
-    fillWaterBalanceDailyOutput_c(DWB, sDay.ASPWBres.WaterBalance, iday);
+    fillWaterBalanceDailyOutput_c(DWB, sDay.WaterBalance, iday);
   }
   
   if(x.control.results.soilResults) {
@@ -1112,11 +1112,7 @@ void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWBCommunicationStructures& s
   }
   if(x.control.results.standResults) {
     DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
-    if(basic) {
-      fillStandDailyOutput_c(Stand, sDay.BSPWBres.Stand, iday);
-    } else {
-      fillStandDailyOutput_c(Stand, sDay.ASPWBres.Stand, iday);
-    }
+    fillStandDailyOutput_c(Stand, sDay.Stand, iday);
   }
   if(x.control.results.plantResults) {
     List plantDWOL = l["Plants"];
@@ -1964,8 +1960,14 @@ List spwb_c(List x, DataFrame meteo,
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
-  std::string& soilDomains = x_c.control.soilDomains;
-  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps, soilDomains);
+
+  
+  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+  BasicTranspiration_RESULT BTres(numCohorts, nlayers);
+  BasicSPWB_RESULT BSPWBres(BTres);
+  AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
+  AdvancedSPWB_RESULT ASPWBres(ATres);
+  
   
   std::string yearString;
   std::vector<double> lateralFlows(nlayers, 0.0);
@@ -2097,11 +2099,11 @@ List spwb_c(List x, DataFrame meteo,
       meteovec.pet = PET[i];
       meteovec.rint = Rint;
       try{
-        spwbDay_basic_c(SPWBcomm.BSPWBres, SPWBcomm.BSPWBcomm, x_c, 
+        spwbDay_basic_c(BSPWBres, SPWBcomm.BSPWBcomm, x_c, 
                         meteovec, 
                         elevation, slope, aspect,
                         0.0, lateralFlows, waterTableDepth);
-        fillSPWBDailyOutput_c(outputList, x_c, SPWBcomm ,i);
+        fillSPWBDailyOutput_c(outputList, x_c, BSPWBres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -2132,7 +2134,7 @@ List spwb_c(List x, DataFrame meteo,
       meteovec.pet = PET[i];
       meteovec.rint = Rint;
       try{
-        spwbDay_advanced_c(SPWBcomm.ASPWBres, SPWBcomm.ASPWBcomm, x_c, 
+        spwbDay_advanced_c(ASPWBres, SPWBcomm.ASPWBcomm, x_c, 
                            meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 

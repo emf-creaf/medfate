@@ -14,22 +14,22 @@ struct SPWB_worker : public Worker
   // source vectors and date
   SPWBCommunicationStructures SPWBcomm;
   std::string date;
-  std::vector<ModelInput> input_vec;
+  std::vector<std::unique_ptr<ModelInput>> input_vec;
   std::vector<double> latitude_vec;
-  std::vector<Topography> topo_vec;
+  std::vector<std::unique_ptr<Topography>> topo_vec;
   std::vector<WeatherInputVector> weather_vec;
   
   // destination vector
-  std::vector<SPWB_RESULT> output_vec;
+  std::vector<std::unique_ptr<SPWB_RESULT>> output_vec;
   
   // initialize with source and destination
   SPWB_worker(SPWBCommunicationStructures& SPWBcomm,
              std::string& date, 
-             std::vector<ModelInput>& input_vec,
+             std::vector<std::unique_ptr<ModelInput>> input_vec,
              std::vector<double>& latitude_vec,
-             std::vector<Topography>& topo_vec,
+             std::vector<std::unique_ptr<Topography>> topo_vec,
              std::vector<WeatherInputVector>& weather_vec,
-             std::vector<SPWB_RESULT>& output_vec) : 
+             std::vector<std::unique_ptr<SPWB_RESULT>> output_vec) : 
     SPWBcomm(SPWBcomm), 
     date(date), input_vec(input_vec), 
     latitude_vec(latitude_vec), 
