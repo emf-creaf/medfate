@@ -21,5 +21,29 @@ test_that("SPWB_runner initializes and runs correctly", {
   meteovec <- unlist(examplemeteo[d,-1])
   date <- as.character(examplemeteo$dates[d])
   mfr$run_day(date, meteovec, 0, NULL, NA)
-  # expect_s3_class(mfr$get_output(), "spwb_day")
+  expect_s3_class(mfr$get_output(), "spwb_day")
+})
+
+test_that("SPWB_multiple_runner initializes and runs correctly", {
+  controlSureau <- defaultControl("Granier")
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
+  x_vec <- vector("list", 100)
+  for(i in 1:100) x_vec[[i]] = x1
+  latitude_vec <- rep(41, 100)
+  elevation_vec <- rep(100, 100)
+  slope_vec <- rep(0, 100)
+  aspect_vec <- rep(0, 100)
+  mfmr <- new(SPWB_multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+  expect_s4_class(mfmr, "Rcpp_SPWB_multiple_runner")
+  d <- 100
+  meteovec1 <- unlist(examplemeteo[d,-1])
+  meteo_vec <- vector("list", 100)
+  for(i in 1:100) meteo_vec[[i]] = meteovec1
+  date <- as.character(examplemeteo$dates[d])
+  system.time(mfmr$run_day(date, meteo_vec, FALSE))
+  expect_s3_class(mfmr$get_output_at(1), "spwb_day")
+  expect_s3_class(mfmr$get_output_at(2), "spwb_day")
+  # system.time(mfmr$run_day(date, meteo_vec, TRUE))
+  # expect_s3_class(mfmr$get_output_at(1), "spwb_day")
+  # expect_s3_class(mfmr$get_output_at(2), "spwb_day")
 })

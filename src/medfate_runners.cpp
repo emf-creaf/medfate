@@ -114,6 +114,7 @@ void SPWB_multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteov
   }
   std::string date_str = Rcpp::as<std::string>(date[0]);
   if(parallelize) {
+    Rcout<<"going parallel\n";
     //build worker
     SPWB_worker worker(SPWBcomm,
                        date_str, 
@@ -139,8 +140,9 @@ void SPWB_multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteov
   }
 }
 
+//Returs output (decreases index)
 Rcpp::List SPWB_multiple_runner::get_output_at(int i) {
-  return(copySPWBResult_c(*SPWB_res_vec[i], *x_vec[i]));
+  return(copySPWBResult_c(*SPWB_res_vec[i-1], *x_vec[i-1]));
 }
 
 RCPP_MODULE(mod_multiple_spwb) {

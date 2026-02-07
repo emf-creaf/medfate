@@ -29,8 +29,8 @@ private:
   std::vector<double> latitude_vec;
   std::vector<std::unique_ptr<Topography>> topo_vec;
   std::vector<std::unique_ptr<ModelInput>> x_vec;
-  SPWBCommunicationStructures SPWBcomm;
   std::vector<std::unique_ptr<SPWB_RESULT>> SPWB_res_vec;
+  SPWBCommunicationStructures SPWBcomm;
 public:
   SPWB_multiple_runner(List x_vec, 
                        NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
