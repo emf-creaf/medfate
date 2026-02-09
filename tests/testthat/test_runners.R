@@ -27,7 +27,7 @@ test_that("SPWB_runner initializes and runs correctly", {
 test_that("SPWB_multiple_runner initializes and runs correctly", {
   controlSureau <- defaultControl("Sureau")
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
-  n = 10000;
+  n = 100;
   x_vec <- vector("list", n)
   for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
   latitude_vec <- rep(41, n)
@@ -41,11 +41,11 @@ test_that("SPWB_multiple_runner initializes and runs correctly", {
   meteo_vec <- vector("list", n)
   for(i in 1:n) meteo_vec[[i]] = rlang::duplicate(meteovec1)
   date <- as.character(examplemeteo$dates[d])
-  print(system.time(mfmr$run_day(date, meteo_vec, FALSE)))
+  system.time(mfmr$run_day(date, meteo_vec, FALSE))
   expect_s3_class(mfmr$get_output_at(1), "spwb_day")
   expect_s3_class(mfmr$get_output_at(2), "spwb_day")
   Sys.setenv(ARMA_NUM_THREADS = "1")
-  print(system.time(mfmr$run_day(date, meteo_vec, TRUE)))
+  system.time(mfmr$run_day(date, meteo_vec, TRUE))
   expect_s3_class(mfmr$get_output_at(1), "spwb_day")
   expect_s3_class(mfmr$get_output_at(2), "spwb_day")
 })

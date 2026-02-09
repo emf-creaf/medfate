@@ -2,6 +2,7 @@
 #define STRICT_R_HEADERS
 #include <RcppArmadillo.h>
 #include <numeric>
+#include <algorithm>
 #include <math.h>
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"
@@ -720,6 +721,7 @@ void fillSoilDailyOutput(List SWB, DataFrame soil, List sDay,
     MLdays(iday,nlayers) = MLdays(iday,nlayers) + MLdays(iday,l);
     Psidays(iday,nlayers) += psi[l]*Water_SAT[l];
   }
+
   SWCdays(iday,nlayers) = sum((W*Theta_FC)*Water_SAT)/sum(Water_SAT);
   RWCdays(iday,nlayers) = MLdays(iday,nlayers)/sum(Water_FC);
   REWdays(iday,nlayers) = (MLdays(iday,nlayers) - sum(Water_min))/sum(Water_ext);
@@ -741,6 +743,59 @@ void fillSoilDailyOutput(List SWB, DataFrame soil, List sDay,
     }
   }
 }
+void fillSoilDailyOutput_c(List SWB, Soil& soil, Soil_RESULT& sb, 
+                         int iday, int numDays,
+                         bool includePlants = true) {
+  int nlayers = soil.getNlayers();
+  double psi_min = -5.0;
+
+  NumericMatrix SWCdays = as<Rcpp::NumericMatrix>(SWB["SWC"]);
+  NumericMatrix MLdays = as<Rcpp::NumericMatrix>(SWB["ML"]);
+  NumericMatrix RWCdays = as<Rcpp::NumericMatrix>(SWB["RWC"]);
+  NumericMatrix Psidays = as<Rcpp::NumericMatrix>(SWB["Psi"]);
+  NumericMatrix REWdays = as<Rcpp::NumericMatrix>(SWB["REW"]);
+  
+  double sumWaterSAT = 0.0;
+  double sumWater = 0.0;
+  double sumWaterFC = 0.0;
+  double sumWaterMin = 0.0;
+  double sumWaterExtractable = 0.0;
+  Psidays(iday,nlayers) = 0.0;
+  for(int l=0; l<nlayers; l++) {
+    Psidays(iday,l) = sb.Psi[l];
+    RWCdays(iday,l) = soil.getW(l);
+    SWCdays(iday,l) = soil.getW(l)*soil.getThetaFC(l);
+    MLdays(iday,l) = RWCdays(iday,l)*soil.getWaterFC(l); 
+    REWdays(iday,l) = (MLdays(iday,l)-soil.getWaterAtPsi(l,psi_min))/(soil.getWaterFC(l) - soil.getWaterAtPsi(l,psi_min));
+    MLdays(iday,nlayers) = MLdays(iday,nlayers) + MLdays(iday,l);
+    Psidays(iday,nlayers) += sb.Psi[l]*soil.getWaterSAT(l);
+    sumWaterSAT += soil.getWaterSAT(l);
+    sumWaterFC += soil.getWaterFC(l);
+    sumWater += SWCdays(iday,l)*soil.getWaterSAT(l);
+    sumWaterMin += soil.getWaterAtPsi(l,psi_min);
+    sumWaterExtractable += soil.getWaterFC(l) - soil.getWaterAtPsi(l,psi_min);
+  }
+
+  SWCdays(iday,nlayers) = sumWater/sumWaterSAT;
+  RWCdays(iday,nlayers) = MLdays(iday,nlayers)/sumWaterFC;
+  REWdays(iday,nlayers) = (MLdays(iday,nlayers) - sumWaterMin)/sumWaterExtractable;
+  Psidays(iday,nlayers) = Psidays(iday,nlayers)/sumWaterSAT;
+  
+  if(includePlants) {
+    NumericMatrix Eplantdays = as<Rcpp::NumericMatrix>(SWB["PlantExt"]);
+    NumericMatrix HydrIndays = as<Rcpp::NumericMatrix>(SWB["HydraulicInput"]);
+    Eplantdays(iday,nlayers) = 0.0;
+    HydrIndays(iday,nlayers) = 0.0;
+    for(int l=0; l<nlayers; l++) {
+      HydrIndays(iday,l) = sb.HydraulicInput[l];
+      HydrIndays(iday,nlayers) += sb.HydraulicInput[l];
+      Eplantdays(iday,l) = sb.PlantExtraction[l];
+      Eplantdays(iday,nlayers) += sb.PlantExtraction[l];
+    }
+  }
+}
+
+
 void fillSoilPoolDailyOutput(List soilPools, DataFrame soil, NumericMatrix Wpool, int iday, String soilFunctions) {
   List REWpool = soilPools["REW"];
   List Psipool = soilPools["Psi"];
@@ -755,6 +810,28 @@ void fillSoilPoolDailyOutput(List soilPools, DataFrame soil, NumericMatrix Wpool
     for(int l=0;l<nlayers;l++) soil_pool_W[l] = Wpool(c,l);
     psiM(iday,_) = psi(soil_pool, soilFunctions);
   }
+}
+void fillSoilPoolDailyOutput_c(List soilPools, Soil& soil, arma::mat& Wpool, int iday) {
+  List REWpool = soilPools["REW"];
+  List Psipool = soilPools["Psi"];
+  int numCohorts = Psipool.size();
+  int nlayers = soil.getNlayers();
+  
+  double* Wbackup = new double[nlayers];
+  for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
+  
+  for(int c=0;c<numCohorts;c++) {
+    NumericMatrix rewM = Rcpp::as<Rcpp::NumericMatrix>(REWpool[c]);
+    for(int l=0;l<nlayers;l++) rewM(iday,l) = Wpool(c,l);
+    NumericMatrix psiM = Rcpp::as<Rcpp::NumericMatrix>(Psipool[c]);
+    for(int l=0;l<nlayers;l++) {
+      soil.setW(l, Wpool(c,l)); 
+      psiM(iday,l) = soil.getPsi(l);
+    }
+  }
+  //Restore soil moisture
+  for(int l = 0; l<nlayers;l++) soil.setW(l, Wbackup[l]);
+  delete[] Wbackup;
 }
 void fillSnowDailyOutput(DataFrame Snow, List x, int iday) {
   NumericVector SWE = Snow["SWE"];
@@ -795,6 +872,32 @@ void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday, int ntimes
   Ebalsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Ebalsoil"]))*tstep;
 }
 
+void fillEnergyBalanceDailyOutput_c(DataFrame DEB, EnergyBalance_RESULT& EB, int iday, int ntimesteps) {
+  double tstep = 86400.0/((double) ntimesteps);
+  NumericVector SWRcan = DEB["SWRcan"];
+  NumericVector LWRcan = DEB["LWRcan"];
+  NumericVector LEVcan = DEB["LEVcan"];
+  NumericVector LEFsnow = DEB["LEFsnow"];
+  NumericVector Hcan_heat = DEB["Hcan"];
+  NumericVector Ebalcan = DEB["Ebalcan"];
+  SWRcan[iday] = 0.000001*std::accumulate(EB.SWRcan.begin(), EB.SWRcan.end(), 0.0)*tstep;
+  LWRcan[iday] = 0.000001*std::accumulate(EB.LWRcan.begin(), EB.LWRcan.end(), 0.0)*tstep;
+  LEVcan[iday] = 0.000001*std::accumulate(EB.LEVcan.begin(), EB.LEVcan.end(), 0.0)*tstep;
+  LEFsnow[iday] = 0.000001*std::accumulate(EB.LEFsnow.begin(), EB.LEFsnow.end(), 0.0)*tstep;
+  Hcan_heat[iday] = 0.000001*std::accumulate(EB.Hcan.begin(), EB.Hcan.end(), 0.0)*tstep;
+  Ebalcan[iday] = 0.000001*std::accumulate(EB.Ebalcan.begin(), EB.Ebalcan.end(), 0.0)*tstep;
+  NumericVector SWRsoil = DEB["SWRsoil"];
+  NumericVector LWRsoil = DEB["LWRsoil"];
+  NumericVector LEVsoil = DEB["LEVsoil"];
+  NumericVector Hcansoil = DEB["Hcansoil"];
+  NumericVector Ebalsoil = DEB["Ebalsoil"];
+  SWRsoil[iday] = 0.000001*std::accumulate(EB.SWRsoil.begin(), EB.SWRsoil.end(), 0.0)*tstep;
+  LWRsoil[iday] = 0.000001*std::accumulate(EB.LWRsoil.begin(), EB.LWRsoil.end(), 0.0)*tstep;
+  LEVsoil[iday] = 0.000001*std::accumulate(EB.LEVsoil.begin(), EB.LEVsoil.end(), 0.0)*tstep;
+  Hcansoil[iday] = 0.000001*std::accumulate(EB.Hcansoil.begin(), EB.Hcansoil.end(), 0.0)*tstep;
+  Ebalsoil[iday] = 0.000001*std::accumulate(EB.Ebalsoil.begin(), EB.Ebalsoil.end(), 0.0)*tstep;
+}
+
 void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday, int ntimesteps) {
   List EB = Rcpp::as<Rcpp::List>(sDay["EnergyBalance"]);
   DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
@@ -823,6 +926,29 @@ void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday, int ntimestep
   Tsoil_max[iday] = max(Tsoil_0);
   Tsoil_mean[iday] = sum(Tsoil_0)/((double) ntimesteps);
 }
+void fillTemperatureDailyOutput_c(DataFrame DT, EnergyBalance_RESULT& EB, int iday, int ntimesteps) {
+  std::vector<double> Tsoil_0(ntimesteps);
+  for(int n = 0;n<ntimesteps; n++) Tsoil_0[n] = EB.SoilTemperature(n,0);
+  
+  NumericVector Tatm_min = DT["Tatm_min"];
+  NumericVector Tatm_max = DT["Tatm_max"];
+  NumericVector Tatm_mean = DT["Tatm_mean"];
+  NumericVector Tcan_min = DT["Tcan_min"];
+  NumericVector Tcan_max = DT["Tcan_max"];
+  NumericVector Tcan_mean = DT["Tcan_mean"];
+  NumericVector Tsoil_min = DT["Tsoil_min"];
+  NumericVector Tsoil_max = DT["Tsoil_max"];
+  NumericVector Tsoil_mean = DT["Tsoil_mean"];
+  Tatm_min[iday] = *std::min_element(EB.Tatm.begin(), EB.Tatm.end());
+  Tatm_max[iday] = *std::max_element(EB.Tatm.begin(), EB.Tatm.end());
+  Tatm_mean[iday] = std::accumulate(EB.Tatm.begin(), EB.Tatm.end(), 0.0)/((double) ntimesteps);
+  Tcan_min[iday] = *std::min_element(EB.Tcan.begin(), EB.Tcan.end());
+  Tcan_max[iday] = *std::max_element(EB.Tcan.begin(), EB.Tcan.end());
+  Tcan_mean[iday] = std::accumulate(EB.Tcan.begin(), EB.Tcan.end(), 0.0)/((double) ntimesteps);
+  Tsoil_min[iday] = *std::min_element(Tsoil_0.begin(), Tsoil_0.end());
+  Tsoil_max[iday] = *std::max_element(Tsoil_0.begin(), Tsoil_0.end());
+  Tsoil_mean[iday] = std::accumulate(Tsoil_0.begin(), Tsoil_0.end(), 0.0)/((double) ntimesteps);
+}
 
 void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday, int ncanlayers, int ntimesteps) {
   List EB = Rcpp::as<Rcpp::List>(sDay["EnergyBalance"]);
@@ -834,6 +960,15 @@ void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday, in
     DLT(iday, l) = 0.0;
     for(int n=0;n<ntimesteps;n++) {
        DLT(iday, l) += LTinst(n,l);
+    }
+    DLT(iday, l) = DLT(iday, l)/((double) ntimesteps);
+  }
+}
+void fillTemperatureLayersDailyOutput_c(NumericMatrix DLT, EnergyBalance_RESULT& EB, int iday, int ncanlayers, int ntimesteps) {
+  for(int l=0;l<ncanlayers;l++) {
+    DLT(iday, l) = 0.0;
+    for(int n=0;n<ntimesteps;n++) {
+      DLT(iday, l) +=  EB.TemperatureLayers(n,l);
     }
     DLT(iday, l) = DLT(iday, l)/((double) ntimesteps);
   }
@@ -927,6 +1062,108 @@ void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpiration
   }
 }
 
+void fillPlantWaterDailyOutput_c(List x, SPWB_RESULT& sDay, int iday, String transpirationMode, int ntimesteps) {
+
+  NumericMatrix PlantStress= Rcpp::as<Rcpp::NumericMatrix>(x["PlantStress"]);
+  NumericMatrix PlantTranspiration= Rcpp::as<Rcpp::NumericMatrix>(x["Transpiration"]);
+  NumericMatrix PlantLAI= Rcpp::as<Rcpp::NumericMatrix>(x["LAI"]);
+  NumericMatrix PlantLAIlive= Rcpp::as<Rcpp::NumericMatrix>(x["LAIlive"]);
+  NumericMatrix LeafPLC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafPLC"]);
+  NumericMatrix StemPLC= Rcpp::as<Rcpp::NumericMatrix>(x["StemPLC"]);
+  NumericMatrix StemRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemRWC"]);
+  NumericMatrix LeafRWC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafRWC"]);
+  NumericMatrix LFMC= Rcpp::as<Rcpp::NumericMatrix>(x["LFMC"]);
+  NumericMatrix PlantWaterBalance= Rcpp::as<Rcpp::NumericMatrix>(x["PlantWaterBalance"]);
+  NumericMatrix PlantFPAR= Rcpp::as<Rcpp::NumericMatrix>(x["FPAR"]);
+  
+  int numCohorts = PlantLAI.ncol();
+  
+  if(transpirationMode=="Granier") {
+    try {
+      auto& sDaybas = dynamic_cast<BasicSPWB_RESULT&>(sDay);
+      PlantsBasicTranspiration_RESULT& plants = sDaybas.BTres.plants;
+      for(int c=0;c<numCohorts;c++) {
+        PlantTranspiration(iday,c) =  plants.Transpiration[c];
+        PlantStress(iday,c) = plants.DDS[c];
+        PlantLAI(iday,c) = plants.LAI[c];
+        PlantLAIlive(iday,c) = plants.LAIlive[c];
+        LeafPLC(iday,c) = plants.LeafPLC[c]; 
+        StemPLC(iday,c) = plants.StemPLC[c]; 
+        StemRWC(iday,c) = plants.StemRWC[c];
+        LeafRWC(iday,c) = plants.LeafRWC[c]; 
+        LFMC(iday,c) = plants.LFMC[c]; 
+        PlantWaterBalance(iday,c) = plants.WaterBalance[c]; 
+        PlantFPAR(iday,c) =  plants.FPAR[c];  
+      }
+      NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
+      NumericMatrix PlantPsi = Rcpp::as<Rcpp::NumericMatrix>(x["PlantPsi"]);
+      NumericMatrix PlantAbsSWRFraction= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedSWRFraction"]);
+      for(int c=0;c<numCohorts;c++) {
+        PlantPsi(iday,c) =  plants.PlantPsi[c];  
+        PlantGrossPhotosynthesis(iday,c) =  plants.GrossPhotosynthesis[c];  
+        PlantAbsSWRFraction(iday,c) =  plants.AbsorbedSWRFraction[c];  
+      }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
+    }
+  } else {
+    try {
+      auto& sDayadv = dynamic_cast<AdvancedSPWB_RESULT&>(sDay);
+      PlantsAdvancedTranspiration_RESULT& plants = sDayadv.ATres.plants;
+      for(int c=0;c<numCohorts;c++) {
+        PlantTranspiration(iday,c) =  plants.Transpiration[c];
+        PlantStress(iday,c) = plants.DDS[c];
+        PlantLAI(iday,c) = plants.LAI[c];
+        PlantLAIlive(iday,c) = plants.LAIlive[c];
+        LeafPLC(iday,c) = plants.LeafPLC[c]; 
+        StemPLC(iday,c) = plants.StemPLC[c]; 
+        StemRWC(iday,c) = plants.StemRWC[c];
+        LeafRWC(iday,c) = plants.LeafRWC[c]; 
+        LFMC(iday,c) = plants.LFMC[c]; 
+        PlantWaterBalance(iday,c) = plants.WaterBalance[c]; 
+        PlantFPAR(iday,c) =  plants.FPAR[c];  
+      }
+      NumericMatrix dEdP = Rcpp::as<Rcpp::NumericMatrix>(x["dEdP"]);
+      NumericMatrix LeafPsiMin = Rcpp::as<Rcpp::NumericMatrix>(x["LeafPsiMin"]);
+      NumericMatrix LeafPsiMax = Rcpp::as<Rcpp::NumericMatrix>(x["LeafPsiMax"]);
+      NumericMatrix StemPsi= Rcpp::as<Rcpp::NumericMatrix>(x["StemPsi"]);
+      NumericMatrix RootPsi= Rcpp::as<Rcpp::NumericMatrix>(x["RootPsi"]);
+      
+      NumericMatrix PlantNetPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["NetPhotosynthesis"]);
+      NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
+      NumericMatrix PlantAbsSWR= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedSWR"]);
+      NumericMatrix PlantNetLWR= Rcpp::as<Rcpp::NumericMatrix>(x["NetLWR"]);
+      
+      LeafAdvancedTranspirationInst_RESULT& sunlit_inst = sDayadv.ATres.sunlit_inst;
+      LeafAdvancedTranspirationInst_RESULT& shade_inst = sDayadv.ATres.shade_inst;
+      double tstep = 86400.0/((double) ntimesteps);
+      
+      for(int j=0;j<numCohorts;j++) {
+        for(int n=0;n<ntimesteps;n++){
+          PlantAbsSWR(iday,j) += 0.000001*(sunlit_inst.Abs_SWR(j,n)+ shade_inst.Abs_SWR(j,n))*tstep;
+          PlantNetLWR(iday,j) += 0.000001*(sunlit_inst.Net_LWR(j,n)+shade_inst.Net_LWR(j,n))*tstep;
+        }
+        PlantNetPhotosynthesis(iday,j) =  plants.NetPhotosynthesis[j];
+        PlantGrossPhotosynthesis(iday,j) = plants.GrossPhotosynthesis[j];
+        LeafPsiMin(iday,j) = plants.LeafPsiMin[j];
+        LeafPsiMax(iday,j) = plants.LeafPsiMax[j];
+        RootPsi(iday,j) = plants.RootPsi[j]; 
+        StemPsi(iday,j) = plants.StemPsi[j]; 
+        dEdP(iday,j) =plants.dEdP[j]; 
+      }
+      List RhizoPsi = x["RhizoPsi"];
+      for(int c=0;c<numCohorts;c++) {
+        NumericMatrix nm = Rcpp::as<Rcpp::NumericMatrix>(RhizoPsi[c]);
+        for(int l=0;l<nm.ncol();l++) {
+          nm(iday,l) =  sDayadv.ATres.rhizoPsi(c,l);
+        }
+      }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
+    }
+  }
+}
+
 void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int iday, int numCohorts) {
 
   NumericMatrix LeafPsiMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMin"]);
@@ -973,6 +1210,37 @@ void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int id
   }
 }
 
+void fillSunlitShadeLeavesDailyOutput_c(List sunlit, List shade, AdvancedTranspiration_RESULT& sDay, int iday, int numCohorts) {
+  
+  NumericMatrix LeafPsiMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMin"]);
+  NumericMatrix LeafPsiMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMax"]);
+  NumericMatrix LeafGSWMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GSWMin"]);
+  NumericMatrix LeafGSWMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GSWMax"]);
+  NumericMatrix LeafTempMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["TempMin"]);
+  NumericMatrix LeafTempMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["TempMax"]);
+  NumericMatrix LeafPsiMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMin"]);
+  NumericMatrix LeafPsiMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMax"]);
+  NumericMatrix LeafGSWMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GSWMin"]);
+  NumericMatrix LeafGSWMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GSWMax"]);
+  NumericMatrix LeafTempMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["TempMin"]);
+  NumericMatrix LeafTempMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["TempMax"]);    
+  
+  for(int i=0;i<numCohorts;i++) {
+    LeafGSWMin_SL(iday,i) = sDay.sunlit.GSWMin[i];
+    LeafGSWMin_SH(iday,i) = sDay.shade.GSWMin[i];
+    LeafGSWMax_SL(iday,i) = sDay.sunlit.GSWMax[i];
+    LeafGSWMax_SH(iday,i) = sDay.shade.GSWMax[i];
+    LeafPsiMin_SL(iday,i) = sDay.sunlit.LeafPsiMin[i];
+    LeafPsiMin_SH(iday,i) = sDay.shade.LeafPsiMin[i];
+    LeafPsiMax_SL(iday,i) = sDay.sunlit.LeafPsiMax[i];
+    LeafPsiMax_SH(iday,i) = sDay.shade.LeafPsiMax[i];
+    LeafTempMin_SL(iday,i) = sDay.sunlit.TempMin[i];
+    LeafTempMin_SH(iday,i) = sDay.shade.TempMin[i];
+    LeafTempMax_SL(iday,i) = sDay.sunlit.TempMax[i];
+    LeafTempMax_SH(iday,i) = sDay.shade.TempMax[i];
+  }
+}
+
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   NumericVector fhd = sDay["FireHazard"];
   NumericVector Loading_understory = fireHazard["Loading_understory"];
@@ -1008,7 +1276,40 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   SFP[iday] = fhd["SFP"];
   CFP[iday] = fhd["CFP"];
 }
-
+void fillFireHazardOutput_c(DataFrame fireHazard, FCCS_RESULT& fhd, int iday) {
+  NumericVector Loading_understory = fireHazard["Loading_understory"];
+  NumericVector Loading_overstory = fireHazard["Loading_overstory"];
+  NumericVector CFMC_understory = fireHazard["CFMC_understory"];
+  NumericVector CFMC_overstory = fireHazard["CFMC_overstory"];
+  NumericVector DFMC = fireHazard["DFMC"];
+  NumericVector ROS_surface = fireHazard["ROS_surface"];
+  NumericVector I_b_surface = fireHazard["I_b_surface"];
+  NumericVector t_r_surface = fireHazard["t_r_surface"];
+  NumericVector FL_surface = fireHazard["FL_surface"];
+  NumericVector Ic_ratio = fireHazard["Ic_ratio"];
+  NumericVector ROS_crown = fireHazard["ROS_crown"];
+  NumericVector I_b_crown = fireHazard["I_b_crown"];
+  NumericVector t_r_crown = fireHazard["t_r_crown"];
+  NumericVector FL_crown = fireHazard["FL_crown"];
+  NumericVector SFP = fireHazard["SFP"];
+  NumericVector CFP = fireHazard["CFP"];
+  Loading_overstory[iday] = fhd.Loading_overstory;
+  Loading_understory[iday] = fhd.Loading_understory;
+  CFMC_overstory[iday] = fhd.CFMC_overstory;
+  CFMC_understory[iday] = fhd.CFMC_understory;
+  DFMC[iday] = fhd.DFMC;
+  ROS_surface[iday] = fhd.ROS_surface;
+  I_b_surface[iday] = fhd.I_b_surface;
+  t_r_surface[iday] = fhd.t_r_surface;
+  FL_surface[iday] = fhd.FL_surface;
+  Ic_ratio[iday] = fhd.Ic_ratio;
+  ROS_crown[iday] = fhd.ROS_crown;
+  I_b_crown[iday] = fhd.I_b_crown;
+  t_r_crown[iday] = fhd.t_r_crown;
+  FL_crown[iday] = fhd.FL_crown;
+  SFP[iday] = fhd.SFP;
+  CFP[iday] = fhd.CFP;
+}
 // [[Rcpp::export(".fillSPWBDailyOutput")]]
 void fillSPWBDailyOutput(List l, List x, List sDay, int iday) {
   
@@ -1088,7 +1389,7 @@ void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWB_RESULT& sDay, int iday) {
   bool basic = x.control.transpirationMode=="Granier";
   
   DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
-  // int numDays = DWB.nrow();
+  int numDays = DWB.nrow();
   if(basic) {
     fillWaterBalanceDailyOutput_c(DWB, sDay.WaterBalance, iday);
   } else {
@@ -1097,15 +1398,13 @@ void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWB_RESULT& sDay, int iday) {
   
   if(x.control.results.soilResults) {
     List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
-    // fillSoilDailyOutput(Soil, x_c.soil, sDay, 
-    //                     iday, numDays, soilFunctions,
-    //                     true);
+    fillSoilDailyOutput_c(Soil, x.soil, sDay.Soil,
+                          iday, numDays,
+                          true);
   }
   if(x.control.results.soilPoolResults && plantWaterPools) {
     List soilPools = Rcpp::as<Rcpp::List>(l["SoilPools"]);
-    // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-    // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-    // fillSoilPoolDailyOutput(soilPools, soil, Wpool, iday, soilFunctions);
+    fillSoilPoolDailyOutput_c(soilPools, x.soil, x.belowLayers.Wpool, iday);
   }
   if(x.control.results.snowResults) {
     DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
@@ -1117,36 +1416,46 @@ void fillSPWBDailyOutput_c(List l, ModelInput& x, SPWB_RESULT& sDay, int iday) {
   }
   if(x.control.results.plantResults) {
     List plantDWOL = l["Plants"];
-    // fillPlantWaterDailyOutput(plantDWOL, sDay, iday, transpirationMode); 
+    fillPlantWaterDailyOutput_c(plantDWOL, sDay, iday, x.control.transpirationMode, x.control.advancedWB.ndailysteps);
     if(x.control.transpirationMode!= "Granier") {
       if(x.control.results.leafResults) {
-        List sunlitDO = l["SunlitLeaves"];
-        List shadeDO = l["ShadeLeaves"];
-        // fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday, numCohorts); 
+        try {
+          auto& sDayadv = dynamic_cast<AdvancedSPWB_RESULT&>(sDay);
+          List sunlitDO = l["SunlitLeaves"];
+          List shadeDO = l["ShadeLeaves"];
+          fillSunlitShadeLeavesDailyOutput_c(sunlitDO, shadeDO, sDayadv.ATres, iday, x.cohorts.CohortCode.size());
+        } catch(const std::bad_cast&) {
+          throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+        }
       }
     } 
   }
   if(x.control.transpirationMode!= "Granier") {
     List DEB = l["EnergyBalance"];
-    // fillEnergyBalanceDailyOutput(DEB,sDay, iday, ntimesteps);
-    
-    if(x.control.results.temperatureResults) {
-      List DT = l["Temperature"];
-      // fillTemperatureDailyOutput(DT,sDay, iday, ntimesteps);
-      if(x.control.advancedWB.multiLayerBalance) {
-        NumericMatrix DLT = l["TemperatureLayers"];
-        // fillTemperatureLayersDailyOutput(DLT,sDay, iday, ncanlayers, ntimesteps);
+    try {
+      auto& sDayadv = dynamic_cast<AdvancedSPWB_RESULT&>(sDay);
+      fillEnergyBalanceDailyOutput_c(DEB, sDayadv.ATres.energy, iday, x.control.advancedWB.ndailysteps);
+      if(x.control.results.temperatureResults) {
+        List DT = l["Temperature"];
+        fillTemperatureDailyOutput_c(DT,sDayadv.ATres.energy, iday, x.control.advancedWB.ndailysteps);
+        if(x.control.advancedWB.multiLayerBalance) {
+          NumericMatrix DLT = l["TemperatureLayers"];
+          fillTemperatureLayersDailyOutput_c(DLT, sDayadv.ATres.energy, iday, 
+                                             x.canopy.Cair.size(), x.control.advancedWB.ndailysteps);
+        }
       }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
     }
   } 
   if(x.control.results.fireHazardResults) {
     DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
-    // fillFireHazardOutput(fireHazard, sDay, iday);
+    fillFireHazardOutput_c(fireHazard, sDay.fccs, iday);
   }
   
   if(x.control.results.subdailyResults) {
     List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
-    // subdailyRes[iday] = copyAdvancedSPWBOutput(sDay, x); //Clones subdaily results because they are communication structures
+    subdailyRes[iday] = copySPWBResult_c(sDay, x); //Clones subdaily results because they are communication structures
   }
 }
 
@@ -2141,7 +2450,7 @@ List spwb_c(List x, DataFrame meteo,
                            solarConstant, delta, 
                            0.0, 
                            lateralFlows, waterTableDepth);
-        // fillSPWBDailyOutput(outputList, x, internalCommunication["advancedSPWBOutput"],i);
+        fillSPWBDailyOutput_c(outputList, x_c, ASPWBres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;

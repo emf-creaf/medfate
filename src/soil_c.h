@@ -110,6 +110,7 @@ class Soil {
     double getPsi(int layer);
     double getTheta(int layer);
     double getWater(int layer);
+    double getWaterAtPsi(int layer, double psiIn);
     double getTemp(int layer);
     double getWaterSAT(int layer);
     double getWaterFC(int layer);

@@ -121,11 +121,21 @@ double Soil::getVG_n(int layer) {return VG_n[layer]; }
 double Soil::getVG_theta_res(int layer) {return VG_theta_res[layer]; }
 double Soil::getVG_theta_sat(int layer) {return VG_theta_sat[layer]; }
 std::string Soil::getUSDAType(int layer) {return usda_type[layer]; }
-double Soil::getThetaSAT(int layer) {return theta_SAT[layer]; }
+double Soil::getThetaSAT(int layer) {
+  return theta_SAT[layer]; }
 double Soil::getThetaFC(int layer) {return theta_FC[layer]; }
 double Soil::getPsi(int layer) {return psi[layer]; }
 double Soil::getTheta(int layer) {return theta[layer]; }
 double Soil::getWater(int layer) {return widths[layer]*theta[layer]*(1.0-(rfc[layer]/100.0));}
+double Soil::getWaterAtPsi(int layer, double psiIn) {
+  double theta_at_psi;
+  if(model=="VG") {
+    theta_at_psi = psi2thetaVanGenuchten_c(VG_n[layer], VG_alpha[layer], VG_theta_res[layer], VG_theta_sat[layer], psiIn);
+  } else {
+    theta_at_psi = psi2thetaSaxton_c(clay[layer], sand[layer], psiIn, om[layer]);
+  }
+  return (widths[layer]*theta_at_psi*(1.0-(rfc[layer]/100.0)));
+}
 double Soil::getConductivity(int layer, bool mmol) {
   double K;
   if(model =="SX") {
@@ -171,7 +181,6 @@ void Soil::setW(int layer, double value) {
   } else {
     psi[layer] = theta2psiSaxton_c(clay[layer], sand[layer], theta[layer], om[layer]);
   }
-  // Rcpp::Rcout<< " setW layer "<< layer << " W "<< W[layer]<<" theta "<< theta[layer]<<" psi "<< psi[layer]<<"\n";
 }
 void Soil::setTemp(int layer, double value) {
   Temp[layer] = value; 

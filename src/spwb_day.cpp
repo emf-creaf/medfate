@@ -1067,7 +1067,6 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
     //Initialises a result
     BasicTranspiration_RESULT BTres(numCohorts, nlayers);
     BasicSPWB_RESULT BSPWBres(BTres);
-    Rcout<< "pointer set to basic result\n";
     // Calls simulation
     spwbDay_inner_c(BSPWBres, SPWBcomm, x_c, 
                     as<std::string>(date[0]),
@@ -1081,7 +1080,6 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
     AdvancedSPWB_RESULT ASPWBres(ATres);
-    Rcout<< "pointer set to advanced result\n";
     // Calls simulation
     spwbDay_inner_c(ASPWBres, SPWBcomm, x_c, 
                     as<std::string>(date[0]),
