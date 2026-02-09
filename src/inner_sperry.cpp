@@ -3,6 +3,7 @@
 #include "photosynthesis.h"
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
 #include "soil.h"

@@ -2,6 +2,7 @@
 #include <numeric>
 #include <math.h>
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "photosynthesis_c.h"
 
 

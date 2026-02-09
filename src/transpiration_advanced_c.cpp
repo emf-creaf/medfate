@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "lowlevel_structures_c.h"
 #include "forestutils_c.h"
 #include "transpiration_advanced_c.h"

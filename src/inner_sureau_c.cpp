@@ -3,6 +3,7 @@
 #include "medfate.h"
 #include "inner_sureau_c.h"
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "photosynthesis_c.h"
 #include "hydraulics_c.h"
 #include "modelInput_c.h"

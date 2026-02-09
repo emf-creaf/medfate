@@ -4,6 +4,7 @@
 #include "photosynthesis.h"
 #include "photosynthesis_c.h"
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "hydraulics.h"
 #include "hydraulics_c.h"
 #include "soil.h"

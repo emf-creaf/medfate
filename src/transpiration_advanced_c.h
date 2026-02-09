@@ -4,8 +4,9 @@
 #include "lightextinction_advanced_c.h"
 #include "soil_thermodynamics_c.h"
 #include "modelInput_c.h"
-#include "radiation_c.h"
 #include "windKatul_c.h"
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
 
 #ifndef TRANSPIRATION_ADVANCED_C_H
 #define TRANSPIRATION_ADVANCED_C_H

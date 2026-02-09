@@ -15,14 +15,15 @@
 #include "modelInput.h"
 #include "photosynthesis.h"
 #include "phenology.h"
-#include "radiation_c.h"
 #include "transpiration.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
 #include "tissuemoisture.h"
 #include "spwb_day_c.h"
 #include "soil.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
 
@@ -48,8 +49,8 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
     double rhmin = meteovec["rhmin"];
     double rhmax = meteovec["rhmax"];
     // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
-    double vp = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    double D = std::max(0.0, meteoland::utils_saturationVP(tmax) - vp);
+    double vp = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+    double D = std::max(0.0, saturationVapourPressure_c(tmax) - vp);
     fm_dead = 5.43 + 52.91*exp(-0.64*D); 
   }
   double wind = meteovec["wind"];
@@ -514,7 +515,7 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   }
   
   //STEP 1 - Leaf Phenology: Adjusted leaf area index
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double tday = averageDaylightTemperature_c(tmin, tmax);
   double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0,  LAIcellexpanded = 0.0, Cm = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
     LAIcell += (LAIphe[c]+LAIdead[c]);
@@ -758,8 +759,8 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   }
   if(NumericVector::is_na(rhmin)) {
     warning("Minimum relative humidity estimated from temperature range");
-    double vp_tmin = meteoland::utils_saturationVP(tmin);
-    double vp_tmax = meteoland::utils_saturationVP(tmax);
+    double vp_tmin = saturationVapourPressure_c(tmin);
+    double vp_tmax = saturationVapourPressure_c(tmax);
     rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
   }
   if(rhmin > rhmax) {
@@ -804,11 +805,11 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   double asprad = aspect * (M_PI/180.0);
   double slorad = slope * (M_PI/180.0);
   double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double tday = averageDaylightTemperature_c(tmin, tmax);
   if(NumericVector::is_na(rad)) {
     warning("Estimating solar radiation");
-    double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+    double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+    rad = RDay_c(solarConstant, latrad, elevation,
                                               slorad, asprad, delta, tmax -tmin, tmax-tmin,
                                               vpa, prec);
   }

@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "control_c.h"
 #include "lowlevel_structures_c.h"
 #include "windextinction_c.h"

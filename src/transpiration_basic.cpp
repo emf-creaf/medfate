@@ -14,13 +14,14 @@
 #include "tissuemoisture_c.h"
 #include "carbon.h"
 #include "photosynthesis.h"
-#include "radiation_c.h"
 #include "root.h"
 #include "soil.h"
 #include "soil_c.h"
 #include "transpiration_basic_c.h"
 #include "spwb.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
 
@@ -66,11 +67,11 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   double Patm = meteovec["Patm"];
   
   //Atmospheric pressure (if missing)
-  if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  if(NumericVector::is_na(Patm)) Patm = atmosphericPressure_c(elevation);
   
   //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-  double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
+  double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+  double vpd = std::max(0.0, saturationVapourPressure_c((tmin+tmax)/2.0) - vpatm);
     
     
   // Canopy
@@ -734,14 +735,14 @@ List transpirationGranier(List x, DataFrame meteo, int day,
 
   double tmin = MinTemperature[day-1];
   double tmax = MaxTemperature[day-1];
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double tday = averageDaylightTemperature_c(tmin, tmax);
   double rhmax = MaxRelativeHumidity[day-1];
   double rhmin = MinRelativeHumidity[day-1];
   double rad = Radiation[day-1];
   double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
 
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+  double pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                              tmin, tmax, rhmin, rhmax, rad, wind);
   
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];

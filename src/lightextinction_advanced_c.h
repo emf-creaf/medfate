@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
-#include "radiation_c.h"
+#include "medfate.h"
+#include "meteoland/radiation_c.hpp"
 
 #ifndef LIGHTEXTINCTION_ADVANCED_C_H
 #define LIGHTEXTINCTION_ADVANCED_C_H

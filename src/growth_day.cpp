@@ -18,7 +18,6 @@
 #include "lightextinction_advanced.h"
 #include "modelInput.h"
 #include "phenology.h"
-#include "radiation_c.h"
 #include "root.h"
 #include "root_c.h"
 #include "soil.h"
@@ -27,7 +26,9 @@
 #include "tissuemoisture.h"
 #include "tissuemoisture_c.h"
 #include "woodformation.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
 //' Mortality
@@ -441,7 +442,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   double Patm = meteovec["Patm"];
   
   //Atmospheric pressure (if missing)
-  if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  if(NumericVector::is_na(Patm)) Patm = atmosphericPressure_c(elevation);
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -576,7 +577,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
     NumericVector TcanIN = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
     for(int n=0;n<ntimesteps;n++) Tcan[n] = TcanIN[n];
-    tcan_day = meteoland::utils_averageDaylightTemperature(min(Tcan), max(Tcan));
+    tcan_day = averageDaylightTemperature_c(min(Tcan), max(Tcan));
   }
   
 
@@ -1419,7 +1420,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         double burnRatioLeaves = 0.0, burnRatioBuds = 0.0;
         bool abovegroundFireSurvival = true;
         if(fireOccurrence) {
-          double rho_air = meteoland::utils_airDensity(tmax, Patm);
+          double rho_air = airDensity_c(tmax, Patm);
           double foliar_factor = leafThermalFactor_c(SLA[j], 130.0, 2500.0);
           double Ib_surf = fireBehavior["I_b_surface [kW/m]"];
           double t_res_surf = fireBehavior["t_r_surface [s]"];
@@ -1648,9 +1649,9 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
     }
     NumericVector soilTheta = theta(soil, soilFunctions);
     NumericVector soilThetaSAT = thetaSAT(soil, soilFunctions);
-    double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-    double vpsat = meteoland::utils_saturationVP(tday);
+    double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+    double tday = averageDaylightTemperature_c(tmin, tmax);
+    double vpsat = saturationVapourPressure_c(tday);
     double rhmean = 100.0*std::max(1.0, vpatm/vpsat);
     heterotrophicRespiration = DAYCENTInner(commDecomp, internalSnags, internalLitter, internalSOC,
                                             paramsLitterDecomposition,
@@ -1750,8 +1751,8 @@ void growthDay_inner(List internalCommunication, List x, CharacterVector date, N
      rhmax = 100.0;
    }
    if(NumericVector::is_na(rhmin)) {
-     double vp_tmin = meteoland::utils_saturationVP(tmin);
-     double vp_tmax = meteoland::utils_saturationVP(tmax);
+     double vp_tmin = saturationVapourPressure_c(tmin);
+     double vp_tmax = saturationVapourPressure_c(tmax);
      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
    }
    if(rhmin > rhmax) {
@@ -1797,8 +1798,8 @@ void growthDay_inner(List internalCommunication, List x, CharacterVector date, N
    double asprad = aspect * (M_PI/180.0);
    double slorad = slope * (M_PI/180.0);
    double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
-   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+   double tday = averageDaylightTemperature_c(tmin, tmax);
+   double pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
    //Derive doy from date  
    int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
    int doy = J - J0101+1;

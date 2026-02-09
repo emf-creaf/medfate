@@ -4,6 +4,7 @@
 #include <numeric>
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "carbon.h"
 #include "communication_structures.h"
 #include "forestutils.h"
@@ -11,11 +12,12 @@
 #include "hydrology.h"
 #include "modelInput.h"
 #include "phenology.h"
-#include "radiation_c.h"
 #include "spwb.h"
 #include "soil.h"
 #include "tissuemoisture.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
 
@@ -904,7 +906,7 @@ List growth(List x, DataFrame meteo, double latitude,
       tmax = swap;
     }
     double prec = Precipitation[i];
-    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double tday = averageDaylightTemperature_c(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
@@ -912,8 +914,8 @@ List growth(List x, DataFrame meteo, double latitude,
       rhmax = 100.0;
     }
     if(NumericVector::is_na(rhmin)) {
-      double vp_tmin = meteoland::utils_saturationVP(tmin);
-      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      double vp_tmin = saturationVapourPressure_c(tmin);
+      double vp_tmax = saturationVapourPressure_c(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
     }
     if(rhmin > rhmax) {
@@ -923,12 +925,12 @@ List growth(List x, DataFrame meteo, double latitude,
       rhmax = swap;
     }
     if(NumericVector::is_na(rad)) {
-      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-      rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
-                                                slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                                                vpa, prec);
+      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+      rad = RDay_c(solarConstant, latrad, elevation,
+                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                   vpa, prec);
     }
-    PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);
     
     //1. Phenology (only leaf fall)

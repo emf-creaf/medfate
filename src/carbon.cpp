@@ -4,6 +4,7 @@
 #include "forestutils.h"
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 using namespace Rcpp;
 
 const double carbonMolarMass = 12.0107; //g*mol-1

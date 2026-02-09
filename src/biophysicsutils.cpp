@@ -4,7 +4,7 @@
 #include <math.h>
 #include "biophysicsutils.h"
 #include "biophysicsutils_c.h"
-#include "radiation_c.h"
+#include "meteoland/radiation_c.hpp"
 
 using namespace Rcpp;
 

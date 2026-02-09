@@ -5,6 +5,7 @@
 #include "fuelstructure_c.h"
 #include "windextinction_c.h"
 #include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 using namespace Rcpp;
 
 Rcpp::NumericVector copyFCCSResult_c(const FCCS_RESULT& fccs) {

@@ -18,7 +18,6 @@
 #include "photosynthesis.h"
 #include "phenology.h"
 #include "phenology_c.h"
-#include "radiation_c.h"
 #include "soil.h"
 #include "soil_c.h"
 #include "spwb_day.h"
@@ -27,7 +26,9 @@
 #include "tissuemoisture.h"
 #include "tissuemoisture_c.h"
 #include "windextinction_c.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
 // [[Rcpp::export(".getWeatherDates")]]
@@ -1699,7 +1700,7 @@ List spwb(List x, DataFrame meteo,
 
       double tmin = MinTemperature[i];
       double tmax = MaxTemperature[i];
-      double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+      double tday = averageDaylightTemperature_c(tmin, tmax);
       double rhmin = MinRelativeHumidity[i];
       double rhmax = MaxRelativeHumidity[i];
       double prec = Precipitation[i];
@@ -1714,8 +1715,8 @@ List spwb(List x, DataFrame meteo,
         rhmax = 100.0;
       }
       if(NumericVector::is_na(rhmin)) {
-        double vp_tmin = meteoland::utils_saturationVP(tmin);
-        double vp_tmax = meteoland::utils_saturationVP(tmax);
+        double vp_tmin = saturationVapourPressure_c(tmin);
+        double vp_tmax = saturationVapourPressure_c(tmax);
         rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
       }
       if(rhmin > rhmax) {
@@ -1725,12 +1726,12 @@ List spwb(List x, DataFrame meteo,
         rhmax = swap;
       }
       if(NumericVector::is_na(rad)) {
-        double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+        double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
         rad = RDay_c(solarConstant, latrad, elevation,
                      slorad, asprad, delta, tmax -tmin, tmax-tmin,
                      vpa, prec);
       }
-      PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+      PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                                  tmin, tmax, rhmin, rhmax, rad, wind);
       
       //1. Phenology and leaf fall
@@ -2043,7 +2044,7 @@ List spwb_c(List x, DataFrame meteo,
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
-    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double tday = averageDaylightTemperature_c(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double prec = Precipitation[i];
@@ -2058,8 +2059,8 @@ List spwb_c(List x, DataFrame meteo,
       rhmax = 100.0;
     }
     if(NumericVector::is_na(rhmin)) {
-      double vp_tmin = meteoland::utils_saturationVP(tmin);
-      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      double vp_tmin = saturationVapourPressure_c(tmin);
+      double vp_tmax = saturationVapourPressure_c(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
     }
     if(rhmin > rhmax) {
@@ -2069,12 +2070,12 @@ List spwb_c(List x, DataFrame meteo,
       rhmax = swap;
     }
     if(NumericVector::is_na(rad)) {
-      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
       rad = RDay_c(solarConstant, latrad, elevation,
                    slorad, asprad, delta, tmax -tmin, tmax-tmin,
                    vpa, prec);
     }
-    PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);
     
     //1. Phenology and leaf fall
@@ -2434,7 +2435,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
-    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double tday = averageDaylightTemperature_c(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
@@ -2449,8 +2450,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       rhmax = 100.0;
     }
     if(NumericVector::is_na(rhmin)) {
-      double vp_tmin = meteoland::utils_saturationVP(tmin);
-      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      double vp_tmin = saturationVapourPressure_c(tmin);
+      double vp_tmax = saturationVapourPressure_c(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
     }
     if(rhmin > rhmax) {
@@ -2460,12 +2461,12 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       rhmax = swap;
     }
     if(NumericVector::is_na(rad)) {
-      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
       rad = RDay_c(solarConstant, latrad, elevation,
                    slorad, asprad, delta, tmax -tmin, tmax-tmin,
                    vpa, prec);
     }
-    PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);
 
     //0. Soil moisture

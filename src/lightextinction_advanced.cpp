@@ -4,9 +4,9 @@
 #include "incbeta_c.h"
 #include "biophysicsutils_c.h"
 #include "lightextinction_advanced_c.h"
-#include "radiation_c.h"
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
 #include <math.h>
-#include <meteoland.h>
 using namespace Rcpp;
 
 //' Advanced radiation transfer functions

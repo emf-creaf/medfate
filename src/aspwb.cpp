@@ -10,7 +10,8 @@
 #include "communication_structures.h"
 #include "hydrology.h"
 #include "hydrology_c.h"
-#include "radiation_c.h"
+#include "meteoland/pet_c.hpp"
+#include "meteoland/radiation_c.hpp"
 using namespace Rcpp;
 using namespace meteoland;
 
@@ -213,10 +214,10 @@ List aspwb_day_inner(List internalCommunication, List x, CharacterVector date, N
   double asprad = aspect * (M_PI/180.0);
   double slorad = slope * (M_PI/180.0);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  double pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
   NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
-  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
+  if(std::isnan(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
   
   //Will not modify input x 
   if(!modifyInput) {
@@ -622,8 +623,8 @@ List aspwb(List x, DataFrame meteo, double latitude,
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
     
-    PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
-                               tmin, tmax, rhmin, rhmax, rad, wind);
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
+                         tmin, tmax, rhmin, rhmax, rad, wind);
     
 
     //2. Water balance and photosynthesis

@@ -15,6 +15,9 @@
 #include "transpiration_advanced_c.h"
 #include "spwb_day_c.h"
 #include "root_c.h"
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 
 
 // Soil water balance with basic hydraulic model
