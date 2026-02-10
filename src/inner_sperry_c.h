@@ -3,6 +3,7 @@
 #include "control_c.h"
 #include "photosynthesis_c.h"
 #include "modelInput_c.h"
+#include "transpiration_advanced_c.h"
 
 #ifndef INNER_SPERRY_C_H
 #define INNER_SPERRY_C_H
@@ -91,4 +92,10 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
 
 void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork,
                                  double minFlow = 0.0, double pCrit = 0.001);
+
+void innerSperry_c(ModelInput& x,
+                   SperryNetwork* networks, 
+                   InnerTranspirationInput_COMM& input, 
+                   AdvancedTranspiration_RESULT& output, int n, double tstep, 
+                   int stepFunctions = -1);
 #endif

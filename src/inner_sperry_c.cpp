@@ -2,6 +2,9 @@
 #include "hydraulics_c.h"
 #include "photosynthesis_c.h"
 #include "tissuemoisture_c.h"
+#include "transpiration_advanced_c.h"
+#include "biophysicsutils_c.h"
+
 
 
 double ludcmp_c(arma::mat& a, int n, std::vector<int>& indx) {
@@ -353,12 +356,12 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
 }
 
 
-void profitMaximization2(ProfitMaximization& PM, 
-                         SupplyFunction& supply, int initialPos,
-                         double Catm, double Patm, double Tair, double vpa, double u, 
-                         double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                         double leafWidth, double refLeafArea,
-                         double Gswmin, double Gswmax) {
+void profitMaximization2_c(ProfitMaximization& PM, 
+                           SupplyFunction& supply, int initialPos,
+                           double Catm, double Patm, double Tair, double vpa, double u, 
+                           double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
+                           double leafWidth, double refLeafArea,
+                           double Gswmin, double Gswmax) {
   
   int nsteps = supply.E.size();
   
@@ -451,4 +454,334 @@ void profitMaximization2(ProfitMaximization& PM,
   PM.photosynthesisFunction = photoCurrent;
   PM.Profit = profitCurrent;
   PM.iMaxProfit = iPos;
+}
+
+void copyRhizoPsi_c(int c, int iPM, 
+                    arma::mat& RhizoPsi, 
+                    arma::mat& RhizoPsiMAT,
+                    const arma::Mat<uint8_t>& layerConnected, 
+                    const std::vector<arma::mat>& RHOP, 
+                    const std::vector<arma::Mat<uint8_t>>& layerConnectedPools,
+                    const std::vector<double>& VCroot_c, 
+                    const std::vector<double>& VCroot_d,  
+                    bool plantWaterPools) {
+  int nlayers = layerConnected.n_cols;
+  int numCohorts = layerConnected.n_rows;
+  
+  if(!plantWaterPools) {
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      if(layerConnected(c,l)) {
+        RhizoPsiMAT(c,l) = RhizoPsi(iPM,cl);
+        cl++;
+      } 
+    }
+  } else {
+    const arma::mat& RHOPcoh = RHOP[c];
+    const arma::Mat<uint8_t>& layerConnectedCoh = layerConnectedPools[c];
+    std::vector<double> rplv(numCohorts,medfate::NA_DOUBLE);
+    std::vector<double> vplv(numCohorts,medfate::NA_DOUBLE);
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      int clj = 0;
+      for(int j=0;j<numCohorts;j++) {
+        if(layerConnectedCoh(j,l)) {
+          rplv[clj] = RhizoPsi(iPM,cl);
+          vplv[clj] = RHOPcoh(j,l);
+          cl++;
+          clj++;
+        }
+      }
+      std::vector<double> pv(clj,medfate::NA_DOUBLE);
+      std::vector<double> vv(clj,medfate::NA_DOUBLE);
+      for(int j=0;j<clj;j++) {
+        pv[j] = rplv[j];
+        vv[j] = vplv[j];
+        // Rcout<< c << " "<< l <<" "<<j<< " "<< pv[j]<< " "<< vv[j]<<"\n";
+      }
+      RhizoPsiMAT(c,l) = averagePsi_c(pv,vv,VCroot_c[c], VCroot_d[c]);
+      // Rcout<< c << " "<<l<< " "<< RhizoPsiMAT(c,l)<<"\n";
+    }
+  }
+}
+void innerSperry_c(ModelInput& x,
+                   SperryNetwork* networks, 
+                   InnerTranspirationInput_COMM& input, 
+                   AdvancedTranspiration_RESULT& output, int n, double tstep, 
+                   int stepFunctions) {
+  
+  int numCohorts = x.cohorts.CohortCode.size();
+  int nlayers = x.soil.getNlayers();
+  
+  // Extract control variables
+  bool plantWaterPools = (x.control.rhizosphereOverlap!="total");
+
+  // Extract parameters
+  // //Water pools
+  // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
+  // List RHOP;
+  // NumericVector poolProportions(numCohorts);
+  // if(plantWaterPools) {
+  //   RHOP = belowLayers["RHOP"];
+  //   poolProportions = belowdf["poolProportions"];
+  // }
+  // NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
+  // 
+  // //Extract output to be filled
+  // // Rcout<<"output\n";
+  // List outPhotoSunlit = output["PhotoSunlitFunctions"];
+  // List outPhotoShade = output["PhotoShadeFunctions"];
+  // List outPMSunlit = output["PMSunlitFunctions"];
+  // List outPMShade = output["PMShadeFunctions"];
+  // 
+  // NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
+  // List ExtractionPools = Rcpp::as<Rcpp::List>(output["ExtractionPools"]);
+  // NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);
+  // 
+  // NumericMatrix minPsiRhizo = Rcpp::as<Rcpp::NumericMatrix>(output["RhizoPsi"]);
+  // 
+
+  arma::mat& LAI_SH = output.shade_inst.LAI;
+  arma::mat& Vmax298_SH = output.shade_inst.Vmax298;
+  arma::mat& Jmax298_SH = output.shade_inst.Jmax298;
+  arma::mat& SWR_SH = output.shade_inst.Abs_SWR;
+  arma::mat& PAR_SH = output.shade_inst.Abs_PAR;
+  arma::mat& LWR_SH = output.shade_inst.Net_LWR;
+
+  arma::mat& LAI_SL = output.sunlit_inst.LAI;
+  arma::mat& Vmax298_SL = output.sunlit_inst.Vmax298;
+  arma::mat& Jmax298_SL = output.sunlit_inst.Jmax298;
+  arma::mat& SWR_SL = output.sunlit_inst.Abs_SWR;
+  arma::mat& PAR_SL = output.sunlit_inst.Abs_PAR;
+  arma::mat& LWR_SL = output.sunlit_inst.Net_LWR;
+  // NumericMatrix Ag_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Ag"]);
+  // NumericMatrix An_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["An"]);
+  // NumericMatrix E_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["E"]);
+  // NumericMatrix VPD_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["VPD"]);
+  // NumericMatrix Psi_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Psi"]);
+  // NumericMatrix Temp_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Temp"]);
+  // NumericMatrix GSW_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Gsw"]);
+  // NumericMatrix Ci_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Ci"]);
+  // 
+  // //Extract input  
+  // std::vector<int>& iLayerCohort = input.iLayerCohort;
+  std::vector<int>& iLayerSunlit = input.iLayerSunlit;
+  std::vector<int>& iLayerShade = input.iLayerShade;
+  // IntegerVector iPMSunlit = input["iPMSunlit"];
+  // IntegerVector iPMShade = input["iPMShade"];
+  // std::vector<int>& nlayerscon = input.nlayerscon;
+  // LogicalMatrix layerConnected = input["layerConnected"];
+  // List layerConnectedPools = input["layerConnectedPools"];
+  
+  for(int c=0;c<numCohorts;c++) { //Plant cohort loop
+    SupplyFunction& supply = networks[c].supply;
+    if((x.above.LAI_expanded[c]>0.0) && (x.internalWater.LeafPLC[c] < 0.999)) { //Process transpiration and photosynthesis only if there are some leaves
+      if(supply.E.size()>0) {
+        double TPhase_gmin = x.control.advancedWB.TPhase_gmin;
+        double Q10_1_gmin = x.control.advancedWB.Q10_1_gmin;
+        double Q10_2_gmin = x.control.advancedWB.Q10_2_gmin;
+        //Here canopy air temperature is used instead of Tleaf, because leaf energy balance has not been closed
+        double gmin_SL = gmin_c(x.canopy.Tair[iLayerSunlit[c]], x.paramsTranspiration.Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        double gmin_SH = gmin_c(x.canopy.Tair[iLayerShade[c]], x.paramsTranspiration.Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        // Rcout<< gmin_SL<< " " << gmin_SH << " " << Gswmax[c]<<"\n";
+        //Photosynthesis function for sunlit and shade leaves
+        ProfitMaximization PMSunlit;
+        profitMaximization2_c(PMSunlit, supply, input.iPMSunlit[c],
+                              x.canopy.Cair[iLayerSunlit[c]], input.Patm,
+                              x.canopy.Tair[iLayerSunlit[c]], x.canopy.VPair[iLayerSunlit[c]], input.zWind[iLayerSunlit[c]],
+                              SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda),
+                              Vmax298_SL(c,n), Jmax298_SL(c,n), x.paramsAnatomy.LeafWidth[c], LAI_SL(c,n),
+                              gmin_SL, x.paramsTranspiration.Gswmax[c]);
+        PhotoFunction& photoSunlit = PMSunlit.photosynthesisFunction;
+        input.iPMSunlit[c] = PMSunlit.iMaxProfit;
+        ProfitMaximization PMShade;
+        profitMaximization2_c(PMShade, supply, input.iPMShade[c], 
+                              x.canopy.Cair[iLayerShade[c]], input.Patm,
+                              x.canopy.Tair[iLayerShade[c]], x.canopy.VPair[iLayerShade[c]], input.zWind[iLayerShade[c]],
+                              SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda),
+                              Vmax298_SH(c,n), Jmax298_SH(c,n), x.paramsAnatomy.LeafWidth[c], LAI_SH(c,n),
+                              gmin_SH, x.paramsTranspiration.Gswmax[c]);
+        if(!x.control.advancedWB.sunlitShade) PMShade = PMSunlit;
+        PhotoFunction& photoShade = PMShade.photosynthesisFunction;
+        input.iPMShade[c] = PMShade.iMaxProfit;
+
+  //       //Store?
+  //       if(!IntegerVector::is_na(stepFunctions)) {
+  //         if(n==stepFunctions) {
+  //           outPhotoSunlit[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerSunlit[c]], Patm,
+  //                                                           Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], 
+  //                                                                                       zWind[iLayerSunlit[c]], 
+  //                                                                                            SWR_SL(c,n), LWR_SL(c,n), 
+  //                                                                                            irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda), 
+  //                                                                                            Vmax298_SL(c,n), Jmax298_SL(c,n), 
+  //                                                                                            leafWidth[c], LAI_SL(c,n));
+  //           outPhotoShade[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerShade[c]], Patm,
+  //                                                          Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
+  //                                                                                     zWind[iLayerShade[c]], 
+  //                                                                                          SWR_SH(c,n), LWR_SH(c,n), 
+  //                                                                                          irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda),
+  //                                                                                          Vmax298_SH(c,n), Jmax298_SH(c,n), 
+  //                                                                                          leafWidth[c], LAI_SH(c,n));
+  //           outPMSunlit[c] = PMSunlit;
+  //           outPMShade[c] = PMShade;
+  //           if(!sunlitShade) {
+  //             outPMShade[c] = outPMSunlit[c];
+  //             outPhotoShade[c] = outPhotoSunlit[c];
+  //           }
+  //         }
+  //       }
+  //       // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
+        //Get leaf status
+        output.shade_inst.E(c,n) = supply.E[input.iPMShade[c]];
+        output.sunlit_inst.E(c,n) = supply.E[input.iPMSunlit[c]];
+        output.shade_inst.Psi(c,n) = supply.psiLeaf[input.iPMShade[c]];
+        output.sunlit_inst.Psi(c,n) = supply.psiLeaf[input.iPMSunlit[c]];
+        output.shade_inst.An(c,n) = photoShade.NetPhotosynthesis;
+        output.sunlit_inst.An(c,n) = photoSunlit.NetPhotosynthesis;
+        output.shade_inst.Ag(c,n) = photoShade.GrossPhotosynthesis;
+        output.sunlit_inst.Ag(c,n) = photoSunlit.GrossPhotosynthesis;
+        output.shade_inst.Ci(c,n) = photoShade.Ci;
+        output.sunlit_inst.Ci(c,n) = photoSunlit.Ci;
+        output.shade_inst.Gsw(c,n)= photoShade.Gsw;
+        output.sunlit_inst.Gsw(c,n)= photoSunlit.Gsw;
+        output.shade_inst.VPD(c,n)= photoShade.LeafVPD;
+        output.sunlit_inst.VPD(c,n)= photoSunlit.LeafVPD;
+        output.shade_inst.Temp(c,n)= photoShade.LeafTemperature;
+        output.sunlit_inst.Temp(c,n)= photoSunlit.LeafTemperature;
+
+        //Scale photosynthesis
+        double Agsum = (output.sunlit_inst.Ag(c,n)*LAI_SL(c,n) + output.shade_inst.Ag(c,n)*LAI_SH(c,n));
+        double Ansum = (output.sunlit_inst.An(c,n)*LAI_SL(c,n) + output.shade_inst.An(c,n)*LAI_SH(c,n));
+        output.plants_inst.Ag(c,n) = (1e-6)*12.01017*Agsum*tstep;
+        output.plants_inst.An(c,n) = (1e-6)*12.01017*Ansum*tstep;
+
+        //Average flow from sunlit and shade leaves
+        double Eaverage = (output.sunlit_inst.E(c,n)*LAI_SL(c,n) + output.shade_inst.E(c,n)*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
+
+        //Find iPM for  flow corresponding to the  average flow
+        double absDiff = 99999999.9;
+        int iPM = -1;
+        for(int k=0;k< (int) supply.E.size();k++){ //Only check up to the size of fittedE
+          double adk = std::abs(supply.E[k]-Eaverage);
+          if(adk<absDiff) {
+            absDiff = adk;
+            iPM = k;
+          }
+        }
+        if(iPM==-1) {
+          throw medfate::MedfateInternalError("iPM -1 (could not determine regulation)");
+        }
+
+        //Store instantaneous total conductance
+        output.plants_inst.dEdP(c,n) = supply.dEdP[iPM];
+
+        //Store instantaneous flow and leaf water potential
+        x.internalWater.Einst[c] = supply.E[iPM]*input.f_dry;
+        x.internalWater.LeafPsi[c] = supply.psiLeaf[iPM];
+        x.internalWater.RootCrownPsi[c] = supply.psiRoot[iPM];
+
+        //Scale from instantaneous flow to water volume in the time step
+        output.plants_inst.E(c,n) = x.internalWater.Einst[c]*0.001*0.01802*x.above.LAI_expanded[c]*tstep;
+
+        std::vector<double> Esoilcn(input.nlayerscon[c],0.0);
+        std::vector<double> ElayersVEC(input.nlayerscon[c],0.0);
+
+
+        //Get info from sFunctionBelow
+        // NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
+ 
+        //Store steady state stem and rootcrown and root surface water potential values
+        x.internalWater.StemPsi[c] = supply.psiStem[iPM];
+        for(int lc=0;lc<input.nlayerscon[c];lc++) {
+          ElayersVEC[lc] = supply.ERhizo(iPM,lc)*tstep*input.f_dry; //Scale according to the time step
+        }
+
+        //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
+        copyRhizoPsi_c(c,iPM,
+                       supply.psiRhizo, x.belowLayers.RhizoPsi,
+                       input.layerConnected,
+                       x.belowLayers.RHOP, input.layerConnectedPools,
+                       x.paramsTranspiration.VCroot_c, x.paramsTranspiration.VCroot_d,
+                       plantWaterPools);
+        
+        x.internalWater.StemSympPsi[c] = x.internalWater.StemPsi[c]; //Stem symplastic compartment coupled with apoplastic compartment
+        x.internalWater.LeafSympPsi[c] = x.internalWater.LeafPsi[c]; //Leaf symplastic compartment coupled with apoplastic compartment
+
+        // Update the leaf and stem PLC
+        if(x.control.sperry.stemCavitationEffects) {
+          if(x.control.commonWB.stemCavitationRecovery!="total") {
+            x.internalWater.StemPLC[c] = std::max(x.internalWater.StemPLC[c], 1.0 - xylemConductance_c(x.internalWater.StemPsi[c], 1.0, x.paramsTranspiration.VCstem_c[c], x.paramsTranspiration.VCstem_d[c]));
+          } else { //Immediate refilling
+            x.internalWater.StemPLC[c] = 1.0 - xylemConductance_c(x.internalWater.StemPsi[c], 1.0, x.paramsTranspiration.VCstem_c[c], x.paramsTranspiration.VCstem_d[c]);
+          }
+        }
+        if(x.control.sperry.leafCavitationEffects) {
+          if(x.control.commonWB.leafCavitationRecovery!="total") {
+            x.internalWater.LeafPLC[c] = std::max(x.internalWater.LeafPLC[c], 1.0 - xylemConductance_c(x.internalWater.LeafPsi[c], 1.0, x.paramsTranspiration.VCleaf_c[c], x.paramsTranspiration.VCleaf_d[c]));
+          } else { //Immediate refilling
+            x.internalWater.LeafPLC[c] = 1.0 - xylemConductance_c(x.internalWater.LeafPsi[c], 1.0, x.paramsTranspiration.VCleaf_c[c], x.paramsTranspiration.VCleaf_d[c]);
+          }
+        }
+
+        //Scale soil water extracted from leaf to cohort level
+        for(int lc=0;lc<input.nlayerscon[c];lc++) {
+          Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*x.above.LAI_expanded[c]; //Scale from flow to water volume in the time step
+        }
+
+        //Balance between extraction and transpiration
+        output.plants_inst.PWB(c,n) = std::accumulate(Esoilcn.begin(), Esoilcn.end(), 0.0) - output.plants_inst.E(c,n);
+
+        //Add step transpiration to daily plant cohort transpiration
+        output.plants.Transpiration[c] += output.plants_inst.E(c,n);
+        output.plants.NetPhotosynthesis[c] += output.plants_inst.An(c,n);
+        output.plants.GrossPhotosynthesis[c] += output.plants_inst.Ag(c,n);
+        //Add PWB
+        output.plants.WaterBalance[c] += output.plants_inst.PWB(c,n);
+
+        //Copy transpiration and from connected layers to transpiration from soil layers
+        //And update soil water content (soil water potential will not be updated until next day!)
+        if(!plantWaterPools) {
+          int cl = 0;
+          for(int l=0;l<nlayers;l++) {
+            if(input.layerConnected(c,l)) {
+              output.extraction(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+              output.extractionInst(l,n) += Esoilcn[cl];
+              cl++;
+            }
+          }
+        } else {
+          arma::Mat<uint8_t>&  layerConnectedCoh = input.layerConnectedPools[c];
+          int cl = 0;
+          for(int j = 0;j<numCohorts;j++) {
+            arma::mat& ExtractionPoolsCoh = output.extractionPools[j];
+            for(int l=0;l<nlayers;l++) {
+              if(layerConnectedCoh(j,l)) {
+                output.extraction(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+                output.extractionInst(l,n) += Esoilcn[cl];
+                ExtractionPoolsCoh(c,l) += Esoilcn[cl];
+                cl++;
+              }
+            }
+          }
+        }
+      } else {
+        output.shade_inst.Psi(c,n) = medfate::NA_DOUBLE;
+        output.sunlit_inst.Psi(c,n) = medfate::NA_DOUBLE;
+        output.shade_inst.Gsw(c,n)= medfate::NA_DOUBLE;
+        output.sunlit_inst.Gsw(c,n)= medfate::NA_DOUBLE;
+        output.shade_inst.VPD(c,n)= medfate::NA_DOUBLE;
+        output.sunlit_inst.VPD(c,n)= medfate::NA_DOUBLE;
+        output.shade_inst.Temp(c,n)= medfate::NA_DOUBLE;
+        output.sunlit_inst.Temp(c,n)= medfate::NA_DOUBLE;
+      }
+    } else if(x.above.LAI_expanded[c]>0.0) { //Cohorts with living individuals but no LAI should be in equilibrium with soil (i.e. no transpiration)
+      x.internalWater.RootCrownPsi[c] = supply.psiRoot[0];
+      x.internalWater.StemPsi[c] = supply.psiStem[0];
+      x.internalWater.StemSympPsi[c] = supply.psiStem[0];
+      x.internalWater.LeafPsi[c] = supply.psiLeaf[0];
+      x.internalWater.LeafSympPsi[c] = supply.psiLeaf[0];
+    }
+  } //End of cohort loop
 }

@@ -295,12 +295,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   EnergyBalance_RESULT& outputEnergyBalance = ATres.energy;
   arma::mat& RHOPCohDyn = ATcomm.RHOPCohDyn;
   
-  // DataFrame outputTemperatureInst =   as<DataFrame>(outputEnergyBalance["Temperature"]);
-  // DataFrame outputCEBinst =  as<DataFrame>(outputEnergyBalance["CanopyEnergyBalance"]);
-  // DataFrame outputSEBinst =  as<DataFrame>(outputEnergyBalance["SoilEnergyBalance"]);
-  
-  // List supply = transpOutput["SupplyFunctions"]; 
-
   //Control parameters
   std::string& transpirationMode = x.control.transpirationMode;
   int ntimesteps = x.control.advancedWB.ndailysteps;
@@ -349,17 +343,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //Soil input
   Soil& soil = x.soil;
   int nlayers = x.soil.getNlayers();
-  // NumericVector widths = soil["widths"];
-  // NumericVector Water_FC = waterFC(soil, soilFunctions);
-  // NumericVector Theta_FC = thetaFC(soil, soilFunctions);
-  // NumericVector Theta_SAT = thetaSAT(soil, soilFunctions);
-  // NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
-  // NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
-  // NumericVector Tsoil = soil["Temp"]; 
-  // NumericVector sand = soil["sand"];
-  // NumericVector clay = soil["clay"];
-  // NumericVector Ws = soil["W"]; //Access to soil state variable
-  // double snowpack = x["snowpack"];
 
   //Canopy params
   int ncanlayers = x.canopy.zlow.size();
@@ -731,22 +714,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   ////////////////////////////////////////
   // STEP 3b. Above-canopy air temperature and long-wave radiation emission for sub-steps
   ////////////////////////////////////////
-  // NumericVector solarHour = outputTemperatureInst["SolarHour"];
-  // NumericVector Hcansoil = outputSEBinst["Hcansoil"];
-  // NumericVector Ebalsoil = outputSEBinst["Ebalsoil"];
-  // NumericVector LEVsoil = outputSEBinst["LEVsoil"];
-  // NumericVector abs_SWR_soil = outputSEBinst["SWRsoil"];
-  // NumericVector net_LWR_soil = outputSEBinst["LWRsoil"];
-  // NumericVector LEFsnow = outputCEBinst["LEFsnow"];
-  // NumericVector abs_SWR_can = outputCEBinst["SWRcan"];
-  // NumericVector net_LWR_can = outputCEBinst["LWRcan"];
-  // NumericVector LEVcan = outputCEBinst["LEVcan"];
-  // NumericVector Hcan_heat = outputCEBinst["Hcan"];
-  // NumericVector Ebal = outputCEBinst["Ebalcan"];
-  // NumericMatrix Tcan_mat = outputEnergyBalance["TemperatureLayers"];
-  // NumericMatrix VPcan_mat = outputEnergyBalance["VaporPressureLayers"];
-  // NumericMatrix Tsoil_mat = outputEnergyBalance["SoilTemperature"];
-
 
   std::vector<double>& Tatm = outputEnergyBalance.Tatm;
   std::vector<double>& Tcan = outputEnergyBalance.Tcan;
@@ -1053,19 +1020,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       }
     }
 
-  //   List innerInput;
-    if(transpirationMode =="Sperry") {
-  //     innerInput = List::create(_["Patm"] = Patm,
-  //                               _["zWind"] = zWind,
-  //                               _["f_dry"] = f_dry,
-  //                               _["iPMSunlit"] = iPMSunlit,
-  //                               _["iPMShade"] = iPMShade,
-  //                               _["nlayerscon"] = nlayerscon,
-  //                               _["layerConnected"] = layerConnected,
-  //                               _["layerConnectedPools"] = layerConnectedPools,
-  //                               _["supply"] = supply);
-    } 
-
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
@@ -1100,8 +1054,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
 
     if(transpirationMode == "Sperry") {
-  //     innerSperry(x, innerInput, innerOutput, n, tstep, 
-  //                 verbose, stepFunctions);
+      innerSperry_c(x, sperryNetworks, input, ATres, n, tstep, stepFunctions);
     } else if(transpirationMode == "Sureau"){
       innerSureau_c(x, sureauNetworks, input, ATres , n, tstep);
     }
