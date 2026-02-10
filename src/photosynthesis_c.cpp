@@ -366,3 +366,26 @@ void photosynthesisBaldocchi_inner_c(BaldocchiPhoto &photoOut,
   photoOut.Ag = Ag;
 }
 
+
+void leafPhotosynthesisOneFunction2_c(PhotoFunction& photo, 
+                                      double E, double psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
+                                      double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
+                                      double leafWidth, double refLeafArea) {
+  double leafTemp, leafVPD;
+  double Gwdiff, Gbound;
+  leafTemp = leafTemperature2_c(SWRabs/refLeafArea, LWRnet/refLeafArea, Tair, u, E, leafWidth);
+  leafVPD = std::max(0.0,leafVapourPressure_c(leafTemp, psiLeaf) - vpa);
+  // Separates diffusive conductance into stomatal and boundary layer conductance
+  Gwdiff = Patm*(E/1000.0)/leafVPD; //Transform flow from mmol to mol
+  Gbound = gLeafBoundary_c(u, leafWidth); // mol boundary layer conductance
+  Gwdiff = std::min(Gwdiff, Gbound); //Diffusive conductance cannot be smaller than the boundary layer resistances
+  Photo LP; 
+  leafphotosynthesis_inner_c(LP, Q/refLeafArea, Catm, Gwdiff/1.6, std::max(0.0,leafTemp), Vmax298/refLeafArea, Jmax298/refLeafArea);
+  photo.Gsw  = std::abs(1.0/((1.0/Gwdiff) - (1.0/Gbound))); //Determine stomatal conductance after accounting for leaf boundary conductance
+  photo.Ci = LP.Ci;
+  photo.GrossPhotosynthesis = LP.A;
+  photo.NetPhotosynthesis = LP.A - 0.015*VmaxTemp_c(Vmax298/refLeafArea, leafTemp);
+  photo.LeafTemperature = leafTemp;
+  photo.LeafVPD = leafVPD;
+}
+

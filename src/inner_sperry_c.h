@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 #include "medfate.h"
 #include "control_c.h"
+#include "photosynthesis_c.h"
 #include "modelInput_c.h"
 
 #ifndef INNER_SPERRY_C_H
@@ -26,7 +27,7 @@ struct NetworkSteadyState {
 };
 struct SupplyFunction {
   std::vector<double> E;
-  std::vector<double> dEdp;
+  std::vector<double> dEdP;
   arma::mat ERhizo;
   arma::mat psiRhizo;
   std::vector<double> psiRoot;
@@ -34,7 +35,7 @@ struct SupplyFunction {
   std::vector<double> psiLeaf;
   SupplyFunction(int nlayers, int maxNsteps) {
     E = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
-    dEdp = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+    dEdP = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
     ERhizo = arma::mat(maxNsteps,nlayers);
     psiRhizo = arma::mat(maxNsteps,nlayers);
     psiRoot = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
@@ -70,6 +71,11 @@ struct SperryNetwork {
   SupplyFunction supply;
 };
 
+struct ProfitMaximization {
+  PhotoFunction photosynthesisFunction;
+  double Profit;
+  int iMaxProfit;
+};
 void initSperryNetwork_inner_c(SperryNetwork& network,
                                int c,
                                const InternalWater& internalWater, 

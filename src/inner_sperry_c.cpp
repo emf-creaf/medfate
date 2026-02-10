@@ -1,5 +1,6 @@
 #include "inner_sperry_c.h"
 #include "hydraulics_c.h"
+#include "photosynthesis_c.h"
 #include "tissuemoisture_c.h"
 
 
@@ -266,29 +267,29 @@ void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork, double minFlo
     if(!std::isnan(SF.psiLeaf[i])) {
       // Rcpp::Rcout<<" psiRC: "<< SF.psiRoot[i] << " psileaf: "<< SF.psiLeaf[i] <<"\n";
       if(i==1) {
-        SF.dEdp[0] = (SF.E[1]-SF.E[0])/std::abs(SF.psiLeaf[1] - SF.psiLeaf[0]);
+        SF.dEdP[0] = (SF.E[1]-SF.E[0])/std::abs(SF.psiLeaf[1] - SF.psiLeaf[0]);
       } else {
         double d1 = (SF.E[i-1]-SF.E[i-2])/std::abs(SF.psiLeaf[i-1] - SF.psiLeaf[i-2]);
         double d2 = (SF.E[i]-SF.E[i-1])/std::abs(SF.psiLeaf[i] - SF.psiLeaf[i-1]);
-        SF.dEdp[i-1] = (d1+d2)/2.0;
+        SF.dEdP[i-1] = (d1+d2)/2.0;
       }
-      if(SF.E[i]>0.1) dE = std::min(0.05,SF.dEdp[i-1]*0.05);
-      else if(SF.E[i]>0.05) dE = std::min(0.01,SF.dEdp[i-1]*0.05);
-      else if(SF.E[i]>0.01) dE = std::min(0.005,SF.dEdp[i-1]*0.05);
+      if(SF.E[i]>0.1) dE = std::min(0.05,SF.dEdP[i-1]*0.05);
+      else if(SF.E[i]>0.05) dE = std::min(0.01,SF.dEdP[i-1]*0.05);
+      else if(SF.E[i]>0.01) dE = std::min(0.005,SF.dEdP[i-1]*0.05);
       nsteps++;
-      if(SF.dEdp[i-1]<(pCrit*maxdEdp)) break;
+      if(SF.dEdP[i-1]<(pCrit*maxdEdp)) break;
     } else {
       break;
     }
   }
   //Calculate last dEdP
-  if(nsteps>1) SF.dEdp[nsteps-1] = (SF.E[nsteps-1]-SF.E[nsteps-2])/std::abs(SF.psiLeaf[nsteps-1] - SF.psiLeaf[nsteps-2]);
+  if(nsteps>1) SF.dEdP[nsteps-1] = (SF.E[nsteps-1]-SF.E[nsteps-2])/std::abs(SF.psiLeaf[nsteps-1] - SF.psiLeaf[nsteps-2]);
   //Copy values to nsteps
   SupplyFunction def(nlayers, nsteps);
   for(int i=0;i<nsteps;i++) {
     if(std::isnan(SF.E[i])) throw medfate::MedfateInternalError("NA E in supplyFunctionNetwork");
     def.E[i] = SF.E[i];
-    def.dEdp[i] = SF.dEdp[i];
+    def.dEdP[i] = SF.dEdP[i];
     def.psiRoot[i] = SF.psiRoot[i];
     for(int l=0;l<nlayers;l++) {
       def.ERhizo(i,l) = SF.ERhizo(i,l);
@@ -349,4 +350,105 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
   
   // Calculates supply function
   fillSupplyFunctionNetwork_c(network, 0.0, 0.001); 
+}
+
+
+void profitMaximization2(ProfitMaximization& PM, 
+                         SupplyFunction& supply, int initialPos,
+                         double Catm, double Patm, double Tair, double vpa, double u, 
+                         double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
+                         double leafWidth, double refLeafArea,
+                         double Gswmin, double Gswmax) {
+  
+  int nsteps = supply.E.size();
+  
+  double maxdEdp = 0.0, mindEdp = 99999999.0;
+  
+  int valid = 1;
+  for(int i=0;i<nsteps-1;i++) {
+    if((i>0) && (supply.E[i] > supply.E[i-1])) valid++; 
+    mindEdp = std::min(mindEdp, supply.dEdP[i]);
+    maxdEdp = std::max(maxdEdp, supply.dEdP[i]);
+  }
+  nsteps = valid;
+  // Rcout<< valid<< " "<< maxdEdp << " "<<mindEdp<< " "<< mindEdp/maxdEdp<<"\n";
+  // initial pos cannot be over the valid steps
+  initialPos = std::min(initialPos, nsteps-1);
+  
+  //Evaluate photosynthesis and profit at Agmax
+  PhotoFunction photoAgMax;
+  leafPhotosynthesisOneFunction2_c(photoAgMax, supply.E[nsteps-1], supply.psiLeaf[nsteps - 1], Catm, Patm, Tair, vpa, u, 
+                                   SWRabs, LWRnet, Q, Vmax298, Jmax298, 
+                                   leafWidth, refLeafArea);
+  double Agmax = photoAgMax.GrossPhotosynthesis;
+  double profitAgMax = (1.0 - ((maxdEdp - supply.dEdP[nsteps-1])/(maxdEdp - mindEdp))); 
+  
+  //Photosynthesis and profit maximization at current value of initialPos
+  PhotoFunction photoInitial;
+  leafPhotosynthesisOneFunction2_c(photoInitial, supply.E[initialPos], supply.psiLeaf[initialPos], Catm, Patm, Tair, vpa, u, 
+                                   SWRabs, LWRnet, Q, Vmax298, Jmax298, 
+                                   leafWidth, refLeafArea);
+  double AgInitial = photoInitial.GrossPhotosynthesis;
+  double profitInitial = (AgInitial/Agmax) - ((maxdEdp - supply.dEdP[initialPos])/(maxdEdp - mindEdp)); 
+  if(Agmax ==0.0) profitInitial = - ((maxdEdp - supply.dEdP[initialPos])/(maxdEdp - mindEdp)); //To avoid 0/0 division
+  
+  PhotoFunction photoPrev, photoNext, photoCurrent;
+  int iPos = initialPos;
+  double profitPrev, profitNext, profitCurrent;
+  
+  photoCurrent = photoInitial;
+  profitCurrent = profitInitial;
+  
+  int prevStep = 0;
+  bool cont = true;
+  // Rcout<< " initialPos " << initialPos;
+  while(cont) {
+    // Rcout<<".";
+    if((iPos>0) && (prevStep <= 0)) {
+      leafPhotosynthesisOneFunction2_c(photoPrev, supply.E[iPos-1], supply.psiLeaf[iPos-1], Catm, Patm, Tair, vpa, u, 
+                                       SWRabs, LWRnet, Q, Vmax298, Jmax298, 
+                                       leafWidth, refLeafArea);
+      double AgPrev = photoPrev.GrossPhotosynthesis;
+      profitPrev = (AgPrev/Agmax) - ((maxdEdp - supply.dEdP[iPos-1])/(maxdEdp - mindEdp)); 
+      if(Agmax ==0.0) profitPrev = - ((maxdEdp - supply.dEdP[iPos-1])/(maxdEdp - mindEdp)); 
+    } else {
+      photoPrev = photoCurrent;
+      profitPrev = profitCurrent;
+    }
+    if((iPos < (nsteps-1)) && (prevStep >= 0)) {
+      leafPhotosynthesisOneFunction2_c(photoNext, supply.E[iPos+1], supply.psiLeaf[iPos+1], Catm, Patm, Tair, vpa, u, 
+                                       SWRabs, LWRnet, Q, Vmax298, Jmax298, 
+                                       leafWidth, refLeafArea);
+      double AgNext = photoNext.GrossPhotosynthesis;
+      profitNext = (AgNext/Agmax) - ((maxdEdp - supply.dEdP[iPos+1])/(maxdEdp - mindEdp)); 
+      if(Agmax ==0.0) profitNext = - ((maxdEdp - supply.dEdP[iPos+1])/(maxdEdp - mindEdp)); 
+    } else {
+      photoNext = photoAgMax;
+      profitNext = profitAgMax;
+    }
+    bool selDecr = ((profitPrev >= profitCurrent) && (photoPrev.Gsw >= Gswmin)) || (photoCurrent.Gsw>Gswmax);
+    selDecr = selDecr && (prevStep<=0) && (iPos>0);
+    bool selIncr = ((profitNext > profitCurrent) && (photoNext.Gsw <= Gswmax)) || (photoCurrent.Gsw<Gswmin);
+    selIncr = selIncr && (prevStep>=0) && (iPos<(nsteps-1));
+    if(selDecr) {
+      profitCurrent = profitPrev;
+      photoCurrent = photoPrev;
+      iPos = iPos-1;
+      prevStep = -1;
+      // Rcout <<"-";
+    } else if(selIncr) {
+      profitCurrent = profitNext;
+      photoCurrent = photoNext;
+      iPos = iPos+1;
+      // Rcout <<"+";
+      prevStep = 1;
+    } else {
+      cont = false;
+    }
+  }
+  // Rcout <<"\n";
+  // Rcout<< " finalPos " << iPos<< " final profit "<< profitCurrent <<"\n"; 
+  PM.photosynthesisFunction = photoCurrent;
+  PM.Profit = profitCurrent;
+  PM.iMaxProfit = iPos;
 }

@@ -17,6 +17,15 @@ struct BaldocchiPhoto{
   double Gsw, Cs, Ci, An, Ag;
 };
 
+struct PhotoFunction {
+  double LeafTemperature;
+  double LeafVPD;
+  double Gsw;
+  double Ci;
+  double GrossPhotosynthesis;
+  double NetPhotosynthesis;
+};
+
 double gammaTemp_c(double Tleaf);
 double KmTemp_c(double Tleaf, double Oi = 209.0);
 double VmaxTemp_c(double Vmax298, double Tleaf);
@@ -47,5 +56,10 @@ void photosynthesisBaldocchi_inner_c(BaldocchiPhoto &photoOut,
                                      double leafWidth,
                                      double Gsw_AC_slope,
                                      double Gsw_AC_intercept);
+
+void leafPhotosynthesisOneFunction2_c(PhotoFunction& photo, 
+                                      double E, double psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
+                                      double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
+                                      double leafWidth = 1.0, double refLeafArea = 1.0);
 #endif
 
