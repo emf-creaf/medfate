@@ -739,7 +739,7 @@ void fillSoilDailyOutput(List SWB, DataFrame soil, List sDay,
       HydrIndays(iday,l) = HydrInVec[l];
       Eplantdays(iday,l) = EplantVec[l];
       Eplantdays(iday,nlayers) += EplantVec[l];
-      HydrIndays(iday,nlayers) += HydrIndays[l];
+      HydrIndays(iday,nlayers) += HydrInVec[l];
     }
   }
 }

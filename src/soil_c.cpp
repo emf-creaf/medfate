@@ -57,9 +57,9 @@ Soil::Soil(int nlayersIn,
   clapp_hornberger = clapp_hornbergerIn;
 }
 
-Soil::Soil(Rcpp::DataFrame x, Rcpp::String model = "VG") {
+Soil::Soil(Rcpp::DataFrame x, Rcpp::String modelIn = "VG") {
   nlayers = x.nrow();
-  model = model.get_cstring();
+  model = modelIn.get_cstring();
   
   widths = Rcpp::as< std::vector<double> >(x["widths"]);
   clay = Rcpp::as< std::vector<double> >(x["clay"]);
@@ -93,6 +93,7 @@ Soil::Soil(Rcpp::DataFrame x, Rcpp::String model = "VG") {
       theta_SAT[l] = VG_theta_sat[l]; 
       theta_FC[l] = psi2thetaVanGenuchten_c(VG_n[l], VG_alpha[l], VG_theta_res[l], VG_theta_sat[l], fieldCapacityPsi); 
     }
+    // Rcpp::Rcout<< l << " theta_FC " << theta_FC[l] <<"\n";
     setW(l, W[l]); // this fills psi and theta based on W
   }
   clapp_hornberger = ClappHornberger(usda_type[0]);
@@ -181,6 +182,7 @@ void Soil::setW(int layer, double value) {
   } else {
     psi[layer] = theta2psiSaxton_c(clay[layer], sand[layer], theta[layer], om[layer]);
   }
+  // Rcpp::Rcout<<" Setting layer "<< layer << " to W: "<< W[layer]<< " theta: " << theta[layer] << " psi: " << psi[layer] <<"\n"; 
 }
 void Soil::setTemp(int layer, double value) {
   Temp[layer] = value; 
@@ -564,7 +566,9 @@ double psi2cVanGenuchten_c(double n, double alpha, double theta_res, double thet
 double psi2thetaVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi) {
   double m = 1.0 - (1.0/n);
   double T = pow(1.0  + pow(alpha*std::abs(psi),n),-m);
-  return(theta_res+T*(theta_sat-theta_res));
+  double theta = theta_res+T*(theta_sat-theta_res);
+  // Rcpp::Rcout<< "in psi2thetaVG psi "<< psi << " theta "<< theta<< "\n";
+  return(theta);
 }
 
 /**
@@ -583,6 +587,7 @@ double theta2psiVanGenuchten_c(double n, double alpha, double theta_res, double 
   // double T = pow(pow(alpha*std::abs(psi),n)+1.0,-m);
   double psi = -(1.0/alpha)*pow(pow(T,-1.0/m)-1.0,1.0/n);
   if(psi < minimumPsi) psi = minimumPsi;
+  // Rcpp::Rcout<< "in theta2psiVanGenuchten_c psi "<< psi << " theta "<< theta<< "\n";
   return(psi);
 }
 

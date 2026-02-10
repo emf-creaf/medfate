@@ -236,7 +236,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   NumericVector Kunsat = conductivity(soil, soilFunctions, true);
   //Calculate soil water potential
   NumericVector psiSoil = psi(soil,soilFunctions);
-
+  
   
   NumericMatrix WaterM(numCohorts, nlayers);
   NumericMatrix KunsatM(numCohorts, nlayers);
@@ -436,11 +436,10 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
             } else{
               HD[l] = -redAmount*ReceiverDiff[l]/sum(ReceiverDiff);
             }
-            // Rcout<<" "<<l<<" "<<HD[l];
+            // Rcout<< c <<" "<<l<<" "<<HD[l]<<"\n";;
             outputExtraction(c,l) += HD[l];
           }
         }
-        // Rcout<< "\n";
       }
     } else {
       for(int c=0;c<numCohorts;c++) {

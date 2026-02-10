@@ -13,21 +13,41 @@ data(SpParamsMED)
 examplesoil <- defaultSoilParams(4)
 
 test_that("SPWB_runner initializes and runs correctly", {
-  controlGranier <- defaultControl("Granier")
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
-  mfr <- new(SPWB_runner, x1, 41.82592, 100, 0, 0)
-  expect_s4_class(mfr, "Rcpp_SPWB_runner")
   d <- 100
   meteovec <- unlist(examplemeteo[d,-1])
   date <- as.character(examplemeteo$dates[d])
-  mfr$run_day(date, meteovec, 0, NULL, NA)
-  expect_s3_class(mfr$get_output(), "spwb_day")
+
+  controlGranier <- defaultControl("Granier")
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
+  mfr1 <- new(SPWB_runner, x1, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr1, "Rcpp_SPWB_runner")
+  mfr1$run_day(date, meteovec, 0, NULL, NA)
+  expect_s3_class(mfr1$get_output(), "spwb_day")
+  
+  controlSperry <- defaultControl("Sperry")
+  x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSperry)
+  mfr2 <- new(SPWB_runner, x2, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr2, "Rcpp_SPWB_runner")
+  mfr2$run_day(date, meteovec, 0, NULL, NA)
+  expect_s3_class(mfr2$get_output(), "spwb_day")
+  
+  controlSureau <- defaultControl("Sureau")
+  x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
+  mfr3 <- new(SPWB_runner, x3, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr3, "Rcpp_SPWB_runner")
+  mfr3$run_day(date, meteovec, 0, NULL, NA)
+  expect_s3_class(mfr3$get_output(), "spwb_day")
 })
 
 test_that("SPWB_multiple_runner initializes and runs correctly", {
-  controlSureau <- defaultControl("Sureau")
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
-  n = 100;
+  n <- 100
+  d <- 100
+  meteovec1 <- unlist(examplemeteo[d,-1])
+  meteo_vec <- vector("list", n)
+  for(i in 1:n) meteo_vec[[i]] = rlang::duplicate(meteovec1)
+  
+  controlGranier <- defaultControl("Granier")
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
   x_vec <- vector("list", n)
   for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
   latitude_vec <- rep(41, n)
@@ -36,10 +56,6 @@ test_that("SPWB_multiple_runner initializes and runs correctly", {
   aspect_vec <- rep(0, n)
   mfmr <- new(SPWB_multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
   expect_s4_class(mfmr, "Rcpp_SPWB_multiple_runner")
-  d <- 100
-  meteovec1 <- unlist(examplemeteo[d,-1])
-  meteo_vec <- vector("list", n)
-  for(i in 1:n) meteo_vec[[i]] = rlang::duplicate(meteovec1)
   date <- as.character(examplemeteo$dates[d])
   system.time(mfmr$run_day(date, meteo_vec, FALSE))
   expect_s3_class(mfmr$get_output_at(1), "spwb_day")

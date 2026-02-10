@@ -123,7 +123,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   //Percentage of irradiance reaching the ground
   double LgroundPAR = 100.0*exp((-1.0)*s);
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
-
+  
   
   //STEP 2 - Hidrological inputs (modifies snowpack)
   waterInputs_c(BSPWB_comm.waterInputs, x,
@@ -154,10 +154,10 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
     //Store overall soil moisture in a backup copy
     double* Wbackup = new double[nlayers];
     for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
-    
+
     for(int c=0;c<numCohorts;c++) {
-      for(int l = 0; l<nlayers;l++) soil.setW(l,Wpool(c,l)); // this updates psi, theta, ... 
-      
+      for(int l = 0; l<nlayers;l++) soil.setW(l,Wpool(c,l)); // this updates psi, theta, ...
+
       //Evaporation from bare  (if there is no snow), do not modify soil
       if(bareSoilEvaporation) {
         EsoilPools[c] = soilEvaporation_c(soil, snowpack, pet, LgroundSWR, false);
@@ -175,7 +175,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
     for(int l = 0; l<nlayers;l++) soil.setW(l, Wbackup[l]);
     delete[] Wbackup;
   }
-  
+
   //STEP 4 - Woody plant transpiration  (does not modify soil, only plants)
   transpirationBasic_c(BTres, BTcomm, x, meteovec, elevation);
 
@@ -190,8 +190,9 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
       BSPWBres.Soil.HydraulicOutput[l] += std::max(BTres.extraction(c,l),0.0);
       BSPWBres.Soil.PlantExtraction[l] += BTres.extraction(c,l);
     }
+    // Rcpp::Rcout << "Layer " << l << " Input " << BSPWBres.Soil.HydraulicInput[l] << " Output " << BSPWBres.Soil.HydraulicOutput[l] << " extraction " << BSPWBres.Soil.PlantExtraction[l] << "\n";
   }
-
+  
   //STEP 5 - Soil flows
   double DeepDrainage = 0.0;
   double Infiltration = 0.0;

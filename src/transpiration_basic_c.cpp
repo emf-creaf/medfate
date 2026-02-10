@@ -258,7 +258,6 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     delete[] Wbackup;
   }
 
-
   ParamsVolume parsVol;
   for(int c=0;c<numCohorts;c++) {
     parsVol.stem_c = VCstem_c[c];
@@ -450,13 +449,15 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       if(sumDonor>0.0) {
         for(int c=0;c<numCohorts;c++) {
           double redAmount = Eplant[c]*hydraulicRedistributionFraction;
-          double hrd = 0.0;
+          // Rcout<<c<< "red amount"<< redAmount;
           for(int l=0;l<nlayers;l++) {
+            double hrd = 0.0;
             if(WDiff[l]>0.0) {
-              hrd += redAmount*DonorDiff[l]/sumDonor;
+              hrd = redAmount*DonorDiff[l]/sumDonor;
             } else{
-              hrd += -redAmount*ReceiverDiff[l]/sumReceiver;
+              hrd = -redAmount*ReceiverDiff[l]/sumReceiver;
             }
+            // Rcout<< c <<" "<<l<<" "<<hrd << "\n";
             outputExtraction(c,l) += hrd;
           }
         }

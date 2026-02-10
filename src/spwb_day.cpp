@@ -253,14 +253,14 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
       //Evaporation from bare soil_c (if there is no snow), do not modify soil
       if(bareSoilEvaporation) {
         EsoilPools[c] = soilEvaporation(soil_c, snowpack, soilFunctions, pet, LgroundSWR, false);
-        Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
+        Esoil = Esoil + poolProportions[c]*EsoilPools[c];
       }
       //Herbaceous transpiration, do not modify soil
       NumericVector EherbVec_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, false);
-      //Update average soil evaporation and herbaceous transpiration 
+      //Update average soil evaporation and herbaceous transpiration
       for(int l=0;l<nlayers;l++) {
         EherbPools(c,l) = EherbVec_c[l];
-        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l]; 
+        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l];
       }
     }
   }
@@ -278,6 +278,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
       soilHydraulicOutput[l] += std::max(soilLayerExtract(c,l),0.0);
       ExtractionVec[l] += soilLayerExtract(c,l);
     }
+    // Rcpp::Rcout << "Layer " << l << " Input " << soilHydraulicInput[l] << " Output " << soilHydraulicOutput[l] << " extraction " << ExtractionVec[l] << "\n";
   }
   
   //STEP 5 - Soil flows

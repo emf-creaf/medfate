@@ -822,7 +822,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           Vc[cnt] = x.belowLayers.V(c,l);
           VCroot_kmaxc[cnt] = x.belowLayers.VCroot_kmax(c,l);
           VGrhizo_kmaxc[cnt] = x.belowLayers.VGrhizo_kmax(c,l);
-          psic[cnt] = -0.033; //FOR DEBUGGING ! x.soil.getPsi(l);
+          psic[cnt] = x.soil.getPsi(l);
           VG_nc[cnt] = x.soil.getVG_n(l);
           VG_alphac[cnt] = x.soil.getVG_alpha(l);
           cnt++;

@@ -153,51 +153,5 @@ test_that("spwb_day can be run with truncated root distribution and rhizosphere 
 })
 
 
-test_that("spwb_day can be run after reorganizing code",{
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  control_granier$rhizosphereOverlap <- "partial"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
 
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  control_sperry$rhizosphereOverlap <- "partial"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  control_sureau$rhizosphereOverlap <- "partial"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-})
   
