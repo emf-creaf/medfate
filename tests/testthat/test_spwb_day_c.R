@@ -73,7 +73,7 @@ test_that("spwb_day can be run after reorganizing code",{
   
 })
 
-test_that("spwb_day and spwb_day_c return the same result",{
+test_that("spwb_day and spwb_day_c return the same result with granier",{
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   sd1_c <- medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
@@ -87,7 +87,23 @@ test_that("spwb_day and spwb_day_c return the same result",{
   expect_equal(sd1, sd1_c) # Check for same output
 })
 
-test_that("spwb and spwb_c return the same result",{
+test_that("spwb_day and spwb_day_c return the same result with sperry",{
+  control_sperry$subdailyResults <- TRUE
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(sd1$WaterBalance, sd1_c$WaterBalance) # Check for same output
+  expect_equal(sd1$Plants, sd1_c$Plants) # Check for same output
+  
+  # control_sperry$rhizosphereOverlap <- "partial"
+  # x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  # sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  # x1_c <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  # sd1_c <- medfate::spwb_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  # expect_equal(sd1, sd1_c) # Check for same output
+})
+
+test_that("spwb and spwb_c return the same result with granier",{
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   S1 <- medfate::spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   S1_c <- medfate::spwb_c(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)

@@ -102,6 +102,7 @@ Rcpp::DataFrame copyLeafAdvancedTranspirationResult_c(const LeafAdvancedTranspir
     _["TempMin"] = Rcpp::wrap(leaf.TempMin),
     _["TempMax"] = Rcpp::wrap(leaf.TempMax)
   );
+  leafDF.attr("row.names") = Rcpp::wrap(x.cohorts.CohortCode);
   return(leafDF);
 }
 

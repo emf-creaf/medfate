@@ -646,7 +646,8 @@ Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelIn
   Rcpp::List l = Rcpp::List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
                                     _["topography"] = copyTopo_c(ASPWBres.topo),
                                     _["weather"] = copyWeather_c(ASPWBres.meteovec, x.control.transpirationMode),
-                                    _["WaterBalance"] = copyWaterBalanceResult_c(ASPWBres.WaterBalance));
+                                    _["WaterBalance"] = copyWaterBalanceResult_c(ASPWBres.WaterBalance),
+                                    _["EnergyBalance"] = copyEnergyBalanceResult_c(ASPWBres.ATres.energy, x));
   if(x.control.results.soilResults) {
     l.push_back(copySoilResult_c(ASPWBres.Soil), "Soil");
   }

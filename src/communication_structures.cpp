@@ -1147,7 +1147,7 @@ List copyAdvancedTranspirationOutput(List atc, List x) {
                         _["SunlitLeaves"] = Sunlit,
                         _["ShadeLeaves"] = Shade,
                         _["ExtractionInst"] = soilLayerExtractInst,
-                        _["RadiationInputInst"] = clone(as<List>(atc["RadiationInputInst"])), 
+                        _["RadiationInputInst"] = clone(as<DataFrame>(atc["RadiationInputInst"])), 
                         _["PlantsInst"] = PlantsInst,
                         _["SunlitLeavesInst"] = SunlitInst,
                         _["ShadeLeavesInst"] = ShadeInst,
@@ -1321,7 +1321,7 @@ List copyAdvancedSPWBOutput(List aoc, List x) {
     l.push_back(soilLayerExtractInst, "ExtractionInst");
     List PlantsInst = copyPlantsInstOutput(as<List>(aoc["PlantsInst"]), x);
     l.push_back(PlantsInst, "PlantsInst");
-    l.push_back(clone(as<List>(aoc["RadiationInputInst"])), "RadiationInputInst");
+    l.push_back(clone(as<DataFrame>(aoc["RadiationInputInst"])), "RadiationInputInst");
     List SunlitInst = copyLeavesInstOutput(as<List>(aoc["SunlitLeavesInst"]), x);
     List ShadeInst = copyLeavesInstOutput(as<List>(aoc["ShadeLeavesInst"]), x);
     l.push_back(SunlitInst, "SunlitLeavesInst");
