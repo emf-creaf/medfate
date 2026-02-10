@@ -81,8 +81,9 @@ test_that("spwb_day and spwb_day_c return the same result",{
 
   control_granier$rhizosphereOverlap <- "partial"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  x1_c <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  sd1_c <- medfate::spwb_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1, sd1_c) # Check for same output
 })
 
@@ -94,10 +95,12 @@ test_that("spwb and spwb_c return the same result",{
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
   expect_equal(S1$Soil, S1_c$Soil)
   expect_equal(S1$Plants, S1_c$Plants)
-  # d <- 301
-  # meteovec <- unlist(examplemeteo[d,-1])
-  # date <- as.character(examplemeteo$dates[d])
-  # sd1 <- medfate::spwb_day(S1$spwbOutput, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  # sd1_c <- medfate::spwb_day_c(S1_c$spwbOutput, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  # expect_equal(sd1, sd1_c) # Check for same output
+  control_granier$rhizosphereOverlap <- "partial"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  S1 <- medfate::spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate::spwb_c(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
+  expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
+  expect_equal(S1$Soil, S1_c$Soil)
+  expect_equal(S1$Plants, S1_c$Plants)
 })

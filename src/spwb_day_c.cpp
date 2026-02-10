@@ -238,10 +238,14 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
       double* Wsoil = new double[nlayers];
       for(int l = 0; l<nlayers;l++) Wsoil[l] = 0.0;
       for(int c=0;c<numCohorts;c++) {
-        for(int l = 0; l<nlayers;l++) soil.setW(l,Wpool(c,l)); // this updates psi, theta, ... 
+        for(int l = 0; l<nlayers;l++) {
+          sourceSinkVec[l] = 0.0; //Reset
+          soil.setW(l,Wpool(c,l)); // this updates psi, theta, ...
+        } 
         for(int l=0;l<nlayers;l++) {
           sourceSinkVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
           if(l ==0) sourceSinkVec[l] -= EsoilPools[c];
+          // Rcout << c << "" << l << " SS " << sourceSinkVec[l] <<"\n";
         }
         soilWaterBalance_inner_c(SWBres, SWBcomm, soil,
                                  RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
@@ -260,6 +264,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
         //copy to Wpool and update averaged soil moisture (Wsoil)
         for(int l=0;l<nlayers;l++) {
           Wpool(c,l) = soil.getW(l);
+          // Rcout << c << "-" << l << " W " << Wpool(c,l) <<"\n";
           Wsoil[l] += soil.getW(l)*poolProportions[c];
         }
       }
@@ -555,7 +560,10 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
       double* Wsoil = new double[nlayers];
       for(int l = 0; l<nlayers;l++) Wsoil[l] = 0.0;
       for(int c=0;c<numCohorts;c++) {
-        for(int l = 0; l<nlayers;l++) soil.setW(l,Wpool(c,l)); // this updates psi, theta, ... 
+        for(int l = 0; l<nlayers;l++) {
+          sourceSinkVec[l] = 0.0; //Reset
+          soil.setW(l,Wpool(c,l)); // this updates psi, theta, ...
+        } 
         for(int l=0;l<nlayers;l++) {
           sourceSinkVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
           if(l ==0) sourceSinkVec[l] -= EsoilPools[c];

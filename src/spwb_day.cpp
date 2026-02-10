@@ -199,6 +199,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
       NumericVector W_c = soil_c["W"];
       for(int l=0;l<nlayers;l++) {
         W_c[l] = Wpool(c,l); 
+        // Rcout << c << "-" << l << " W " << W_c[l] <<"\n";
       }
       soilPools[c] = soil_c;
     }
@@ -331,7 +332,9 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
         for(int l=0;l<nlayers;l++) {
           sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
           if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
+          // Rcout << c << "" << l << " SS " << sourceSinkPoolVec[l] <<"\n";
         }
+        
         NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
                                                     RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
                                                     runon, lateralFlows, waterTableDepth,
@@ -354,6 +357,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
         NumericVector W_c = soil_c["W"];
         for(int l=0;l<nlayers;l++) {
           Wpool(c,l) = W_c[l];
+          // Rcout << c << "-" << l << " W " << W_c[l] <<"\n";
           Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
         }
       }
