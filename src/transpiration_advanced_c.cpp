@@ -827,7 +827,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   SperryNetwork* sperryNetworks = new SperryNetwork[numCohorts];
   
   //Hydraulics: Define supply functions
-  // List supplyAboveground(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     if(!plantWaterPools) {
       //Determine connected layers (non-zero fine root abundance)
@@ -856,23 +855,23 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           Vc[cnt] = x.belowLayers.V(c,l);
           VCroot_kmaxc[cnt] = x.belowLayers.VCroot_kmax(c,l);
           VGrhizo_kmaxc[cnt] = x.belowLayers.VGrhizo_kmax(c,l);
-          psic[cnt] = x.soil.getPsi(l);
+          psic[cnt] = -0.033; //FOR DEBUGGING ! x.soil.getPsi(l);
           VG_nc[cnt] = x.soil.getVG_n(l);
           VG_alphac[cnt] = x.soil.getVG_alpha(l);
           cnt++;
         }
       }
       
-      //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode=="Sperry") {
+        //Build supply function networks (Sperry transpiration mode)
         initSperryNetwork_inner_c(sperryNetworks[c], c,
                                   x.internalWater, x.paramsTranspiration, x.paramsWaterStorage,
                                   VCroot_kmaxc, VGrhizo_kmaxc,
                                   psic, VG_nc, VG_alphac,
                                   x.control,
                                   sapFluidityDay);
-        //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
+        //Build networks (Sureau transpiration mode)
         initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
                                   x.internalWater,
                                   x.paramsAnatomy, x.paramsTranspiration, x.paramsWaterStorage,
@@ -938,7 +937,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
                                   psic, VG_nc, VG_alphac,
                                   x.control,
                                   sapFluidityDay);
-  //       supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Sureau") {
         initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
                                   x.internalWater,

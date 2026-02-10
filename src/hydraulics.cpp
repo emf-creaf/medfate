@@ -151,6 +151,7 @@ List E2psiBelowground(double E, List hydraulicNetwork,
   int ntrial = numericParams["ntrial"];
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
+  // Rcpp::Rcout<< "parameters: " << ntrial << " " << psiTol << " " << ETol << "\n";
   
   NumericVector psiSoil = hydraulicNetwork["psisoil"]; 
   NumericVector krhizomax = hydraulicNetwork["krhizomax"]; 
@@ -172,13 +173,14 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     for(int l=0;l<nlayers;l++) {
       x[l] =psiSoil[l];
       minPsi = std::min(minPsi, psiSoil[l]);
-      // Rcout<<"("<<x[l]<<") ";
     }
     x[nlayers] = minPsi;
-    // Rcout<<"("<<x[nlayers]<<")\n";
-    
+
   }
-  
+  // for(int l=0;l<nlayers +1;l++) {
+  //   Rcpp::Rcout << x[l]<<" ";
+  // }
+  // Rcpp::Rcout<<"\n";
   //Flow across root xylem and rhizosphere elements
   NumericVector Eroot(nlayers), Erhizo(nlayers);
   
@@ -194,10 +196,9 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     bool stop = false;
     for(int l=0;l<nlayers;l++) {
       Eroot[l] = EXylem_c(x[nlayers], x[l], krootmax[l], rootc, rootd, true, 0.0);
-      // Rcout<<"("<<Eroot[l]<<"\n";
       Erhizo[l] = EVanGenuchten_c(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
       fvec[l] = Erhizo[l] - Eroot[l];
-      // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
+      // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" psiSoil"<<l <<": "<< psiSoil[l]<< " krhizo max"<<l<<": "<< krhizomax[l]<< " nsoil "<< nsoil[l] << " alphasoil "<< alphasoil[l] << " kroot max"<<l<<": "<< krootmax[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
       // Rcout<<"der psi_l "<<d_psi_l<<"der Eroot psi_l "<<d_Eroot_psi_l<<"  der psi_root "<<d_psi_root<<"\n";
       Esum +=Eroot[l];
     }
@@ -228,6 +229,7 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     //Check function convergence
     double errf = 0.0;
     for(int fi=0;fi<=nlayers;fi++) errf += std::abs(fvec[fi]);
+    // Rcpp::Rcout<< "ERRF: "<< errf<<"\n";
     if(errf<=ETol) break;
     //Right-hand side of linear equations
     for(int fi=0;fi<=nlayers;fi++) p[fi] = -fvec[fi];
@@ -822,11 +824,12 @@ List supplyFunctionNetwork(List hydraulicNetwork,
                            sol["x"]);
   double psiLeafI = solI["psiLeaf"];
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
-  
+  // Rcout<< " maxdEdp " << maxdEdp <<"\n";
+
   int nsteps = 1;
   double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
-    // if(i==3) stop("kk");
+    // Rcout<< " step: "<< i;
     supplyE[i] = supplyE[i-1]+dE;
     sol = E2psiNetwork(supplyE[i], hydraulicNetwork,
                        sol["x"]);
@@ -839,6 +842,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
     supplyPsiRoot[i] = sol["psiRootCrown"];
 
     if(!NumericVector::is_na(supplyPsiLeaf[i])) {
+      // Rcout<< " psiRC: "<<supplyPsiRoot[i] <<" psileaf: "<< supplyPsiLeaf[i] <<"\n";
       if(i==1) {
         supplydEdp[0] = (supplyE[1]-supplyE[0])/std::abs(supplyPsiLeaf[1] - supplyPsiLeaf[0]);
       } else {
@@ -875,6 +879,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
     supplyPsiStemDef[i] = supplyPsiStem[i];
     supplyPsiLeafDef[i] = supplyPsiLeaf[i];
   }
+
   return(List::create(Named("E") = supplyEDef,
                       Named("ERhizo") = supplyERhizoDef,
                       Named("psiRhizo")=supplyPsiRhizoDef,

@@ -434,4 +434,3 @@ double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxy
   return(E2psiXylem_c(E, psiRoot, kxylemmax, c, d, psiCav));
 }
 
-

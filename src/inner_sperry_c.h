@@ -6,6 +6,46 @@
 #ifndef INNER_SPERRY_C_H
 #define INNER_SPERRY_C_H
 
+
+struct NetworkSteadyState {
+  double E;
+  std::vector<double> ERoot;
+  std::vector<double> ERhizo;
+  double psiLeaf;
+  double psiStem;
+  double psiRootCrown;
+  std::vector<double> psiRhizo;
+  std::vector<double> x;
+  NetworkSteadyState(int nlayers, double E) {
+    E = E;
+    ERhizo = std::vector<double>(nlayers, medfate::NA_DOUBLE);
+    ERoot = std::vector<double>(nlayers, medfate::NA_DOUBLE);
+    psiRhizo = std::vector<double>(nlayers, medfate::NA_DOUBLE);
+    x = std::vector<double>(nlayers+1, medfate::NA_DOUBLE);
+  }
+};
+struct SupplyFunction {
+  std::vector<double> E;
+  std::vector<double> dEdp;
+  arma::mat ERhizo;
+  arma::mat psiRhizo;
+  std::vector<double> psiRoot;
+  std::vector<double> psiStem;
+  std::vector<double> psiLeaf;
+  SupplyFunction(int nlayers, int maxNsteps) {
+    E = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+    dEdp = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+    ERhizo = arma::mat(maxNsteps,nlayers);
+    psiRhizo = arma::mat(maxNsteps,nlayers);
+    psiRoot = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+    psiStem = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+    psiLeaf = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  }
+  SupplyFunction() {
+    SupplyFunction(0,0);
+  }
+};
+
 struct SperryNetwork {
   SperryWBParams sperryParams;
 
@@ -26,7 +66,8 @@ struct SperryNetwork {
   double leafd;
   double PLCstem;
   double PLCleaf;
-
+  
+  SupplyFunction supply;
 };
 
 void initSperryNetwork_inner_c(SperryNetwork& network,
@@ -41,4 +82,7 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
                                const std::vector<double>& VG_alpha,
                                const ControlParameters& control,
                                double sapFluidityDay = 1.0);
+
+void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork,
+                                 double minFlow = 0.0, double pCrit = 0.001);
 #endif
