@@ -74,7 +74,7 @@ void lubksb_c(const arma::mat& a, const int n, const std::vector<int>& indx,
   }
 }
 
-void E2psiBelowground_c(NetworkSteadyState& nss, SperryNetwork& hydraulicNetwork, std::vector<double>& psiIni) {
+void E2psiBelowground_c(NetworkSteadyState& nss, SperryNetwork& hydraulicNetwork, const std::vector<double>& psiIni) {
   
   int nlayers = hydraulicNetwork.psisoil.size();
 
@@ -215,20 +215,29 @@ void E2psiAboveground_c(NetworkSteadyState& nss, SperryNetwork& hydraulicNetwork
 }
 
 void E2psiNetwork_c(NetworkSteadyState& nss, SperryNetwork& hydraulicNetwork,
-                    std::vector<double>& psiIni) {
+                    const std::vector<double>& psiIni) {
   E2psiBelowground_c(nss, hydraulicNetwork, psiIni);
   if(!std::isnan(nss.psiRootCrown)) E2psiAboveground_c(nss, hydraulicNetwork);
 } 
 
-void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork, double minFlow, double pCrit) {
+void fillSupplyFunctionNetwork_c(SperryNetwork& hydraulicNetwork, double minFlow, double pCrit) {
 
   int maxNsteps  = hydraulicNetwork.sperryParams.maxNsteps;
   double ETol = hydraulicNetwork.sperryParams.ETol;
   std::vector<double>& psiSoil = hydraulicNetwork.psisoil;
   int nlayers = psiSoil.size();
-
+  
+  SupplyFunction& SF = hydraulicNetwork.supply;
+  //Initialize vectors
+  SF.E = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  SF.dEdP = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  SF.ERhizo = arma::mat(maxNsteps,nlayers);
+  SF.psiRhizo = arma::mat(maxNsteps,nlayers);
+  SF.psiRoot = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  SF.psiStem = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  SF.psiLeaf = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  
   NetworkSteadyState sol(nlayers, minFlow);
-  SupplyFunction SF(nlayers, maxNsteps);
   std::vector<double> psiIni = {0.0};
   E2psiNetwork_c(sol, hydraulicNetwork, psiIni);
   for(int l=0;l<nlayers;l++) {
@@ -240,11 +249,11 @@ void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork, double minFlo
   SF.psiRoot[0] = sol.psiRootCrown;
   SF.E[0] = minFlow;
   //Store solution
-  std::vector<double> prevX = sol.x;
+  // std::vector<double> prevX = sol.x;
   
   //Calculate initial slope
   sol.E = minFlow+ETol*2.0;
-  E2psiNetwork_c(sol, hydraulicNetwork, prevX);
+  E2psiNetwork_c(sol, hydraulicNetwork, sol.x);
   double psiLeafI = sol.psiLeaf;
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - SF.psiLeaf[0]);
   // Rcpp::Rcout<< " maxdEdp " << maxdEdp <<"\n";
@@ -253,12 +262,11 @@ void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork, double minFlo
   double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // Rcpp::Rcout<< " step: "<< i;
-    
+
     SF.E[i] = SF.E[i-1]+dE;
     sol.E = SF.E[i];
-    E2psiNetwork_c(sol, hydraulicNetwork, prevX);
-    //Replace stored solution
-    prevX = sol.x;
+    E2psiNetwork_c(sol, hydraulicNetwork, sol.x);
+    
     for(int l=0;l<nlayers;l++) {
       SF.ERhizo(i,l) = sol.ERhizo[l];
       SF.psiRhizo(i,l) = sol.psiRhizo[l];
@@ -287,23 +295,15 @@ void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork, double minFlo
   }
   //Calculate last dEdP
   if(nsteps>1) SF.dEdP[nsteps-1] = (SF.E[nsteps-1]-SF.E[nsteps-2])/std::abs(SF.psiLeaf[nsteps-1] - SF.psiLeaf[nsteps-2]);
-  //Copy values to nsteps
-  SupplyFunction def(nlayers, nsteps);
-  for(int i=0;i<nsteps;i++) {
-    if(std::isnan(SF.E[i])) throw medfate::MedfateInternalError("NA E in supplyFunctionNetwork");
-    def.E[i] = SF.E[i];
-    def.dEdP[i] = SF.dEdP[i];
-    def.psiRoot[i] = SF.psiRoot[i];
-    for(int l=0;l<nlayers;l++) {
-      def.ERhizo(i,l) = SF.ERhizo(i,l);
-      def.psiRhizo(i,l) = SF.psiRhizo(i,l);
-    }
-    def.psiStem[i] = SF.psiStem[i];
-    def.psiLeaf[i] = SF.psiLeaf[i];
-  }
-
-  // Assign to hydraulic network supply function
-  hydraulicNetwork.supply = def;
+  
+  //Subset values to nsteps
+  SF.E = std::vector<double>(SF.E.begin(), SF.E.begin() + nsteps);
+  SF.dEdP = std::vector<double>(SF.dEdP.begin(), SF.dEdP.begin() + nsteps);
+  SF.psiRoot = std::vector<double>(SF.psiRoot.begin(), SF.psiRoot.begin() + nsteps);
+  SF.psiStem = std::vector<double>(SF.psiStem.begin(), SF.psiStem.begin() + nsteps);
+  SF.psiLeaf = std::vector<double>(SF.psiLeaf.begin(), SF.psiLeaf.begin() + nsteps);
+  SF.ERhizo = SF.ERhizo.submat(0,0, nsteps-1, nlayers -1);
+  SF.psiRhizo = SF.psiRhizo.submat(0,0, nsteps-1, nlayers -1);
 }
 
 void initSperryNetwork_inner_c(SperryNetwork& network,
@@ -351,6 +351,18 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
   }
   network.PLCstem = internalWater.StemPLC[c];
   
+  // Rcpp::Rcout<< "parameters: " << network.sperryParams.ntrial << " " << network.sperryParams.psiTol << " " << network.sperryParams.ETol << "\n";
+  // Rcpp::Rcout<< " Stem PLC " << network.PLCstem << " Leaf PLC " << network.PLCleaf<< "\n";
+  // Rcpp::Rcout<< " kstemmax " << network.kstemmax << " kleafmax " << network.kleafmax<< " kleafapomax " << network.kleafapomax<< " kleafsymp " << network.kleafsymp<< "\n";
+  // Rcpp::Rcout<< " root c " << network.rootc << " root d " << network.rootd<< "\n";
+  // Rcpp::Rcout<< " stem c " << network.stemc << " stem d " << network.stemd<< "\n";
+  // Rcpp::Rcout<< " leaf c " << network.leafc << " leaf d " << network.leafd<< "\n";
+  // for(int l=0;l<nlayers; l++) {
+  //   Rcpp::Rcout<< " l "<< l << " psisoil " << network.psisoil[l] << 
+  //     " krootmax " << network.krootmax[l] << " krhizomax "<< network.krhizomax[l] <<
+  //       " alpha " << network.alphasoil[l] << " n "<< network.nsoil[l] << "\n";
+  // }
+  
   // Calculates supply function
   fillSupplyFunctionNetwork_c(network, 0.0, 0.001); 
 }
@@ -374,7 +386,7 @@ void profitMaximization2_c(ProfitMaximization& PM,
     maxdEdp = std::max(maxdEdp, supply.dEdP[i]);
   }
   nsteps = valid;
-  // Rcout<< valid<< " "<< maxdEdp << " "<<mindEdp<< " "<< mindEdp/maxdEdp<<"\n";
+  // Rcpp::Rcout<< " valid " << valid<< " maxdEdp "<< maxdEdp << " "<<mindEdp<< " mindEdp "<< mindEdp/maxdEdp<<"\n";
   // initial pos cannot be over the valid steps
   initialPos = std::min(initialPos, nsteps-1);
   
@@ -404,9 +416,9 @@ void profitMaximization2_c(ProfitMaximization& PM,
   
   int prevStep = 0;
   bool cont = true;
-  // Rcout<< " initialPos " << initialPos;
+  // Rcpp::Rcout<< " initialPos " << initialPos;
   while(cont) {
-    // Rcout<<".";
+    // Rcpp::Rcout<<".";
     if((iPos>0) && (prevStep <= 0)) {
       leafPhotosynthesisOneFunction2_c(photoPrev, supply.E[iPos-1], supply.psiLeaf[iPos-1], Catm, Patm, Tair, vpa, u, 
                                        SWRabs, LWRnet, Q, Vmax298, Jmax298, 
@@ -438,19 +450,19 @@ void profitMaximization2_c(ProfitMaximization& PM,
       photoCurrent = photoPrev;
       iPos = iPos-1;
       prevStep = -1;
-      // Rcout <<"-";
+      // Rcpp::Rcout <<"-";
     } else if(selIncr) {
       profitCurrent = profitNext;
       photoCurrent = photoNext;
       iPos = iPos+1;
-      // Rcout <<"+";
+      // Rcpp::Rcout <<"+";
       prevStep = 1;
     } else {
       cont = false;
     }
   }
-  // Rcout <<"\n";
-  // Rcout<< " finalPos " << iPos<< " final profit "<< profitCurrent <<"\n"; 
+  // Rcpp::Rcout <<"\n";
+  // Rcpp::Rcout<< " finalPos " << iPos<< " final profit "<< profitCurrent <<"\n";
   PM.photosynthesisFunction = photoCurrent;
   PM.Profit = profitCurrent;
   PM.iMaxProfit = iPos;
@@ -505,7 +517,7 @@ void copyRhizoPsi_c(int c, int iPM,
   }
 }
 void innerSperry_c(ModelInput& x,
-                   SperryNetwork* networks, 
+                   std::vector<SperryNetwork>& networks, 
                    InnerTranspirationInput_COMM& input, 
                    AdvancedTranspiration_RESULT& output, int n, double tstep, 
                    int stepFunctions) {
@@ -585,7 +597,7 @@ void innerSperry_c(ModelInput& x,
         //Here canopy air temperature is used instead of Tleaf, because leaf energy balance has not been closed
         double gmin_SL = gmin_c(x.canopy.Tair[iLayerSunlit[c]], x.paramsTranspiration.Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
         double gmin_SH = gmin_c(x.canopy.Tair[iLayerShade[c]], x.paramsTranspiration.Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        // Rcout<< gmin_SL<< " " << gmin_SH << " " << Gswmax[c]<<"\n";
+        // Rcpp::Rcout<< " gmin_SL "<< gmin_SL<< " gmin_SH " << gmin_SH << " " << x.paramsTranspiration.Gswmax[c]<<"\n";
         //Photosynthesis function for sunlit and shade leaves
         ProfitMaximization PMSunlit;
         profitMaximization2_c(PMSunlit, supply, input.iPMSunlit[c],
@@ -596,6 +608,7 @@ void innerSperry_c(ModelInput& x,
                               gmin_SL, x.paramsTranspiration.Gswmax[c]);
         PhotoFunction& photoSunlit = PMSunlit.photosynthesisFunction;
         input.iPMSunlit[c] = PMSunlit.iMaxProfit;
+        // Rcpp::Rcout << c << " / " << n << " iPMSunlit " << input.iPMSunlit[c] <<"\n";
         ProfitMaximization PMShade;
         profitMaximization2_c(PMShade, supply, input.iPMShade[c], 
                               x.canopy.Cair[iLayerShade[c]], input.Patm,
@@ -665,11 +678,13 @@ void innerSperry_c(ModelInput& x,
         int iPM = -1;
         for(int k=0;k< (int) supply.E.size();k++){ //Only check up to the size of fittedE
           double adk = std::abs(supply.E[k]-Eaverage);
+          // Rcpp::Rcout << supply.E[k] << "\n";
           if(adk<absDiff) {
             absDiff = adk;
             iPM = k;
           }
         }
+        // Rcpp::Rcout<< c << " / " << n << " iPM " << iPM <<"\n";
         if(iPM==-1) {
           throw medfate::MedfateInternalError("iPM -1 (could not determine regulation)");
         }
@@ -684,7 +699,7 @@ void innerSperry_c(ModelInput& x,
 
         //Scale from instantaneous flow to water volume in the time step
         output.plants_inst.E(c,n) = x.internalWater.Einst[c]*0.001*0.01802*x.above.LAI_expanded[c]*tstep;
-
+        // Rcpp::Rcout<< c << " / " << n << " E: "<< output.plants_inst.E(c,n) << "\n";
         std::vector<double> Esoilcn(input.nlayerscon[c],0.0);
         std::vector<double> ElayersVEC(input.nlayerscon[c],0.0);
 

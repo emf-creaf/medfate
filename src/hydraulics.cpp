@@ -290,7 +290,11 @@ List E2psiAboveground(double E, double psiRootCrown,
   double PLCleaf = hydraulicNetwork["PLCleaf"];
   bool stemCavitationEffects = hydraulicNetwork["stemCavitationEffects"];
   bool leafCavitationEffects = hydraulicNetwork["leafCavitationEffects"];
-    
+  // Rcpp::Rcout<< " Stem PLC " << PLCstem << " Leaf PLC " << PLCleaf<< "\n";
+  // Rcpp::Rcout<< " kstemmax " << kstemmax << " kleafmax " << kleafmax<< "\n";
+  // Rcpp::Rcout<< " stem c " << stemc << " stem d " << stemd<< "\n";
+  // Rcpp::Rcout<< " leaf c " << leafc << " leaf d " << leafd<< "\n";
+  
   double psiPLCStem =  0.0;
   if(stemCavitationEffects) psiPLCStem = apoplasticWaterPotential_c(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
   double psiStem = E2psiXylem_c(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 

@@ -24,8 +24,8 @@ Rcpp::DataFrame copyPlantAdvancedTranspirationResult_c(const PlantsAdvancedTrans
     _["NetPhotosynthesis"] = Rcpp::wrap(plants.NetPhotosynthesis),
     _["RootPsi"] = Rcpp::wrap(plants.RootPsi),
     _["StemPsi"] = Rcpp::wrap(plants.StemPsi),
-    _["StemPLC"] = Rcpp::wrap(plants.StemPLC),
     _["LeafPLC"] = Rcpp::wrap(plants.LeafPLC),
+    _["StemPLC"] = Rcpp::wrap(plants.StemPLC),
     _["LeafPsiMin"] = Rcpp::wrap(plants.LeafPsiMin),
     _["LeafPsiMax"] = Rcpp::wrap(plants.LeafPsiMax),
     _["dEdP"] = Rcpp::wrap(plants.dEdP),
@@ -342,7 +342,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   int numCohorts = LAIlive.size();
 
   //Soil input
-  Soil& soil = x.soil;
   int nlayers = x.soil.getNlayers();
 
   //Canopy params
@@ -470,17 +469,17 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   if(plantWaterPools){
     //Store overall soil moisture in a backup copy
     double* Wbackup = new double[nlayers];
-    for(int l = 0; l<nlayers;l++) Wbackup[l] = soil.getW(l);
+    for(int l = 0; l<nlayers;l++) Wbackup[l] = x.soil.getW(l);
     for(int j = 0; j<numCohorts;j++) {
       //Copy values of soil moisture from pool of cohort j to general soil
       for(int l = 0; l<nlayers;l++) {
-        soil.setW(l,x.belowLayers.Wpool(j,l)); // this updates psi, theta, ... 
-        input.psiSoilM(j,l) = soil.getPsi(l);
-        input.KunsatM(j,l) = soil.getConductivity(l, true);
+        x.soil.setW(l,x.belowLayers.Wpool(j,l)); // this updates psi, theta, ... 
+        input.psiSoilM(j,l) = x.soil.getPsi(l);
+        input.KunsatM(j,l) = x.soil.getConductivity(l, true);
       }
     }
     //Restore soil moisture
-    for(int l = 0; l<nlayers;l++) soil.setW(l, Wbackup[l]);
+    for(int l = 0; l<nlayers;l++) x.soil.setW(l, Wbackup[l]);
     //Delete backup
     delete[] Wbackup;
   }
@@ -701,7 +700,10 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
                                  canopyHeight,
                                  wind, windMeasurementHeight,
                                  "k-epsilon");
-    for(int i=0;i<ncanlayers;i++) input.zWind[i] = ATres.canopyTurbulence.u[i];
+    for(int i=0;i<ncanlayers;i++) {
+      input.zWind[i] = ATres.canopyTurbulence.u[i];
+      // Rcpp::Rcout<< "wind "<< i << ": " << input.zWind[i]<<"\n";
+    }
     dU = ATres.canopyTurbulence.du;
     uw = ATres.canopyTurbulence.uw;
   }
@@ -729,6 +731,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     Tatm[n] = temperatureDiurnalPattern_c(Tsunrise, tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
     //Longwave sky diffuse radiation (W/m2)
     lwdr[n] = skyLongwaveRadiation_c(Tatm[n], vpatm, cloudcover);
+    // Rcpp::Rcout<< n <<" Tatm: "<< Tatm[n] << " lwdr: " << lwdr[n]<<"\n";
   }
   if(std::isnan(Tair[0])) {//If missing initialize canopy profile with atmospheric air temperature
     for(int i=0;i<ncanlayers;i++) Tair[i] = Tatm[0];
@@ -778,6 +781,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     sum_abs_SWR_can += ATres.lightExtinctionAbsortion.SWR_can[n];
     outputEnergyBalance.SWRsoil[n] = ATres.lightExtinctionAbsortion.SWR_soil[n];
     sum_abs_SWR_soil += ATres.lightExtinctionAbsortion.SWR_soil[n];
+    // Rcpp::Rcout<< n <<" SWR_soil: "<< ATres.lightExtinctionAbsortion.SWR_soil[n] << " SWR can: " << ATres.lightExtinctionAbsortion.SWR_can[n]<<"\n";
   }
 
   ////////////////////////////////////////
@@ -788,11 +792,11 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   //Average sap fluidity
   double sapFluidityDay = 1.0;
   if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
+  // Rcpp::Rcout << " Sap fluidity " << sapFluidityDay << "\n";
 
-  
   //Define inner networks
   SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
-  SperryNetwork* sperryNetworks = new SperryNetwork[numCohorts];
+  std::vector<SperryNetwork> sperryNetworks(numCohorts);
   
   //Hydraulics: Define supply functions
   for(int c=0;c<numCohorts;c++) {
@@ -807,7 +811,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           input.layerConnected(c,l) = 0;
         }
       }
-      // Rcout<<c<<" "<< nlayerscon[c]<<"\n";
+      // Rcout<<c<<" "<< input.nlayerscon[c]<<"\n";
       if(input.nlayerscon[c]==0) throw medfate::MedfateInternalError("Plant cohort not connected to any soil layer!");
       
       // Copy values from connected layers
@@ -950,6 +954,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     //Canopy evaporation (mm) in the current step and fraction of dry canopy
     double canEvapStep = canopyEvaporation*(outputEnergyBalance.SWRcan[n]/sum_abs_SWR_can);
     if(sum_abs_SWR_can==0.0) canEvapStep = 0.0;
+    // Rcout<< n << " Soil evap "<< soilEvapStep << " snow melt " << snowMeltStep << " can evap " << canEvapStep <<"\n";
     input.f_dry = 1.0;
     if(canEvapStep>0.0) {
       input.f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
@@ -983,7 +988,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       for(int i=(ncanlayers-1);i>=0.0;i--) {
         //Effect of nitrogen concentration decay through the canopy (Improvement: see 10.5194/bg-7-1833-2010)
         double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sumLAIme_c);
-        // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
+        // if(LAIme(i,c) > 0.0) Rcout<< n << " c "<< c << " l "<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
         sn+=LAIme(i,c);
         SLarealayer[i] = LAIme(i,c)*fsunlit[i];
         SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
@@ -997,6 +1002,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         Jmax298_SL(c,n) +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Vmax298_SH(c,n) +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         Jmax298_SH(c,n) +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+        // if(LAI_SL(c,n) > 0.0) Rcout<< n << " c "<< c << " l "<<i<<" LAI_SL: "<< Vmax298_SL(c,n)<<" Vmax298_SL: "<< Vmax298_SL(c,n) <<"\n";
       }
     }
 
@@ -1019,6 +1025,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) input.iLayerSunlit[c] = i;
         if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) input.iLayerShade[c] = i;
       }
+      // Rcout<< n << " " << c << " "<< hc_sl<<" "<< input.iLayerSunlit[c]<< " "<< hc_sh<<" "<< input.iLayerShade[c]<<"\n";
     }
 
     ////////////////////////////////////////
@@ -1026,11 +1033,12 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     ////////////////////////////////////////
     longwaveRadiationSHAW_inner_c(ATres.lwrExtinction[n], 
                                   LAIme, LAImd, LAImx,
-                                  lwdr[n], soil.getTemp(0), Tair, 0.1);
+                                  lwdr[n], x.soil.getTemp(0), Tair, 0.1);
     outputEnergyBalance.LWRsoil[n] = ATres.lwrExtinction[n].Lnet_ground;
     outputEnergyBalance.LWRcan[n]= ATres.lwrExtinction[n].Lnet_canopy; 
     arma::mat& Lnet_cohort_layer = ATres.lwrExtinction[n].Lnet_cohort_layer;
-
+    // Rcout<< n << " lwdr[n] " << lwdr[n] << " Tsoil[0] "<< x.soil.getTemp(0) << " Tair[0] "<< Tair[0]  <<" Lnet_ground " << outputEnergyBalance.LWRsoil[n] << " Lnet_canopy " << outputEnergyBalance.LWRcan[n] <<"\n";
+    
     ////////////////////////////////////////
     // STEP 5.2 Sunlit/shade leaf energy balance, stomatal conductance and plant hydraulics
     ////////////////////////////////////////
@@ -1051,6 +1059,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           outputSunlitInst.Net_LWR(c,n) += Lnet_cohort_layer(i,c)*fsunlit[i];
           outputShadeInst.Net_LWR(c,n) += Lnet_cohort_layer(i,c)*(1.0 - fsunlit[i]);
         }
+        // if(outputSunlitInst.Net_LWR(c,n)!=0.0) Rcout << c << " " << n << " Net_LWR_SL " << outputSunlitInst.Net_LWR(c,n) << "\n";
       }
     }
 
@@ -1152,7 +1161,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       outputEnergyBalance.LWRsoil[n] = 0.0; //Set net LWR to zero
     }
     outputEnergyBalance.LEVsoil[n] = (1e6)*latentHeatVaporisation_c(x.soil.getTemp(0))*soilEvapStep/tstep;
-    // Rcout<<n<<" "<<sum_abs_SWR_soil<<" "<<soilEvapStep << " "<<Tsoil[0]<<" " << LEVsoil[n]<<"\n";
+    // Rcout<<n<<" "<<sum_abs_SWR_soil <<" "<<soilEvapStep << " "<<x.soil.getTemp(0) <<" " << outputEnergyBalance.LEVsoil[n]<<"\n";
     outputEnergyBalance.LEFsnow[n] = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
 
     //Herbaceous transpiration (mm) in the current step
@@ -1367,6 +1376,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       outputEnergyBalance.TemperatureLayers(n+1,i) = Tair[i];
       outputEnergyBalance.VaporPressureLayers(n+1,i) = VPair[i];
     }
+    // stop("End of step");
   } //End of timestep loop
 
   //Delete Sureau Networks
@@ -1376,7 +1386,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
   }
   delete[] sureauNetworks;
-  delete[] sperryNetworks;
+  // delete[] sperryNetworks;
   
   ////////////////////////////////////////
   // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture

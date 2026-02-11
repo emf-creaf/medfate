@@ -104,7 +104,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
     maxdEdp = std::max(maxdEdp, dEdP[i]);
   }
   nsteps = valid;
-  // Rcout<< valid<< " "<< maxdEdp << " "<<mindEdp<< " "<< mindEdp/maxdEdp<<"\n";
+  // Rcout<< " valid " << valid<< " maxdEdp "<< maxdEdp << " "<<mindEdp<< " mindEdp "<< mindEdp/maxdEdp<<"\n";
   // initial pos cannot be over the valid steps
   initialPos = std::min(initialPos, nsteps-1);
   
@@ -555,7 +555,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         //Here canopy air temperature is used instead of Tleaf, because leaf energy balance has not been closed
         double gmin_SL = gmin_c(Tair[iLayerSunlit[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
         double gmin_SH = gmin_c(Tair[iLayerShade[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        // Rcout<< gmin_SL<< " " << gmin_SH << " " << Gswmax[c]<<"\n";
+        // Rcpp::Rcout<< " gmin_SL "<< gmin_SL<< " gmin_SH " << gmin_SH << " " << Gswmax[c]<<"\n";
         //Photosynthesis function for sunlit and shade leaves
         List PMSunlit = profitMaximization2(sFunctionAbove, iPMSunlit[c], 
                                             Cair[iLayerSunlit[c]], Patm,
@@ -565,6 +565,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                             gmin_SL, Gswmax[c]);
         NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
         iPMSunlit[c] = PMSunlit["iMaxProfit"];
+        // Rcpp::Rcout << c << " / " << n << " iPMSunlit " << iPMSunlit[c] <<"\n";
+        
         List PMShade = profitMaximization2(sFunctionAbove, iPMShade[c], 
                                            Cair[iLayerShade[c]], Patm,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
@@ -641,6 +643,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
             iPM = k;
           }
         }
+        // Rcpp::Rcout<< c << " / " << n << " iPM " << iPM <<"\n";
         if(iPM==-1) {
           Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit[c]="<< iPMSunlit[c]<< " fittedE[iPMSunlit[c]]="<<fittedE[iPMSunlit[c]]<<" iPMShade[c]="<<iPMShade[c]<<" fittedE[iPMShade[c]]="<<fittedE[iPMShade[c]]<<"\n";
           stop("");
@@ -656,6 +659,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         
         //Scale from instantaneous flow to water volume in the time step
         Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep; 
+        // Rcpp::Rcout<< c << " / " << n << " E: "<< Einst(c,n) << "\n";
         
         NumericVector Esoilcn(nlayerscon[c],0.0);
         NumericVector ElayersVEC(nlayerscon[c],0.0);

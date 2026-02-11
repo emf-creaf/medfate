@@ -186,6 +186,7 @@ void Soil::setW(int layer, double value) {
 }
 void Soil::setTemp(int layer, double value) {
   Temp[layer] = value; 
+  // Rcpp::Rcout << "Setting soil temperature at layer " << layer << " to  " << value << "\n";
 }
 
 

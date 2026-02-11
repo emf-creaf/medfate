@@ -1,3 +1,9 @@
+# medfate 5.0.0
+* Internal restructuration to avoid Rcpp structures (NumericVector, NumericMatrix, DataFrame,...)
+* Approximate speed increase (Granier): spwb_day() x 4.5, spwb(1 yr) x 8.5
+* Approximate speed increase (Sperry): spwb_day() x 2.0, spwb(1 yr) x 4.0
+* Approximate speed increase (Sureau): spwb_day() x 2.5, spwb(1 yr) x 4.0
+
 # medfate 4.9.0
 * Forest objects can now have a seedling bank, snag data and litter data
 * Recruitment from seeds with daily/annual environmental filters

@@ -94,7 +94,7 @@ void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork,
                                  double minFlow = 0.0, double pCrit = 0.001);
 
 void innerSperry_c(ModelInput& x,
-                   SperryNetwork* networks, 
+                   std::vector<SperryNetwork>& networks, 
                    InnerTranspirationInput_COMM& input, 
                    AdvancedTranspiration_RESULT& output, int n, double tstep, 
                    int stepFunctions = -1);

@@ -373,6 +373,8 @@ void leafPhotosynthesisOneFunction2_c(PhotoFunction& photo,
                                       double leafWidth, double refLeafArea) {
   double leafTemp, leafVPD;
   double Gwdiff, Gbound;
+  // Rcpp::Rcout<< "in leafphotosynthesisOneFunction2 E: " << E << " psi "<< psiLeaf << " Catm " << Catm << " Patm" << Patm << " Tair " << Tair << " vpa " << vpa << " u " << u;
+  // Rcpp::Rcout<< " SWRabs " << SWRabs << " LWRnet " << LWRnet << " Q " << Q << " Vmax298 " << Vmax298 << " Jmax298 " << Jmax298 << " LW " << leafWidth << "\n"; 
   leafTemp = leafTemperature2_c(SWRabs/refLeafArea, LWRnet/refLeafArea, Tair, u, E, leafWidth);
   leafVPD = std::max(0.0,leafVapourPressure_c(leafTemp, psiLeaf) - vpa);
   // Separates diffusive conductance into stomatal and boundary layer conductance
@@ -387,5 +389,6 @@ void leafPhotosynthesisOneFunction2_c(PhotoFunction& photo,
   photo.NetPhotosynthesis = LP.A - 0.015*VmaxTemp_c(Vmax298/refLeafArea, leafTemp);
   photo.LeafTemperature = leafTemp;
   photo.LeafVPD = leafVPD;
+  // Rcpp::Rcout << " A " << LP.A << " " << psiLeaf << "\n";
 }
 

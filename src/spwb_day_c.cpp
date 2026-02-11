@@ -404,10 +404,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
   Soil& soil = x.soil;
   int nlayers = soil.getNlayers();
   
-  
-  //Set soil temperature to tday
-  for(int l=0; l<nlayers; l++) soil.setTemp(l, tday);
-  
+
   //Water pools
   arma::mat& Wpool = x.belowLayers.Wpool;
   std::vector<double>& poolProportions = x.below.poolProportions;

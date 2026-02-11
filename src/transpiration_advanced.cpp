@@ -494,6 +494,9 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     zWind = canopyTurbulence["u"]; 
     dU = canopyTurbulence["du"];
     uw = canopyTurbulence["uw"];
+    // for(int i=0;i<ncanlayers;i++) {
+    //     Rcpp::Rcout<< "wind "<< i << ": " << zWind[i]<<"\n";
+    // }    
   } 
   
   ////////////////////////////////////////
@@ -537,6 +540,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     Tatm[n] = temperatureDiurnalPattern_c(Tsunrise, tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
     //Longwave sky diffuse radiation (W/m2)
     lwdr[n] = skyLongwaveRadiation_c(Tatm[n], vpatm, cloudcover);
+    // Rcpp::Rcout<< n <<" Tatm: "<< Tatm[n] << " lwdr: " << lwdr[n]<<"\n";
   }
   if(NumericVector::is_na(Tair[0])) {//If missing initialize canopy profile with atmospheric air temperature 
     for(int i=0;i<ncanlayers;i++) Tair[i] = Tatm[0];
@@ -546,6 +550,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   }
   //Take initial canopy air temperature from previous day
   Tcan[0] = sum(Tair*LAIpx)/sum(LAIpx);
+  // Rcout <<ncanlayers << " "<< sum(Tair*LAIpx)<< " " <<  sum(LAIpx) << " "<< Tcan[0] << "\n";
+  
   for(int j=0;j<ncanlayers; j++) {
     Tcan_mat(0,j) = Tair[j];
     VPcan_mat(0,j) = VPair[j];
@@ -581,6 +587,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     abs_SWR_soil[n] = abs_SWR_soil_LEA[n];
     sum_abs_SWR_soil += abs_SWR_soil[n];
     sum_abs_SWR_can += abs_SWR_can[n];
+    // Rcpp::Rcout<< n <<" SWR_soil: "<< abs_SWR_can[n] << " SWR can: " << abs_SWR_can[n]<<"\n";
   }
 
   ////////////////////////////////////////
@@ -596,7 +603,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
   //Average sap fluidity
   double sapFluidityDay = 1.0;
   if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity_c((tmin+tmax)/2.0);
-  
+  // Rcpp::Rcout << " Sap fluidity " << sapFluidityDay << "\n";
+
   //Hydraulics: Define supply functions
   SureauNetwork* sureauNetworks = new SureauNetwork[numCohorts];
   List supplyAboveground(numCohorts);
@@ -762,6 +770,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     //Canopy evaporation (mm) in the current step and fraction of dry canopy
     double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum_abs_SWR_can);
     if(sum_abs_SWR_can==0.0) canEvapStep = 0.0;
+    // Rcout<< n << " Soil evap "<< soilEvapStep << " snow melt " << snowMeltStep << " can evap " << canEvapStep <<"\n";
     double f_dry = 1.0;
     if(canEvapStep>0.0) {
       f_dry = 1.0 - std::min(1.0, canopyEvaporation/pet);
@@ -794,7 +803,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       for(int i=(ncanlayers-1);i>=0.0;i--) {
         //Effect of nitrogen concentration decay through the canopy (Improvement: see 10.5194/bg-7-1833-2010)
         double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
-        // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
+        // if(LAIme(i,c) > 0.0) Rcout<< n << " c "<< c << " l "<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
         sn+=LAIme(i,c);
         SLarealayer[i] = LAIme(i,c)*fsunlit[i];
         SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
@@ -808,6 +817,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         Jmax298_SL(c,n) +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Vmax298_SH(c,n) +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         Jmax298_SH(c,n) +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+        // if(LAI_SL(c,n) > 0.0) Rcout<< n << " c "<< c << " l "<<i<<" LAI_SL: "<< Vmax298_SL(c,n)<<" Vmax298_SL: "<< Vmax298_SL(c,n) <<"\n";
       }
     }
     
@@ -831,7 +841,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) iLayerSunlit[c] = i;
         if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) iLayerShade[c] = i;
       }
-      // Rcout << c << " "<< hc_sl<<" "<< iLayerSunlit[c]<< " "<< hc_sh<<" "<< iLayerShade[c]<<"\n";
+      // Rcout<< n << " " << c << " "<< hc_sl<<" "<< iLayerSunlit[c]<< " "<< hc_sh<<" "<< iLayerShade[c]<<"\n";
     }
     
     List innerInput;
@@ -867,11 +877,12 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
     longwaveRadiationSHAW_inner(lwrExtinctionList[n], LAIme, LAImd, LAImx, 
-                                lwdr[n], Tsoil[0], Tair);
+                                lwdr[n], Tsoil[0], Tair, 0.1);
     List internalLWR = lwrExtinctionList[n];
     net_LWR_soil[n] = internalLWR["Lnet_ground"];
     net_LWR_can[n]= internalLWR["Lnet_canopy"];
     NumericMatrix Lnet_cohort_layer = internalLWR["Lnet_cohort_layer"];
+    // Rcout<< n << " lwdr[n] " << lwdr[n] <<  " Tsoil[0] "<< Tsoil[0] << " Tair[0] "<< Tair[0]  << " Lnet_ground " << net_LWR_soil[n] << " Lnet_canopy " << net_LWR_can[n] <<"\n";
 
     ////////////////////////////////////////
     // STEP 5.2 Sunlit/shade leaf energy balance, stomatal conductance and plant hydraulics
@@ -893,6 +904,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
           LWR_SL(c,n) += Lnet_cohort_layer(i,c)*fsunlit[i];
           LWR_SH(c,n) += Lnet_cohort_layer(i,c)*(1.0 - fsunlit[i]);
         }
+        // if(LWR_SL(c,n) != 0.0) Rcout << c << " " << n << " Net_LWR_SL " << LWR_SL(c,n) << "\n";
       }
     }
 
@@ -1020,6 +1032,8 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       for(int c=0;c<numCohorts;c++) sum_Einst_n +=Einst(c, n);
       double LEwat = (1e6)*latentHeatVaporisation_c(Tcan[n])*(sum_Einst_n + canEvapStep + herbTranspStep)/tstep;
       LEVcan[n] = LEwat; 
+      // Rcout<< n <<" " << sum_Einst_n << " " << canEvapStep <<" "<< LEVcan[n]<<"\n";
+      
       //Canopy temperature changes
       Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEVcan[n] - LEFsnow[n] - Hcan_heat[n] - Hcansoil[n];
       double canopyAirThermalCapacity = airDensity_c(Tcan[n],Patm)*Cp_JKG;
@@ -1172,7 +1186,6 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
         Cair[i] = CO2Layer[i]/(0.409*44.01);
         // Rcout<< n << " "<<i << " - " << moistureLayer[i]<< " "<< VPair[i]<<"\n";
       }
-      // stop("kk");
       // Rcout<< n << " "<<abs_SWR_can[n]<< " = "<< sum(absSWRlayer)<<" = "<< (sum(absSWR_SL_ML) + sum(absSWR_SH_ML))<<" "<<net_LWR_can[n]<< " = "<< sum(LWRnet_layer)<<"\n";
       //Canopy energy balance
       Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEVcan[n] - Hcan_heat[n] - Hcansoil[n];
@@ -1185,6 +1198,7 @@ void transpirationAdvanced(List SEBcommunication, List transpOutput, List x, Num
       Tcan_mat(n+1,i) = Tair[i];
       VPcan_mat(n+1,i) = VPair[i];
     }
+    // stop("End of step");
   } //End of timestep loop
 
   //Delete Sureau Networks
