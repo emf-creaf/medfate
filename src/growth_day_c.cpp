@@ -6,6 +6,7 @@
 #include "spwb_day_c.h"
 #include "growth_day_c.h"
 #include "forestutils_c.h"
+#include "lowlevel_structures_c.h"
 #include "hydraulics_c.h"
 #include "root_c.h"
 #include "woodformation.h"
@@ -176,6 +177,7 @@ Rcpp::DataFrame copyGrowthMortalityResult_c(const GrowthMortality_RESULT& GMres,
 }
 Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x) {
   Rcpp::List l = copyBasicSPWBResult_c(GROWTHres.BSPWBres, x);
+  l.push_back(copyCarbonBalanceResult_c(GROWTHres.standCB), "CarbonBalance");
   l.push_back(copyLabileCarbonBalanceResult_c(GROWTHres.LCBres, x), "LabileCarbonBalance");
   l.push_back(copyPlantBiomassBalanceResult_c(GROWTHres.PBBres, x), "PlantBiomassBalance");
   l.push_back(copyPlantStructureResult_c(GROWTHres.PSres, x), "PlantStructure");
@@ -186,6 +188,7 @@ Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x)
 
 Rcpp::List copyAdvancedGROWTHResult_c(AdvancedGROWTH_RESULT& GROWTHres, ModelInput& x) {
   Rcpp::List l = copyAdvancedSPWBResult_c(GROWTHres.ASPWBres, x);
+  l.push_back(copyCarbonBalanceResult_c(GROWTHres.standCB), "CarbonBalance");
   l.push_back(copyLabileCarbonBalanceResult_c(GROWTHres.LCBres, x), "LabileCarbonBalance");
   l.push_back(copyPlantBiomassBalanceResult_c(GROWTHres.PBBres, x), "PlantBiomassBalance");
   l.push_back(copyPlantStructureResult_c(GROWTHres.PSres, x), "PlantStructure");
@@ -1244,10 +1247,10 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
     GROWTHres.LCBres.StarchSapwood[j] = starchSapwood[j];
   }
 
-  // ///////////////////////////////////////////
-  // ///// C. FIRE OCCURRENCE AND BEHAVIOR /////
-  // ///////////////////////////////////////////
-  // double fireCombustion = 0.0;// Fire combustion (in C/m2) for stand carbon balance
+  ///////////////////////////////////////////
+  ///// C. FIRE OCCURRENCE AND BEHAVIOR /////
+  ///////////////////////////////////////////
+  double fireCombustion = 0.0;// Fire combustion (in C/m2) for stand carbon balance
   // bool fireOccurrence = false;
   // double pfire = meteovec["pfire"];
   // NumericVector fireBehavior = communicationFireHazard();
@@ -1494,11 +1497,11 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   //   // else newRHOP = horizontalProportions(poolProportions, CRSV, N, V, widths, rfc);
   //   for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   // }
-  // 
-  // ///////////////////////////////////
-  // ///// F. CARBON DECOMPOSITION /////
-  // ///////////////////////////////////
-  // double heterotrophicRespiration = 0.0;
+
+  ///////////////////////////////////
+  ///// F. CARBON DECOMPOSITION /////
+  ///////////////////////////////////
+  double heterotrophicRespiration = 0.0;
   // if(exportLitter) {
   //   NumericVector baseAnnualRates = control["decompositionAnnualBaseRates"];
   //   double annualTurnoverRate = control["decompositionAnnualTurnoverRate"];
@@ -1568,25 +1571,23 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   // finalStand_gC_m2 += (sum(Snag_smallbranches) + sum(Snag_largewood));
   // double changeStand_gC_m2 = finalStand_gC_m2 - initialStand_gC_m2;
   // 
-  // ///////////////////////////////////////////////
-  // ///// H. CLOSE STAND-LEVEL CARBON BALANCE /////
-  // ///////////////////////////////////////////////
-  // NumericVector standCB = modelOutput["CarbonBalance"];
-  // standCB["GrossPrimaryProduction"] = standGrossPrimaryProduction;
-  // standCB["MaintenanceRespiration"] = standMaintenanceRespiration;
-  // standCB["SynthesisRespiration"] = standSynthesisRespiration;
-  // standCB["NetPrimaryProduction"] = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
-  // standCB["FireCombustion"] = fireCombustion;
-  // standCB["HeterotrophicRespiration"] = heterotrophicRespiration;
-  // standCB["NetEcosystemProduction"] = standCB["NetPrimaryProduction"] - fireCombustion - heterotrophicRespiration; 
-  // 
-  // double NEP_gC_m2 = standCB["NetEcosystemProduction"];
+  ///////////////////////////////////////////////
+  ///// H. CLOSE STAND-LEVEL CARBON BALANCE /////
+  ///////////////////////////////////////////////
+  GROWTHres.standCB.GrossPrimaryProduction = standGrossPrimaryProduction;
+  GROWTHres.standCB.MaintenanceRespiration = standMaintenanceRespiration;
+  GROWTHres.standCB.SynthesisRespiration = standSynthesisRespiration;
+  GROWTHres.standCB.NetPrimaryProduction = standGrossPrimaryProduction - standMaintenanceRespiration - standSynthesisRespiration;
+  GROWTHres.standCB.FireCombustion = fireCombustion;
+  GROWTHres.standCB.HeterotrophicRespiration = heterotrophicRespiration;
+  GROWTHres.standCB.NetEcosystemProduction = GROWTHres.standCB.NetPrimaryProduction - fireCombustion - heterotrophicRespiration; 
+
+  double NEP_gC_m2 = GROWTHres.standCB.NetEcosystemProduction;
   // if(std::abs(changeStand_gC_m2 - NEP_gC_m2) > 0.001) {
   //   // Rcout << " Stand biomass balance not closed!\n";
   //   // Rcout<< "GPP " << standGrossPrimaryProduction<<" MR "<<standMaintenanceRespiration<< " SR "<<standSynthesisRespiration<< " HR "<< heterotrophicRespiration << " FC "<< fireCombustion<<"\n";
   //   // Rcout<< "NEP: " << NEP_gC_m2<< " Mass change: " << changeStand_gC_m2<< " dif: "<< (changeStand_gC_m2 - NEP_gC_m2)<< "\n";
   // }
-  // 
 }
 
 void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& GROWTHcomm, ModelInput& x, 

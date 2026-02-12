@@ -137,6 +137,22 @@ struct Stand_RESULT {
 };
 Rcpp::NumericVector copyStandResult_c(const Stand_RESULT& Sres);
 
+struct StandCB_RESULT {
+  double GrossPrimaryProduction;
+  double MaintenanceRespiration;
+  double SynthesisRespiration;
+  double NetPrimaryProduction; 
+  double HeterotrophicRespiration;
+  double FireCombustion;
+  double NetEcosystemProduction;
+  StandCB_RESULT() {
+    GrossPrimaryProduction = MaintenanceRespiration = SynthesisRespiration = medfate::NA_DOUBLE;
+    NetPrimaryProduction = HeterotrophicRespiration = FireCombustion = medfate::NA_DOUBLE;
+    NetEcosystemProduction = medfate::NA_DOUBLE;
+  }
+};
+Rcpp::NumericVector copyCarbonBalanceResult_c(const StandCB_RESULT& SWBres);
+
 Rcpp::NumericMatrix copyNumericMatrix_c(arma::mat comm, int rows, int cols);
 
 

@@ -91,6 +91,18 @@ Rcpp::NumericVector copyWaterBalanceResult_c(const StandWB_RESULT& SWBres) {
   return(WaterBalance);
 }
 
+
+Rcpp::NumericVector copyCarbonBalanceResult_c(const StandCB_RESULT& CBres) {
+  NumericVector CarbonBalance = NumericVector::create(_["GrossPrimaryProduction"] = CBres.GrossPrimaryProduction, 
+                                                      _["MaintenanceRespiration"] = CBres.MaintenanceRespiration,
+                                                      _["SynthesisRespiration"] = CBres.SynthesisRespiration,
+                                                      _["NetPrimaryProduction"] = CBres.NetPrimaryProduction,
+                                                      _["HeterotrophicRespiration"] = CBres.HeterotrophicRespiration,
+                                                      _["FireCombustion"] = CBres.FireCombustion,
+                                                      _["NetEcosystemProduction"] = CBres.NetEcosystemProduction);
+  return(CarbonBalance);
+}
+
 Rcpp::NumericMatrix copyNumericMatrix_c(arma::mat comm, int rows, int cols) {
   NumericMatrix out(rows, cols);
   for(int r=0;r<rows;r++) {

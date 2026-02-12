@@ -120,6 +120,8 @@ struct GROWTH_RESULT {
   PlantBiomassBalance_RESULT PBBres;
   PlantStructure_RESULT PSres;
   GrowthMortality_RESULT GMres;
+
+  StandCB_RESULT standCB;  
   
   GROWTH_RESULT(size_t numCohorts) : 
     LCBres(numCohorts),
