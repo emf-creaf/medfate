@@ -349,124 +349,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sugarStarchDynamicsLeaf
-double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc);
-RcppExport SEXP _medfate_sugarStarchDynamicsLeaf(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
-    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
-    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sugarStarchDynamicsStem
-double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);
-RcppExport SEXP _medfate_sugarStarchDynamicsStem(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
-    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
-    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsStem(sugarConc, starchConc, eqSugarConc));
-    return rcpp_result_gen;
-END_RCPP
-}
-// osmoticWaterPotential
-double osmoticWaterPotential(double sugarConc, double temp, double nonSugarConc);
-RcppExport SEXP _medfate_osmoticWaterPotential(SEXP sugarConcSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
-    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(osmoticWaterPotential(sugarConc, temp, nonSugarConc));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sugarConcentration
-double sugarConcentration(double osmoticWP, double temp, double nonSugarConc);
-RcppExport SEXP _medfate_sugarConcentration(SEXP osmoticWPSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type osmoticWP(osmoticWPSEXP);
-    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarConcentration(osmoticWP, temp, nonSugarConc));
-    return rcpp_result_gen;
-END_RCPP
-}
-// relativeSapViscosity
-double relativeSapViscosity(double sugarConc, double temp);
-RcppExport SEXP _medfate_relativeSapViscosity(SEXP sugarConcSEXP, SEXP tempSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
-    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(relativeSapViscosity(sugarConc, temp));
-    return rcpp_result_gen;
-END_RCPP
-}
-// leafStructuralBiomass
-double leafStructuralBiomass(double LAI, double N, double SLA);
-RcppExport SEXP _medfate_leafStructuralBiomass(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
-    Rcpp::traits::input_parameter< double >::type N(NSEXP);
-    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
-    rcpp_result_gen = Rcpp::wrap(leafStructuralBiomass(LAI, N, SLA));
-    return rcpp_result_gen;
-END_RCPP
-}
-// twigStructuralBiomass
-double twigStructuralBiomass(double LAI, double N, double SLA, double r635);
-RcppExport SEXP _medfate_twigStructuralBiomass(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP r635SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
-    Rcpp::traits::input_parameter< double >::type N(NSEXP);
-    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
-    Rcpp::traits::input_parameter< double >::type r635(r635SEXP);
-    rcpp_result_gen = Rcpp::wrap(twigStructuralBiomass(LAI, N, SLA, r635));
-    return rcpp_result_gen;
-END_RCPP
-}
-// leafStarchCapacity
-double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
-RcppExport SEXP _medfate_leafStarchCapacity(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP leafDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
-    Rcpp::traits::input_parameter< double >::type N(NSEXP);
-    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
-    Rcpp::traits::input_parameter< double >::type leafDensity(leafDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(leafStarchCapacity(LAI, N, SLA, leafDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
-// abovegroundSapwoodStructuralBiomass
-double abovegroundSapwoodStructuralBiomass(double SA, double H, double woodDensity);
-RcppExport SEXP _medfate_abovegroundSapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
-    Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(abovegroundSapwoodStructuralBiomass(SA, H, woodDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
 // belowgroundSapwoodStructuralBiomass
 double belowgroundSapwoodStructuralBiomass(double SA, NumericVector L, NumericVector V, double woodDensity);
 RcppExport SEXP _medfate_belowgroundSapwoodStructuralBiomass(SEXP SASEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
@@ -493,20 +375,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
     rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, L, V, woodDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
-// abovegroundHeartwoodStructuralBiomass
-double abovegroundHeartwoodStructuralBiomass(double DBH, double SA, double H, double woodDensity);
-RcppExport SEXP _medfate_abovegroundHeartwoodStructuralBiomass(SEXP DBHSEXP, SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
-    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
-    Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(abovegroundHeartwoodStructuralBiomass(DBH, SA, H, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -566,6 +434,138 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< String >::type biomassUnits(biomassUnitsSEXP);
     rcpp_result_gen = Rcpp::wrap(carbonCompartments(x, biomassUnits));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sugarStarchDynamicsLeaf_c
+double sugarStarchDynamicsLeaf_c(double sugarConc, double starchConc, double eqSugarConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsLeaf_c(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
+    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsLeaf_c(sugarConc, starchConc, eqSugarConc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sugarStarchDynamicsStem_c
+double sugarStarchDynamicsStem_c(double sugarConc, double starchConc, double eqSugarConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsStem_c(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
+    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsStem_c(sugarConc, starchConc, eqSugarConc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// osmoticWaterPotential_c
+double osmoticWaterPotential_c(double sugarConc, double temp, double nonSugarConc);
+RcppExport SEXP _medfate_osmoticWaterPotential_c(SEXP sugarConcSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
+    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(osmoticWaterPotential_c(sugarConc, temp, nonSugarConc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sugarConcentration_c
+double sugarConcentration_c(double osmoticWP, double temp, double nonSugarConc);
+RcppExport SEXP _medfate_sugarConcentration_c(SEXP osmoticWPSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type osmoticWP(osmoticWPSEXP);
+    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
+    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarConcentration_c(osmoticWP, temp, nonSugarConc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// relativeSapViscosity_c
+double relativeSapViscosity_c(double sugarConc, double temp);
+RcppExport SEXP _medfate_relativeSapViscosity_c(SEXP sugarConcSEXP, SEXP tempSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
+    rcpp_result_gen = Rcpp::wrap(relativeSapViscosity_c(sugarConc, temp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// leafStructuralBiomass_c
+double leafStructuralBiomass_c(double LAI, double N, double SLA);
+RcppExport SEXP _medfate_leafStructuralBiomass_c(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
+    rcpp_result_gen = Rcpp::wrap(leafStructuralBiomass_c(LAI, N, SLA));
+    return rcpp_result_gen;
+END_RCPP
+}
+// twigStructuralBiomass_c
+double twigStructuralBiomass_c(double LAI, double N, double SLA, double r635);
+RcppExport SEXP _medfate_twigStructuralBiomass_c(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP r635SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
+    Rcpp::traits::input_parameter< double >::type r635(r635SEXP);
+    rcpp_result_gen = Rcpp::wrap(twigStructuralBiomass_c(LAI, N, SLA, r635));
+    return rcpp_result_gen;
+END_RCPP
+}
+// leafStarchCapacity_c
+double leafStarchCapacity_c(double LAI, double N, double SLA, double leafDensity);
+RcppExport SEXP _medfate_leafStarchCapacity_c(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP leafDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
+    Rcpp::traits::input_parameter< double >::type leafDensity(leafDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(leafStarchCapacity_c(LAI, N, SLA, leafDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// abovegroundSapwoodStructuralBiomass_c
+double abovegroundSapwoodStructuralBiomass_c(double SA, double H, double woodDensity);
+RcppExport SEXP _medfate_abovegroundSapwoodStructuralBiomass_c(SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(abovegroundSapwoodStructuralBiomass_c(SA, H, woodDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// abovegroundHeartwoodStructuralBiomass_c
+double abovegroundHeartwoodStructuralBiomass_c(double DBH, double SA, double H, double woodDensity);
+RcppExport SEXP _medfate_abovegroundHeartwoodStructuralBiomass_c(SEXP DBHSEXP, SEXP SASEXP, SEXP HSEXP, SEXP woodDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
+    Rcpp::traits::input_parameter< double >::type H(HSEXP);
+    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(abovegroundHeartwoodStructuralBiomass_c(DBH, SA, H, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1893,41 +1893,6 @@ RcppExport SEXP _medfate_growth(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, S
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// dailyMortalityProbability
-double dailyMortalityProbability(double stressValue, double stressThreshold);
-static SEXP _medfate_dailyMortalityProbability_try(SEXP stressValueSEXP, SEXP stressThresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< double >::type stressValue(stressValueSEXP);
-    Rcpp::traits::input_parameter< double >::type stressThreshold(stressThresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability(stressValue, stressThreshold));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_dailyMortalityProbability(SEXP stressValueSEXP, SEXP stressThresholdSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_dailyMortalityProbability_try(stressValueSEXP, stressThresholdSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
 // growthDay_inner
 void growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
 static SEXP _medfate_growthDay_inner_try(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
@@ -2015,6 +1980,18 @@ RcppExport SEXP _medfate_growthDay(SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP,
     }
     UNPROTECT(1);
     return rcpp_result_gen;
+}
+// dailyMortalityProbability_c
+double dailyMortalityProbability_c(double stressValue, double stressThreshold);
+RcppExport SEXP _medfate_dailyMortalityProbability_c(SEXP stressValueSEXP, SEXP stressThresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type stressValue(stressValueSEXP);
+    Rcpp::traits::input_parameter< double >::type stressThreshold(stressThresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability_c(stressValue, stressThreshold));
+    return rcpp_result_gen;
+END_RCPP
 }
 // averagePsi
 double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract);
@@ -6224,7 +6201,6 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*.defineGrowthDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillGrowthDailyOutput)(List,List,List,int)");
         signatures.insert("List(*growth)(List,DataFrame,double,double,double,double,NumericVector,double)");
-        signatures.insert("double(*mortality_dailyProbability)(double,double)");
         signatures.insert("void(*growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*growth_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("double(*hydrology_rainfallIntensity)(int,double,NumericVector)");
@@ -6294,7 +6270,6 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_.defineGrowthDailyOutput", (DL_FUNC)_medfate_defineGrowthDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_.fillGrowthDailyOutput", (DL_FUNC)_medfate_fillGrowthDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_growth", (DL_FUNC)_medfate_growth_try);
-    R_RegisterCCallable("medfate", "_medfate_mortality_dailyProbability", (DL_FUNC)_medfate_dailyMortalityProbability_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day_inner", (DL_FUNC)_medfate_growthDay_inner_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day", (DL_FUNC)_medfate_growthDay_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_rainfallIntensity", (DL_FUNC)_medfate_rainfallIntensity_try);
@@ -6367,22 +6342,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafVapourPressure_c", (DL_FUNC) &_medfate_leafVapourPressure_c, 2},
     {"_medfate_irradianceToPhotonFlux_c", (DL_FUNC) &_medfate_irradianceToPhotonFlux_c, 2},
     {"_medfate_waterDynamicViscosity_c", (DL_FUNC) &_medfate_waterDynamicViscosity_c, 1},
-    {"_medfate_sugarStarchDynamicsLeaf", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf, 3},
-    {"_medfate_sugarStarchDynamicsStem", (DL_FUNC) &_medfate_sugarStarchDynamicsStem, 3},
-    {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 3},
-    {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 3},
-    {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
-    {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
-    {"_medfate_twigStructuralBiomass", (DL_FUNC) &_medfate_twigStructuralBiomass, 4},
-    {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
-    {"_medfate_abovegroundSapwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundSapwoodStructuralBiomass, 3},
     {"_medfate_belowgroundSapwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundSapwoodStructuralBiomass, 4},
     {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 5},
-    {"_medfate_abovegroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass, 4},
     {"_medfate_belowgroundHeartwoodStructuralBiomass", (DL_FUNC) &_medfate_belowgroundHeartwoodStructuralBiomass, 5},
     {"_medfate_heartwoodStructuralBiomass", (DL_FUNC) &_medfate_heartwoodStructuralBiomass, 6},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_carbonCompartments", (DL_FUNC) &_medfate_carbonCompartments, 2},
+    {"_medfate_sugarStarchDynamicsLeaf_c", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf_c, 3},
+    {"_medfate_sugarStarchDynamicsStem_c", (DL_FUNC) &_medfate_sugarStarchDynamicsStem_c, 3},
+    {"_medfate_osmoticWaterPotential_c", (DL_FUNC) &_medfate_osmoticWaterPotential_c, 3},
+    {"_medfate_sugarConcentration_c", (DL_FUNC) &_medfate_sugarConcentration_c, 3},
+    {"_medfate_relativeSapViscosity_c", (DL_FUNC) &_medfate_relativeSapViscosity_c, 2},
+    {"_medfate_leafStructuralBiomass_c", (DL_FUNC) &_medfate_leafStructuralBiomass_c, 3},
+    {"_medfate_twigStructuralBiomass_c", (DL_FUNC) &_medfate_twigStructuralBiomass_c, 4},
+    {"_medfate_leafStarchCapacity_c", (DL_FUNC) &_medfate_leafStarchCapacity_c, 4},
+    {"_medfate_abovegroundSapwoodStructuralBiomass_c", (DL_FUNC) &_medfate_abovegroundSapwoodStructuralBiomass_c, 3},
+    {"_medfate_abovegroundHeartwoodStructuralBiomass_c", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass_c, 4},
     {"_medfate_copyModelOutput", (DL_FUNC) &_medfate_copyModelOutput, 3},
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
@@ -6470,9 +6445,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_defineGrowthDailyOutput", (DL_FUNC) &_medfate_defineGrowthDailyOutput, 6},
     {"_medfate_fillGrowthDailyOutput", (DL_FUNC) &_medfate_fillGrowthDailyOutput, 4},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 8},
-    {"_medfate_dailyMortalityProbability", (DL_FUNC) &_medfate_dailyMortalityProbability, 2},
     {"_medfate_growthDay_inner", (DL_FUNC) &_medfate_growthDay_inner, 12},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 11},
+    {"_medfate_dailyMortalityProbability_c", (DL_FUNC) &_medfate_dailyMortalityProbability_c, 2},
     {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
     {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 3},
     {"_medfate_E2psiBelowground", (DL_FUNC) &_medfate_E2psiBelowground, 3},

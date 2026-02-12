@@ -275,27 +275,6 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline double mortality_dailyProbability(double stressValue, double stressThreshold) {
-        typedef SEXP(*Ptr_mortality_dailyProbability)(SEXP,SEXP);
-        static Ptr_mortality_dailyProbability p_mortality_dailyProbability = NULL;
-        if (p_mortality_dailyProbability == NULL) {
-            validateSignature("double(*mortality_dailyProbability)(double,double)");
-            p_mortality_dailyProbability = (Ptr_mortality_dailyProbability)R_GetCCallable("medfate", "_medfate_mortality_dailyProbability");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_mortality_dailyProbability(Shield<SEXP>(Rcpp::wrap(stressValue)), Shield<SEXP>(Rcpp::wrap(stressThreshold)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
-    }
-
     inline void growth_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
         typedef SEXP(*Ptr_growth_day_inner)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_growth_day_inner p_growth_day_inner = NULL;

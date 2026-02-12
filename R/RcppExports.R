@@ -175,6 +175,44 @@ biophysics_waterDynamicViscosity <- function(temp) {
     .Call(`_medfate_waterDynamicViscosity_c`, temp)
 }
 
+#' @rdname carbon
+#' @keywords internal
+carbon_belowgroundSapwoodStructuralBiomass <- function(SA, L, V, woodDensity) {
+    .Call(`_medfate_belowgroundSapwoodStructuralBiomass`, SA, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
+    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_belowgroundHeartwoodStructuralBiomass <- function(DBH, SA, L, V, woodDensity) {
+    .Call(`_medfate_belowgroundHeartwoodStructuralBiomass`, DBH, SA, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_heartwoodStructuralBiomass <- function(DBH, SA, H, L, V, woodDensity) {
+    .Call(`_medfate_heartwoodStructuralBiomass`, DBH, SA, H, L, V, woodDensity)
+}
+
+#' @rdname carbon
+#' @keywords internal
+carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
+    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, conduit2sapwood)
+}
+
+#' @rdname carbon
+#' @param x An object of class \code{\link{growthInput}}.
+#' @param biomassUnits A string for output biomass units, either "g_ind" (g per individual) or "g_m2" (g per square meter).
+#' @keywords internal
+carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
+    .Call(`_medfate_carbonCompartments`, x, biomassUnits)
+}
+
 #' Carbon-related functions
 #' 
 #' Low-level functions used in the calculation of carbon balance.
@@ -237,99 +275,61 @@ biophysics_waterDynamicViscosity <- function(temp) {
 #' @name carbon
 #' @keywords internal
 carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, eqSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, eqSugarConc)
+    .Call(`_medfate_sugarStarchDynamicsLeaf_c`, sugarConc, starchConc, eqSugarConc)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
+    .Call(`_medfate_sugarStarchDynamicsStem_c`, sugarConc, starchConc, eqSugarConc)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_osmoticWaterPotential <- function(sugarConc, temp, nonSugarConc) {
-    .Call(`_medfate_osmoticWaterPotential`, sugarConc, temp, nonSugarConc)
+    .Call(`_medfate_osmoticWaterPotential_c`, sugarConc, temp, nonSugarConc)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc) {
-    .Call(`_medfate_sugarConcentration`, osmoticWP, temp, nonSugarConc)
+    .Call(`_medfate_sugarConcentration_c`, osmoticWP, temp, nonSugarConc)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_relativeSapViscosity <- function(sugarConc, temp) {
-    .Call(`_medfate_relativeSapViscosity`, sugarConc, temp)
+    .Call(`_medfate_relativeSapViscosity_c`, sugarConc, temp)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_leafStructuralBiomass <- function(LAI, N, SLA) {
-    .Call(`_medfate_leafStructuralBiomass`, LAI, N, SLA)
+    .Call(`_medfate_leafStructuralBiomass_c`, LAI, N, SLA)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_twigStructuralBiomass <- function(LAI, N, SLA, r635) {
-    .Call(`_medfate_twigStructuralBiomass`, LAI, N, SLA, r635)
+    .Call(`_medfate_twigStructuralBiomass_c`, LAI, N, SLA, r635)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
-    .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
+    .Call(`_medfate_leafStarchCapacity_c`, LAI, N, SLA, leafDensity)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_abovegroundSapwoodStructuralBiomass <- function(SA, H, woodDensity) {
-    .Call(`_medfate_abovegroundSapwoodStructuralBiomass`, SA, H, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
-carbon_belowgroundSapwoodStructuralBiomass <- function(SA, L, V, woodDensity) {
-    .Call(`_medfate_belowgroundSapwoodStructuralBiomass`, SA, L, V, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
-carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
-    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
+    .Call(`_medfate_abovegroundSapwoodStructuralBiomass_c`, SA, H, woodDensity)
 }
 
 #' @rdname carbon
 #' @keywords internal
 carbon_abovegroundHeartwoodStructuralBiomass <- function(DBH, SA, H, woodDensity) {
-    .Call(`_medfate_abovegroundHeartwoodStructuralBiomass`, DBH, SA, H, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
-carbon_belowgroundHeartwoodStructuralBiomass <- function(DBH, SA, L, V, woodDensity) {
-    .Call(`_medfate_belowgroundHeartwoodStructuralBiomass`, DBH, SA, L, V, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
-carbon_heartwoodStructuralBiomass <- function(DBH, SA, H, L, V, woodDensity) {
-    .Call(`_medfate_heartwoodStructuralBiomass`, DBH, SA, H, L, V, woodDensity)
-}
-
-#' @rdname carbon
-#' @keywords internal
-carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
-    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, conduit2sapwood)
-}
-
-#' @rdname carbon
-#' @param x An object of class \code{\link{growthInput}}.
-#' @param biomassUnits A string for output biomass units, either "g_ind" (g per individual) or "g_m2" (g per square meter).
-#' @keywords internal
-carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
-    .Call(`_medfate_carbonCompartments`, x, biomassUnits)
+    .Call(`_medfate_abovegroundHeartwoodStructuralBiomass_c`, DBH, SA, H, woodDensity)
 }
 
 #' Internal communication
@@ -1435,26 +1435,6 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
     .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
-#' Mortality
-#' 
-#' A simple sigmoid function to determine a daily mortality likelihood according 
-#' to the value of a stress variable.
-#'
-#' @param stressValue Current value of the stress variable (0 to 1, 
-#'                    with higher values indicate stronger stress).
-#' @param stressThreshold Threshold to indicate 50% annual mortality probability.
-#' 
-#' @return Returns a probability (between 0 and 1)
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' @seealso \code{\link{growth}}, \code{\link{regeneration}}
-#' 
-#' @keywords internal
-mortality_dailyProbability <- function(stressValue, stressThreshold) {
-    .Call(`_medfate_dailyMortalityProbability`, stressValue, stressThreshold)
-}
-
 #' @rdname communication
 #' @keywords internal
 growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
@@ -1592,6 +1572,26 @@ growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude,
 #' @name growth_day
 growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+}
+
+#' Mortality
+#' 
+#' A simple sigmoid function to determine a daily mortality likelihood according 
+#' to the value of a stress variable.
+#'
+#' @param stressValue Current value of the stress variable (0 to 1, 
+#'                    with higher values indicate stronger stress).
+#' @param stressThreshold Threshold to indicate 50% annual mortality probability.
+#' 
+#' @return Returns a probability (between 0 and 1)
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{growth}}, \code{\link{regeneration}}
+#' 
+#' @keywords internal
+mortality_dailyProbability <- function(stressValue, stressThreshold) {
+    .Call(`_medfate_dailyMortalityProbability_c`, stressValue, stressThreshold)
 }
 
 #' @rdname hydraulics_conductancefunctions
