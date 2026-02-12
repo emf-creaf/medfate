@@ -31,11 +31,6 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
                                          double kleafmax, double leafc, double leafd,
                                          double initialValue = 0.0);
 
-double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope, 
-                                    double PLC_crit = 0.88, double P50_cv = 10.0);
-
-double proportionDefoliationWeibull(double psiLeaf, double c, double d, 
-                                    double PLC_crit = 0.88, double P50_cv = 10.0);
 
 
 List E2psiBelowground(double E, List hydraulicNetwork,

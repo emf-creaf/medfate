@@ -2,6 +2,7 @@
 #include <numeric>
 #include <math.h>
 #include "carbon.h"
+#include "carbon_c.h"
 #include "forestutils.h"
 #include "tissuemoisture_c.h"
 #include "paramutils.h"

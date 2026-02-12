@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "carbon.h"
+#include "carbon_c.h"
 #include "root.h"
 #include "root_c.h"
 #include "soil.h"
@@ -591,7 +592,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
       L(c,_) = coarseRootLengths(V(c,_), widths, 0.5); //Arbitrary ratio (to revise some day)
       CRSV[c] = coarseRootSoilVolume(V(c,_), widths, 0.5);
       //Assume fine root biomass is half leaf structural biomass
-      double LA = leafArea(LAI_live[c], N[c]); //m2 leaf area per individual
+      double LA = leafArea_c(LAI_live[c], N[c]); //m2 leaf area per individual
       double fineRootArea = Ar2Al[c]*LA;//fine root area in m2
       FRB[c] = fineRootArea/(specificRootSurfaceArea_c(SRL[c], FineRootDensity[c])*1e-4);
     }
@@ -964,20 +965,20 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector starchSapwood(numCohorts,0.0);
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
-    double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
+    double lvol = leafStorageVolume_c(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
     double svol = sapwoodStorageVolume(SA[c], H[c], L(c,_), V(c,_),WoodDensity[c], conduit2sapwood[c]);
     
     // 70% in starch storage for sapwood and 1% in leaves
-    if(LAI_expanded[c]>0.0) starchLeaf[c] = (0.01/(lvol))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
+    if(LAI_expanded[c]>0.0) starchLeaf[c] = (0.01/(lvol))*leafStarchCapacity_c(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
     starchSapwood[c] = (0.7/(svol))*sapwoodStarchCapacity(SA[c], H[c], L, V(c,_), WoodDensity[c], conduit2sapwood[c]);
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0
     if(LAI_expanded[c]>0.0) {
-      double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
+      double lconc = sugarConcentration_c(LeafPI0[c],20.0, nonSugarConcentration);
       sugarLeaf[c] = lconc;
     }
-    double sconc = sugarConcentration(StemPI0[c],20.0, nonSugarConcentration);
+    double sconc = sugarConcentration_c(StemPI0[c],20.0, nonSugarConcentration);
     sugarSapwood[c] = sconc;
     // sugar[c] = sugarLeaf[c] + sugarSapwood[c];
   }

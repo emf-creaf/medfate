@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "carbon.h"
+#include "carbon_c.h"
 #include "phenology.h"
 #include "phenology_c.h"
 #include "decomposition.h"

@@ -4,6 +4,8 @@
 #define FORESTUTILS_C_H
 using namespace Rcpp;
 
+std::vector<std::string> cohortType_c(std::vector<std::string> IDs);
+
 double leafAreaProportion_c(double z1, double z2, double zmin, double zmax);
 
 void updateLAIdistributionVectors_c(arma::mat& LAIdist, 

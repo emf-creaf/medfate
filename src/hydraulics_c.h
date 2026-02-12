@@ -39,4 +39,11 @@ double E2psiVanGenuchten_c(double E, double psiSoil, double krhizomax, double n,
                            double psiStep = -0.0001, double psiMax = -10.0);
 double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
                           double psiStep = -0.0001, double psiMax = -10.0);
+
+
+double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, 
+                                      double PLC_crit, double P50_cv);
+
+double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, 
+                                      double PLC_crit, double P50_cv);
 #endif

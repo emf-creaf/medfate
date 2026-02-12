@@ -1981,6 +1981,50 @@ RcppExport SEXP _medfate_growthDay(SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP,
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// growthDay_c
+List growthDay_c(List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
+static SEXP _medfate_growthDay_c_try(SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type meteovec(meteovecSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
+    Rcpp::traits::input_parameter< Nullable<NumericVector> >::type lateralFlows(lateralFlowsSEXP);
+    Rcpp::traits::input_parameter< double >::type waterTableDepth(waterTableDepthSEXP);
+    Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
+    rcpp_result_gen = Rcpp::wrap(growthDay_c(x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_growthDay_c(SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_growthDay_c_try(xSEXP, dateSEXP, meteovecSEXP, latitudeSEXP, elevationSEXP, slopeSEXP, aspectSEXP, runonSEXP, lateralFlowsSEXP, waterTableDepthSEXP, modifyInputSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // dailyMortalityProbability_c
 double dailyMortalityProbability_c(double stressValue, double stressThreshold);
 RcppExport SEXP _medfate_dailyMortalityProbability_c(SEXP stressValueSEXP, SEXP stressThresholdSEXP) {
@@ -2374,36 +2418,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// proportionDefoliationSigmoid
-double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope, double PLC_crit, double P50_cv);
-RcppExport SEXP _medfate_proportionDefoliationSigmoid(SEXP psiLeafSEXP, SEXP P50SEXP, SEXP slopeSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
-    Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
-    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
-    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
-    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
-    rcpp_result_gen = Rcpp::wrap(proportionDefoliationSigmoid(psiLeaf, P50, slope, PLC_crit, P50_cv));
-    return rcpp_result_gen;
-END_RCPP
-}
-// proportionDefoliationWeibull
-double proportionDefoliationWeibull(double psiLeaf, double c, double d, double PLC_crit, double P50_cv);
-RcppExport SEXP _medfate_proportionDefoliationWeibull(SEXP psiLeafSEXP, SEXP cSEXP, SEXP dSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
-    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
-    rcpp_result_gen = Rcpp::wrap(proportionDefoliationWeibull(psiLeaf, c, d, PLC_crit, P50_cv));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Psi2K_c
 double Psi2K_c(double psi, double psi_extract, double exp_extract);
 RcppExport SEXP _medfate_Psi2K_c(SEXP psiSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
@@ -2656,6 +2670,36 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
     Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
     rcpp_result_gen = Rcpp::wrap(E2psiTwoElements_c(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// proportionDefoliationSigmoid_c
+double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, double PLC_crit, double P50_cv);
+RcppExport SEXP _medfate_proportionDefoliationSigmoid_c(SEXP psiLeafSEXP, SEXP P50SEXP, SEXP slopeSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
+    Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
+    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
+    rcpp_result_gen = Rcpp::wrap(proportionDefoliationSigmoid_c(psiLeaf, P50, slope, PLC_crit, P50_cv));
+    return rcpp_result_gen;
+END_RCPP
+}
+// proportionDefoliationWeibull_c
+double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, double PLC_crit, double P50_cv);
+RcppExport SEXP _medfate_proportionDefoliationWeibull_c(SEXP psiLeafSEXP, SEXP cSEXP, SEXP dSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
+    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
+    rcpp_result_gen = Rcpp::wrap(proportionDefoliationWeibull_c(psiLeaf, c, d, PLC_crit, P50_cv));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6203,6 +6247,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*growth)(List,DataFrame,double,double,double,double,NumericVector,double)");
         signatures.insert("void(*growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*growth_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
+        signatures.insert("List(*growth_day_c)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("double(*hydrology_rainfallIntensity)(int,double,NumericVector)");
         signatures.insert("double(*hydrology_soilEvaporation)(DataFrame,double,String,double,double,bool)");
         signatures.insert("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,DataFrame,String,bool)");
@@ -6272,6 +6317,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_growth", (DL_FUNC)_medfate_growth_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day_inner", (DL_FUNC)_medfate_growthDay_inner_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day", (DL_FUNC)_medfate_growthDay_try);
+    R_RegisterCCallable("medfate", "_medfate_growth_day_c", (DL_FUNC)_medfate_growthDay_c_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_rainfallIntensity", (DL_FUNC)_medfate_rainfallIntensity_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilEvaporation", (DL_FUNC)_medfate_soilEvaporation_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_herbaceousTranspiration", (DL_FUNC)_medfate_herbaceousTranspiration_try);
@@ -6447,6 +6493,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 8},
     {"_medfate_growthDay_inner", (DL_FUNC) &_medfate_growthDay_inner, 12},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 11},
+    {"_medfate_growthDay_c", (DL_FUNC) &_medfate_growthDay_c, 11},
     {"_medfate_dailyMortalityProbability_c", (DL_FUNC) &_medfate_dailyMortalityProbability_c, 2},
     {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
     {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 3},
@@ -6471,8 +6518,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
     {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
-    {"_medfate_proportionDefoliationSigmoid", (DL_FUNC) &_medfate_proportionDefoliationSigmoid, 5},
-    {"_medfate_proportionDefoliationWeibull", (DL_FUNC) &_medfate_proportionDefoliationWeibull, 5},
     {"_medfate_Psi2K_c", (DL_FUNC) &_medfate_Psi2K_c, 3},
     {"_medfate_K2Psi_c", (DL_FUNC) &_medfate_K2Psi_c, 3},
     {"_medfate_xylemConductance_c", (DL_FUNC) &_medfate_xylemConductance_c, 4},
@@ -6490,6 +6535,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_ECrit_c", (DL_FUNC) &_medfate_ECrit_c, 5},
     {"_medfate_E2psiVanGenuchten_c", (DL_FUNC) &_medfate_E2psiVanGenuchten_c, 7},
     {"_medfate_E2psiTwoElements_c", (DL_FUNC) &_medfate_E2psiTwoElements_c, 11},
+    {"_medfate_proportionDefoliationSigmoid_c", (DL_FUNC) &_medfate_proportionDefoliationSigmoid_c, 5},
+    {"_medfate_proportionDefoliationWeibull_c", (DL_FUNC) &_medfate_proportionDefoliationWeibull_c, 5},
     {"_medfate_rainfallIntensity", (DL_FUNC) &_medfate_rainfallIntensity, 3},
     {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 6},
     {"_medfate_herbaceousTranspiration", (DL_FUNC) &_medfate_herbaceousTranspiration, 6},

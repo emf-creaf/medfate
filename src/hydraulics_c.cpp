@@ -2,6 +2,7 @@
 #include "medfate.h"
 #include "incgamma_c.h"
 #include "biophysicsutils_c.h"
+#include "numerical_solving_c.h"
 #include "meteoland/utils_c.hpp"
 #include <cmath>
 
@@ -434,3 +435,54 @@ double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxy
   return(E2psiXylem_c(E, psiRoot, kxylemmax, c, d, psiCav));
 }
 
+
+//' Hydraulic-related defoliation
+//' 
+//' Functions to calculate the proportion of crown defoliation due to hydraulic disconnection.
+//'
+//' @param psiLeaf Leaf water potential (in MPa).
+//' @param c,d Parameters of the Weibull function.
+//' @param P50,slope Parameters of the Sigmoid function.
+//' @param PLC_crit Critical leaf PLC corresponding to defoliation
+//' @param P50_cv Coefficient of variation (in percent) of leaf P50, to describe the
+//' variability in hydraulic vulnerability across crown leaves.
+//' 
+//' @details The functions assume that crowns are made of a population of leaves whose
+//' hydraulic vulnerability (i.e. the water potential corresponding to 50% loss of conductance) 
+//' follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (\code{P50_cv}).
+//' The slope parameter (or the c exponent in the case of a Weibull function) is considered constant.
+//' Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (\code{PLC_crit}).
+//' 
+//' @return The proportion of crown defoliation.
+//' 
+//' @author 
+//' Hervé Cochard, INRAE 
+//' 
+//' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso
+//' \code{\link{hydraulics_conductancefunctions}}
+//' 
+//' @name hydraulics_defoliation
+//' @keywords internal
+// [[Rcpp::export("hydraulics_proportionDefoliationSigmoid")]]
+double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, 
+                                     double PLC_crit = 0.88, double P50_cv = 10.0) {
+   double P50_crit = psiLeaf - (log((1.0 - PLC_crit)/PLC_crit)/(slope/25));
+   double pnorm =  normal_cdf(P50_crit, P50, std::abs((P50_cv/100.0)*P50));
+   double PDEF = (1.0-pnorm);
+   return(PDEF);
+}
+
+//' @name hydraulics_defoliation
+//' @keywords internal
+// [[Rcpp::export("hydraulics_proportionDefoliationWeibull")]]
+double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, 
+                                       double PLC_crit = 0.88, double P50_cv = 10.0) {
+   double d_crit = psiLeaf/pow(-1.0*log(1.0 - PLC_crit), 1.0/c);
+   double P50 = xylemPsi_c(0.5,1.0, c, d);
+   double P50_crit = xylemPsi_c(0.5,1.0, c, d_crit);
+   double pnorm =  normal_cdf(P50_crit, P50, std::abs((P50_cv/100.0)*P50));
+   double PDEF = (1.0-pnorm);
+   return(PDEF);
+ }

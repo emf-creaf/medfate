@@ -372,7 +372,7 @@ class ModelInput {
     WaterStorageParams paramsWaterStorage;
     GrowthParams paramsGrowth;
     MortalityRegenerationParams paramsMortalityRegeneration;
-    AllometryParams paramsAllometry;
+    AllometryParams paramsAllometries;
     LitterDecompositionParams paramsLitterDecomposition;
     
     //Internal state variables

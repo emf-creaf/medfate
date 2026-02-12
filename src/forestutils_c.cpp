@@ -1,6 +1,9 @@
 #include "RcppArmadillo.h"
 #include "forestutils_c.h"
 #include "incgamma_c.h"
+#include "medfate.h"
+#include "strings.h"
+#include "vector"
 
 double leafAreaProportion_c(double z1, double z2, double zmin, double zmax) {
   double mu = (zmax+zmin)/2.0;
@@ -35,4 +38,21 @@ void updateLAIdistributionVectors_c(arma::mat& LAIdist,
       }
     }
   }
+}
+
+std::vector<std::string> cohortType_c(std::vector<std::string> IDs) {
+  std::vector<std::string> types(IDs.size());
+  int numCohorts = IDs.size();
+  for(int i=0;i<numCohorts;i++) {
+    if(IDs[i].substr(0,1) =="T") {
+      types[i] = "tree";
+    } else if(IDs[i].substr(0,1) =="S") {
+      types[i] = "shrub";
+    } else if(IDs[i].substr(0,1) =="H") {
+      types[i] = "herb";
+    } else {
+      throw medfate::MedfateInternalError("Wrong ID start");
+    }
+  }
+  return(types);
 }

@@ -16,6 +16,7 @@
 #include "growth_day_c.h"
 #include "growth_day.h"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "hydrology.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
@@ -1073,7 +1074,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
       if(PLCinc>0.0) {
-        double LeafPDEF = proportionDefoliationWeibull(psiApoLeaf[j], VCleaf_c[j], VCleaf_d[j]);
+        double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], VCleaf_c[j], VCleaf_d[j], 0.88, 10);
         double LApdef = std::min(LAexpanded, (1.0 - LeafPDEF)*leafAreaTarget[j]);
         if(LApdef<LAexpanded) {
           propLeafSenescence = std::max((LAexpanded-LApdef)/LAexpanded, propLeafSenescence);
@@ -1897,4 +1898,75 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
 
   List modelOutput = copyModelOutput(internalCommunication, x, "growth");
   return(modelOutput);
+}
+
+
+
+// [[Rcpp::export("growth_day_c")]]
+List growthDay_c(List x, CharacterVector date, NumericVector meteovec, 
+                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+                 double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                 bool modifyInput = true) {
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+  
+  WeatherInputVector meteovec_c(meteovec);
+  ModelInput x_c(x);  
+  
+  
+  
+  // Build communication structures
+  int nlayers = x_c.soil.getNlayers();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
+  GROWTHCommunicationStructures GROWTHcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+  
+  // Prepare lateral flows
+  std::vector<double> lateralFlows_c(nlayers, 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
+  List l;
+  
+  if(x_c.control.transpirationMode=="Granier") {
+    //Initialises a result
+    BasicTranspiration_RESULT BTres(numCohorts, nlayers);
+    BasicSPWB_RESULT BSPWBres(BTres);
+    BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
+    
+    // Calls simulation
+    growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
+                      as<std::string>(date[0]),
+                      meteovec_c, 
+                      latitude, elevation, slope, aspect,
+                      runon, 
+                      lateralFlows_c, waterTableDepth);
+    //Copies result
+    l = copyGROWTHResult_c(GROWTHres, x_c);
+  } else {
+    //Initialises a result
+    AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
+    AdvancedSPWB_RESULT ASPWBres(ATres);
+    AdvancedGROWTH_RESULT GROWTHres(ASPWBres, numCohorts);
+    // Calls simulation
+    growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
+                    as<std::string>(date[0]),
+                    meteovec_c, 
+                    latitude, elevation, slope, aspect,
+                    runon, 
+                    lateralFlows_c, waterTableDepth);
+    //Copies result
+    l = copyGROWTHResult_c(GROWTHres, x_c);
+  }
+  
+  //Modifies input list, if required  
+  if(modifyInput) x_c.copyStateToList(x);
+  
+  return(l);
 }

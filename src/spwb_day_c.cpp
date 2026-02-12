@@ -53,7 +53,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
    BSPWBres.topo.elevation = elevation;
    BSPWBres.topo.slope = slope;
    BSPWBres.topo.aspect = aspect;
-   
+
    //Store weather for output
    BSPWBres.meteovec.pet = pet;
    BSPWBres.meteovec.rhmax = rhmax;
@@ -689,12 +689,20 @@ Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelIn
 
 Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x) {
   Rcpp::List l;
-  try {
-    auto& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(SPWBres);
-    l = copyBasicSPWBResult_c(BSPWBres, x);
-  } catch(const std::bad_cast&) {
-    auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(SPWBres);
-    l = copyAdvancedSPWBResult_c(ASPWBres, x);
+  if(x.control.transpirationMode=="Granier") {
+    try {
+      auto& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(SPWBres);
+      l = copyBasicSPWBResult_c(BSPWBres, x);
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
+    }
+  } else {
+    try {
+      auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(SPWBres);
+      l = copyAdvancedSPWBResult_c(ASPWBres, x);
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+    }
   }
   return(l);
 }

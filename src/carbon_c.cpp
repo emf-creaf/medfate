@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 #include "tissuemoisture_c.h"
 #include "carbon_c.h"
+#include "forestutils_c.h"
 #include "biophysicsutils_c.h"
 #include "meteoland/utils_c.hpp"
 
@@ -345,6 +346,113 @@ double sapwoodStarchCapacity_c(double SA, double H, const std::vector<double>& L
   return(0.5*1000.0*sapwoodStorageVolume_c(SA,H,L,V,woodDensity,conduit2sapwood)*starchDensity/starchMolarMass);
 }
 
+
+
+void fillCarbonCompartments_c(CarbonCompartments& cc, ModelInput& x, std::string& biomassUnits) {
+  
+  if((biomassUnits!="g_m2") && (biomassUnits !="g_ind") && (biomassUnits !="gC_m2")) {
+    throw medfate::MedfateInternalError("Wrong biomass units"); 
+  }
+  
+  //Aboveground parameters
+  std::vector<double>& H = x.above.H;
+  std::vector<double>& N = x.above.N;
+  std::vector<double>& LAI_expanded = x.above.LAI_expanded;
+  std::vector<double>& LAI_dead = x.above.LAI_dead;
+  std::vector<double>& SA = x.above.SA;
+  std::vector<double>& DBH = x.above.DBH;
+  
+  std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);
+
+  arma::mat& V = x.belowLayers.V;
+  arma::mat& L = x.belowLayers.L;
+   
+  std::vector<double>& SLA = x.paramsAnatomy.SLA;
+  std::vector<double>& r635 = x.paramsAnatomy.r635;
+  std::vector<double>& WoodDensity = x.paramsAnatomy.WoodDensity;
+  std::vector<double>& LeafDensity = x.paramsAnatomy.LeafDensity;
+  std::vector<double>& conduit2sapwood = x.paramsAnatomy.conduit2sapwood;
+  std::vector<double>& WoodC = x.paramsGrowth.WoodC;
+  
+  int numCohorts = x.cohorts.CohortCode.size();
+  int nlayers = x.soil.getNlayers();
+  for(int j=0;j<numCohorts;j++){
+    std::vector<double> Vj(nlayers);
+    std::vector<double> Lj(nlayers);
+    for(int l=0;l<nlayers;l++) {
+      Vj[l] = V(j,l);
+      Lj[l] = L(j,l);
+    }
+    cc.FineRootBiomass[j] = x.below.fineRootBiomass[j];
+    cc.LeafStructuralBiomass[j] = leafStructuralBiomass_c(LAI_expanded[j],N[j],x.paramsAnatomy.SLA[j]);
+    cc.TwigStructuralBiomass[j] = twigStructuralBiomass_c(LAI_expanded[j],N[j],SLA[j], x.paramsAnatomy.r635[j]);
+    cc.DeadLeafStructuralBiomass[j] = leafStructuralBiomass_c(LAI_dead[j],N[j],SLA[j]);
+    cc.DeadTwigStructuralBiomass[j] = twigStructuralBiomass_c(LAI_dead[j],N[j],SLA[j], r635[j]);
+    cc.TwigLivingStructuralBiomass[j] = cc.TwigStructuralBiomass[j]*(1.0 - x.internalWater.StemPLC[j])*(1.0-conduit2sapwood[j]);
+    cc.SapwoodStructuralBiomass[j] = sapwoodStructuralBiomass_c(SA[j], H[j], Lj,Vj, WoodDensity[j]);
+    cc.SapwoodLivingStructuralBiomass[j] = cc.SapwoodStructuralBiomass[j]*(1.0 - x.internalWater.StemPLC[j])*(1.0-conduit2sapwood[j]);
+    cc.AbovegroundWoodBiomass[j] = abovegroundSapwoodStructuralBiomass_c(SA[j], H[j], WoodDensity[j]);
+    cc.BelowgroundWoodBiomass[j] = belowgroundSapwoodStructuralBiomass_c(SA[j], Lj, Vj, WoodDensity[j]);
+    if(ctype[j] =="tree") {
+      cc.HeartwoodStructuralBiomass[j] = heartwoodStructuralBiomass_c(DBH[j], SA[j], H[j], Lj, Vj, WoodDensity[j]);
+      cc.AbovegroundWoodBiomass[j] += abovegroundHeartwoodStructuralBiomass_c(DBH[j], SA[j], H[j], WoodDensity[j]);
+      cc.BelowgroundWoodBiomass[j] += belowgroundHeartwoodStructuralBiomass_c(DBH[j], SA[j], Lj,Vj, WoodDensity[j]);
+    } else {
+      cc.HeartwoodStructuralBiomass[j] = 0.0;
+    }
+    cc.LeafStorageVolume[j] = leafStorageVolume_c(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+    cc.SapwoodStorageVolume[j] = sapwoodStorageVolume_c(SA[j], H[j], Lj, Vj, WoodDensity[j], conduit2sapwood[j]);
+    cc.LeafStarchCapacity[j] = leafStarchCapacity_c(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+    cc.SapwoodStarchCapacity[j] =  sapwoodStarchCapacity_c(SA[j], H[j], Lj, Vj, WoodDensity[j], conduit2sapwood[j]);
+    cc.LeafStarchMaximumConcentration[j] = cc.LeafStarchCapacity[j]/cc.LeafStorageVolume[j];
+    cc.SapwoodStarchMaximumConcentration[j] = cc.SapwoodStarchCapacity[j]/cc.SapwoodStorageVolume[j];
+    if(cc.LeafStorageVolume[j]==0.0) cc.LeafStarchMaximumConcentration[j] = 0.0;
+    if(cc.SapwoodStorageVolume[j]==0.0) cc.SapwoodStarchMaximumConcentration[j] = 0.0;
+    
+    double labileMassLeaf = (x.internalCarbon.sugarLeaf[j]+x.internalCarbon.starchLeaf[j])*(glucoseMolarMass*cc.LeafStorageVolume[j]);
+    double labileMassSapwood = (x.internalCarbon.sugarSapwood[j]+x.internalCarbon.starchSapwood[j])*(glucoseMolarMass*cc.SapwoodStorageVolume[j]);
+    cc.LabileBiomass[j] = labileMassSapwood+labileMassLeaf;
+    
+    if(biomassUnits=="g_m2") {
+      double f = N[j]/(10000.0);
+      cc.LeafStructuralBiomass[j] = cc.LeafStructuralBiomass[j]*f;
+      cc.TwigStructuralBiomass[j] = cc.TwigStructuralBiomass[j]*f;
+      cc.TwigLivingStructuralBiomass[j] = cc.TwigLivingStructuralBiomass[j]*f;
+      cc.DeadLeafStructuralBiomass[j] = cc.DeadLeafStructuralBiomass[j]*f;
+      cc.DeadTwigStructuralBiomass[j] = cc.DeadTwigStructuralBiomass[j]*f;
+      cc.SapwoodStructuralBiomass[j] = cc.SapwoodStructuralBiomass[j]*f;
+      cc.SapwoodLivingStructuralBiomass[j] = cc.SapwoodLivingStructuralBiomass[j]*f;
+      cc.HeartwoodStructuralBiomass[j] = cc.HeartwoodStructuralBiomass[j]*f;
+      cc.AbovegroundWoodBiomass[j] = cc.AbovegroundWoodBiomass[j]*f;
+      cc.BelowgroundWoodBiomass[j] = cc.BelowgroundWoodBiomass[j]*f;
+      cc.FineRootBiomass[j] = cc.FineRootBiomass[j]*f;
+      cc.LabileBiomass[j] = cc.LabileBiomass[j]*f;
+    } else if(biomassUnits=="gC_m2") {
+      double f = N[j]/(10000.0);
+      cc.LeafStructuralBiomass[j] = cc.LeafStructuralBiomass[j]*f*leafCperDry;
+      cc.TwigStructuralBiomass[j] = cc.TwigStructuralBiomass[j]*f*WoodC[j];
+      cc.TwigLivingStructuralBiomass[j] = cc.TwigLivingStructuralBiomass[j]*f*WoodC[j];
+      cc.DeadLeafStructuralBiomass[j] = cc.DeadLeafStructuralBiomass[j]*f*leafCperDry;
+      cc.DeadTwigStructuralBiomass[j] = cc.DeadTwigStructuralBiomass[j]*f*WoodC[j];
+      cc.SapwoodStructuralBiomass[j] = cc.SapwoodStructuralBiomass[j]*f*WoodC[j];
+      cc.SapwoodLivingStructuralBiomass[j] = cc.SapwoodLivingStructuralBiomass[j]*f*WoodC[j];
+      cc.HeartwoodStructuralBiomass[j] = cc.HeartwoodStructuralBiomass[j]*f*WoodC[j];
+      cc.AbovegroundWoodBiomass[j] = cc.AbovegroundWoodBiomass[j]*f*WoodC[j];
+      cc.BelowgroundWoodBiomass[j] = cc.BelowgroundWoodBiomass[j]*f*WoodC[j];
+      cc.FineRootBiomass[j] = cc.FineRootBiomass[j]*f*rootCperDry;
+      cc.LabileBiomass[j] = cc.LabileBiomass[j]*f*(6.0*carbonMolarMass/glucoseMolarMass);
+    }
+    
+    cc.StructuralBiomass[j] = cc.LeafStructuralBiomass[j]  + cc.TwigStructuralBiomass[j]   + cc.SapwoodStructuralBiomass[j]  + cc.FineRootBiomass[j];
+    cc.DeadBiomass[j] = cc.DeadLeafStructuralBiomass[j] + cc.DeadTwigStructuralBiomass[j] + cc.HeartwoodStructuralBiomass[j];
+    cc.TotalLivingBiomass[j] = cc.LeafStructuralBiomass[j] + cc.TwigLivingStructuralBiomass[j] + cc.SapwoodLivingStructuralBiomass[j] + cc.FineRootBiomass[j] + cc.LabileBiomass[j];
+    cc.TotalBiomass[j] = cc.StructuralBiomass[j] + cc.DeadBiomass[j] + cc.LabileBiomass[j];
+  }
+  // if(biomassUnits=="gC_m2"){
+  //   Rcout << " B leaves " << sum(leafStructBiomass) << " fineroots "<< sum(fineRootBiomass) <<" sapwood " << sum(sapwoodStructBiomass) << " heartwood "<< sum(heartwoodStructBiomass)<<" struct " << sum(structuralBiomass)<< " dead " << sum(deadBiomass) << " labile " << sum(labileBiomass) << " total " << sum(totalBiomass) <<"\n";
+  // }
+}
+
 Rcpp::DataFrame copyCarbonCompartments_c(const CarbonCompartments& cc, ModelInput& x) {
   Rcpp::DataFrame outDF = Rcpp::DataFrame::create(
     Rcpp::Named("LeafStorageVolume") = Rcpp::wrap(cc.LeafStorageVolume),
@@ -355,6 +463,9 @@ Rcpp::DataFrame copyCarbonCompartments_c(const CarbonCompartments& cc, ModelInpu
     Rcpp::Named("SapwoodStarchCapacity") = Rcpp::wrap(cc.SapwoodStarchCapacity),
     Rcpp::Named("LeafStructuralBiomass") = Rcpp::wrap(cc.LeafStructuralBiomass),
     Rcpp::Named("TwigStructuralBiomass") = Rcpp::wrap(cc.TwigStructuralBiomass),
+    Rcpp::Named("TwigLivingStructuralBiomass") = Rcpp::wrap(cc.TwigLivingStructuralBiomass),
+    Rcpp::Named("DeadLeafStructuralBiomass") = Rcpp::wrap(cc.DeadLeafStructuralBiomass),
+    Rcpp::Named("DeadTwigStructuralBiomass") = Rcpp::wrap(cc.DeadTwigStructuralBiomass),
     Rcpp::Named("SapwoodStructuralBiomass") = Rcpp::wrap(cc.SapwoodStructuralBiomass),
     Rcpp::Named("SapwoodLivingStructuralBiomass") = Rcpp::wrap(cc.SapwoodLivingStructuralBiomass),
     Rcpp::Named("HeartwoodStructuralBiomass") = Rcpp::wrap(cc.HeartwoodStructuralBiomass),
@@ -362,6 +473,7 @@ Rcpp::DataFrame copyCarbonCompartments_c(const CarbonCompartments& cc, ModelInpu
     Rcpp::Named("BelowgroundWoodBiomass") = Rcpp::wrap(cc.BelowgroundWoodBiomass),
     Rcpp::Named("FineRootBiomass") = Rcpp::wrap(cc.FineRootBiomass),
     Rcpp::Named("StructuralBiomass") = Rcpp::wrap(cc.StructuralBiomass),
+    Rcpp::Named("DeadBiomass") = Rcpp::wrap(cc.DeadBiomass),
     Rcpp::Named("LabileBiomass") = Rcpp::wrap(cc.LabileBiomass),
     Rcpp::Named("TotalLivingBiomass") = Rcpp::wrap(cc.TotalLivingBiomass),
     Rcpp::Named("TotalBiomass") = Rcpp::wrap(cc.TotalBiomass));

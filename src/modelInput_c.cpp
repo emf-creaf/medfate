@@ -79,6 +79,9 @@ ModelInput::ModelInput(Rcpp::List x) {
       belowLayers.RHOP[c] = Rcpp::as<arma::mat>(RHOPList[c]);
     }
   }
+  
+  //// PARAMETER TABLES
+  
   //Phenology parameters
   Rcpp::DataFrame phenoDF = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   paramsPhenology.phenoType = Rcpp::as< std::vector<std::string> >(phenoDF["PhenologyType"]);
@@ -182,6 +185,77 @@ ModelInput::ModelInput(Rcpp::List x) {
   if(transpDF.containsElementNamed("FR_stem")) paramsTranspiration.FR_stem = Rcpp::as< std::vector<double> >(transpDF["FR_stem"]);
   if(transpDF.containsElementNamed("FR_root")) paramsTranspiration.FR_root = Rcpp::as< std::vector<double> >(transpDF["FR_root"]);
   
+  if(x.containsElementNamed("paramsGrowth")){
+    Rcpp::DataFrame growthDF = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+    if(growthDF.containsElementNamed("RERleaf")) paramsGrowth.RERleaf = Rcpp::as< std::vector<double> >(growthDF["RERleaf"]);
+    if(growthDF.containsElementNamed("RERsapwood")) paramsGrowth.RERsapwood = Rcpp::as< std::vector<double> >(growthDF["RERsapwood"]);
+    if(growthDF.containsElementNamed("RERfineroot")) paramsGrowth.RERfineroot = Rcpp::as< std::vector<double> >(growthDF["RERfineroot"]);
+    if(growthDF.containsElementNamed("CCleaf")) paramsGrowth.CCleaf = Rcpp::as< std::vector<double> >(growthDF["CCleaf"]);
+    if(growthDF.containsElementNamed("CCsapwood")) paramsGrowth.CCsapwood = Rcpp::as< std::vector<double> >(growthDF["CCsapwood"]);
+    if(growthDF.containsElementNamed("CCfineroot")) paramsGrowth.CCfineroot = Rcpp::as< std::vector<double> >(growthDF["CCfineroot"]);
+    if(growthDF.containsElementNamed("RGRleafmax")) paramsGrowth.RGRleafmax = Rcpp::as< std::vector<double> >(growthDF["RGRleafmax"]);
+    if(growthDF.containsElementNamed("RGRsapwoodmax")) paramsGrowth.RGRsapwoodmax = Rcpp::as< std::vector<double> >(growthDF["RGRsapwoodmax"]);
+    if(growthDF.containsElementNamed("RGRcambiummax")) paramsGrowth.RGRcambiummax = Rcpp::as< std::vector<double> >(growthDF["RGRcambiummax"]);
+    if(growthDF.containsElementNamed("RGRfinerootmax")) paramsGrowth.RGRfinerootmax = Rcpp::as< std::vector<double> >(growthDF["RGRfinerootmax"]);
+    if(growthDF.containsElementNamed("SRsapwood")) paramsGrowth.SRsapwood = Rcpp::as< std::vector<double> >(growthDF["SRsapwood"]);
+    if(growthDF.containsElementNamed("SRfineroot")) paramsGrowth.SRfineroot = Rcpp::as< std::vector<double> >(growthDF["SRfineroot"]);
+    if(growthDF.containsElementNamed("RSSG")) paramsGrowth.RSSG = Rcpp::as< std::vector<double> >(growthDF["RSSG"]);
+    if(growthDF.containsElementNamed("fHDmin")) paramsGrowth.fHDmin = Rcpp::as< std::vector<double> >(growthDF["fHDmin"]);
+    if(growthDF.containsElementNamed("fHDmax")) paramsGrowth.fHDmax = Rcpp::as< std::vector<double> >(growthDF["fHDmax"]);
+    if(growthDF.containsElementNamed("WoodC")) paramsGrowth.WoodC = Rcpp::as< std::vector<double> >(growthDF["WoodC"]);
+  }
+  
+  if(x.containsElementNamed("paramsMortalityRegeneration")){
+    Rcpp::DataFrame mortDF = Rcpp::as<Rcpp::DataFrame>(x["paramsMortalityRegeneration"]);
+    if(mortDF.containsElementNamed("MortalityBaselineRate")) paramsMortalityRegeneration.MortalityBaselineRate = Rcpp::as< std::vector<double> >(mortDF["MortalityBaselineRate"]);
+    if(mortDF.containsElementNamed("SurvivalModelStep")) paramsMortalityRegeneration.SurvivalModelStep = Rcpp::as< std::vector<double> >(mortDF["SurvivalModelStep"]);
+    if(mortDF.containsElementNamed("SurvivalB0")) paramsMortalityRegeneration.SurvivalB0 = Rcpp::as< std::vector<double> >(mortDF["SurvivalB0"]);
+    if(mortDF.containsElementNamed("SurvivalB1")) paramsMortalityRegeneration.SurvivalB1 = Rcpp::as< std::vector<double> >(mortDF["SurvivalB1"]);
+    if(mortDF.containsElementNamed("RecrTreeDensity")) paramsMortalityRegeneration.RecrTreeDensity = Rcpp::as< std::vector<double> >(mortDF["RecrTreeDensity"]);
+    if(mortDF.containsElementNamed("RecrTreeDBH")) paramsMortalityRegeneration.RecrTreeDBH = Rcpp::as< std::vector<double> >(mortDF["RecrTreeDBH"]);
+    if(mortDF.containsElementNamed("IngrowthTreeDensity")) paramsMortalityRegeneration.IngrowthTreeDensity = Rcpp::as< std::vector<double> >(mortDF["IngrowthTreeDensity"]);
+    if(mortDF.containsElementNamed("IngrowthTreeDBH")) paramsMortalityRegeneration.IngrowthTreeDBH = Rcpp::as< std::vector<double> >(mortDF["IngrowthTreeDBH"]);
+    if(mortDF.containsElementNamed("RespDist")) paramsMortalityRegeneration.RespDist = Rcpp::as< std::vector<double> >(mortDF["RespDist"]);
+    if(mortDF.containsElementNamed("RespFire")) paramsMortalityRegeneration.RespFire = Rcpp::as< std::vector<double> >(mortDF["RespFire"]);
+  }
+  
+  if(x.containsElementNamed("paramsAllometries")){
+    Rcpp::DataFrame allomDF = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
+    if(allomDF.containsElementNamed("Afbt")) paramsAllometries.Afbt = Rcpp::as< std::vector<double> >(allomDF["Afbt"]);
+    if(allomDF.containsElementNamed("Bfbt")) paramsAllometries.Bfbt = Rcpp::as< std::vector<double> >(allomDF["Bfbt"]);
+    if(allomDF.containsElementNamed("Cfbt")) paramsAllometries.Cfbt = Rcpp::as< std::vector<double> >(allomDF["Cfbt"]);
+    
+    if(allomDF.containsElementNamed("Aash")) paramsAllometries.Aash = Rcpp::as< std::vector<double> >(allomDF["Aash"]);
+    if(allomDF.containsElementNamed("Bash")) paramsAllometries.Bash = Rcpp::as< std::vector<double> >(allomDF["Bash"]);
+    if(allomDF.containsElementNamed("Absh")) paramsAllometries.Absh = Rcpp::as< std::vector<double> >(allomDF["Absh"]);
+    if(allomDF.containsElementNamed("Bbsh")) paramsAllometries.Bbsh = Rcpp::as< std::vector<double> >(allomDF["Bbsh"]);
+    if(allomDF.containsElementNamed("BTsh")) paramsAllometries.BTsh = Rcpp::as< std::vector<double> >(allomDF["BTsh"]);
+    
+    if(allomDF.containsElementNamed("Acr")) paramsAllometries.Acr = Rcpp::as< std::vector<double> >(allomDF["Acr"]);
+    if(allomDF.containsElementNamed("B1cr")) paramsAllometries.B1cr = Rcpp::as< std::vector<double> >(allomDF["B1cr"]);
+    if(allomDF.containsElementNamed("B2cr")) paramsAllometries.B2cr = Rcpp::as< std::vector<double> >(allomDF["B2cr"]);
+    if(allomDF.containsElementNamed("B3cr")) paramsAllometries.B3cr = Rcpp::as< std::vector<double> >(allomDF["B3cr"]);
+    if(allomDF.containsElementNamed("C1cr")) paramsAllometries.C1cr = Rcpp::as< std::vector<double> >(allomDF["C1cr"]);
+    if(allomDF.containsElementNamed("C2cr")) paramsAllometries.C2cr = Rcpp::as< std::vector<double> >(allomDF["C2cr"]);
+    
+    if(allomDF.containsElementNamed("Acw")) paramsAllometries.Acw = Rcpp::as< std::vector<double> >(allomDF["Acw"]);
+    if(allomDF.containsElementNamed("Bcw")) paramsAllometries.Bcw = Rcpp::as< std::vector<double> >(allomDF["Bcw"]);
+    if(allomDF.containsElementNamed("Abt")) paramsAllometries.Abt = Rcpp::as< std::vector<double> >(allomDF["Abt"]);
+    if(allomDF.containsElementNamed("Bbt")) paramsAllometries.Bbt = Rcpp::as< std::vector<double> >(allomDF["Bbt"]);
+  }
+  
+  if(x.containsElementNamed("paramsLitterDecomposition")){
+    Rcpp::DataFrame litterDF = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
+    if(litterDF.containsElementNamed("Species")) paramsLitterDecomposition.Species = Rcpp::as< std::vector<std::string> >(litterDF["Species"]);
+    if(litterDF.containsElementNamed("LeafLignin")) paramsLitterDecomposition.LeafLignin = Rcpp::as< std::vector<double> >(litterDF["LeafLignin"]);
+    if(litterDF.containsElementNamed("Nleaf")) paramsLitterDecomposition.Nleaf = Rcpp::as< std::vector<double> >(litterDF["Nleaf"]);
+    if(litterDF.containsElementNamed("Nsapwood")) paramsLitterDecomposition.Nsapwood = Rcpp::as< std::vector<double> >(litterDF["Nsapwood"]);
+    if(litterDF.containsElementNamed("Nfineroot")) paramsLitterDecomposition.Nfineroot = Rcpp::as< std::vector<double> >(litterDF["Nfineroot"]);
+  }
+  
+  
+  //// INTERNAL VARIABLES
+  
   //Internal phenology variables
   Rcpp::DataFrame internalPhenoDF = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   internalPhenology.gdd = Rcpp::as< std::vector<double> >(internalPhenoDF["gdd"]);
@@ -263,6 +337,7 @@ ModelInput::ModelInput(Rcpp::List x) {
     internalSnags.Species = Rcpp::as< std::vector<std::string> >(internalSnagDF["Species"]);
     internalSnags.DBH = Rcpp::as< std::vector<double> >(internalSnagDF["DBH"]);
     internalSnags.Height = Rcpp::as< std::vector<double> >(internalSnagDF["Height"]);
+    internalSnags.DeathAge = Rcpp::as< std::vector<double> >(internalSnagDF["DeathAge"]);
     internalSnags.SmallBranches = Rcpp::as< std::vector<double> >(internalSnagDF["SmallBranches"]);
     internalSnags.LargeWood = Rcpp::as< std::vector<double> >(internalSnagDF["LargeWood"]);
   }
@@ -369,7 +444,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   }
 
   //Cohort definition does not change with spwb/growth simulations
-  
+
   //Above
   Rcpp::DataFrame aboveDF = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   int numCohorts = aboveDF.nrows();
@@ -438,7 +513,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Rcpp::NumericVector poolProportions = belowDF["poolProportions"];
     for(int c = 0;c < numCohorts; c++) poolProportions[c] = below.poolProportions[c];
   }
-  
+
   //BelowLayers
   Rcpp::List belowLayersList = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   Rcpp::NumericMatrix V = belowLayersList["V"];
@@ -484,8 +559,8 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       }
     }
   }
-  
-  
+
+
   //Internal phenology variables
   Rcpp::DataFrame internalPhenoDF = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   Rcpp::NumericVector gdd = internalPhenoDF["gdd"];
@@ -504,7 +579,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     leafDormancy[c] = internalPhenology.leafDormancy[c];
     phi[c] = internalPhenology.phi[c];
   }
-  
+
   //Internal LAI distribution
   if(x.containsElementNamed("internalLAIDistribution")){
     Rcpp::List intLAIDist = x["internalLAIDistribution"];
@@ -527,7 +602,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       }
     }
   }
-  
+
   //Internal water variables
   if(x.containsElementNamed("internalWater")) {
     Rcpp::DataFrame internalWaterDF = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -580,7 +655,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       for(int c = 0;c < numCohorts; c++) StemPLC[c] = internalWater.StemPLC[c];
     }
   }
-  
+
   //Internal carbon variables
   if(x.containsElementNamed("internalCarbon")) {
     Rcpp::DataFrame internalCarbonDF = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
@@ -595,7 +670,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       starchSapwood[c] = internalCarbon.starchSapwood[c];
     }
   }
-  
+
   //Internal mortality variables
   if(x.containsElementNamed("internalMortality")) {
     Rcpp::DataFrame internalMortalityDF = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
@@ -654,12 +729,14 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Rcpp::CharacterVector Species = internalSnagDF["Species"];
     Rcpp::NumericVector DBH = internalSnagDF["DBH"];
     Rcpp::NumericVector Height = internalSnagDF["Height"];
+    Rcpp::NumericVector DeathAge = internalSnagDF["DeathAge"];
     Rcpp::NumericVector SmallBranches = internalSnagDF["SmallBranches"];
     Rcpp::NumericVector LargeWood = internalSnagDF["LargeWood"];
-    for(int c = 0;c < numCohorts; c++) {
+    for(int c = 0;c < Species.size(); c++) {
       Species[c] = internalSnags.Species[c];
       DBH[c] = internalSnags.DBH[c];
       Height[c] = internalSnags.Height[c];
+      DeathAge[c] = internalSnags.DeathAge[c];
       SmallBranches[c] = internalSnags.SmallBranches[c];
       LargeWood[c] = internalSnags.LargeWood[c];
     }
@@ -675,7 +752,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Rcpp::NumericVector LargeWood = internalLitterDF["LargeWood"];
     Rcpp::NumericVector CoarseRoots = internalLitterDF["CoarseRoots"];
     Rcpp::NumericVector FineRoots = internalLitterDF["FineRoots"];
-    for(int c = 0;c < numCohorts; c++) {
+    for(int c = 0;c < Species.size(); c++) {
       Species[c] = internalLitter.Species[c];
       Leaves[c] = internalLitter.Leaves[c];
       Twigs[c] = internalLitter.Twigs[c];
@@ -685,7 +762,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       FineRoots[c] = internalLitter.FineRoots[c];
     }
   }
-  
+
   //Internal SOC variables
   if(x.containsElementNamed("internalSOC")) {
     Rcpp::NumericVector internalSOCDF = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
@@ -697,7 +774,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     internalSOCDF["SoilSlow"] = internalSOC.SoilSlow;
     internalSOCDF["SoilPassive"] = internalSOC.SoilPassive;
   }
-  
+
   //Internal FCCS variables
   if(x.containsElementNamed("internalFCCS")) {
     Rcpp::DataFrame fccsDF = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
@@ -748,5 +825,5 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       }
     }
   }
-  
+
 }

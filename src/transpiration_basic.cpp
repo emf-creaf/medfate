@@ -13,6 +13,7 @@
 #include "forestutils.h"
 #include "tissuemoisture_c.h"
 #include "carbon.h"
+#include "carbon_c.h"
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
