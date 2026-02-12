@@ -2431,6 +2431,7 @@ List spwb_c(List x, DataFrame meteo,
       WeatherInputVector meteovec;
       meteovec.tmax = tmax;
       meteovec.tmin = tmin;
+      meteovec.tday = tday;
       meteovec.tminPrev = tminPrev;
       meteovec.tminNext = tminNext;
       meteovec.tmaxPrev = tmaxPrev;

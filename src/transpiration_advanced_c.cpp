@@ -181,7 +181,6 @@ Rcpp::List copyEnergyBalanceResult_c(const EnergyBalance_RESULT& EBres, ModelInp
     _["Hcansoil"] = Rcpp::wrap(EBres.Hcansoil),
     _["LEVsoil"] = Rcpp::wrap(EBres.LEVsoil),
     _["SWRsoil"] = Rcpp::wrap(EBres.SWRsoil),
-    _["LEFsnow"] = Rcpp::wrap(EBres.LEFsnow),
     _["LWRsoil"] = Rcpp::wrap(EBres.LWRsoil),
     _["Ebalsoil"] = Rcpp::wrap(EBres.Ebalsoil)
   );

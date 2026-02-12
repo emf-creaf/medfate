@@ -631,6 +631,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
   //Copy final soil state to output
   for(int l=0;l<nlayers;l++) {
     ASPWBres.Soil.Psi[l] = soil.getPsi(l);
+    ASPWBres.Soil.HerbTranspiration[l] = EherbVec[l];
   }
 }
 
