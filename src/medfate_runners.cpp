@@ -14,7 +14,6 @@ WB_runner::WB_runner(Rcpp::List x_list,
   slope(slope),
   aspect(aspect),
   WBcomm(0,0,0,0) {
-  Topography top;
   Rcpp::CharacterVector classVector = x_list.attr("class");
   Rcpp::String s = classVector[0];
   std::string input_classIn = s.get_cstring();
@@ -35,6 +34,15 @@ WB_runner::WB_runner(Rcpp::List x_list,
       WBres = std::make_unique<AdvancedSPWB_RESULT>(ASPWBres);
     }
     WBcomm = WBCommunicationStructures(x_m.cohorts.SpeciesIndex.size(), x_m.soil.getNlayers(), x_m.canopy.zlow.size(), x_m.control.advancedWB.ndailysteps);
+  } else if (input_classIn == "aspwbInput") {
+    AgricultureModelInput x_m = AgricultureModelInput(x_list);
+    x = std::make_unique<AgricultureModelInput>(x_m);
+    int nlayers = x_m.soil.getNlayers();
+    AgricultureWB_RESULT AgrWBres(nlayers);
+    WBres = std::make_unique<AgricultureWB_RESULT>(AgrWBres);
+    WBcomm = WBCommunicationStructures(0, nlayers,0, 0);
+  } else {
+    throw medfate::MedfateInternalError("Wrong model input class (should be spwbInput or aspwbInput)");
   }
 }
 WB_runner::~WB_runner(){
@@ -75,32 +83,47 @@ WB_multiple_runner::WB_multiple_runner(List wbInput_vec,
   size_t ncanlayers_max = 0;
   size_t ntimesteps_max = 0;
   for(int i=0; i<n;i++) {
-    ModelInput x_i = ModelInput(wbInput_vec[i]);
-    x_vec[i] = std::make_unique<ModelInput>(x_i);
-    int numCohorts_i = x_i.cohorts.SpeciesIndex.size();
-    int nlayers_i = x_i.soil.getNlayers();
-    int ncanlayers_i = x_i.canopy.zlow.size();
-    int ntimesteps_i = x_i.control.advancedWB.ndailysteps;
-    if(x_i.control.transpirationMode=="Granier") {
-      BasicTranspiration_RESULT BTres(numCohorts_i, nlayers_i);
-      BasicSPWB_RESULT BSPWBres(BTres);
-      WBres_vec[i] = std::make_unique<BasicSPWB_RESULT>(BSPWBres);
+    Rcpp::List wbInput_i = wbInput_vec[i];
+    Rcpp::CharacterVector classVector_i = wbInput_i.attr("class");
+    Rcpp::String s_i = classVector_i[0];
+    std::string input_class_i = s_i.get_cstring();
+    if(input_class_i=="spwbInput") {
+      ModelInput x_i = ModelInput(wbInput_i);
+      x_vec[i] = std::make_unique<ModelInput>(x_i);
+      int numCohorts_i = x_i.cohorts.SpeciesIndex.size();
+      int nlayers_i = x_i.soil.getNlayers();
+      int ncanlayers_i = x_i.canopy.zlow.size();
+      int ntimesteps_i = x_i.control.advancedWB.ndailysteps;
+      if(x_i.control.transpirationMode=="Granier") {
+        BasicTranspiration_RESULT BTres(numCohorts_i, nlayers_i);
+        BasicSPWB_RESULT BSPWBres(BTres);
+        WBres_vec[i] = std::make_unique<BasicSPWB_RESULT>(BSPWBres);
+      } else {
+        AdvancedTranspiration_RESULT ATres(numCohorts_i, nlayers_i, ncanlayers_i, ntimesteps_i);
+        AdvancedSPWB_RESULT ASPWBres(ATres);
+        WBres_vec[i] = std::make_unique<AdvancedSPWB_RESULT>(ASPWBres);
+      }
+      numCohorts_max = std::max(numCohorts_max, x_i.cohorts.SpeciesIndex.size());
+      nlayers_max = std::max(nlayers_max, (size_t) x_i.soil.getNlayers());
+      ncanlayers_max = std::max(ncanlayers_max, x_i.canopy.zlow.size());
+      ntimesteps_max = std::max(ntimesteps_max, (size_t) x_i.control.advancedWB.ndailysteps);
+    } else if (input_class_i == "aspwbInput") {
+      AgricultureModelInput x_i = AgricultureModelInput(wbInput_i);
+      x_vec[i] = std::make_unique<AgricultureModelInput>(x_i);
+      int nlayers_i = x_i.soil.getNlayers();
+      nlayers_max = std::max(nlayers_max, (size_t) nlayers_i);
+      AgricultureWB_RESULT AgrWBres(nlayers_i);
+      WBres_vec[i] = std::make_unique<AgricultureWB_RESULT>(AgrWBres);
     } else {
-      AdvancedTranspiration_RESULT ATres(numCohorts_i, nlayers_i, ncanlayers_i, ntimesteps_i);
-      AdvancedSPWB_RESULT ASPWBres(ATres);
-      WBres_vec[i] = std::make_unique<AdvancedSPWB_RESULT>(ASPWBres);
+      throw medfate::MedfateInternalError("Wrong model input class (should be spwbInput or aspwbInput)");
     }
-    numCohorts_max = std::max(numCohorts_max, x_i.cohorts.SpeciesIndex.size());
-    nlayers_max = std::max(nlayers_max, (size_t) x_i.soil.getNlayers());
-    ncanlayers_max = std::max(ncanlayers_max, x_i.canopy.zlow.size());
-    ntimesteps_max = std::max(ntimesteps_max, (size_t) x_i.control.advancedWB.ndailysteps);
     latitude_vec[i] = latitude[i];
     Topography topo_i = Topography();
     topo_i.elevation = elevation[i];
     topo_i.slope = slope[i];
     topo_i.aspect = aspect[i];
     topo_vec[i] = std::make_unique<Topography>(topo_i);
-  }
+  } 
   WBcomm = WBCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
 }
 WB_multiple_runner::~WB_multiple_runner() {

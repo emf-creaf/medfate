@@ -849,12 +849,24 @@ Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x) {
   return(l);
 }
 Rcpp::List copyWBResult_c(WB_RESULT& WBres, WaterBalanceModelInput& x) {
-  try {
-    ModelInput& x_m = dynamic_cast<ModelInput&>(x);
-    SPWB_RESULT& SPWBres = dynamic_cast<SPWB_RESULT&>(WBres);
-    return(copySPWBResult_c(SPWBres, x_m));
-  } catch(const std::bad_cast&) {
-    throw medfate::MedfateInternalError("Could not cast to ModelInput / SPWB_RESULT class");
+  if(x.getInputClass()=="spwbInput") {
+    try {
+      ModelInput& x_m = dynamic_cast<ModelInput&>(x);
+      SPWB_RESULT& SPWBres = dynamic_cast<SPWB_RESULT&>(WBres);
+      return(copySPWBResult_c(SPWBres, x_m));
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Could not cast to ModelInput / SPWB_RESULT class");
+    }
+  } else if(x.getInputClass()=="aspwbInput") {
+    try {
+      AgricultureModelInput& x_m = dynamic_cast<AgricultureModelInput&>(x);
+      AgricultureWB_RESULT& AgrWBres = dynamic_cast<AgricultureWB_RESULT&>(WBres);
+      return(copyAgricultureWBResult_c(AgrWBres, x_m));
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Could not cast to AgricultureModelInput / AgricultureWB_RESULT class");
+    }
+  } else {
+    throw medfate::MedfateInternalError("Wrong model input class");
   }
 }  
 void wb_day_inner_c(WB_RESULT& WBres, WBCommunicationStructures& WBcomm, WaterBalanceModelInput& x, 
