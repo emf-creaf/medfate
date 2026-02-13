@@ -19,6 +19,10 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, 
     .Call(`_medfate_aspwb_day`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
+aspwb_day_c <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_aspwb_day_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+}
+
 .defineASPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
     .Call(`_medfate_defineASPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
@@ -2243,6 +2247,12 @@ hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil,
 #' @keywords internal
 hydrology_waterInputs <- function(x, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, modifyInput = TRUE) {
     .Call(`_medfate_waterInputs`, x, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, modifyInput)
+}
+
+#' @name hydrology_verticalInputs
+#' @keywords internal
+hydrology_agricultureWaterInputs <- function(x, prec, tday, rad, elevation, LgroundSWR, modifyInput = TRUE) {
+    .Call(`_medfate_agricultureWaterInputs`, x, prec, tday, rad, elevation, LgroundSWR, modifyInput)
 }
 
 #' Soil water balance

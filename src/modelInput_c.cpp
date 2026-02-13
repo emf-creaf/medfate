@@ -51,7 +51,6 @@ AgricultureModelInput::AgricultureModelInput(Rcpp::List x) : WaterBalanceModelIn
 }
 void AgricultureModelInput::copyStateToList(Rcpp::List x) {
   WaterBalanceModelInput::copyStateToList(x);
-  
 }
 
 ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){

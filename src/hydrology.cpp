@@ -271,6 +271,30 @@ NumericVector waterInputs(List x,
 }
 
 
+//' @name hydrology_verticalInputs
+//' @keywords internal
+// [[Rcpp::export("hydrology_agricultureWaterInputs")]]
+NumericVector agricultureWaterInputs(List x, 
+                                     double prec, double tday, double rad, double elevation,
+                                     double LgroundSWR, 
+                                     bool modifyInput = true) {
+  
+  WaterInputs_COMM waterInputs;
+  AgricultureModelInput x_c = AgricultureModelInput(x);
+  agricultureWaterInputs_c(waterInputs, x_c,
+                           prec, tday, rad, elevation,
+                           LgroundSWR, 
+                           modifyInput);
+  x["snowpack"] = x_c.snowpack;
+  
+  NumericVector WI = NumericVector::create(_["Rain"] = waterInputs.rain, _["Snow"] = waterInputs.snow,
+                                           _["Interception"] = waterInputs.interception,
+                                           _["NetRain"] = waterInputs.netrain, 
+                                           _["Snowmelt"] = waterInputs.melt);
+  return(WI);
+}
+
+
 
 
 // TO BE DELETED WHEN TRANSITION TO C++ IS COMPLETE

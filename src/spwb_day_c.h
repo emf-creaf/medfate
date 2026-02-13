@@ -22,6 +22,14 @@ struct WB_RESULT : ABSTRACTMODEL_RESULT {
 };
 Rcpp::List copyWBResult_c(WB_RESULT& WBres, WaterBalanceModelInput& x);
 
+struct AgricultureWB_RESULT: WB_RESULT {
+  SoilWaterBalance_RESULT SWBres;
+  StandWB_RESULT WaterBalance;
+  AgricultureWB_RESULT() : WB_RESULT(0) {}
+  AgricultureWB_RESULT(size_t nlayers) : WB_RESULT(nlayers) {}
+};
+Rcpp::List copyAgricultureWBResult_c(AgricultureWB_RESULT& AgrWBres, AgricultureModelInput& x);
+
 struct SPWB_RESULT : WB_RESULT {
   Stand_RESULT Stand;
   StandWB_RESULT WaterBalance;
@@ -48,6 +56,18 @@ struct AdvancedSPWB_RESULT : SPWB_RESULT {
   AdvancedSPWB_RESULT(AdvancedTranspiration_RESULT& ATresIN) : SPWB_RESULT(ATresIN.nlayers), ATres(ATresIN) {}
 };
 Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelInput& x);
+
+struct AgricultureWB_COMM {
+  WaterInputs_COMM waterInputs;
+  SoilWaterBalance_COMM SWBcomm;
+  AgricultureWB_COMM(SoilWaterBalance_COMM& SWBcommIn) : SWBcomm(SWBcommIn) {}
+};
+
+void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, AgricultureModelInput& x, 
+                const WeatherInputVector& meteovec, 
+                const double elevation, const double slope, const double aspect,
+                const double runon, 
+                const std::vector<double>& lateralFlows, const double waterTableDepth);
 
 struct BasicSPWB_COMM {
   WaterInputs_COMM waterInputs;
@@ -86,6 +106,7 @@ struct WBCommunicationStructures {
   SoilWaterBalance_COMM SWBcomm;
   BasicTranspiration_COMM BTcomm;
   AdvancedTranspiration_COMM ATcomm;
+  AgricultureWB_COMM AgrWBcomm;
   BasicSPWB_COMM BSPWBcomm;
   AdvancedSPWB_COMM ASPWBcomm;
 
@@ -93,6 +114,7 @@ struct WBCommunicationStructures {
     SWBcomm(nlayers),
     BTcomm(numCohorts, ncanlayers, nlayers),
     ATcomm(numCohorts, nlayers, ncanlayers, ntimesteps),
+    AgrWBcomm(SWBcomm),
     BSPWBcomm(SWBcomm, BTcomm),
     ASPWBcomm(SWBcomm, ATcomm)
      {} 

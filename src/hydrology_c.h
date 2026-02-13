@@ -249,6 +249,11 @@ void waterInputs_c(WaterInputs_COMM& waterInputs,
                    double pet, double tday, double rad, double elevation,
                    double Cm, double LgroundPAR, double LgroundSWR, 
                    bool modifyInput);
+void agricultureWaterInputs_c(WaterInputs_COMM& waterInputs,
+                              AgricultureModelInput& x,
+                              double prec, double tday, double rad, double elevation,
+                              double LgroundSWR, 
+                              bool modifyInput);
 double microporeImbibitionRate_c(double theta_b, double theta_micro, 
                                  double D_theta_b, double D_theta_micro,
                                  double S_macro);

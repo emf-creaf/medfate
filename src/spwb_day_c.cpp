@@ -317,26 +317,6 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   }
 }
 
-Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x) {
-  Rcpp::List l = Rcpp::List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
-                                    _["topography"] = copyTopo_c(BSPWBres.topo),
-                                    _["weather"] = copyWeather_c(BSPWBres.meteovec, x.control.transpirationMode),
-                                    _["WaterBalance"] = copyWaterBalanceResult_c(BSPWBres.WaterBalance));
-  if(x.control.results.soilResults) {
-    l.push_back(copySoilResult_c(BSPWBres.Soil), "Soil");
-  }
-  if(x.control.results.standResults) {
-    l.push_back(copyStandResult_c(BSPWBres.Stand), "Stand");
-  }
-  if(x.control.results.plantResults) {
-    l.push_back(copyPlantBasicTranspirationResult_c(BSPWBres.BTres.plants, x), "Plants");
-  }
-  if(x.control.results.fireHazardResults) {
-    l.push_back(copyFCCSResult_c(BSPWBres.fccs), "FireHazard");
-  }
-  l.attr("class") = CharacterVector::create("spwb_day","list");
-  return(l);
-}
 
 
 // Soil water balance with advanced hydraulic model
@@ -634,6 +614,167 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
     ASPWBres.Soil.HerbTranspiration[l] = EherbVec[l];
   }
 }
+void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, AgricultureModelInput& x, 
+                const WeatherInputVector& meteovec, 
+                const double elevation, const double slope, const double aspect,
+                const double runon, 
+                const std::vector<double>& lateralFlows, const double waterTableDepth) {
+  
+  //Retrieve communication structures
+  SoilWaterBalance_COMM& SWBcomm = AgrWBcomm.SWBcomm;
+  SoilWaterBalance_RESULT& SWBres = AgrWBres.SWBres;
+  
+  
+  //Meteo input
+  double pet = meteovec.pet;
+  double tday = meteovec.tday;
+  double prec = meteovec.prec;
+  double rad = meteovec.rad;
+  double rainfallIntensity = meteovec.rint;
+  AgrWBres.meteovec = meteovec; //store as result
+  
+  //Store topography for output
+  AgrWBres.topo.elevation = elevation;
+  AgrWBres.topo.slope = slope;
+  AgrWBres.topo.aspect = aspect;
+  
+  //Store weather for output
+  AgrWBres.meteovec.pet = pet;
+  AgrWBres.meteovec.tday = tday;
+  AgrWBres.meteovec.prec = prec;
+  AgrWBres.meteovec.rad = rad;
+  AgrWBres.meteovec.rint = rainfallIntensity;
+  
+  double crop_factor = x.crop_factor;
+  
+  int nlayers = x.soil.getNlayers();
+  
+  // Assume SWR is reduced with crop factor
+  double LgroundSWR = 100.0 * (1.0 - crop_factor);
+  // Rcpp::Rcout << crop_factor << " " << LgroundSWR << "\n";
+  
+  //Snow pack dynamics and hydrology input (update snowpack)
+  agricultureWaterInputs_c(AgrWBcomm.waterInputs, x,
+                           prec, tday, rad, elevation,
+                           LgroundSWR,
+                           true);
+  double RainfallInput = AgrWBcomm.waterInputs.netrain;
+  double Snowmelt = AgrWBcomm.waterInputs.melt;  
+  
+  double snowpack = x.snowpack;
+  //Evaporation from bare soil (if there is no snow), do not update soil yet
+  double Esoil = soilEvaporation_c(x.soil, snowpack, pet, LgroundSWR, false);
+  
+  // Transpiration is the product of PET and CROP FACTOR. HOWEVER, it is reduced with 
+  double transp_max = pet*crop_factor; 
+  //Calculate current soil water potential for transpiration
+  std::vector<double> lrd(nlayers,0.0);
+  ldrRS_one_c(lrd, 50, 500, medfate::NA_DOUBLE, x.soil.getWidths());
+  for(int l=0;l<nlayers;l++) {
+    AgrWBres.Soil.PlantExtraction[l] = lrd[l] * transp_max * exp(-0.6931472*pow(std::abs(x.soil.getPsi(l)/(-2.0)),3.0)); //Reduce transpiration when soil is dry 
+    // Rcpp::Rcout << " layer "<< l<< ": " << lrd[l] << " " << AgrWBres.Soil.PlantExtraction[l] << "\n";
+  }
+  
+  //Define source/sink with soil evaporation, herb transpiration and woody plant transpiration
+  std::vector<double> sourceSinkVec(nlayers, 0.0);
+  for(int l=0;l<nlayers;l++) {
+    sourceSinkVec[l] -= AgrWBres.Soil.PlantExtraction[l];
+    if(l ==0) sourceSinkVec[l] -= Esoil;
+  }
+  
+  //Determine water flows, returning deep drainage
+  double DeepDrainage = 0.0;
+  double Infiltration = 0.0;
+  double Runoff = 0.0;
+  double InfiltrationExcess = 0.0;
+  double SaturationExcess = 0.0;
+  double CapillarityRise = 0.0;
+  if(x.control.soilDomains != "none") {
+    soilWaterBalance_inner_c(SWBres, SWBcomm, x.soil,
+                             RainfallInput, rainfallIntensity, Snowmelt, sourceSinkVec,
+                             runon, lateralFlows, waterTableDepth,
+                             x.control.commonWB.infiltrationMode, x.control.commonWB.infiltrationCorrection,
+                             x.control.soilDomains,
+                             x.control.advancedWB.ndailysteps, x.control.commonWB.max_nsubsteps_soil);
+    
+    DeepDrainage = SWBres.deepDrainage_mm;
+    Infiltration = SWBres.infiltration_mm;
+    Runoff = SWBres.runoff_mm;
+    InfiltrationExcess = SWBres.infiltrationExcess_mm;
+    SaturationExcess = SWBres.saturationExcess_mm;
+    CapillarityRise = SWBres.capillarityRise_mm;
+  }
+  
+  // Arrange output
+  AgrWBres.WaterBalance.PET = pet;
+  AgrWBres.WaterBalance.Rain = AgrWBcomm.waterInputs.rain;
+  AgrWBres.WaterBalance.Snow = AgrWBcomm.waterInputs.snow;
+  AgrWBres.WaterBalance.NetRain = AgrWBcomm.waterInputs.netrain;
+  AgrWBres.WaterBalance.Snowmelt = Snowmelt;
+  AgrWBres.WaterBalance.Runon = runon;
+  AgrWBres.WaterBalance.Infiltration = Infiltration;
+  AgrWBres.WaterBalance.InfiltrationExcess = InfiltrationExcess;
+  AgrWBres.WaterBalance.SaturationExcess = SaturationExcess;
+  AgrWBres.WaterBalance.Runoff = Runoff;
+  AgrWBres.WaterBalance.DeepDrainage = DeepDrainage;
+  AgrWBres.WaterBalance.CapillarityRise = CapillarityRise;
+  AgrWBres.WaterBalance.SoilEvaporation = Esoil;
+  AgrWBres.WaterBalance.HerbTranspiration = 0.0;
+  AgrWBres.WaterBalance.PlantExtraction = std::accumulate(AgrWBres.Soil.PlantExtraction.begin(), AgrWBres.Soil.PlantExtraction.end(), 0.0);
+  AgrWBres.WaterBalance.Transpiration = std::accumulate(AgrWBres.Soil.PlantExtraction.begin(), AgrWBres.Soil.PlantExtraction.end(), 0.0);
+  AgrWBres.WaterBalance.HydraulicRedistribution =0.0;
+  
+  //Copy final soil state to output
+  for(int l=0;l<nlayers;l++) {
+    AgrWBres.Soil.Psi[l] = x.soil.getPsi(l);
+  }
+}
+
+Rcpp::List copyAgricultureWBResult_c(AgricultureWB_RESULT& AgrWBres, AgricultureModelInput& x) {
+  NumericVector WaterBalance = NumericVector::create(_["PET"] = AgrWBres.WaterBalance.PET, 
+                                                     _["Rain"] = AgrWBres.WaterBalance.Rain, 
+                                                     _["Snow"] = AgrWBres.WaterBalance.Snow, 
+                                                     _["NetRain"] = AgrWBres.WaterBalance.NetRain, 
+                                                     _["Snowmelt"] = AgrWBres.WaterBalance.Snowmelt,
+                                                     _["Runon"] = AgrWBres.WaterBalance.Runon, 
+                                                     _["Infiltration"] = AgrWBres.WaterBalance.Infiltration, 
+                                                     _["InfiltrationExcess"] = AgrWBres.WaterBalance.InfiltrationExcess, 
+                                                     _["SaturationExcess"] = AgrWBres.WaterBalance.SaturationExcess, 
+                                                     _["Runoff"] = AgrWBres.WaterBalance.Runoff, 
+                                                     _["DeepDrainage"] = AgrWBres.WaterBalance.DeepDrainage, 
+                                                     _["CapillarityRise"] = AgrWBres.WaterBalance.CapillarityRise,
+                                                     _["SoilEvaporation"] = AgrWBres.WaterBalance.SoilEvaporation, 
+                                                     _["Transpiration"] = AgrWBres.WaterBalance.Transpiration);
+  Rcpp::List l = Rcpp::List::create(_["WaterBalance"] = WaterBalance);
+  if(x.control.results.soilResults) {
+    DataFrame soilDF = DataFrame::create(_["Psi"] = Rcpp::wrap(AgrWBres.Soil.Psi),
+                                         _["PlantExtraction"] = Rcpp::wrap(AgrWBres.Soil.PlantExtraction));
+    l.push_back(soilDF, "Soil");
+  }
+  l.attr("class") = CharacterVector::create("aspwb_day","list");
+  return(l);
+}
+
+Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x) {
+  Rcpp::List l = Rcpp::List::create(_["cohorts"] = copyCohorts_c(x.cohorts),
+                                    _["topography"] = copyTopo_c(BSPWBres.topo),
+                                    _["weather"] = copyWeather_c(BSPWBres.meteovec, x.control.transpirationMode),
+                                    _["WaterBalance"] = copyWaterBalanceResult_c(BSPWBres.WaterBalance));
+  if(x.control.results.soilResults) {
+    l.push_back(copySoilResult_c(BSPWBres.Soil), "Soil");
+  }
+  if(x.control.results.standResults) {
+    l.push_back(copyStandResult_c(BSPWBres.Stand), "Stand");
+  }
+  if(x.control.results.plantResults) {
+    l.push_back(copyPlantBasicTranspirationResult_c(BSPWBres.BTres.plants, x), "Plants");
+  }
+  if(x.control.results.fireHazardResults) {
+    l.push_back(copyFCCSResult_c(BSPWBres.fccs), "FireHazard");
+  }
+  l.attr("class") = CharacterVector::create("spwb_day","list");
+  return(l);
+}
 
 Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelInput& x) {
   
@@ -826,5 +967,19 @@ void wb_day_inner_c(WB_RESULT& WBres, WBCommunicationStructures& WBcomm, WaterBa
     } catch (const std::bad_cast&)  {
       throw medfate::MedfateInternalError("Could not cast to ModelInput class");
     }
+  } else if(x.getInputClass() == "aspwbInput") {
+    try {
+      AgricultureModelInput& x_m = dynamic_cast<AgricultureModelInput&>(x);
+      auto& AgrWBres = dynamic_cast<AgricultureWB_RESULT&>(WBres);
+      aspwbDay_c(AgrWBres, WBcomm.AgrWBcomm, x_m, 
+                 meteovec, 
+                 elevation, slope, aspect,
+                 runon, 
+                 lateralFlows, waterTableDepth);
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to agriculture but result object is not agriculture");
+    }
+  } else {
+    throw medfate::MedfateInternalError("Wrong water balance model input class");
   }
 }

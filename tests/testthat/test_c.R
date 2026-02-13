@@ -26,7 +26,14 @@ control_sureau$subdailyResults <- TRUE
 #Initialize soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("spwb_day can be run after reorganizing code",{
+test_that("aspwb_day and spwb_day can be run after reorganizing code",{
+  xa <- aspwbInput(0.75, defaultControl(), examplesoil)
+  W_ini <- rlang::duplicate(xa$soil$W)
+  expect_s3_class(aspwb_day_c(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE), "aspwb_day")
+  expect_equal(xa$soil$W, W_ini) # Check that W has not changed
+  expect_s3_class(aspwb_day_c(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = TRUE), "aspwb_day")
+  expect_false(all(xa$soil$W == W_ini)) # Check that W has changed
+  
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   W_ini <- rlang::duplicate(x1$soil$W)
   expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
@@ -72,6 +79,13 @@ test_that("spwb_day can be run after reorganizing code",{
   expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
   expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
   
+})
+
+test_that("aspwb_day and spwb_day_c return the same result", {
+  xa <- aspwbInput(0.75, defaultControl(), examplesoil)
+  sda <- aspwb_day(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE) 
+  sda_c <- aspwb_day_c(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE) 
+  expect_equal(sda, sda_c) # Check for same output
 })
 
 test_that("spwb_day and spwb_day_c return the same result with granier",{

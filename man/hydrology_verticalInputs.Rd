@@ -3,6 +3,7 @@
 \name{hydrology_verticalInputs}
 \alias{hydrology_verticalInputs}
 \alias{hydrology_waterInputs}
+\alias{hydrology_agricultureWaterInputs}
 \alias{hydrology_snowMelt}
 \title{Water vertical inputs}
 \usage{
@@ -16,6 +17,16 @@ hydrology_waterInputs(
   elevation,
   Cm,
   LgroundPAR,
+  LgroundSWR,
+  modifyInput = TRUE
+)
+
+hydrology_agricultureWaterInputs(
+  x,
+  prec,
+  tday,
+  rad,
+  elevation,
   LgroundSWR,
   modifyInput = TRUE
 )

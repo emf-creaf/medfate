@@ -23,6 +23,11 @@ NumericVector waterInputs(List x,
                           double pet, double tday, double rad, double elevation,
                           double Cm, double LgroundPAR, double LgroundSWR, 
                           bool modifyInput = true);
+NumericVector agricultureWaterInputs(List x, 
+                                     double prec, double tday, double rad, double elevation,
+                                     double LgroundSWR, 
+                                     bool modifyInput = true);
+
 NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,

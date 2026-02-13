@@ -1075,11 +1075,11 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
     // Calls simulation
     std::unique_ptr<WaterBalanceModelInput> x_wb = std::make_unique<ModelInput>(x_c);
     wb_day_inner_c(BSPWBres, WBcomm, *x_wb, 
-               as<std::string>(date[0]),
-               meteovec_c, 
-               latitude, elevation, slope, aspect,
-               runon, 
-               lateralFlows_c, waterTableDepth);
+                   as<std::string>(date[0]),
+                   meteovec_c, 
+                   latitude, elevation, slope, aspect,
+                   runon, 
+                   lateralFlows_c, waterTableDepth);
     //Copies result
     l = copySPWBResult_c(BSPWBres, x_c);
     //Modifies input list, if required  

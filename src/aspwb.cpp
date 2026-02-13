@@ -10,50 +10,12 @@
 #include "communication_structures.h"
 #include "hydrology.h"
 #include "hydrology_c.h"
+#include "modelInput_c.h"
+#include "spwb_day_c.h"
 #include "meteoland/pet_c.hpp"
 #include "meteoland/radiation_c.hpp"
 using namespace Rcpp;
 using namespace meteoland;
-
-NumericVector agricultureWaterInputs(List x, 
-                                     double prec, double tday, double rad, double elevation,
-                                     double LgroundSWR, 
-                                     bool modifyInput = true) {
-
-  double swe = x["snowpack"];
-  
-  //Snow pack dynamics
-  double snow = 0.0, rain=0.0;
-  double melt = 0.0;
-  //Turn rain into snow and add it into the snow pack
-  if(tday < 0.0) { 
-    snow = prec; 
-    swe = swe + snow;
-  } else {
-    rain = prec;
-  }
-  //Apply snow melting
-  if(swe > 0.0) {
-    melt = std::min(swe, snowMelt_c(tday, rad, LgroundSWR, elevation));
-    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-    swe = swe-melt;
-  }
-  
-  //Hydrologic input
-  double NetRain = 0.0, Interception = 0.0;
-  if(rain>0.0)  {
-    NetRain = rain - Interception; 
-  }
-  if(modifyInput) {
-    x["snowpack"] = swe;
-  }
-  NumericVector WI = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
-                                           _["Interception"] = Interception,
-                                           _["NetRain"] = NetRain, 
-                                           _["Snowmelt"] = melt);
-  return(WI);
-}
-
 
 //' @rdname aspwb
 //' @keywords internal
@@ -255,6 +217,45 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
                          modifyInput));
 }
 
+
+// [[Rcpp::export("aspwb_day_c")]]
+List aspwb_day_c(List x, CharacterVector date, NumericVector meteovec, 
+                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                 double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                 bool modifyInput = true) {
+  
+  WeatherInputVector meteovec_c(meteovec);
+  AgricultureModelInput x_c(x);  
+  int nlayers = x_c.soil.getNlayers();
+  
+  // Prepare lateral flows
+  std::vector<double> lateralFlows_c(nlayers, 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
+
+  //Initialises a result
+  AgricultureWB_RESULT AgrWBres(nlayers);
+  SoilWaterBalance_COMM SWBcomm(nlayers);
+  WBCommunicationStructures WBcomm(0, nlayers, 0, 0);
+  
+  // Calls simulation
+  wb_day_inner_c(AgrWBres, WBcomm, x_c, 
+                 as<std::string>(date[0]),
+                 meteovec_c, 
+                 latitude, elevation, slope, aspect,
+                 runon, 
+                 lateralFlows_c, waterTableDepth);
+  //Copies result
+  List l = copyAgricultureWBResult_c(AgrWBres, x_c);
+  
+  if(modifyInput) x_c.copyStateToList(x);
+  return(l);
+}
 
 
 

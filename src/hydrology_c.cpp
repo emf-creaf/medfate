@@ -274,6 +274,46 @@ void waterInputs_c(WaterInputs_COMM& waterInputs,
   }
 }
 
+void agricultureWaterInputs_c(WaterInputs_COMM& waterInputs,
+                              AgricultureModelInput& x,
+                              double prec, double tday, double rad, double elevation,
+                              double LgroundSWR, 
+                              bool modifyInput = true) {
+  
+  double swe = x.snowpack; //snow pack
+  
+  //Snow pack dynamics
+  double snow = 0.0, rain=0.0;
+  double melt = 0.0;
+  //Turn rain into snow and add it into the snow pack
+  if(tday < 0.0) { 
+    snow = prec; 
+    swe = swe + snow;
+  } else {
+    rain = prec;
+  }
+  //Apply snow melting
+  if(swe > 0.0) {
+    melt = std::min(swe, snowMelt_c(tday, rad, LgroundSWR, elevation));
+    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
+    swe = swe-melt;
+  }
+  
+  //Hydrologic input
+  double NetRain = 0.0, Interception = 0.0;
+  if(rain>0.0)  {
+    NetRain = rain - Interception; 
+  }
+  waterInputs.rain = rain;
+  waterInputs.snow = snow;
+  waterInputs.interception = Interception;
+  waterInputs.netrain = NetRain;
+  waterInputs.melt = melt;
+  if(modifyInput) {
+    x.snowpack = swe;
+  }
+}
+
 //Imbitition from macropores to micropores following Larsbo et al. 2005, eq. 6-7
 //Diffusion equation with gradients in water content as driving force
 //Returns m3/m3/s
