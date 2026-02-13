@@ -27,6 +27,7 @@ struct NetworkSteadyState {
   }
 };
 struct SupplyFunction {
+  int nsteps;
   std::vector<double> E;
   std::vector<double> dEdP;
   arma::mat ERhizo;
@@ -35,6 +36,7 @@ struct SupplyFunction {
   std::vector<double> psiStem;
   std::vector<double> psiLeaf;
   SupplyFunction(int nlayers, int maxNsteps) {
+    nsteps = 0;
     E = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
     dEdP = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
     ERhizo = arma::mat(maxNsteps,nlayers);
@@ -42,9 +44,6 @@ struct SupplyFunction {
     psiRoot = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
     psiStem = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
     psiLeaf = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
-  }
-  SupplyFunction() {
-    SupplyFunction(0,0);
   }
 };
 
@@ -69,7 +68,9 @@ struct SperryNetwork {
   double PLCstem;
   double PLCleaf;
   
-  SupplyFunction supply;
+  std::unique_ptr<SupplyFunction> supply;
+  
+  
 };
 
 struct ProfitMaximization {
@@ -90,8 +91,7 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
                                const ControlParameters& control,
                                double sapFluidityDay = 1.0);
 
-void fillSupplyFunctionNetwork_c(SperryNetwork&  hydraulicNetwork,
-                                 double minFlow = 0.0, double pCrit = 0.001);
+SupplyFunction buildSupplyFunctionNetwork_c(SperryNetwork& hydraulicNetwork, double minFlow = 0.0, double pCrit = 0.001);
 
 void innerSperry_c(ModelInput& x,
                    std::vector<SperryNetwork>& networks, 

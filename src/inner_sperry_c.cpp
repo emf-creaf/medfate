@@ -220,22 +220,14 @@ void E2psiNetwork_c(NetworkSteadyState& nss, SperryNetwork& hydraulicNetwork,
   if(!std::isnan(nss.psiRootCrown)) E2psiAboveground_c(nss, hydraulicNetwork);
 } 
 
-void fillSupplyFunctionNetwork_c(SperryNetwork& hydraulicNetwork, double minFlow, double pCrit) {
+SupplyFunction buildSupplyFunctionNetwork_c(SperryNetwork& hydraulicNetwork, double minFlow, double pCrit) {
 
   int maxNsteps  = hydraulicNetwork.sperryParams.maxNsteps;
   double ETol = hydraulicNetwork.sperryParams.ETol;
   std::vector<double>& psiSoil = hydraulicNetwork.psisoil;
   int nlayers = psiSoil.size();
   
-  SupplyFunction& SF = hydraulicNetwork.supply;
-  //Initialize vectors
-  SF.E = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
-  SF.dEdP = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
-  SF.ERhizo = arma::mat(maxNsteps,nlayers);
-  SF.psiRhizo = arma::mat(maxNsteps,nlayers);
-  SF.psiRoot = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
-  SF.psiStem = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
-  SF.psiLeaf = std::vector<double>(maxNsteps, medfate::NA_DOUBLE);
+  SupplyFunction SF = SupplyFunction(nlayers, maxNsteps);
   
   NetworkSteadyState sol(nlayers, minFlow);
   std::vector<double> psiIni = {0.0};
@@ -258,7 +250,7 @@ void fillSupplyFunctionNetwork_c(SperryNetwork& hydraulicNetwork, double minFlow
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - SF.psiLeaf[0]);
   // Rcpp::Rcout<< " maxdEdp " << maxdEdp <<"\n";
 
-  int nsteps = 1;
+  SF.nsteps = 1;
   double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // Rcpp::Rcout<< " step: "<< i;
@@ -287,23 +279,16 @@ void fillSupplyFunctionNetwork_c(SperryNetwork& hydraulicNetwork, double minFlow
       if(SF.E[i]>0.1) dE = std::min(0.05,SF.dEdP[i-1]*0.05);
       else if(SF.E[i]>0.05) dE = std::min(0.01,SF.dEdP[i-1]*0.05);
       else if(SF.E[i]>0.01) dE = std::min(0.005,SF.dEdP[i-1]*0.05);
-      nsteps++;
+      SF.nsteps++;
       if(SF.dEdP[i-1]<(pCrit*maxdEdp)) break;
     } else {
       break;
     }
   }
   //Calculate last dEdP
-  if(nsteps>1) SF.dEdP[nsteps-1] = (SF.E[nsteps-1]-SF.E[nsteps-2])/std::abs(SF.psiLeaf[nsteps-1] - SF.psiLeaf[nsteps-2]);
+  if(SF.nsteps>1) SF.dEdP[SF.nsteps-1] = (SF.E[SF.nsteps-1]-SF.E[SF.nsteps-2])/std::abs(SF.psiLeaf[SF.nsteps-1] - SF.psiLeaf[SF.nsteps-2]);
   
-  //Subset values to nsteps
-  SF.E = std::vector<double>(SF.E.begin(), SF.E.begin() + nsteps);
-  SF.dEdP = std::vector<double>(SF.dEdP.begin(), SF.dEdP.begin() + nsteps);
-  SF.psiRoot = std::vector<double>(SF.psiRoot.begin(), SF.psiRoot.begin() + nsteps);
-  SF.psiStem = std::vector<double>(SF.psiStem.begin(), SF.psiStem.begin() + nsteps);
-  SF.psiLeaf = std::vector<double>(SF.psiLeaf.begin(), SF.psiLeaf.begin() + nsteps);
-  SF.ERhizo = SF.ERhizo.submat(0,0, nsteps-1, nlayers -1);
-  SF.psiRhizo = SF.psiRhizo.submat(0,0, nsteps-1, nlayers -1);
+  return(SF);
 }
 
 void initSperryNetwork_inner_c(SperryNetwork& network,
@@ -362,9 +347,6 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
   //     " krootmax " << network.krootmax[l] << " krhizomax "<< network.krhizomax[l] <<
   //       " alpha " << network.alphasoil[l] << " n "<< network.nsoil[l] << "\n";
   // }
-  
-  // Calculates supply function
-  fillSupplyFunctionNetwork_c(network, 0.0, 0.001); 
 }
 
 
@@ -375,7 +357,7 @@ void profitMaximization2_c(ProfitMaximization& PM,
                            double leafWidth, double refLeafArea,
                            double Gswmin, double Gswmax) {
   
-  int nsteps = supply.E.size();
+  int nsteps = supply.nsteps;
   
   double maxdEdp = 0.0, mindEdp = 99999999.0;
   
@@ -588,7 +570,7 @@ void innerSperry_c(ModelInput& x,
   // List layerConnectedPools = input["layerConnectedPools"];
   
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-    SupplyFunction& supply = networks[c].supply;
+    SupplyFunction& supply = *networks[c].supply;
     if((x.above.LAI_expanded[c]>0.0) && (x.internalWater.LeafPLC[c] < 0.999)) { //Process transpiration and photosynthesis only if there are some leaves
       if(supply.E.size()>0) {
         double TPhase_gmin = x.control.advancedWB.TPhase_gmin;

@@ -841,6 +841,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
                                   psic, VG_nc, VG_alphac,
                                   x.control,
                                   sapFluidityDay);
+        sperryNetworks[c].supply = std::make_unique<SupplyFunction>(buildSupplyFunctionNetwork_c(sperryNetworks[c]));
       } else if(transpirationMode == "Sureau") {
         //Build networks (Sureau transpiration mode)
         initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
@@ -908,6 +909,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
                                   psic, VG_nc, VG_alphac,
                                   x.control,
                                   sapFluidityDay);
+        sperryNetworks[c].supply = std::make_unique<SupplyFunction>(buildSupplyFunctionNetwork_c(sperryNetworks[c]));
       } else if(transpirationMode == "Sureau") {
         initSureauNetwork_inner_c(sureauNetworks[c], c, LAIphe,
                                   x.internalWater,
