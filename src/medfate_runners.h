@@ -23,6 +23,7 @@ public:
                double runon = 0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL);
   ~WB_runner();
   List get_output();
+  void update_input(List x_list);
 };
 
 class WB_multiple_runner {
@@ -39,6 +40,7 @@ public:
   ~WB_multiple_runner();
   void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
   List get_output_at(int i);
+  void update_input_at(int i, List x_list);
 };
 
 
@@ -56,6 +58,7 @@ public:
                double runon = 0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL);
   ~GROWTH_runner();
   List get_output();
+  void update_input(List x_list);
 };
 
 class GROWTH_multiple_runner {
@@ -72,5 +75,6 @@ public:
   ~GROWTH_multiple_runner();
   void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
   List get_output_at(int i);
+  void update_input_at(int i, List x_list);
 };
 #endif

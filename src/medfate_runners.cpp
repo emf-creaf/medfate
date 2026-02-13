@@ -70,6 +70,9 @@ void WB_runner::run_day(Rcpp::CharacterVector date, Rcpp::NumericVector meteovec
 Rcpp::List WB_runner::get_output() {
   return(copyWBResult_c(*WBres, *x));
 }
+void WB_runner::update_input(List x_list) {
+  x->copyStateToList(x_list);
+}
 
 //  Constructor for SPWB_multiple_runner
 WB_multiple_runner::WB_multiple_runner(List wbInput_vec, 
@@ -167,7 +170,9 @@ void WB_multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec
 Rcpp::List WB_multiple_runner::get_output_at(int i) {
   return(copyWBResult_c(*WBres_vec[i-1], *x_vec[i-1]));
 }
-
+void WB_multiple_runner::update_input_at(int i, List x_list) {
+  x_vec[i-1]->copyStateToList(x_list);
+}
 
 
 
@@ -226,6 +231,9 @@ void GROWTH_runner::run_day(Rcpp::CharacterVector date, Rcpp::NumericVector mete
 
 Rcpp::List GROWTH_runner::get_output() {
   return(copyGROWTHResult_c(*GROWTHres, *x));
+}
+void GROWTH_runner::update_input(List x_list) {
+  x->copyStateToList(x_list);
 }
 
 
@@ -313,6 +321,9 @@ void GROWTH_multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List mete
 Rcpp::List GROWTH_multiple_runner::get_output_at(int i) {
   return(copyGROWTHResult_c(*GROWTHres_vec[i-1], *x_vec[i-1]));
 }
+void GROWTH_multiple_runner::update_input_at(int i, List x_list) {
+  x_vec[i-1]->copyStateToList(x_list);
+}
 
 /* 
  * CREATE RCPP MODULES 
@@ -323,6 +334,7 @@ RCPP_MODULE(mod_wb) {
   .constructor<Rcpp::List, double, double, double, double>()
   .method( "run_day", &WB_runner::run_day )
   .method( "get_output", &WB_runner::get_output)
+  .method( "update_input", &WB_runner::update_input)
   ;
 }
 RCPP_MODULE(mod_multiple_wb) {
@@ -330,6 +342,7 @@ RCPP_MODULE(mod_multiple_wb) {
   .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector>()
   .method( "run_day", &WB_multiple_runner::run_day )
   .method( "get_output_at", &WB_multiple_runner::get_output_at)
+  .method( "update_input_at", &WB_multiple_runner::update_input_at)
   ;
 }
 RCPP_MODULE(mod_growth) {
@@ -337,6 +350,7 @@ RCPP_MODULE(mod_growth) {
   .constructor<Rcpp::List, double, double, double, double>()
   .method( "run_day", &GROWTH_runner::run_day )
   .method( "get_output", &GROWTH_runner::get_output)
+  .method( "update_input", &GROWTH_runner::update_input)
   ;
 }
 RCPP_MODULE(mod_multiple_growth) {
@@ -344,5 +358,6 @@ RCPP_MODULE(mod_multiple_growth) {
   .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector>()
   .method( "run_day", &GROWTH_multiple_runner::run_day )
   .method( "get_output_at", &GROWTH_multiple_runner::get_output_at)
+  .method( "update_input_at", &GROWTH_multiple_runner::update_input_at)
   ;
 }
