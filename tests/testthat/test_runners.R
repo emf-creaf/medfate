@@ -12,35 +12,35 @@ data(SpParamsMED)
 # Define soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("SPWB_runner initializes and runs correctly", {
+test_that("WB_runner initializes and runs correctly", {
   d <- 100
   meteovec <- unlist(examplemeteo[d,-1])
   date <- as.character(examplemeteo$dates[d])
 
   controlGranier <- defaultControl("Granier")
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
-  mfr1 <- new(SPWB_runner, x1, 41.82592, 100, 0, 0)
-  expect_s4_class(mfr1, "Rcpp_SPWB_runner")
+  mfr1 <- new(WB_runner, x1, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr1, "Rcpp_WB_runner")
   mfr1$run_day(date, meteovec, 0, NULL, NA)
   expect_s3_class(mfr1$get_output(), "spwb_day")
   
   controlSperry <- defaultControl("Sperry")
   x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSperry)
-  mfr2 <- new(SPWB_runner, x2, 41.82592, 100, 0, 0)
-  expect_s4_class(mfr2, "Rcpp_SPWB_runner")
+  mfr2 <- new(WB_runner, x2, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr2, "Rcpp_WB_runner")
   mfr2$run_day(date, meteovec, 0, NULL, NA)
   expect_s3_class(mfr2$get_output(), "spwb_day")
   
   controlSureau <- defaultControl("Sureau")
   x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
-  mfr3 <- new(SPWB_runner, x3, 41.82592, 100, 0, 0)
-  expect_s4_class(mfr3, "Rcpp_SPWB_runner")
+  mfr3 <- new(WB_runner, x3, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr3, "Rcpp_WB_runner")
   mfr3$run_day(date, meteovec, 0, NULL, NA)
   expect_s3_class(mfr3$get_output(), "spwb_day")
 })
 
-test_that("SPWB_multiple_runner initializes and runs correctly", {
-  n <- 100
+test_that("WB_multiple_runner initializes and runs correctly", {
+  n <- 1000
   d <- 100
   meteovec1 <- unlist(examplemeteo[d,-1])
   meteo_vec <- vector("list", n)
@@ -54,8 +54,8 @@ test_that("SPWB_multiple_runner initializes and runs correctly", {
   elevation_vec <- rep(100, n)
   slope_vec <- rep(0, n)
   aspect_vec <- rep(0, n)
-  mfmr <- new(SPWB_multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
-  expect_s4_class(mfmr, "Rcpp_SPWB_multiple_runner")
+  mfmr <- new(WB_multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+  expect_s4_class(mfmr, "Rcpp_WB_multiple_runner")
   date <- as.character(examplemeteo$dates[d])
   system.time(mfmr$run_day(date, meteo_vec, FALSE))
   expect_s3_class(mfmr$get_output_at(1), "spwb_day")
@@ -64,4 +64,31 @@ test_that("SPWB_multiple_runner initializes and runs correctly", {
   system.time(mfmr$run_day(date, meteo_vec, TRUE))
   expect_s3_class(mfmr$get_output_at(1), "spwb_day")
   expect_s3_class(mfmr$get_output_at(2), "spwb_day")
+})
+
+test_that("GROWTH_runner initializes and runs correctly", {
+  d <- 100
+  meteovec <- unlist(examplemeteo[d,-1])
+  date <- as.character(examplemeteo$dates[d])
+  
+  # controlGranier <- defaultControl("Granier")
+  # x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
+  # mfr1 <- new(GROWTH_runner, x1, 41.82592, 100, 0, 0)
+  # expect_s4_class(mfr1, "Rcpp_GROWTH_runner")
+  # mfr1$run_day(date, meteovec, 0, NULL, NA)
+  # expect_s3_class(mfr1$get_output(), "growth_day")
+  # 
+  # controlSperry <- defaultControl("Sperry")
+  # x2 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlSperry)
+  # mfr2 <- new(GROWTH_runner, x2, 41.82592, 100, 0, 0)
+  # expect_s4_class(mfr2, "Rcpp_GROWTH_runner")
+  # mfr2$run_day(date, meteovec, 0, NULL, NA)
+  # expect_s3_class(mfr2$get_output(), "growth_day")
+  # 
+  # controlSureau <- defaultControl("Sureau")
+  # x3 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
+  # mfr3 <- new(GROWTH_runner, x3, 41.82592, 100, 0, 0)
+  # expect_s4_class(mfr3, "Rcpp_GROWTH_runner")
+  # mfr3$run_day(date, meteovec, 0, NULL, NA)
+  # expect_s3_class(mfr3$get_output(), "growth_day")
 })

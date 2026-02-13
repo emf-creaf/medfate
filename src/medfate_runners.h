@@ -3,6 +3,7 @@
 #include "medfate_workers.h"
 #include "modelInput_c.h"
 #include "spwb_day_c.h"
+#include "growth_day_c.h"
 using namespace Rcpp;
 
 #ifndef MEDFATE_RUNNERS_H
@@ -40,4 +41,36 @@ public:
   List get_output_at(int i);
 };
 
+
+class GROWTH_runner {
+private:
+  std::unique_ptr<ModelInput> x;
+  double latitude;
+  double elevation, slope, aspect;
+  std::unique_ptr<GROWTH_RESULT> GROWTHres;
+  GROWTHCommunicationStructures GROWTHcomm;
+public:
+  GROWTH_runner(List x_list, 
+            double latitude, double elevation, double slope, double aspect);
+  void run_day(CharacterVector date, NumericVector meteovec, 
+               double runon = 0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL);
+  ~GROWTH_runner();
+  List get_output();
+};
+
+class GROWTH_multiple_runner {
+private:
+  int n;
+  std::vector<double> latitude_vec;
+  std::vector<std::unique_ptr<Topography>> topo_vec;
+  std::vector<std::unique_ptr<ModelInput>> x_vec;
+  std::vector<std::unique_ptr<GROWTH_RESULT>> GROWTHres_vec;
+  GROWTHCommunicationStructures GROWTHcomm;
+public:
+  GROWTH_multiple_runner(List x_vec, 
+                     NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
+  ~GROWTH_multiple_runner();
+  void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
+  List get_output_at(int i);
+};
 #endif

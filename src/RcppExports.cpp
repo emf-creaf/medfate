@@ -6373,6 +6373,8 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
 
 RcppExport SEXP _rcpp_module_boot_mod_wb();
 RcppExport SEXP _rcpp_module_boot_mod_multiple_wb();
+RcppExport SEXP _rcpp_module_boot_mod_growth();
+RcppExport SEXP _rcpp_module_boot_mod_multiple_growth();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_aspwbInput", (DL_FUNC) &_medfate_aspwbInput, 3},
@@ -6705,6 +6707,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_grow_ring", (DL_FUNC) &_medfate_grow_ring, 11},
     {"_rcpp_module_boot_mod_wb", (DL_FUNC) &_rcpp_module_boot_mod_wb, 0},
     {"_rcpp_module_boot_mod_multiple_wb", (DL_FUNC) &_rcpp_module_boot_mod_multiple_wb, 0},
+    {"_rcpp_module_boot_mod_growth", (DL_FUNC) &_rcpp_module_boot_mod_growth, 0},
+    {"_rcpp_module_boot_mod_multiple_growth", (DL_FUNC) &_rcpp_module_boot_mod_multiple_growth, 0},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };
