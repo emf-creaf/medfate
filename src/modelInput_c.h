@@ -347,18 +347,38 @@ struct InternalFCCS {
   std::vector<double> ActFMC;
 };
 
+
+class WaterBalanceModelInput : AbstractModelInput {
+public:
+  ControlParameters control;
+  Soil soil;
+  double snowpack;
+
+  WaterBalanceModelInput(Rcpp::List x);
+  void copyStateToList(Rcpp::List x);
+  std::string getInputClass() {return(input_class);}
+  virtual ~WaterBalanceModelInput() = default;
+  
+};
+
+class AgricultureModelInput : public WaterBalanceModelInput {
+public:
+  double crop_factor;
+  
+  AgricultureModelInput(Rcpp::List x);
+  void copyStateToList(Rcpp::List x);
+};
+
 /**
  * Internal C++ representation of the model input data structure
  */
-class ModelInput {
+class ModelInput : public WaterBalanceModelInput {
   public:
-    ControlParameters control;
-    Soil soil;
-    double snowpack;
+    
     CanopyParams canopy;
     double herbLAI;
     double herbLAImax;
-    
+
     Cohorts cohorts;
     Above above;
     Below below;
@@ -387,10 +407,8 @@ class ModelInput {
     InternalLAIDistribution internalLAIDistribution;
     InternalFCCS internalFCCS;
     
-    std::string version;
     
     ModelInput(Rcpp::List x);
-    
     void copyStateToList(Rcpp::List x);
 };
 

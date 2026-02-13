@@ -1,3 +1,4 @@
+#include "RcppArmadillo.h"
 #include <vector>
 #include <string>
 #include <limits>
@@ -10,6 +11,22 @@
 // PURE C++ STRUCTURES (Internal use)
 // ============================================================================
 
+class AbstractModelInput {
+public:
+  std::string input_class;
+  std::string version;
+  AbstractModelInput(Rcpp::List x);
+  
+  std::string getInputClass() {return(input_class);}
+  void checkInputClass(Rcpp::List x);
+  virtual ~AbstractModelInput() = default;
+};
+
+struct ABSTRACTMODEL_RESULT {
+  virtual ~ABSTRACTMODEL_RESULT() = default;
+};
+
+
 namespace medfate {
     constexpr double NA_DOUBLE = std::numeric_limits<double>::quiet_NaN();
     constexpr int NA_INTEGER = std::numeric_limits<int>::quiet_NaN();
@@ -17,9 +34,6 @@ namespace medfate {
     inline bool is_na(double val) {
         return std::isnan(val);
     }
-
-    template<typename T>
-    using Matrix = std::vector<std::vector<T>>;
     
     class MedfateInternalError : public std::exception {
     private:
@@ -30,6 +44,7 @@ namespace medfate {
         return message.c_str();
       }
     };      
+
     
     
 }

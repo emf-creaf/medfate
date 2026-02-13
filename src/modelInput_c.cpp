@@ -3,13 +3,23 @@
 #include <RcppArmadillo.h>
 
 
-/**
- * Implementation of ModelInput class
- *
- * Initialises parameters and internal variables from an R list.
- */
-ModelInput::ModelInput(Rcpp::List x) {
+AbstractModelInput::AbstractModelInput(Rcpp::List x) {
+  // Model input class
+  Rcpp::CharacterVector classVector = x.attr("class");
+  Rcpp::String s = classVector[0];
+  std::string input_classIn = s.get_cstring();
+  input_class = input_classIn;
+  
+  if(x.containsElementNamed("version")) version = Rcpp::as<std::string>(x["version"]);
+}
 
+void AbstractModelInput::checkInputClass(Rcpp::List x) {
+  Rcpp::CharacterVector classVector = x.attr("class");
+  Rcpp::String s = classVector[0];
+  std::string input_classIn = s.get_cstring();
+  if(input_class != input_classIn) throw medfate::MedfateInternalError("Trying to copy to a different model input class.");
+}
+WaterBalanceModelInput::WaterBalanceModelInput(Rcpp::List x) : AbstractModelInput(x) {
   //Control parameters
   Rcpp::List controlList = x["control"];
   control = ControlParameters(controlList);
@@ -17,8 +27,35 @@ ModelInput::ModelInput(Rcpp::List x) {
   //Soil
   Rcpp::String soilFunctions = controlList["soilFunctions"];
   soil = Soil(Rcpp::as<Rcpp::DataFrame>(x["soil"]), soilFunctions);
-
+  
   snowpack = Rcpp::as<double>(x["snowpack"]);
+}
+
+void WaterBalanceModelInput::copyStateToList(Rcpp::List x) {
+  checkInputClass(x);
+  //Soil
+  Rcpp::DataFrame soilDF = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  Rcpp::NumericVector W = soilDF["W"];
+  Rcpp::NumericVector Temp = soilDF["Temp"];
+  int nlayers = W.size();
+  for(int l=0;l<nlayers; l++) {
+    W[l] = soil.getW(l);
+    Temp[l] = soil.getTemp(l);
+  }
+  if(x.containsElementNamed("snowpack")) x["snowpack"] = snowpack;
+}
+
+AgricultureModelInput::AgricultureModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
+  
+  crop_factor = Rcpp::as<double>(x["crop_factor"]);
+}
+void AgricultureModelInput::copyStateToList(Rcpp::List x) {
+  WaterBalanceModelInput::copyStateToList(x);
+  
+}
+
+ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
+  
   herbLAI = Rcpp::as<double>(x["herbLAI"]);
   herbLAImax = Rcpp::as<double>(x["herbLAImax"]);
 
@@ -392,8 +429,6 @@ ModelInput::ModelInput(Rcpp::List x) {
       internalFCCS.ActFMC = Rcpp::as< std::vector<double> >(fccsDF["ActFMC"]);
     }
   }
-  
-  if(x.containsElementNamed("version")) version = Rcpp::as<std::string>(x["version"]);
 }
 
 // Creates a data frame with cohort information
@@ -408,19 +443,12 @@ Rcpp::DataFrame copyCohorts_c(const Cohorts& cohorts) {
 
 // Assumes that x was the original list from which the struct was generated
 void ModelInput::copyStateToList(Rcpp::List x) {
-  //Soil
-  Rcpp::DataFrame soilDF = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  Rcpp::NumericVector W = soilDF["W"];
-  Rcpp::NumericVector Temp = soilDF["Temp"];
-  int nlayers = W.size();
-  for(int l=0;l<nlayers; l++) {
-    W[l] = soil.getW(l);
-    Temp[l] = soil.getTemp(l);
-  }
+  WaterBalanceModelInput::copyStateToList(x);
+
+  if(x.containsElementNamed("herbLAI")) x["herbLAI"] = herbLAI;
+  if(x.containsElementNamed("herbLAImax")) x["herbLAImax"] = herbLAImax;
   
-  x["snowpack"] = snowpack;
-  x["herbLAI"] = herbLAI;
-  x["herbLAImax"] = herbLAImax;
+  int nlayers = soil.getNlayers();
   
   //Canopy
   Rcpp::DataFrame canopyDF = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
@@ -825,5 +853,4 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       }
     }
   }
-
 }

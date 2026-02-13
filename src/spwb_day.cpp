@@ -1055,7 +1055,7 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
-  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+  WBCommunicationStructures WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
 
   // Prepare lateral flows
   std::vector<double> lateralFlows_c(nlayers, 0.0);
@@ -1073,31 +1073,34 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
     BasicTranspiration_RESULT BTres(numCohorts, nlayers);
     BasicSPWB_RESULT BSPWBres(BTres);
     // Calls simulation
-    spwbDay_inner_c(BSPWBres, SPWBcomm, x_c, 
-                    as<std::string>(date[0]),
-                    meteovec_c, 
-                    latitude, elevation, slope, aspect,
-                    runon, 
-                    lateralFlows_c, waterTableDepth);
+    std::unique_ptr<WaterBalanceModelInput> x_wb = std::make_unique<ModelInput>(x_c);
+    wb_day_inner_c(BSPWBres, WBcomm, *x_wb, 
+               as<std::string>(date[0]),
+               meteovec_c, 
+               latitude, elevation, slope, aspect,
+               runon, 
+               lateralFlows_c, waterTableDepth);
     //Copies result
     l = copySPWBResult_c(BSPWBres, x_c);
+    //Modifies input list, if required  
+    if(modifyInput) x_wb->copyStateToList(x);
   } else {
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
     AdvancedSPWB_RESULT ASPWBres(ATres);
     // Calls simulation
-    spwbDay_inner_c(ASPWBres, SPWBcomm, x_c, 
-                    as<std::string>(date[0]),
-                    meteovec_c, 
-                    latitude, elevation, slope, aspect,
-                    runon, 
-                    lateralFlows_c, waterTableDepth);
+    std::unique_ptr<WaterBalanceModelInput> x_wb = std::make_unique<ModelInput>(x_c);
+    wb_day_inner_c(ASPWBres, WBcomm, *x_wb, 
+                   as<std::string>(date[0]),
+                   meteovec_c, 
+                   latitude, elevation, slope, aspect,
+                   runon, 
+                   lateralFlows_c, waterTableDepth);
     //Copies result
     l = copySPWBResult_c(ASPWBres, x_c);
+    //Modifies input list, if required  
+    if(modifyInput) x_wb->copyStateToList(x);
   }
-
-  //Modifies input list, if required  
-  if(modifyInput) x_c.copyStateToList(x);
 
   return(l);
 }

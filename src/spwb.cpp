@@ -2272,7 +2272,7 @@ List spwb_c(List x, DataFrame meteo,
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
 
   
-  SPWBCommunicationStructures SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+  WBCommunicationStructures WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   BasicTranspiration_RESULT BTres(numCohorts, nlayers);
   BasicSPWB_RESULT BSPWBres(BTres);
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
@@ -2409,7 +2409,7 @@ List spwb_c(List x, DataFrame meteo,
       meteovec.pet = PET[i];
       meteovec.rint = Rint;
       try{
-        spwbDay_basic_c(BSPWBres, SPWBcomm.BSPWBcomm, x_c, 
+        spwbDay_basic_c(BSPWBres, WBcomm.BSPWBcomm, x_c, 
                         meteovec, 
                         elevation, slope, aspect,
                         0.0, lateralFlows, waterTableDepth);
@@ -2445,7 +2445,7 @@ List spwb_c(List x, DataFrame meteo,
       meteovec.pet = PET[i];
       meteovec.rint = Rint;
       try{
-        spwbDay_advanced_c(ASPWBres, SPWBcomm.ASPWBcomm, x_c, 
+        spwbDay_advanced_c(ASPWBres, WBcomm.ASPWBcomm, x_c, 
                            meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 

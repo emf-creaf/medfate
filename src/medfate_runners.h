@@ -8,33 +8,34 @@ using namespace Rcpp;
 #ifndef MEDFATE_RUNNERS_H
 #define MEDFATE_RUNNERS_H
 
-class SPWB_runner {
+class WB_runner {
 private:
-  ModelInput x;
-  double latitude, elevation, slope, aspect;
-  SPWBCommunicationStructures SPWBcomm;
-  std::unique_ptr<SPWB_RESULT> SPWBres;
+  std::unique_ptr<WaterBalanceModelInput> x;
+  double latitude;
+  double elevation, slope, aspect;
+  WBCommunicationStructures WBcomm;
+  std::unique_ptr<WB_RESULT> WBres;
 public:
-  SPWB_runner(List x_list, 
-             double latitude, double elevation, double slope, double aspect);
+  WB_runner(List x_list, 
+            double latitude, double elevation, double slope, double aspect);
   void run_day(CharacterVector date, NumericVector meteovec, 
                double runon = 0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL);
-  ~SPWB_runner();
+  ~WB_runner();
   List get_output();
 };
 
-class SPWB_multiple_runner {
+class WB_multiple_runner {
 private:
   int n;
   std::vector<double> latitude_vec;
   std::vector<std::unique_ptr<Topography>> topo_vec;
-  std::vector<std::unique_ptr<ModelInput>> x_vec;
-  std::vector<std::unique_ptr<SPWB_RESULT>> SPWB_res_vec;
-  SPWBCommunicationStructures SPWBcomm;
+  std::vector<std::unique_ptr<WaterBalanceModelInput>> x_vec;
+  std::vector<std::unique_ptr<WB_RESULT>> WBres_vec;
+  WBCommunicationStructures WBcomm;
 public:
-  SPWB_multiple_runner(List x_vec, 
-                       NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
-  ~SPWB_multiple_runner();
+  WB_multiple_runner(List x_vec, 
+                     NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
+  ~WB_multiple_runner();
   void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
   List get_output_at(int i);
 };

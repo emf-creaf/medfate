@@ -1,4 +1,5 @@
 #include "Rcpp.h"
+#include "medfate.h"
 #include "lowlevel_structures_c.h"
 #include "lightextinction_basic_c.h"
 #include "transpiration_basic_c.h"
@@ -11,18 +12,25 @@
 #ifndef SPWB_DAY_C_H
 #define SPWB_DAY_C_H
 
-struct SPWB_RESULT {
+struct WB_RESULT : ABSTRACTMODEL_RESULT {
   Topography topo;
   WeatherInputVector meteovec;
   Soil_RESULT Soil;
+  WB_RESULT() : Soil(0) {}
+  WB_RESULT(size_t nlayers) : Soil(nlayers) {}
+  virtual ~WB_RESULT() = default;
+};
+Rcpp::List copyWBResult_c(WB_RESULT& WBres, WaterBalanceModelInput& x);
+
+struct SPWB_RESULT : WB_RESULT {
   Stand_RESULT Stand;
   StandWB_RESULT WaterBalance;
   SoilWaterBalance_RESULT SWBres;
   FCCSBehaviour_RESULT fccsbeh;
   FCCS_RESULT fccs;
   
-  SPWB_RESULT() : Soil(0) {}
-  SPWB_RESULT(size_t nlayers) : Soil(nlayers) {}
+  SPWB_RESULT() : WB_RESULT(0) {}
+  SPWB_RESULT(size_t nlayers) : WB_RESULT(nlayers) {}
   virtual ~SPWB_RESULT() = default;
 };
 Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x);
@@ -73,7 +81,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
                         const std::vector<double>& lateralFlows, const double waterTableDepth);
 
 
-struct SPWBCommunicationStructures {
+struct WBCommunicationStructures {
   
   SoilWaterBalance_COMM SWBcomm;
   BasicTranspiration_COMM BTcomm;
@@ -81,7 +89,7 @@ struct SPWBCommunicationStructures {
   BasicSPWB_COMM BSPWBcomm;
   AdvancedSPWB_COMM ASPWBcomm;
 
-  SPWBCommunicationStructures(size_t numCohorts, size_t nlayers, size_t ncanlayers, size_t ntimesteps) :
+  WBCommunicationStructures(size_t numCohorts, size_t nlayers, size_t ncanlayers, size_t ntimesteps) :
     SWBcomm(nlayers),
     BTcomm(numCohorts, ncanlayers, nlayers),
     ATcomm(numCohorts, nlayers, ncanlayers, ntimesteps),
@@ -90,10 +98,10 @@ struct SPWBCommunicationStructures {
      {} 
 };
 
-void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
-                     std::string date,
-                     WeatherInputVector meteovec, 
-                     double latitude, double elevation, double slope, double aspect,
-                     const double runon, 
-                     const std::vector<double>& lateralFlows, const double waterTableDepth);
+void wb_day_inner_c(WB_RESULT& SPWBres, WBCommunicationStructures& WBcomm, WaterBalanceModelInput& x, 
+                    std::string date,
+                    WeatherInputVector meteovec, 
+                    double latitude, double elevation, double slope, double aspect,
+                    const double runon, 
+                    const std::vector<double>& lateralFlows, const double waterTableDepth);
 #endif

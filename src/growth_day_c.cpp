@@ -241,7 +241,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   if(x.control.transpirationMode=="Granier") {
     try {
       auto& BGROWTHres = dynamic_cast<BasicGROWTH_RESULT&>(GROWTHres);
-      spwbDay_basic_c(BGROWTHres.BSPWBres, GROWTHcomm.SPWBcomm.BSPWBcomm, x, 
+      spwbDay_basic_c(BGROWTHres.BSPWBres, GROWTHcomm.WBcomm.BSPWBcomm, x, 
                       meteovec,
                       elevation, slope, aspect,
                       runon, 
@@ -257,7 +257,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   } else {
     try {
       auto& AGROWTHres = dynamic_cast<AdvancedGROWTH_RESULT&>(GROWTHres);
-      spwbDay_advanced_c(AGROWTHres.ASPWBres, GROWTHcomm.SPWBcomm.ASPWBcomm, x, 
+      spwbDay_advanced_c(AGROWTHres.ASPWBres, GROWTHcomm.WBcomm.ASPWBcomm, x, 
                          meteovec,
                          latitude, elevation, slope, aspect,
                          solarConstant, delta,

@@ -687,6 +687,7 @@ Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelIn
   return(l);
 }
 
+  
 Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x) {
   Rcpp::List l;
   if(x.control.transpirationMode=="Granier") {
@@ -706,13 +707,21 @@ Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x) {
   }
   return(l);
 }
-
-void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm, ModelInput& x, 
-                     std::string date,
-                     WeatherInputVector meteovec, 
-                     double latitude, double elevation, double slope, double aspect,
-                     const double runon, 
-                     const std::vector<double>& lateralFlows, const double waterTableDepth) {
+Rcpp::List copyWBResult_c(WB_RESULT& WBres, WaterBalanceModelInput& x) {
+  try {
+    ModelInput& x_m = dynamic_cast<ModelInput&>(x);
+    SPWB_RESULT& SPWBres = dynamic_cast<SPWB_RESULT&>(WBres);
+    return(copySPWBResult_c(SPWBres, x_m));
+  } catch(const std::bad_cast&) {
+    throw medfate::MedfateInternalError("Could not cast to ModelInput / SPWB_RESULT class");
+  }
+}  
+void wb_day_inner_c(WB_RESULT& WBres, WBCommunicationStructures& WBcomm, WaterBalanceModelInput& x, 
+                    std::string date,
+                    WeatherInputVector meteovec, 
+                    double latitude, double elevation, double slope, double aspect,
+                    const double runon, 
+                    const std::vector<double>& lateralFlows, const double waterTableDepth) {
   
   if(std::isnan(meteovec.prec)) throw medfate::MedfateInternalError("Missing precipitation value");
   if(std::isnan(meteovec.tmin)) throw medfate::MedfateInternalError("Missing minimum temperature value");
@@ -738,7 +747,7 @@ void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm
   }
   if(std::isnan(meteovec.wind)) meteovec.wind = x.control.weather.defaultWindSpeed; 
   if(meteovec.wind<0.1) meteovec.wind = 0.1; //Minimum windspeed abovecanopy
-
+  
   if(std::isnan(meteovec.Catm)) meteovec.Catm = x.control.weather.defaultCO2;
   
   int month = std::atoi(date.substr(5,2).c_str());
@@ -773,40 +782,49 @@ void spwbDay_inner_c(SPWB_RESULT& SPWBres, SPWBCommunicationStructures& SPWBcomm
   std::vector<double> defaultRainfallIntensityPerMonth = x.control.weather.defaultRainfallIntensityPerMonth;
   if(std::isnan(meteovec.rint)) meteovec.rint = rainfallIntensity_c(month, meteovec.prec, defaultRainfallIntensityPerMonth);
   
-  bool leafPhenology = x.control.phenology.leafPhenology;
-  
-  //Update phenology
-  if(leafPhenology) {
-    updatePhenology_c(x, doy, photoperiod, meteovec.tday);
-    updateLeaves_c(x, meteovec.wind, false);
-  }
   
   meteovec.tminPrev = meteovec.tmin;
   meteovec.tmaxPrev = meteovec.tmax;
   meteovec.tminNext = meteovec.tmin;
-
-  if(x.control.transpirationMode=="Granier") {
+  
+  
+  if(x.getInputClass() == "spwbInput"){
     try {
-      BasicSPWB_RESULT& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(SPWBres);
-      spwbDay_basic_c(BSPWBres, SPWBcomm.BSPWBcomm, x, 
-                      meteovec, 
-                      elevation, slope, aspect,
-                      runon, 
-                      lateralFlows, waterTableDepth);
-    } catch(const std::bad_cast&) {
-      throw medfate::MedfateInternalError("Control transpiration mode set to basic(granier) but result object is not basic");
-    }
-  } else {
-    try {
-      auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(SPWBres);
-      spwbDay_advanced_c(ASPWBres, SPWBcomm.ASPWBcomm, x, 
-                       meteovec, 
-                       latitude, elevation, slope, aspect,
-                       solarConstant, delta,
-                       runon, 
-                       lateralFlows, waterTableDepth);
-    } catch(const std::bad_cast&) {
-      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+      ModelInput& x_m = dynamic_cast<ModelInput&>(x);
+      
+      bool leafPhenology = x_m.control.phenology.leafPhenology;
+      
+      //Update phenology
+      if(leafPhenology) {
+        updatePhenology_c(x_m, doy, photoperiod, meteovec.tday);
+        updateLeaves_c(x_m, meteovec.wind, false);
+      }
+      if(x_m.control.transpirationMode=="Granier") {
+        try {
+          BasicSPWB_RESULT& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(WBres);
+          spwbDay_basic_c(BSPWBres, WBcomm.BSPWBcomm, x_m, 
+                          meteovec, 
+                          elevation, slope, aspect,
+                          runon, 
+                          lateralFlows, waterTableDepth);
+        } catch(const std::bad_cast&) {
+          throw medfate::MedfateInternalError("Control transpiration mode set to basic(granier) but result object is not basic");
+        }
+      } else {
+        try {
+          auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(WBres);
+          spwbDay_advanced_c(ASPWBres, WBcomm.ASPWBcomm, x_m, 
+                             meteovec, 
+                             latitude, elevation, slope, aspect,
+                             solarConstant, delta,
+                             runon, 
+                             lateralFlows, waterTableDepth);
+        } catch(const std::bad_cast&) {
+          throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+        }
+      }
+    } catch (const std::bad_cast&)  {
+      throw medfate::MedfateInternalError("Could not cast to ModelInput class");
     }
   }
 }

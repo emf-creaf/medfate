@@ -9,28 +9,28 @@ using namespace RcppParallel;
 #ifndef MEDFATE_WORKERS_H
 #define MEDFATE_WORKERS_H
 
-struct SPWB_worker : public Worker
+struct WATERBALANCE_worker : public Worker
 {
   // source vectors and date
-  SPWBCommunicationStructures& SPWBcomm;
+  WBCommunicationStructures& WBcomm;
   const std::string& date;
-  std::vector<std::unique_ptr<ModelInput>>& input_vec;
+  std::vector<std::unique_ptr<WaterBalanceModelInput>>& input_vec;
   std::vector<double>& latitude_vec;
   std::vector<std::unique_ptr<Topography>>& topo_vec;
   std::vector<WeatherInputVector>& weather_vec;
   
   // destination vector
-  std::vector<std::unique_ptr<SPWB_RESULT>>& output_vec;
+  std::vector<std::unique_ptr<WB_RESULT>>& output_vec;
   
   // initialize with source and destination
-  SPWB_worker(SPWBCommunicationStructures& SPWBcomm,
-             std::string& date, 
-             std::vector<std::unique_ptr<ModelInput>>& input_vec,
-             std::vector<double>& latitude_vec,
-             std::vector<std::unique_ptr<Topography>>& topo_vec,
-             std::vector<WeatherInputVector>& weather_vec,
-             std::vector<std::unique_ptr<SPWB_RESULT>>& output_vec) : 
-    SPWBcomm(SPWBcomm), 
+  WATERBALANCE_worker(WBCommunicationStructures& WBcomm,
+                      std::string& date, 
+                      std::vector<std::unique_ptr<WaterBalanceModelInput>>& input_vec,
+                      std::vector<double>& latitude_vec,
+                      std::vector<std::unique_ptr<Topography>>& topo_vec,
+                      std::vector<WeatherInputVector>& weather_vec,
+                      std::vector<std::unique_ptr<WB_RESULT>>& output_vec) : 
+    WBcomm(WBcomm), 
     date(date), input_vec(input_vec), 
     latitude_vec(latitude_vec), 
     topo_vec(topo_vec), 

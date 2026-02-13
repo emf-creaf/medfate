@@ -165,11 +165,11 @@ struct InitialFinalCarbonCompartments{
 };
 
 struct GROWTHCommunicationStructures {
-  SPWBCommunicationStructures SPWBcomm;
+  WBCommunicationStructures WBcomm;
   InitialFinalCarbonCompartments initialFinalCC;
   
   GROWTHCommunicationStructures(size_t numCohorts, size_t nlayers, size_t ncanlayers, size_t ntimesteps) : 
-    SPWBcomm(numCohorts, nlayers, ncanlayers, ntimesteps),
+    WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps),
     initialFinalCC(numCohorts) {}
 };
 
