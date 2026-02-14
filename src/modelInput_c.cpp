@@ -212,7 +212,7 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(transpDF.containsElementNamed("VCstem_d")) paramsTranspiration.VCstem_d = Rcpp::as< std::vector<double> >(transpDF["VCstem_d"]);
   if(transpDF.containsElementNamed("kstem_xylem")) paramsTranspiration.kstem_xylem = Rcpp::as< std::vector<double> >(transpDF["kstem_xylem"]);
   if(transpDF.containsElementNamed("kstem_symp")) paramsTranspiration.kstem_symp = Rcpp::as< std::vector<double> >(transpDF["kstem_symp"]);
-  if(transpDF.containsElementNamed("VCroottot_kmax")) paramsTranspiration.VCroottot_kmax = Rcpp::as< std::vector<double> >(transpDF["VCroottot_kmax"]);
+  if(transpDF.containsElementNamed("VCroot_kmax")) paramsTranspiration.VCroot_kmax = Rcpp::as< std::vector<double> >(transpDF["VCroot_kmax"]);
   if(transpDF.containsElementNamed("VCroot_slope")) paramsTranspiration.VCroot_slope = Rcpp::as< std::vector<double> >(transpDF["VCroot_slope"]);
   if(transpDF.containsElementNamed("VCroot_P50")) paramsTranspiration.VCroot_P50 = Rcpp::as< std::vector<double> >(transpDF["VCroot_P50"]);
   if(transpDF.containsElementNamed("VCroot_c")) paramsTranspiration.VCroot_c = Rcpp::as< std::vector<double> >(transpDF["VCroot_c"]);
@@ -499,7 +499,10 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   }
   if(aboveDF.containsElementNamed("DBH")) {
     Rcpp::NumericVector DBH = aboveDF["DBH"];
-    for(int c = 0;c < numCohorts; c++) DBH[c] = above.DBH[c];
+    for(int c = 0;c < numCohorts; c++) {
+      DBH[c] = above.DBH[c];
+      // Rcpp::Rcout<< above.DBH[c]<<"\n";
+    }
   }
   if(aboveDF.containsElementNamed("SA")) {
     Rcpp::NumericVector SA = aboveDF["SA"];

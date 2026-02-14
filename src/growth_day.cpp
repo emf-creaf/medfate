@@ -1261,7 +1261,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
         }
         NumericVector VGrhizo_target(nlayers,0.0);
         for(int s=0;s<nlayers;s++) {
-          VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0,
+          VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance_c(averageFracRhizosphereResistance*100.0,
                                 VG_n[s], VG_alpha[s],
                                                  VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
                                                                                          VCstem_kmax[j], VCstem_c[j], VCstem_d[j],

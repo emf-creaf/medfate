@@ -1,4 +1,5 @@
 #include "RcppArmadillo.h"
+#include "medfate.h"
 #include "forestutils_c.h"
 #include "incgamma_c.h"
 #include "medfate.h"
@@ -40,7 +41,7 @@ void updateLAIdistributionVectors_c(arma::mat& LAIdist,
   }
 }
 
-std::vector<std::string> cohortType_c(std::vector<std::string> IDs) {
+std::vector<std::string> cohortType_c(const std::vector<std::string> IDs) {
   std::vector<std::string> types(IDs.size());
   int numCohorts = IDs.size();
   for(int i=0;i<numCohorts;i++) {
@@ -55,4 +56,63 @@ std::vector<std::string> cohortType_c(std::vector<std::string> IDs) {
     }
   }
   return(types);
+}
+
+std::vector<double> treeBasalArea_c(const std::vector<double>& N, const std::vector<double>& dbh) {
+  int ncoh = N.size(); //N is density of individuals (ind/ha) in the cell
+  std::vector<double> BA(ncoh, medfate::NA_DOUBLE); 
+  for(int i=0;i<ncoh;i++) {
+    if(!std::isnan(dbh[i])) BA[i] = N[i]*3.141593*pow(dbh[i]/200,2.0); //Basal area in m2/ha
+  }
+  return(BA);
+}
+
+std::vector<double> largerTreeBasalArea_c(const std::vector<double>& N, const std::vector<double>& dbh, 
+                                          double self_include_prop) {
+  int ncoh = N.size();
+  std::vector<double> BA = treeBasalArea_c(N, dbh); 
+  std::vector<double> ltBA(ncoh, medfate::NA_DOUBLE);
+  for(int i=0;i<ncoh;i++) {
+    if(!std::isnan(BA[i])) {
+      ltBA[i] = 0.0;
+      for(int j=0;j<ncoh;j++) {
+        if(i==j) ltBA[i] += (BA[j]*self_include_prop); //add half of its own basal area
+        else if(dbh[j]>dbh[i]) ltBA[i] += BA[j];
+      }
+    }
+  }
+  return(ltBA);
+}
+
+double crownCompetitionFactorAllometric_c(const std::vector<double>& N, const std::vector<double>& dbh, 
+                                          const std::vector<double>& Acw, const std::vector<double>& Bcw) {
+  int ntree = N.size();
+  double ccf = 0.0;
+  for(int i=0;i<ntree;i++) {
+    if(!std::isnan(dbh[i])) {
+      double cw = Acw[i]*pow(dbh[i], Bcw[i]);
+      ccf = ccf + (N[i]*M_PI*pow(cw/2.0,2.0)/100.0);
+    }
+  }
+  return(ccf);
+}
+
+std::vector<double> treeCrownRatioAllometric_c(std::vector<double>& N, std::vector<double>& dbh, std::vector<double>& H, 
+                                               const std::vector<double>& Acw, const std::vector<double>& Bcw,
+                                               const std::vector<double>& Acr, const std::vector<double>& B1cr, 
+                                               const std::vector<double>& B2cr, 
+                                               const std::vector<double>& B3cr,
+                                               const std::vector<double>& C1cr, const std::vector<double>& C2cr) {
+  std::vector<double> BAL = largerTreeBasalArea_c(N, dbh);
+  double ccf = crownCompetitionFactorAllometric_c(N, dbh, Acw, Bcw);
+  // Rcout<<ccf<<"\n";
+  int ntree = N.size();
+  std::vector<double> treeCR(ntree, medfate::NA_DOUBLE);
+  for(int i=0;i<ntree;i++) {
+    if(!std::isnan(dbh[i])) {
+      double lm = Acr[i]+ B1cr[i]*(H[i]/(100.0*dbh[i]))+B2cr[i]*(H[i]/100.0)+B3cr[i]*pow(dbh[i],2.0)+C1cr[i]*BAL[i]+C2cr[i]*log(ccf);
+      treeCR[i] = 1.0/(1.0+ exp(-1.0*lm));
+    }
+  }
+  return(treeCR);
 }

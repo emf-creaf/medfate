@@ -263,6 +263,124 @@ Rcpp::List copyGROWTHResult_c(GROWTH_RESULT& GROWTHres, ModelInput& x) {
   }
   return(l);
 }
+
+void updateStructuralVariables_c(ModelInput& x, 
+                                 const std::vector<double>& deltaSAgrowth,
+                                 const std::vector<double>& PARcohort) {
+  
+  // Control params
+  bool shrubDynamics = x.control.growth.shrubDynamics;
+  bool herbDynamics = x.control.growth.herbDynamics;
+  int numCohorts = x.cohorts.CohortCode.size();
+  std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);
+  
+  //Aboveground parameters
+  std::vector<double>& DBH = x.above.DBH;
+  std::vector<double>& Cover = x.above.Cover;
+  std::vector<double>& H = x.above.H;
+  std::vector<double>& N = x.above.N;
+  std::vector<double>& CR = x.above.CR;
+  std::vector<double>& LAI_live = x.above.LAI_live;
+  std::vector<double>& LAI_expanded = x.above.LAI_expanded;
+  std::vector<double>& LAI_dead = x.above.LAI_dead;
+  std::vector<double>& LAI_nocomp = x.above.LAI_nocomp;
+  std::vector<double>& SA = x.above.SA;
+  
+  //Allometric parameters
+  const std::vector<double>& Afbt  = x.paramsAllometries.Afbt;
+  const std::vector<double>& Bfbt  = x.paramsAllometries.Bfbt;
+  const std::vector<double>& Cfbt  = x.paramsAllometries.Cfbt;
+  const std::vector<double>& Aash  = x.paramsAllometries.Aash;
+  const std::vector<double>& Bash  = x.paramsAllometries.Bash;
+  const std::vector<double>& Absh  = x.paramsAllometries.Absh;
+  const std::vector<double>& Bbsh  = x.paramsAllometries.Bbsh;
+  const std::vector<double>& Acw  = x.paramsAllometries.Acw;
+  const std::vector<double>& Bcw  = x.paramsAllometries.Bcw;
+  const std::vector<double>& Acr  = x.paramsAllometries.Acr;
+  const std::vector<double>& B1cr  = x.paramsAllometries.B1cr;
+  const std::vector<double>& B2cr  = x.paramsAllometries.B2cr;
+  const std::vector<double>& B3cr  = x.paramsAllometries.B3cr;
+  const std::vector<double>& C1cr  = x.paramsAllometries.C1cr;
+  const std::vector<double>& C2cr  = x.paramsAllometries.C2cr;
+  
+  //Update DBH
+  std::vector<double> deltaDBH(numCohorts, 0.0);
+  for(int j=0;j<numCohorts; j++) {
+    if(!std::isnan(DBH[j])) {
+      deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(deltaSAgrowth[j]/M_PI)) - DBH[j];
+      DBH[j] = DBH[j] + deltaDBH[j];
+      // Rcout<< DBH[j]<<"\n";
+    }
+  }
+  
+  //Update height
+  for(int j=0;j<numCohorts; j++) {
+    if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+      double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(x.paramsAnatomy.Hmax[j]-137.0)))));
+      double fHD = (x.paramsGrowth.fHDmin[j]*(PARcohort[j]/100.0) + x.paramsGrowth.fHDmax[j]*(1.0-(PARcohort[j]/100.0)))*fHmod;
+      H[j] = H[j] + fHD*deltaDBH[j];
+    }
+  }
+  //Update crown ratio
+  std::vector<double> crNew = treeCrownRatioAllometric_c(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+  for(int j=0;j<numCohorts; j++) {
+    if(!std::isnan(DBH[j]) && N[j]>0.0) {
+      CR[j] = crNew[j];
+    }
+  }
+  //Update tree leaf area target
+  std::vector<double> ltba = largerTreeBasalArea_c(N, DBH, 1.0); //Allometries were calibrated including the target cohort
+  for(int j=0;j<numCohorts;j++) {
+    if(!std::isnan(DBH[j]) && N[j]>0.0) {
+      double leafBiomassNoComp = Afbt[j]*pow(std::min(100.0,DBH[j]), Bfbt[j])*exp(-0.0001*N[j]);//Correct for high density packing
+      LAI_nocomp[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*N[j]/10000.0; //LAI without competition effect
+      if(x.internalPhenology.budFormation[j]) { //Update target if buds are active
+        // Rcout <<j<< " "<< ltba[j]<< " "<<leafAreaTarget[j];
+        x.internalAllocation.leafAreaTarget[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*exp(Cfbt[j]*ltba[j]); //Include competition effect in leaf biomass estimation
+        LAI_live[j] = x.internalAllocation.leafAreaTarget[j]*N[j]/10000.0;
+        // Rcout << " "<< leafAreaTarget[j]<<"\n";
+      }
+    }
+  }
+  //Shrub variables
+  if(shrubDynamics) {
+    double treeLAI = 0.0;
+    for(int j=0;j<numCohorts;j++) {
+      if(ctype[j] == "tree") treeLAI +=LAI_live[j];
+    }
+    for(int j=0;j<numCohorts; j++) {
+      if((ctype[j]=="shrub") && N[j]>0.0) {
+        if(x.internalPhenology.budFormation[j]) {
+          x.internalAllocation.leafAreaTarget[j] = (x.paramsAnatomy.Al2As[j]*SA[j])/10000.0; // Set leaf area target according to current sapwood area
+          double Wleaves = x.internalAllocation.leafAreaTarget[j]/x.paramsAnatomy.SLA[j];  //Calculates the biomass (kg dry weight) of leaves
+          Wleaves = Wleaves/exp(-0.235*treeLAI); //Correct depending on tree leaf area
+          double PV = pow(Wleaves*x.paramsAnatomy.r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
+          H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
+          // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
+          if(H[j]> x.paramsAnatomy.Hmax[j]) { //Limit height (and update the former variables)
+            H[j] = x.paramsAnatomy.Hmax[j];
+            PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
+            Wleaves = (Absh[j]/x.paramsAnatomy.r635[j])*pow(PV, Bbsh[j]); //recalculate Wleaves from phytovolume
+            Wleaves = Wleaves*exp(-0.235*treeLAI); //Correct depending on tree leaf area
+            x.internalAllocation.leafAreaTarget[j] = Wleaves * x.paramsAnatomy.SLA[j]; //recalculate leaf area target from Wleaves
+            x.internalAllocation.sapwoodAreaTarget[j] = 10000.0*x.internalAllocation.leafAreaTarget[j]/x.paramsAnatomy.Al2As[j]; //Set target sapwood area (may generate sapwood senescence)
+          }
+          Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
+          LAI_live[j] = x.internalAllocation.leafAreaTarget[j]*N[j]/10000.0;
+        }
+        //Update LAI without tree competition effect
+        LAI_nocomp[j] = LAI_live[j]/exp(-0.235*treeLAI);
+      }
+    }
+  }
+  //Herb variables
+  if(herbDynamics) {
+    double woodyLAI = std::accumulate(LAI_live.begin(), LAI_live.end(), 0.0);
+    double herbLAImax = x.herbLAImax;
+    x.herbLAI = herbLAImax*exp(-0.235*woodyLAI);
+  }
+}
+
 void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& GROWTHcomm, ModelInput& x, 
                          WeatherInputVector meteovec, 
                          double latitude, double elevation, double slope, double aspect,
@@ -281,11 +399,11 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   ///////////////////////////////////////////////////////////////////////////////////
   std::vector<double> Tcan(ntimesteps);
   std::vector<double> Ag(numCohorts);
-  arma::mat* AgStep;
-  arma::mat* AnStep;
+  arma::mat* AgStep = nullptr;
+  arma::mat* AnStep = nullptr;
   std::vector<double> PARcohort(numCohorts);
   std::vector<double> LFMC(numCohorts);
-  LabileCarbonBalanceInst_RESULT* LCBInstres;
+  LabileCarbonBalanceInst_RESULT* LCBInstres = nullptr;
   
   double tcan_day = medfate::NA_DOUBLE;
 
@@ -346,9 +464,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   }
   
   bool plantWaterPools = (x.control.rhizosphereOverlap!="total");
-  // bool taper = control["taper"];
-  // double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-  // double phloemConductanceFactor = control["phloemConductanceFactor"];
   double nonSugarConcentration = x.control.growth.nonSugarConcentration;
   double equilibriumLeafTotalConc = x.control.growth.equilibriumOsmoticConcentration.leaf;
   double equilibriumSapwoodTotalConc = x.control.growth.equilibriumOsmoticConcentration.sapwood;
@@ -370,25 +485,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   for(int i=0; i< numCohorts;i++) StemPLCprev[i] = x.internalWater.StemPLC[i];
   std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);
   
-  // //Cohort info
-  // DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  // CharacterVector speciesNames = cohorts["Name"];
-  // CharacterVector ctype = cohortType(cohorts.attr("row.names"));
-  // IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
-  // 
-  // //Soil
-  // DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  // int nlayers = soil.nrow();
-  // NumericVector psiSoil = psi(soil, soilFunctions);
-  // NumericVector widths = soil["widths"];
-  // NumericVector sand = soil["sand"];
-  // NumericVector clay = soil["clay"];
-  // NumericVector rfc = soil["rfc"];
-  // NumericVector Ksat = soil["Ksat"];
-  // NumericVector VG_n = soil["VG_n"];
-  // NumericVector VG_alpha = soil["VG_alpha"];
-  // NumericVector Tsoil = soil["Temp"];
-
   //Aboveground parameters
   std::vector<double>& DBH = x.above.DBH;
   std::vector<double>& Cover = x.above.Cover;
@@ -448,177 +544,19 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   std::vector<double>& starchLeaf = x.internalCarbon.starchLeaf;
   std::vector<double>& sugarSapwood = x.internalCarbon.sugarSapwood;
   std::vector<double>& starchSapwood = x.internalCarbon.starchSapwood;
-  // 
-  // DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
-  // NumericVector N_dead = internalMortality["N_dead"];
-  // NumericVector N_starvation = internalMortality["N_starvation"];
-  // NumericVector N_dessication = internalMortality["N_dessication"];
-  // NumericVector N_burnt = internalMortality["N_burnt"];
-  // NumericVector N_resprouting_stumps = internalMortality["N_resprouting_stumps"];
-  // NumericVector Cover_dead = internalMortality["Cover_dead"];
-  // NumericVector Cover_starvation = internalMortality["Cover_starvation"];
-  // NumericVector Cover_dessication = internalMortality["Cover_dessication"];
-  // NumericVector Cover_burnt = internalMortality["Cover_burnt"];
-  // NumericVector Cover_resprouting_stumps = internalMortality["Cover_resprouting_stumps"];
-  // NumericVector Snag_smallbranches = internalMortality["Snag_smallbranches"];
-  // NumericVector Snag_largewood = internalMortality["Snag_largewood"];
-  // 
+  
   std::vector<double>& allocationTarget = x.internalAllocation.allocationTarget;
   std::vector<double>& sapwoodAreaTarget = x.internalAllocation.sapwoodAreaTarget;
   std::vector<double>& leafAreaTarget = x.internalAllocation.leafAreaTarget;
   std::vector<double>& fineRootBiomassTarget = x.internalAllocation.fineRootBiomassTarget;
   std::vector<double>& crownBudPercent = x.internalAllocation.crownBudPercent;
-  // 
-  // DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
-  // LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
-  // LogicalVector budFormation = internalPhenology["budFormation"];
-  // LogicalVector leafSenescence = internalPhenology["leafSenescence"];
-  // 
-  // DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOutput["Plants"]);
-  // List PlantsInst;
-  // NumericVector Ag = Plants["GrossPhotosynthesis"];
-  // NumericVector LFMC = Plants["LFMC"];
-  // NumericVector PARcohort= Plants["FPAR"];
-  // NumericMatrix AgStep, AnStep;
-  // int numSteps = 1;
-  // if(transpirationMode!="Granier") {
-  //   PlantsInst = spwbOutput["PlantsInst"];
-  //   AgStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
-  //   AnStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
-  //   numSteps = AgStep.ncol();
-  // }
 
 
-  // 
-  // //Anatomy parameters
-  // DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  // NumericVector Hmed = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Hmed"]);
   std::vector<double>& SLA = x.paramsAnatomy.SLA;
   std::vector<double>& r635 = x.paramsAnatomy.r635;
-  // NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  // NumericVector Ar2Al;
-  // NumericVector RLD;
-  // if(transpirationMode=="Granier") Ar2Al = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Ar2Al"]);
-  // else RLD = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["RLD"]);
   std::vector<double>& WoodDensity = x.paramsAnatomy.WoodDensity;
   std::vector<double>& LeafDensity =x.paramsAnatomy.LeafDensity;
-  // NumericVector FineRootDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["FineRootDensity"]);
-  // NumericVector SRL = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SRL"]);
-  // NumericVector conduit2sapwood = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["conduit2sapwood"]);
-  // 
-  // //Growth parameters
-  // DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
-  // NumericVector fHDmin= paramsGrowth["fHDmin"];
-  // NumericVector fHDmax= paramsGrowth["fHDmax"];
-  // NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
-  // NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
-  // NumericVector RERsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERsapwood"]);
-  // NumericVector RERfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERfineroot"]);
-  // NumericVector CCleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCleaf"]);
-  // NumericVector CCsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCsapwood"]);
-  // NumericVector CCfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCfineroot"]);
-  // NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
-  // NumericVector RGRcambiummax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRcambiummax"]);
-  // NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
-  // NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
-  // NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
-  // NumericVector SRfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRfineroot"]);
-  // NumericVector RSSG = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RSSG"]);
-  // 
-  // //Mortality/regeneration parameters
-  // DataFrame paramsMortalityRegeneration = Rcpp::as<Rcpp::DataFrame>(x["paramsMortalityRegeneration"]);
-  // NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["MortalityBaselineRate"]);
-  // NumericVector SurvivalModelStep = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["SurvivalModelStep"]);
-  // NumericVector SurvivalB0 = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["SurvivalB0"]);
-  // NumericVector SurvivalB1 = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["SurvivalB1"]);
-  // NumericVector RecrTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDensity"]);
-  // NumericVector RecrTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDBH"]);
-  // NumericVector IngrowthTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDensity"]);
-  // NumericVector IngrowthTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDBH"]);
-  // NumericVector RespFire = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RespFire"]);
-  // NumericVector RespDist = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RespDist"]);
-  // 
-  // //Phenology parameters
-  // DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
-  // CharacterVector phenoType = Rcpp::as<Rcpp::CharacterVector>(paramsPhenology["PhenologyType"]);
-  // NumericVector leafDuration = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["LeafDuration"]);
-  // 
-  // //Transpiration parameters
-  // DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  // NumericVector Psi_Extract, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
-  // NumericVector VCstem_kmax, VCstem_c, VCstem_d, VCroot_kmaxVEC, VCroot_c, VCroot_d, VGrhizo_kmaxVEC;
-  // NumericVector WUE_par(numCohorts, 0.3643);
-  // VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
-  // VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
-  // VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
-  // VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
-  // if(transpirationMode=="Granier") {
-  //   Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-  //   if(paramsTransp.containsElementNamed("WUE_par")) {
-  //     WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
-  //   }
-  //   if(paramsTransp.containsElementNamed("WUE_decay")) { //For compatibility with previous versions (2.7.5)
-  //     WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
-  //   }
-  // } else {
-  //   Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
-  //   Plant_kmax= paramsTransp["Plant_kmax"];
-  //   VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
-  //   VCstem_kmax = paramsTransp["VCstem_kmax"];
-  //   VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
-  //   VCroot_c = paramsTransp["VCroot_c"];
-  //   VCroot_d = paramsTransp["VCroot_d"];
-  //   VGrhizo_kmaxVEC= paramsTransp["VGrhizo_kmax"];
-  // }
-  // 
-  // //Water storage parameters
-  // DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  // NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-  // NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-  // NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  // NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-  // NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  // NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
-  // 
-  // //Allometry parameters
-  // DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
-  // NumericVector Hmax  = paramsAnatomy["Hmax"];
-  // NumericVector Abt  = paramsAllometries["Abt"];
-  // NumericVector Bbt  = paramsAllometries["Bbt"];
-  // NumericVector BTsh  = paramsAllometries["BTsh"];
-  // 
-  // //Inteception parameters
-  // DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  // NumericVector kPAR = paramsInterception["kPAR"];
-  // 
-  // //Litter
-  // DataFrame internalLitter, internalSnags;
-  // DataFrame paramsLitterDecomposition;
-  // NumericVector internalSOC(0);
-  // bool exportLitter = false;
-  // if(x.containsElementNamed("internalLitter") && x.containsElementNamed("internalSnags") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
-  //   paramsLitterDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
-  //   internalSnags = Rcpp::as<Rcpp::DataFrame>(x["internalSnags"]);
-  //   internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
-  //   internalSOC = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
-  //   exportLitter = true;
-  // }
-  // 
-  // //Ring of forming vessels
-  // // List ringList = as<Rcpp::List>(x["internalRings"]);
-  // 
-  // //Daily output vectors
-  // DataFrame labileCarbonBalance = as<DataFrame>(modelOutput["LabileCarbonBalance"]);
-  // NumericVector GrossPhotosynthesis = labileCarbonBalance["GrossPhotosynthesis"];
-  // NumericVector MaintenanceRespiration = labileCarbonBalance["MaintenanceRespiration"];
-  // NumericVector GrowthCosts = labileCarbonBalance["GrowthCosts"];
-  // NumericVector RootExudation = labileCarbonBalance["RootExudation"];
-  // NumericVector LabileCarbonBalance = labileCarbonBalance["LabileCarbonBalance"];
-  // NumericVector PlantSugarLeaf = labileCarbonBalance["SugarLeaf"];
-  // NumericVector PlantStarchLeaf = labileCarbonBalance["StarchLeaf"];
-  // NumericVector PlantSugarSapwood = labileCarbonBalance["SugarSapwood"];
-  // NumericVector PlantStarchSapwood = labileCarbonBalance["StarchSapwood"];
-  // NumericVector PlantSugarTransport = labileCarbonBalance["SugarTransport"];
+  
   for(int c=0;c<numCohorts;c++) {
     GROWTHres.LCBres.GrossPhotosynthesis[c] = 0.0;
     GROWTHres.LCBres.MaintenanceRespiration[c] = 0.0;
@@ -645,29 +583,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
     GROWTHres.PSres.HuberValue[c] = 0.0;
     GROWTHres.PSres.RootAreaLeafArea[c] = 0.0;
   }
-  // 
-  // DataFrame plantStructure = as<DataFrame>(modelOutput["PlantStructure"]);
-  // NumericVector LeafBiomass = plantStructure["LeafBiomass"];
-  // NumericVector SapwoodBiomass = plantStructure["SapwoodBiomass"];
-  // NumericVector FineRootBiomass = plantStructure["FineRootBiomass"];
-  // NumericVector LeafArea = plantStructure["LeafArea"];
-  // NumericVector SapwoodArea = plantStructure["SapwoodArea"];
-  // NumericVector FineRootArea = plantStructure["FineRootArea"];
-  // NumericVector HuberValue = plantStructure["HuberValue"];
-  // NumericVector RootAreaLeafArea = plantStructure["RootAreaLeafArea"];
-  // NumericVector OutputDBH = plantStructure["DBH"];
-  // NumericVector OutputHeight = plantStructure["Height"];
-  // 
-  // DataFrame growthMortality = as<DataFrame>(modelOutput["GrowthMortality"]);
-  // NumericVector SAgrowth = growthMortality["SAgrowth"];
-  // NumericVector LAgrowth = growthMortality["LAgrowth"];
-  // NumericVector FRAgrowth = growthMortality["FRAgrowth"];
-  // NumericVector StarvationRate = growthMortality["StarvationRate"];
-  // NumericVector DessicationRate = growthMortality["DessicationRate"];
-  // NumericVector MortalityRate = growthMortality["MortalityRate"];
-  // 
-  // 
-  // 
+ 
   std::vector<double> deltaLAgrowth(numCohorts,0.0);
   std::vector<double> deltaSAgrowth(numCohorts,0.0);
 
@@ -907,19 +823,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         GROWTHres.LCBres.MaintenanceRespiration[j] = (leafRespDay+twigResp + sapwoodResp+finerootResp)/TotalLivingBiomass[j];
 
       } else {
-  //       //Get output matrices
-  //       List labileCBInst = modelOutput["LabileCarbonBalanceInst"];
-  //       NumericMatrix LabileCarbonBalanceInst = labileCBInst["LabileCarbonBalance"];
-  //       NumericMatrix GrossPhotosynthesisInst = labileCBInst["GrossPhotosynthesis"];
-  //       NumericMatrix MaintenanceRespirationInst = labileCBInst["MaintenanceRespiration"];
-  //       NumericMatrix GrowthCostsInst = labileCBInst["GrowthCosts"];
-  //       NumericMatrix RootExudationInst = labileCBInst["RootExudation"];
-  //       NumericMatrix PlantSugarTransportInst = labileCBInst["SugarTransport"];
-  //       NumericMatrix PlantSugarLeafInst = labileCBInst["SugarLeaf"];
-  //       NumericMatrix PlantStarchLeafInst = labileCBInst["StarchLeaf"];
-  //       NumericMatrix PlantSugarSapwoodInst = labileCBInst["SugarSapwood"]; 
-  //       NumericMatrix PlantStarchSapwoodInst = labileCBInst["StarchSapwood"];
-  //       
+
         //Carbon balance and growth by steps
         for(int s=0;s<ntimesteps;s++) {
 
@@ -983,7 +887,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
             double deltaSAavailable = std::max(0.0, (starchSapwood[j] - minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
             double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
             if(deltaSAgrowthStep<0.0) {
-              Rcout<<deltaSAsink<<" "<< deltaSAavailable<< " "<< starchSapwood[j]<<"\n";
+              // Rcout<<deltaSAsink<<" "<< deltaSAavailable<< " "<< starchSapwood[j]<<"\n";
               throw medfate::MedfateInternalError("negative growth!");
             }
             growthCostSAStep = deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
@@ -1240,8 +1144,9 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       GROWTHres.GMres.FRAgrowth[j] = std::accumulate(deltaFRBgrowth.begin(), deltaFRBgrowth.end(), 0.0)*specificRootSurfaceArea_c(x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j])*1e-4;//Store fine root area growth rate (m2·d-1)
     }
   }
+  
   ///// B15. UPDATE STRUCTURAL VARIABLES /////
-  // updateStructuralVariables(x, deltaSAgrowth);
+  updateStructuralVariables_c(x, deltaSAgrowth, PARcohort);
 
   ///// B16. UPDATE SAPWOOD AREA AND FINEROOT BIOMASS TARGETS AND RECALCULATE CONCENTRATIONS /////
   for(int j=0;j<numCohorts;j++){
@@ -1251,25 +1156,25 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/x.paramsAnatomy.Al2As[j];
         fineRootBiomassTarget[j] = (x.paramsAnatomy.Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea_c(x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j])*1e-4);
       } else {
-        // if(allocationStrategy == "Plant_kmax") {
-        //   sapwoodAreaTarget[j] = 10000.0*(leafAreaTarget[j]/x.paramsAnatomy.Al2As[j])*(allocationTarget[j]/x.paramsTranspiration.Plant_kmax[j]);
-        // } else if(allocationStrategy =="Al2As") {
-        //   sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/x.paramsAnatomy.Al2As[j];
-        // }
-        // NumericVector VGrhizo_target(nlayers,0.0);
-        // for(int s=0;s<nlayers;s++) {
-        //   VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0,
-        //                         VG_n[s], VG_alpha[s],
-        //                                          VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
-        //                                                                                  VCstem_kmax[j], VCstem_c[j], VCstem_d[j],
-        //                                                                                                                       VCleaf_kmax[j], VCleaf_c[j], VCleaf_d[j],
-        //                                                                                                                                                            log(VGrhizo_kmax(j,s)));
-        // }
-        // fineRootBiomassTarget[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_target, LAI_live[j], N[j],
-        //                                                         SRL[j], FineRootDensity[j], RLD[j]);
+        if(allocationStrategy == "Plant_kmax") {
+          sapwoodAreaTarget[j] = 10000.0*(leafAreaTarget[j]/x.paramsAnatomy.Al2As[j])*(allocationTarget[j]/x.paramsTranspiration.Plant_kmax[j]);
+        } else if(allocationStrategy =="Al2As") {
+          sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/x.paramsAnatomy.Al2As[j];
+        }
+        std::vector<double> VGrhizo_target(nlayers,0.0);
+        for(int s=0;s<nlayers;s++) {
+          VGrhizo_target[s] = x.belowLayers.V(j,s)*findRhizosphereMaximumConductance_c(x.control.advancedWB.averageFracRhizosphereResistance*100.0,
+                                                                                       x.soil.getVG_n(s), x.soil.getVG_alpha(s),
+                                                                                       x.paramsTranspiration.VCroot_kmax[j], x.paramsTranspiration.VCroot_c[j], x.paramsTranspiration.VCroot_d[j],
+                                                                                       x.paramsTranspiration.VCstem_kmax[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j],
+                                                                                       x.paramsTranspiration.VCleaf_kmax[j], x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j],
+                                                                                       log(x.belowLayers.VGrhizo_kmax(j,s)));
+        }
+        fineRootBiomassTarget[j] = fineRootBiomassPerIndividual_c(x.soil.getKsat(), VGrhizo_target, LAI_live[j], N[j],
+                                                                  x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j], x.paramsAnatomy.RLD[j]);
       }
     }
-
+    
     //RECALCULATE storage concentrations (SA, LA and H may have changed)
     std::vector<double> Vj(nlayers);
     std::vector<double> Lj(nlayers);
@@ -1297,7 +1202,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
     GROWTHres.LCBres.SugarSapwood[j] = sugarSapwood[j];
     GROWTHres.LCBres.StarchSapwood[j] = starchSapwood[j];
   }
-
+  
   ///////////////////////////////////////////
   ///// C. FIRE OCCURRENCE AND BEHAVIOR /////
   ///////////////////////////////////////////
@@ -1316,7 +1221,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       fireOccurrence = true;
     }
   }
-
+  
   /////////////////////////////////////////////////////////
   ///// D. PLANT MORTALITY AND FIRE EFFECTS BY COHORT /////
   /////////////////////////////////////////////////////////
@@ -1546,7 +1451,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   }
 
 
-
   ////////////////////////////////////////
   ///// E3. UPDATE PLANT WATER POOLS /////
   ////////////////////////////////////////
@@ -1563,7 +1467,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       }
     }
   }
-
+  
   ///////////////////////////////////
   ///// F. CARBON DECOMPOSITION /////
   ///////////////////////////////////
@@ -1581,6 +1485,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
                                             tday, rhmean,
                                             x.soil.getSand(0), x.soil.getClay(0), x.soil.getTemp(0), soilMoisture, soilPH,
                                             1.0, 1.0, 1.0);
+  
 
   ///////////////////////////////////////////////
   ///// G. FIRE EFFECTS ON SNAGS AND LITTER /////
@@ -1599,7 +1504,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       x.internalSnags.SmallBranches[i] = 0.0;
     }
   }
-
+  
   ////////////////////////////////////////////
   ///// E4. CLOSE PLANT BIOMASS BALANCE //////
   ////////////////////////////////////////////
@@ -1643,6 +1548,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   //   // Rcout<< "GPP " << standGrossPrimaryProduction<<" MR "<<standMaintenanceRespiration<< " SR "<<standSynthesisRespiration<< " HR "<< heterotrophicRespiration << " FC "<< fireCombustion<<"\n";
   //   // Rcout<< "NEP: " << NEP_gC_m2<< " Mass change: " << changeStand_gC_m2<< " dif: "<< (changeStand_gC_m2 - NEP_gC_m2)<< "\n";
   // }
+
 }
 
 void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& GROWTHcomm, ModelInput& x, 

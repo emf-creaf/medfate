@@ -303,34 +303,9 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
 
 
 
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_fineRootHalfDistance")]]
-double fineRootHalfDistance(double rootLengthDensity) {
-  return(1.0/sqrt(M_PI*rootLengthDensity));
-}
 
-/**
- * Derivation of fine root length per ground area (m·m-2) 
- * from the conductance factor for cylindrical flow geometry of the rhizosphere
- * 
- */
-double fineRootLengthPerArea(double Ksoil, double krhizo, double lai,
-                      double radius, double rootLengthDensity) {
-  double Xi = krhizo*lai/Ksoil;
-  double rmax = fineRootHalfDistance(rootLengthDensity);
-  return(log(pow(rmax,2.0)/pow(radius,2.0))*Xi/(4.0*M_PI));
-}
-/**
- * Derivation of maximum rhizosphere conductance (mmol·m-2·s·MPa-1)
- * from the conductance factor for cylindrical flow geometry of the rhizosphere
- * 
- */
-double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, double lai,
-                                   double radius, double rootLengthDensity) {
-  double rmax = fineRootHalfDistance(rootLengthDensity);
-  return((fineRootLengthPerArea*Ksoil*4.0*M_PI)/(lai*log(pow(rmax,2.0)/pow(radius,2.0))));
-}
+
+
 
 //' @rdname root
 //' @keywords internal
@@ -342,7 +317,7 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
   int numLayers = Ksoil.size();
   double frai = 0.0;
   for(int l=0;l<numLayers;l++) {
-    double LA = fineRootLengthPerArea(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
+    double LA = fineRootLengthPerArea_c(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
     // Rcout<<l<<" "<<LA<<"\n";
     frai += LA*2.0*M_PI*(r/100.0);
   }
@@ -357,15 +332,9 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
-  int numLayers = Ksoil.size();
-  double frb = 0.0;
-  for(int l=0;l<numLayers;l++) {
-    double LA = fineRootLengthPerArea(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
-    // Rcout<<l<<" "<<LA<<"\n";
-    frb += (10000.0*LA)/(N*0.01*specificRootLength);
-  }
-  return(frb);
+  return(fineRootBiomassPerIndividual_c(as<std::vector<double>>(Ksoil),
+                                        as<std::vector<double>>(krhizo),
+                                        lai, N, specificRootLength, rootTissueDensity, rootLengthDensity));
 }
 
 //' @rdname root
@@ -374,14 +343,12 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
 NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
-  int numLayers = Ksoil.size();
-  NumericVector krhizo(numLayers, 0.0);
-  for(int l=0;l<numLayers;l++) {
-    double FRLA = 1e-6*fineRootBiomass[l]*N*specificRootLength;
-    krhizo[l] = fineRootMaximumConductance(Ksoil[l], FRLA, lai, r, rootLengthDensity);
-  }
-  return(krhizo);
+  std::vector<double> krhizo = rhizosphereMaximumConductance_c(as<std::vector<double>>(Ksoil),
+                                                         as<std::vector<double>>(fineRootBiomass),
+                                                         lai, N,
+                                                         specificRootLength, rootTissueDensity,
+                                                         rootLengthDensity);
+  return(Rcpp::wrap(krhizo));
 }
 
 

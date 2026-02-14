@@ -153,7 +153,7 @@ struct TranspirationParams {
   std::vector<double> VCstem_d;
   std::vector<double> kstem_xylem;
   std::vector<double> kstem_symp;
-  std::vector<double> VCroottot_kmax;
+  std::vector<double> VCroot_kmax;
   std::vector<double> VCroot_slope;
   std::vector<double> VCroot_P50;
   std::vector<double> VCroot_c;

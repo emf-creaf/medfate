@@ -210,3 +210,64 @@ double coarseRootSoilVolume_c(const std::vector<double>& v, const std::vector<do
   }
   return(volInd);
 }
+
+
+//' @rdname root
+//' @keywords internal
+// [[Rcpp::export("root_fineRootHalfDistance")]]
+double fineRootHalfDistance_c(double rootLengthDensity) {
+  return(1.0/sqrt(M_PI*rootLengthDensity));
+}
+
+/**
+ * Derivation of fine root length per ground area (m·m-2) 
+ * from the conductance factor for cylindrical flow geometry of the rhizosphere
+ * 
+ */
+double fineRootLengthPerArea_c(double Ksoil, double krhizo, double lai,
+                               double radius, double rootLengthDensity) {
+  double Xi = krhizo*lai/Ksoil;
+  double rmax = fineRootHalfDistance_c(rootLengthDensity);
+  return(log(pow(rmax,2.0)/pow(radius,2.0))*Xi/(4.0*M_PI));
+}
+
+double fineRootBiomassPerIndividual_c(const std::vector<double>& Ksoil, const std::vector<double>& krhizo, double lai, double N,
+                                      double specificRootLength, double rootTissueDensity,  
+                                      double rootLengthDensity) {
+  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
+  int numLayers = Ksoil.size();
+  double frb = 0.0;
+  for(int l=0;l<numLayers;l++) {
+    double LA = fineRootLengthPerArea_c(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
+    // Rcout<<l<<" "<<LA<<"\n";
+    frb += (10000.0*LA)/(N*0.01*specificRootLength);
+  }
+  return(frb);
+}
+
+/**
+ * Derivation of maximum rhizosphere conductance (mmol·m-2·s·MPa-1)
+ * from the conductance factor for cylindrical flow geometry of the rhizosphere
+ * 
+ */
+double fineRootMaximumConductance_c(double Ksoil, double fineRootLengthPerArea, double lai,
+                                  double radius, double rootLengthDensity) {
+  double rmax = fineRootHalfDistance_c(rootLengthDensity);
+  return((fineRootLengthPerArea*Ksoil*4.0*M_PI)/(lai*log(pow(rmax,2.0)/pow(radius,2.0))));
+}
+
+//' @rdname root
+//' @keywords internal
+// [[Rcpp::export("root_rhizosphereMaximumConductance")]]
+std::vector<double> rhizosphereMaximumConductance_c(const std::vector<double>& Ksoil, const std::vector<double>& fineRootBiomass, double lai, double N,
+                                                    double specificRootLength, double rootTissueDensity,  
+                                                    double rootLengthDensity) {
+   double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
+   int numLayers = Ksoil.size();
+   std::vector<double> krhizo(numLayers, 0.0);
+   for(int l=0;l<numLayers;l++) {
+     double FRLA = 1e-6*fineRootBiomass[l]*N*specificRootLength;
+     krhizo[l] = fineRootMaximumConductance_c(Ksoil[l], FRLA, lai, r, rootLengthDensity);
+   }
+   return(krhizo);
+ }

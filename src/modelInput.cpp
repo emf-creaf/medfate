@@ -16,6 +16,7 @@
 #include "tissuemoisture_c.h"
 #include "fuelstructure.h"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "stdlib.h"
 
 using namespace Rcpp;
@@ -665,10 +666,10 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
       NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
       for(int l=0;l<nlayers;l++) {
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
-        VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
+        VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance_c(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                      VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
                      VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],0.0);
         VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
       }
       FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 

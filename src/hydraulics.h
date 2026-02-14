@@ -25,11 +25,6 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 
 double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootmax, 
                                    double kstemmax, double kleafmax);
-double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
-                                         double krootmax, double rootc, double rootd,
-                                         double kstemmax, double stemc, double stemd,
-                                         double kleafmax, double leafc, double leafd,
-                                         double initialValue = 0.0);
 
 
 

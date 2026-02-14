@@ -1761,18 +1761,6 @@ hydraulics_soilPlantResistancesWeibull <- function(psiSoil, psiRhizo, psiStem, P
 
 #' @rdname hydraulics_scalingconductance
 #' @keywords internal
-hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
-    .Call(`_medfate_averageRhizosphereResistancePercent`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
-}
-
-#' @rdname hydraulics_scalingconductance
-#' @keywords internal
-hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue = 0.0) {
-    .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
-}
-
-#' @rdname hydraulics_scalingconductance
-#' @keywords internal
 hydraulics_taperFactorSavage <- function(height) {
     .Call(`_medfate_taperFactorSavage`, height)
 }
@@ -2093,6 +2081,18 @@ hydraulics_proportionDefoliationSigmoid <- function(psiLeaf, P50, slope, PLC_cri
 #' @keywords internal
 hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, PLC_crit = 0.88, P50_cv = 10.0) {
     .Call(`_medfate_proportionDefoliationWeibull_c`, psiLeaf, c, d, PLC_crit, P50_cv)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
+    .Call(`_medfate_averageRhizosphereResistancePercent_c`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue) {
+    .Call(`_medfate_findRhizosphereMaximumConductance_c`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
 }
 
 #' @param month Month of the year (from 1 to 12).
@@ -3429,12 +3429,6 @@ root_individualRootedGroundArea <- function(VolInd, V, d, rfc) {
 
 #' @rdname root
 #' @keywords internal
-root_fineRootHalfDistance <- function(rootLengthDensity) {
-    .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
-}
-
-#' @rdname root
-#' @keywords internal
 root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootAreaIndex`, Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
@@ -3497,6 +3491,18 @@ root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) 
 #' @keywords internal
 root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
     .Call(`_medfate_fineRootSoilVolume_c`, fineRootBiomass, specificRootLength, rootLengthDensity)
+}
+
+#' @rdname root
+#' @keywords internal
+root_fineRootHalfDistance <- function(rootLengthDensity) {
+    .Call(`_medfate_fineRootHalfDistance_c`, rootLengthDensity)
+}
+
+#' @rdname root
+#' @keywords internal
+root_rhizosphereMaximumConductance <- function(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
+    .Call(`_medfate_rhizosphereMaximumConductance_c`, Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
 #' @rdname soil_texture

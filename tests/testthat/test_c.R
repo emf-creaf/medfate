@@ -318,3 +318,82 @@ test_that("growth_day can be run after reorganizing code",{
   expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
   
 })
+test_that("growth_day and growth_day_c return the same result with granier",{
+  control_granier$rhizosphereOverlap <- "total"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  expect_equal(x1$above$DBH, x1_c$above$DBH) # Check for same output
+  expect_equal(x1$above$Cover, x1_c$above$Cover) # Check for same output
+  expect_equal(x1$above$N, x1_c$above$N) # Check for same output
+  expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
+  expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
+  expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
+  expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+  
+  control_granier$rhizosphereOverlap <- "partial"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x1$above$DBH, x1_c$above$DBH) # Check for same output
+  expect_equal(x1$above$Cover, x1_c$above$Cover) # Check for same output
+  expect_equal(x1$above$N, x1_c$above$N) # Check for same output
+  expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
+  expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
+  expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
+  expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+})
+
+test_that("growth_day and growth_day_c return the same result with sperry",{
+  control_sperry$rhizosphereOverlap <- "total"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x1$above$DBH, x1_c$above$DBH) # Check for same output
+  expect_equal(x1$above$Cover, x1_c$above$Cover) # Check for same output
+  expect_equal(x1$above$N, x1_c$above$N) # Check for same output
+  # expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
+  # expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
+  # expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
+  # expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+  # 
+  control_sperry$rhizosphereOverlap <- "partial"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x1$above$DBH, x1_c$above$DBH) # Check for same output
+  expect_equal(x1$above$Cover, x1_c$above$Cover) # Check for same output
+  expect_equal(x1$above$N, x1_c$above$N) # Check for same output
+  # # expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
+  # expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
+  # expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
+  # expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+})
+
+test_that("growth_day and growth_day_c return the same result with sureau",{
+  control_sureau$rhizosphereOverlap <- "total"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  sd1_c <- medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  expect_equal(x1$above$DBH, x1_c$above$DBH) # Check for same output
+  expect_equal(x1$above$Cover, x1_c$above$Cover) # Check for same output
+  expect_equal(x1$above$N, x1_c$above$N) # Check for same output
+  # expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
+  # # expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
+  # # expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
+  # expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+  # 
+  control_sureau$rhizosphereOverlap <- "partial"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  # expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
+  # expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
+  # expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
+  # expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+})

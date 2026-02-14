@@ -33,4 +33,15 @@ RadialAxialLengths coarseRootRadialAxialLengths_c(const std::vector<double>& v, 
 std::vector<double> coarseRootLengths_c(const std::vector<double>& v, const std::vector<double>& d, double depthWidthRatio);
 
 double coarseRootSoilVolume_c(const std::vector<double>& v, const std::vector<double>& d, double depthWidthRatio);
+
+double fineRootLengthPerArea_c(double Ksoil, double krhizo, double lai,
+                               double radius, double rootLengthDensity);
+  
+double fineRootBiomassPerIndividual_c(const std::vector<double>& Ksoil, const std::vector<double>& krhizo, double lai, double N,
+                                      double specificRootLength, double rootTissueDensity,  
+                                      double rootLengthDensity);
+
+std::vector<double> rhizosphereMaximumConductance_c(const std::vector<double>& Ksoil, const std::vector<double>& fineRootBiomass, double lai, double N,
+                                                    double specificRootLength, double rootTissueDensity,  
+                                                    double rootLengthDensity);
 #endif
