@@ -32,6 +32,33 @@ struct LabileCarbonBalance_RESULT {
 };
 Rcpp::DataFrame copyLabileCarbonBalanceResult_c(const LabileCarbonBalance_RESULT& LCBres, ModelInput& x);
 
+struct LabileCarbonBalanceInst_RESULT {
+  arma::mat GrossPhotosynthesis;
+  arma::mat MaintenanceRespiration;
+  arma::mat GrowthCosts;
+  arma::mat RootExudation;
+  arma::mat LabileCarbonBalance;
+  arma::mat SugarLeaf;
+  arma::mat StarchLeaf;
+  arma::mat SugarSapwood; 
+  arma::mat StarchSapwood;
+  arma::mat SugarTransport;
+  LabileCarbonBalanceInst_RESULT(size_t numCohorts = 0, size_t ntimesteps = 0) {
+    GrossPhotosynthesis = arma::mat(numCohorts, ntimesteps);
+    MaintenanceRespiration = arma::mat(numCohorts, ntimesteps);
+    GrowthCosts = arma::mat(numCohorts, ntimesteps);
+    RootExudation = arma::mat(numCohorts, ntimesteps);
+    LabileCarbonBalance = arma::mat(numCohorts, ntimesteps);
+    SugarLeaf = arma::mat(numCohorts, ntimesteps);
+    StarchLeaf = arma::mat(numCohorts, ntimesteps);
+    SugarSapwood = arma::mat(numCohorts, ntimesteps);
+    StarchSapwood = arma::mat(numCohorts, ntimesteps);
+    SugarTransport = arma::mat(numCohorts, ntimesteps);
+  }
+};
+Rcpp::DataFrame copyLabileCarbonBalanceInstResult_c(const LabileCarbonBalanceInst_RESULT& LCBres, ModelInput& x);
+
+
 struct PlantBiomassBalance_RESULT {
   std::vector<double> InitialDensity;
   std::vector<double> InitialSapwoodBiomass;
@@ -144,10 +171,12 @@ Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x)
 
 struct AdvancedGROWTH_RESULT : GROWTH_RESULT {
   AdvancedSPWB_RESULT ASPWBres;
+  LabileCarbonBalanceInst_RESULT LCBInstres;
   
-  AdvancedGROWTH_RESULT(AdvancedSPWB_RESULT SPWBres, size_t numCohorts) : 
+  AdvancedGROWTH_RESULT(AdvancedSPWB_RESULT SPWBres, size_t numCohorts, size_t ntimesteps) : 
   GROWTH_RESULT(numCohorts),
-  ASPWBres(SPWBres){}
+  ASPWBres(SPWBres),
+  LCBInstres(numCohorts, ntimesteps) {}
 };
 Rcpp::List copyAdvancedGROWTHResult_c(AdvancedGROWTH_RESULT& GROWTHres, ModelInput& x);
 

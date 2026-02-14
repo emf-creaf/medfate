@@ -1921,7 +1921,7 @@ List growthDay_c(List x, CharacterVector date, NumericVector meteovec,
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
-  Rcpp::Rcout << "Defining communication structures\n";
+  // Rcpp::Rcout << "Defining communication structures\n";
   GROWTHCommunicationStructures GROWTHcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   
   // Prepare lateral flows
@@ -1942,7 +1942,7 @@ List growthDay_c(List x, CharacterVector date, NumericVector meteovec,
     BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
     
     // Calls simulation
-    Rcpp::Rcout << "about to enter growthDay_inner_c\n";
+    // Rcpp::Rcout << "about to enter growthDay_inner_c\n";
     growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
                       as<std::string>(date[0]),
                       meteovec_c, 
@@ -1955,7 +1955,7 @@ List growthDay_c(List x, CharacterVector date, NumericVector meteovec,
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
     AdvancedSPWB_RESULT ASPWBres(ATres);
-    AdvancedGROWTH_RESULT GROWTHres(ASPWBres, numCohorts);
+    AdvancedGROWTH_RESULT GROWTHres(ASPWBres, numCohorts, ntimesteps);
     // Calls simulation
     growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
                     as<std::string>(date[0]),

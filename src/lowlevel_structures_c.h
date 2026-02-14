@@ -25,6 +25,7 @@ struct WeatherInputVector {
   double prec;
   double wind;
   double rad;
+  double pfire;
   WeatherInputVector() {
     pet = medfate::NA_DOUBLE;
     rhmax = medfate::NA_DOUBLE;
@@ -41,6 +42,7 @@ struct WeatherInputVector {
     prec = medfate::NA_DOUBLE;
     wind = medfate::NA_DOUBLE;
     rad = medfate::NA_DOUBLE;
+    pfire = medfate::NA_DOUBLE;
   }
   WeatherInputVector(Rcpp::NumericVector meteovec) {
     if(meteovec.containsElementNamed("MinTemperature")) tmin = meteovec["MinTemperature"];

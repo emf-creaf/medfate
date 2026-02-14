@@ -87,6 +87,7 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(aboveDF.containsElementNamed("LAI_nocomp")) above.LAI_nocomp = Rcpp::as< std::vector<double> >(aboveDF["LAI_nocomp"]);
   if(aboveDF.containsElementNamed("N")) above.N = Rcpp::as< std::vector<double> >(aboveDF["N"]);
   if(aboveDF.containsElementNamed("DBH")) above.DBH = Rcpp::as< std::vector<double> >(aboveDF["DBH"]);
+  if(aboveDF.containsElementNamed("Cover")) above.Cover = Rcpp::as< std::vector<double> >(aboveDF["Cover"]);
   if(aboveDF.containsElementNamed("SA")) above.SA = Rcpp::as< std::vector<double> >(aboveDF["SA"]);
   if(aboveDF.containsElementNamed("Loading")) above.Loading = Rcpp::as< std::vector<double> >(aboveDF["Loading"]);
   if(aboveDF.containsElementNamed("Age")) above.Age = Rcpp::as< std::vector<double> >(aboveDF["Age"]);

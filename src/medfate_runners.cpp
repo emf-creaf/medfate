@@ -203,7 +203,7 @@ GROWTH_runner::GROWTH_runner(Rcpp::List x_list,
     } else {
       AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
       AdvancedSPWB_RESULT ASPWBres(ATres);
-      AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts);
+      AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts, ntimesteps);
       GROWTHres = std::make_unique<AdvancedGROWTH_RESULT>(AGROWTHres);
     }
     GROWTHcomm = GROWTHCommunicationStructures(x_m.cohorts.SpeciesIndex.size(), x_m.soil.getNlayers(), x_m.canopy.zlow.size(), x_m.control.advancedWB.ndailysteps);
@@ -264,7 +264,7 @@ GROWTH_multiple_runner::GROWTH_multiple_runner(List wbInput_vec,
     } else {
       AdvancedTranspiration_RESULT ATres(numCohorts_i, nlayers_i, ncanlayers_i, ntimesteps_i);
       AdvancedSPWB_RESULT ASPWBres(ATres);
-      AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts_i);
+      AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts_i, ntimesteps_i);
       GROWTHres_vec[i] = std::make_unique<AdvancedGROWTH_RESULT>(AGROWTHres);
     }
     numCohorts_max = std::max(numCohorts_max, x_i.cohorts.SpeciesIndex.size());

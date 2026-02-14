@@ -284,7 +284,7 @@ test_that("growth_day can be run after reorganizing code",{
   expect_equal(x1$soil$W, W_ini) # Check that W has not changed
   expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
   expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
+  
   control_sperry$rhizosphereOverlap <- "partial"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   W_ini <- rlang::duplicate(x1$soil$W)
@@ -292,7 +292,11 @@ test_that("growth_day can be run after reorganizing code",{
   expect_equal(x1$soil$W, W_ini) # Check that W has not changed
   expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
   expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
+  
+  control_sperry$subdailyCarbonBalance <- TRUE
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
+  
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   W_ini <- rlang::duplicate(x1$soil$W)
   expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
@@ -308,4 +312,9 @@ test_that("growth_day can be run after reorganizing code",{
   expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
   expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
 
+  
+  control_sureau$subdailyCarbonBalance <- TRUE
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
+  
 })
