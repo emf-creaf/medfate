@@ -1,8 +1,8 @@
 #include <RcppArmadillo.h>
 #include "phenology_c.h"
 #include "modelInput_c.h"
-#include "carbon.h"
-#include "decomposition.h"
+#include "carbon_c.h"
+#include "decomposition_c.h"
 
 double leafDevelopmentStatus_c(double Sgdd, double gdd, double unfoldingDD) {
   double ds = 0.0;
@@ -114,17 +114,14 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
     if(leafFall) {
       double LAIlitter = x.above.LAI_dead[j]*(1.0 - exp(-1.0*(wind/10.0)));//Decrease dead leaf area according to wind speed
       x.above.LAI_dead[j] = x.above.LAI_dead[j] - LAIlitter;
-      // if(x.containsElementNamed("internalLitter") && x.containsElementNamed("internalSOC") && x.containsElementNamed("paramsLitterDecomposition")) {
-      //   DataFrame internalLitter = Rcpp::as<Rcpp::DataFrame>(x["internalLitter"]);
-      //   DataFrame paramsLitterDecomposition = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
-      //   NumericVector internalSOC = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
-      //   // from m2/m2 to g C/m2
-      //   double leaf_litter = leafCperDry*1000.0*LAIlitter/SLA[j];
-      //   double twig_litter = leaf_litter/(r635[j] - 1.0);
-      //   addLeafTwigLitter(speciesNames[j], leaf_litter, twig_litter, 
-      //                     internalLitter, paramsLitterDecomposition,
-      //                     internalSOC);
-      // }
+      if(fromGrowthModel) {
+          // from m2/m2 to g C/m2
+          double leaf_litter = leafCperDry*1000.0*LAIlitter/x.paramsAnatomy.SLA[j];
+          double twig_litter = leaf_litter/(x.paramsAnatomy.r635[j] - 1.0);
+          addLeafTwigLitter_c(x.cohorts.SpeciesName[j], leaf_litter, twig_litter,
+                              x.internalLitter, x.paramsLitterDecomposition,
+                              x.internalSOC);
+      }
     } 
     //Leaf unfolding, senescence and defoliation only dealt with if called from spwb
     if(!fromGrowthModel) {

@@ -41,10 +41,10 @@ test_that("fordyn can be run and continued in example, herbs and empty forests",
   expect_s3_class(fordyn(fd, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
-  expect_s3_class(fordyn(forest_herbs, examplesoil, 
+  expect_s3_class(fordyn(forest_herbs, examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
-  expect_s3_class(fordyn(emptyforest(), examplesoil, 
+  expect_s3_class(fordyn(emptyforest(), examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
@@ -53,14 +53,14 @@ test_that("fordyn can be run using species codes",{
   f <- exampleforest
   f$treeData$Species <- c(148, 168)
   f$shrubData$Species <- 165
-  expect_s3_class(fordyn(f, examplesoil, 
+  expect_s3_class(fordyn(f, examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
 test_that("fordyn can be run using single soilDomains",{
   control_single <- control
   control_single$soilDomains <- "single"
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil,
                          SpParamsMED, meteo_01_02, control_single,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
@@ -68,7 +68,7 @@ test_that("fordyn can be run using single soilDomains",{
 test_that("fordyn can be run using dual soilDomains",{
   control_dual <- control
   control_dual$soilDomains <- "dual"
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil,
                          SpParamsMED, meteo_01_02, control_dual,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
@@ -76,7 +76,7 @@ test_that("fordyn can be run using dual soilDomains",{
 test_that("fordyn can be run using partial rhizosphere overlap",{
   control_partial_overlap <- control
   control_partial_overlap$rhizosphereOverlap <- "partial"
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil,
                          SpParamsMED, meteo_01_02, control_partial_overlap,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
@@ -85,38 +85,38 @@ test_that("fordyn can be run using different recruitment modes",{
   control_recr <- control
   for(mode in c("annual/stochastic", "annual/deterministic", "daily/stochastic", "daily/deterministic")) {
     control_recr$recruitmentMode <- mode
-    expect_s3_class(fordyn(exampleforest, examplesoil, 
+    expect_s3_class(fordyn(exampleforest, examplesoil,
                            SpParamsMED, meteo_01_02, control_recr,
                            latitude = 41.82592, elevation = 100), "fordyn")
   }
 })
 
 test_that("fordyn can be run in example, herbs and empty forests using management",{
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100,
                          management_function = defaultManagementFunction,
                          management_args = defaultManagementArguments()), "fordyn")
-  expect_s3_class(fordyn(forest_herbs, examplesoil, 
+  expect_s3_class(fordyn(forest_herbs, examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100,
                          management_function = defaultManagementFunction,
                          management_args = defaultManagementArguments()), "fordyn")
-  expect_s3_class(fordyn(emptyforest(), examplesoil, 
+  expect_s3_class(fordyn(emptyforest(), examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100,
                          management_function = defaultManagementFunction,
                          management_args = defaultManagementArguments()), "fordyn")
 })
 test_that("fordyn can be run with fire hazard results",{
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil,
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
 test_that("fordyn can be run using dates as columns",{
   control_fh <- control
   control_fh$fireHazardResults <- TRUE
-  expect_s3_class(fordyn(exampleforest, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil,
                          SpParamsMED, meteo_01_02_B, control_fh,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })

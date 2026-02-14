@@ -1,81 +1,12 @@
 #include <RcppArmadillo.h>
-#include "fuelmoisture.h"
+#include "fuelmoisture_c.h"
 #include "communication_structures.h"
+#include "decomposition_c.h"
+#include "decomposition.h"
 using namespace Rcpp;
 
 
-//' Low-level decomposition functions
-//' 
-//' Functions related to litter and soil carbon decomposition processes
-//' 
-//' @param AET Actual evapotranspiration (mm)
-//' @param lignin Lignin percent
-//' 
-//' @details
-//' Function \code{decomposition_moistureEffect} follows Kelly et al. (2000) 
-//' Function \code{decomposition_snagFallProbability} follows Vanderwell et al. (2006) 
-//' 
-//' @return Functions \code{decomposition_moistureEffect}, \code{decomposition_pHEffect} and \code{decomposition_temperatureEffect} return
-//' a scalar value representing a factor that should modify a decomposition rate. Function \code{decomposition_annualLitterDecompositionRate} 
-//' directly returns a scalar value with the annual decomposition rate (yr-1). Function \code{decomposition_litterMetabolicFraction} returns
-//' a scalar with the fraction of litter that corresponds to metabolic carbon.
-//' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' 
-//' @seealso \code{\link{decomposition_DAYCENT}}
-//' 
-//' @references
-//' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
-//' 
-//' Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.
-//' 
-//' Meentemeyer (1978)
-//' 
-//' Kelly et al (2000)
-//' 
-//' @keywords internal
-//' @name decomposition_annualLitterDecompositionRate
-// [[Rcpp::export("decomposition_annualLitterDecompositionRate")]]
-double annualLitterDecompositionRate(double AET, double lignin) {
-  double ki = (-0.5365+0.00241*AET) - (-0.01586+0.000056*AET)*lignin;
-  return(ki);
-}
 
-//' @param DBH Diameter at breast height
-//' @param decayClass Decay class, from 1 to 5
-//' @param durabilityEffect Effect of wood durability
-//' 
-//' @rdname decomposition_annualLitterDecompositionRate
-// [[Rcpp::export("decomposition_snagFallProbability")]]
-double snagFallProbability(double DBH, int decayClass, double durabilityEffect = 0.0) {
-  double gamma_dur[5];
-  gamma_dur[0] = 0.0;
-  gamma_dur[1] = 0.177;
-  gamma_dur[2] = 0.542;
-  gamma_dur[3] = 0.702;
-  gamma_dur[4] = 0.528;
-  
-  double lnDBH = log(DBH);
-  double lp  = 5.691 + durabilityEffect + gamma_dur[decayClass - 1] - 3.777*lnDBH + 0.531*pow(lnDBH,2.0);
-  double p5 = exp(lp)/(1.0 + exp(lp));
-  double p1 = 1.0 - pow(1.0 - p5, 1.0/5.0);
-  return(p1);
-}
-
-
-//' @param ligninPercent lignin content (% of dry)
-//' @param Nmass  nitrogen content (mg N / g dry)
-//' 
-//' @rdname decomposition_annualLitterDecompositionRate
-// [[Rcpp::export("decomposition_litterMetabolicFraction")]]
-double litterMetabolicFraction(double ligninPercent, double Nmass) {
-  double fnit = Nmass/1000.0; //to g N/g dry
-  double flig = ligninPercent/100.0; //to g lignin /g dry
-  double rlig2n = flig/fnit;
-  double fmet = 0.85 - 0.013 * rlig2n;
-  return(fmet);
-}
 
 // [[Rcpp::export(".decomposition_addLeafTwigLitter")]]
 void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter,
@@ -92,7 +23,7 @@ void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_li
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
-    double fmet = litterMetabolicFraction(LeafLignin[row], Nleaf[row]);
+    double fmet = litterMetabolicFraction_c(LeafLignin[row], Nleaf[row]);
     //Distribute between metabolic and structural
     SOC["SurfaceMetabolic"] = SOC["SurfaceMetabolic"] + leaf_litter*fmet;
     structural_litter_leaves[row] += leaf_litter*(1.0 - fmet);
@@ -151,7 +82,7 @@ void addFineRootLitter(String species_litter, double fineroot_litter,
   int row = -1;
   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
   if(row !=-1) {
-    double fmet = litterMetabolicFraction(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
+    double fmet = litterMetabolicFraction_c(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
     //Distribute between metabolic and structural
     SOC["SoilMetabolic"] = SOC["SoilMetabolic"] + fineroot_litter*fmet;
     structural_litter_fineroots[row] += fineroot_litter*(1.0 - fmet);
@@ -160,86 +91,14 @@ void addFineRootLitter(String species_litter, double fineroot_litter,
   
 
 
-double pHEffect(double x, double a, double b, double c, double d) {
-  double pi = 3.141592;
-  double pHeff = b + (c / pi) * atan(d * (x - a) * pi);
-  pHeff = std::max(std::min(pHeff, 1.0), 0.0);
-  return(pHeff);
-}
-
 //' @param x Soil water pH (0-14)
 //' @param pool String indicating the decomposition pool
 //' 
 //' @rdname decomposition_annualLitterDecompositionRate
 // [[Rcpp::export("decomposition_pHEffect")]]
 double pHEffect(double x, String pool) {
-  double a, b, c, d;
-  if(pool=="SurfaceMetabolic") {
-    a = 4.8; b=0.5; c=1.14; d = 0.7;
-  } else if(pool=="SoilMetabolic") {
-      a = 4.8; b=0.5; c=1.14; d = 0.7;
-  } else if(pool=="Leaves") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="FineRoots") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="Twigs") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SmallBranches") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="LargeWood") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="CoarseRoots") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SurfaceActive") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilActive") {
-    a = 4.8; b= 0.5; c = 1.14; d = 0.7;
-  } else if(pool=="SurfaceSlow") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilSlow") {
-    a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilPassive") {
-    a = 3.0; b= 0.5; c = 1.1; d = 0.7;
-  } else {
-    stop("Wrong carbon pool");
-  }
-  return(pHEffect(x, a, b, c, d));
-}
-
-//' @param sand,clay Soil texture values in percent volume.
-//' @param soilMoisture Soil moisture content, relative to saturation.
-//' 
-//' @rdname decomposition_annualLitterDecompositionRate
-// [[Rcpp::export("decomposition_moistureEffect")]]
-double moistureEffect(double sand, double clay, double soilMoisture) {
-  
-  bool fineTexture = (sand < 20.0); //TO BE REVISED
-  
-  double a = 0.6;
-  double b = 1.27;
-  double c = 0.0012;
-  double d = 2.84;
-  if(!fineTexture) {
-    a = 0.55;
-    b = 1.7;
-    c = -0.007;
-    d = 3.22;
-  }
-  double e = d*(b - a)/(a - c);
-  double f1 = pow((soilMoisture - b)/(a - b), e);
-  double f2 = pow((soilMoisture - c)/(a - c), d);
-  return(f1*f2);
-}
-
-
-//' @param soilTemperature Soil temperature (in Celsius).
-//' 
-//' @rdname decomposition_annualLitterDecompositionRate
-// [[Rcpp::export("decomposition_temperatureEffect")]]
-double temperatureEffect(double soilTemperature) {
-  double pi = 3.141592;
-  double tEff = 0.56  + (1.46/pi) * atan(0.031*pi*(soilTemperature - 15.7)); //15.7 Celsius = 288.85 K
-  return(tEff);
+  std::string pool_c = pool.get_cstring();
+  return(pHEffect_c(x, pool_c));
 }
 
 void updateBaseRates(List commDecomp,
@@ -261,17 +120,17 @@ void updateBaseRates(List commDecomp,
 // rate for soil temperature and soil moisture scalars
 // (cdi) and additionally pH, lignin, texture, anaerobic,
 // and cultivation
- //'  @param soilPH  soil pH
- //'  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
- //'  @param sand,clay percent sand, clay
- //'  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
- //'  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
- //'  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
- //' 
- //' Updates
- //'    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
- //'    xi          ! environmental scalar
- void updateDecompositionRateScalars(List commDecomp, 
+//'  @param soilPH  soil pH
+//'  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
+//'  @param sand,clay percent sand, clay
+//'  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
+//'  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
+//'  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
+//' 
+//' Updates
+//'    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
+//'    xi          ! environmental scalar
+void updateDecompositionRateScalars(List commDecomp, 
                                      double sand, double clay,
                                      double soilTemperature, double soilMoisture, double soilPH, 
                                      double soilO2, double cultfac) {
@@ -282,8 +141,8 @@ void updateBaseRates(List commDecomp,
    
    double pHeff, textureEff;
    
-   double tempEff = temperatureEffect(soilTemperature);
-   double moistEff = moistureEffect(sand, clay, soilMoisture);
+   double tempEff = temperatureEffect_c(soilTemperature);
+   double moistEff = moistureEffect_c(sand, clay, soilMoisture);
    double cdi = tempEff*moistEff;
    
    //  metabolic litter (surface)
@@ -385,11 +244,11 @@ void DAYCENTsnagsInner(NumericVector snagDecompositionOutput,
   
   
   //Temperature effect
-  double tempEff = temperatureEffect(airTemperature);
+  double tempEff = temperatureEffect_c(airTemperature);
   //Moisture effect for fine texture
   double fuelMaximumMoisture = 100.0; //% dry Depends on wood density
-  double fuelMoisture = EMCSimard(airTemperature, airRelativeHumidity); //Ranges between 0 and 30% dry
-  double moistEff = moistureEffect(0, 80, fuelMoisture/fuelMaximumMoisture);
+  double fuelMoisture = EMCSimard_c(airTemperature, airRelativeHumidity); //Ranges between 0 and 30% dry
+  double moistEff = moistureEffect_c(0, 80, fuelMoisture/fuelMaximumMoisture);
   
   double k, flig, loss;
   
@@ -461,8 +320,8 @@ void DAYCENTlitterInner(NumericVector litterDecompositionOutput,
   double pHeff;
   
 
-  double tempEff = temperatureEffect(soilTemperature);
-  double moistEff = moistureEffect(sand, clay, soilMoisture);
+  double tempEff = temperatureEffect_c(soilTemperature);
+  double moistEff = moistureEffect_c(sand, clay, soilMoisture);
 
   double k, flig, loss;
   

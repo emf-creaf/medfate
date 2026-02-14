@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 #include "biophysicsutils_c.h"
 #include "carbon_c.h"
+#include "decomposition_c.h"
 #include "modelInput_c.h"
 #include "phenology_c.h"
 #include "spwb_day_c.h"
@@ -276,7 +277,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
     }
   }
   
-
   // String soilFunctions = control["soilFunctions"];
   // String mortalityMode = control["mortalityMode"];
   bool subdailyCarbonBalance = x.control.growth.subdailyCarbonBalance;
@@ -1086,24 +1086,23 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         // Rcout << " GC "<< GROWTHres.LCBres.GrowthCosts[j]*TotalLivingBiomass[j] << " RE " << GROWTHres.LCBres.RootExudation[j]*TotalLivingBiomass[j] << " DeltaS " <<  GROWTHres.LCBres.LabileCarbonBalance[j]*TotalLivingBiomass[j]<<"\n";
       }
 
-  //     ///// C13. EXPORT ROOT EXUDATION AND FINEROOT LITTER TO DECOMPOSING POOLS
-  //     if(exportLitter) {
-  //       //From g/ind to g C/m2
-  //       double fineroot_litter = rootCperDry*senescenceFinerootLoss*(N[j]/10000.0); 
-  //       addFineRootLitter(speciesNames[j], fineroot_litter,
-  //                         internalLitter, paramsLitterDecomposition,
-  //                         internalSOC);
-  //       //From g gluc/g ind to g C/m2
-  //       double metabolicSoil = (6.0*carbonMolarMass/glucoseMolarMass) * RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0); 
-  //       internalSOC["SoilMetabolic"] = internalSOC["SoilMetabolic"] + metabolicSoil;
-  //     }
-  //     //For shrubs, convert SA senescence into mass of standing dead branches (g C/m2)
-  //     if(ctype[j]=="shrub") {
-  //       double sh_wood_biomass = (deltaSASenescence/SA[j])*(N[j]/10000.0)*AbovegroundWoodBiomass[j]*WoodC[j]; //Aboveground necromass
-  //       Snag_smallbranches[j] += sh_wood_biomass;
-  //     }
-  //     
-  //     
+      ///// C13. EXPORT ROOT EXUDATION AND FINEROOT LITTER TO DECOMPOSING POOLS
+      //From g/ind to g C/m2
+      double fineroot_litter = rootCperDry*senescenceFinerootLoss*(N[j]/10000.0);
+      addFineRootLitter_c(x.cohorts.SpeciesName[j], fineroot_litter,
+                          x.internalLitter, x.paramsLitterDecomposition,
+                          x.internalSOC);
+      //From g gluc/g ind to g C/m2
+      double metabolicSoil = (6.0*carbonMolarMass/glucoseMolarMass) * GROWTHres.LCBres.RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0);
+      x.internalSOC.SoilMetabolic += metabolicSoil;
+      
+      //For shrubs, convert SA senescence into mass of standing dead branches (g C/m2)
+      if(ctype[j]=="shrub") {
+        double sh_wood_biomass = (deltaSASenescence/SA[j])*(N[j]/10000.0)*AbovegroundWoodBiomass[j]*x.paramsGrowth.WoodC[j]; //Aboveground necromass
+        x.internalMortality.Snag_smallbranches[j] += sh_wood_biomass;
+      }
+
+
       ///// C13. UPDATE INDIVIDUAL LEAF AREA, DEAD LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS /////
       // Rcout<<"-update";
       LAexpanded += deltaLAgrowth[j] - deltaLAsenescence;
@@ -1251,7 +1250,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   ///// C. FIRE OCCURRENCE AND BEHAVIOR /////
   ///////////////////////////////////////////
   double fireCombustion = 0.0;// Fire combustion (in C/m2) for stand carbon balance
-  // bool fireOccurrence = false;
+  bool fireOccurrence = false;
   // double pfire = meteovec["pfire"];
   // NumericVector fireBehavior = communicationFireHazard();
   // if(R::runif(0.0,1.0) < pfire) {
@@ -1502,49 +1501,38 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   ///// F. CARBON DECOMPOSITION /////
   ///////////////////////////////////
   double heterotrophicRespiration = 0.0;
-  // if(exportLitter) {
-  //   NumericVector baseAnnualRates = control["decompositionAnnualBaseRates"];
-  //   double annualTurnoverRate = control["decompositionAnnualTurnoverRate"];
-  //   List commDecomp = internalCommunication["decomposition"];
-  //   double soilPH = 7.0;
-  //   if(soil.containsElementNamed("pH")) {
-  //     NumericVector pH = soil["pH"];
-  //     if(!NumericVector::is_na(pH[0])) soilPH = pH[0];
-  //   }
-  //   NumericVector soilTheta = theta(soil, soilFunctions);
-  //   NumericVector soilThetaSAT = thetaSAT(soil, soilFunctions);
-  //   double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
-  //   double tday = averageDaylightTemperature_c(tmin, tmax);
-  //   double vpsat = saturationVapourPressure_c(tday);
-  //   double rhmean = 100.0*std::max(1.0, vpatm/vpsat);
-  //   heterotrophicRespiration = DAYCENTInner(commDecomp, internalSnags, internalLitter, internalSOC,
-  //                                           paramsLitterDecomposition,
-  //                                           baseAnnualRates, annualTurnoverRate,
-  //                                           tday, rhmean,
-  //                                           sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
-  // }
-  // 
-  // 
-  // ///////////////////////////////////////////////
-  // ///// G. FIRE EFFECTS ON SNAGS AND LITTER /////
-  // ///////////////////////////////////////////////
-  // if(fireOccurrence) {
-  //   NumericVector li_leaves = internalLitter["Leaves"];
-  //   NumericVector li_twigs = internalLitter["Twigs"];
-  //   NumericVector li_smallbranches = internalLitter["SmallBranches"];
-  //   fireCombustion += sum(li_leaves) + sum(li_twigs) + sum(li_smallbranches);
-  //   for(int i=0;i<li_leaves.size();i++) {
-  //     li_leaves[i] = 0.0;
-  //     li_twigs[i] = 0.0;
-  //     li_smallbranches[i] = 0.0;
-  //   }
-  //   NumericVector sn_smallbranches = internalSnags["SmallBranches"];
-  //   fireCombustion += sum(sn_smallbranches);
-  //   for(int i=0;i<sn_smallbranches.size();i++) {
-  //     sn_smallbranches[i] = 0.0;
-  //   }
-  // }
-  // 
+  double soilPH = 7.0;
+  if(!std::isnan(x.soil.getPH(0))) soilPH = x.soil.getPH(0);
+  double soilMoisture = x.soil.getTheta(0)/x.soil.getThetaSAT(0);
+  double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+  double vpsat = saturationVapourPressure_c(tday);
+  double rhmean = 100.0*std::max(1.0, vpatm/vpsat);
+  heterotrophicRespiration = DAYCENTInner_c(GROWTHcomm.DECcomm,
+                                            x.internalSnags, x.internalLitter, x.internalSOC,
+                                            x.paramsLitterDecomposition,
+                                            x.control.decomposition.annualBaseRates, x.control.decomposition.decompositionAnnualTurnoverRate,
+                                            tday, rhmean,
+                                            x.soil.getSand(0), x.soil.getClay(0), x.soil.getTemp(0), soilMoisture, soilPH,
+                                            1.0, 1.0, 1.0);
+
+  ///////////////////////////////////////////////
+  ///// G. FIRE EFFECTS ON SNAGS AND LITTER /////
+  ///////////////////////////////////////////////
+  if(fireOccurrence) {
+    int numLitterCohorts = x.internalLitter.Leaves.size();
+    for(int i=0;i<numLitterCohorts;i++) {
+      fireCombustion += x.internalLitter.Leaves[i] + x.internalLitter.Twigs[i] + x.internalLitter.SmallBranches[i];
+      x.internalLitter.Leaves[i] = 0.0;
+      x.internalLitter.Twigs[i] = 0.0;
+      x.internalLitter.SmallBranches[i] = 0.0;
+    }
+    int numSnagCohorts = x.internalSnags.SmallBranches.size();
+    for(int i=0;i<numSnagCohorts;i++) {
+      fireCombustion += x.internalSnags.SmallBranches[i];
+      x.internalSnags.SmallBranches[i] = 0.0;
+    }
+  }
+
   // ////////////////////////////////////////////
   // ///// E4. CLOSE PLANT BIOMASS BALANCE //////
   // ////////////////////////////////////////////
@@ -1570,7 +1558,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   // }
   // finalStand_gC_m2 += (sum(Snag_smallbranches) + sum(Snag_largewood));
   // double changeStand_gC_m2 = finalStand_gC_m2 - initialStand_gC_m2;
-  // 
+
   ///////////////////////////////////////////////
   ///// H. CLOSE STAND-LEVEL CARBON BALANCE /////
   ///////////////////////////////////////////////
@@ -1660,6 +1648,7 @@ void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& 
   
   //Update phenology
   if(leafPhenology) {
+    Rcpp::Rcout<< "about to enter phenology\n";
     updatePhenology_c(x, doy, photoperiod, meteovec.tday);
     updateLeaves_c(x, meteovec.wind, false);
   }
@@ -1668,7 +1657,7 @@ void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& 
   meteovec.tmaxPrev = meteovec.tmax;
   meteovec.tminNext = meteovec.tmin;
   
-  // Rcpp::Rcout << "about to enter growth day_private_c\n";
+  Rcpp::Rcout << "about to enter growth day_private_c\n";
   growthDay_private_c(GROWTHres, GROWTHcomm, x, 
                       meteovec, 
                       latitude, elevation, slope, aspect,

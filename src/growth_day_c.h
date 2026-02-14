@@ -1,6 +1,7 @@
 #include "lowlevel_structures_c.h"
 #include "spwb_day_c.h"
 #include "carbon_c.h"
+#include "decomposition_c.h"
 
 #ifndef GROWTH_DAY_C_H
 #define GROWTH_DAY_C_H
@@ -167,10 +168,12 @@ struct InitialFinalCarbonCompartments{
 struct GROWTHCommunicationStructures {
   WBCommunicationStructures WBcomm;
   InitialFinalCarbonCompartments initialFinalCC;
+  Decomposition_COMM DECcomm;
   
   GROWTHCommunicationStructures(size_t numCohorts, size_t nlayers, size_t ncanlayers, size_t ntimesteps) : 
     WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps),
-    initialFinalCC(numCohorts) {}
+    initialFinalCC(numCohorts),
+    DECcomm(7) {}
 };
 
 double dailyMortalityProbability_c(double stressValue, double stressThreshold);

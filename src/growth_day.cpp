@@ -1569,7 +1569,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
                                             paramsLitterDecomposition,
                                             baseAnnualRates, annualTurnoverRate,
                                             tday, rhmean,
-                                            sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH);
+                                            sand[0], clay[0], Tsoil[0], soilTheta[0]/soilThetaSAT[0], soilPH, 1.0, 1.0, 1.0);
   }
   
 
@@ -1921,6 +1921,7 @@ List growthDay_c(List x, CharacterVector date, NumericVector meteovec,
   int ncanlayers = x_c.canopy.zlow.size();
   int numCohorts = x_c.cohorts.SpeciesIndex.size();
   int ntimesteps = x_c.control.advancedWB.ndailysteps;
+  Rcpp::Rcout << "Defining communication structures\n";
   GROWTHCommunicationStructures GROWTHcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   
   // Prepare lateral flows
@@ -1941,6 +1942,7 @@ List growthDay_c(List x, CharacterVector date, NumericVector meteovec,
     BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
     
     // Calls simulation
+    Rcpp::Rcout << "about to enter growthDay_inner_c\n";
     growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
                       as<std::string>(date[0]),
                       meteovec_c, 

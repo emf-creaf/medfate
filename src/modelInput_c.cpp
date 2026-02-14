@@ -10,14 +10,14 @@ AbstractModelInput::AbstractModelInput(Rcpp::List x) {
   std::string input_classIn = s.get_cstring();
   input_class = input_classIn;
   if(x.containsElementNamed("version")) version = Rcpp::as<std::string>(x["version"]);
-  Rcpp::Rcout<< " Model input:  " << input_classIn <<  " version: "<< version << "\n";
+  // Rcpp::Rcout<< " Model input:  " << input_classIn <<  " version: "<< version << "\n";
 }
 
 void AbstractModelInput::checkInputClass(Rcpp::List x) {
   Rcpp::CharacterVector classVector = x.attr("class");
   Rcpp::String s = classVector[0];
   std::string input_classIn = s.get_cstring();
-  Rcpp::Rcout<<  " Checking: "<<input_class << " vs. " << input_classIn <<"\n";
+  // Rcpp::Rcout<<  " Checking: "<<input_class << " vs. " << input_classIn <<"\n";
   if(input_class != input_classIn) throw medfate::MedfateInternalError("Trying to copy to a different model input class.");
 }
 WaterBalanceModelInput::WaterBalanceModelInput(Rcpp::List x) : AbstractModelInput(x) {

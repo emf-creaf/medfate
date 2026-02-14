@@ -374,58 +374,17 @@ instance_communication_structures <- function(x, model) {
     .Call(`_medfate_testControlListToStructure`, x)
 }
 
-#' Low-level decomposition functions
+#'  @param soilPH  soil pH
+#'  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
+#'  @param sand,clay percent sand, clay
+#'  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
+#'  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
+#'  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
 #' 
-#' Functions related to litter and soil carbon decomposition processes
-#' 
-#' @param AET Actual evapotranspiration (mm)
-#' @param lignin Lignin percent
-#' 
-#' @details
-#' Function \code{decomposition_moistureEffect} follows Kelly et al. (2000) 
-#' Function \code{decomposition_snagFallProbability} follows Vanderwell et al. (2006) 
-#' 
-#' @return Functions \code{decomposition_moistureEffect}, \code{decomposition_pHEffect} and \code{decomposition_temperatureEffect} return
-#' a scalar value representing a factor that should modify a decomposition rate. Function \code{decomposition_annualLitterDecompositionRate} 
-#' directly returns a scalar value with the annual decomposition rate (yr-1). Function \code{decomposition_litterMetabolicFraction} returns
-#' a scalar with the fraction of litter that corresponds to metabolic carbon.
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' 
-#' @seealso \code{\link{decomposition_DAYCENT}}
-#' 
-#' @references
-#' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
-#' 
-#' Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.
-#' 
-#' Meentemeyer (1978)
-#' 
-#' Kelly et al (2000)
-#' 
-#' @keywords internal
-#' @name decomposition_annualLitterDecompositionRate
-decomposition_annualLitterDecompositionRate <- function(AET, lignin) {
-    .Call(`_medfate_annualLitterDecompositionRate`, AET, lignin)
-}
-
-#' @param DBH Diameter at breast height
-#' @param decayClass Decay class, from 1 to 5
-#' @param durabilityEffect Effect of wood durability
-#' 
-#' @rdname decomposition_annualLitterDecompositionRate
-decomposition_snagFallProbability <- function(DBH, decayClass, durabilityEffect = 0.0) {
-    .Call(`_medfate_snagFallProbability`, DBH, decayClass, durabilityEffect)
-}
-
-#' @param ligninPercent lignin content (% of dry)
-#' @param Nmass  nitrogen content (mg N / g dry)
-#' 
-#' @rdname decomposition_annualLitterDecompositionRate
-decomposition_litterMetabolicFraction <- function(ligninPercent, Nmass) {
-    .Call(`_medfate_litterMetabolicFraction`, ligninPercent, Nmass)
-}
+#' Updates
+#'    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
+#'    xi          ! environmental scalar
+NULL
 
 .decomposition_addLeafTwigLitter <- function(species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC) {
     invisible(.Call(`_medfate_addLeafTwigLitter`, species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC))
@@ -453,21 +412,6 @@ decomposition_litterMetabolicFraction <- function(ligninPercent, Nmass) {
 #' @rdname decomposition_annualLitterDecompositionRate
 decomposition_pHEffect <- function(x, pool) {
     .Call(`_medfate_pHEffect`, x, pool)
-}
-
-#' @param sand,clay Soil texture values in percent volume.
-#' @param soilMoisture Soil moisture content, relative to saturation.
-#' 
-#' @rdname decomposition_annualLitterDecompositionRate
-decomposition_moistureEffect <- function(sand, clay, soilMoisture) {
-    .Call(`_medfate_moistureEffect`, sand, clay, soilMoisture)
-}
-
-#' @param soilTemperature Soil temperature (in Celsius).
-#' 
-#' @rdname decomposition_annualLitterDecompositionRate
-decomposition_temperatureEffect <- function(soilTemperature) {
-    .Call(`_medfate_temperatureEffect`, soilTemperature)
 }
 
 #' @rdname decomposition_DAYCENT
@@ -532,6 +476,74 @@ decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseA
 #' @keywords internal
 decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
     .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
+}
+
+#' Low-level decomposition functions
+#' 
+#' Functions related to litter and soil carbon decomposition processes
+#' 
+#' @param AET Actual evapotranspiration (mm)
+#' @param lignin Lignin percent
+#' 
+#' @details
+#' Function \code{decomposition_moistureEffect} follows Kelly et al. (2000) 
+#' Function \code{decomposition_snagFallProbability} follows Vanderwell et al. (2006) 
+#' 
+#' @return Functions \code{decomposition_moistureEffect}, \code{decomposition_pHEffect} and \code{decomposition_temperatureEffect} return
+#' a scalar value representing a factor that should modify a decomposition rate. Function \code{decomposition_annualLitterDecompositionRate} 
+#' directly returns a scalar value with the annual decomposition rate (yr-1). Function \code{decomposition_litterMetabolicFraction} returns
+#' a scalar with the fraction of litter that corresponds to metabolic carbon.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' 
+#' @seealso \code{\link{decomposition_DAYCENT}}
+#' 
+#' @references
+#' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
+#' 
+#' Vanderwel et al. (2006) Snag dynamics in partially harvested and unmanaged northern hardwood forests. Canadian Journal of Forest Research 36: 2769-2779.
+#' 
+#' Meentemeyer (1978)
+#' 
+#' Kelly et al (2000)
+#' 
+#' @keywords internal
+#' @name decomposition_annualLitterDecompositionRate
+decomposition_annualLitterDecompositionRate <- function(AET, lignin) {
+    .Call(`_medfate_annualLitterDecompositionRate_c`, AET, lignin)
+}
+
+#' @param DBH Diameter at breast height
+#' @param decayClass Decay class, from 1 to 5
+#' @param durabilityEffect Effect of wood durability
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
+decomposition_snagFallProbability <- function(DBH, decayClass, durabilityEffect = 0.0) {
+    .Call(`_medfate_snagFallProbability_c`, DBH, decayClass, durabilityEffect)
+}
+
+#' @param ligninPercent lignin content (% of dry)
+#' @param Nmass  nitrogen content (mg N / g dry)
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
+decomposition_litterMetabolicFraction <- function(ligninPercent, Nmass) {
+    .Call(`_medfate_litterMetabolicFraction_c`, ligninPercent, Nmass)
+}
+
+#' @param sand,clay Soil texture values in percent volume.
+#' @param soilMoisture Soil moisture content, relative to saturation.
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
+decomposition_moistureEffect <- function(sand, clay, soilMoisture) {
+    .Call(`_medfate_moistureEffect_c`, sand, clay, soilMoisture)
+}
+
+#' @param soilTemperature Soil temperature (in Celsius).
+#' 
+#' @rdname decomposition_annualLitterDecompositionRate
+decomposition_temperatureEffect <- function(soilTemperature) {
+    .Call(`_medfate_temperatureEffect_c`, soilTemperature)
 }
 
 #' Fire behaviour functions
@@ -1152,20 +1164,16 @@ forest2belowground <- function(x, soil, SpParams) {
     .Call(`_medfate_forest2belowground`, x, soil, SpParams)
 }
 
-.fuelConditions <- function(airTemp, airHumidity, fuelRadiation, fuelWindSpeed) {
-    .Call(`_medfate_fuelConditions`, airTemp, airHumidity, fuelRadiation, fuelWindSpeed)
-}
-
 .EMCdesorption <- function(fuelTemperature, fuelHumidity) {
-    .Call(`_medfate_EMCdesorption`, fuelTemperature, fuelHumidity)
+    .Call(`_medfate_EMCdesorption_c`, fuelTemperature, fuelHumidity)
 }
 
 .EMCadsorption <- function(fuelTemperature, fuelHumidity) {
-    .Call(`_medfate_EMCadsorption`, fuelTemperature, fuelHumidity)
+    .Call(`_medfate_EMCadsorption_c`, fuelTemperature, fuelHumidity)
 }
 
 .EMCSimard <- function(fuelTemperature, fuelHumidity) {
-    .Call(`_medfate_EMCSimard`, fuelTemperature, fuelHumidity)
+    .Call(`_medfate_EMCSimard_c`, fuelTemperature, fuelHumidity)
 }
 
 .woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_) {

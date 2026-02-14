@@ -733,43 +733,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// annualLitterDecompositionRate
-double annualLitterDecompositionRate(double AET, double lignin);
-RcppExport SEXP _medfate_annualLitterDecompositionRate(SEXP AETSEXP, SEXP ligninSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type AET(AETSEXP);
-    Rcpp::traits::input_parameter< double >::type lignin(ligninSEXP);
-    rcpp_result_gen = Rcpp::wrap(annualLitterDecompositionRate(AET, lignin));
-    return rcpp_result_gen;
-END_RCPP
-}
-// snagFallProbability
-double snagFallProbability(double DBH, int decayClass, double durabilityEffect);
-RcppExport SEXP _medfate_snagFallProbability(SEXP DBHSEXP, SEXP decayClassSEXP, SEXP durabilityEffectSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
-    Rcpp::traits::input_parameter< int >::type decayClass(decayClassSEXP);
-    Rcpp::traits::input_parameter< double >::type durabilityEffect(durabilityEffectSEXP);
-    rcpp_result_gen = Rcpp::wrap(snagFallProbability(DBH, decayClass, durabilityEffect));
-    return rcpp_result_gen;
-END_RCPP
-}
-// litterMetabolicFraction
-double litterMetabolicFraction(double ligninPercent, double Nmass);
-RcppExport SEXP _medfate_litterMetabolicFraction(SEXP ligninPercentSEXP, SEXP NmassSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type ligninPercent(ligninPercentSEXP);
-    Rcpp::traits::input_parameter< double >::type Nmass(NmassSEXP);
-    rcpp_result_gen = Rcpp::wrap(litterMetabolicFraction(ligninPercent, Nmass));
-    return rcpp_result_gen;
-END_RCPP
-}
 // addLeafTwigLitter
 void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter, DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector SOC);
 RcppExport SEXP _medfate_addLeafTwigLitter(SEXP species_litterSEXP, SEXP leaf_litterSEXP, SEXP twig_litterSEXP, SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP SOCSEXP) {
@@ -847,30 +810,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// moistureEffect
-double moistureEffect(double sand, double clay, double soilMoisture);
-RcppExport SEXP _medfate_moistureEffect(SEXP sandSEXP, SEXP claySEXP, SEXP soilMoistureSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
-    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
-    Rcpp::traits::input_parameter< double >::type soilMoisture(soilMoistureSEXP);
-    rcpp_result_gen = Rcpp::wrap(moistureEffect(sand, clay, soilMoisture));
-    return rcpp_result_gen;
-END_RCPP
-}
-// temperatureEffect
-double temperatureEffect(double soilTemperature);
-RcppExport SEXP _medfate_temperatureEffect(SEXP soilTemperatureSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureEffect(soilTemperature));
-    return rcpp_result_gen;
-END_RCPP
-}
 // DAYCENTsnags
 NumericVector DAYCENTsnags(DataFrame snags, NumericVector baseAnnualRates, double airTemperature, double airRelativeHumidity, double tstep);
 RcppExport SEXP _medfate_DAYCENTsnags(SEXP snagsSEXP, SEXP baseAnnualRatesSEXP, SEXP airTemperatureSEXP, SEXP airRelativeHumiditySEXP, SEXP tstepSEXP) {
@@ -930,6 +869,67 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
     rcpp_result_gen = Rcpp::wrap(DAYCENT(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    return rcpp_result_gen;
+END_RCPP
+}
+// annualLitterDecompositionRate_c
+double annualLitterDecompositionRate_c(double AET, double lignin);
+RcppExport SEXP _medfate_annualLitterDecompositionRate_c(SEXP AETSEXP, SEXP ligninSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type AET(AETSEXP);
+    Rcpp::traits::input_parameter< double >::type lignin(ligninSEXP);
+    rcpp_result_gen = Rcpp::wrap(annualLitterDecompositionRate_c(AET, lignin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// snagFallProbability_c
+double snagFallProbability_c(double DBH, int decayClass, double durabilityEffect);
+RcppExport SEXP _medfate_snagFallProbability_c(SEXP DBHSEXP, SEXP decayClassSEXP, SEXP durabilityEffectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
+    Rcpp::traits::input_parameter< int >::type decayClass(decayClassSEXP);
+    Rcpp::traits::input_parameter< double >::type durabilityEffect(durabilityEffectSEXP);
+    rcpp_result_gen = Rcpp::wrap(snagFallProbability_c(DBH, decayClass, durabilityEffect));
+    return rcpp_result_gen;
+END_RCPP
+}
+// litterMetabolicFraction_c
+double litterMetabolicFraction_c(double ligninPercent, double Nmass);
+RcppExport SEXP _medfate_litterMetabolicFraction_c(SEXP ligninPercentSEXP, SEXP NmassSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type ligninPercent(ligninPercentSEXP);
+    Rcpp::traits::input_parameter< double >::type Nmass(NmassSEXP);
+    rcpp_result_gen = Rcpp::wrap(litterMetabolicFraction_c(ligninPercent, Nmass));
+    return rcpp_result_gen;
+END_RCPP
+}
+// moistureEffect_c
+double moistureEffect_c(double sand, double clay, double soilMoisture);
+RcppExport SEXP _medfate_moistureEffect_c(SEXP sandSEXP, SEXP claySEXP, SEXP soilMoistureSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type soilMoisture(soilMoistureSEXP);
+    rcpp_result_gen = Rcpp::wrap(moistureEffect_c(sand, clay, soilMoisture));
+    return rcpp_result_gen;
+END_RCPP
+}
+// temperatureEffect_c
+double temperatureEffect_c(double soilTemperature);
+RcppExport SEXP _medfate_temperatureEffect_c(SEXP soilTemperatureSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperatureEffect_c(soilTemperature));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1629,53 +1629,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fuelConditions
-NumericVector fuelConditions(double airTemp, double airHumidity, double fuelRadiation, double fuelWindSpeed);
-RcppExport SEXP _medfate_fuelConditions(SEXP airTempSEXP, SEXP airHumiditySEXP, SEXP fuelRadiationSEXP, SEXP fuelWindSpeedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type airTemp(airTempSEXP);
-    Rcpp::traits::input_parameter< double >::type airHumidity(airHumiditySEXP);
-    Rcpp::traits::input_parameter< double >::type fuelRadiation(fuelRadiationSEXP);
-    Rcpp::traits::input_parameter< double >::type fuelWindSpeed(fuelWindSpeedSEXP);
-    rcpp_result_gen = Rcpp::wrap(fuelConditions(airTemp, airHumidity, fuelRadiation, fuelWindSpeed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// EMCdesorption
-double EMCdesorption(double fuelTemperature, double fuelHumidity);
-RcppExport SEXP _medfate_EMCdesorption(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
+// EMCdesorption_c
+double EMCdesorption_c(double fuelTemperature, double fuelHumidity);
+RcppExport SEXP _medfate_EMCdesorption_c(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type fuelTemperature(fuelTemperatureSEXP);
     Rcpp::traits::input_parameter< double >::type fuelHumidity(fuelHumiditySEXP);
-    rcpp_result_gen = Rcpp::wrap(EMCdesorption(fuelTemperature, fuelHumidity));
+    rcpp_result_gen = Rcpp::wrap(EMCdesorption_c(fuelTemperature, fuelHumidity));
     return rcpp_result_gen;
 END_RCPP
 }
-// EMCadsorption
-double EMCadsorption(double fuelTemperature, double fuelHumidity);
-RcppExport SEXP _medfate_EMCadsorption(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
+// EMCadsorption_c
+double EMCadsorption_c(double fuelTemperature, double fuelHumidity);
+RcppExport SEXP _medfate_EMCadsorption_c(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type fuelTemperature(fuelTemperatureSEXP);
     Rcpp::traits::input_parameter< double >::type fuelHumidity(fuelHumiditySEXP);
-    rcpp_result_gen = Rcpp::wrap(EMCadsorption(fuelTemperature, fuelHumidity));
+    rcpp_result_gen = Rcpp::wrap(EMCadsorption_c(fuelTemperature, fuelHumidity));
     return rcpp_result_gen;
 END_RCPP
 }
-// EMCSimard
-double EMCSimard(double fuelTemperature, double fuelHumidity);
-RcppExport SEXP _medfate_EMCSimard(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
+// EMCSimard_c
+double EMCSimard_c(double fuelTemperature, double fuelHumidity);
+RcppExport SEXP _medfate_EMCSimard_c(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type fuelTemperature(fuelTemperatureSEXP);
     Rcpp::traits::input_parameter< double >::type fuelHumidity(fuelHumiditySEXP);
-    rcpp_result_gen = Rcpp::wrap(EMCSimard(fuelTemperature, fuelHumidity));
+    rcpp_result_gen = Rcpp::wrap(EMCSimard_c(fuelTemperature, fuelHumidity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6499,20 +6485,20 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_generalCommunicationStructures", (DL_FUNC) &_medfate_generalCommunicationStructures, 5},
     {"_medfate_instanceCommunicationStructures", (DL_FUNC) &_medfate_instanceCommunicationStructures, 2},
     {"_medfate_testControlListToStructure", (DL_FUNC) &_medfate_testControlListToStructure, 1},
-    {"_medfate_annualLitterDecompositionRate", (DL_FUNC) &_medfate_annualLitterDecompositionRate, 2},
-    {"_medfate_snagFallProbability", (DL_FUNC) &_medfate_snagFallProbability, 3},
-    {"_medfate_litterMetabolicFraction", (DL_FUNC) &_medfate_litterMetabolicFraction, 2},
     {"_medfate_addLeafTwigLitter", (DL_FUNC) &_medfate_addLeafTwigLitter, 6},
     {"_medfate_addSmallBranchLitter", (DL_FUNC) &_medfate_addSmallBranchLitter, 3},
     {"_medfate_addLargeWoodLitter", (DL_FUNC) &_medfate_addLargeWoodLitter, 3},
     {"_medfate_addCoarseRootLitter", (DL_FUNC) &_medfate_addCoarseRootLitter, 3},
     {"_medfate_addFineRootLitter", (DL_FUNC) &_medfate_addFineRootLitter, 5},
     {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
-    {"_medfate_moistureEffect", (DL_FUNC) &_medfate_moistureEffect, 3},
-    {"_medfate_temperatureEffect", (DL_FUNC) &_medfate_temperatureEffect, 1},
     {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 5},
     {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},
     {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 16},
+    {"_medfate_annualLitterDecompositionRate_c", (DL_FUNC) &_medfate_annualLitterDecompositionRate_c, 2},
+    {"_medfate_snagFallProbability_c", (DL_FUNC) &_medfate_snagFallProbability_c, 3},
+    {"_medfate_litterMetabolicFraction_c", (DL_FUNC) &_medfate_litterMetabolicFraction_c, 2},
+    {"_medfate_moistureEffect_c", (DL_FUNC) &_medfate_moistureEffect_c, 3},
+    {"_medfate_temperatureEffect_c", (DL_FUNC) &_medfate_temperatureEffect_c, 1},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
     {"_medfate_criticalFirelineIntensity_c", (DL_FUNC) &_medfate_criticalFirelineIntensity_c, 2},
@@ -6566,10 +6552,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 5},
     {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 4},
     {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 3},
-    {"_medfate_fuelConditions", (DL_FUNC) &_medfate_fuelConditions, 4},
-    {"_medfate_EMCdesorption", (DL_FUNC) &_medfate_EMCdesorption, 2},
-    {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},
-    {"_medfate_EMCSimard", (DL_FUNC) &_medfate_EMCSimard, 2},
+    {"_medfate_EMCdesorption_c", (DL_FUNC) &_medfate_EMCdesorption_c, 2},
+    {"_medfate_EMCadsorption_c", (DL_FUNC) &_medfate_EMCadsorption_c, 2},
+    {"_medfate_EMCSimard_c", (DL_FUNC) &_medfate_EMCSimard_c, 2},
     {"_medfate_woodyFuelProfile", (DL_FUNC) &_medfate_woodyFuelProfile, 4},
     {"_medfate_layerCohortFuelLoading", (DL_FUNC) &_medfate_layerCohortFuelLoading, 5},
     {"_medfate_layerFuelLoading", (DL_FUNC) &_medfate_layerFuelLoading, 5},

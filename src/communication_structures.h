@@ -1,8 +1,8 @@
 #include <RcppArmadillo.h>
-
+#include "decomposition_c.h"
 #ifndef COMMUNICATION_STRUCTURES_H
 #define COMMUNICATION_STRUCTURES_H
-#endif
+
 using namespace Rcpp;
 
 
@@ -58,6 +58,7 @@ const int SOILWBCOM_capill_below = 43;
 const int SOILWBCOM_drain_above = 44;
 const int SOILWBCOM_drain_below = 45;
 const int SOILWBCOM_lateral_flows_step_mm = 46;
+
 List communicationSoilWaterBalance(int nlayers);
 
 const int SOILEBCOM_dZ_m = 0;
@@ -75,27 +76,13 @@ const int SOILEBCOM_f = 11;
 const int SOILEBCOM_k_up = 12;
 const int SOILEBCOM_k_down = 13;
 const int SOILEBCOM_tempch = 14;
+
 List communicationSoilEnergyBalance(int nlayers);
 
-const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
-const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
-const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
-const int LITDECOMPCOM_TRANSFER_SOIL_SLOW = 3;
-const int LITDECOMPCOM_FLUX_RESPIRATION = 4;
-
-const int DECOMPCOM_SURFACE_METABOLIC = 0;
-const int DECOMPCOM_SOIL_METABOLIC = 1;
-const int DECOMPCOM_SURFACE_ACTIVE = 2;
-const int DECOMPCOM_SOIL_ACTIVE = 3;
-const int DECOMPCOM_SURFACE_SLOW = 4;
-const int DECOMPCOM_SOIL_SLOW = 5;
-const int DECOMPCOM_SOIL_PASSIVE = 6;
 
 NumericVector communicationLitterDecomposition();
 
-const int SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
-const int SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
-const int SNAGDECOMPCOM_FLUX_RESPIRATION = 2;
+
 NumericVector communicationSnagDecomposition();
   
 List communicationDecomposition();
@@ -113,3 +100,4 @@ List copyAdvancedGROWTHOutput(List aoc, List x);
 List copyModelOutput(List internalCommunication, List x, String model);
 
 DataFrame communicationCarbonCompartments(int numCohorts);
+#endif
