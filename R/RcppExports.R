@@ -374,18 +374,6 @@ instance_communication_structures <- function(x, model) {
     .Call(`_medfate_testControlListToStructure`, x)
 }
 
-#'  @param soilPH  soil pH
-#'  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
-#'  @param sand,clay percent sand, clay
-#'  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
-#'  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
-#'  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
-#' 
-#' Updates
-#'    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
-#'    xi          ! environmental scalar
-NULL
-
 .decomposition_addLeafTwigLitter <- function(species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC) {
     invisible(.Call(`_medfate_addLeafTwigLitter`, species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC))
 }
@@ -1761,30 +1749,6 @@ hydraulics_soilPlantResistancesWeibull <- function(psiSoil, psiRhizo, psiStem, P
 
 #' @rdname hydraulics_scalingconductance
 #' @keywords internal
-hydraulics_taperFactorSavage <- function(height) {
-    .Call(`_medfate_taperFactorSavage`, height)
-}
-
-#' @rdname hydraulics_scalingconductance
-#' @keywords internal
-hydraulics_terminalConduitRadius <- function(height) {
-    .Call(`_medfate_terminalConduitRadius`, height)
-}
-
-#' @rdname hydraulics_scalingconductance
-#' @keywords internal
-hydraulics_referenceConductivityHeightFactor <- function(refheight, height) {
-    .Call(`_medfate_referenceConductivityHeightFactor`, refheight, height)
-}
-
-#' @rdname hydraulics_scalingconductance
-#' @keywords internal
-hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper = FALSE) {
-    .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, taper)
-}
-
-#' @rdname hydraulics_scalingconductance
-#' @keywords internal
 hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
@@ -2093,6 +2057,30 @@ hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, 
 #' @keywords internal
 hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue) {
     .Call(`_medfate_findRhizosphereMaximumConductance_c`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_taperFactorSavage <- function(height) {
+    .Call(`_medfate_taperFactorSavage_c`, height)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_terminalConduitRadius <- function(height) {
+    .Call(`_medfate_terminalConduitRadius_c`, height)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_referenceConductivityHeightFactor <- function(refheight, height) {
+    .Call(`_medfate_referenceConductivityHeightFactor_c`, refheight, height)
+}
+
+#' @rdname hydraulics_scalingconductance
+#' @keywords internal
+hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper) {
+    .Call(`_medfate_maximumStemHydraulicConductance_c`, xylemConductivity, refheight, Al2As, height, taper)
 }
 
 #' @param month Month of the year (from 1 to 12).

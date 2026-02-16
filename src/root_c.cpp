@@ -73,7 +73,7 @@ double frv_c(double vol, double B, const std::vector<double>& v, const std::vect
   for(int i=0;i<numLayers;i++) {
     li = ax[i]+sqrt(vol)*ra[i];
     s +=(v[i]/li); //No taper effect
-    // s +=(V[i]/(li*taperFactorSavage(li*100.0))); //TODO: Improve usage of Savage taper factor for roots
+    // s +=(V[i]/(li*taperFactorSavage_c(li*100.0))); //TODO: Improve usage of Savage taper factor for roots
   }
   return(B*s - 1.0);
 }

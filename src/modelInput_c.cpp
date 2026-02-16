@@ -217,7 +217,7 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(transpDF.containsElementNamed("VCroot_P50")) paramsTranspiration.VCroot_P50 = Rcpp::as< std::vector<double> >(transpDF["VCroot_P50"]);
   if(transpDF.containsElementNamed("VCroot_c")) paramsTranspiration.VCroot_c = Rcpp::as< std::vector<double> >(transpDF["VCroot_c"]);
   if(transpDF.containsElementNamed("VCroot_d")) paramsTranspiration.VCroot_d = Rcpp::as< std::vector<double> >(transpDF["VCroot_d"]);
-  if(transpDF.containsElementNamed("VGrhizotot_kmax")) paramsTranspiration.VGrhizotot_kmax = Rcpp::as< std::vector<double> >(transpDF["VGrhizotot_kmax"]);
+  if(transpDF.containsElementNamed("VGrhizo_kmax")) paramsTranspiration.VGrhizo_kmax = Rcpp::as< std::vector<double> >(transpDF["VGrhizo_kmax"]);
   if(transpDF.containsElementNamed("Plant_kmax")) paramsTranspiration.Plant_kmax = Rcpp::as< std::vector<double> >(transpDF["Plant_kmax"]);
   if(transpDF.containsElementNamed("FR_leaf")) paramsTranspiration.FR_leaf = Rcpp::as< std::vector<double> >(transpDF["FR_leaf"]);
   if(transpDF.containsElementNamed("FR_stem")) paramsTranspiration.FR_stem = Rcpp::as< std::vector<double> >(transpDF["FR_stem"]);

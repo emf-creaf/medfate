@@ -504,6 +504,20 @@ double rhizosphereResistancePercent_c(double psiSoil,
   return(100.0*(1.0/krhizo)/((1.0/kroot)+(1.0/kstem)+(1.0/kleaf)+(1.0/krhizo)));
 }
 
+std::vector<double> rootxylemConductanceProportions_c(const std::vector<double>& L, const std::vector<double>& V) {
+  int nlayers = L.size();
+  std::vector<double> w(nlayers,0.0);
+  //Weights
+  double wsum=0.0;
+  for(int i=0;i<nlayers;i++) {
+    if(L[i]>0.0) {
+      w[i]= V[i]*(1.0/L[i]);
+      wsum +=w[i];
+    }
+  }
+  for(int i=0;i<nlayers;i++) w[i] = w[i]/wsum;
+  return(w);
+}
 
 //' @rdname hydraulics_scalingconductance
 //' @keywords internal
@@ -559,4 +573,83 @@ double findRhizosphereMaximumConductance_c(double averageResistancePercent, doub
   }
   // Rcout<< nsteps<< " "<<exp(krhizomaxlog) << " "<< f << " "<< averageResistancePercent<< " "<< step<<"\n";
   return(exp(krhizomaxlog));
+}
+
+
+
+
+
+/**
+ * BIOMECHANICS
+ * 
+ * Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Reich, and E. I. von Allmen. 2010. Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants. Proceedings of the National Academy of Sciences of the United States of America 107:22722–7.
+ * Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
+ * 
+ * height - Tree height in cm
+ */
+//' @rdname hydraulics_scalingconductance
+//' @keywords internal
+// [[Rcpp::export("hydraulics_taperFactorSavage")]]
+double taperFactorSavage_c(double height) {
+  double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants (p = 1/3)
+  double a_p0 = 7.20E-13, a_p13 = 6.67E-13;
+  double n_ext = 2.0; //Number of daughter branches per parent
+  double N = ((3.0*log(1.0-(height/4.0)*(1.0-pow(n_ext, 1.0/3.0))))/log(n_ext))-1.0;
+  double K_0 = a_p0*pow(pow(n_ext, N/2.0),b_p0);
+  double K_13 = a_p13*pow(pow(n_ext, N/2.0),b_p13);
+  return(K_13/K_0);
+}
+
+/**
+ *  Returns the terminal conduit radius (in micras)
+ *  
+ *  height - plant height in cm
+ */
+//' @rdname hydraulics_scalingconductance
+//' @keywords internal
+// [[Rcpp::export("hydraulics_terminalConduitRadius")]]
+double terminalConduitRadius_c(double height) {
+  double dh  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
+  return(dh/2.0);
+}
+
+
+//' @rdname hydraulics_scalingconductance
+//' @keywords internal
+// [[Rcpp::export("hydraulics_referenceConductivityHeightFactor")]]
+double referenceConductivityHeightFactor_c(double refheight, double height) {
+  double rhref  = terminalConduitRadius_c(refheight);
+  double rh  = terminalConduitRadius_c(height);
+  double df = pow(rh/rhref,2.0);
+  return(df);
+}
+
+/**
+ * Calculate maximum leaf-specific stem hydraulic conductance (in mmol·m-2·s-1·MPa-1)
+ * 
+ * xylemConductivity - Sapwood-specific conductivity of stem xylem (in kg·m-1·s-1·MPa-1), 
+ *                     assumed to be measured at distal twigs
+ * refheight - Reference plant height (on which xylem conductivity was measured)
+ * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
+ * height - plant height (in cm)
+ * taper - boolean to apply taper
+ */
+//' @rdname hydraulics_scalingconductance
+//' @keywords internal
+// [[Rcpp::export("hydraulics_maximumStemHydraulicConductance")]]
+double maximumStemHydraulicConductance_c(double xylemConductivity, double refheight, double Al2As, double height, 
+                                         bool taper) {
+  
+  
+  // Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
+  double kmax = 0.0;
+  if(!taper) {
+    double xylemConductivityCorrected = xylemConductivity*referenceConductivityHeightFactor_c(refheight, height);
+    kmax =   (1000.0/0.018)*(xylemConductivityCorrected/Al2As)*(100.0/height);
+  } else {
+    double petioleConductivity = xylemConductivity*referenceConductivityHeightFactor_c(refheight, 100.0);
+    // Correct reference conductivity in relation to the reference plant height in which it was measured
+    kmax =   (1000.0/0.018)*(petioleConductivity/Al2As)*(100.0/height)*(taperFactorSavage_c(height)/(taperFactorSavage_c(100.0)));
+  } 
+  return(kmax); 
 }

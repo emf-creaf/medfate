@@ -1198,7 +1198,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           double oldrootprop = oldrootR/(oldrootR+oldstemR);
           
           // Al2As[j] = (LAlive)/(SA[j]/10000.0);
-          VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
+          VCstem_kmax[j]=maximumStemHydraulicConductance_c(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
 
           //Update rhizosphere maximum conductance
           NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],

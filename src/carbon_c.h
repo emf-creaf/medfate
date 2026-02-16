@@ -102,6 +102,6 @@ double sugarStarchDynamicsRoot_c(double sugarConc, double starchConc, double eqS
 
 
 Rcpp::DataFrame copyCarbonCompartments_c(const CarbonCompartments& cc, ModelInput& x);
-void fillCarbonCompartments_c(CarbonCompartments& cc, ModelInput& x, std::string& biomassUnits);
+void fillCarbonCompartments_c(CarbonCompartments& cc, ModelInput& x, const std::string& biomassUnits);
 
 #endif

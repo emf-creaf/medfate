@@ -239,7 +239,7 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
   
   double Psi_RCApo_np1 = 0.0;
   int nwhilecomp = 0; // # count the number of step in while loop (if more than 4 no solution and warning)
-  while (((!LcavitWellComputed)||(!ScavitWellComputed)) && (nwhilecomp<delta_L_cavs.size())) {
+  while (((!LcavitWellComputed)||(!ScavitWellComputed)) && (nwhilecomp< ((int) delta_L_cavs.size()))) {
     double delta_L_cav = delta_L_cavs[nwhilecomp];
     double delta_S_cav = delta_S_cavs[nwhilecomp];
     
@@ -273,7 +273,7 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
     
     // Rcout<< nwhilecomp << " "<< Psi_LApo_np1 << " "<<Psi_LApo_cav<<" "<<Psi_SApo_np1<< " "<< Psi_SApo_cav<<"\n";
     
-    if ((delta_L_cavs.size() > 1) && (nwhilecomp==delta_L_cavs.size())) { //# we tried the normal cases and the computation is still not ok so we have done a last one desactivating cavitation water source (delta_cav=0)
+    if ((delta_L_cavs.size() > 1) && (nwhilecomp== ((int) delta_L_cavs.size()))) { //# we tried the normal cases and the computation is still not ok so we have done a last one desactivating cavitation water source (delta_cav=0)
       Rcerr << "water flux due to Cavitation ignored with time step, no solution from the implicit solver="<<dt<<"\n";
     }
   } //# end of the while loop with check on cavitation options
@@ -772,7 +772,7 @@ void innerSureau_c(ModelInput& x,
 
       double Agsum = 0.0, Ansum = 0.0;
 
-      while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
+      while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp< ((int) nsmalltimesteps.size()))) { //# LOOP TO TRY DIFFERENT TIME STEPS
         //Copy values to temporary network
         copyNetwork_c(networks[c], network_n);
 

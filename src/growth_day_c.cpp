@@ -17,6 +17,9 @@
 #include "woodformation.h"
 #include "meteoland/pet_c.hpp"
 
+const std::string units_g_ind = "g_ind";
+const std::string units_gC_m2 = "gC_m2";
+
 //' Mortality
 //' 
 //' A simple sigmoid function to determine a daily mortality likelihood according 
@@ -105,6 +108,9 @@ double qResp_c(double Tmean) {
   return(pow(Q10_resp,(Tmean-20.0)/10.0));
 }
 
+double vecsum(const std::vector<double>& vec) {
+  return(std::accumulate(vec.begin(), vec.end(), 0.0));
+}
 
 // double storageTransferRelativeRate(double fastCstorage, double fastCstoragemax) {
 //   double f = ((2.0/(1.0+exp(-5.0*((fastCstorage/fastCstoragemax)-tlpConcSapwood)/tlpConcSapwood)))-1.0);
@@ -264,6 +270,60 @@ Rcpp::List copyGROWTHResult_c(GROWTH_RESULT& GROWTHres, ModelInput& x) {
   return(l);
 }
 
+
+void fillInitialPlantBiomassBalance_c(PlantBiomassBalance_RESULT& pbb, 
+                                      CarbonCompartments& ccIni, Above& above) {
+  int numCohorts = above.N.size();
+  for(int c=0; c < numCohorts;c++) {
+    pbb.InitialDensity[c] = above.N[c];
+    pbb.InitialSapwoodBiomass[c] = ccIni.SapwoodStructuralBiomass[c];
+    pbb.InitialStructuralBiomass[c] = ccIni.StructuralBiomass[c];
+    pbb.InitialLabileBiomass[c] = ccIni.LabileBiomass[c];
+    pbb.InitialPlantBiomass[c] = ccIni.TotalBiomass[c];
+    pbb.InitialCohortBiomass[c] = ccIni.TotalBiomass[c]*(pbb.InitialDensity[c]/10000.0);
+    pbb.InitialLivingPlantBiomass[c] = ccIni.TotalLivingBiomass[c];
+    pbb.InitialStructuralBiomass[c] = ccIni.StructuralBiomass[c];
+  }
+}
+
+
+void closePlantBiomassBalance_c(InitialFinalCarbonCompartments& initialFinalCC, 
+                                PlantBiomassBalance_RESULT& pbb, 
+                                ModelInput& x,
+                                std::vector<double>& LabileCarbonBalance,
+                                std::vector<double>& LeafBiomassBalance,
+                                std::vector<double>& FineRootBiomassBalance) {
+  int numCohorts = x.cohorts.CohortCode.size();
+  
+  fillCarbonCompartments_c(initialFinalCC.ccFin_g_ind, x, units_g_ind);
+
+  //PLANT BIOMASS balance (g_ind)
+  for(int j=0; j<numCohorts;j++) {
+    double sapwoodBiomassBalance = initialFinalCC.ccFin_g_ind.SapwoodStructuralBiomass[j] - pbb.InitialSapwoodBiomass[j];
+    pbb.StructuralBiomassChange[j] = initialFinalCC.ccFin_g_ind.StructuralBiomass[j] - pbb.InitialStructuralBiomass[j];
+    pbb.LabileBiomassChange[j] = initialFinalCC.ccFin_g_ind.LabileBiomass[j] - pbb.InitialLabileBiomass[j];
+    pbb.PlantBiomassChange[j] = initialFinalCC.ccFin_g_ind.TotalBiomass[j] - pbb.InitialPlantBiomass[j];
+
+    pbb.StructuralBiomassBalance[j] = LeafBiomassBalance[j] + sapwoodBiomassBalance + FineRootBiomassBalance[j];
+    pbb.LabileBiomassBalance[j] = LabileCarbonBalance[j]*pbb.InitialLivingPlantBiomass[j];
+
+    pbb.PlantBiomassBalance[j] = pbb.LabileBiomassBalance[j] + pbb.StructuralBiomassBalance[j];
+
+    //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (g/m2)
+    pbb.MortalityBiomassLoss[j] = (pbb.InitialDensity[j] - x.above.N[j])*(pbb.InitialPlantBiomass[j]+pbb.PlantBiomassBalance[j])/(10000.0);
+
+    //Change units to g/m2
+    pbb.StructuralBiomassBalance[j] = pbb.StructuralBiomassBalance[j]*(pbb.InitialDensity[j]/10000.0);
+    pbb.LabileBiomassBalance[j] = pbb.LabileBiomassBalance[j]*(pbb.InitialDensity[j]/10000.0);
+    pbb.PlantBiomassBalance[j] = pbb.PlantBiomassBalance[j]*(pbb.InitialDensity[j]/10000.0);
+
+    //COHORT BIOMASS balance (g/m2)
+    pbb.CohortBiomassBalance[j] = pbb.PlantBiomassBalance[j] - pbb.MortalityBiomassLoss[j];
+    pbb.CohortBiomassChange[j] = initialFinalCC.ccFin_g_ind.TotalBiomass[j]*(x.above.N[j]/10000.0) - pbb.InitialCohortBiomass[j];
+  }
+
+}
+
 void updateStructuralVariables_c(ModelInput& x, 
                                  const std::vector<double>& deltaSAgrowth,
                                  const std::vector<double>& PARcohort) {
@@ -281,8 +341,6 @@ void updateStructuralVariables_c(ModelInput& x,
   std::vector<double>& N = x.above.N;
   std::vector<double>& CR = x.above.CR;
   std::vector<double>& LAI_live = x.above.LAI_live;
-  std::vector<double>& LAI_expanded = x.above.LAI_expanded;
-  std::vector<double>& LAI_dead = x.above.LAI_dead;
   std::vector<double>& LAI_nocomp = x.above.LAI_nocomp;
   std::vector<double>& SA = x.above.SA;
   
@@ -449,13 +507,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
     }
   }
   
-  // String soilFunctions = control["soilFunctions"];
-  // String mortalityMode = control["mortalityMode"];
   bool subdailyCarbonBalance = x.control.growth.subdailyCarbonBalance;
-  // double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
-  // double mortalityRWCThreshold= control["mortalityRWCThreshold"];
-  // bool allowDessication = control["allowDessication"];
-  // bool allowStarvation = control["allowStarvation"];
   bool sinkLimitation = x.control.growth.sinkLimitation;
   std::string allocationStrategy = x.control.growth.allocationStrategy;
   if(x.control.transpirationMode=="Granier")  {
@@ -467,7 +519,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   double nonSugarConcentration = x.control.growth.nonSugarConcentration;
   double equilibriumLeafTotalConc = x.control.growth.equilibriumOsmoticConcentration.leaf;
   double equilibriumSapwoodTotalConc = x.control.growth.equilibriumOsmoticConcentration.sapwood;
-  // 
+
   //Weather
   double tday = meteovec.tday;
   double tmin = meteovec.tmin;
@@ -497,28 +549,9 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   std::vector<double>& LAI_nocomp = x.above.LAI_nocomp;
   std::vector<double>& SA = x.above.SA;
 
-  // //Belowground parameters  
-  // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  // NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);.
-  // NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
+  //Belowground parameters
   std::vector<double>& fineRootBiomass = x.below.fineRootBiomass;
-  // NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(belowdf["coarseRootSoilVolume"]);
-  // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  // List RHOP;
-  // if(plantWaterPools) RHOP = belowLayers["RHOP"];
-  // NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
-  // NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
-  // NumericMatrix RhizoPsi, VCroot_kmax, VGrhizo_kmax;
-  // if((transpirationMode=="Sperry") || (transpirationMode=="Sureau")) {
-  //   RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
-  //   VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
-  //   VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
-  // }
-  // 
-  // //Internal state variables
-  // internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  // 
-  
+
   //Values at the end of the day (after calling spwb)
   std::vector<double>& LeafPLC = x.internalWater.LeafPLC;
   std::vector<double>& StemPLC = x.internalWater.StemPLC;
@@ -597,37 +630,22 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
 
   double rcellmax = relative_expansion_rate(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
 
-
-
   // Initial Biomass balance
-  std::string units_g_ind = "g_ind";
-  std::string units_gC_m2 = "gC_m2";
   fillCarbonCompartments_c(GROWTHcomm.initialFinalCC.ccIni_g_ind, x, units_g_ind);
   fillCarbonCompartments_c(GROWTHcomm.initialFinalCC.ccIni_gC_m2, x, units_gC_m2);
+  fillInitialPlantBiomassBalance_c(GROWTHres.PBBres, GROWTHcomm.initialFinalCC.ccIni_g_ind, x.above);
+
+  // Initial Stand carbon content gC·m-2  
+  double initialStand_gC_m2 = vecsum(GROWTHcomm.initialFinalCC.ccIni_gC_m2.TotalBiomass);
+  initialStand_gC_m2 += vecsum(x.internalLitter.Leaves) + vecsum(x.internalLitter.Twigs) + vecsum(x.internalLitter.SmallBranches);
+  initialStand_gC_m2 += vecsum(x.internalLitter.LargeWood) + vecsum(x.internalLitter.CoarseRoots) + vecsum(x.internalLitter.FineRoots);
+  initialStand_gC_m2 += x.internalSOC.SurfaceActive + x.internalSOC.SurfaceMetabolic + x.internalSOC.SurfaceSlow;
+  initialStand_gC_m2 += x.internalSOC.SoilActive + x.internalSOC.SoilMetabolic + x.internalSOC.SoilSlow + x.internalSOC.SoilPassive;
+  initialStand_gC_m2 += vecsum(x.internalSnags.SmallBranches) + vecsum(x.internalSnags.LargeWood);
   
-  // NumericVector initialTotalCohortBiomass_gC_m2 = ccIni_gC_m2["TotalBiomass"];
-  // double initialStand_gC_m2 = sum(initialTotalCohortBiomass_gC_m2);
-  // // Rcout<< "initial cohort gC_m2 = "<<sum(initialTotalCohortBiomass_gC_m2)<<"\n";
-  // if(exportLitter) {
-  //   NumericVector sn_smallBranches = internalSnags["SmallBranches"];
-  //   NumericVector sn_largeWood = internalSnags["LargeWood"];
-  //   initialStand_gC_m2 += (sum(sn_smallBranches) + sum(sn_largeWood));
-  //   NumericVector li_leaves = internalLitter["Leaves"];
-  //   NumericVector li_twigs = internalLitter["Twigs"];
-  //   NumericVector li_smallBranches = internalLitter["SmallBranches"];
-  //   NumericVector li_largeWood = internalLitter["LargeWood"];
-  //   NumericVector li_coarseRoots = internalLitter["CoarseRoots"];
-  //   NumericVector li_fineRoots = internalLitter["FineRoots"];
-  //   initialStand_gC_m2 += (sum(li_leaves) + sum(li_twigs) + sum(li_smallBranches) + sum(li_largeWood) + sum(li_coarseRoots) + sum(li_fineRoots));
-  //   initialStand_gC_m2 += sum(internalSOC);
-  // }
-  // initialStand_gC_m2 += (sum(Snag_smallbranches) + sum(Snag_largewood));
-  // 
   std::vector<double> LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
-  // 
-  // DataFrame plantBiomassBalance = as<DataFrame>(modelOutput["PlantBiomassBalance"]);
-  // fillInitialPlantBiomassBalance(plantBiomassBalance, ccIni_g_ind, above);
-  // 
+
+
   std::vector<double>& Volume_leaves = GROWTHcomm.initialFinalCC.ccIni_g_ind.LeafStorageVolume;
   std::vector<double>& Volume_sapwood = GROWTHcomm.initialFinalCC.ccIni_g_ind.SapwoodStorageVolume;
   std::vector<double>& Starch_max_leaves = GROWTHcomm.initialFinalCC.ccIni_g_ind.LeafStarchMaximumConcentration;
@@ -1093,38 +1111,44 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         x.below.coarseRootSoilVolume[j] = coarseRootSoilVolume_c(Vj, x.soil.getWidths(), 0.5);
       } else { //SPERRY/Sureau
         if(LAlive>0.0) {
-  //         //Update Huber value, stem and root hydraulic conductance
-  //         double oldstemR = 1.0/VCstem_kmax[j];
-  //         double oldrootR = 1.0/VCroot_kmaxVEC[j];
-  //         double oldrootprop = oldrootR/(oldrootR+oldstemR);
-  //         
-  //         // Al2As[j] = (LAlive)/(SA[j]/10000.0);
-  //         VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
-  //         
-  //         //Update rhizosphere maximum conductance
-  //         NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],
-  //                                                                   SRL[j], FineRootDensity[j], RLD[j]);
-  //         for(int s=0;s<nlayers;s++) { 
-  //           VGrhizo_kmax(j,s) = VGrhizo_new[s];
-  //         }
-  //         VGrhizo_kmaxVEC[j] = sum(VGrhizo_kmax(j,_));
-  //         
-  //         //Update root maximum conductance so that it keeps the same resistance proportion with stem conductance
-  //         double newstemR = 1.0/VCstem_kmax[j];
-  //         double newrootR = oldrootprop*newstemR/(1.0-oldrootprop);
-  //         VCroot_kmaxVEC[j] = 1.0/newrootR;
-  //         //Update coarse root soil volume
-  //         CRSV[j] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
-  //                                                       V(j,_), widths, rfc);
-  //         //Update coarse root length and root maximum conductance
-  //         L(j,_) = coarseRootLengthsFromVolume(CRSV[j], V(j,_), widths, rfc);
-  //         NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
-  //         VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
-  //         //Update Plant_kmax
-  //         Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
+          //Update Huber value, stem and root hydraulic conductance
+          double oldstemR = 1.0/x.paramsTranspiration.VCstem_kmax[j];
+          double oldrootR = 1.0/x.paramsTranspiration.VCroot_kmax[j];
+          double oldrootprop = oldrootR/(oldrootR+oldstemR);
+          // Al2As[j] = (LAlive)/(SA[j]/10000.0);
+          x.paramsTranspiration.VCstem_kmax[j]=maximumStemHydraulicConductance_c(x.paramsTranspiration.Kmax_stemxylem[j],
+                                                                                 x.paramsAnatomy.Hmed[j],
+                                                                                 x.paramsAnatomy.Al2As[j], H[j], x.control.advancedWB.taper);
+
+          //Update rhizosphere maximum conductance
+          std::vector<double> krhizo_new = rhizosphereMaximumConductance_c(x.soil.getKsat(),
+                                                                           newFRB,
+                                                                           LAI_live[j], N[j],
+                                                                           x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j], x.paramsAnatomy.RLD[j]);
+          for(int s=0;s<nlayers;s++) {
+            x.belowLayers.VGrhizo_kmax(j,s) = krhizo_new[s];
+          }
+          x.paramsTranspiration.VGrhizo_kmax[j] = vecsum(krhizo_new);
+
+          //Update root maximum conductance so that it keeps the same resistance proportion with stem conductance
+          double newstemR = 1.0/x.paramsTranspiration.VCstem_kmax[j];
+          double newrootR = oldrootprop*newstemR/(1.0-oldrootprop);
+          x.paramsTranspiration.VCroot_kmax[j] = 1.0/newrootR;
+          
+          //Update coarse root soil volume
+          x.below.coarseRootSoilVolume[j] = coarseRootSoilVolumeFromConductance_c(x.paramsTranspiration.Kmax_stemxylem[j], x.paramsTranspiration.VCroot_kmax[j], 
+                                                                                  x.paramsAnatomy.Al2As[j], Vj, x.soil.getWidths(), x.soil.getRFC());
+          
+          //Update coarse root length and root maximum conductance
+          Lj = coarseRootLengthsFromVolume_c(x.below.coarseRootSoilVolume[j], Vj, x.soil.getWidths(), x.soil.getRFC());
+          for(int l =0;l<nlayers; l++) x.belowLayers.L(j,l) = Lj[l]; 
+          std::vector<double> xp = rootxylemConductanceProportions_c(Lj, Vj);
+          for(int l =0;l<nlayers; l++) x.belowLayers.VCroot_kmax(j,l) = x.paramsTranspiration.VCroot_kmax[j]*xp[l];
+          
+          //Update Plant_kmax
+          x.paramsTranspiration.Plant_kmax[j] = 1.0/((1.0/x.paramsTranspiration.VCleaf_kmax[j])+(1.0/x.paramsTranspiration.VCstem_kmax[j])+(1.0/x.paramsTranspiration.VCroot_kmax[j]));
         }
       }
-
 
       ///// B14b. ESTIMATE LEAF/FINE ROOT BIOMASS balance (g_ind)
       LeafBiomassBalance[j] = leafBiomassIncrement - senescenceLeafLoss;
@@ -1508,28 +1532,17 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   ////////////////////////////////////////////
   ///// E4. CLOSE PLANT BIOMASS BALANCE //////
   ////////////////////////////////////////////
-  // closePlantBiomassBalance(initialFinalCC, plantBiomassBalance, x,
-  //                          LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
-  // DataFrame ccFin_gC_m2 = as<DataFrame>(initialFinalCC["ccFin_gC_m2"]);
-  // fillCarbonCompartments(ccFin_gC_m2, x, "gC_m2");
-  // NumericVector finalTotalCohortBiomass_gC_m2 = ccFin_gC_m2["TotalBiomass"];
-  // // Rcout<< "final cohort gC_m2 = "<< sum(finalTotalCohortBiomass_gC_m2)<<"\n";
-  // double finalStand_gC_m2 = sum(finalTotalCohortBiomass_gC_m2);
-  // if(exportLitter) {
-  //   NumericVector sn_smallBranches = internalSnags["SmallBranches"];
-  //   NumericVector sn_largeWood = internalSnags["LargeWood"];
-  //   finalStand_gC_m2 += (sum(sn_smallBranches) + sum(sn_largeWood));
-  //   NumericVector li_leaves = internalLitter["Leaves"];
-  //   NumericVector li_twigs = internalLitter["Twigs"];
-  //   NumericVector li_smallBranches = internalLitter["SmallBranches"];
-  //   NumericVector li_largeWood = internalLitter["LargeWood"];
-  //   NumericVector li_coarseRoots = internalLitter["CoarseRoots"];
-  //   NumericVector li_fineRoots = internalLitter["FineRoots"];
-  //   finalStand_gC_m2 += (sum(li_leaves) + sum(li_twigs) + sum(li_smallBranches) + sum(li_largeWood) + sum(li_coarseRoots) + sum(li_fineRoots));
-  //   finalStand_gC_m2 += sum(internalSOC);
-  // }
-  // finalStand_gC_m2 += (sum(Snag_smallbranches) + sum(Snag_largewood));
-  // double changeStand_gC_m2 = finalStand_gC_m2 - initialStand_gC_m2;
+  closePlantBiomassBalance_c(GROWTHcomm.initialFinalCC, GROWTHres.PBBres, x,
+                             GROWTHres.LCBres.LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
+  fillCarbonCompartments_c(GROWTHcomm.initialFinalCC.ccFin_gC_m2, x, units_gC_m2);
+  double finalStand_gC_m2 = vecsum(GROWTHcomm.initialFinalCC.ccFin_gC_m2.TotalBiomass);
+  finalStand_gC_m2 += vecsum(x.internalLitter.Leaves) + vecsum(x.internalLitter.Twigs) + vecsum(x.internalLitter.SmallBranches);
+  finalStand_gC_m2 += vecsum(x.internalLitter.LargeWood) + vecsum(x.internalLitter.CoarseRoots) + vecsum(x.internalLitter.FineRoots);
+  finalStand_gC_m2 += x.internalSOC.SurfaceActive + x.internalSOC.SurfaceMetabolic + x.internalSOC.SurfaceSlow;
+  finalStand_gC_m2 += x.internalSOC.SoilActive + x.internalSOC.SoilMetabolic + x.internalSOC.SoilSlow + x.internalSOC.SoilPassive;
+  finalStand_gC_m2 += vecsum(x.internalSnags.SmallBranches) + vecsum(x.internalSnags.LargeWood);
+  
+  double changeStand_gC_m2 = finalStand_gC_m2 - initialStand_gC_m2;
 
   ///////////////////////////////////////////////
   ///// H. CLOSE STAND-LEVEL CARBON BALANCE /////
@@ -1543,11 +1556,11 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   GROWTHres.standCB.NetEcosystemProduction = GROWTHres.standCB.NetPrimaryProduction - fireCombustion - heterotrophicRespiration; 
 
   double NEP_gC_m2 = GROWTHres.standCB.NetEcosystemProduction;
-  // if(std::abs(changeStand_gC_m2 - NEP_gC_m2) > 0.001) {
+  if(std::abs(changeStand_gC_m2 - NEP_gC_m2) > 0.001) {
   //   // Rcout << " Stand biomass balance not closed!\n";
   //   // Rcout<< "GPP " << standGrossPrimaryProduction<<" MR "<<standMaintenanceRespiration<< " SR "<<standSynthesisRespiration<< " HR "<< heterotrophicRespiration << " FC "<< fireCombustion<<"\n";
   //   // Rcout<< "NEP: " << NEP_gC_m2<< " Mass change: " << changeStand_gC_m2<< " dif: "<< (changeStand_gC_m2 - NEP_gC_m2)<< "\n";
-  // }
+  }
 
 }
 

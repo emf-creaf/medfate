@@ -5,13 +5,13 @@
 \alias{hydraulics_maximumSoilPlantConductance}
 \alias{hydraulics_soilPlantResistancesSigmoid}
 \alias{hydraulics_soilPlantResistancesWeibull}
+\alias{hydraulics_rootxylemConductanceProportions}
+\alias{hydraulics_averageRhizosphereResistancePercent}
+\alias{hydraulics_findRhizosphereMaximumConductance}
 \alias{hydraulics_taperFactorSavage}
 \alias{hydraulics_terminalConduitRadius}
 \alias{hydraulics_referenceConductivityHeightFactor}
 \alias{hydraulics_maximumStemHydraulicConductance}
-\alias{hydraulics_rootxylemConductanceProportions}
-\alias{hydraulics_averageRhizosphereResistancePercent}
-\alias{hydraulics_findRhizosphereMaximumConductance}
 \title{Scaling from conductivity to conductance}
 \usage{
 hydraulics_maximumSoilPlantConductance(krhizomax, krootmax, kstemmax, kleafmax)
@@ -58,20 +58,6 @@ hydraulics_soilPlantResistancesWeibull(
   leafd
 )
 
-hydraulics_taperFactorSavage(height)
-
-hydraulics_terminalConduitRadius(height)
-
-hydraulics_referenceConductivityHeightFactor(refheight, height)
-
-hydraulics_maximumStemHydraulicConductance(
-  xylemConductivity,
-  refheight,
-  Al2As,
-  height,
-  taper = FALSE
-)
-
 hydraulics_rootxylemConductanceProportions(L, V)
 
 hydraulics_averageRhizosphereResistancePercent(
@@ -104,6 +90,20 @@ hydraulics_findRhizosphereMaximumConductance(
   leafc,
   leafd,
   initialValue
+)
+
+hydraulics_taperFactorSavage(height)
+
+hydraulics_terminalConduitRadius(height)
+
+hydraulics_referenceConductivityHeightFactor(refheight, height)
+
+hydraulics_maximumStemHydraulicConductance(
+  xylemConductivity,
+  refheight,
+  Al2As,
+  height,
+  taper
 )
 }
 \arguments{
@@ -139,16 +139,6 @@ hydraulics_findRhizosphereMaximumConductance(
 
 \item{leafc, leafd}{Parameters of the Weibull function for leaves (leaf vulnerability curve).}
 
-\item{height}{Plant height (in cm).}
-
-\item{refheight}{Reference plant height of measurement of xylem conductivity (in cm).}
-
-\item{xylemConductivity}{Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).}
-
-\item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
-
-\item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).}
-
 \item{L}{Vector with the length of coarse roots (mm) for each soil layer.}
 
 \item{V}{Vector with the proportion [0-1] of fine roots within each soil layer.}
@@ -158,6 +148,16 @@ hydraulics_findRhizosphereMaximumConductance(
 \item{averageResistancePercent}{Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).}
 
 \item{initialValue}{Initial value of rhizosphere conductance.}
+
+\item{height}{Plant height (in cm).}
+
+\item{refheight}{Reference plant height of measurement of xylem conductivity (in cm).}
+
+\item{xylemConductivity}{Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).}
+
+\item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
+
+\item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).}
 }
 \value{
 Values returned for each function are:

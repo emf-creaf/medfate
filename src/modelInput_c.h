@@ -158,7 +158,7 @@ struct TranspirationParams {
   std::vector<double> VCroot_P50;
   std::vector<double> VCroot_c;
   std::vector<double> VCroot_d;
-  std::vector<double> VGrhizotot_kmax;
+  std::vector<double> VGrhizo_kmax;
   std::vector<double> Plant_kmax;
   std::vector<double> FR_leaf;
   std::vector<double> FR_stem;

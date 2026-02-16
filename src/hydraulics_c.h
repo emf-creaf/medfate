@@ -47,10 +47,18 @@ double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope,
 double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, 
                                       double PLC_crit, double P50_cv);
 
+std::vector<double> rootxylemConductanceProportions_c(const std::vector<double>& L, const std::vector<double>& V);
+
 double findRhizosphereMaximumConductance_c(double averageResistancePercent, double n, double alpha,
                                            double krootmax, double rootc, double rootd,
                                            double kstemmax, double stemc, double stemd,
                                            double kleafmax, double leafc, double leafd,
                                            double initialValue = 0.0);
+
+double taperFactorSavage_c(double height);
+double terminalConduitRadius_c(double height);
+double referenceConductivityHeightFactor_c(double refheight, double height);
+
+double maximumStemHydraulicConductance_c(double xylemConductivity, double refheight, double Al2As,  double height, bool taper = false);
 
 #endif

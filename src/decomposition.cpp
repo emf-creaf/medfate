@@ -120,16 +120,16 @@ void updateBaseRates(List commDecomp,
 // rate for soil temperature and soil moisture scalars
 // (cdi) and additionally pH, lignin, texture, anaerobic,
 // and cultivation
-//'  @param soilPH  soil pH
-//'  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
-//'  @param sand,clay percent sand, clay
-//'  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
-//'  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
-//'  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
-//' 
-//' Updates
-//'    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
-//'    xi          ! environmental scalar
+//  @param soilPH  soil pH
+//  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
+//  @param sand,clay percent sand, clay
+//  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
+//  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
+//  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
+// 
+// Updates
+//    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
+//    xi          ! environmental scalar
 void updateDecompositionRateScalars(List commDecomp, 
                                      double sand, double clay,
                                      double soilTemperature, double soilMoisture, double soilPH, 

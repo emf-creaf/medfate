@@ -348,7 +348,7 @@ double sapwoodStarchCapacity_c(double SA, double H, const std::vector<double>& L
 
 
 
-void fillCarbonCompartments_c(CarbonCompartments& cc, ModelInput& x, std::string& biomassUnits) {
+void fillCarbonCompartments_c(CarbonCompartments& cc, ModelInput& x, const std::string& biomassUnits) {
   
   if((biomassUnits!="g_m2") && (biomassUnits !="g_ind") && (biomassUnits !="gC_m2")) {
     throw medfate::MedfateInternalError("Wrong biomass units"); 
