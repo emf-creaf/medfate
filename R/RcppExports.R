@@ -16,11 +16,11 @@ aspwb_day_inner <- function(internalCommunication, x, date, meteovec, latitude, 
 #' @rdname aspwb
 #' @keywords internal
 aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_aspwb_day`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+    .Call(`_medfate_aspwb_day_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
-aspwb_day_c <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_aspwb_day_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+.aspwb_day_old <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_aspwb_day_old`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 .defineASPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
@@ -80,6 +80,10 @@ aspwb_day_c <- function(x, date, meteovec, latitude, elevation, slope = NA_real_
 #' @keywords internal
 aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, waterTableDepth = NA_real_) {
     .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect, waterTableDepth)
+}
+
+.aspwb_old <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, waterTableDepth = NA_real_) {
+    .Call(`_medfate_aspwb_old`, x, meteo, latitude, elevation, slope, aspect, waterTableDepth)
 }
 
 #' Physical and biophysical utility functions

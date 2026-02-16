@@ -837,7 +837,7 @@ void fillSnowDailyOutput(DataFrame Snow, List x, int iday) {
   NumericVector SWE = Snow["SWE"];
   SWE[iday] = x["snowpack"];
 }
-void fillSnowDailyOutput_c(DataFrame Snow, ModelInput& x, int iday) {
+void fillSnowDailyOutput_c(DataFrame Snow, WaterBalanceModelInput& x, int iday) {
   NumericVector SWE = Snow["SWE"];
   SWE[iday] = x.snowpack;
 }

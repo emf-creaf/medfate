@@ -34,7 +34,7 @@ void fillSoilDailyOutput_c(List SWB, Soil& soil, Soil_RESULT& sb,
                            bool includePlants = true);
 void fillSoilPoolDailyOutput_c(List soilPools, Soil& soil, arma::mat& Wpool, int iday);
 void fillSnowDailyOutput(DataFrame Snow, List x, int iday);
-void fillSnowDailyOutput_c(DataFrame Snow, ModelInput& x, int iday);
+void fillSnowDailyOutput_c(DataFrame Snow, WaterBalanceModelInput& x, int iday);
 void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday, int ntimesteps);
 void fillEnergyBalanceDailyOutput_c(DataFrame DEB, EnergyBalance_RESULT& EB, int iday, int ntimesteps);
 void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday, int ntimesteps);

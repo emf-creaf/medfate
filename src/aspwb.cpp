@@ -203,22 +203,6 @@ List aspwb_day_inner(List internalCommunication, List x, CharacterVector date, N
 //' @rdname aspwb
 //' @keywords internal
 // [[Rcpp::export("aspwb_day")]]
-List aspwb_day(List x, CharacterVector date, NumericVector meteovec, 
-               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
-               double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-               bool modifyInput = true) {
-  
-  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  List internalCommunication = List::create(_["SWBcommunication"] = communicationSoilWaterBalance(soil.nrow()));
-  
-  return(aspwb_day_inner(internalCommunication, x, date, meteovec,
-                         latitude, elevation, slope, aspect, 
-                         runon, lateralFlows, waterTableDepth,
-                         modifyInput));
-}
-
-
-// [[Rcpp::export("aspwb_day_c")]]
 List aspwb_day_c(List x, CharacterVector date, NumericVector meteovec, 
                  double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
                  double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
@@ -257,7 +241,20 @@ List aspwb_day_c(List x, CharacterVector date, NumericVector meteovec,
   return(l);
 }
 
-
+// [[Rcpp::export(".aspwb_day_old")]]
+List aspwb_day_old(List x, CharacterVector date, NumericVector meteovec, 
+                   double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                   double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                   bool modifyInput = true) {
+  
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  List internalCommunication = List::create(_["SWBcommunication"] = communicationSoilWaterBalance(soil.nrow()));
+  
+  return(aspwb_day_inner(internalCommunication, x, date, meteovec,
+                         latitude, elevation, slope, aspect, 
+                         runon, lateralFlows, waterTableDepth,
+                         modifyInput));
+}
 
 DataFrame defineAgricultureWaterBalanceDailyOutput(CharacterVector dateStrings) {
   int numDays = dateStrings.length();
@@ -301,6 +298,10 @@ List defineASPWBDailyOutput(double latitude, double elevation, double slope, dou
   List Soil = defineSoilDailyOutput(dateStrings, soil, false);
   DataFrame Snow = defineSnowDailyOutput(dateStrings);
   
+  int numDays = dateStrings.size();
+  List subdailyRes(numDays);
+  subdailyRes.attr("names") = dateStrings;
+  
   List l;
   l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
@@ -310,6 +311,7 @@ List defineASPWBDailyOutput(double latitude, double elevation, double slope, dou
                    Named("WaterBalance")=DWB);
   if(control["soilResults"]) l.push_back(Soil, "Soil");
   if(control["snowResults"]) l.push_back(Snow, "Snow");
+  if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("aspwb","list");
   return(l);
 }
@@ -346,6 +348,38 @@ void fillAgricultureWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday) 
   Evapotranspiration[iday] = Transpiration[iday]+SoilEvaporation[iday];
 }
 
+
+void fillAgricultureWaterBalanceDailyOutput_c(DataFrame DWB, AgricultureWB_RESULT& sDay, int iday) {
+  NumericVector PET = DWB["PET"];
+  NumericVector Precipitation = DWB["Precipitation"];
+  NumericVector DeepDrainage = DWB["DeepDrainage"];
+  NumericVector Infiltration = DWB["Infiltration"];
+  NumericVector InfiltrationExcess = DWB["InfiltrationExcess"];
+  NumericVector SaturationExcess = DWB["SaturationExcess"];
+  NumericVector CapillarityRise = DWB["CapillarityRise"];
+  NumericVector Runoff = DWB["Runoff"];
+  NumericVector Rain = DWB["Rain"];
+  NumericVector Snow = DWB["Snow"];
+  NumericVector Snowmelt = DWB["Snowmelt"];
+  NumericVector Transpiration = DWB["Transpiration"];
+  NumericVector SoilEvaporation = DWB["SoilEvaporation"];
+  NumericVector Evapotranspiration = DWB["Evapotranspiration"];
+  DeepDrainage[iday] = sDay.WaterBalance.DeepDrainage;
+  Infiltration[iday] = sDay.WaterBalance.Infiltration;
+  InfiltrationExcess[iday] = sDay.WaterBalance.InfiltrationExcess;
+  SaturationExcess[iday] = sDay.WaterBalance.SaturationExcess;
+  CapillarityRise[iday] = sDay.WaterBalance.CapillarityRise;
+  Runoff[iday] = sDay.WaterBalance.Runoff;
+  Rain[iday] = sDay.WaterBalance.Rain;
+  Snow[iday] = sDay.WaterBalance.Snow;
+  PET[iday] = sDay.WaterBalance.PET;
+  Precipitation[iday] = Rain[iday]+Snow[iday];
+  Snowmelt[iday] = sDay.WaterBalance.Snowmelt;
+  Transpiration[iday] = sDay.WaterBalance.Transpiration;
+  SoilEvaporation[iday] = sDay.WaterBalance.SoilEvaporation;
+  Evapotranspiration[iday] = Transpiration[iday]+SoilEvaporation[iday];
+}
+
 // [[Rcpp::export(".fillASPWBDailyOutput")]]
 void fillASPWBDailyOutput(List l, List x, List sDay, int iday) {
   
@@ -367,6 +401,29 @@ void fillASPWBDailyOutput(List l, List x, List sDay, int iday) {
   if(control["snowResults"]) {
     DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
     fillSnowDailyOutput(Snow, x, iday);
+  }
+}
+
+void fillASPWBDailyOutput_c(List l, AgricultureModelInput& x, AgricultureWB_RESULT& sDay, int iday) {
+  
+  DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
+  int numDays = DWB.nrow();
+  fillAgricultureWaterBalanceDailyOutput_c(DWB, sDay, iday);
+
+  if(x.control.results.soilResults) {
+    List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+    fillSoilDailyOutput_c(Soil, x.soil, sDay.Soil,
+                          iday, numDays,
+                          false);
+  }
+  if(x.control.results.snowResults) {
+    DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
+    fillSnowDailyOutput_c(Snow, x, iday);
+  }
+
+  if(x.control.results.subdailyResults) {
+    List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
+    subdailyRes[iday] = copyWBResult_c(sDay, x); //Clones subdaily results because they are communication structures
   }
 }
 
@@ -558,15 +615,213 @@ List aspwb(List x, DataFrame meteo, double latitude,
   
   CharacterVector dateStrings = getWeatherDates(meteo);
   if(!doy_input) DOY = date2doy(dateStrings);
-
-  //Detailed subday results
-  List subdailyRes(numDays);
-  
-
   
   //Define output list
   List outputList = defineASPWBDailyOutput(latitude, elevation, slope, aspect,
                                           dateStrings, x);
+  outputList["weather"] = clone(meteo);
+  
+  NumericVector initialContent = water(soil, soilFunctions);
+  double initialSnowContent = x["snowpack"];
+  if(verbose) {
+    Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
+    Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
+  }
+  
+  //Internal object
+  AgricultureModelInput x_c(x);
+  
+  // Build communication structures
+  int nlayers = x_c.soil.getNlayers();
+  
+  AgricultureWB_RESULT AgrWBres(nlayers);
+  SoilWaterBalance_COMM SWBcomm(nlayers);
+  WBCommunicationStructures WBcomm(0, nlayers, 0, 0);
+  
+  bool error_occurence = false;
+  if(verbose) Rcout << "Performing daily simulations\n";
+  NumericVector Eplanttot(numDays,0.0);
+  List s;
+  std::string yearString;
+  std::vector<double> lateralFlows(nlayers, 0.0);
+  for(int i=0;(i<numDays) && (!error_occurence);i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    yearString = c.substr(0, 4);
+    if(verbose) {
+      if(DOY[i]==1 || i==0) {
+        Rcout<<"\n [Year "<< yearString << "]:";
+      } 
+      else if(i%10 == 0) Rcout<<".";//<<i;
+    } 
+    
+    double wind = WindSpeed[i];
+    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
+    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+    
+    
+    double Rint = RainfallIntensity[i];
+    if(NumericVector::is_na(Rint)) {
+      int month = std::atoi(c.substr(5,2).c_str());
+      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
+    }
+    
+    
+    if(unlimitedSoilWater) {
+      NumericVector W = soil["W"];
+      for(int h=0;h<W.size();h++) W[h] = 1.0;
+    }
+    
+    
+    //Julian day from either input column or date
+    int J = NA_INTEGER;
+    if(julianday_input) J = JulianDay[i];
+    if(IntegerVector::is_na(J)){
+      std::string c = as<std::string>(dateStrings[i]);
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+    }
+
+    double tmin = MinTemperature[i];
+    double tmax = MaxTemperature[i];
+    double tday = averageDaylightTemperature_c(tmin, tmax);
+    double rhmin = MinRelativeHumidity[i];
+    double rhmax = MaxRelativeHumidity[i];
+    double rad = Radiation[i];
+    
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
+                         tmin, tmax, rhmin, rhmax, rad, wind);
+    
+    //2. Water balance and photosynthesis
+    WeatherInputVector meteovec;
+    meteovec.tday = tday;
+    meteovec.prec = Precipitation[i];
+    meteovec.rad = rad;
+    meteovec.pet = PET[i];
+    meteovec.rint = Rint;
+    try{
+      aspwbDay_c(AgrWBres, WBcomm.AgrWBcomm, x_c, 
+                 meteovec, 
+                 elevation, slope, aspect,
+                 0.0, 
+                 lateralFlows, waterTableDepth);
+      //Fill output list      
+      fillASPWBDailyOutput_c(outputList, x_c, AgrWBres,i);
+    } catch(std::exception& ex) {
+      Rcerr<< "c++ error: "<< ex.what() <<"\n";
+      error_occurence = true;
+    }
+  }
+  if(verbose) Rcout << "\n\n";
+  
+  if(verbose) {
+    List DWB = outputList["WaterBalance"];
+    printAgricultureWaterBalanceResult(DWB, x,
+                                       initialContent, initialSnowContent);
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
+    }
+  }
+  return(outputList);
+}
+
+
+
+// [[Rcpp::export(".aspwb_old")]]
+List aspwb_old(List x, DataFrame meteo, double latitude, 
+               double elevation, double slope = NA_REAL, double aspect = NA_REAL, 
+               double waterTableDepth = NA_REAL) {
+  List control = x["control"];
+  String soilFunctions = control["soilFunctions"];
+  bool verbose = control["verbose"];
+  bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  
+  //Clone input
+  x = clone(x);
+  
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+  List internalCommunication = List::create(_["SWBcommunication"] = communicationSoilWaterBalance(soil.nrow()));
+  
+  
+  //Meteorological input    
+  NumericVector MinTemperature, MaxTemperature;
+  NumericVector MinRelativeHumidity, MaxRelativeHumidity;
+  NumericVector Radiation;
+  
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+  
+  
+  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
+  NumericVector Precipitation = meteo["Precipitation"];
+  int numDays = Precipitation.size();
+  NumericVector WindSpeed(numDays, NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+  
+  NumericVector PET(numDays, NA_REAL);
+  
+  
+  if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+  
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
+  Radiation = meteo["Radiation"];
+  
+  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation'");
+  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature'");
+  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
+  if(any(is_na(MinRelativeHumidity))) stop("Missing values in 'MinRelativeHumidity'");
+  if(any(is_na(MaxRelativeHumidity))) stop("Missing values in 'MaxRelativeHumidity'");
+  if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
+  
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
+  
+  IntegerVector DOY, JulianDay;
+  bool doy_input = false;
+  if(meteo.containsElementNamed("DOY")) {
+    DOY = meteo["DOY"];
+    doy_input = true;
+    if(verbose) {
+      Rcout<<"DOY taken from input column 'DOY'\n";
+    }
+  }
+  
+  bool julianday_input = false;
+  if(meteo.containsElementNamed("JulianDay")) {
+    JulianDay = meteo["JulianDay"];
+    julianday_input = true;
+    if(verbose) {
+      Rcout<<"Julian day taken from input column 'JulianDay'\n";
+    }
+  }
+  
+  CharacterVector dateStrings = getWeatherDates(meteo);
+  if(!doy_input) DOY = date2doy(dateStrings);
+  
+  //Detailed subday results
+  List subdailyRes(numDays);
+  
+  
+  
+  //Define output list
+  List outputList = defineASPWBDailyOutput(latitude, elevation, slope, aspect,
+                                           dateStrings, x);
   outputList["weather"] = clone(meteo);
   
   NumericVector initialContent = water(soil, soilFunctions);
@@ -616,7 +871,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
       std::string c = as<std::string>(dateStrings[i]);
       J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
-
+    
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
     double tday = averageDaylightTemperature_c(tmin, tmax);
@@ -627,19 +882,19 @@ List aspwb(List x, DataFrame meteo, double latitude,
     PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                          tmin, tmax, rhmin, rhmax, rad, wind);
     
-
+    
     //2. Water balance and photosynthesis
     NumericVector meteovec = NumericVector::create(
       Named("tday") = tday, 
       Named("prec") = Precipitation[i], 
-      Named("rad") = rad, 
-      Named("pet") = PET[i],
-      Named("rint") = Rint);
+                                   Named("rad") = rad, 
+                                   Named("pet") = PET[i],
+                                                     Named("rint") = Rint);
     try{
       s = aspwb_day_private(internalCommunication, x, meteovec, 
-                          elevation, slope, aspect,
-                          0.0, R_NilValue, waterTableDepth, 
-                          verbose);
+                            elevation, slope, aspect,
+                            0.0, R_NilValue, waterTableDepth, 
+                            verbose);
     } catch(std::exception& ex) {
       Rcerr<< "c++ error: "<< ex.what() <<"\n";
       error_occurence = true;
@@ -647,7 +902,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
     
     //Fill output list      
     fillASPWBDailyOutput(outputList, x, s,i);
-
+    
     if(control["subdailyResults"]) {
       subdailyRes[i] = clone(s);
     }
