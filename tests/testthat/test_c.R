@@ -348,7 +348,7 @@ test_that("growth_day and growth_day_c return the same result with sperry",{
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
   expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
-  
+
   control_sperry$rhizosphereOverlap <- "partial"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
@@ -369,7 +369,7 @@ test_that("growth_day and growth_day_c return the same result with sureau",{
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
   expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
-  
+
   control_sureau$rhizosphereOverlap <- "partial"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
@@ -379,4 +379,17 @@ test_that("growth_day and growth_day_c return the same result with sureau",{
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
   expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
+})
+
+test_that("growth and growth_c return the same result with granier",{
+  control_granier$rhizosphereOverlap <- "total"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  S1 <- medfate::growth(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate::growth_c(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  # expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
+  control_granier$rhizosphereOverlap <- "partial"
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  S1 <- medfate::growth(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate::growth_c(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  # expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
 })

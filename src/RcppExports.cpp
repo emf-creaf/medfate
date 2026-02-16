@@ -1923,6 +1923,47 @@ RcppExport SEXP _medfate_growth(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, S
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// growth_c
+List growth_c(List x, DataFrame meteo, double latitude, double elevation, double slope, double aspect, NumericVector CO2ByYear, double waterTableDepth);
+static SEXP _medfate_growth_c_try(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP CO2ByYearSEXP, SEXP waterTableDepthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type CO2ByYear(CO2ByYearSEXP);
+    Rcpp::traits::input_parameter< double >::type waterTableDepth(waterTableDepthSEXP);
+    rcpp_result_gen = Rcpp::wrap(growth_c(x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_growth_c(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP CO2ByYearSEXP, SEXP waterTableDepthSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_growth_c_try(xSEXP, meteoSEXP, latitudeSEXP, elevationSEXP, slopeSEXP, aspectSEXP, CO2ByYearSEXP, waterTableDepthSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // growthDay_inner
 void growthDay_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, Nullable<NumericVector> lateralFlows, double waterTableDepth, bool modifyInput);
 static SEXP _medfate_growthDay_inner_try(SEXP internalCommunicationSEXP, SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP lateralFlowsSEXP, SEXP waterTableDepthSEXP, SEXP modifyInputSEXP) {
@@ -6333,6 +6374,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*.defineGrowthDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillGrowthDailyOutput)(List,List,List,int)");
         signatures.insert("List(*growth)(List,DataFrame,double,double,double,double,NumericVector,double)");
+        signatures.insert("List(*growth_c)(List,DataFrame,double,double,double,double,NumericVector,double)");
         signatures.insert("void(*growth_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*growth_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*growth_day_c)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
@@ -6405,6 +6447,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_.defineGrowthDailyOutput", (DL_FUNC)_medfate_defineGrowthDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_.fillGrowthDailyOutput", (DL_FUNC)_medfate_fillGrowthDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_growth", (DL_FUNC)_medfate_growth_try);
+    R_RegisterCCallable("medfate", "_medfate_growth_c", (DL_FUNC)_medfate_growth_c_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day_inner", (DL_FUNC)_medfate_growthDay_inner_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day", (DL_FUNC)_medfate_growthDay_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day_c", (DL_FUNC)_medfate_growthDay_c_try);
@@ -6584,6 +6627,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_defineGrowthDailyOutput", (DL_FUNC) &_medfate_defineGrowthDailyOutput, 6},
     {"_medfate_fillGrowthDailyOutput", (DL_FUNC) &_medfate_fillGrowthDailyOutput, 4},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 8},
+    {"_medfate_growth_c", (DL_FUNC) &_medfate_growth_c, 8},
     {"_medfate_growthDay_inner", (DL_FUNC) &_medfate_growthDay_inner, 12},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 11},
     {"_medfate_growthDay_c", (DL_FUNC) &_medfate_growthDay_c, 11},

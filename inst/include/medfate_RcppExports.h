@@ -296,6 +296,27 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
+    inline List growth_c(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
+        typedef SEXP(*Ptr_growth_c)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr_growth_c p_growth_c = NULL;
+        if (p_growth_c == NULL) {
+            validateSignature("List(*growth_c)(List,DataFrame,double,double,double,double,NumericVector,double)");
+            p_growth_c = (Ptr_growth_c)R_GetCCallable("medfate", "_medfate_growth_c");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_growth_c(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<List >(rcpp_result_gen);
+    }
+
     inline void growth_day_inner(List internalCommunication, List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, bool modifyInput = true) {
         typedef SEXP(*Ptr_growth_day_inner)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_growth_day_inner p_growth_day_inner = NULL;

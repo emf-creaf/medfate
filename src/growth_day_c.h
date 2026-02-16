@@ -144,6 +144,8 @@ Rcpp::DataFrame copyGrowthMortalityResult_c(const GrowthMortality_RESULT& GMres,
 
 struct GROWTH_RESULT {
   
+  SPWB_RESULT* SPWBres;
+  
   LabileCarbonBalance_RESULT LCBres;
   PlantBiomassBalance_RESULT PBBres;
   PlantStructure_RESULT PSres;
@@ -151,31 +153,29 @@ struct GROWTH_RESULT {
 
   StandCB_RESULT standCB;  
   
-  GROWTH_RESULT(size_t numCohorts) : 
+  GROWTH_RESULT(SPWB_RESULT* SPWBresIn,  size_t numCohorts) : 
     LCBres(numCohorts),
     PBBres(numCohorts),
     PSres(numCohorts),
-    GMres(numCohorts){}
+    GMres(numCohorts){
+    SPWBres = SPWBresIn;
+  }
   virtual ~GROWTH_RESULT() = default;
 };
 Rcpp::List copyGROWTHResult_c(GROWTH_RESULT& GROWTHres, ModelInput& x);
 
 struct BasicGROWTH_RESULT : GROWTH_RESULT {
-  BasicSPWB_RESULT BSPWBres;
-  
-  BasicGROWTH_RESULT(BasicSPWB_RESULT SPWBres, size_t numCohorts) : 
-    GROWTH_RESULT(numCohorts),
-    BSPWBres(SPWBres){}
+
+  BasicGROWTH_RESULT(BasicSPWB_RESULT* SPWBresIn, size_t numCohorts) : 
+    GROWTH_RESULT(SPWBresIn,numCohorts) {}
 };
 Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x);
 
 struct AdvancedGROWTH_RESULT : GROWTH_RESULT {
-  AdvancedSPWB_RESULT ASPWBres;
   LabileCarbonBalanceInst_RESULT LCBInstres;
   
-  AdvancedGROWTH_RESULT(AdvancedSPWB_RESULT SPWBres, size_t numCohorts, size_t ntimesteps) : 
-  GROWTH_RESULT(numCohorts),
-  ASPWBres(SPWBres),
+  AdvancedGROWTH_RESULT(AdvancedSPWB_RESULT* SPWBresIn, size_t numCohorts, size_t ntimesteps) : 
+  GROWTH_RESULT(SPWBresIn, numCohorts),
   LCBInstres(numCohorts, ntimesteps) {}
 };
 Rcpp::List copyAdvancedGROWTHResult_c(AdvancedGROWTH_RESULT& GROWTHres, ModelInput& x);

@@ -3,6 +3,12 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
+
+double vecsum(const std::vector<double>& vec) {
+  return(std::accumulate(vec.begin(), vec.end(), 0.0));
+}
+
+
 // a,b,c,d are input vectors
 // e,f are vectors used internally
 // sol is the output

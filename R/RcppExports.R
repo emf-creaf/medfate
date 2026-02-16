@@ -1435,6 +1435,10 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
     .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
+growth_c <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
+    .Call(`_medfate_growth_c`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
+}
+
 #' @rdname communication
 #' @keywords internal
 growth_day_inner <- function(internalCommunication, x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {

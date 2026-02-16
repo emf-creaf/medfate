@@ -15,6 +15,7 @@
 #include "root_c.h"
 #include "tissuemoisture_c.h"
 #include "woodformation.h"
+#include "numerical_solving_c.h"
 #include "meteoland/pet_c.hpp"
 
 const std::string units_g_ind = "g_ind";
@@ -106,10 +107,6 @@ double qResp_c(double Tmean) {
   // Tjoelker, M. G., J. Oleksyn, and P. B. Reich. 2001. Modelling respiration of vegetation: Evidence for a general temperature-dependent Q10. Global Change Biology 7:223–230.
   double Q10_resp = 3.22 - 0.046 * Tmean; 
   return(pow(Q10_resp,(Tmean-20.0)/10.0));
-}
-
-double vecsum(const std::vector<double>& vec) {
-  return(std::accumulate(vec.begin(), vec.end(), 0.0));
 }
 
 // double storageTransferRelativeRate(double fastCstorage, double fastCstoragemax) {
@@ -226,7 +223,7 @@ Rcpp::DataFrame copyGrowthMortalityResult_c(const GrowthMortality_RESULT& GMres,
   return(DF);
 }
 Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x) {
-  Rcpp::List l = copyBasicSPWBResult_c(GROWTHres.BSPWBres, x);
+  Rcpp::List l = copySPWBResult_c(*GROWTHres.SPWBres, x);
   l.push_back(copyCarbonBalanceResult_c(GROWTHres.standCB), "CarbonBalance");
   l.push_back(copyLabileCarbonBalanceResult_c(GROWTHres.LCBres, x), "LabileCarbonBalance");
   l.push_back(copyPlantBiomassBalanceResult_c(GROWTHres.PBBres, x), "PlantBiomassBalance");
@@ -237,7 +234,7 @@ Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x)
 }
 
 Rcpp::List copyAdvancedGROWTHResult_c(AdvancedGROWTH_RESULT& GROWTHres, ModelInput& x) {
-  Rcpp::List l = copyAdvancedSPWBResult_c(GROWTHres.ASPWBres, x);
+  Rcpp::List l = copySPWBResult_c(*GROWTHres.SPWBres, x);
   l.push_back(copyCarbonBalanceResult_c(GROWTHres.standCB), "CarbonBalance");
   l.push_back(copyLabileCarbonBalanceResult_c(GROWTHres.LCBres, x), "LabileCarbonBalance");
   l.push_back(copyPlantBiomassBalanceResult_c(GROWTHres.PBBres, x), "PlantBiomassBalance");
@@ -467,17 +464,17 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
 
   if(x.control.transpirationMode=="Granier") {
     try {
-      auto& BGROWTHres = dynamic_cast<BasicGROWTH_RESULT&>(GROWTHres);
-      spwbDay_basic_c(BGROWTHres.BSPWBres, GROWTHcomm.WBcomm.BSPWBcomm, x, 
+      auto& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(*GROWTHres.SPWBres);
+      spwbDay_basic_c(BSPWBres, GROWTHcomm.WBcomm.BSPWBcomm, x, 
                       meteovec,
                       elevation, slope, aspect,
                       runon, 
                       lateralFlows, waterTableDepth);
       
       for(int i=0;i<numCohorts;i++) {
-        Ag[i] = BGROWTHres.BSPWBres.BTres.plants.GrossPhotosynthesis[i];
-        PARcohort[i] = BGROWTHres.BSPWBres.BTres.plants.FPAR[i];
-        LFMC[i] = BGROWTHres.BSPWBres.BTres.plants.LFMC[i];
+        Ag[i] = BSPWBres.BTres.plants.GrossPhotosynthesis[i];
+        PARcohort[i] = BSPWBres.BTres.plants.FPAR[i];
+        LFMC[i] = BSPWBres.BTres.plants.LFMC[i];
       }
     } catch(const std::bad_cast&) {
       throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
@@ -485,22 +482,23 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   } else {
     try {
       auto& AGROWTHres = dynamic_cast<AdvancedGROWTH_RESULT&>(GROWTHres);
-      spwbDay_advanced_c(AGROWTHres.ASPWBres, GROWTHcomm.WBcomm.ASPWBcomm, x, 
+      auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(*GROWTHres.SPWBres);
+      spwbDay_advanced_c(ASPWBres, GROWTHcomm.WBcomm.ASPWBcomm, x, 
                          meteovec,
                          latitude, elevation, slope, aspect,
                          solarConstant, delta,
                          runon, 
                          lateralFlows, waterTableDepth);
-      for(int n=0;n<ntimesteps;n++) Tcan[n] = AGROWTHres.ASPWBres.ATres.energy.Tcan[n];
+      for(int n=0;n<ntimesteps;n++) Tcan[n] = ASPWBres.ATres.energy.Tcan[n];
       tcan_day = averageDaylightTemperature_c(*std::min_element(Tcan.begin(), Tcan.end()), 
                                               *std::max_element(Tcan.begin(), Tcan.end()));
       for(int i=0;i<numCohorts;i++) {
-        Ag[i] = AGROWTHres.ASPWBres.ATres.plants.GrossPhotosynthesis[i];
-        PARcohort[i] = AGROWTHres.ASPWBres.ATres.plants.FPAR[i];
-        LFMC[i] = AGROWTHres.ASPWBres.ATres.plants.LFMC[i];
+        Ag[i] = ASPWBres.ATres.plants.GrossPhotosynthesis[i];
+        PARcohort[i] = ASPWBres.ATres.plants.FPAR[i];
+        LFMC[i] = ASPWBres.ATres.plants.LFMC[i];
       }
-      AgStep = &AGROWTHres.ASPWBres.ATres.plants_inst.Ag;
-      AnStep = &AGROWTHres.ASPWBres.ATres.plants_inst.An;
+      AgStep = &ASPWBres.ATres.plants_inst.Ag;
+      AnStep = &ASPWBres.ATres.plants_inst.An;
       LCBInstres = &AGROWTHres.LCBInstres;
     } catch(const std::bad_cast&) {
       throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
