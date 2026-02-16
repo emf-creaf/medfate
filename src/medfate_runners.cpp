@@ -71,7 +71,13 @@ Rcpp::List WB_runner::get_output() {
   return(copyWBResult_c(*WBres, *x));
 }
 void WB_runner::update_input(List x_list) {
-  (*x).copyStateToList(x_list);
+  if(x->getInputClass()=="spwbInput") {
+    ModelInput& x_m = dynamic_cast<ModelInput&>(*x);
+    x_m.copyStateToList(x_list);
+  } else if(x->getInputClass()=="aspwbInput") {
+    AgricultureModelInput& x_m = dynamic_cast<AgricultureModelInput&>(*x);
+    x_m.copyStateToList(x_list);
+  }
 }
 
 //  Constructor for SPWB_multiple_runner
@@ -171,7 +177,13 @@ Rcpp::List WB_multiple_runner::get_output_at(int i) {
   return(copyWBResult_c(*WBres_vec[i-1], *x_vec[i-1]));
 }
 void WB_multiple_runner::update_input_at(int i, List x_list) {
-  x_vec[i-1]->copyStateToList(x_list);
+  if(x_vec[i-1]->getInputClass()=="spwbInput") {
+    ModelInput& x_m = dynamic_cast<ModelInput&>(*x_vec[i-1]);
+    x_m.copyStateToList(x_list);
+  } else if(x_vec[i-1]->getInputClass()=="aspwbInput") {
+    AgricultureModelInput& x_m = dynamic_cast<AgricultureModelInput&>(*x_vec[i-1]);
+    x_m.copyStateToList(x_list);
+  }
 }
 
 
