@@ -497,6 +497,10 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Rcpp::NumericVector N = aboveDF["N"];
     for(int c = 0;c < numCohorts; c++) N[c] = above.N[c];
   }
+  if(aboveDF.containsElementNamed("Cover")) {
+    Rcpp::NumericVector Cover = aboveDF["Cover"];
+    for(int c = 0;c < numCohorts; c++) Cover[c] = above.Cover[c];
+  }
   if(aboveDF.containsElementNamed("DBH")) {
     Rcpp::NumericVector DBH = aboveDF["DBH"];
     for(int c = 0;c < numCohorts; c++) {

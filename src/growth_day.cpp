@@ -257,7 +257,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
           Wleaves = Wleaves/exp(-0.235*treeLAI); //Correct depending on tree leaf area
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
           H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
-          // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
+          // Rcout<< j << " " << Wleaves << " " << PV << " " << H[j]<<"\n";
           if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
             H[j] = Hmax[j];
             PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
@@ -1462,12 +1462,13 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
           }
         }
         N_resprouting_stumps[j] = N_resprouting_stumps[j] + N_resprouting_stump_day;
-        // Rcout << Ndead_day <<"\n";
+        // Rcout << j << " Ndead_day "<< Ndead_day << " Cdead_day " << Cdead_day <<"\n";
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
         if(ctype[j]=="shrub") {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
           Cover_dead[j] = Cover_dead[j] + Cdead_day;
+          // Rcout << j << " Cdead_day " << Cover_dead <<  " Cover " << Cover[j] << " Cover dead " << Cover_dead[j] <<"\n";
           if(cause == "starvation") {
             Cover_starvation[j] = Cover_starvation[j] + Cdead_day;
           } else if(cause == "dessication") {

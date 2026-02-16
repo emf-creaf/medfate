@@ -411,7 +411,7 @@ void updateStructuralVariables_c(ModelInput& x,
           Wleaves = Wleaves/exp(-0.235*treeLAI); //Correct depending on tree leaf area
           double PV = pow(Wleaves*x.paramsAnatomy.r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
           H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
-          // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
+          // Rcout<< j << " " << Wleaves << " " << PV << " " << H[j]<<"\n";
           if(H[j]> x.paramsAnatomy.Hmax[j]) { //Limit height (and update the former variables)
             H[j] = x.paramsAnatomy.Hmax[j];
             PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
@@ -448,6 +448,9 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   int nlayers = x.soil.getNlayers();
   int numCohorts = x.internalWater.StemPLC.size();
   
+  //Get previous PLC so that defoliation occurs only when PLC increases
+  std::vector<double> StemPLCprev(numCohorts);
+  for(int i=0; i< numCohorts;i++) StemPLCprev[i] = x.internalWater.StemPLC[i];
   
   ///////////////////////////////////////////////////////////////////////////////////
   ///// A. WATER-ENERGY BALANCE (this creates communication structures as well) /////
@@ -530,9 +533,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   if(std::isnan(Patm)) Patm = atmosphericPressure_c(elevation);
 
   
-  //Get previous PLC so that defoliation occurs only when PLC increases
-  std::vector<double> StemPLCprev(numCohorts);
-  for(int i=0; i< numCohorts;i++) StemPLCprev[i] = x.internalWater.StemPLC[i];
+
   std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);
   
   //Aboveground parameters
@@ -1406,12 +1407,13 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
           }
         }
         x.internalMortality.N_resprouting_stumps[j] = x.internalMortality.N_resprouting_stumps[j] + N_resprouting_stump_day;
-        // Rcout << Ndead_day <<"\n";
+        // Rcout << j << " Ndead_day "<< Ndead_day << " Cdead_day " << Cdead_day <<"\n";
         N[j] = N[j] - Ndead_day;
         x.internalMortality.N_dead[j] = x.internalMortality.N_dead[j] + Ndead_day;
         if(ctype[j]=="shrub") {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
           x.internalMortality.Cover_dead[j] = x.internalMortality.Cover_dead[j] + Cdead_day;
+          // Rcout << j << " Cdead_day " << Cdead_day <<  " Cover " << Cover[j] << " Cover dead " << x.internalMortality.Cover_dead[j] <<"\n";
           if(cause == "starvation") {
             x.internalMortality.Cover_starvation[j] = x.internalMortality.Cover_starvation[j] + Cdead_day;
           } else if(cause == "dessication") {
