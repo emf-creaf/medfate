@@ -150,24 +150,27 @@ hydraulics_supplyFunctionPlot(x, type="StemPsi")
 
 Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.
 
-
-### Stomatal regulation and photosynthesis
-
-The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage (a profit-maximization approach). Given a meteorological and soil inputs and a chosen day and timestep, function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal aperture:
-
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
+```{r, include=FALSE}
 d <- 100
-transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100, type="E")
-transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100, type="An")
-transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100, type="Gsw")
-transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100, type="T")
-transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100, type="VPD")
 ```
+
+
+<!-- ### Stomatal regulation and photosynthesis -->
+
+<!-- The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage (a profit-maximization approach). Given a meteorological and soil inputs and a chosen day and timestep, function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal aperture: -->
+
+<!-- ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5} -->
+<!-- transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12, -->
+<!--                               latitude = 41.82592, elevation = 100, type="E") -->
+<!-- transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12, -->
+<!--                               latitude = 41.82592, elevation = 100, type="An") -->
+<!-- transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12, -->
+<!--                               latitude = 41.82592, elevation = 100, type="Gsw") -->
+<!-- transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12, -->
+<!--                               latitude = 41.82592, elevation = 100, type="T") -->
+<!-- transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12, -->
+<!--                               latitude = 41.82592, elevation = 100, type="VPD") -->
+<!-- ``` -->
 
 
 ### Pressure volume curves
@@ -186,8 +189,8 @@ Soil water balance simulations will normally span periods of several months or y
 ```{r}
 date <- examplemeteo$dates[d]
 meteovec <- unlist(examplemeteo[d,])
-sd1<-spwb_day(x, date, meteovec, 
-             latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
+sd1<-spwb_day_old(x, date, meteovec, 
+              latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
 ```
 
 The output of `spwb_day()` is a list with several elements:

@@ -35,7 +35,7 @@ test_that("spwb(_day) and growth(_day) can be run from stored inputs coming from
     expect_equal(S1$spwbOutput$version, as.character(packageVersion("medfate")))
     
     x1 <- readRDS(paste0("initialized_objects/growthInput_", ver,".rds")) 
-    G1 <- growth(x1, 
+    G1 <- growth(x1,
                  examplemeteo[1:10,],
                  latitude = 41.82592, elevation = 100)
     expect_s3_class(G1, "growth")

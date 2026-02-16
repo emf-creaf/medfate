@@ -1891,7 +1891,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                  bool modifyInput = true) {
   
   //Check if input version is lower than current medfate version. If so, try to complete fields
-  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+  if(isLowerVersion(x)) growthInputVersionUpdate(x);
   
   WeatherInputVector meteovec_c(meteovec);
   ModelInput x_c(x);  

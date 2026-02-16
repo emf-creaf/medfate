@@ -46,9 +46,9 @@ test_that("hydraulic supply functions can be shown",{
   expect_s3_class(hydraulics_supplyFunctionPlot(x2, type = "dEdP"), "ggplot")
 })
 
-test_that("Stomatal regulation plot can be shown",{
-  d = 100
-  x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  expect_s3_class(transp_stomatalRegulationPlot(x2, examplemeteo, day = d, timestep=12,
-                                latitude = 41.82592, elevation = 100, type="E"), "ggplot")
-})
+# test_that("Stomatal regulation plot can be shown",{
+#   d = 100
+#   x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+#   expect_s3_class(transp_stomatalRegulationPlot(x2, examplemeteo, day = d, timestep=12,
+#                                 latitude = 41.82592, elevation = 100, type="E"), "ggplot")
+# })

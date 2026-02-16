@@ -56,7 +56,7 @@ struct LabileCarbonBalanceInst_RESULT {
     SugarTransport = arma::mat(numCohorts, ntimesteps);
   }
 };
-Rcpp::DataFrame copyLabileCarbonBalanceInstResult_c(const LabileCarbonBalanceInst_RESULT& LCBres, ModelInput& x);
+Rcpp::List copyLabileCarbonBalanceInstResult_c(const LabileCarbonBalanceInst_RESULT& LCBres, ModelInput& x);
 
 
 struct PlantBiomassBalance_RESULT {

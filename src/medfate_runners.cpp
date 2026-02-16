@@ -71,7 +71,7 @@ Rcpp::List WB_runner::get_output() {
   return(copyWBResult_c(*WBres, *x));
 }
 void WB_runner::update_input(List x_list) {
-  x->copyStateToList(x_list);
+  (*x).copyStateToList(x_list);
 }
 
 //  Constructor for SPWB_multiple_runner

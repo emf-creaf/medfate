@@ -208,7 +208,7 @@ fordyn<-function(forest, soil, SpParams,
     monthsYear <- months[years==year]
     # 1.1 Calls growth model
     if(verboseDyn) cat(paste0(" (a) Growth/mortality"))
-    Gi <- growth_c(xi, meteoYear, latitude = latitude, 
+    Gi <- growth(xi, meteoYear, latitude = latitude, 
                 elevation = elevation, slope = slope, aspect = aspect,
                 CO2ByYear = CO2ByYear)
 

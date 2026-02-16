@@ -349,12 +349,12 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
     internalMortality.N_starvation = Rcpp::as< std::vector<double> >(internalMortalityDF["N_starvation"]);
     internalMortality.N_dessication = Rcpp::as< std::vector<double> >(internalMortalityDF["N_dessication"]);
     internalMortality.N_burnt = Rcpp::as< std::vector<double> >(internalMortalityDF["N_burnt"]);
-    internalMortality.N_resprouting_stumps = Rcpp::as< std::vector<double> >(internalMortalityDF["N_resprouting_stumps"]);
     internalMortality.Cover_dead = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_dead"]);
     internalMortality.Cover_starvation = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_starvation"]);
     internalMortality.Cover_dessication = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_dessication"]);
     internalMortality.Cover_burnt = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_burnt"]);
-    internalMortality.Cover_resprouting_stumps = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_resprouting_stumps"]);
+    if(internalMortalityDF.containsElementNamed("N_resprouting_stumps")) internalMortality.N_resprouting_stumps = Rcpp::as< std::vector<double> >(internalMortalityDF["N_resprouting_stumps"]);
+    if(internalMortalityDF.containsElementNamed("Cover_resprouting_stumps")) internalMortality.Cover_resprouting_stumps = Rcpp::as< std::vector<double> >(internalMortalityDF["Cover_resprouting_stumps"]);
     if(internalMortalityDF.containsElementNamed("Snag_smallbranches")) internalMortality.Snag_smallbranches = Rcpp::as< std::vector<double> >(internalMortalityDF["Snag_smallbranches"]);
     if(internalMortalityDF.containsElementNamed("Snag_largewood")) internalMortality.Snag_largewood = Rcpp::as< std::vector<double> >(internalMortalityDF["Snag_largewood"]);
   }
@@ -467,9 +467,13 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     zlow[l] = canopy.zlow[l];
     zmid[l] = canopy.zmid[l];
     zup[l] = canopy.zup[l];
+    LAIlive[l] = canopy.LAIlive[l];
+    LAIdead[l] = canopy.LAIdead[l];
+    LAIexpanded[l] = canopy.LAIexpanded[l];
     Tair[l] = canopy.Tair[l];
     Cair[l] = canopy.Cair[l];
     VPair[l] = canopy.VPair[l];
+    // Rcpp::Rcout << l << ": " <<  canopy.LAIexpanded[l] << "\n";
   }
 
   //Cohort definition does not change with spwb/growth simulations
@@ -714,23 +718,27 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Rcpp::NumericVector N_starvation = internalMortalityDF["N_starvation"];
     Rcpp::NumericVector N_dessication = internalMortalityDF["N_dessication"];
     Rcpp::NumericVector N_burnt = internalMortalityDF["N_burnt"];
-    Rcpp::NumericVector N_resprouting_stumps = internalMortalityDF["N_resprouting_stumps"];
     Rcpp::NumericVector Cover_dead = internalMortalityDF["Cover_dead"];
     Rcpp::NumericVector Cover_starvation = internalMortalityDF["Cover_starvation"];
     Rcpp::NumericVector Cover_dessication = internalMortalityDF["Cover_dessication"];
     Rcpp::NumericVector Cover_burnt = internalMortalityDF["Cover_burnt"];
-    Rcpp::NumericVector Cover_resprouting_stumps = internalMortalityDF["Cover_resprouting_stumps"];
     for(int c = 0;c < numCohorts; c++) {
       N_dead[c] = internalMortality.N_dead[c];
       N_starvation[c] = internalMortality.N_starvation[c];
       N_dessication[c] = internalMortality.N_dessication[c];
       N_burnt[c] = internalMortality.N_burnt[c];
-      N_resprouting_stumps[c] = internalMortality.N_resprouting_stumps[c];
       Cover_dead[c] = internalMortality.Cover_dead[c];
       Cover_starvation[c] = internalMortality.Cover_starvation[c];
       Cover_dessication[c] = internalMortality.Cover_dessication[c];
       Cover_burnt[c] = internalMortality.Cover_burnt[c];
-      Cover_resprouting_stumps[c] = internalMortality.Cover_resprouting_stumps[c];
+    }
+    if(internalMortalityDF.containsElementNamed("N_resprouting_stumps")) {
+      Rcpp::NumericVector N_resprouting_stumps = internalMortalityDF["N_resprouting_stumps"];
+      for(int c = 0;c < numCohorts; c++) N_resprouting_stumps[c] = internalMortality.N_resprouting_stumps[c];
+    }
+    if(internalMortalityDF.containsElementNamed("Cover_resprouting_stumps")) {
+      Rcpp::NumericVector Cover_resprouting_stumps = internalMortalityDF["Cover_resprouting_stumps"];
+      for(int c = 0;c < numCohorts; c++) Cover_resprouting_stumps[c] = internalMortality.Cover_resprouting_stumps[c];
     }
     if(internalMortalityDF.containsElementNamed("Snag_smallbranches")) {
       Rcpp::NumericVector Snag_smallbranches = internalMortalityDF["Snag_smallbranches"];

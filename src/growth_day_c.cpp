@@ -133,7 +133,7 @@ Rcpp::DataFrame copyLabileCarbonBalanceResult_c(const LabileCarbonBalance_RESULT
   DF.attr("row.names") = x.cohorts.CohortCode;
   return(DF);
 }
-Rcpp::DataFrame copyLabileCarbonBalanceInstResult_c(const LabileCarbonBalanceInst_RESULT& LCBInstres, ModelInput& x) {
+Rcpp::List copyLabileCarbonBalanceInstResult_c(const LabileCarbonBalanceInst_RESULT& LCBInstres, ModelInput& x) {
   int numCohorts = x.cohorts.CohortCode.size();
   int ntimesteps = x.control.advancedWB.ndailysteps;
   NumericMatrix GrossPhotosynthesis = copyNumericMatrix_c(LCBInstres.GrossPhotosynthesis, numCohorts, ntimesteps);
@@ -157,7 +157,7 @@ Rcpp::DataFrame copyLabileCarbonBalanceInstResult_c(const LabileCarbonBalanceIns
   NumericMatrix SugarTransport = copyNumericMatrix_c(LCBInstres.SugarTransport, numCohorts, ntimesteps);
   SugarTransport.attr("dimnames") = List::create(x.cohorts.CohortCode, seq(1,ntimesteps));
   
-  Rcpp::DataFrame DF = Rcpp::DataFrame::create(
+  Rcpp::List DF = Rcpp::List::create(
     Rcpp::Named("GrossPhotosynthesis") = GrossPhotosynthesis,
     Rcpp::Named("MaintenanceRespiration") = MaintenanceRespiration,
     Rcpp::Named("GrowthCosts") = GrowthCosts,
@@ -241,7 +241,7 @@ Rcpp::List copyAdvancedGROWTHResult_c(AdvancedGROWTH_RESULT& GROWTHres, ModelInp
   l.push_back(copyPlantStructureResult_c(GROWTHres.PSres, x), "PlantStructure");
   l.push_back(copyGrowthMortalityResult_c(GROWTHres.GMres, x), "GrowthMortality");
   if(x.control.growth.subdailyCarbonBalance) {
-    l.push_back(copyLabileCarbonBalanceInstResult_c(GROWTHres.LCBInstres, x));
+    l.push_back(copyLabileCarbonBalanceInstResult_c(GROWTHres.LCBInstres, x), "LabileCarbonBalanceInst");
   }
   l.attr("class") = Rcpp::CharacterVector::create("growth_day","list");
   return(l);

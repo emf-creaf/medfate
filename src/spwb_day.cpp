@@ -1051,8 +1051,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
     BasicTranspiration_RESULT BTres(numCohorts, nlayers);
     BasicSPWB_RESULT BSPWBres(BTres);
     // Calls simulation
-    std::unique_ptr<WaterBalanceModelInput> x_wb = std::make_unique<ModelInput>(x_c);
-    wb_day_inner_c(BSPWBres, WBcomm, *x_wb, 
+    wb_day_inner_c(BSPWBres, WBcomm, x_c, 
                    as<std::string>(date[0]),
                    meteovec_c, 
                    latitude, elevation, slope, aspect,
@@ -1061,14 +1060,13 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
     //Copies result
     l = copySPWBResult_c(BSPWBres, x_c);
     //Modifies input list, if required  
-    if(modifyInput) x_wb->copyStateToList(x);
+    if(modifyInput) x_c.copyStateToList(x);
   } else {
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
     AdvancedSPWB_RESULT ASPWBres(ATres);
     // Calls simulation
-    std::unique_ptr<WaterBalanceModelInput> x_wb = std::make_unique<ModelInput>(x_c);
-    wb_day_inner_c(ASPWBres, WBcomm, *x_wb, 
+    wb_day_inner_c(ASPWBres, WBcomm, x_c, 
                    as<std::string>(date[0]),
                    meteovec_c, 
                    latitude, elevation, slope, aspect,
@@ -1077,7 +1075,9 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
     //Copies result
     l = copySPWBResult_c(ASPWBres, x_c);
     //Modifies input list, if required  
-    if(modifyInput) x_wb->copyStateToList(x);
+    if(modifyInput) {
+      x_c.copyStateToList(x); 
+    }
   }
 
   return(l);

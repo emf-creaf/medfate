@@ -362,70 +362,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   }
   if(multiLayerBalance) Cair[ncanlayers-1] = Catm;
 
-  // //Root distribution input
-  // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  // NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
-  // NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
-  // NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
-  // NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
-  // 
-  // //Water pools
-  // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-  // List RHOP;
-  // NumericVector poolProportions(numCohorts);
-  // if(plantWaterPools) {
-  //   RHOP = belowLayers["RHOP"];
-  //   poolProportions = belowdf["poolProportions"];
-  // }
-  // 
-  //Base parameters
-  // 
-  // //Phenology parameters
-  // DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
-  // CharacterVector phenoType = paramsPhenology["PhenologyType"];
-  // 
-  // //Anatomy parameters
-  // DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  // NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
-  // NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  // NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
-  // 
-  // //Transpiration parameters
-  // DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  // NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Plant_kmax"]);
-  // NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
-  // NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
-  // 
-  // NumericVector Vmax298 = paramsTranspiration["Vmax298"];
-  // NumericVector Jmax298 = paramsTranspiration["Jmax298"];
-  // 
-  // //Water storage parameters
-  // DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  // NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
-  // NumericVector maxMCstem = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCstem"]);
-  // NumericVector maxMCleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxMCleaf"]);
-  // NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-  // NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-  // NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  // NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-  // NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
-  // NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
-  // NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  // NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
-  // 
-  // //Comunication with outside
-  // DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
-  // NumericVector phi = Rcpp::as<Rcpp::NumericVector>(internalPhenology["phi"]);
-  // DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  // NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-  // NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-  // NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
-  // NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
-  // NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-  // NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
-  // NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
-  
+
   arma::mat& LAImx = x.internalLAIDistribution.live;
   arma::mat& LAIme = x.internalLAIDistribution.expanded;
   arma::mat& LAImd = x.internalLAIDistribution.dead;
@@ -483,91 +420,17 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     delete[] Wbackup;
   }
 
-  // ////////////////////////////////////////
-  // // DEFINE OUTPUT
-  // ////////////////////////////////////////
-  // //Transpiration and photosynthesis
-  // NumericMatrix minPsiRhizo = transpOutput["RhizoPsi"];
-  // 
-  // NumericVector outputFPAR = outputPlants["FPAR"];
-  // arma::mat& SoilExtractCoh = ATres.extraction;
-  // NumericVector DDS = outputPlants["DDS"];
-  // NumericVector LFMC = outputPlants["LFMC"];
-  // NumericVector Eplant = outputPlants["Transpiration"];
-  // NumericVector Anplant = outputPlants["GrossPhotosynthesis"];
-  // NumericVector Agplant = outputPlants["NetPhotosynthesis"];
-  // NumericVector minStemPsi= outputPlants["StemPsi"];
-  // NumericVector minRootPsi= outputPlants["RootPsi"];
-  // NumericVector minLeafPsi= outputPlants["LeafPsiMin"];
-  // NumericVector maxLeafPsi= outputPlants["LeafPsiMax"];
-  // NumericVector PLClm = outputPlants["LeafPLC"];
-  // NumericVector PLCsm = outputPlants["StemPLC"];
-  // NumericVector dEdPm = outputPlants["dEdP"];
-  // NumericVector PWB = outputPlants["WaterBalance"];
-  // NumericVector RWCsm = outputPlants["StemRWC"];
-  // NumericVector RWClm = outputPlants["LeafRWC"];
-  // 
-  // 
-  // NumericVector maxGSW_SL = outputSunlit["GSWMax"];
-  // NumericVector maxGSW_SH = outputShade["GSWMax"];
-  // NumericVector minGSW_SL = outputSunlit["GSWMin"];
-  // NumericVector minGSW_SH = outputShade["GSWMin"];
-  // NumericVector maxTemp_SL = outputSunlit["TempMax"];
-  // NumericVector maxTemp_SH = outputShade["TempMax"];
-  // NumericVector minTemp_SL = outputSunlit["TempMin"];
-  // NumericVector minTemp_SH = outputShade["TempMin"];
-  // NumericVector maxLeafPsi_SL = outputSunlit["LeafPsiMax"];
-  // NumericVector maxLeafPsi_SH = outputShade["LeafPsiMax"];
-  // NumericVector minLeafPsi_SL = outputSunlit["LeafPsiMin"];
-  // NumericVector minLeafPsi_SH = outputShade["LeafPsiMin"];
-  // 
-  // NumericMatrix Einst = outputPlantsInst["E"];
-  // NumericMatrix Aginst = outputPlantsInst["Ag"];
-  // NumericMatrix Aninst = outputPlantsInst["An"];
-  // NumericMatrix dEdPInst = outputPlantsInst["dEdP"];
-  // NumericMatrix LeafPsiInst = outputPlantsInst["LeafPsi"];
-  // NumericMatrix StemPsiInst = outputPlantsInst["StemPsi"];
-  // NumericMatrix RootPsiInst = outputPlantsInst["RootPsi"];
-  // NumericMatrix LeafSympPsiInst = outputPlantsInst["LeafSympPsi"];
-  // NumericMatrix StemSympPsiInst = outputPlantsInst["StemSympPsi"];
-  // NumericMatrix StemPLC = outputPlantsInst["StemPLC"];
-  // NumericMatrix LeafPLC = outputPlantsInst["LeafPLC"];
-  // NumericMatrix LeafRWCInst = outputPlantsInst["LeafRWC"];
-  // NumericMatrix StemRWCInst = outputPlantsInst["StemRWC"];
-  // NumericMatrix LeafSympRWCInst = outputPlantsInst["LeafSympRWC"];
-  // NumericMatrix StemSympRWCInst = outputPlantsInst["StemSympRWC"];
-  // NumericMatrix PWBinst = outputPlantsInst["PWB"];
-  // 
+  ////////////////////////////////////////
+  // DEFINE OUTPUT
+  ////////////////////////////////////////
+  
   arma::mat& LAI_SL = outputSunlitInst.LAI;
   arma::mat& LAI_SH = outputShadeInst.LAI;
   arma::mat& Vmax298_SL = outputSunlitInst.Vmax298;
   arma::mat& Vmax298_SH = outputShadeInst.Vmax298;
   arma::mat& Jmax298_SL = outputSunlitInst.Jmax298;
   arma::mat& Jmax298_SH = outputShadeInst.Jmax298;
-  // NumericMatrix SWR_SL = outputSunlitInst["Abs_SWR"];
-  // NumericMatrix SWR_SH = outputShadeInst["Abs_SWR"];
-  // NumericMatrix PAR_SL = outputSunlitInst["Abs_PAR"];
-  // NumericMatrix PAR_SH = outputShadeInst["Abs_PAR"];
-  // NumericMatrix LWR_SL = outputSunlitInst["Net_LWR"];
-  // NumericMatrix LWR_SH = outputShadeInst["Net_LWR"];
-  // NumericMatrix An_SL = outputSunlitInst["An"];
-  // NumericMatrix An_SH = outputShadeInst["An"];
-  // NumericMatrix Ag_SL = outputSunlitInst["Ag"];
-  // NumericMatrix Ag_SH = outputShadeInst["Ag"];
-  // NumericMatrix Ci_SL = outputSunlitInst["Ci"];
-  // NumericMatrix Ci_SH = outputShadeInst["Ci"];
-  // NumericMatrix E_SL = outputSunlitInst["E"];
-  // NumericMatrix E_SH = outputShadeInst["E"];
-  // NumericMatrix GSW_SL = outputSunlitInst["Gsw"];
-  // NumericMatrix GSW_SH = outputShadeInst["Gsw"];
-  // NumericMatrix VPD_SL = outputSunlitInst["VPD"];
-  // NumericMatrix VPD_SH = outputShadeInst["VPD"];
-  // NumericMatrix Temp_SL = outputSunlitInst["Temp"];
-  // NumericMatrix Temp_SH = outputShadeInst["Temp"];
-  // NumericMatrix Psi_SL = outputSunlitInst["Psi"];
-  // NumericMatrix Psi_SH = outputShadeInst["Psi"];
-  // 
-  // 
+
   //Reset output data
   std::fill(outputPlants.Transpiration.begin(), outputPlants.Transpiration.end(), 0.0);
   std::fill(outputPlants.GrossPhotosynthesis.begin(), outputPlants.GrossPhotosynthesis.end(), 0.0);
@@ -588,45 +451,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   std::fill(Vmax298_SL.begin(), Vmax298_SL.end(), 0.0);
   std::fill(LAI_SH.begin(), LAI_SH.end(), 0.0);
   std::fill(LAI_SL.begin(), LAI_SL.end(), 0.0);
-  
-  // std::fill(StemPLC.begin(), StemPLC.end(), NA_REAL);
-  // std::fill(LeafPLC.begin(), LeafPLC.end(), NA_REAL);
-  // std::fill(dEdPInst.begin(), dEdPInst.end(), NA_REAL);
-  // std::fill(LeafPsiInst.begin(), LeafPsiInst.end(), NA_REAL);
-  // std::fill(StemPsiInst.begin(), StemPsiInst.end(), NA_REAL);
-  // std::fill(RootPsiInst.begin(), RootPsiInst.end(), NA_REAL);
-  // std::fill(LeafSympPsiInst.begin(), LeafSympPsiInst.end(), NA_REAL);
-  // std::fill(StemSympPsiInst.begin(), StemSympPsiInst.end(), NA_REAL);
-  // std::fill(Aninst.begin(), Aninst.end(), NA_REAL);
-  // std::fill(Aginst.begin(), Aginst.end(), NA_REAL);
-  // std::fill(LeafRWCInst.begin(), LeafRWCInst.end(), NA_REAL);
-  // std::fill(StemRWCInst.begin(), StemRWCInst.end(), NA_REAL);
-  // std::fill(PWBinst.begin(), PWBinst.end(), NA_REAL);
-  // std::fill(LeafSympRWCInst.begin(), LeafSympRWCInst.end(), NA_REAL);
-  // std::fill(StemSympRWCInst.begin(), StemSympRWCInst.end(), NA_REAL);
-  // std::fill(Psi_SH.begin(), Psi_SH.end(), NA_REAL);
-  // std::fill(Psi_SL.begin(), Psi_SL.end(), NA_REAL);
-  // std::fill(Temp_SL.begin(), Temp_SL.end(), NA_REAL);
-  // std::fill(Temp_SH.begin(), Temp_SH.end(), NA_REAL);
-  // std::fill(VPD_SL.begin(), VPD_SL.end(), NA_REAL);
-  // std::fill(VPD_SH.begin(), VPD_SH.end(), NA_REAL);
-  // std::fill(GSW_SL.begin(), GSW_SL.end(), NA_REAL);
-  // std::fill(GSW_SH.begin(), GSW_SH.end(), NA_REAL);
-  // std::fill(E_SH.begin(), E_SH.end(), NA_REAL);
-  // std::fill(E_SL.begin(), E_SL.end(), NA_REAL);
-  // std::fill(Ci_SH.begin(), Ci_SH.end(), NA_REAL);
-  // std::fill(Ci_SL.begin(), Ci_SL.end(), NA_REAL);
-  // std::fill(An_SH.begin(), An_SH.end(), NA_REAL);
-  // std::fill(Ag_SH.begin(), Ag_SH.end(), NA_REAL);
-  // std::fill(An_SL.begin(), An_SL.end(), NA_REAL);
-  // std::fill(Ag_SL.begin(), Ag_SL.end(), NA_REAL);
-  // std::fill(LWR_SL.begin(), LWR_SL.end(), NA_REAL);
-  // std::fill(PAR_SH.begin(), PAR_SH.end(), NA_REAL);
-  // std::fill(LWR_SH.begin(), LWR_SH.end(), NA_REAL);
-  // std::fill(PAR_SL.begin(), PAR_SL.end(), NA_REAL);
-  // std::fill(SWR_SL.begin(), SWR_SL.end(), NA_REAL);
-  // std::fill(SWR_SH.begin(), SWR_SH.end(), NA_REAL);
-
 
   ////////////////////////////////////////
   // STEP 1. Estimate stand-level leaf area values and leaf distribution across layers from leaf-level live/expanded area
