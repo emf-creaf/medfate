@@ -26,9 +26,7 @@
 #include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
-
-
-//TO BE DELETED AFTER CONVERSION
+// TO BE DELETED IN FUTURE VERSIONS
 void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List transpOutput, double slope) {
   List control = x["control"];
   
@@ -107,7 +105,7 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
 
 
 
-
+// TO BE DELETED IN FUTURE VERSIONS
 // Soil water balance with simple hydraulic model
 void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec, 
                    double elevation, double slope, double aspect,
@@ -425,6 +423,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   }
 }
 
+// TO BE DELETED IN FUTURE VERSIONS
 // Soil water balance with Sperry or Sureau hydraulic and stomatal conductance models
 void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec, 
                       double latitude, double elevation, double slope, double aspect,
@@ -736,7 +735,7 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
 }
 
 
-
+// TO BE DELETED IN FUTURE VERSIONS
 //' @rdname communication
 //' @keywords internal
 // [[Rcpp::export("spwb_day_inner")]]
@@ -1017,30 +1016,9 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //' @name spwb_day
 // [[Rcpp::export("spwb_day")]]
 List spwbDay(List x, CharacterVector date, NumericVector meteovec, 
-              double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
-              double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-              bool modifyInput = true) {
-
-   //Check if input version is lower than current medfate version. If so, try to complete fields
-   if(isLowerVersion(x)) spwbInputVersionUpdate(x);
-     
-   //Instance communication structures
-   List internalCommunication = instanceCommunicationStructures(x, "spwb");
-   
-   spwbDay_inner(internalCommunication, x, date, meteovec,
-                 latitude, elevation, slope, aspect,
-                 runon, lateralFlows, waterTableDepth,
-                 modifyInput);
-   
-   List modelOutput = copyModelOutput(internalCommunication, x, "spwb");
-   return(modelOutput);
- }
-
-// [[Rcpp::export("spwb_day_c")]]
-List spwbDay_c(List x, CharacterVector date, NumericVector meteovec, 
-               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
-               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-               bool modifyInput = true) {
+             double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+             double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+             bool modifyInput = true) {
   
   //Check if input version is lower than current medfate version. If so, try to complete fields
   if(isLowerVersion(x)) spwbInputVersionUpdate(x);
@@ -1103,4 +1081,27 @@ List spwbDay_c(List x, CharacterVector date, NumericVector meteovec,
   }
 
   return(l);
+}
+
+
+// OLD SPWBDAY (NOT MAINTAINED)
+// [[Rcpp::export("spwb_day_old")]]
+List spwbDay_old(List x, CharacterVector date, NumericVector meteovec,
+                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                 double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                 bool modifyInput = true) {
+
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures(x, "spwb");
+
+  spwbDay_inner(internalCommunication, x, date, meteovec,
+                latitude, elevation, slope, aspect,
+                runon, lateralFlows, waterTableDepth,
+                modifyInput);
+
+  List modelOutput = copyModelOutput(internalCommunication, x, "spwb");
+  return(modelOutput);
 }

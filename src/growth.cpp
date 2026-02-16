@@ -890,346 +890,6 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
 List growth(List x, DataFrame meteo, double latitude, 
             double elevation, double slope = NA_REAL, double aspect = NA_REAL,
             NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
-
-  //Clone input
-  x = clone(x);
-  
-  //Control params 
-  List control =x["control"];  
-  String transpirationMode = control["transpirationMode"];
-  String soilFunctions = control["soilFunctions"];
-  bool verbose = control["verbose"];
-  bool leafPhenology = control["leafPhenology"];
-  bool unlimitedSoilWater = control["unlimitedSoilWater"];
-  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
-  checkgrowthInput(x, transpirationMode, soilFunctions);
-
-
-  //Cohort info
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
-  IntegerVector SPunique = uniqueSpp(SP);
-
-  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
-  double latrad = latitude * (M_PI/180.0);
-  if(NumericVector::is_na(aspect)) aspect = 0.0;
-  if(NumericVector::is_na(slope)) slope = 0.0;
-  double asprad = aspect * (M_PI/180.0);
-  double slorad = slope * (M_PI/180.0);
-  
-  //Meteorological input    
-  NumericVector MinTemperature, MaxTemperature;
-  NumericVector MinRelativeHumidity, MaxRelativeHumidity;
-  NumericVector Radiation;
-  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
-  NumericVector Precipitation = meteo["Precipitation"];
-  int numDays = Precipitation.size();
-  if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
-  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
-  MinTemperature = meteo["MinTemperature"];
-  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
-  MaxTemperature = meteo["MaxTemperature"];
-  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
-  MinRelativeHumidity = meteo["MinRelativeHumidity"];
-  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
-  MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
-  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
-  Radiation = meteo["Radiation"];
-  
-  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation' are not allowed");
-  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature' are not allowed");
-  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature' are not allowed");
-  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
-  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
-  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
-  
-  NumericVector WindSpeed(numDays, NA_REAL);
-  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
-  
-  NumericVector FireProbability(numDays, 0.0);
-  if(meteo.containsElementNamed("FireProbability")) FireProbability = meteo["FireProbability"];
-  
-  NumericVector PET = NumericVector(numDays, NA_REAL);
-  
-  NumericVector CO2(Precipitation.length(), NA_REAL);
-  if(meteo.containsElementNamed("CO2")) {
-    CO2 = meteo["CO2"];
-    if(verbose) {
-      Rcout<<"CO2 taken from input column 'CO2'\n";
-    }
-    if(any(is_na(CO2))) stop("Missing values in 'CO2'");
-  }
-  NumericVector Patm(Precipitation.length(), NA_REAL);
-  if(meteo.containsElementNamed("Patm")) {
-    Patm = meteo["Patm"];
-    if(verbose) {
-      Rcout<<"Patm taken from input column 'Patm'\n";
-    }
-  }
-  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
-  if(meteo.containsElementNamed("RainfallIntensity")) {
-    RainfallIntensity = meteo["RainfallIntensity"];
-    if(verbose) {
-      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
-    }
-  }
-  
-  IntegerVector DOY, JulianDay;
-  NumericVector Photoperiod;
-  bool doy_input = false, photoperiod_input = false, julianday_input = false;
-  if(meteo.containsElementNamed("DOY")) {
-    DOY = meteo["DOY"];
-    doy_input = true;
-    if(verbose) {
-      Rcout<<"DOY taken from input column 'DOY'\n";
-    }
-  }
-  if(meteo.containsElementNamed("Photoperiod")) {
-    Photoperiod = meteo["Photoperiod"];
-    photoperiod_input = true;
-    if(verbose) {
-      Rcout<<"Photoperiod taken from input column 'Photoperiod'\n";
-    }
-  }
-  if(meteo.containsElementNamed("JulianDay")) {
-    JulianDay = meteo["JulianDay"];
-    julianday_input = true;
-    if(verbose) {
-      Rcout<<"Julian day taken from input column 'JulianDay'\n";
-    }
-  }
-  
-  // Dates
-  CharacterVector dateStrings = getWeatherDates(meteo);
-  if(!doy_input) DOY = date2doy(dateStrings);
-  if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
-  
-  //Soil params 
-  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  
-  //Output list
-  List outputList = defineGrowthDailyOutput(latitude, elevation, slope, aspect,
-                                            dateStrings, x);
-  outputList["weather"] = clone(meteo);
-
-  //Count years (times structural variables will be updated)
-  int numYears = 0;
-  for(int i=0;i<numDays;i++) {
-    if(((DOY[i]==1) && (i>0)) || ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
-  }
-
-  NumericVector initialSoilContent = water(soil, soilFunctions);
-  NumericVector initialPlantContent = plantWaterContent(x);
-  double initialSnowContent = x["snowpack"];
-  
-  
-  DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
-  double cohortBiomassBalanceSum = 0.0;
-  double initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
-  
-  if(verbose) {
-    Rcout<<"Initial plant cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
-    Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
-    Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
-    Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
-  }
-  
-  //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x, "growth");
-
-  bool error_occurence = false;
-  if(verbose) Rcout << "Performing daily simulations\n";
-  List s;
-  std::string yearString;
-  for(int i=0;i<numDays;i++) {
-    std::string c = as<std::string>(dateStrings[i]);
-    yearString = c.substr(0, 4);
-    if(verbose) {
-      if(DOY[i]==1 || i==0) {
-        Rcout<<"\n Year "<< yearString<< ":";
-      } 
-      else if(i%30 == 0) Rcout<<".";//<<i;
-    } 
-    
-    double wind = WindSpeed[i];
-    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
-    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
-    
-    double Catm = CO2[i];
-    //If missing, use
-    if(NumericVector::is_na(Catm)) {
-      if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
-    }
-    //If still missing, use default control value
-    if(NumericVector::is_na(Catm)) {
-      Catm = control["defaultCO2"];
-    }
-    
-    double Rint = RainfallIntensity[i];
-    if(NumericVector::is_na(Rint)) {
-      int month = std::atoi(c.substr(5,2).c_str());
-      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
-    }
-    
-    if(unlimitedSoilWater) {
-      NumericVector W = soil["W"];
-      for(int h=0;h<W.size();h++) W[h] = 1.0;
-    }
-    
-
-    //Julian day from either input column or date
-    int J = NA_INTEGER;
-    if(julianday_input) J = JulianDay[i];
-    if(IntegerVector::is_na(J)){
-      std::string c = as<std::string>(dateStrings[i]);
-      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
-    }
-    double delta = solarDeclination_c(J);
-    double solarConstant = solarConstant_c(J);
-    
-    double tmin = MinTemperature[i];
-    double tmax = MaxTemperature[i];
-    if(tmin > tmax) {
-      warning("tmin > tmax. Swapping values.");
-      double swap = tmin;
-      tmin = tmax;
-      tmax = swap;
-    }
-    double prec = Precipitation[i];
-    double tday = averageDaylightTemperature_c(tmin, tmax);
-    double rhmin = MinRelativeHumidity[i];
-    double rhmax = MaxRelativeHumidity[i];
-    double rad = Radiation[i];
-    if(NumericVector::is_na(rhmax)) {
-      rhmax = 100.0;
-    }
-    if(NumericVector::is_na(rhmin)) {
-      double vp_tmin = saturationVapourPressure_c(tmin);
-      double vp_tmax = saturationVapourPressure_c(tmax);
-      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
-    }
-    if(rhmin > rhmax) {
-      warning("rhmin > rhmax. Swapping values.");
-      double swap = rhmin;
-      rhmin = rhmax;
-      rhmax = swap;
-    }
-    if(NumericVector::is_na(rad)) {
-      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
-      rad = RDay_c(solarConstant, latrad, elevation,
-                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                   vpa, prec);
-    }
-    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
-                               tmin, tmax, rhmin, rhmax, rad, wind);
-    
-    //1. Phenology (only leaf fall)
-    if(leafPhenology) {
-      updatePhenology(x, DOY[i], Photoperiod[i], tday);
-      updateLeaves(x, wind, true);
-    }
-    
-    //2. Water balance and photosynthesis
-    if(transpirationMode=="Granier") {
-      NumericVector meteovec_inner = NumericVector::create(
-        Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-        Named("prec") = prec, 
-        Named("rhmin") = rhmin, Named("rhmax") = rhmax,
-        Named("rad") = rad, 
-        Named("wind") = wind, 
-        Named("pet") = PET[i],
-        Named("Catm") = Catm);
-      meteovec_inner.push_back(Patm[i], "Patm");
-      meteovec_inner.push_back(Rint, "rint");
-      meteovec_inner.push_back(FireProbability[i], "pfire"); 
-      try{
-        growthDay_private(internalCommunication, x, meteovec_inner,  
-                           latitude, elevation, slope, aspect,
-                           solarConstant, delta, 
-                           0.0, R_NilValue, waterTableDepth,
-                           false); //No Runon in simulations for a single cell
-        fillGrowthDailyOutput(outputList, x, internalCommunication["basicGROWTHOutput"], i);
-      } catch(std::exception& ex) {
-        Rcerr<< "c++ error: "<< ex.what() <<"\n";
-        error_occurence = true;
-      }
-    } else {
-      double tmaxPrev = tmax;
-      double tminPrev = tmin;
-      double tminNext = tmin;
-      if(i>0) {
-        tmaxPrev = MaxTemperature[i-1];
-        tminPrev = MinTemperature[i-1];
-      }
-      if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
-      NumericVector meteovec = NumericVector::create(
-        Named("tday") = tday,
-        Named("tmin") = tmin, 
-        Named("tmax") = tmax,
-        Named("tminPrev") = tminPrev, 
-        Named("tmaxPrev") = tmaxPrev, 
-        Named("tminNext") = tminNext, 
-        Named("prec") = Precipitation[i],
-        Named("rhmin") = rhmin, 
-        Named("rhmax") = rhmax, 
-        Named("rad") = rad, 
-        Named("wind") = wind, 
-        Named("Catm") = Catm,
-        Named("Patm") = Patm[i],
-        Named("pet") = PET[i],
-        Named("rint") = Rint);
-      meteovec.push_back(FireProbability[i], "pfire"); 
-      try{
-        growthDay_private(internalCommunication, x, meteovec, 
-                           latitude, elevation, slope, aspect,
-                           solarConstant, delta, 
-                           0.0, R_NilValue, waterTableDepth,
-                           verbose);
-        fillGrowthDailyOutput(outputList, x, internalCommunication["advancedGROWTHOutput"], i);
-      } catch(std::exception& ex) {
-        Rcerr<< "c++ error: "<< ex.what() <<"\n";
-        error_occurence = true;
-      }
-    }    
-    
-    //Add cohort biomass sum
-    List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
-    NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
-    cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
-  }
-  if(verbose) Rcout << "\n\n";
-  
-  // Check biomass balance
-  DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
-  double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
-  if(verbose) {
-    NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(outputList["BiomassBalance"]);
-    
-    Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
-    Rcout<<"Change in plant cohort biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
-    Rcout<<"Plant biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
-    Rcout<<"Plant biomass balance components:\n";
-    
-    Rcout<<"  Structural balance (g/m2) "  <<round(sum(StandBiomassBalance(_,0)))<<" Labile balance (g/m2) "  <<round(sum(StandBiomassBalance(_,1))) <<"\n";
-    Rcout<<"  Plant individual balance (g/m2) "  <<round(sum(StandBiomassBalance(_,2)))<<" Mortality loss (g/m2) "  <<round(sum(StandBiomassBalance(_,3))) <<"\n";
-    
-    printWaterBalanceResult(outputList, x,
-                            initialPlantContent, initialSoilContent, initialSnowContent,
-                            transpirationMode);
-    
-    if(error_occurence) {
-      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
-    }
-  }
-  
-  return(outputList);
-}
-
-
-// [[Rcpp::export("growth_c")]]
-List growth_c(List x, DataFrame meteo, double latitude, 
-            double elevation, double slope = NA_REAL, double aspect = NA_REAL,
-            NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
   
   //Clone input
   x = clone(x);
@@ -1584,5 +1244,345 @@ List growth_c(List x, DataFrame meteo, double latitude,
     }
   }
   
+  return(outputList);
+}
+
+// OLD GROWTH FUNCTION (NOT MAINTAINED)
+// [[Rcpp::export(".growth_old")]]
+List growth_old(List x, DataFrame meteo, double latitude,
+                double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
+  
+  //Clone input
+  x = clone(x);
+
+  //Control params
+  List control =x["control"];
+  String transpirationMode = control["transpirationMode"];
+  String soilFunctions = control["soilFunctions"];
+  bool verbose = control["verbose"];
+  bool leafPhenology = control["leafPhenology"];
+  bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  checkgrowthInput(x, transpirationMode, soilFunctions);
+
+
+  //Cohort info
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
+  IntegerVector SPunique = uniqueSpp(SP);
+
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+
+  //Meteorological input
+  NumericVector MinTemperature, MaxTemperature;
+  NumericVector MinRelativeHumidity, MaxRelativeHumidity;
+  NumericVector Radiation;
+  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
+  NumericVector Precipitation = meteo["Precipitation"];
+  int numDays = Precipitation.size();
+  if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
+  Radiation = meteo["Radiation"];
+
+  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation' are not allowed");
+  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature' are not allowed");
+  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature' are not allowed");
+  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
+  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
+  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
+
+  NumericVector WindSpeed(numDays, NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+
+  NumericVector FireProbability(numDays, 0.0);
+  if(meteo.containsElementNamed("FireProbability")) FireProbability = meteo["FireProbability"];
+
+  NumericVector PET = NumericVector(numDays, NA_REAL);
+
+  NumericVector CO2(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("CO2")) {
+    CO2 = meteo["CO2"];
+    if(verbose) {
+      Rcout<<"CO2 taken from input column 'CO2'\n";
+    }
+    if(any(is_na(CO2))) stop("Missing values in 'CO2'");
+  }
+  NumericVector Patm(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) {
+    Patm = meteo["Patm"];
+    if(verbose) {
+      Rcout<<"Patm taken from input column 'Patm'\n";
+    }
+  }
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
+
+  IntegerVector DOY, JulianDay;
+  NumericVector Photoperiod;
+  bool doy_input = false, photoperiod_input = false, julianday_input = false;
+  if(meteo.containsElementNamed("DOY")) {
+    DOY = meteo["DOY"];
+    doy_input = true;
+    if(verbose) {
+      Rcout<<"DOY taken from input column 'DOY'\n";
+    }
+  }
+  if(meteo.containsElementNamed("Photoperiod")) {
+    Photoperiod = meteo["Photoperiod"];
+    photoperiod_input = true;
+    if(verbose) {
+      Rcout<<"Photoperiod taken from input column 'Photoperiod'\n";
+    }
+  }
+  if(meteo.containsElementNamed("JulianDay")) {
+    JulianDay = meteo["JulianDay"];
+    julianday_input = true;
+    if(verbose) {
+      Rcout<<"Julian day taken from input column 'JulianDay'\n";
+    }
+  }
+
+  // Dates
+  CharacterVector dateStrings = getWeatherDates(meteo);
+  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
+
+  //Soil params
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+
+  //Output list
+  List outputList = defineGrowthDailyOutput(latitude, elevation, slope, aspect,
+                                            dateStrings, x);
+  outputList["weather"] = clone(meteo);
+
+  //Count years (times structural variables will be updated)
+  int numYears = 0;
+  for(int i=0;i<numDays;i++) {
+    if(((DOY[i]==1) && (i>0)) || ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
+  }
+
+  NumericVector initialSoilContent = water(soil, soilFunctions);
+  NumericVector initialPlantContent = plantWaterContent(x);
+  double initialSnowContent = x["snowpack"];
+
+
+  DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
+  double cohortBiomassBalanceSum = 0.0;
+  double initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
+
+  if(verbose) {
+    Rcout<<"Initial plant cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
+    Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
+    Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
+    Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
+  }
+
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures(x, "growth");
+
+  bool error_occurence = false;
+  if(verbose) Rcout << "Performing daily simulations\n";
+  List s;
+  std::string yearString;
+  for(int i=0;i<numDays;i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    yearString = c.substr(0, 4);
+    if(verbose) {
+      if(DOY[i]==1 || i==0) {
+        Rcout<<"\n Year "<< yearString<< ":";
+      }
+      else if(i%30 == 0) Rcout<<".";//<<i;
+    }
+
+    double wind = WindSpeed[i];
+    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
+    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+
+    double Catm = CO2[i];
+    //If missing, use
+    if(NumericVector::is_na(Catm)) {
+      if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
+    }
+    //If still missing, use default control value
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["defaultCO2"];
+    }
+
+    double Rint = RainfallIntensity[i];
+    if(NumericVector::is_na(Rint)) {
+      int month = std::atoi(c.substr(5,2).c_str());
+      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
+    }
+
+    if(unlimitedSoilWater) {
+      NumericVector W = soil["W"];
+      for(int h=0;h<W.size();h++) W[h] = 1.0;
+    }
+
+
+    //Julian day from either input column or date
+    int J = NA_INTEGER;
+    if(julianday_input) J = JulianDay[i];
+    if(IntegerVector::is_na(J)){
+      std::string c = as<std::string>(dateStrings[i]);
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+    }
+    double delta = solarDeclination_c(J);
+    double solarConstant = solarConstant_c(J);
+
+    double tmin = MinTemperature[i];
+    double tmax = MaxTemperature[i];
+    if(tmin > tmax) {
+      warning("tmin > tmax. Swapping values.");
+      double swap = tmin;
+      tmin = tmax;
+      tmax = swap;
+    }
+    double prec = Precipitation[i];
+    double tday = averageDaylightTemperature_c(tmin, tmax);
+    double rhmin = MinRelativeHumidity[i];
+    double rhmax = MaxRelativeHumidity[i];
+    double rad = Radiation[i];
+    if(NumericVector::is_na(rhmax)) {
+      rhmax = 100.0;
+    }
+    if(NumericVector::is_na(rhmin)) {
+      double vp_tmin = saturationVapourPressure_c(tmin);
+      double vp_tmax = saturationVapourPressure_c(tmax);
+      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
+    if(rhmin > rhmax) {
+      warning("rhmin > rhmax. Swapping values.");
+      double swap = rhmin;
+      rhmin = rhmax;
+      rhmax = swap;
+    }
+    if(NumericVector::is_na(rad)) {
+      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+      rad = RDay_c(solarConstant, latrad, elevation,
+                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                   vpa, prec);
+    }
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J,
+                         tmin, tmax, rhmin, rhmax, rad, wind);
+
+    //1. Phenology (only leaf fall)
+    if(leafPhenology) {
+      updatePhenology(x, DOY[i], Photoperiod[i], tday);
+      updateLeaves(x, wind, true);
+    }
+
+    //2. Water balance and photosynthesis
+    if(transpirationMode=="Granier") {
+      NumericVector meteovec_inner = NumericVector::create(
+        Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
+              Named("prec") = prec,
+              Named("rhmin") = rhmin, Named("rhmax") = rhmax,
+              Named("rad") = rad,
+              Named("wind") = wind,
+              Named("pet") = PET[i],
+                                Named("Catm") = Catm);
+      meteovec_inner.push_back(Patm[i], "Patm");
+      meteovec_inner.push_back(Rint, "rint");
+      meteovec_inner.push_back(FireProbability[i], "pfire");
+      try{
+        growthDay_private(internalCommunication, x, meteovec_inner,
+                          latitude, elevation, slope, aspect,
+                          solarConstant, delta,
+                          0.0, R_NilValue, waterTableDepth,
+                          false); //No Runon in simulations for a single cell
+        fillGrowthDailyOutput(outputList, x, internalCommunication["basicGROWTHOutput"], i);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
+    } else {
+      double tmaxPrev = tmax;
+      double tminPrev = tmin;
+      double tminNext = tmin;
+      if(i>0) {
+        tmaxPrev = MaxTemperature[i-1];
+        tminPrev = MinTemperature[i-1];
+      }
+      if(i<(numDays-1)) tminNext = MinTemperature[i+1];
+      NumericVector meteovec = NumericVector::create(
+        Named("tday") = tday,
+        Named("tmin") = tmin,
+        Named("tmax") = tmax,
+        Named("tminPrev") = tminPrev,
+        Named("tmaxPrev") = tmaxPrev,
+        Named("tminNext") = tminNext,
+        Named("prec") = Precipitation[i],
+                                     Named("rhmin") = rhmin,
+                                     Named("rhmax") = rhmax,
+                                     Named("rad") = rad,
+                                     Named("wind") = wind,
+                                     Named("Catm") = Catm,
+                                     Named("Patm") = Patm[i],
+                                                         Named("pet") = PET[i],
+                                                                           Named("rint") = Rint);
+      meteovec.push_back(FireProbability[i], "pfire");
+      try{
+        growthDay_private(internalCommunication, x, meteovec,
+                          latitude, elevation, slope, aspect,
+                          solarConstant, delta,
+                          0.0, R_NilValue, waterTableDepth,
+                          verbose);
+        fillGrowthDailyOutput(outputList, x, internalCommunication["advancedGROWTHOutput"], i);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
+    }
+
+    //Add cohort biomass sum
+    List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
+    NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
+    cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
+  }
+  if(verbose) Rcout << "\n\n";
+
+  // Check biomass balance
+  DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
+  double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
+  if(verbose) {
+    NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(outputList["BiomassBalance"]);
+
+    Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
+    Rcout<<"Change in plant cohort biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
+    Rcout<<"Plant biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
+    Rcout<<"Plant biomass balance components:\n";
+
+    Rcout<<"  Structural balance (g/m2) "  <<round(sum(StandBiomassBalance(_,0)))<<" Labile balance (g/m2) "  <<round(sum(StandBiomassBalance(_,1))) <<"\n";
+    Rcout<<"  Plant individual balance (g/m2) "  <<round(sum(StandBiomassBalance(_,2)))<<" Mortality loss (g/m2) "  <<round(sum(StandBiomassBalance(_,3))) <<"\n";
+
+    printWaterBalanceResult(outputList, x,
+                            initialPlantContent, initialSoilContent, initialSnowContent,
+                            transpirationMode);
+
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
+    }
+  }
+
   return(outputList);
 }

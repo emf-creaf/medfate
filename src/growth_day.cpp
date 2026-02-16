@@ -35,8 +35,7 @@
 #include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
-
-
+// TO BE DELETED IN FUTURE VERSIONS
 void fillInitialPlantBiomassBalance(DataFrame plantBiomassBalance, DataFrame ccIni, DataFrame above) {
 
   NumericVector N = above["N"];
@@ -69,7 +68,7 @@ void fillInitialPlantBiomassBalance(DataFrame plantBiomassBalance, DataFrame ccI
   }
 }
 
-
+// TO BE DELETED IN FUTURE VERSIONS
 void closePlantBiomassBalance(List initialFinalCC, DataFrame plantBiomassBalance, List x,
                          NumericVector LabileCarbonBalance,
                          NumericVector LeafBiomassBalance,
@@ -137,6 +136,7 @@ void closePlantBiomassBalance(List initialFinalCC, DataFrame plantBiomassBalance
   
 }
 
+// TO BE DELETED IN FUTURE VERSIONS
 void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   
   //Control params
@@ -281,6 +281,8 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
     x["herbLAI"] = herbLAImax*exp(-0.235*woodyLAI);
   }
 }
+
+// TO BE DELETED IN FUTURE VERSIONS
 void growthDay_private(List internalCommunication, List x, NumericVector meteovec, 
                        double latitude, double elevation, double slope, double aspect,
                        double solarConstant, double delta, 
@@ -1642,6 +1644,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
 }
 
 
+// TO BE DELETED IN FUTURE VERSIONS
 //' @rdname communication
 //' @keywords internal
 // [[Rcpp::export("growth_day_inner")]]
@@ -1883,28 +1886,6 @@ void growthDay_inner(List internalCommunication, List x, CharacterVector date, N
 //' @name growth_day
 // [[Rcpp::export("growth_day")]]
 List growthDay(List x, CharacterVector date, NumericVector meteovec, 
-               double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
-               double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL, 
-               bool modifyInput = true) {
-  
-  //Check if input version is lower than current medfate version. If so, try to complete fields
-  if(isLowerVersion(x)) growthInputVersionUpdate(x);
-  
-  //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x, "growth");
-  growthDay_inner(internalCommunication, x, date, meteovec,
-                                     latitude, elevation, slope, aspect,
-                                     runon, lateralFlows, waterTableDepth,
-                                     modifyInput);
-
-  List modelOutput = copyModelOutput(internalCommunication, x, "growth");
-  return(modelOutput);
-}
-
-
-
-// [[Rcpp::export("growth_day_c")]]
-List growthDay_c(List x, CharacterVector date, NumericVector meteovec, 
                  double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
                  double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                  bool modifyInput = true) {
@@ -1971,4 +1952,26 @@ List growthDay_c(List x, CharacterVector date, NumericVector meteovec,
   if(modifyInput) x_c.copyStateToList(x);
   
   return(l);
+}
+
+
+// OLD GROWTHDAY FUNCTION (NOT MAINTAINED)
+// [[Rcpp::export(".growth_day_old")]]
+List growthDay_old(List x, CharacterVector date, NumericVector meteovec,
+                   double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                   double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                   bool modifyInput = true) {
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) growthInputVersionUpdate(x);
+
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures(x, "growth");
+  growthDay_inner(internalCommunication, x, date, meteovec,
+                  latitude, elevation, slope, aspect,
+                  runon, lateralFlows, waterTableDepth,
+                  modifyInput);
+
+  List modelOutput = copyModelOutput(internalCommunication, x, "growth");
+  return(modelOutput);
 }

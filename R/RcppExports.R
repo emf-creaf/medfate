@@ -1435,8 +1435,8 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
     .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
-growth_c <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
-    .Call(`_medfate_growth_c`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
+.growth_old <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
+    .Call(`_medfate_growth_old`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
 #' @rdname communication
@@ -1578,8 +1578,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_,
     .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
-growth_day_c <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_growthDay_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+.growth_day_old <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_growthDay_old`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 #' Mortality
@@ -4163,10 +4163,6 @@ spwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_re
     .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
-spwb_c <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
-    .Call(`_medfate_spwb_c`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
-}
-
 #' Plant water balance
 #' 
 #' Function \code{pwb()} performs plant water balance 
@@ -4218,6 +4214,10 @@ spwb_c <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #' @keywords internal
 pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), herbTranspiration = numeric(0), CO2ByYear = numeric(0)) {
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, CO2ByYear)
+}
+
+.spwb_old <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
+    .Call(`_medfate_spwb_old`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
 }
 
 #' @rdname communication
@@ -4366,8 +4366,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, a
     .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
-spwb_day_c <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_spwbDay_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+spwb_day_old <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_spwbDay_old`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 #' Tissue moisture functions

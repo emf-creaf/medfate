@@ -26,114 +26,33 @@ control_sureau$subdailyResults <- TRUE
 #Initialize soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
 
-test_that("aspwb_day and spwb_day can be run after reorganizing code",{
-  xa <- aspwbInput(0.75, defaultControl(), examplesoil)
-  W_ini <- rlang::duplicate(xa$soil$W)
-  expect_s3_class(aspwb_day_c(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE), "aspwb_day")
-  expect_equal(xa$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(aspwb_day_c(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = TRUE), "aspwb_day")
-  expect_false(all(xa$soil$W == W_ini)) # Check that W has changed
-  
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  # forest herbs
-  x1 <- spwbInput(forest_herbs, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  control_granier$rhizosphereOverlap <- "partial"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  control_granier$rhizosphereOverlap <- "total"
-  control_granier$soilDomains = "single"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  control_granier$rhizosphereOverlap <- "total"
-  control_granier$soilDomains = "dual"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  control_sperry$rhizosphereOverlap <- "partial"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-  control_sureau$rhizosphereOverlap <- "partial"
-  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "spwb_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "spwb_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-  
-})
-
-test_that("aspwb_day and spwb_day_c return the same result", {
+test_that("aspwb_day and aspwb_day_old return the same result", {
   xa <- aspwbInput(0.75, defaultControl(), examplesoil)
   sda <- aspwb_day(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE) 
-  sda_c <- aspwb_day_c(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE) 
+  sda_c <- aspwb_day_old(xa, date, meteovec, latitude = 41.82592, elevation = 100, modifyInput = FALSE) 
   expect_equal(sda, sda_c) # Check for same output
 })
 
-test_that("spwb_day and spwb_day_c return the same result with granier",{
+test_that("spwb_day and spwb_day_old return the same result with granier",{
   control_granier$rhizosphereOverlap <- "total"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate::spwb_day_old(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   expect_equal(sd1, sd1_c) # Check for same output
 
   control_granier$rhizosphereOverlap <- "partial"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   x1_c <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  sd1_c <- medfate::spwb_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  sd1_c <- medfate::spwb_day_old(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1, sd1_c) # Check for same output
 })
 
-test_that("spwb_day and spwb_day_c return the same result with sperry",{
+test_that("spwb_day and spwb_day_old return the same result with sperry",{
   control_sperry$rhizosphereOverlap <- "total"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate::spwb_day_old(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   expect_equal(sd1$WaterBalance, sd1_c$WaterBalance) # Check for same output
   expect_equal(sd1$Plants, sd1_c$Plants) # Check for same output
   expect_equal(sd1$Sunlit, sd1_c$Sunlit) # Check for same output
@@ -151,7 +70,7 @@ test_that("spwb_day and spwb_day_c return the same result with sperry",{
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   x1_c <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  sd1_c <- medfate::spwb_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  sd1_c <- medfate::spwb_day_old(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1$WaterBalance, sd1_c$WaterBalance) # Check for same output
   expect_equal(sd1$Plants, sd1_c$Plants) # Check for same output
   expect_equal(sd1$Sunlit, sd1_c$Sunlit) # Check for same output
@@ -167,11 +86,11 @@ test_that("spwb_day and spwb_day_c return the same result with sperry",{
 })
 
 
-test_that("spwb_day and spwb_day_c return the same result with sureau",{
+test_that("spwb_day and spwb_day_old return the same result with sureau",{
   control_sureau$rhizosphereOverlap <- "total"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::spwb_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate::spwb_day_old(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   expect_equal(sd1$WaterBalance, sd1_c$WaterBalance) # Check for same output
   expect_equal(sd1$Plants, sd1_c$Plants) # Check for same output
   expect_equal(sd1$Sunlit, sd1_c$Sunlit) # Check for same output
@@ -189,7 +108,7 @@ test_that("spwb_day and spwb_day_c return the same result with sureau",{
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   sd1 <- medfate::spwb_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   x1_c <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  sd1_c <- medfate::spwb_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  sd1_c <- medfate::spwb_day_old(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1$WaterBalance, sd1_c$WaterBalance) # Check for same output
   expect_equal(sd1$Plants, sd1_c$Plants) # Check for same output
   expect_equal(sd1$Sunlit, sd1_c$Sunlit) # Check for same output
@@ -203,11 +122,11 @@ test_that("spwb_day and spwb_day_c return the same result with sureau",{
   expect_equal(sd1$RhizoPsi, sd1_c$RhizoPsi) # Check for same output
   expect_equal(sd1$CanopyTurbulence, sd1_c$CanopyTurbulence) # Check for same output
 })
-test_that("spwb and spwb_c return the same result with granier",{
+test_that("spwb and spwb_old return the same result with granier",{
   control_granier$rhizosphereOverlap <- "total"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   S1 <- medfate::spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::spwb_c(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.spwb_old(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$spwbOutput$internalWater, S1_c$spwbOutput$internalWater) # Check for same outputs
   expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
@@ -216,18 +135,18 @@ test_that("spwb and spwb_c return the same result with granier",{
   control_granier$rhizosphereOverlap <- "partial"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   S1 <- medfate::spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::spwb_c(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.spwb_old(x1, examplemeteo, latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
   expect_equal(S1$Soil, S1_c$Soil)
   expect_equal(S1$Plants, S1_c$Plants)
 })
 
-test_that("spwb and spwb_c return the same result with sperry",{
+test_that("spwb and spwb_old return the same result with sperry",{
   control_sperry$rhizosphereOverlap <- "total"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   S1 <- medfate::spwb(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::spwb_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.spwb_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   # expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
   # expect_equal(S1$Soil, S1_c$Soil)
@@ -235,7 +154,7 @@ test_that("spwb and spwb_c return the same result with sperry",{
   control_sperry$rhizosphereOverlap <- "partial"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   S1 <- medfate::spwb(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::spwb_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.spwb_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
   expect_equal(S1$Soil, S1_c$Soil)
@@ -243,11 +162,11 @@ test_that("spwb and spwb_c return the same result with sperry",{
 })
 
 
-test_that("spwb and spwb_c return the same result with sureau",{
+test_that("spwb and spwb_old return the same result with sureau",{
   control_sureau$rhizosphereOverlap <- "total"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   S1 <- medfate::spwb(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::spwb_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.spwb_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
   expect_equal(S1$Soil, S1_c$Soil)
@@ -255,7 +174,7 @@ test_that("spwb and spwb_c return the same result with sureau",{
   control_sureau$rhizosphereOverlap <- "partial"
   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   S1 <- medfate::spwb(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::spwb_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.spwb_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$WaterBalance, S1_c$WaterBalance) # Check for same outputs
   expect_equal(S1$Stand, S1_c$Stand) # Check for same outputs
   expect_equal(S1$Soil, S1_c$Soil)
@@ -263,67 +182,11 @@ test_that("spwb and spwb_c return the same result with sureau",{
 })
 
 
-test_that("growth_day can be run after reorganizing code",{
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  control_granier$rhizosphereOverlap <- "partial"
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  control_sperry$rhizosphereOverlap <- "partial"
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  control_sperry$subdailyCarbonBalance <- TRUE
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-  control_sureau$rhizosphereOverlap <- "partial"
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  W_ini <- rlang::duplicate(x1$soil$W)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-  expect_equal(x1$soil$W, W_ini) # Check that W has not changed
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE), "growth_day")
-  expect_false(all(x1$soil$W == W_ini)) # Check that W has changed
-
-
-  control_sureau$subdailyCarbonBalance <- TRUE
-  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  expect_s3_class(medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE), "growth_day")
-
-})
-test_that("growth_day and growth_day_c return the same result with granier",{
+test_that("growth_day and growth_day_old return the same result with granier",{
   control_granier$rhizosphereOverlap <- "total"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate:::.growth_day_old(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
@@ -335,7 +198,7 @@ test_that("growth_day and growth_day_c return the same result with granier",{
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
-  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  sd1_c <- medfate:::.growth_day_old(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
@@ -344,11 +207,11 @@ test_that("growth_day and growth_day_c return the same result with granier",{
   expect_equal(sd1$Soil, sd1_c$Soil) # Check for same output
 })
 
-test_that("growth_day and growth_day_c return the same result with sperry",{
+test_that("growth_day and growth_day_old return the same result with sperry",{
   control_sperry$rhizosphereOverlap <- "total"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate:::.growth_day_old(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
@@ -358,18 +221,18 @@ test_that("growth_day and growth_day_c return the same result with sperry",{
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
-  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  sd1_c <- medfate:::.growth_day_old(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
   expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
 })
 
-test_that("growth_day and growth_day_c return the same result with sureau",{
+test_that("growth_day and growth_day_old return the same result with sureau",{
   control_sureau$rhizosphereOverlap <- "total"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
-  sd1_c <- medfate::growth_day_c(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
+  sd1_c <- medfate:::.growth_day_old(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = FALSE)
   expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
@@ -379,18 +242,18 @@ test_that("growth_day and growth_day_c return the same result with sureau",{
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   sd1 <- medfate::growth_day(x1, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   x1_c <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
-  sd1_c <- medfate::growth_day_c(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
+  sd1_c <- medfate:::.growth_day_old(x1_c, date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0, modifyInput = TRUE)
   expect_equal(sd1$CarbonBalance, sd1_c$CarbonBalance) # Check for same output
   expect_equal(sd1$LabileCarbonBalance, sd1_c$LabileCarbonBalance) # Check for same output
   expect_equal(sd1$PlantStructure, sd1_c$PlantStructure) # Check for same output
   expect_equal(sd1$GrowthMortality, sd1_c$GrowthMortality) # Check for same output
 })
 
-test_that("growth and growth_c return the same result with granier",{
+test_that("growth and .growth_old return the same result with granier",{
   control_granier$rhizosphereOverlap <- "total"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   S1 <- medfate::growth(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::growth_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.growth_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$growthOutput$internalCarbon, S1_c$growthOutput$internalCarbon)
   expect_equal(S1$Plants, S1_c$Plants) # Check for same outputs
   expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
@@ -401,7 +264,7 @@ test_that("growth and growth_c return the same result with granier",{
   control_granier$rhizosphereOverlap <- "partial"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_granier)
   S1 <- medfate::growth(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::growth_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.growth_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$growthOutput$internalCarbon, S1_c$growthOutput$internalCarbon)
   expect_equal(S1$Plants, S1_c$Plants) # Check for same outputs
   expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
@@ -411,11 +274,11 @@ test_that("growth and growth_c return the same result with granier",{
   expect_equal(S1$DecompositionPools, S1_c$DecompositionPools)
 })
 
-test_that("growth and growth_c return the same result with sperry",{
+test_that("growth and .growth_old return the same result with sperry",{
   control_sperry$rhizosphereOverlap <- "total"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   S1 <- medfate::growth(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::growth_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.growth_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$growthOutput$internalCarbon, S1_c$growthOutput$internalCarbon)
   expect_equal(S1$Plants, S1_c$Plants) # Check for same outputs
   expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
@@ -426,7 +289,7 @@ test_that("growth and growth_c return the same result with sperry",{
   control_sperry$rhizosphereOverlap <- "partial"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
   S1 <- medfate::growth(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::growth_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.growth_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$growthOutput$internalCarbon, S1_c$growthOutput$internalCarbon)
   expect_equal(S1$Plants, S1_c$Plants) # Check for same outputs
   expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
@@ -436,11 +299,11 @@ test_that("growth and growth_c return the same result with sperry",{
   expect_equal(S1$DecompositionPools, S1_c$DecompositionPools)
 })
 
-test_that("growth and growth_c return the same result with sureau",{
+test_that("growth and .growth_old return the same result with sureau",{
   control_sureau$rhizosphereOverlap <- "total"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   S1 <- medfate::growth(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::growth_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.growth_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$growthOutput$internalCarbon, S1_c$growthOutput$internalCarbon)
   expect_equal(S1$Plants, S1_c$Plants) # Check for same outputs
   expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs
@@ -451,7 +314,7 @@ test_that("growth and growth_c return the same result with sureau",{
   control_sureau$rhizosphereOverlap <- "partial"
   x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
   S1 <- medfate::growth(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
-  S1_c <- medfate::growth_c(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  S1_c <- medfate:::.growth_old(x1, examplemeteo[1:10,], latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_equal(S1$growthOutput$internalCarbon, S1_c$growthOutput$internalCarbon)
   expect_equal(S1$Plants, S1_c$Plants) # Check for same outputs
   expect_equal(S1$CarbonBalance, S1_c$CarbonBalance) # Check for same outputs

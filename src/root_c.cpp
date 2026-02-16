@@ -176,6 +176,7 @@ RadialAxialLengths coarseRootRadialAxialLengths_c(const std::vector<double>& v, 
   
   //Radial lengths
   std::vector<double> r(nlayers, 0.0);
+  for(int i=0;i<nlayers;i++) radax.radial[i] = 0.0;
   double maxr = 0.0;
   for(int i=0;i<nlayerseff;i++) {
     r[i] = sqrt(v[i]/(d[i]*M_PI));
@@ -194,6 +195,7 @@ std::vector<double> coarseRootLengths_c(const std::vector<double>& v, const std:
   RadialAxialLengths radax = coarseRootRadialAxialLengths_c(v, d, depthWidthRatio);
   std::vector<double> l(nlayers, 0.0);
   for(int i=0;i<nlayers;i++) {
+    // Rcpp::Rcout << radax.radial[i] << " " << radax.axial[i] <<"\n";
     l[i]= (radax.radial[i]+ radax.axial[i]);
   }
   return(l);
