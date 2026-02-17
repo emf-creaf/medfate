@@ -348,7 +348,7 @@ struct InternalFCCS {
 };
 
 
-class WaterBalanceModelInput : AbstractModelInput {
+class WaterBalanceModelInput : public AbstractModelInput {
 public:
   ControlParameters control;
   Soil soil;

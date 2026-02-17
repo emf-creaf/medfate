@@ -26,6 +26,10 @@ struct ABSTRACTMODEL_RESULT {
   virtual ~ABSTRACTMODEL_RESULT() = default;
 };
 
+struct AbstractCommunicationStructures {
+  virtual ~AbstractCommunicationStructures() = default;
+};
+
 
 namespace medfate {
     constexpr double NA_DOUBLE = std::numeric_limits<double>::quiet_NaN();

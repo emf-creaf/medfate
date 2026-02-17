@@ -12,7 +12,7 @@
 #ifndef SPWB_DAY_C_H
 #define SPWB_DAY_C_H
 
-struct WB_RESULT : ABSTRACTMODEL_RESULT {
+struct WB_RESULT : public ABSTRACTMODEL_RESULT {
   Topography topo;
   WeatherInputVector meteovec;
   Soil_RESULT Soil;
@@ -22,7 +22,7 @@ struct WB_RESULT : ABSTRACTMODEL_RESULT {
 };
 Rcpp::List copyWBResult_c(WB_RESULT& WBres, WaterBalanceModelInput& x);
 
-struct AgricultureWB_RESULT: WB_RESULT {
+struct AgricultureWB_RESULT: public WB_RESULT {
   SoilWaterBalance_RESULT SWBres;
   StandWB_RESULT WaterBalance;
   AgricultureWB_RESULT() : WB_RESULT(0) {}
@@ -30,7 +30,7 @@ struct AgricultureWB_RESULT: WB_RESULT {
 };
 Rcpp::List copyAgricultureWBResult_c(AgricultureWB_RESULT& AgrWBres, AgricultureModelInput& x);
 
-struct SPWB_RESULT : WB_RESULT {
+struct SPWB_RESULT : public WB_RESULT {
   Stand_RESULT Stand;
   StandWB_RESULT WaterBalance;
   SoilWaterBalance_RESULT SWBres;
@@ -43,21 +43,21 @@ struct SPWB_RESULT : WB_RESULT {
 };
 Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x);
 
-struct BasicSPWB_RESULT : SPWB_RESULT {
+struct BasicSPWB_RESULT : public SPWB_RESULT {
   BasicTranspiration_RESULT BTres;
   
   BasicSPWB_RESULT(BasicTranspiration_RESULT& BTres) : SPWB_RESULT(BTres.nlayers), BTres(BTres) {}
 };
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x);
 
-struct AdvancedSPWB_RESULT : SPWB_RESULT {
+struct AdvancedSPWB_RESULT : public SPWB_RESULT {
   AdvancedTranspiration_RESULT ATres;
   
   AdvancedSPWB_RESULT(AdvancedTranspiration_RESULT& ATresIN) : SPWB_RESULT(ATresIN.nlayers), ATres(ATresIN) {}
 };
 Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelInput& x);
 
-struct AgricultureWB_COMM {
+struct AgricultureWB_COMM : public AbstractCommunicationStructures {
   WaterInputs_COMM waterInputs;
   SoilWaterBalance_COMM SWBcomm;
   AgricultureWB_COMM(SoilWaterBalance_COMM& SWBcommIn) : SWBcomm(SWBcommIn) {}
@@ -69,7 +69,7 @@ void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, A
                 const double runon, 
                 const std::vector<double>& lateralFlows, const double waterTableDepth);
 
-struct BasicSPWB_COMM {
+struct BasicSPWB_COMM : public AbstractCommunicationStructures {
   WaterInputs_COMM waterInputs;
   SoilWaterBalance_COMM SWBcomm;
   BasicTranspiration_COMM BTcomm;
@@ -101,7 +101,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
                         const std::vector<double>& lateralFlows, const double waterTableDepth);
 
 
-struct WBCommunicationStructures {
+struct WBCommunicationStructures : public AbstractCommunicationStructures {
   
   SoilWaterBalance_COMM SWBcomm;
   BasicTranspiration_COMM BTcomm;

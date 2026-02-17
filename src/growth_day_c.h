@@ -142,7 +142,7 @@ struct GrowthMortality_RESULT {
 };
 Rcpp::DataFrame copyGrowthMortalityResult_c(const GrowthMortality_RESULT& GMres, ModelInput& x);
 
-struct GROWTH_RESULT {
+struct GROWTH_RESULT : public ABSTRACTMODEL_RESULT{
   
   LabileCarbonBalance_RESULT LCBres;
   PlantBiomassBalance_RESULT PBBres;
@@ -197,7 +197,7 @@ struct InitialFinalCarbonCompartments{
     ccFin_gC_m2(numCohorts) {}
 };
 
-struct GROWTHCommunicationStructures {
+struct GROWTHCommunicationStructures : public AbstractCommunicationStructures {
   WBCommunicationStructures WBcomm;
   InitialFinalCarbonCompartments initialFinalCC;
   Decomposition_COMM DECcomm;

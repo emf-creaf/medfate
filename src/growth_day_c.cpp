@@ -485,7 +485,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   } else if(x.control.transpirationMode=="Sperry" || x.control.transpirationMode=="Sureau") {
     try {
       auto& AGROWTHres = dynamic_cast<AdvancedGROWTH_RESULT&>(GROWTHres);
-      Rcout<< "ASWPB\n";
       spwbDay_advanced_c(AGROWTHres.ASPWBres, GROWTHcomm.WBcomm.ASPWBcomm, x, 
                          meteovec,
                          latitude, elevation, slope, aspect,
@@ -509,7 +508,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   } else {
     throw medfate::MedfateInternalError("Wrong transpiration mode");
   }
-  Rcout <<" About to run carbon balance/ growth/mortality\n";
+  
   bool subdailyCarbonBalance = x.control.growth.subdailyCarbonBalance;
   bool sinkLimitation = x.control.growth.sinkLimitation;
   std::string allocationStrategy = x.control.growth.allocationStrategy;
@@ -1645,7 +1644,7 @@ void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& 
   meteovec.tmaxPrev = meteovec.tmax;
   meteovec.tminNext = meteovec.tmin;
   
-  Rcpp::Rcout << "about to enter growth day_private_c\n";
+  // Rcpp::Rcout << "about to enter growth day_private_c\n";
   growthDay_private_c(GROWTHres, GROWTHcomm, x, 
                       meteovec, 
                       latitude, elevation, slope, aspect,

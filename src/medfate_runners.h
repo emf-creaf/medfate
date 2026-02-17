@@ -9,72 +9,40 @@ using namespace Rcpp;
 #ifndef MEDFATE_RUNNERS_H
 #define MEDFATE_RUNNERS_H
 
-class WB_runner {
+class single_runner {
 private:
-  std::unique_ptr<WaterBalanceModelInput> x;
+  std::unique_ptr<AbstractModelInput> p_x;
   double latitude;
   double elevation, slope, aspect;
-  WBCommunicationStructures WBcomm;
-  std::unique_ptr<WB_RESULT> WBres;
+  std::unique_ptr<WBCommunicationStructures> p_WBcomm;
+  std::unique_ptr<GROWTHCommunicationStructures> p_GROWTHcomm;
+  std::unique_ptr<ABSTRACTMODEL_RESULT> p_result;
 public:
-  WB_runner(List x_list, 
-            double latitude, double elevation, double slope, double aspect);
+  single_runner(List x_list, 
+                double latitude, double elevation, double slope, double aspect);
   void run_day(CharacterVector date, NumericVector meteovec, 
                double runon = 0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL);
-  ~WB_runner();
+  ~single_runner();
   List get_output();
   void update_input(List x_list);
 };
 
-class WB_multiple_runner {
+class multiple_runner {
 private:
   int n;
   std::vector<double> latitude_vec;
-  std::vector<std::unique_ptr<Topography>> topo_vec;
-  std::vector<std::unique_ptr<WaterBalanceModelInput>> x_vec;
-  std::vector<std::unique_ptr<WB_RESULT>> WBres_vec;
-  WBCommunicationStructures WBcomm;
+  std::vector<std::unique_ptr<Topography>> p_topo_vec;
+  std::vector<std::unique_ptr<AbstractModelInput>> p_x_vec;
+  std::vector<std::unique_ptr<ABSTRACTMODEL_RESULT>> p_result_vec;
+  std::unique_ptr<WBCommunicationStructures> p_WBcomm;
+  std::unique_ptr<GROWTHCommunicationStructures> p_GROWTHcomm;
 public:
-  WB_multiple_runner(List x_vec, 
-                     NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
-  ~WB_multiple_runner();
+  multiple_runner(List x_vec, 
+                  NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
+  ~multiple_runner();
   void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
   List get_output_at(int i);
   void update_input_at(int i, List x_list);
 };
 
-
-class GROWTH_runner {
-private:
-  std::unique_ptr<ModelInput> x;
-  double latitude;
-  double elevation, slope, aspect;
-  std::unique_ptr<GROWTH_RESULT> GROWTHres;
-  GROWTHCommunicationStructures GROWTHcomm;
-public:
-  GROWTH_runner(List x_list, 
-            double latitude, double elevation, double slope, double aspect);
-  void run_day(CharacterVector date, NumericVector meteovec, 
-               double runon = 0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL);
-  ~GROWTH_runner();
-  List get_output();
-  void update_input(List x_list);
-};
-
-class GROWTH_multiple_runner {
-private:
-  int n;
-  std::vector<double> latitude_vec;
-  std::vector<std::unique_ptr<Topography>> topo_vec;
-  std::vector<std::unique_ptr<ModelInput>> x_vec;
-  std::vector<std::unique_ptr<GROWTH_RESULT>> GROWTHres_vec;
-  GROWTHCommunicationStructures GROWTHcomm;
-public:
-  GROWTH_multiple_runner(List x_vec, 
-                     NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);
-  ~GROWTH_multiple_runner();
-  void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
-  List get_output_at(int i);
-  void update_input_at(int i, List x_list);
-};
 #endif
