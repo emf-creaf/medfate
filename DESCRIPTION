@@ -26,7 +26,7 @@ URL: https://emf-creaf.github.io/medfate/, https://github.com/emf-creaf/medfate
 BugReports: https://github.com/emf-creaf/medfate/issues
 LazyLoad: yes
 Depends: R (>= 3.5.0)
-Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.0.0), Rcpp (>= 1.0.6), RcppParallel, shiny, units
+Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.2.6), Rcpp (>= 1.0.6), RcppParallel, shiny, units
 Suggests: 
     testthat (>= 3.0.0),
     rlang,
