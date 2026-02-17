@@ -1,10 +1,6 @@
 #include <RcppArmadillo.h>
+#include "woodformation_c.h"
 using namespace Rcpp;
-
-/// Constants
-double Rn = 8.314; // The perfect gas constant
-double T0 = -273.15; // Absolute 0 temperature in degC
-double Tref = 15.0; // Reference temperature in degC
 
 //' Wood formation
 //' 
@@ -82,80 +78,21 @@ List initialize_ring(){
   return(ring);
 }
 
-////// Effect of temperature (on metabolic rate and microtubule stability)
-double _microT(double Tc, double inflection, double scale=5.0){
-  double out = 1.0/(1.0+exp((-Tc+inflection)*scale));
-  return(out);
-}
-double _metR(double Tc, double DHa, double DSd, double DHd){
-  double Tk = Tc-T0;
-  double out = Tk*exp(-DHa/(Rn*Tk)) / (1.0+exp(DSd/Rn*(1.0-(DHd/(DSd*Tk)))));
-  return(out);
-}
-
-//' @rdname woodformation
-//' @keywords internal
-// [[Rcpp::export("woodformation_temperatureEffect")]]
-double temperature_function(double Tc, double Y_T=5.0, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
-  double out = _metR(Tc, DHa, DSd, DHd);
-  out = out/_metR(30.0, DHa, DSd, DHd); // the output is equal to 1 at 30 degC
-  out = out*_microT(Tc, Y_T);
-  // out = 1;
-  return(out);
-}
-
-
-//// Convert osmotic potential to osmolyte quantity and back
-double _pi2n(double pi, double V, double Tc){
-  double n = -pi*V/(Rn*(Tc-T0));
-  return(n);
-}
-
-double _n2pi(double n, double V, double Tc){
-  double pi = -n*Rn*(Tc-T0)/V;
-  return(pi);
-}
-
-////// Cell expansion model
-//' @rdname woodformation
-//' @keywords internal
-// [[Rcpp::export("woodformation_relativeExpansionRate")]]
-double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
-  double out = phi*(psi-pi-Y_P);
-  if(out<0.0) out=0.0;
-  out = out*temperature_function(Tc,Y_T);
-  return(out);
-}
-
-////// Cell division model
-double _divide(double psi, double Tc,
-               double Nc = 8.85, double phi0=0.13, double pi0=-0.8,
-               double Y_P=0.05, double Y_T=5.0){
-  // Default parameters from Cabon et al New Phytologist (2020)
-  
-  double r; //  Cell relative growth rate
-  double P; // Cell production rate
-  double pi_Tcorr = _n2pi(_pi2n(pi0,1.0,Tref),1.0,Tc);
-  r = relative_expansion_rate(psi, Tc, pi_Tcorr, phi0, Y_P, Y_T);
-  P = r/log(2.0)*Nc;
-  
-  return(P);
-}
 List _expand_cell(double psi, double Tc,
                   double phi0=0.13, double pi0=-0.8, double CRD0=8.3,
                   double Y_P=0.05, double Y_T=5.0, double h=0.043*1.8, double s=1.8){
   // default parameters from Cabon et al. New Phytologist 2020. h is different because of potential error in the ref value.
   
-  double n = _pi2n(pi0, CRD0, Tref);
-  pi0 = _n2pi(n, CRD0, Tc); // updates the value of pi0 which is given at Tref for the current temperature Tc
+  double n = _pi2n_c(pi0, CRD0, Tref);
+  pi0 = _n2pi_c(n, CRD0, Tc); // updates the value of pi0 which is given at Tref for the current temperature Tc
   
   // Calculate relative volume expansion rate
-  double r = relative_expansion_rate(psi, Tc, pi0, phi0, Y_P, Y_T);
+  double r = relative_expansion_rate_c(psi, Tc, pi0, phi0, Y_P, Y_T);
   
   // Variable update
   double CRD1 = CRD0*(1.0+r); // cell diameter (volume) increment
-  double pi1 = _n2pi(n, CRD1, Tref); // pi is returned at Tref in order to be consistent with input
-  double phi1 = phi0 + phi0*(s*r - h*(_metR(Tc, 87.5e3, 1.09e3, 333e3)/_metR(Tref, 87.5e3, 1.09e3, 333e3))); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
+  double pi1 = _n2pi_c(n, CRD1, Tref); // pi is returned at Tref in order to be consistent with input
+  double phi1 = phi0 + phi0*(s*r - h*(_metR_c(Tc, 87.5e3, 1.09e3, 333e3)/_metR_c(Tref, 87.5e3, 1.09e3, 333e3))); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
   if(phi1<0.0) {
     phi1=0.0;
   }
@@ -207,7 +144,7 @@ void grow_ring(List ring, double psi, double Tc,
   int dog = P.size()+1;
   
   // Calculate cell production
-  double P_i = _divide(psi, Tc, Nc, phi0, pi0, Y_P, Y_T);
+  double P_i = _divide_c(psi, Tc, Nc, phi0, pi0, Y_P, Y_T);
   // Update the cell production vector
   P.push_back(P_i);
 

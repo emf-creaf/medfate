@@ -14,7 +14,7 @@
 #include "hydraulics_c.h"
 #include "root_c.h"
 #include "tissuemoisture_c.h"
-#include "woodformation.h"
+#include "woodformation_c.h"
 #include "numerical_solving_c.h"
 #include "meteoland/pet_c.hpp"
 
@@ -628,7 +628,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
 
-  double rcellmax = relative_expansion_rate(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
+  double rcellmax = relative_expansion_rate_c(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
 
   // Initial Biomass balance
   fillCarbonCompartments_c(GROWTHcomm.initialFinalCC.ccIni_g_ind, x, units_g_ind);
@@ -731,14 +731,14 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       double relative_hormone_factor = std::max(0.0, std::min(1.0, LAI_expanded[j]/LAI_nocomp[j]));
       if(x.control.transpirationMode=="Granier") {
         // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
-        rleafcell = std::min(rcellmax, relative_expansion_rate(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(x.soil.getPsi(l) ,tday, -1.0 ,0.5,0.05,5.0));
+        rleafcell = std::min(rcellmax, relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
+        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(x.soil.getPsi(l) ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
-        rleafcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(x.belowLayers.RhizoPsi(j,l), x.soil.getTemp(l), -1.0, 0.5,0.05,5.0));
+        rleafcell = std::min(rcellmax, relative_expansion_rate_c(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(x.belowLayers.RhizoPsi(j,l), x.soil.getTemp(l), -1.0, 0.5,0.05,5.0));
         // Rcout<<j<< " rcellmax "<< rcellmax<<" tcan_day "<< tcan_day<< " Psi:"<< psiRootCrown[j]<< " r:"<< rcambiumcell<<"\n";
       }
 
@@ -1613,7 +1613,6 @@ void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& 
     meteovec.tday = averageDaylightTemperature_c(meteovec.tmin, meteovec.tmax);
   }
   if(std::isnan(meteovec.rad)) {
-    // warning("Estimating solar radiation");
     double vpa = averageDailyVapourPressure_c(meteovec.tmin, meteovec.tmax, meteovec.rhmin, meteovec.rhmax);
     meteovec.rad = RDay_c(solarConstant, latrad, elevation,
                           slorad, asprad, delta, meteovec.tmax -meteovec.tmin, meteovec.tmax-meteovec.tmin,

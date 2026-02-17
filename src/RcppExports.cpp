@@ -6345,37 +6345,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// temperature_function
-double temperature_function(double Tc, double Y_T, double DHa, double DSd, double DHd);
-RcppExport SEXP _medfate_temperature_function(SEXP TcSEXP, SEXP Y_TSEXP, SEXP DHaSEXP, SEXP DSdSEXP, SEXP DHdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
-    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
-    Rcpp::traits::input_parameter< double >::type DHa(DHaSEXP);
-    Rcpp::traits::input_parameter< double >::type DSd(DSdSEXP);
-    Rcpp::traits::input_parameter< double >::type DHd(DHdSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperature_function(Tc, Y_T, DHa, DSd, DHd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// relative_expansion_rate
-double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T);
-RcppExport SEXP _medfate_relative_expansion_rate(SEXP psiSEXP, SEXP TcSEXP, SEXP piSEXP, SEXP phiSEXP, SEXP Y_PSEXP, SEXP Y_TSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
-    Rcpp::traits::input_parameter< double >::type pi(piSEXP);
-    Rcpp::traits::input_parameter< double >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< double >::type Y_P(Y_PSEXP);
-    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
-    rcpp_result_gen = Rcpp::wrap(relative_expansion_rate(psi, Tc, pi, phi, Y_P, Y_T));
-    return rcpp_result_gen;
-END_RCPP
-}
 // grow_ring
 void grow_ring(List ring, double psi, double Tc, double Nc, double phi0, double pi0, double CRD0, double Y_P, double Y_T, double h, double s);
 RcppExport SEXP _medfate_grow_ring(SEXP ringSEXP, SEXP psiSEXP, SEXP TcSEXP, SEXP NcSEXP, SEXP phi0SEXP, SEXP pi0SEXP, SEXP CRD0SEXP, SEXP Y_PSEXP, SEXP Y_TSEXP, SEXP hSEXP, SEXP sSEXP) {
@@ -6394,6 +6363,37 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type s(sSEXP);
     grow_ring(ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s);
     return R_NilValue;
+END_RCPP
+}
+// temperature_function_c
+double temperature_function_c(double Tc, double Y_T, double DHa, double DSd, double DHd);
+RcppExport SEXP _medfate_temperature_function_c(SEXP TcSEXP, SEXP Y_TSEXP, SEXP DHaSEXP, SEXP DSdSEXP, SEXP DHdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
+    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
+    Rcpp::traits::input_parameter< double >::type DHa(DHaSEXP);
+    Rcpp::traits::input_parameter< double >::type DSd(DSdSEXP);
+    Rcpp::traits::input_parameter< double >::type DHd(DHdSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperature_function_c(Tc, Y_T, DHa, DSd, DHd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// relative_expansion_rate_c
+double relative_expansion_rate_c(double psi, double Tc, double pi, double phi, double Y_P, double Y_T);
+RcppExport SEXP _medfate_relative_expansion_rate_c(SEXP psiSEXP, SEXP TcSEXP, SEXP piSEXP, SEXP phiSEXP, SEXP Y_PSEXP, SEXP Y_TSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
+    Rcpp::traits::input_parameter< double >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< double >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< double >::type Y_P(Y_PSEXP);
+    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
+    rcpp_result_gen = Rcpp::wrap(relative_expansion_rate_c(psi, Tc, pi, phi, Y_P, Y_T));
+    return rcpp_result_gen;
 END_RCPP
 }
 
@@ -6880,9 +6880,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor_c", (DL_FUNC) &_medfate_windAdjustmentFactor_c, 4},
     {"_medfate_windSpeedAtHeightOverCanopy_c", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy_c, 3},
     {"_medfate_initialize_ring", (DL_FUNC) &_medfate_initialize_ring, 0},
-    {"_medfate_temperature_function", (DL_FUNC) &_medfate_temperature_function, 5},
-    {"_medfate_relative_expansion_rate", (DL_FUNC) &_medfate_relative_expansion_rate, 6},
     {"_medfate_grow_ring", (DL_FUNC) &_medfate_grow_ring, 11},
+    {"_medfate_temperature_function_c", (DL_FUNC) &_medfate_temperature_function_c, 5},
+    {"_medfate_relative_expansion_rate_c", (DL_FUNC) &_medfate_relative_expansion_rate_c, 6},
     {"_rcpp_module_boot_mod_single", (DL_FUNC) &_rcpp_module_boot_mod_single, 0},
     {"_rcpp_module_boot_mod_multiple", (DL_FUNC) &_rcpp_module_boot_mod_multiple, 0},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},

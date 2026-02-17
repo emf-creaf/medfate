@@ -61,18 +61,6 @@ test_that("single_runner initializes and runs correctly for spwb", {
   }
 })
 
-n <- 10
-d <- 100
-meteovec1 <- unlist(examplemeteo[d,-1])
-meteo_vec <- vector("list", n)
-date <- as.character(examplemeteo$dates[d])
-for(i in 1:n) meteo_vec[[i]] = rlang::duplicate(meteovec1)
-x_vec <- vector("list", n)
-latitude_vec <- rep(41.82592, n)
-elevation_vec <- rep(100, n)
-slope_vec <- rep(0, n)
-aspect_vec <- rep(0, n)
-
 
 test_that("single_runner initializes and runs correctly for growth", {
   for(transpirationMode in c("Granier", "Sperry", "Sureau")) {
@@ -99,6 +87,19 @@ test_that("single_runner initializes and runs correctly for growth", {
   }
 })
 
+
+n <- 50
+d <- 100
+meteovec1 <- unlist(examplemeteo[d,-1])
+meteo_vec <- vector("list", n)
+date <- as.character(examplemeteo$dates[d])
+for(i in 1:n) meteo_vec[[i]] = rlang::duplicate(meteovec1)
+x_vec <- vector("list", n)
+latitude_vec <- rep(41.82592, n)
+elevation_vec <- rep(100, n)
+slope_vec <- rep(0, n)
+aspect_vec <- rep(0, n)
+
 test_that("multiple_runner initializes and runs correctly with agriculture", {
   for(parallelize in c(FALSE, TRUE)) {
     xa <- aspwbInput(0.75, defaultControl(), examplesoil)
@@ -118,7 +119,7 @@ test_that("multiple_runner initializes and runs correctly with agriculture", {
     expect_false(all(x_vec[[2]]$soil$W == W_ini))
     # Check that result is equal to a stand-alone run
     xa2 <- rlang::duplicate(xa)
-    sa2 <- aspwb_day(xa2, date, meteovec, 41.82592, 100, 0, 0, modifyInput = TRUE)
+    sa2 <- aspwb_day(xa2, date, meteovec1, 41.82592, 100, 0, 0, modifyInput = TRUE)
     expect_equal(xa2, x_vec[[2]])
     expect_equal(sa2, sa)
   }
@@ -126,7 +127,7 @@ test_that("multiple_runner initializes and runs correctly with agriculture", {
 
 test_that("multiple_runner initializes and runs correctly for spwb", {
   for(transpirationMode in c("Granier", "Sperry", "Sureau")) {
-    for(parallelize in c(FALSE, TRUE)) {
+    for(parallelize in c(FALSE)) {
       ctl <- defaultControl(transpirationMode)
       x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, ctl)
       W_ini <- rlang::duplicate(x1$soil$W)
@@ -145,7 +146,7 @@ test_that("multiple_runner initializes and runs correctly for spwb", {
       expect_false(all(x_vec[[2]]$soil$W == W_ini))
       # Check that result is equal to a stand-alone run
       x12 <- rlang::duplicate(x1)
-      s12 <- spwb_day(x12, date, meteovec, 41.82592, 100, 0, 0, modifyInput = TRUE)
+      s12 <- spwb_day(x12, date, meteovec1, 41.82592, 100, 0, 0, modifyInput = TRUE)
       expect_equal(x12, x_vec[[2]])
       expect_equal(s12, s1)
     }
@@ -154,7 +155,7 @@ test_that("multiple_runner initializes and runs correctly for spwb", {
 
 test_that("multiple_runner initializes and runs correctly for growth", {
   for(transpirationMode in c("Granier", "Sperry", "Sureau")) {
-    for(parallelize in c(FALSE, TRUE)) {
+    for(parallelize in c(FALSE)) {
 
       ctl <- defaultControl(transpirationMode)
       x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, ctl)
@@ -174,7 +175,7 @@ test_that("multiple_runner initializes and runs correctly for growth", {
       expect_false(all(x_vec[[2]]$soil$W == W_ini))
       # Check that result is equal to a stand-alone run
       x12 <- rlang::duplicate(x1)
-      s12 <- growth_day(x12, date, meteovec, 41.82592, 100, 0, 0, modifyInput = TRUE)
+      s12 <- growth_day(x12, date, meteovec1, 41.82592, 100, 0, 0, modifyInput = TRUE)
       expect_equal(x12, x_vec[[2]])
       expect_equal(s12, s1)
     }

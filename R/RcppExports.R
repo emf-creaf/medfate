@@ -4881,20 +4881,20 @@ woodformation_initRing <- function() {
 
 #' @rdname woodformation
 #' @keywords internal
+woodformation_growRing <- function(ring, psi, Tc, Nc = 8.85, phi0 = 0.13, pi0 = -0.8, CRD0 = 8.3, Y_P = 0.05, Y_T = 5.0, h = 0.043*1.8, s = 1.8) {
+    invisible(.Call(`_medfate_grow_ring`, ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s))
+}
+
+#' @rdname woodformation
+#' @keywords internal
 woodformation_temperatureEffect <- function(Tc, Y_T = 5.0, DHa = 87.5e3, DSd = 1.09e3, DHd = 333e3) {
-    .Call(`_medfate_temperature_function`, Tc, Y_T, DHa, DSd, DHd)
+    .Call(`_medfate_temperature_function_c`, Tc, Y_T, DHa, DSd, DHd)
 }
 
 #' @rdname woodformation
 #' @keywords internal
 woodformation_relativeExpansionRate <- function(psi, Tc, pi, phi, Y_P, Y_T) {
-    .Call(`_medfate_relative_expansion_rate`, psi, Tc, pi, phi, Y_P, Y_T)
-}
-
-#' @rdname woodformation
-#' @keywords internal
-woodformation_growRing <- function(ring, psi, Tc, Nc = 8.85, phi0 = 0.13, pi0 = -0.8, CRD0 = 8.3, Y_P = 0.05, Y_T = 5.0, h = 0.043*1.8, s = 1.8) {
-    invisible(.Call(`_medfate_grow_ring`, ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s))
+    .Call(`_medfate_relative_expansion_rate_c`, psi, Tc, pi, phi, Y_P, Y_T)
 }
 
 # Register entry points for exported C++ functions

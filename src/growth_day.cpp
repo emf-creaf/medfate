@@ -29,7 +29,7 @@
 #include "spwb_day.h"
 #include "tissuemoisture.h"
 #include "tissuemoisture_c.h"
-#include "woodformation.h"
+#include "woodformation_c.h"
 #include "meteoland/utils_c.hpp"
 #include "meteoland/radiation_c.hpp"
 #include "meteoland/pet_c.hpp"
@@ -686,7 +686,7 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
 
-  double rcellmax = relative_expansion_rate(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
+  double rcellmax = relative_expansion_rate_c(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
   
   NumericVector Lcoh = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
   
@@ -798,14 +798,14 @@ void growthDay_private(List internalCommunication, List x, NumericVector meteove
       double relative_hormone_factor = std::max(0.0, std::min(1.0, LAI_expanded[j]/LAI_nocomp[j]));
       if(transpirationMode=="Granier") {
         // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
-        rleafcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
+        rleafcell = std::min(rcellmax, relative_expansion_rate_c(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
+        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
-        rleafcell = std::min(rcellmax, relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
-        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
+        rleafcell = std::min(rcellmax, relative_expansion_rate_c(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
         // Rcout<<j<< " rcellmax "<< rcellmax<<" tcan_day "<< tcan_day<< " Psi:"<< psiRootCrown[j]<< " r:"<< rcambiumcell<<"\n";
       }
       
@@ -1923,12 +1923,12 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
     
     // Calls simulation
-    // Rcpp::Rcout << "about to enter growthDay_inner_c\n";
-    growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
+    Rcpp::Rcout << "about to enter growthDay_inner_c\n";
+    growthDay_inner_c(GROWTHres, GROWTHcomm, x_c,
                       as<std::string>(date[0]),
-                      meteovec_c, 
+                      meteovec_c,
                       latitude, elevation, slope, aspect,
-                      runon, 
+                      runon,
                       lateralFlows_c, waterTableDepth);
     //Copies result
     l = copyGROWTHResult_c(GROWTHres, x_c);
@@ -1938,11 +1938,11 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     AdvancedSPWB_RESULT ASPWBres(ATres);
     AdvancedGROWTH_RESULT GROWTHres(ASPWBres, numCohorts, ntimesteps);
     // Calls simulation
-    growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
+    growthDay_inner_c(GROWTHres, GROWTHcomm, x_c,
                     as<std::string>(date[0]),
-                    meteovec_c, 
+                    meteovec_c,
                     latitude, elevation, slope, aspect,
-                    runon, 
+                    runon,
                     lateralFlows_c, waterTableDepth);
     //Copies result
     l = copyGROWTHResult_c(GROWTHres, x_c);
