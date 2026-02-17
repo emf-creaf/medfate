@@ -100,8 +100,7 @@ test_that("single_runner initializes and runs correctly for growth", {
 })
 
 test_that("multiple_runner initializes and runs correctly with agriculture", {
-  for(parallelize in c(FALSE)) {
-
+  for(parallelize in c(FALSE, TRUE)) {
     xa <- aspwbInput(0.75, defaultControl(), examplesoil)
     W_ini <- rlang::duplicate(xa$soil$W)
     for(i in 1:n) x_vec[[i]] = rlang::duplicate(xa)
@@ -127,7 +126,7 @@ test_that("multiple_runner initializes and runs correctly with agriculture", {
 
 test_that("multiple_runner initializes and runs correctly for spwb", {
   for(transpirationMode in c("Granier", "Sperry", "Sureau")) {
-    for(parallelize in c(FALSE)) {
+    for(parallelize in c(FALSE, TRUE)) {
       ctl <- defaultControl(transpirationMode)
       x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, ctl)
       W_ini <- rlang::duplicate(x1$soil$W)
@@ -155,7 +154,7 @@ test_that("multiple_runner initializes and runs correctly for spwb", {
 
 test_that("multiple_runner initializes and runs correctly for growth", {
   for(transpirationMode in c("Granier", "Sperry", "Sureau")) {
-    for(parallelize in c(FALSE)) {
+    for(parallelize in c(FALSE, TRUE)) {
 
       ctl <- defaultControl(transpirationMode)
       x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, ctl)

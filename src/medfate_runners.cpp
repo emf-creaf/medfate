@@ -241,16 +241,17 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
   }
   std::string date_str = Rcpp::as<std::string>(date[0]);
   if(parallelize) {
-    // //build worker
-    // WATERBALANCE_worker worker(WBcomm,
-    //                            date_str, 
-    //                            x_vec,
-    //                            latitude_vec,
-    //                            topo_vec,
-    //                            weather_vec,
-    //                            WBres_vec);
-    // // call it with parallelFor
-    // parallelFor(0, x_vec.size(), worker, std::min(100, (int) x_vec.size()));
+    //build worker
+    DAY_worker worker(*p_WBcomm,
+                      *p_GROWTHcomm,
+                       date_str,
+                       p_x_vec,
+                       latitude_vec,
+                       p_topo_vec,
+                       weather_vec,
+                       p_result_vec);
+    // call it with parallelFor
+    parallelFor(0, n, worker);
   } else {
     double runon = 0.0;
     double waterTableDepth = medfate::NA_DOUBLE;
