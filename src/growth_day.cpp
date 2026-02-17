@@ -1920,7 +1920,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     //Initialises a result
     BasicTranspiration_RESULT BTres(numCohorts, nlayers);
     BasicSPWB_RESULT BSPWBres(BTres);
-    BasicGROWTH_RESULT GROWTHres(&BSPWBres, numCohorts);
+    BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
     
     // Calls simulation
     // Rcpp::Rcout << "about to enter growthDay_inner_c\n";
@@ -1932,11 +1932,11 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                       lateralFlows_c, waterTableDepth);
     //Copies result
     l = copyGROWTHResult_c(GROWTHres, x_c);
-  } else {
+  } else if(x_c.control.transpirationMode=="Sperry" || x_c.control.transpirationMode=="Sureau"){
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
     AdvancedSPWB_RESULT ASPWBres(ATres);
-    AdvancedGROWTH_RESULT GROWTHres(&ASPWBres, numCohorts, ntimesteps);
+    AdvancedGROWTH_RESULT GROWTHres(ASPWBres, numCohorts, ntimesteps);
     // Calls simulation
     growthDay_inner_c(GROWTHres, GROWTHcomm, x_c, 
                     as<std::string>(date[0]),
@@ -1946,6 +1946,8 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                     lateralFlows_c, waterTableDepth);
     //Copies result
     l = copyGROWTHResult_c(GROWTHres, x_c);
+  } else {
+    throw medfate::MedfateInternalError("Wrong transpiration mode");
   }
   
   //Modifies input list, if required  

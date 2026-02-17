@@ -223,7 +223,7 @@ Rcpp::DataFrame copyGrowthMortalityResult_c(const GrowthMortality_RESULT& GMres,
   return(DF);
 }
 Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x) {
-  Rcpp::List l = copySPWBResult_c(*GROWTHres.SPWBres, x);
+  Rcpp::List l = copyBasicSPWBResult_c(GROWTHres.BSPWBres, x);
   l.push_back(copyCarbonBalanceResult_c(GROWTHres.standCB), "CarbonBalance");
   l.push_back(copyLabileCarbonBalanceResult_c(GROWTHres.LCBres, x), "LabileCarbonBalance");
   l.push_back(copyPlantBiomassBalanceResult_c(GROWTHres.PBBres, x), "PlantBiomassBalance");
@@ -234,7 +234,7 @@ Rcpp::List copyBasicGROWTHResult_c(BasicGROWTH_RESULT& GROWTHres, ModelInput& x)
 }
 
 Rcpp::List copyAdvancedGROWTHResult_c(AdvancedGROWTH_RESULT& GROWTHres, ModelInput& x) {
-  Rcpp::List l = copySPWBResult_c(*GROWTHres.SPWBres, x);
+  Rcpp::List l = copyAdvancedSPWBResult_c(GROWTHres.ASPWBres, x);
   l.push_back(copyCarbonBalanceResult_c(GROWTHres.standCB), "CarbonBalance");
   l.push_back(copyLabileCarbonBalanceResult_c(GROWTHres.LCBres, x), "LabileCarbonBalance");
   l.push_back(copyPlantBiomassBalanceResult_c(GROWTHres.PBBres, x), "PlantBiomassBalance");
@@ -467,47 +467,49 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
 
   if(x.control.transpirationMode=="Granier") {
     try {
-      auto& BSPWBres = dynamic_cast<BasicSPWB_RESULT&>(*GROWTHres.SPWBres);
-      spwbDay_basic_c(BSPWBres, GROWTHcomm.WBcomm.BSPWBcomm, x, 
+      auto& BGROWTHres = dynamic_cast<BasicGROWTH_RESULT&>(GROWTHres);
+      spwbDay_basic_c(BGROWTHres.BSPWBres, GROWTHcomm.WBcomm.BSPWBcomm, x, 
                       meteovec,
                       elevation, slope, aspect,
                       runon, 
                       lateralFlows, waterTableDepth);
       
       for(int i=0;i<numCohorts;i++) {
-        Ag[i] = BSPWBres.BTres.plants.GrossPhotosynthesis[i];
-        PARcohort[i] = BSPWBres.BTres.plants.FPAR[i];
-        LFMC[i] = BSPWBres.BTres.plants.LFMC[i];
+        Ag[i] = BGROWTHres.BSPWBres.BTres.plants.GrossPhotosynthesis[i];
+        PARcohort[i] = BGROWTHres.BSPWBres.BTres.plants.FPAR[i];
+        LFMC[i] = BGROWTHres.BSPWBres.BTres.plants.LFMC[i];
       }
     } catch(const std::bad_cast&) {
       throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
     }
-  } else {
+  } else if(x.control.transpirationMode=="Sperry" || x.control.transpirationMode=="Sureau") {
     try {
       auto& AGROWTHres = dynamic_cast<AdvancedGROWTH_RESULT&>(GROWTHres);
-      auto& ASPWBres = dynamic_cast<AdvancedSPWB_RESULT&>(*GROWTHres.SPWBres);
-      spwbDay_advanced_c(ASPWBres, GROWTHcomm.WBcomm.ASPWBcomm, x, 
+      Rcout<< "ASWPB\n";
+      spwbDay_advanced_c(AGROWTHres.ASPWBres, GROWTHcomm.WBcomm.ASPWBcomm, x, 
                          meteovec,
                          latitude, elevation, slope, aspect,
                          solarConstant, delta,
                          runon, 
                          lateralFlows, waterTableDepth);
-      for(int n=0;n<ntimesteps;n++) Tcan[n] = ASPWBres.ATres.energy.Tcan[n];
+      for(int n=0;n<ntimesteps;n++) Tcan[n] = AGROWTHres.ASPWBres.ATres.energy.Tcan[n];
       tcan_day = averageDaylightTemperature_c(*std::min_element(Tcan.begin(), Tcan.end()), 
                                               *std::max_element(Tcan.begin(), Tcan.end()));
       for(int i=0;i<numCohorts;i++) {
-        Ag[i] = ASPWBres.ATres.plants.GrossPhotosynthesis[i];
-        PARcohort[i] = ASPWBres.ATres.plants.FPAR[i];
-        LFMC[i] = ASPWBres.ATres.plants.LFMC[i];
+        Ag[i] = AGROWTHres.ASPWBres.ATres.plants.GrossPhotosynthesis[i];
+        PARcohort[i] = AGROWTHres.ASPWBres.ATres.plants.FPAR[i];
+        LFMC[i] = AGROWTHres.ASPWBres.ATres.plants.LFMC[i];
       }
-      AgStep = &ASPWBres.ATres.plants_inst.Ag;
-      AnStep = &ASPWBres.ATres.plants_inst.An;
+      AgStep = &AGROWTHres.ASPWBres.ATres.plants_inst.Ag;
+      AnStep = &AGROWTHres.ASPWBres.ATres.plants_inst.An;
       LCBInstres = &AGROWTHres.LCBInstres;
     } catch(const std::bad_cast&) {
       throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
     }
+  } else {
+    throw medfate::MedfateInternalError("Wrong transpiration mode");
   }
-  
+  Rcout <<" About to run carbon balance/ growth/mortality\n";
   bool subdailyCarbonBalance = x.control.growth.subdailyCarbonBalance;
   bool sinkLimitation = x.control.growth.sinkLimitation;
   std::string allocationStrategy = x.control.growth.allocationStrategy;
@@ -1643,7 +1645,7 @@ void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& 
   meteovec.tmaxPrev = meteovec.tmax;
   meteovec.tminNext = meteovec.tmin;
   
-  // Rcpp::Rcout << "about to enter growth day_private_c\n";
+  Rcpp::Rcout << "about to enter growth day_private_c\n";
   growthDay_private_c(GROWTHres, GROWTHcomm, x, 
                       meteovec, 
                       latitude, elevation, slope, aspect,

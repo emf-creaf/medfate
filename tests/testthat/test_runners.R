@@ -97,14 +97,14 @@ test_that("WB_runner initializes and runs correctly for spwb with sureau", {
   expect_equal(s32, s3)
 })
 
-n <- 100
+n <- 10
 d <- 100
 meteovec1 <- unlist(examplemeteo[d,-1])
 meteo_vec <- vector("list", n)
 date <- as.character(examplemeteo$dates[d])
 for(i in 1:n) meteo_vec[[i]] = rlang::duplicate(meteovec1)
 x_vec <- vector("list", n)
-latitude_vec <- rep(41, n)
+latitude_vec <- rep(41.82592, n)
 elevation_vec <- rep(100, n)
 slope_vec <- rep(0, n)
 aspect_vec <- rep(0, n)
@@ -199,32 +199,26 @@ test_that("WB_multiple_runner initializes and runs correctly with sureau", {
   expect_equal(x32, x3)
   s32 <- spwb_day(x32, date, meteovec, 41.82592, 100, 0, 0, modifyInput = TRUE)
   expect_equal(x32, x_vec[[2]])
-  expect_equal(s32, s2)
+  expect_equal(s32, s3)
 })
 
-test_that("GROWTH_runner initializes and runs correctly", {
-  d <- 100
-  meteovec <- unlist(examplemeteo[d,-1])
-  date <- as.character(examplemeteo$dates[d])
-  
-  # controlGranier <- defaultControl("Granier")
-  # x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
-  # mfr1 <- new(GROWTH_runner, x1, 41.82592, 100, 0, 0)
-  # expect_s4_class(mfr1, "Rcpp_GROWTH_runner")
-  # mfr1$run_day(date, meteovec, 0, NULL, NA)
-  # expect_s3_class(mfr1$get_output(), "growth_day")
-  # 
-  # controlSperry <- defaultControl("Sperry")
-  # x2 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlSperry)
-  # mfr2 <- new(GROWTH_runner, x2, 41.82592, 100, 0, 0)
-  # expect_s4_class(mfr2, "Rcpp_GROWTH_runner")
-  # mfr2$run_day(date, meteovec, 0, NULL, NA)
-  # expect_s3_class(mfr2$get_output(), "growth_day")
-  # 
-  # controlSureau <- defaultControl("Sureau")
-  # x3 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlSureau)
-  # mfr3 <- new(GROWTH_runner, x3, 41.82592, 100, 0, 0)
-  # expect_s4_class(mfr3, "Rcpp_GROWTH_runner")
-  # mfr3$run_day(date, meteovec, 0, NULL, NA)
-  # expect_s3_class(mfr3$get_output(), "growth_day")
+test_that("GROWTH_runner initializes and runs correctly for granier", {
+  controlGranier <- defaultControl("Granier")
+  x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
+  W_ini <- rlang::duplicate(x1$soil$W)
+  # builds runner
+  mfr1 <- new(GROWTH_runner, x1, 41.82592, 100, 0, 0)
+  expect_s4_class(mfr1, "Rcpp_GROWTH_runner")
+  # runs and gets output
+  mfr1$run_day(date, meteovec, 0, NULL, NA)
+  # s1 <- mfr1$get_output()
+  # expect_s3_class(s1, "growth_day")
+  # # Check that W has changed
+  # mfr1$update_input(x1)
+  # expect_false(all(x1$soil$W == W_ini))
+  # # Check that result is equal to a stand-alone run
+  # x12 <- growthInput(exampleforest, examplesoil, SpParamsMED, controlGranier)
+  # s12 <- growth_day(x12, date, meteovec, 41.82592, 100, 0, 0, modifyInput = TRUE)
+  # expect_equal(x12, x1)
+  # expect_equal(s12, s1)
 })

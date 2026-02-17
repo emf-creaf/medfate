@@ -568,13 +568,74 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
   int numDays = DWB.nrow();
   int numCohorts = x.cohorts.CohortCode.size();
   
-  fillWaterBalanceDailyOutput_c(DWB, sDay.SPWBres->WaterBalance, iday);
-
-  if(x.control.results.soilResults) {
-    List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
-    fillSoilDailyOutput_c(Soil, x.soil, sDay.SPWBres->Soil,
-                          iday, numDays, 
-                          true);
+  if(x.control.transpirationMode== "Granier") {
+    try {
+      auto& sDaybas = dynamic_cast<BasicGROWTH_RESULT&>(sDay);
+      fillWaterBalanceDailyOutput_c(DWB, sDaybas.BSPWBres.WaterBalance, iday);
+      if(x.control.results.soilResults) {
+        List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+        fillSoilDailyOutput_c(Soil, x.soil, sDaybas.BSPWBres.Soil,
+                              iday, numDays, 
+                              true);
+      }
+      if(x.control.results.standResults) {
+        DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
+        fillStandDailyOutput_c(Stand, sDaybas.BSPWBres.Stand, iday);
+      }
+      if(x.control.results.plantResults) {
+        List plantDWOL = l["Plants"];
+        fillPlantWaterDailyOutput_c(plantDWOL, sDaybas.BSPWBres, iday, 
+                                    x.control.transpirationMode, x.control.advancedWB.ndailysteps);
+      }
+      if(x.control.results.fireHazardResults) {
+        DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
+        fillFireHazardOutput_c(fireHazard, sDaybas.BSPWBres.fccs, iday);
+      }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
+    }
+  } else {
+    try {
+      auto& sDayadv = dynamic_cast<AdvancedGROWTH_RESULT&>(sDay);
+      fillWaterBalanceDailyOutput_c(DWB, sDayadv.ASPWBres.WaterBalance, iday);
+      if(x.control.results.soilResults) {
+        List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+        fillSoilDailyOutput_c(Soil, x.soil, sDayadv.ASPWBres.Soil,
+                              iday, numDays, 
+                              true);
+      }
+      if(x.control.results.standResults) {
+        DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
+        fillStandDailyOutput_c(Stand, sDayadv.ASPWBres.Stand, iday);
+      }
+      if(x.control.results.plantResults) {
+        List plantDWOL = l["Plants"];
+        fillPlantWaterDailyOutput_c(plantDWOL, sDayadv.ASPWBres, iday, 
+                                    x.control.transpirationMode, x.control.advancedWB.ndailysteps);
+        if(x.control.results.leafResults) {
+          List sunlitDO = l["SunlitLeaves"];
+          List shadeDO = l["ShadeLeaves"];
+          fillSunlitShadeLeavesDailyOutput_c(sunlitDO, shadeDO, sDayadv.ASPWBres.ATres, iday, x.cohorts.CohortCode.size());
+        }
+      }
+      List DEB = l["EnergyBalance"];
+      fillEnergyBalanceDailyOutput_c(DEB, sDayadv.ASPWBres.ATres.energy, iday, x.control.advancedWB.ndailysteps);
+      if(x.control.results.temperatureResults) {
+        List DT = l["Temperature"];
+        fillTemperatureDailyOutput_c(DT,sDayadv.ASPWBres.ATres.energy, iday, x.control.advancedWB.ndailysteps);
+        if(x.control.advancedWB.multiLayerBalance) {
+          NumericMatrix DLT = l["TemperatureLayers"];
+          fillTemperatureLayersDailyOutput_c(DLT, sDayadv.ASPWBres.ATres.energy, iday, 
+                                             x.canopy.Cair.size(), x.control.advancedWB.ndailysteps);
+        }
+      }
+      if(x.control.results.fireHazardResults) {
+        DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
+        fillFireHazardOutput_c(fireHazard, sDayadv.ASPWBres.fccs, iday);
+      }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+    }
   }
   if(x.control.results.soilPoolResults && plantWaterPools) {
     List soilPools = Rcpp::as<Rcpp::List>(l["SoilPools"]);
@@ -584,54 +645,10 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
     DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
     fillSnowDailyOutput_c(Snow, x, iday);
   }
-  if(x.control.results.standResults) {
-    DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
-    fillStandDailyOutput_c(Stand, sDay.SPWBres->Stand, iday);
-  }
-  if(x.control.results.plantResults) {
-    List plantDWOL = l["Plants"];
-    fillPlantWaterDailyOutput_c(plantDWOL, *sDay.SPWBres, iday, 
-                                x.control.transpirationMode, x.control.advancedWB.ndailysteps);
-    if(x.control.transpirationMode!= "Granier") {
-      if(x.control.results.leafResults) {
-        try {
-          auto& sDayadv = dynamic_cast<AdvancedSPWB_RESULT&>(*sDay.SPWBres);
-          List sunlitDO = l["SunlitLeaves"];
-          List shadeDO = l["ShadeLeaves"];
-          fillSunlitShadeLeavesDailyOutput_c(sunlitDO, shadeDO, sDayadv.ATres, iday, x.cohorts.CohortCode.size());
-        } catch(const std::bad_cast&) {
-          throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
-        }
-      }
-    } 
-  }
-  if(x.control.transpirationMode!= "Granier") {
-    List DEB = l["EnergyBalance"];
-    try {
-      auto& sDayadv = dynamic_cast<AdvancedSPWB_RESULT&>(*sDay.SPWBres);
-      fillEnergyBalanceDailyOutput_c(DEB, sDayadv.ATres.energy, iday, x.control.advancedWB.ndailysteps);
-      if(x.control.results.temperatureResults) {
-        List DT = l["Temperature"];
-        fillTemperatureDailyOutput_c(DT,sDayadv.ATres.energy, iday, x.control.advancedWB.ndailysteps);
-        if(x.control.advancedWB.multiLayerBalance) {
-          NumericMatrix DLT = l["TemperatureLayers"];
-          fillTemperatureLayersDailyOutput_c(DLT, sDayadv.ATres.energy, iday, 
-                                             x.canopy.Cair.size(), x.control.advancedWB.ndailysteps);
-        }
-      }
-    } catch(const std::bad_cast&) {
-      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but SWPB result object is not advanced");
-    }
-  } 
-  if(x.control.results.fireHazardResults) {
-    DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
-    fillFireHazardOutput_c(fireHazard, sDay.SPWBres->fccs, iday);
-  }
   if(x.control.results.subdailyResults) {
     List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
     subdailyRes[iday] = copyGROWTHResult_c(sDay, x); //Clones subdaily results because they are communication structures
   }
-  
   if(x.control.results.labileCarbonBalanceResults) {
     List labileCarbonBalance = Rcpp::as<Rcpp::List>(l["LabileCarbonBalance"]);
     NumericMatrix LabileCarbonBalance = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["LabileCarbonBalance"]);
@@ -657,7 +674,6 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
       RootExudation(iday,i) = sDay.LCBres.RootExudation[i];
     }
   }
-
   if(x.control.results.plantStructureResults) {
     List plantStructure = Rcpp::as<Rcpp::List>(l["PlantStructure"]);
     NumericMatrix LeafBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafBiomass"]);
@@ -1050,10 +1066,10 @@ List growth(List x, DataFrame meteo, double latitude,
   GROWTHCommunicationStructures GROWTHcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   BasicTranspiration_RESULT BTres(numCohorts, nlayers);
   BasicSPWB_RESULT BSPWBres(BTres);
-  BasicGROWTH_RESULT BGROWTHres(&BSPWBres, numCohorts);
+  BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts);
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
   AdvancedSPWB_RESULT ASPWBres(ATres);
-  AdvancedGROWTH_RESULT AGROWTHres(&ASPWBres, numCohorts, ntimesteps);
+  AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts, ntimesteps);
   
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;

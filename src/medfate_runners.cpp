@@ -200,25 +200,30 @@ GROWTH_runner::GROWTH_runner(Rcpp::List x_list,
   Rcpp::CharacterVector classVector = x_list.attr("class");
   Rcpp::String s = classVector[0];
   std::string input_classIn = s.get_cstring();
-  if(input_classIn=="spwbInput") {
+  if(input_classIn=="growthInput") {
     ModelInput x_m = ModelInput(x_list);
     x = std::make_unique<ModelInput>(x_m);
     int numCohorts = x_m.cohorts.SpeciesIndex.size();
     int nlayers = x_m.soil.getNlayers();
     int ncanlayers = x_m.canopy.zlow.size();
     int ntimesteps = x_m.control.advancedWB.ndailysteps;
+    Rcout<< x_m.control.transpirationMode<<"\n";
     if(x_m.control.transpirationMode=="Granier") {
+      Rcout<< "BGROWTH\n";
       BasicTranspiration_RESULT BTres(numCohorts, nlayers);
       BasicSPWB_RESULT BSPWBres(BTres);
-      BasicGROWTH_RESULT BGROWTHres(&BSPWBres, numCohorts);
+      BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts);
       GROWTHres = std::make_unique<BasicGROWTH_RESULT>(BGROWTHres);
-    } else {
+    } else if(x_m.control.transpirationMode=="Sperry" || x_m.control.transpirationMode=="Sureau")  {
+      Rcout<< "AGROWTH\n";
       AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
       AdvancedSPWB_RESULT ASPWBres(ATres);
-      AdvancedGROWTH_RESULT AGROWTHres(&ASPWBres, numCohorts, ntimesteps);
+      AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts, ntimesteps);
       GROWTHres = std::make_unique<AdvancedGROWTH_RESULT>(AGROWTHres);
     }
     GROWTHcomm = GROWTHCommunicationStructures(x_m.cohorts.SpeciesIndex.size(), x_m.soil.getNlayers(), x_m.canopy.zlow.size(), x_m.control.advancedWB.ndailysteps);
+  } else {
+    throw medfate::MedfateInternalError("Wrong transpiration mode");
   }
 }
 GROWTH_runner::~GROWTH_runner(){}
@@ -239,7 +244,8 @@ void GROWTH_runner::run_day(Rcpp::CharacterVector date, Rcpp::NumericVector mete
                  WeatherInputVector(meteovec),
                  latitude, elevation, slope, aspect,
                  runon,
-                 lateralFlows_c, waterTableDepth);}
+                 lateralFlows_c, waterTableDepth);
+}
 
 Rcpp::List GROWTH_runner::get_output() {
   return(copyGROWTHResult_c(*GROWTHres, *x));
@@ -271,12 +277,12 @@ GROWTH_multiple_runner::GROWTH_multiple_runner(List wbInput_vec,
     if(x_i.control.transpirationMode=="Granier") {
       BasicTranspiration_RESULT BTres(numCohorts_i, nlayers_i);
       BasicSPWB_RESULT BSPWBres(BTres);
-      BasicGROWTH_RESULT BGROWTHres(&BSPWBres, numCohorts_i);
+      BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts_i);
       GROWTHres_vec[i] = std::make_unique<BasicGROWTH_RESULT>(BGROWTHres);
     } else {
       AdvancedTranspiration_RESULT ATres(numCohorts_i, nlayers_i, ncanlayers_i, ntimesteps_i);
       AdvancedSPWB_RESULT ASPWBres(ATres);
-      AdvancedGROWTH_RESULT AGROWTHres(&ASPWBres, numCohorts_i, ntimesteps_i);
+      AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts_i, ntimesteps_i);
       GROWTHres_vec[i] = std::make_unique<AdvancedGROWTH_RESULT>(AGROWTHres);
     }
     numCohorts_max = std::max(numCohorts_max, x_i.cohorts.SpeciesIndex.size());
