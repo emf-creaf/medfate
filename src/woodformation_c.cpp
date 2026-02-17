@@ -1,13 +1,14 @@
+#include <cmath>
 #include "woodformation_c.h"
 
 ////// Effect of temperature (on metabolic rate and microtubule stability)
 double _microT_c(double Tc, double inflection, double scale=5.0){
-  double out = 1.0/(1.0+exp((-Tc+inflection)*scale));
+  double out = 1.0/(1.0+std::exp((-Tc+inflection)*scale));
   return(out);
 }
 double _metR_c(double Tc, double DHa, double DSd, double DHd){
   double Tk = Tc-T0;
-  double out = Tk*exp(-DHa/(Rn*Tk)) / (1.0+exp(DSd/Rn*(1.0-(DHd/(DSd*Tk)))));
+  double out = Tk*std::exp(-DHa/(Rn*Tk)) / (1.0+std::exp(DSd/Rn*(1.0-(DHd/(DSd*Tk)))));
   return(out);
 }
 
@@ -55,7 +56,7 @@ double _divide_c(double psi, double Tc,
   double P; // Cell production rate
   double pi_Tcorr = _n2pi_c(_pi2n_c(pi0,1.0,Tref),1.0,Tc);
   r = relative_expansion_rate_c(psi, Tc, pi_Tcorr, phi0, Y_P, Y_T);
-  P = r/log(2.0)*Nc;
+  P = r/std::log(2.0)*Nc;
   
   return(P);
 }

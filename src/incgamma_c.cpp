@@ -1815,7 +1815,7 @@ double invincgam_c(double a, double p, double q) {
       dlnr=(1.0-a)*log(x)+x+lgamma(a); //loggam in fortran
       if(dlnr > log(giant)) {
         n=20;
-        std::cout << "overflow problem in the computation of one of the gamma factors before starting the Newton iteration. The initial approximation to the root is given as output.\n";
+        // std::cout << "overflow problem in the computation of one of the gamma factors before starting the Newton iteration. The initial approximation to the root is given as output.\n";
       } else {
         r=exp(dlnr);
         if(pcase) {
@@ -1941,14 +1941,14 @@ double gammds_c ( double x, double p)
   //
   if ( x <= 0.0 )
   {
-    std::cout << "x <= 0.0 in gammds\n";
+    // std::cout << "x <= 0.0 in gammds\n";
     value = 0.0;
     return value;
   }
   
   if ( p <= 0.0 ) 
   {
-    std::cout << "p <= 0.0 in gammds\n";
+    // std::cout << "p <= 0.0 in gammds\n";
     value = 0.0;
     return value;
   }

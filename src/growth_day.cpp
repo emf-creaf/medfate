@@ -1923,7 +1923,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
     
     // Calls simulation
-    Rcpp::Rcout << "about to enter growthDay_inner_c\n";
+    // Rcpp::Rcout << "about to enter growthDay_inner_c\n";
     growthDay_inner_c(GROWTHres, GROWTHcomm, x_c,
                       as<std::string>(date[0]),
                       meteovec_c,

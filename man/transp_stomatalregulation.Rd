@@ -35,30 +35,6 @@ as well as profit maximization from supply and photosynthesis input functions.
 Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential
 and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
-\examples{
-#Load example daily meteorological data
-data(examplemeteo)
-
-#Load example plot plant data
-data(exampleforest)
-
-#Default species parameterization
-data(SpParamsMED)
-
-#Define soil with default soil params (4 layers)
-examplesoil <- defaultSoilParams(4)
-
-#Initialize control parameters
-control <- defaultControl(transpirationMode="Sperry")
-
-#Initialize input
-x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-
-# Stomatal VPD curve and chosen value for the 12th time step at day 100
-transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
-                              latitude = 41.82592, elevation = 100, type="VPD")
- 
-}
 \references{
 Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 }

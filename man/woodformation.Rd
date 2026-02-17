@@ -4,23 +4,13 @@
 \name{woodformation}
 \alias{woodformation}
 \alias{woodformation_initRing}
+\alias{woodformation_growRing}
 \alias{woodformation_temperatureEffect}
 \alias{woodformation_relativeExpansionRate}
-\alias{woodformation_growRing}
 \alias{woodformation_relativeGrowthRate}
 \title{Wood formation}
 \usage{
 woodformation_initRing()
-
-woodformation_temperatureEffect(
-  Tc,
-  Y_T = 5,
-  DHa = 87500,
-  DSd = 1090,
-  DHd = 333000
-)
-
-woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
 
 woodformation_growRing(
   ring,
@@ -36,24 +26,24 @@ woodformation_growRing(
   s = 1.8
 )
 
+woodformation_temperatureEffect(
+  Tc,
+  Y_T = 5,
+  DHa = 87500,
+  DSd = 1090,
+  DHd = 333000
+)
+
+woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
+
 woodformation_relativeGrowthRate(dbh1, dbh2, yeardiff, lower = -2, upper = 8)
 }
 \arguments{
-\item{Tc}{Temperature in Celsius.}
-
-\item{Y_T}{Temperature yield threshold (in Celsius)}
-
-\item{DHa, DSd, DHd}{Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).}
+\item{ring}{An object of class \code{\link{ring}} returned by function \code{woodformation_initRing}.}
 
 \item{psi}{Water potential (in MPa).}
 
-\item{pi}{Osmotic potential (in MPa)}
-
-\item{phi}{Cell extensibility (in MPa-1 day-1)}
-
-\item{Y_P}{Turgor pressure yield threshold (in MPa)}
-
-\item{ring}{An object of class \code{\link{ring}} returned by function \code{woodformation_initRing}.}
+\item{Tc}{Temperature in Celsius.}
 
 \item{Nc}{Number of active cells in the cambium.}
 
@@ -63,9 +53,19 @@ woodformation_relativeGrowthRate(dbh1, dbh2, yeardiff, lower = -2, upper = 8)
 
 \item{CRD0}{Initial value of cell radial diameter}
 
+\item{Y_P}{Turgor pressure yield threshold (in MPa)}
+
+\item{Y_T}{Temperature yield threshold (in Celsius)}
+
 \item{h}{Cell wall hardening coefficient (in day-1)}
 
 \item{s}{Cell wall softening coefficient (unitless)}
+
+\item{DHa, DSd, DHd}{Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).}
+
+\item{pi}{Osmotic potential (in MPa)}
+
+\item{phi}{Cell extensibility (in MPa-1 day-1)}
 
 \item{dbh1, dbh2}{Initial and final diameter at breast height.}
 

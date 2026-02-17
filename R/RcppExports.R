@@ -2475,29 +2475,6 @@ hydraulics_initSperryNetworks <- function(x) {
 #' @seealso
 #' \code{\link{transp_transpirationSperry}}, \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 #' 
-#' @examples
-#' #Load example daily meteorological data
-#' data(examplemeteo)
-#' 
-#' #Load example plot plant data
-#' data(exampleforest)
-#' 
-#' #Default species parameterization
-#' data(SpParamsMED)
-#' 
-#' #Define soil with default soil params (4 layers)
-#' examplesoil <- defaultSoilParams(4)
-#' 
-#' #Initialize control parameters
-#' control <- defaultControl(transpirationMode="Sperry")
-#' 
-#' #Initialize input
-#' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-#' 
-#' # Stomatal VPD curve and chosen value for the 12th time step at day 100
-#' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
-#'                               latitude = 41.82592, elevation = 100, type="VPD")
-#'  
 #' @name transp_stomatalregulation
 transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gswmin, Gswmax) {
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
