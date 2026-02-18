@@ -1085,7 +1085,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
 
 
 // OLD SPWBDAY (NOT MAINTAINED)
-// [[Rcpp::export("spwb_day_old")]]
+// [[Rcpp::export(".spwb_day_old")]]
 List spwbDay_old(List x, CharacterVector date, NumericVector meteovec,
                  double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
                  double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,

@@ -6468,7 +6468,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*.spwb_old)(List,DataFrame,double,double,double,double,NumericVector,double)");
         signatures.insert("void(*spwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*spwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
-        signatures.insert("List(*spwb_day_old)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
+        signatures.insert("List(*.spwb_day_old)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
     }
     return signatures.find(sig) != signatures.end();
 }
@@ -6542,7 +6542,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_.spwb_old", (DL_FUNC)_medfate_spwb_old_try);
     R_RegisterCCallable("medfate", "_medfate_spwb_day_inner", (DL_FUNC)_medfate_spwbDay_inner_try);
     R_RegisterCCallable("medfate", "_medfate_spwb_day", (DL_FUNC)_medfate_spwbDay_try);
-    R_RegisterCCallable("medfate", "_medfate_spwb_day_old", (DL_FUNC)_medfate_spwbDay_old_try);
+    R_RegisterCCallable("medfate", "_medfate_.spwb_day_old", (DL_FUNC)_medfate_spwbDay_old_try);
     R_RegisterCCallable("medfate", "_medfate_RcppExport_validate", (DL_FUNC)_medfate_RcppExport_validate);
     return R_NilValue;
 }
