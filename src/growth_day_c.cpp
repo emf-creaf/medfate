@@ -370,7 +370,7 @@ void updateStructuralVariables_c(ModelInput& x,
   
   //Update height
   for(int j=0;j<numCohorts; j++) {
-    if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+    if(!std::isnan(DBH[j]) && N[j]>0.0) {
       double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(x.paramsAnatomy.Hmax[j]-137.0)))));
       double fHD = (x.paramsGrowth.fHDmin[j]*(PARcohort[j]/100.0) + x.paramsGrowth.fHDmax[j]*(1.0-(PARcohort[j]/100.0)))*fHmod;
       H[j] = H[j] + fHD*deltaDBH[j];
@@ -532,8 +532,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
 
   //Atmospheric pressure (if missing)
   if(std::isnan(Patm)) Patm = atmosphericPressure_c(elevation);
-
-  
 
   std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);
   
@@ -725,12 +723,10 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       // if(subdailyCarbonBalance) k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
 
       //Xylogenesis
-      // List ring = ringList[j];
       double rleafcell = medfate::NA_DOUBLE, rcambiumcell = medfate::NA_DOUBLE;
       std::vector<double> rfineroot(nlayers);
       double relative_hormone_factor = std::max(0.0, std::min(1.0, LAI_expanded[j]/LAI_nocomp[j]));
       if(x.control.transpirationMode=="Granier") {
-        // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
         rleafcell = std::min(rcellmax, relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(x.soil.getPsi(l) ,tday, -1.0 ,0.5,0.05,5.0));
@@ -1351,7 +1347,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
             }
             if(x.control.growth.allowStarvation) GROWTHres.GMres.StarvationRate[j] = dailyMortalityProbability_c(relativeSugarSapwood, x.control.mortality.mortalityRelativeSugarThreshold);
             if(x.control.growth.allowDessication) GROWTHres.GMres.DessicationRate[j] = dailyMortalityProbability_c((stemSympRWC + (1.0 - StemPLC[j]))/2.0, x.control.mortality.mortalityRWCThreshold);
-            GROWTHres.GMres.MortalityRate[j] = max(NumericVector::create(basalMortalityRate, GROWTHres.GMres.DessicationRate[j],  GROWTHres.GMres.StarvationRate[j]));
+            GROWTHres.GMres.MortalityRate[j] = std::max(std::max(basalMortalityRate, GROWTHres.GMres.DessicationRate[j]), GROWTHres.GMres.StarvationRate[j]);
             if((GROWTHres.GMres.DessicationRate[j] > basalMortalityRate) && (GROWTHres.GMres.DessicationRate[j] > GROWTHres.GMres.StarvationRate[j])) {
               cause = "dessication";
             } else if((GROWTHres.GMres.StarvationRate[j] > basalMortalityRate) && (GROWTHres.GMres.StarvationRate[j] > GROWTHres.GMres.DessicationRate[j])) {

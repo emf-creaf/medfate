@@ -15,7 +15,7 @@ void DAY_worker::operator()(std::size_t begin, std::size_t end) {
       std::vector<double> lateralFlows_c(nlayers_i, 0.0);
       wb_day_inner_c(WBres_i, WBcomm, x_i,
                      date,
-                     WeatherInputVector(weather_vec[i]),
+                     *p_weather_vec[i],
                      latitude_vec[i], p_topo_vec[i]->elevation, p_topo_vec[i]->slope, p_topo_vec[i]->aspect,
                      runon,
                      lateralFlows_c, waterTableDepth);
@@ -26,7 +26,7 @@ void DAY_worker::operator()(std::size_t begin, std::size_t end) {
       std::vector<double> lateralFlows_c(nlayers_i, 0.0);
       growthDay_inner_c(GROWTHres_i, GROWTHcomm, x_i,
                         date,
-                        WeatherInputVector(weather_vec[i]),
+                        *p_weather_vec[i],
                         latitude_vec[i], p_topo_vec[i]->elevation, p_topo_vec[i]->slope, p_topo_vec[i]->aspect,
                         runon,
                         lateralFlows_c, waterTableDepth);

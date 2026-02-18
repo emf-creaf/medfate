@@ -234,10 +234,10 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
 
   if(meteovec_list.size() != n) throw medfate::MedfateInternalError("Wrong weather list size");
   
-  std::vector<WeatherInputVector> weather_vec(n);
+  std::vector<std::unique_ptr<WeatherInputVector>> p_weather_vec(n);
   for(int i=0; i<n;i++) {
     NumericVector meteovec_i = meteovec_list[i];
-    weather_vec[i] = WeatherInputVector(meteovec_i);
+    p_weather_vec[i] = std::make_unique<WeatherInputVector>(WeatherInputVector(meteovec_i));
   }
   std::string date_str = Rcpp::as<std::string>(date[0]);
   if(parallelize) {
@@ -248,7 +248,7 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
                        p_x_vec,
                        latitude_vec,
                        p_topo_vec,
-                       weather_vec,
+                       p_weather_vec,
                        p_result_vec);
     // call it with parallelFor
     parallelFor(0, n, worker);
@@ -263,7 +263,7 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
         std::vector<double> lateralFlows_c(nlayers_i, 0.0);
         wb_day_inner_c(WBres_i, *p_WBcomm, x_i,
                        Rcpp::as<std::string>(date[0]),
-                       WeatherInputVector(weather_vec[i]),
+                       *p_weather_vec[i],
                        latitude_vec[i], p_topo_vec[i]->elevation, p_topo_vec[i]->slope, p_topo_vec[i]->aspect,
                        runon,
                        lateralFlows_c, waterTableDepth);
@@ -274,7 +274,7 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
         std::vector<double> lateralFlows_c(nlayers_i, 0.0);
         growthDay_inner_c(GROWTHres_i, *p_GROWTHcomm, x_i,
                           Rcpp::as<std::string>(date[0]),
-                          WeatherInputVector(weather_vec[i]),
+                          *p_weather_vec[i],
                           latitude_vec[i], p_topo_vec[i]->elevation, p_topo_vec[i]->slope, p_topo_vec[i]->aspect,
                           runon,
                           lateralFlows_c, waterTableDepth);

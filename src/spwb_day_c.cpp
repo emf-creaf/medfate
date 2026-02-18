@@ -68,7 +68,6 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
    BSPWBres.meteovec.Patm = Patm;
    BSPWBres.meteovec.rint = rainfallIntensity;
    
-   
   //Control parameters
   bool bareSoilEvaporation = x.control.commonWB.bareSoilEvaporation;
   std::string& rhizosphereOverlap = x.control.rhizosphereOverlap;
@@ -940,7 +939,7 @@ void wb_day_inner_c(WB_RESULT& WBres, WBCommunicationStructures& WBcomm, WaterBa
   meteovec.tmaxPrev = meteovec.tmax;
   meteovec.tminNext = meteovec.tmin;
   
-  
+
   if(x.getInputClass() == "spwbInput"){
     try {
       ModelInput& x_m = dynamic_cast<ModelInput&>(x);
