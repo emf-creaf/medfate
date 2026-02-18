@@ -25,6 +25,27 @@ namespace medfate {
         }
     }
 
+    inline List _nswbInput(String land_cover_type, double snowpack = 0.0) {
+        typedef SEXP(*Ptr__nswbInput)(SEXP,SEXP);
+        static Ptr__nswbInput p__nswbInput = NULL;
+        if (p__nswbInput == NULL) {
+            validateSignature("List(*_nswbInput)(String,double)");
+            p__nswbInput = (Ptr__nswbInput)R_GetCCallable("medfate", "_medfate__nswbInput");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__nswbInput(Shield<SEXP>(Rcpp::wrap(land_cover_type)), Shield<SEXP>(Rcpp::wrap(snowpack)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<List >(rcpp_result_gen);
+    }
+
     inline List aspwbInput(double crop_factor, List control, DataFrame soil) {
         typedef SEXP(*Ptr_aspwbInput)(SEXP,SEXP,SEXP);
         static Ptr_aspwbInput p_aspwbInput = NULL;

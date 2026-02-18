@@ -14,6 +14,41 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// nswbInput
+List nswbInput(String land_cover_type, double snowpack);
+static SEXP _medfate_nswbInput_try(SEXP land_cover_typeSEXP, SEXP snowpackSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< String >::type land_cover_type(land_cover_typeSEXP);
+    Rcpp::traits::input_parameter< double >::type snowpack(snowpackSEXP);
+    rcpp_result_gen = Rcpp::wrap(nswbInput(land_cover_type, snowpack));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_nswbInput(SEXP land_cover_typeSEXP, SEXP snowpackSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_nswbInput_try(land_cover_typeSEXP, snowpackSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // aspwbInput
 List aspwbInput(double crop_factor, List control, DataFrame soil);
 static SEXP _medfate_aspwbInput_try(SEXP crop_factorSEXP, SEXP controlSEXP, SEXP soilSEXP) {
@@ -6401,6 +6436,7 @@ END_RCPP
 static int _medfate_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
+        signatures.insert("List(*.nswbInput)(String,double)");
         signatures.insert("List(*aspwbInput)(double,List,DataFrame)");
         signatures.insert("List(*aspwb_day_inner)(List,List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
         signatures.insert("List(*aspwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,Nullable<NumericVector>,double,bool)");
@@ -6475,6 +6511,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
 
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _medfate_RcppExport_registerCCallable() { 
+    R_RegisterCCallable("medfate", "_medfate_.nswbInput", (DL_FUNC)_medfate_nswbInput_try);
     R_RegisterCCallable("medfate", "_medfate_aspwbInput", (DL_FUNC)_medfate_aspwbInput_try);
     R_RegisterCCallable("medfate", "_medfate_aspwb_day_inner", (DL_FUNC)_medfate_aspwb_day_inner_try);
     R_RegisterCCallable("medfate", "_medfate_aspwb_day", (DL_FUNC)_medfate_aspwb_day_c_try);
@@ -6550,6 +6587,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
 RcppExport SEXP _rcpp_module_boot_runners();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_medfate_nswbInput", (DL_FUNC) &_medfate_nswbInput, 2},
     {"_medfate_aspwbInput", (DL_FUNC) &_medfate_aspwbInput, 3},
     {"_medfate_aspwb_day_inner", (DL_FUNC) &_medfate_aspwb_day_inner, 12},
     {"_medfate_aspwb_day_c", (DL_FUNC) &_medfate_aspwb_day_c, 11},

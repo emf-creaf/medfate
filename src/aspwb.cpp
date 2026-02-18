@@ -17,6 +17,14 @@
 using namespace Rcpp;
 using namespace meteoland;
 
+// [[Rcpp::export(".nswbInput")]]
+List nswbInput(String land_cover_type, double snowpack = 0.0) {
+   List input = List::create(_["land_cover_type"] = land_cover_type,
+                             _["snowpack"] = snowpack);
+   input.attr("class") = CharacterVector::create("nswbInput","list");
+   return(input);
+}
+
 //' @rdname aspwb
 //' @keywords internal
 // [[Rcpp::export("aspwbInput")]]
