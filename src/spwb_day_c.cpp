@@ -729,6 +729,63 @@ void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, A
   }
 }
 
+void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
+               const WeatherInputVector& meteovec, 
+               const double elevation, const double slope, const double aspect,
+               const double runon, 
+               const double rock_max_infiltration) {
+  
+  double tday = meteovec.tday;
+  double prec = meteovec.prec;
+  double rad = meteovec.rad;
+  if(tday>0.0) {
+    NSWBres.WaterBalance.Snow = prec;
+    x.snowpack += prec;
+  } else {
+    NSWBres.WaterBalance.Rain = prec;
+  }
+  if(x.snowpack>0.0) {
+    double melt = snowMelt_c(tday, rad, 1.0, elevation);
+    NSWBres.WaterBalance.Snowmelt = std::min(melt, x.snowpack);
+    x.snowpack -= NSWBres.WaterBalance.Snowmelt;
+  }
+  if(x.land_cover_type=="rock") {
+    //Part of the water is allowed to infiltrate (draining to the aquifer)
+    NSWBres.WaterBalance.Infiltration = std::min(rock_max_infiltration, NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain);
+    NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Infiltration;
+    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain - NSWBres.WaterBalance.DeepDrainage;
+    NSWBres.WaterBalance.Runoff = NSWBres.WaterBalance.InfiltrationExcess;
+  } else if(x.land_cover_type=="artificial") {
+    //all Precipitation becomes surface runoff if cell is rock artificial
+    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt + NSWBres.WaterBalance.Rain;
+    NSWBres.WaterBalance.Runoff = NSWBres.WaterBalance.InfiltrationExcess;
+  } else if(x.land_cover_type=="water") {
+    // water cells receive water from Precipitation
+    // but do not export to the atmosphere contribute nor to other cells.
+    // any received water drains directly to the aquifer so that it can feed base flow
+    NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Snowmelt+ NSWBres.WaterBalance.Rain;
+    NSWBres.WaterBalance.Infiltration = NSWBres.WaterBalance.DeepDrainage;
+    NSWBres.WaterBalance.Runoff = 0.0;
+  }
+  NSWBres.WaterBalance.NetRain = NSWBres.WaterBalance.Rain;
+}
+
+Rcpp::List copyNSWBResult_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x) {
+  NumericVector WaterBalance = NumericVector::create(_["PET"] = NSWBres.WaterBalance.PET, 
+                                                     _["Rain"] = NSWBres.WaterBalance.Rain, 
+                                                     _["Snow"] = NSWBres.WaterBalance.Snow, 
+                                                     _["NetRain"] = NSWBres.WaterBalance.NetRain, 
+                                                     _["Snowmelt"] = NSWBres.WaterBalance.Snowmelt,
+                                                     _["Runon"] = NSWBres.WaterBalance.Runon, 
+                                                     _["Infiltration"] = NSWBres.WaterBalance.Infiltration, 
+                                                     _["InfiltrationExcess"] = NSWBres.WaterBalance.InfiltrationExcess, 
+                                                     _["SaturationExcess"] = NSWBres.WaterBalance.SaturationExcess, 
+                                                     _["Runoff"] = NSWBres.WaterBalance.Runoff, 
+                                                     _["DeepDrainage"] = NSWBres.WaterBalance.DeepDrainage);
+  Rcpp::List l = Rcpp::List::create(_["WaterBalance"] = WaterBalance);
+  l.attr("class") = CharacterVector::create("nswb_day","list");
+  return(l);
+}
 Rcpp::List copyAgricultureWBResult_c(AgricultureWB_RESULT& AgrWBres, AgricultureModelInput& x) {
   NumericVector WaterBalance = NumericVector::create(_["PET"] = AgrWBres.WaterBalance.PET, 
                                                      _["Rain"] = AgrWBres.WaterBalance.Rain, 

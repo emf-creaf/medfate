@@ -347,6 +347,15 @@ struct InternalFCCS {
   std::vector<double> ActFMC;
 };
 
+class NonSoilWaterBalanceModelInput : public AbstractModelInput {
+public:
+  std::string land_cover_type;
+  double snowpack;
+  
+  NonSoilWaterBalanceModelInput(Rcpp::List x);
+  void copyStateToList(Rcpp::List x);
+  std::string getInputClass() {return(input_class);}
+};
 
 class WaterBalanceModelInput : public AbstractModelInput {
 public:

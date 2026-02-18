@@ -20,6 +20,16 @@ void AbstractModelInput::checkInputClass(Rcpp::List x) {
   // Rcpp::Rcout<<  " Checking: "<<input_class << " vs. " << input_classIn <<"\n";
   if(input_class != input_classIn) throw medfate::MedfateInternalError("Trying to copy to a different model input class.");
 }
+
+NonSoilWaterBalanceModelInput::NonSoilWaterBalanceModelInput(Rcpp::List x) : AbstractModelInput(x)  {
+  snowpack = x["snowpack"];
+  land_cover_type = Rcpp::as<std::string>(x["land_cover_type"]);
+}
+void NonSoilWaterBalanceModelInput::copyStateToList(Rcpp::List x) {
+  checkInputClass(x);
+  x["snowpack"] = snowpack;
+}
+
 WaterBalanceModelInput::WaterBalanceModelInput(Rcpp::List x) : AbstractModelInput(x) {
   //Control parameters
   Rcpp::List controlList = x["control"];

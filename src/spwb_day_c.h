@@ -12,6 +12,19 @@
 #ifndef SPWB_DAY_C_H
 #define SPWB_DAY_C_H
 
+struct NSWB_RESULT : public ABSTRACTMODEL_RESULT {
+  StandWB_RESULT WaterBalance;
+};
+Rcpp::List copyNSWBResult_c(NSWB_RESULT& WBres, NonSoilWaterBalanceModelInput& x);
+
+
+void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
+               const WeatherInputVector& meteovec, 
+               const double elevation, const double slope, const double aspect,
+               const double runon, 
+               const double rock_max_infiltration);
+  
+  
 struct WB_RESULT : public ABSTRACTMODEL_RESULT {
   Topography topo;
   WeatherInputVector meteovec;

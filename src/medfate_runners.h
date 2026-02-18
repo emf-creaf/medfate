@@ -45,4 +45,29 @@ public:
   void update_input_at(int i, List x_list);
 };
 
+class watershed_runner {
+private:
+  int n;
+  std::vector<double> latitude_vec;
+  std::vector<std::unique_ptr<Topography>> p_topo_vec;
+  std::vector<std::unique_ptr<AbstractModelInput>> p_x_vec;
+  std::vector<std::unique_ptr<ABSTRACTMODEL_RESULT>> p_result_vec;
+  std::unique_ptr<WBCommunicationStructures> p_WBcomm;
+  std::unique_ptr<GROWTHCommunicationStructures> p_GROWTHcomm;
+  List sf_routing;
+
+public:
+  watershed_runner(List x_vec, 
+                   NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec,
+                   List sf_routing);
+  ~watershed_runner();
+  void run_day(CharacterVector date, DataFrame gridMeteo, 
+               NumericVector waterTableDepth, 
+               List output,
+               double rock_max_infiltration,
+               bool free_drainage_outlets,
+               bool standSummary, bool fireHazardSummary, bool carbonBalanceSummary, bool biomassBalanceSummary);
+  List get_output_at(int i);
+  void update_input_at(int i, List x_list);
+};
 #endif

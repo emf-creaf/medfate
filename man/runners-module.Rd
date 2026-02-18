@@ -12,6 +12,7 @@
 	classes: \describe{
         \item{single_runner}{An S4 class to run spwb_day() or growth_day() simulations on a single site.}
         \item{multiple_runner}{An S4 class to run spwb_day() or growth_day() simulations on multiple sites, if required using parallelization.}
+        \item{watershed_runner}{An S4 class to run one day of watershed simulations.}
 		}
 }
 \examples{
