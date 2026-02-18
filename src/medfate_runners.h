@@ -42,6 +42,7 @@ public:
   ~multiple_runner();
   void run_day(CharacterVector date, List meteovec_list, bool parallelize = false);
   List get_output_at(int i);
+  void store_output_at(int i, List l_vec);
   void update_input_at(int i, List x_list);
 };
 
@@ -68,6 +69,7 @@ public:
                bool free_drainage_outlets,
                bool standSummary, bool fireHazardSummary, bool carbonBalanceSummary, bool biomassBalanceSummary);
   List get_output_at(int i);
+  void store_output_at(int i, List l_vec);
   void update_input_at(int i, List x_list);
 };
 #endif

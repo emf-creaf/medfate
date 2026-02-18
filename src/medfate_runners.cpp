@@ -309,6 +309,10 @@ Rcpp::List multiple_runner::get_output_at(int i) {
   }
   return(l);
 }
+void multiple_runner::store_output_at(int i, List l_vec) {
+  l_vec[i-1] = get_output_at(i);  
+}
+
 //Updates state of (external) input object
 void multiple_runner::update_input_at(int i, List x_list) {
   if(p_x_vec[i-1]->getInputClass()=="spwbInput" || p_x_vec[i-1]->getInputClass()=="growthInput") {
@@ -817,6 +821,9 @@ Rcpp::List watershed_runner::get_output_at(int i) {
   }
   return(l);
 }
+void watershed_runner::store_output_at(int i, List l_vec) {
+  l_vec[i-1] = get_output_at(i);  
+}
 //Updates state of (external) input object
 void watershed_runner::update_input_at(int i, List x_list) {
   if(p_x_vec[i-1]->getInputClass()=="spwbInput" || p_x_vec[i-1]->getInputClass()=="growthInput") {
@@ -848,12 +855,14 @@ RCPP_MODULE(runners) {
     .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector>()
     .method( "run_day", &multiple_runner::run_day )
     .method( "get_output_at", &multiple_runner::get_output_at)
+    .method( "store_output_at", &multiple_runner::update_input_at)
     .method( "update_input_at", &multiple_runner::update_input_at)
   ;
   class_<watershed_runner>( "watershed_runner" )
     .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector, Rcpp::List>()
     .method( "run_day", &watershed_runner::run_day )
     .method( "get_output_at", &watershed_runner::get_output_at)
+    .method( "store_output_at", &watershed_runner::update_input_at)
     .method( "update_input_at", &watershed_runner::update_input_at)
   ;
 }
