@@ -1049,7 +1049,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   if(x_c.control.transpirationMode=="Granier") {
     //Initialises a result
     BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-    BasicSPWB_RESULT BSPWBres(BTres);
+    BasicSPWB_RESULT BSPWBres(BTres, nlayers);
     // Calls simulation
     wb_day_inner_c(BSPWBres, WBcomm, x_c, 
                    as<std::string>(date[0]),
@@ -1064,7 +1064,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   } else {
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
-    AdvancedSPWB_RESULT ASPWBres(ATres);
+    AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
     // Calls simulation
     wb_day_inner_c(ASPWBres, WBcomm, x_c, 
                    as<std::string>(date[0]),

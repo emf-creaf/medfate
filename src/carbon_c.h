@@ -38,7 +38,7 @@ struct CarbonCompartments {
   std::vector<double> TotalLivingBiomass;
   std::vector<double> TotalBiomass;
   
-  CarbonCompartments(size_t numCohorts = 0) {
+  CarbonCompartments(size_t numCohorts) {
     LeafStorageVolume = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     SapwoodStorageVolume = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     LeafStarchMaximumConcentration = std::vector<double>(numCohorts, medfate::NA_DOUBLE);

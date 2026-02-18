@@ -26,11 +26,11 @@ single_runner::single_runner(Rcpp::List x_list,
     int ntimesteps = x.control.advancedWB.ndailysteps;
     if(x.control.transpirationMode=="Granier") {
       BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-      BasicSPWB_RESULT BSPWBres(BTres);
+      BasicSPWB_RESULT BSPWBres(BTres, nlayers);
       p_result = std::make_unique<BasicSPWB_RESULT>(BSPWBres);
     } else {
       AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
-      AdvancedSPWB_RESULT ASPWBres(ATres);
+      AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
       p_result = std::make_unique<AdvancedSPWB_RESULT>(ASPWBres);
     }
     WBCommunicationStructures WBcomm = WBCommunicationStructures(numCohorts, nlayers, ncanlayers, ntimesteps);
@@ -44,12 +44,12 @@ single_runner::single_runner(Rcpp::List x_list,
     int ntimesteps = x.control.advancedWB.ndailysteps;
     if(x.control.transpirationMode=="Granier") {
       BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-      BasicSPWB_RESULT BSPWBres(BTres);
+      BasicSPWB_RESULT BSPWBres(BTres, nlayers);
       BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts);
       p_result = std::make_unique<BasicGROWTH_RESULT>(BGROWTHres);
     } else if(x.control.transpirationMode=="Sperry" || x.control.transpirationMode=="Sureau")  {
       AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
-      AdvancedSPWB_RESULT ASPWBres(ATres);
+      AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
       AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts, ntimesteps);
       p_result = std::make_unique<AdvancedGROWTH_RESULT>(AGROWTHres);
     }
@@ -172,11 +172,11 @@ multiple_runner::multiple_runner(List input_vec,
       int ntimesteps_i = x_i.control.advancedWB.ndailysteps;
       if(x_i.control.transpirationMode=="Granier") {
         BasicTranspiration_RESULT BTres(numCohorts_i, nlayers_i);
-        BasicSPWB_RESULT BSPWBres(BTres);
+        BasicSPWB_RESULT BSPWBres(BTres, nlayers_i);
         p_result_vec[i] = std::make_unique<BasicSPWB_RESULT>(BSPWBres);
       } else {
         AdvancedTranspiration_RESULT ATres(numCohorts_i, nlayers_i, ncanlayers_i, ntimesteps_i);
-        AdvancedSPWB_RESULT ASPWBres(ATres);
+        AdvancedSPWB_RESULT ASPWBres(ATres, nlayers_i);
         p_result_vec[i] = std::make_unique<AdvancedSPWB_RESULT>(ASPWBres);
       }
       numCohorts_max = std::max(numCohorts_max, x_i.cohorts.SpeciesIndex.size());
@@ -192,12 +192,12 @@ multiple_runner::multiple_runner(List input_vec,
       int ntimesteps_i = x_i.control.advancedWB.ndailysteps;
       if(x_i.control.transpirationMode=="Granier") {
         BasicTranspiration_RESULT BTres(numCohorts_i, nlayers_i);
-        BasicSPWB_RESULT BSPWBres(BTres);
+        BasicSPWB_RESULT BSPWBres(BTres, nlayers_i);
         BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts_i);
         p_result_vec[i] = std::make_unique<BasicGROWTH_RESULT>(BGROWTHres);
       } else {
         AdvancedTranspiration_RESULT ATres(numCohorts_i, nlayers_i, ncanlayers_i, ntimesteps_i);
-        AdvancedSPWB_RESULT ASPWBres(ATres);
+        AdvancedSPWB_RESULT ASPWBres(ATres, nlayers_i);
         AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts_i, ntimesteps_i);
         p_result_vec[i] = std::make_unique<AdvancedGROWTH_RESULT>(AGROWTHres);
       }

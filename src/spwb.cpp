@@ -1938,9 +1938,9 @@ List spwb(List x, DataFrame meteo,
   
   WBCommunicationStructures WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-  BasicSPWB_RESULT BSPWBres(BTres);
+  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
-  AdvancedSPWB_RESULT ASPWBres(ATres);
+  AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
   
   
   std::string yearString;

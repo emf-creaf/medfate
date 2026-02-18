@@ -114,7 +114,7 @@ double coarseRootSoilVolumeFromConductance_c(double Kmax_rootxylem, double VCroo
     f = frv_c(vol,B,v, ax,ra);
     nsteps++;
   }
-  if(nsteps==maxnsteps) throw medfate::MedfateInternalError("Maximum number of steps reached in coarse root volume estimation");
+  // if(nsteps==maxnsteps) throw medfate::MedfateInternalError("Maximum number of steps reached in coarse root volume estimation");
   // for(int j=0;j<numLayers;j++) {
   // Rcout<<j<<" "<<ax[j]<<" "<<sqrt(vol)*ra[j]<<" "<<((d[j]/1000.0)*M_PI*pow(sqrt(vol)*ra[j],2.0))<<"\n";
   // }

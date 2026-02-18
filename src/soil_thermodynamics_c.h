@@ -44,7 +44,7 @@ struct SoilEnergyBalance_COMM {
   std::vector<double> tempch;
   
   // Constructor
-  SoilEnergyBalance_COMM(size_t nlayers = 0) {
+  SoilEnergyBalance_COMM(size_t nlayers) {
     dZ_m = std::vector<double>(nlayers, medfate::NA_DOUBLE);
     dZUp = std::vector<double>(nlayers, medfate::NA_DOUBLE);
     dZDown = std::vector<double>(nlayers, medfate::NA_DOUBLE);

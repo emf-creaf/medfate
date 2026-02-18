@@ -1919,7 +1919,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   if(x_c.control.transpirationMode=="Granier") {
     //Initialises a result
     BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-    BasicSPWB_RESULT BSPWBres(BTres);
+    BasicSPWB_RESULT BSPWBres(BTres, nlayers);
     BasicGROWTH_RESULT GROWTHres(BSPWBres, numCohorts);
     
     // Calls simulation
@@ -1931,11 +1931,12 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
                       runon,
                       lateralFlows_c, waterTableDepth);
     //Copies result
+    // Rcpp::Rcout << "about to copy results\n";
     l = copyGROWTHResult_c(GROWTHres, x_c);
   } else if(x_c.control.transpirationMode=="Sperry" || x_c.control.transpirationMode=="Sureau"){
     //Initialises a result
     AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
-    AdvancedSPWB_RESULT ASPWBres(ATres);
+    AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
     AdvancedGROWTH_RESULT GROWTHres(ASPWBres, numCohorts, ntimesteps);
     // Calls simulation
     growthDay_inner_c(GROWTHres, GROWTHcomm, x_c,
@@ -1951,7 +1952,10 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   }
   
   //Modifies input list, if required  
-  if(modifyInput) x_c.copyStateToList(x);
+  if(modifyInput) {
+    // Rcpp::Rcout << "about to update input\n";
+    x_c.copyStateToList(x);
+  }
   
   return(l);
 }

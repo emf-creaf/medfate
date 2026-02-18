@@ -444,6 +444,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
                          const std::vector<double>& lateralFlows, const double waterTableDepth) {
 
 
+  // Rcpp::Rcout<< "in growth private\n";
   int ntimesteps = x.control.advancedWB.ndailysteps;
   int nlayers = x.soil.getNlayers();
   int numCohorts = x.internalWater.StemPLC.size();
@@ -508,6 +509,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   } else {
     throw medfate::MedfateInternalError("Wrong transpiration mode");
   }
+  // Rcpp::Rcout<< "after water balance\n";
   
   bool subdailyCarbonBalance = x.control.growth.subdailyCarbonBalance;
   bool sinkLimitation = x.control.growth.sinkLimitation;
@@ -665,6 +667,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   /////////////////////////////////////////////////////////////////////
   ///// B. LABILE CARBON BALANCE, GROWTH AND SENESCENCE BY COHORT /////
   /////////////////////////////////////////////////////////////////////
+  // Rcpp::Rcout<< "labile carbon balance\n";
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
       
@@ -1166,9 +1169,11 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   }
   
   ///// B15. UPDATE STRUCTURAL VARIABLES /////
+  // Rcpp::Rcout<< "structural update\n";
   updateStructuralVariables_c(x, deltaSAgrowth, PARcohort);
 
   ///// B16. UPDATE SAPWOOD AREA AND FINEROOT BIOMASS TARGETS AND RECALCULATE CONCENTRATIONS /////
+  // Rcpp::Rcout<< "update state variables\n";
   for(int j=0;j<numCohorts;j++){
     //Update fine root biomass target
     if((LAI_live[j]>0.0) && (N[j]>0.0)) {
@@ -1245,6 +1250,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   /////////////////////////////////////////////////////////
   ///// D. PLANT MORTALITY AND FIRE EFFECTS BY COHORT /////
   /////////////////////////////////////////////////////////
+  // Rcpp::Rcout<< "mortality and fire effects\n";
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
 
@@ -1492,6 +1498,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   ///////////////////////////////////
   ///// F. CARBON DECOMPOSITION /////
   ///////////////////////////////////
+  // Rcpp::Rcout<< "decomposition\n";
   double heterotrophicRespiration = 0.0;
   double soilPH = 7.0;
   if(!std::isnan(x.soil.getPH(0))) soilPH = x.soil.getPH(0);

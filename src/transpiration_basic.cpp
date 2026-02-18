@@ -703,7 +703,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
                           double latitude, double elevation, double slope, double aspect, 
                           bool modifyInput = true) {
 
-
+  // Rcpp::Rcout << "In transpiration Granier\n";
   List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
@@ -757,6 +757,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   meteovec.Catm = Catm,
   meteovec.Patm = Patm[day-1];
   
+  // Rcpp::Rcout << "Building input\n";
   ModelInput x_c = ModelInput(x);
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
@@ -770,10 +771,12 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   BasicTranspiration_COMM BTcomm = BasicTranspiration_COMM(numCohorts, ncanlayers, nlayers);
   
   //Perform simulation
+  // Rcpp::Rcout << "Transpiration\n";
   transpirationBasic_c(BTres, BTcomm, x_c, 
                        meteovec, elevation);
 
   //Copy output to Rcpp structures
+  // Rcpp::Rcout << "Copying results\n";
   List transpBasic = copyBasicTranspirationResult_c(BTres, x_c);
     
   if(modifyInput) {

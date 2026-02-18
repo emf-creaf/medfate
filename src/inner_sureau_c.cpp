@@ -10,7 +10,6 @@
 #include "soil_c.h"
 #include "tissuemoisture_c.h"
 #include "transpiration_advanced_c.h"
-using namespace Rcpp;
 
 
 double PLC_derivative_c(double plc, double slope) {
@@ -274,7 +273,8 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
     // Rcout<< nwhilecomp << " "<< Psi_LApo_np1 << " "<<Psi_LApo_cav<<" "<<Psi_SApo_np1<< " "<< Psi_SApo_cav<<"\n";
     
     if ((delta_L_cavs.size() > 1) && (nwhilecomp== ((int) delta_L_cavs.size()))) { //# we tried the normal cases and the computation is still not ok so we have done a last one desactivating cavitation water source (delta_cav=0)
-      Rcerr << "water flux due to Cavitation ignored with time step, no solution from the implicit solver="<<dt<<"\n";
+      //TO DO: HANDLE IN ITS CALL
+      // Rcerr << "water flux due to Cavitation ignored with time step, no solution from the implicit solver="<<dt<<"\n";
     }
   } //# end of the while loop with check on cavitation options
   

@@ -103,7 +103,7 @@ struct SoilWaterBalance_COMM {
   std::vector<double> theta_micro_step;
   
   // Constructor
-  SoilWaterBalance_COMM(size_t n = 0) {
+  SoilWaterBalance_COMM(size_t n) {
     dZ_m = std::vector<double>(n, medfate::NA_DOUBLE);
     dZUp = std::vector<double>(n, medfate::NA_DOUBLE);
     dZDown = std::vector<double>(n, medfate::NA_DOUBLE);

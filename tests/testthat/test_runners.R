@@ -61,7 +61,6 @@ test_that("single_runner initializes and runs correctly for spwb", {
   }
 })
 
-
 test_that("single_runner initializes and runs correctly for growth", {
   for(transpirationMode in c("Granier", "Sperry", "Sureau")) {
     for(soilDomains in c("buckets", "single", "dual")) {

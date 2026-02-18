@@ -44,6 +44,17 @@ test_that("transpiration granier can be run ",{
                                           modifyInput = TRUE), "list")
   expect_false(all(x1$internalWater$PlantPsi == Psi_ini)) # Check that psi has changed
 })
+test_that("transpiration granier can be run with medfateland example ",{
+  testthat::skip_if_not_installed("medfateland")
+  control_granier <- defaultControl("Granier")
+  control_granier$verbose <- FALSE
+  library(medfateland)
+  f <- example_ifn$forest[[1]]
+  x1 <- spwbInput(f,examplesoil, SpParamsMED, control_granier)
+  expect_type(transp_transpirationGranier(x1, examplemeteo, 1, 
+                                          latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                          modifyInput = FALSE), "list")
+})
 
 test_that("transpiration sperry can be run ",{
   control_sperry <- defaultControl("Sperry")
@@ -58,6 +69,19 @@ test_that("transpiration sperry can be run ",{
                                          latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
                                          modifyInput = FALSE), "list")
 })
+
+test_that("transpiration sperry can be run with medfateland example ",{
+  testthat::skip_if_not_installed("medfateland")
+  control_sperry <- defaultControl("Sperry")
+  control_sperry$verbose <- FALSE
+  library(medfateland)
+  f <- example_ifn$forest[[1]]
+  x1 <- spwbInput(f,examplesoil, SpParamsMED, control_sperry)
+  expect_type(transp_transpirationSperry(x1, examplemeteo, 1, 
+                                          latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                          modifyInput = FALSE), "list")
+})
+
 test_that("transpiration sureau can be run ",{
   control_sureau <- defaultControl("Sureau")
   control_sureau$verbose <- FALSE
@@ -88,4 +112,17 @@ test_that("transpiration sureau can be run ",{
                                    modifyInput = TRUE)
   expect_type(t1, "list")
   expect_false(all(x1$internalWater$StemPsi == Psi_ini)) # Check that psi has changed
+})
+
+
+test_that("transpiration sureau can be run with medfateland example ",{
+  testthat::skip_if_not_installed("medfateland")
+  control_sureau <- defaultControl("Sureau")
+  control_sureau$verbose <- FALSE
+  library(medfateland)
+  f <- example_ifn$forest[[1]]
+  x1 <- spwbInput(f,examplesoil, SpParamsMED, control_sureau)
+  expect_type(transp_transpirationSureau(x1, examplemeteo, 1, 
+                                          latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                          modifyInput = FALSE), "list")
 })

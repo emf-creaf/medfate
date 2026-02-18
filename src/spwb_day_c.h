@@ -46,14 +46,14 @@ Rcpp::List copySPWBResult_c(SPWB_RESULT& SPWBres, ModelInput& x);
 struct BasicSPWB_RESULT : public SPWB_RESULT {
   BasicTranspiration_RESULT BTres;
   
-  BasicSPWB_RESULT(BasicTranspiration_RESULT& BTres) : SPWB_RESULT(BTres.nlayers), BTres(BTres) {}
+  BasicSPWB_RESULT(BasicTranspiration_RESULT& BTres, size_t nlayers) : SPWB_RESULT(nlayers), BTres(BTres) {}
 };
 Rcpp::List copyBasicSPWBResult_c(const BasicSPWB_RESULT& BSPWBres, ModelInput& x);
 
 struct AdvancedSPWB_RESULT : public SPWB_RESULT {
   AdvancedTranspiration_RESULT ATres;
   
-  AdvancedSPWB_RESULT(AdvancedTranspiration_RESULT& ATresIN) : SPWB_RESULT(ATresIN.nlayers), ATres(ATresIN) {}
+  AdvancedSPWB_RESULT(AdvancedTranspiration_RESULT& ATresIN, size_t nlayers) : SPWB_RESULT(nlayers), ATres(ATresIN) {}
 };
 Rcpp::List copyAdvancedSPWBResult_c(const AdvancedSPWB_RESULT& ASPWBres, ModelInput& x);
 

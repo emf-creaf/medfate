@@ -452,6 +452,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   int nlayers = soil.getNlayers();
   
   //Canopy
+  // Rcpp::Rcout<< "copy canopy\n";
   Rcpp::DataFrame canopyDF = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   int ncanlayers = canopyDF.nrows();
   Rcpp::NumericVector zlow = canopyDF["zlow"];
@@ -479,6 +480,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   //Cohort definition does not change with spwb/growth simulations
 
   //Above
+  // Rcpp::Rcout<< "copy above\n";
   Rcpp::DataFrame aboveDF = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   int numCohorts = aboveDF.nrows();
   Rcpp::NumericVector H = aboveDF["H"];
@@ -530,6 +532,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   }
 
   //Below
+  // Rcpp::Rcout<< "copy below\n";
   Rcpp::DataFrame belowDF = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   Rcpp::NumericVector Z50 = belowDF["Z50"];
   Rcpp::NumericVector Z95 = belowDF["Z95"];
@@ -602,6 +605,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
 
 
   //Internal phenology variables
+  // Rcpp::Rcout<< "copy internal pheno\n";
   Rcpp::DataFrame internalPhenoDF = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   Rcpp::NumericVector gdd = internalPhenoDF["gdd"];
   Rcpp::NumericVector sen = internalPhenoDF["sen"];
@@ -621,6 +625,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   }
 
   //Internal LAI distribution
+  // Rcpp::Rcout<< "copy internal LAI dist\n";
   if(x.containsElementNamed("internalLAIDistribution")){
     Rcpp::List intLAIDist = x["internalLAIDistribution"];
     Rcpp::NumericVector PrevLAIdead = intLAIDist["PrevLAIdead"];
@@ -820,6 +825,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   }
 
   //Internal FCCS variables
+  // Rcpp::Rcout<< "copy internal FCCS\n";
   if(x.containsElementNamed("internalFCCS")) {
     Rcpp::DataFrame fccsDF = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
     if(fccsDF.nrows()>0) {
@@ -844,7 +850,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       Rcpp::NumericVector MinFMC = fccsDF["MinFMC"];
       Rcpp::NumericVector MaxFMC = fccsDF["MaxFMC"];
       Rcpp::NumericVector ActFMC = fccsDF["ActFMC"];
-      for(int c = 0;c < numCohorts; c++) {
+      for(int c = 0;c < fccsDF.nrows(); c++) {
         w[c] = internalFCCS.w[c];
         cover[c] = internalFCCS.cover[c];
         hbc[c] = internalFCCS.hbc[c];
@@ -869,4 +875,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       }
     }
   }
+  
+  
+  // Rcpp::Rcout<< "copy done\n";
 }

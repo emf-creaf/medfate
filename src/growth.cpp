@@ -1065,10 +1065,10 @@ List growth(List x, DataFrame meteo, double latitude,
   
   GROWTHCommunicationStructures GROWTHcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-  BasicSPWB_RESULT BSPWBres(BTres);
+  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
   BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts);
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
-  AdvancedSPWB_RESULT ASPWBres(ATres);
+  AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
   AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts, ntimesteps);
   
   if(verbose) Rcout << "Performing daily simulations\n";

@@ -56,9 +56,7 @@ struct StandBasicTranspiration_RESULT {
 Rcpp::NumericVector copyStandBasicTranspirationResult_c(const StandBasicTranspiration_RESULT& stand);
 
 struct BasicTranspiration_RESULT {
-  size_t numCohorts;
-  size_t nlayers;
-  
+
   // Stand-level (4 fields)
   StandBasicTranspiration_RESULT stand;
   
@@ -69,9 +67,7 @@ struct BasicTranspiration_RESULT {
   arma::mat extraction;
   std::vector<arma::mat> extractionPools;
   
-  BasicTranspiration_RESULT(size_t numCohorts = 0, size_t nlayers = 0) : 
-    numCohorts(numCohorts),
-    nlayers(nlayers),
+  BasicTranspiration_RESULT(size_t numCohorts, size_t nlayers) : 
     plants(numCohorts), 
     extraction(numCohorts, nlayers, arma::fill::zeros),
     extractionPools(numCohorts) {
@@ -91,7 +87,7 @@ struct BasicTranspiration_COMM {
   std::vector<double> Tmax;
   std::vector<double> TmaxCoh;
   arma::mat RHOPCohDyn;
-  BasicTranspiration_COMM(size_t numCohorts = 0, size_t ncanlayers = 0, size_t nlayers= 0) : 
+  BasicTranspiration_COMM(size_t numCohorts, size_t ncanlayers, size_t nlayers) : 
     AbSWRcomm(numCohorts, ncanlayers), 
     CohASWRF(numCohorts),
     Tmax(numCohorts),

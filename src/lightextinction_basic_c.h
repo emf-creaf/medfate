@@ -7,7 +7,7 @@ struct AbsorbedSWR_COMM {
   std::vector<double> fi; 
   std::vector<double> rem;
   arma::mat fij; 
-  AbsorbedSWR_COMM(size_t numCohorts = 0, size_t ncanlayers = 0) : fi(ncanlayers), rem(ncanlayers), fij(ncanlayers, numCohorts) {}
+  AbsorbedSWR_COMM(size_t numCohorts, size_t ncanlayers) : fi(ncanlayers), rem(ncanlayers), fij(ncanlayers, numCohorts) {}
 };
   
 double availableLight_c(double h, 
