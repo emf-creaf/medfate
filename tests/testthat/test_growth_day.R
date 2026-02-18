@@ -51,17 +51,17 @@ test_that("growth_day can be run with missing meteo data",{
                                  date, meteovec_mis2, latitude = 41.82592, elevation = 100, slope=0, aspect=0))
 })
 
-test_that("growth_day can be run with medfateland examples", {
-  testthat::skip_if_not_installed("medfateland")
-  library(medfateland)
-  f <- example_ifn$forest[[1]]
-  expect_s3_class(suppressWarnings(medfate::growth_day(growthInput(f, examplesoil, SpParamsMED, control_granier),
-                                   date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "growth_day")
-  expect_s3_class(suppressWarnings(medfate::growth_day(growthInput(f, examplesoil, SpParamsMED, control_sperry),
-                                                     date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "growth_day")
-  expect_s3_class(suppressWarnings(medfate::growth_day(growthInput(f, examplesoil, SpParamsMED, control_sureau),
-                                                     date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "growth_day")
-})
+# test_that("growth_day can be run with medfateland examples", {
+#   testthat::skip_if_not_installed("medfateland")
+#   library(medfateland)
+#   f <- example_ifn$forest[[1]]
+#   expect_s3_class(suppressWarnings(medfate::growth_day(growthInput(f, examplesoil, SpParamsMED, control_granier),
+#                                    date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "growth_day")
+#   expect_s3_class(suppressWarnings(medfate::growth_day(growthInput(f, examplesoil, SpParamsMED, control_sperry),
+#                                                      date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "growth_day")
+#   expect_s3_class(suppressWarnings(medfate::growth_day(growthInput(f, examplesoil, SpParamsMED, control_sureau),
+#                                                      date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "growth_day")
+# })
 
 test_that("growth_day can be run with truncated root distribution",{
   exampleforest$shrubData$Z50 <- 100

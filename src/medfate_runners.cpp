@@ -318,22 +318,20 @@ void multiple_runner::update_input_at(int i, List x_list) {
 
 
 /* 
- * CREATE RCPP MODULES 
+ * CREATE RCPP MODULE 
  */
 
-RCPP_MODULE(mod_single) {
+RCPP_MODULE(runners) {
   class_<single_runner>( "single_runner" )
   .constructor<Rcpp::List, double, double, double, double>()
   .method( "run_day", &single_runner::run_day )
   .method( "get_output", &single_runner::get_output)
   .method( "update_input", &single_runner::update_input)
   ;
-}
-RCPP_MODULE(mod_multiple) {
   class_<multiple_runner>( "multiple_runner" )
-  .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector>()
-  .method( "run_day", &multiple_runner::run_day )
-  .method( "get_output_at", &multiple_runner::get_output_at)
-  .method( "update_input_at", &multiple_runner::update_input_at)
+    .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector>()
+    .method( "run_day", &multiple_runner::run_day )
+    .method( "get_output_at", &multiple_runner::get_output_at)
+    .method( "update_input_at", &multiple_runner::update_input_at)
   ;
 }

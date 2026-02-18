@@ -20,7 +20,7 @@ test_that("single_runner initializes and runs correctly for aspwb", {
   xa <- aspwbInput(0.75, defaultControl(), examplesoil)
   W_ini <- rlang::duplicate(xa$soil$W)
   # builds runner
-  mfra <- new(single_runner, xa, 41.82592, 100, 0, 0)
+  mfra <- new(runners$single_runner, xa, 41.82592, 100, 0, 0)
   expect_s4_class(mfra, "Rcpp_single_runner")
   # runs and gets output
   mfra$run_day(date, meteovec, 0, NULL, NA)
@@ -43,7 +43,7 @@ test_that("single_runner initializes and runs correctly for spwb", {
       x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, ctl)
       W_ini <- rlang::duplicate(x1$soil$W)
       # builds runner
-      mfr1 <- new(single_runner, x1, 41.82592, 100, 0, 0)
+      mfr1 <- new(runners$single_runner, x1, 41.82592, 100, 0, 0)
       expect_s4_class(mfr1, "Rcpp_single_runner")
       # runs and gets output
       mfr1$run_day(date, meteovec, 0, NULL, NA)
@@ -68,7 +68,7 @@ test_that("single_runner initializes and runs correctly for growth", {
       x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, ctl)
       W_ini <- rlang::duplicate(x1$soil$W)
       # builds runner
-      mfr1 <- new(single_runner, x1, 41.82592, 100, 0, 0)
+      mfr1 <- new(runners$single_runner, x1, 41.82592, 100, 0, 0)
       expect_s4_class(mfr1, "Rcpp_single_runner")
       # runs and gets output
       mfr1$run_day(date, meteovec, 0, NULL, NA)
@@ -105,7 +105,7 @@ test_that("multiple_runner initializes and runs correctly with agriculture", {
   W_ini <- rlang::duplicate(xa$soil$W)
   for(i in 1:n) x_vec[[i]] = rlang::duplicate(xa)
   # Build runner
-  mfmr <- new(multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+  mfmr <- new(runners$multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
   expect_s4_class(mfmr, "Rcpp_multiple_runner")
   # Run without parallelization
   mfmr$run_day(date, meteo_vec, parallelize)
@@ -130,7 +130,7 @@ test_that("multiple_runner initializes and runs correctly for spwb", {
     W_ini <- rlang::duplicate(x1$soil$W)
     for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
     # Build runner
-    mfmr <- new(multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+    mfmr <- new(runners$multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
     expect_s4_class(mfmr, "Rcpp_multiple_runner")
     # Run without parallelization
     mfmr$run_day(date, meteo_vec, parallelize)
@@ -158,7 +158,7 @@ test_that("multiple_runner initializes and runs correctly for growth", {
     W_ini <- rlang::duplicate(x1$soil$W)
     for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
     # Build runner
-    mfmr <- new(multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+    mfmr <- new(runners$multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
     expect_s4_class(mfmr, "Rcpp_multiple_runner")
     # Run without parallelization
     mfmr$run_day(date, meteo_vec, parallelize)
@@ -185,7 +185,7 @@ test_that("multiple_runner initializes and runs correctly with agriculture and p
   W_ini <- rlang::duplicate(xa$soil$W)
   for(i in 1:n) x_vec[[i]] = rlang::duplicate(xa)
   # Build runner
-  mfmr <- new(multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+  mfmr <- new(runners$multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
   expect_s4_class(mfmr, "Rcpp_multiple_runner")
   # Run with parallelization
   Sys.setenv(ARMA_NUM_THREADS = "1")
@@ -213,7 +213,7 @@ test_that("multiple_runner initializes and runs correctly for spwb and paralleli
     W_ini <- rlang::duplicate(x1$soil$W)
     for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
     # Build runner
-    mfmr <- new(multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+    mfmr <- new(runners$multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
     expect_s4_class(mfmr, "Rcpp_multiple_runner")
     # Run with parallelization
     Sys.setenv(ARMA_NUM_THREADS = "1")
@@ -242,7 +242,7 @@ test_that("multiple_runner initializes and runs correctly for growth and paralle
     W_ini <- rlang::duplicate(x1$soil$W)
     for(i in 1:n) x_vec[[i]] = rlang::duplicate(x1)
     # Build runner
-    mfmr <- new(multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
+    mfmr <- new(runners$multiple_runner, x_vec, latitude_vec, elevation_vec, slope_vec, aspect_vec)
     expect_s4_class(mfmr, "Rcpp_multiple_runner")
     # Run with parallelization
     Sys.setenv(ARMA_NUM_THREADS = "1")

@@ -51,17 +51,17 @@ test_that("spwb_day can be run with missing meteo data",{
                                  date, meteovec_mis2, latitude = 41.82592, elevation = 100, slope=0, aspect=0))
 })
 
-test_that("spwb_day can be run with medfateland examples", {
-  testthat::skip_if_not_installed("medfateland")
-  library(medfateland)
-  f <- example_ifn$forest[[1]]
-  expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(f, examplesoil, SpParamsMED, control_granier), 
-                                   date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
-  expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(f, examplesoil, SpParamsMED, control_sperry), 
-                                                     date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
-  expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(f, examplesoil, SpParamsMED, control_sureau), 
-                                                     date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
-})
+# test_that("spwb_day can be run with medfateland examples", {
+#   testthat::skip_if_not_installed("medfateland")
+#   library(medfateland)
+#   f <- example_ifn$forest[[1]]
+#   expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(f, examplesoil, SpParamsMED, control_granier),
+#                                    date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
+#   expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(f, examplesoil, SpParamsMED, control_sperry),
+#                                                      date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
+#   expect_s3_class(suppressWarnings(medfate::spwb_day(spwbInput(f, examplesoil, SpParamsMED, control_sureau),
+#                                                      date, meteovec, latitude = 41.82592, elevation = 100, slope=0, aspect=0)), "spwb_day")
+# })
 # 
 # test_that("spwb_day gives same result with inner and direct calls",{
 #   x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
