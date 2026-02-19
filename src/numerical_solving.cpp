@@ -1,7 +1,13 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 using namespace Rcpp;
+
+
+double vecsum(const std::vector<double>& vec) {
+  return(std::accumulate(vec.begin(), vec.end(), 0.0));
+}
+
 
 // a,b,c,d are input vectors
 // e,f are vectors used internally

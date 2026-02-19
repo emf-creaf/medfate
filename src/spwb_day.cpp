@@ -1,15 +1,16 @@
 // [[Rcpp::interfaces(r,cpp)]]
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
 #include <math.h>
+#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
 #include "lightextinction_advanced.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include "hydraulics.h"
 #include "hydrology.h"
-#include "biophysicsutils.h"
 #include "forestutils.h"
 #include "modelInput.h"
 #include "photosynthesis.h"
@@ -18,11 +19,14 @@
 #include "fuelstructure.h"
 #include "firebehaviour.h"
 #include "tissuemoisture.h"
+#include "spwb_day_c.h"
 #include "soil.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
-
+// TO BE DELETED IN FUTURE VERSIONS
 void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List transpOutput, double slope) {
   List control = x["control"];
   
@@ -43,8 +47,8 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
     double rhmin = meteovec["rhmin"];
     double rhmax = meteovec["rhmax"];
     // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
-    double vp = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    double D = std::max(0.0, meteoland::utils_saturationVP(tmax) - vp);
+    double vp = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+    double D = std::max(0.0, saturationVapourPressure_c(tmax) - vp);
     fm_dead = 5.43 + 52.91*exp(-0.64*D); 
   }
   double wind = meteovec["wind"];
@@ -100,6 +104,8 @@ void fccsHazard(NumericVector fireHazard, List x, NumericVector meteovec, List t
 }
 
 
+
+// TO BE DELETED IN FUTURE VERSIONS
 // Soil water balance with simple hydraulic model
 void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec, 
                    double elevation, double slope, double aspect,
@@ -191,6 +197,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
       NumericVector W_c = soil_c["W"];
       for(int l=0;l<nlayers;l++) {
         W_c[l] = Wpool(c,l); 
+        // Rcout << c << "-" << l << " W " << W_c[l] <<"\n";
       }
       soilPools[c] = soil_c;
     }
@@ -245,14 +252,14 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
       //Evaporation from bare soil_c (if there is no snow), do not modify soil
       if(bareSoilEvaporation) {
         EsoilPools[c] = soilEvaporation(soil_c, snowpack, soilFunctions, pet, LgroundSWR, false);
-        Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
+        Esoil = Esoil + poolProportions[c]*EsoilPools[c];
       }
       //Herbaceous transpiration, do not modify soil
       NumericVector EherbVec_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, false);
-      //Update average soil evaporation and herbaceous transpiration 
+      //Update average soil evaporation and herbaceous transpiration
       for(int l=0;l<nlayers;l++) {
         EherbPools(c,l) = EherbVec_c[l];
-        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l]; 
+        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l];
       }
     }
   }
@@ -270,6 +277,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
       soilHydraulicOutput[l] += std::max(soilLayerExtract(c,l),0.0);
       ExtractionVec[l] += soilLayerExtract(c,l);
     }
+    // Rcpp::Rcout << "Layer " << l << " Input " << soilHydraulicInput[l] << " Output " << soilHydraulicOutput[l] << " extraction " << ExtractionVec[l] << "\n";
   }
   
   //STEP 5 - Soil flows
@@ -322,7 +330,9 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
         for(int l=0;l<nlayers;l++) {
           sourceSinkPoolVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
           if(l ==0) sourceSinkPoolVec[l] -= EsoilPools[c];
+          // Rcout << c << "" << l << " SS " << sourceSinkPoolVec[l] <<"\n";
         }
+        
         NumericVector sf_c = soilWaterBalance_inner(SWBcommunication, soil_c, soilFunctions,
                                                     RainfallInput, rainfallIntensity, Snowmelt, sourceSinkPoolVec, 
                                                     runon, lateralFlows, waterTableDepth,
@@ -345,6 +355,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
         NumericVector W_c = soil_c["W"];
         for(int l=0;l<nlayers;l++) {
           Wpool(c,l) = W_c[l];
+          // Rcout << c << "-" << l << " W " << W_c[l] <<"\n";
           Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
         }
       }
@@ -412,6 +423,7 @@ void spwbDay_basic(List internalCommunication, List x, NumericVector meteovec,
   }
 }
 
+// TO BE DELETED IN FUTURE VERSIONS
 // Soil water balance with Sperry or Sureau hydraulic and stomatal conductance models
 void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec, 
                       double latitude, double elevation, double slope, double aspect,
@@ -507,7 +519,7 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
   }
   
   //STEP 1 - Leaf Phenology: Adjusted leaf area index
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double tday = averageDaylightTemperature_c(tmin, tmax);
   double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0,  LAIcellexpanded = 0.0, Cm = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
     LAIcell += (LAIphe[c]+LAIdead[c]);
@@ -723,7 +735,7 @@ void spwbDay_advanced(List internalCommunication, List x, NumericVector meteovec
 }
 
 
-
+// TO BE DELETED IN FUTURE VERSIONS
 //' @rdname communication
 //' @keywords internal
 // [[Rcpp::export("spwb_day_inner")]]
@@ -751,8 +763,8 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   }
   if(NumericVector::is_na(rhmin)) {
     warning("Minimum relative humidity estimated from temperature range");
-    double vp_tmin = meteoland::utils_saturationVP(tmin);
-    double vp_tmax = meteoland::utils_saturationVP(tmax);
+    double vp_tmin = saturationVapourPressure_c(tmin);
+    double vp_tmax = saturationVapourPressure_c(tmax);
     rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
   }
   if(rhmin > rhmax) {
@@ -788,27 +800,27 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
   
   std::string c = as<std::string>(date[0]);
   int month = std::atoi(c.substr(5,2).c_str());
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = solarDeclination_c(J);
+  double solarConstant = solarConstant_c(J);
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
   double asprad = aspect * (M_PI/180.0);
   double slorad = slope * (M_PI/180.0);
-  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double photoperiod = daylength_c(latrad, 0.0, 0.0, delta);
+  double tday = averageDaylightTemperature_c(tmin, tmax);
   if(NumericVector::is_na(rad)) {
     warning("Estimating solar radiation");
-    double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-    rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+    double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+    rad = RDay_c(solarConstant, latrad, elevation,
                                               slorad, asprad, delta, tmax -tmin, tmax-tmin,
                                               vpa, prec);
   }
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  double pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
   //Derive doy from date  
-  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
   int doy = J - J0101+1;
   
   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
@@ -1004,23 +1016,92 @@ void spwbDay_inner(List internalCommunication, List x, CharacterVector date, Num
 //' @name spwb_day
 // [[Rcpp::export("spwb_day")]]
 List spwbDay(List x, CharacterVector date, NumericVector meteovec, 
-              double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
-              double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-              bool modifyInput = true) {
+             double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,  
+             double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+             bool modifyInput = true) {
+  
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
 
-   //Check if input version is lower than current medfate version. If so, try to complete fields
-   if(isLowerVersion(x)) spwbInputVersionUpdate(x);
-     
-   //Instance communication structures
-   List internalCommunication = instanceCommunicationStructures(x, "spwb");
-   
-   spwbDay_inner(internalCommunication, x, date, meteovec,
-                 latitude, elevation, slope, aspect,
-                 runon, lateralFlows, waterTableDepth,
-                 modifyInput);
-   
-   List modelOutput = copyModelOutput(internalCommunication, x, "spwb");
-   return(modelOutput);
- }
+  WeatherInputVector meteovec_c(meteovec);
+  ModelInput x_c(x);  
+
+  
+  
+  // Build communication structures
+  int nlayers = x_c.soil.getNlayers();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
+  WBCommunicationStructures WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+
+  // Prepare lateral flows
+  std::vector<double> lateralFlows_c(nlayers, 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
+  List l;
+  
+  if(x_c.control.transpirationMode=="Granier") {
+    //Initialises a result
+    BasicTranspiration_RESULT BTres(numCohorts, nlayers);
+    BasicSPWB_RESULT BSPWBres(BTres, nlayers);
+    // Calls simulation
+    wb_day_inner_c(BSPWBres, WBcomm, x_c, 
+                   as<std::string>(date[0]),
+                   meteovec_c, 
+                   latitude, elevation, slope, aspect,
+                   runon, 
+                   lateralFlows_c, waterTableDepth);
+    //Copies result
+    l = copySPWBResult_c(BSPWBres, x_c);
+    //Modifies input list, if required  
+    if(modifyInput) x_c.copyStateToList(x);
+  } else {
+    //Initialises a result
+    AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps);
+    AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
+    // Calls simulation
+    wb_day_inner_c(ASPWBres, WBcomm, x_c, 
+                   as<std::string>(date[0]),
+                   meteovec_c, 
+                   latitude, elevation, slope, aspect,
+                   runon, 
+                   lateralFlows_c, waterTableDepth);
+    //Copies result
+    l = copySPWBResult_c(ASPWBres, x_c);
+    //Modifies input list, if required  
+    if(modifyInput) {
+      x_c.copyStateToList(x); 
+    }
+  }
+
+  return(l);
+}
 
 
+// OLD SPWBDAY (NOT MAINTAINED)
+// [[Rcpp::export(".spwb_day_old")]]
+List spwbDay_old(List x, CharacterVector date, NumericVector meteovec,
+                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                 double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
+                 bool modifyInput = true) {
+
+  //Check if input version is lower than current medfate version. If so, try to complete fields
+  if(isLowerVersion(x)) spwbInputVersionUpdate(x);
+
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures(x, "spwb");
+
+  spwbDay_inner(internalCommunication, x, date, meteovec,
+                latitude, elevation, slope, aspect,
+                runon, lateralFlows, waterTableDepth,
+                modifyInput);
+
+  List modelOutput = copyModelOutput(internalCommunication, x, "spwb");
+  return(modelOutput);
+}

@@ -1,66 +1,32 @@
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
+#include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
 #include "communication_structures.h"
 #include "lightextinction_basic.h"
-#include "windextinction.h"
+#include "windextinction_c.h"
 #include "windKatul.h"
 #include "hydraulics.h"
-#include "biophysicsutils.h"
+#include "hydraulics_c.h"
 #include "phenology.h"
 #include "forestutils.h"
-#include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "carbon.h"
+#include "carbon_c.h"
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
+#include "soil_c.h"
+#include "transpiration_basic_c.h"
 #include "spwb.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
-struct ParamsVolume{
-  double leafpi0;
-  double leafeps;
-  double leafaf;
-  double stempi0;
-  double stemeps;
-  double stem_c;
-  double stem_d;
-  double stemaf;
-  double Vsapwood;
-  double Vleaf;
-  double LAI;
-  double LAIlive;
-}; 
 
-//Plant volume in l·m-2 ground = mm
-double plantVol(double plantPsi, ParamsVolume pars) {
-  
-  double leafrwc = tissueRelativeWaterContent(plantPsi, pars.leafpi0, pars.leafeps, 
-                                              plantPsi, pars.stem_c, pars.stem_d, 
-                                              pars.leafaf);
-  double stemrwc = tissueRelativeWaterContent(plantPsi, pars.stempi0, pars.stemeps, 
-                                              plantPsi, pars.stem_c, pars.stem_d, 
-                                              pars.stemaf);
-  return((pars.Vleaf * leafrwc * pars.LAI) + (pars.Vsapwood * stemrwc * pars.LAIlive));
-}
-
-
-double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double rootCrownPsi,
-                                ParamsVolume parsVol){
-  if(plantPsi==rootCrownPsi) return(plantPsi);
-  double V = plantVol(plantPsi, parsVol);
-  //More negative rootCrownPsi causes increased flow due to water being removed
-  double psiStep = rootCrownPsi - plantPsi;
-  double Vnew = plantVol(plantPsi + psiStep, parsVol);
-  while(std::abs(Vnew - V) > flowFromRoots) {
-    psiStep = psiStep/2.0;
-    Vnew = plantVol(plantPsi + psiStep, parsVol);
-  }
-  return(plantPsi+psiStep);
-}
-
-
+// TO BE DELETED WHEN EVERYTHING IS MOVED TO C++
 void transpirationBasic(List transpOutput, List x, NumericVector meteovec,  
                         double elevation, bool modifyInput = true) {
   
@@ -102,11 +68,11 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   double Patm = meteovec["Patm"];
   
   //Atmospheric pressure (if missing)
-  if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  if(NumericVector::is_na(Patm)) Patm = atmosphericPressure_c(elevation);
   
   //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-  double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
+  double vpatm = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+  double vpd = std::max(0.0, saturationVapourPressure_c((tmin+tmax)/2.0) - vpatm);
     
     
   // Canopy
@@ -131,10 +97,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   List RHOP;
-  NumericVector poolProportions(numCohorts);
   if(plantWaterPools) {
     RHOP = belowLayers["RHOP"];
-    poolProportions = belowdf["poolProportions"];
   }
   
   
@@ -273,7 +237,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   NumericVector Kunsat = conductivity(soil, soilFunctions, true);
   //Calculate soil water potential
   NumericVector psiSoil = psi(soil,soilFunctions);
-
+  
   
   NumericMatrix WaterM(numCohorts, nlayers);
   NumericMatrix KunsatM(numCohorts, nlayers);
@@ -315,8 +279,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     double rootCrownPsi = NA_REAL;
     
     //Cuticular transpiration    
-    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    double lvp_tmax = leafVapourPressure_c(tmax,  PlantPsi[c]);
+    double lvp_tmin = leafVapourPressure_c(tmin,  PlantPsi[c]);
     double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
     double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
     double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
@@ -327,7 +291,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       NumericVector Klc(nlayers);
       NumericVector Kunlc(nlayers);
       for(int l=0;l<nlayers;l++) {
-        Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
+        Klc[l] = Psi2K_c(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
         //Limit Mean Kl due to previous cavitation
         if(stemCavitationRecovery!="total") {
           Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
@@ -336,6 +300,8 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       }
       double sumKunlc = sum(Kunlc);
       double Klcmean = sum(Klc*V(c,_));
+      // Rcout<< c << " : TmaxCoh[c] = "<< TmaxCoh[c]<<  " sumKunlc = "  <<sumKunlc<<"  Klcmean = " << Klcmean<< "\n";
+      
       for(int l=0;l<nlayers;l++) {
         outputExtraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin_day)*(Kunlc[l]/sumKunlc);
       }
@@ -361,13 +327,14 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       for(int j = 0;j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
           RHOPcohV(j,l) = RHOPcohDyn(j,l)*V(c,l);
-          Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
+          Klc(j,l) = Psi2K_c(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
           //Limit Mean Kl due to previous cavitation
           if(stemCavitationRecovery!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
           Kunlc(j,l) = std::sqrt(KunsatM(j,l))*RHOPcohV(j,l);
         }
       }
       double sumKunlc = sum(Kunlc);
+      
       double Klcmean = sum(Klc*RHOPcohV);
       for(int l=0;l<nlayers;l++) {
         for(int j = 0;j<numCohorts;j++) {
@@ -381,18 +348,19 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
       // Rcout<< c << " : "<< RHOPcohV(c,0) << " " << RHOPcohV(c,1) << " " << RHOPcohV(c,2) << " " << RHOPcohV(c,3) << " " << rootCrownPsi<<"\n";
     }
 
-
-    double oldVol = plantVol(PlantPsi[c], parsVol); 
+    double oldVol = plantVol_c(PlantPsi[c], parsVol); 
     
     //Transpiration is the maximum of predicted extraction and cuticular transpiration
     double ext_sum = sum(outputExtraction(c,_));
     Eplant[c] = ext_sum;
+    // Rcout<< c << " : E = "  <<ext_sum<<"\n";
+    
     // PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
     //For deciduous species, make water potential follow soil during winter
     // if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;
     PlantPsi[c] = rootCrownPsi;
     // PlantPsi[c] = rootCrownPsi;
-    double newVol = plantVol(PlantPsi[c], parsVol);
+    double newVol = plantVol_c(PlantPsi[c], parsVol);
     
     double volDiff = newVol - oldVol;
     //Plant transpiration and water balance
@@ -410,21 +378,21 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
   //Plant water status (StemPLC, RWC, DDS)
   for(int c=0;c<numCohorts;c++) {
     if(stemCavitationRecovery!="total") {
-      StemPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
+      StemPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
     } else {
-      StemPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
+      StemPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
     }
     if(leafCavitationRecovery!="total") {
-      LeafPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
+      LeafPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
     } else {
-      LeafPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
+      LeafPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
     }
     
     //Relative water content and fuel moisture from plant water potential
-    RWClm[c] =  tissueRelativeWaterContent(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
+    RWClm[c] =  tissueRelativeWaterContent_c(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            LeafAF[c]);
-    RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
+    RWCsm[c] =  tissueRelativeWaterContent_c(PlantPsi[c], StemPI0[c], StemEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            StemAF[c]);
     // The fraction of leaves will decrease due to phenology or processes leading to defoliation
@@ -436,7 +404,7 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
     }
     
     //Daily drought stress from plant WP
-    DDS[c] = (1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
+    DDS[c] = (1.0 - Psi2K_c(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
     if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
       
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
@@ -469,11 +437,10 @@ void transpirationBasic(List transpOutput, List x, NumericVector meteovec,
             } else{
               HD[l] = -redAmount*ReceiverDiff[l]/sum(ReceiverDiff);
             }
-            // Rcout<<" "<<l<<" "<<HD[l];
+            // Rcout<< c <<" "<<l<<" "<<HD[l]<<"\n";;
             outputExtraction(c,l) += HD[l];
           }
         }
-        // Rcout<< "\n";
       }
     } else {
       for(int c=0;c<numCohorts;c++) {
@@ -736,7 +703,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
                           double latitude, double elevation, double slope, double aspect, 
                           bool modifyInput = true) {
 
-
+  // Rcpp::Rcout << "In transpiration Granier\n";
   List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
@@ -764,40 +731,58 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   
   CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
 
   double tmin = MinTemperature[day-1];
   double tmax = MaxTemperature[day-1];
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double tday = averageDaylightTemperature_c(tmin, tmax);
   double rhmax = MaxRelativeHumidity[day-1];
   double rhmin = MinRelativeHumidity[day-1];
   double rad = Radiation[day-1];
   double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
 
-  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+  double pet = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
                              tmin, tmax, rhmin, rhmax, rad, wind);
   
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
-  NumericVector meteovec = NumericVector::create(
-    Named("tmax") = tmax,
-    Named("tmin") = tmin,
-    Named("rhmin") = rhmin, 
-    Named("rhmax") = rhmax,
-    Named("tday") = tday, 
-    Named("pet") = pet,
-    Named("Catm") = Catm,
-    Named("Patm") = Patm[day-1]);
   
+  WeatherInputVector meteovec;
+  meteovec.tmax = tmax,
+  meteovec.tmin = tmin,
+  meteovec.rhmin = rhmin, 
+  meteovec.rhmax = rhmax,
+  meteovec.tday = tday, 
+  meteovec.pet = pet,
+  meteovec.Catm = Catm,
+  meteovec.Patm = Patm[day-1];
+  
+  // Rcpp::Rcout << "Building input\n";
+  ModelInput x_c = ModelInput(x);
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
-  int nlayers = soil.nrow();
-  int numCohorts = cohorts.nrow();
-  List transpOutput = basicTranspirationCommunicationOutput(numCohorts, nlayers);
-  transpirationBasic(transpOutput, x, meteovec, elevation, modifyInput);
+  int nlayers = x_c.soil.getNlayers();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ncanlayers = x_c.canopy.zlow.size();
+  
+  //Create comunication structures
+  BasicTranspiration_RESULT BTres = BasicTranspiration_RESULT(numCohorts, nlayers);
+  
+  BasicTranspiration_COMM BTcomm = BasicTranspiration_COMM(numCohorts, ncanlayers, nlayers);
+  
+  //Perform simulation
+  // Rcpp::Rcout << "Transpiration\n";
+  transpirationBasic_c(BTres, BTcomm, x_c, 
+                       meteovec, elevation);
 
-  List transpBasic = copyBasicTranspirationOutput(transpOutput, x);
+  //Copy output to Rcpp structures
+  // Rcpp::Rcout << "Copying results\n";
+  List transpBasic = copyBasicTranspirationResult_c(BTres, x_c);
     
+  if(modifyInput) {
+    // Modify all state variables of input object from structure
+    x_c.copyStateToList(x);
+  }
   return(transpBasic);
 } 
 

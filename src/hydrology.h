@@ -1,20 +1,16 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef HYDROLOGY_H
 #define HYDROLOGY_H
 #endif
 using namespace Rcpp;
 
-double soilEvaporationAmount(double DEF,double PETs, double Gsoil);
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                       DataFrame soil, String soilFunctions, bool modifySoil = true);
 double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true);
 
-
-double infiltrationBoughton(double input, double Ssoil);
-double infitrationGreenAmpt(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, 
                           String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0);
 NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVector macro, 
@@ -22,16 +18,16 @@ NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVec
 
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth);
 
-double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05);
-double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05);
-
-double snowMelt(double tday, double rad, double LgroundSWR, double elevation);
-
 NumericVector waterInputs(List x, 
                           double prec, double rainfallIntensity,
                           double pet, double tday, double rad, double elevation,
                           double Cm, double LgroundPAR, double LgroundSWR, 
                           bool modifyInput = true);
+NumericVector agricultureWaterInputs(List x, 
+                                     double prec, double tday, double rad, double elevation,
+                                     double LgroundSWR, 
+                                     bool modifyInput = true);
+
 NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, String soilFunctions, 
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,

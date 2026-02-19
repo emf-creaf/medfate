@@ -1,8 +1,11 @@
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "photosynthesis.h"
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "soil.h"
 #include "tissuemoisture.h"
 using namespace Rcpp;
@@ -101,7 +104,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
     maxdEdp = std::max(maxdEdp, dEdP[i]);
   }
   nsteps = valid;
-  // Rcout<< valid<< " "<< maxdEdp << " "<<mindEdp<< " "<< mindEdp/maxdEdp<<"\n";
+  // Rcout<< " valid " << valid<< " maxdEdp "<< maxdEdp << " "<<mindEdp<< " mindEdp "<< mindEdp/maxdEdp<<"\n";
   // initial pos cannot be over the valid steps
   initialPos = std::min(initialPos, nsteps-1);
   
@@ -213,30 +216,8 @@ List profitMaximization2(List supplyFunction, int initialPos,
 //' @seealso
 //' \code{\link{transp_transpirationSperry}}, \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 //' 
-//' @examples
-//' #Load example daily meteorological data
-//' data(examplemeteo)
-//' 
-//' #Load example plot plant data
-//' data(exampleforest)
-//' 
-//' #Default species parameterization
-//' data(SpParamsMED)
-//' 
-//' #Define soil with default soil params (4 layers)
-//' examplesoil <- defaultSoilParams(4)
-//' 
-//' #Initialize control parameters
-//' control <- defaultControl(transpirationMode="Sperry")
-//' 
-//' #Initialize input
-//' x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-//' 
-//' # Stomatal VPD curve and chosen value for the 12th time step at day 100
-//' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
-//'                               latitude = 41.82592, elevation = 100, type="VPD")
-//'  
 //' @name transp_stomatalregulation
+//' @keywords internal
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax) {
   NumericVector supplyE = supplyFunction["E"];
@@ -550,22 +531,24 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         double Q10_1_gmin = control["Q10_1_gmin"]; 
         double Q10_2_gmin = control["Q10_2_gmin"];
         //Here canopy air temperature is used instead of Tleaf, because leaf energy balance has not been closed
-        double gmin_SL = gmin(Tair[iLayerSunlit[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        double gmin_SH = gmin(Tair[iLayerShade[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        // Rcout<< gmin_SL<< " " << gmin_SH << " " << Gswmax[c]<<"\n";
+        double gmin_SL = gmin_c(Tair[iLayerSunlit[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        double gmin_SH = gmin_c(Tair[iLayerShade[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        // Rcpp::Rcout<< " gmin_SL "<< gmin_SL<< " gmin_SH " << gmin_SH << " " << Gswmax[c]<<"\n";
         //Photosynthesis function for sunlit and shade leaves
         List PMSunlit = profitMaximization2(sFunctionAbove, iPMSunlit[c], 
                                             Cair[iLayerSunlit[c]], Patm,
                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
-                                            SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux(PAR_SL(c,n)), 
+                                            SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda), 
                                             Vmax298_SL(c,n), Jmax298_SL(c,n), leafWidth[c], LAI_SL(c,n),
                                             gmin_SL, Gswmax[c]);
         NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
         iPMSunlit[c] = PMSunlit["iMaxProfit"];
+        // Rcpp::Rcout << c << " / " << n << " iPMSunlit " << iPMSunlit[c] <<"\n";
+        
         List PMShade = profitMaximization2(sFunctionAbove, iPMShade[c], 
                                            Cair[iLayerShade[c]], Patm,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
-                                           SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
+                                           SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda), 
                                            Vmax298_SH(c,n), Jmax298_SH(c,n), leafWidth[c], LAI_SH(c,n),
                                            gmin_SH, Gswmax[c]);    
         if(!sunlitShade) PMShade = PMSunlit;
@@ -581,14 +564,14 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], 
                                                             zWind[iLayerSunlit[c]], 
                                                             SWR_SL(c,n), LWR_SL(c,n), 
-                                                            irradianceToPhotonFlux(PAR_SL(c,n)), 
+                                                            irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda), 
                                                             Vmax298_SL(c,n), Jmax298_SL(c,n), 
                                                             leafWidth[c], LAI_SL(c,n));
             outPhotoShade[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerShade[c]], Patm,
                                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
                                                            zWind[iLayerShade[c]], 
                                                            SWR_SH(c,n), LWR_SH(c,n), 
-                                                           irradianceToPhotonFlux(PAR_SH(c,n)),
+                                                           irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda),
                                                            Vmax298_SH(c,n), Jmax298_SH(c,n), 
                                                            leafWidth[c], LAI_SH(c,n));
             outPMSunlit[c] = PMSunlit;
@@ -638,6 +621,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
             iPM = k;
           }
         }
+        // Rcpp::Rcout<< c << " / " << n << " iPM " << iPM <<"\n";
         if(iPM==-1) {
           Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit[c]="<< iPMSunlit[c]<< " fittedE[iPMSunlit[c]]="<<fittedE[iPMSunlit[c]]<<" iPMShade[c]="<<iPMShade[c]<<" fittedE[iPMShade[c]]="<<fittedE[iPMShade[c]]<<"\n";
           stop("");
@@ -653,6 +637,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         
         //Scale from instantaneous flow to water volume in the time step
         Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep; 
+        // Rcpp::Rcout<< c << " / " << n << " E: "<< Einst(c,n) << "\n";
         
         NumericVector Esoilcn(nlayerscon[c],0.0);
         NumericVector ElayersVEC(nlayerscon[c],0.0);
@@ -683,16 +668,16 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         // Update the leaf and stem PLC
         if(stemCavitationEffects) {
           if(stemCavitationRecovery!="total") {
-            StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+            StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance_c(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
           } else { //Immediate refilling
-            StemPLCVEC[c] = 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+            StemPLCVEC[c] = 1.0 - xylemConductance_c(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
           }
         }
         if(leafCavitationEffects) {
           if(leafCavitationRecovery!="total") {
-            LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
+            LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance_c(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
           } else { //Immediate refilling
-            LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
+            LeafPLCVEC[c] = 1.0 - xylemConductance_c(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
           }
         }
         

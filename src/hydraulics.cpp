@@ -1,142 +1,35 @@
-#include "Rcpp.h"
+#include "RcppArmadillo.h"
 #include "root.h"
 #include "biophysicsutils.h"
-#include "tissuemoisture.h"
-#include "incgamma.h"
+#include "biophysicsutils_c.h"
+#include "tissuemoisture_c.h"
+#include "hydraulics_c.h"
+#include "incgamma_c.h"
 #include <math.h>
 
 
 using namespace Rcpp;
 using namespace std;
 
-double const maxPsi = -0.000001;
-double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 
-//' Hydraulic confuctance functions
-//' 
-//' Set of functions used in the calculation of soil and plant hydraulic conductance.
-//'
-//' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
-//' @param K Whole-plant relative conductance (0-1).
-//' @param psi_extract Soil water potential (in MPa) corresponding to 50% whole-plant relative transpiration.
-//' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
-//' @param v Proportion of fine roots within each soil layer.
-//' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-//' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-//' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
-//' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
-//' @param kxylem Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).
-//' @param pCrit Proportion of maximum conductance considered critical for hydraulic functioning.
-//' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50%, 88% and 12% percent conductance loss.
-//' @param temp Temperature (in degrees Celsius).
-//' 
-//' @details Details of plant hydraulic models are given the medfate book. 
-//' Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
-//' 
-//' @return
-//' Values returned for each function are:
-//' \itemize{
-//'   \item{\code{hydraulics_psi2K}: Whole-plant relative conductance (0-1).}
-//'   \item{\code{hydraulics_K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics_psi2K()}).}
-//'   \item{\code{hydraulics_averagePsi}: The average water potential (in MPa) across soil layers.}
-//'   \item{\code{hydraulics_vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
-//'   \item{\code{hydraulics_xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
-//'   \item{\code{hydraulics_xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
-//'   \item{\code{hydraulics_psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
-//' }
-//' 
-//' @references
-//' Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell and Environment 21:347–359.
-//' 
-//' Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
-//' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' @seealso
-//' \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
-//' 
-//' @examples
-//' 
-//' #Manual display of vulnerability curve
-//' kstemmax = 4 # in mmol·m-2·s-1·MPa-1
-//' stemc = 3 
-//' stemd = -4 # in MPa
-//' psiVec = seq(-0.1, -7.0, by =-0.01)
-//' kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
-//' plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
-//'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
-//' 
-//' #Load example dataset
-//' data(exampleforest)
-//' 
-//' #Default species parameterization
-//' data(SpParamsMED)
-//' 
-//' #Initialize soil with default soil params (4 layers)
-//' examplesoil <- defaultSoilParams(4)
-//' 
-//' #Initialize control parameters
-//' control <- defaultControl("Granier")
-//' 
-//' #Switch to 'Sperry' transpiration mode
-//' control <- defaultControl("Sperry")
-//' 
-//' #Initialize input
-//' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-//' 
-//' #Leaf vulnerability curves
-//' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
-//' 
-//' #Stem vulnerability curves
-//' hydraulics_vulnerabilityCurvePlot(x, type="stem")
-//'              
-//' @name hydraulics_conductancefunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_psi2K")]]
-double Psi2K(double psi, double psi_extract, double exp_extract = 3.0) {
-  return(exp(-0.6931472*pow(std::abs(psi/psi_extract),exp_extract)));
-}
 NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract = 3.0) {
   int n = psi_extract.size();
   NumericVector k(n);
   for(int i=0; i<n; i++) {
-    k[i] = Psi2K(psi,psi_extract[i],exp_extract);
+    k[i] = Psi2K_c(psi,psi_extract[i],exp_extract);
   }
   return k;
 }
 
-/**
- * Inverse of the whole-plant conductance function. Used to obtain the 'average' soil water
- * potential perceived by each plant cohort.
- */
-//' @rdname hydraulics_conductancefunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_K2Psi")]]
-double K2Psi(double K, double psi_extract, double exp_extract = 3.0) {
-  double psi = psi_extract*pow(log(K)/(-0.6931472),1.0/exp_extract);
-  if(psi>0.0) psi = -psi; //Usually psi_extr is a positive number
-  if(psi< -40.0) psi = -40.0; //Minimum value
-  return(psi);
-}
 NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extract = 3.0) {
   int n = psi_extract.size();
   NumericVector psi(n);
   for(int i=0; i<n; i++) {
-    psi[i] = K2Psi(K[i], psi_extract[i], exp_extract);
+    psi[i] = K2Psi_c(K[i], psi_extract[i], exp_extract);
   }
   return psi;
 }
 
-double gmin(double leafTemperature, double gmin_20, 
-            double TPhase, double Q10_1, double Q10_2) {
-  double gmin = NA_REAL;
-  if (leafTemperature<= TPhase) {
-    gmin = gmin_20 * pow(Q10_1,(leafTemperature - 20.0) / 10.0);
-  } else if (leafTemperature > TPhase) {
-    gmin = gmin_20 * pow(Q10_1, (TPhase - 20.0) / 10.0) * pow(Q10_2, (leafTemperature- TPhase) / 10.0);
-  }
-  return(gmin);
-}
 
 
 //' @rdname hydraulics_conductancefunctions
@@ -160,52 +53,7 @@ double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double exp_extr
   return(psires);
 }
 
-//' @rdname hydraulics_conductancefunctions
-// [[Rcpp::export("hydraulics_xylemConductance")]]
-double xylemConductance(double psi, double kxylemmax, double c, double d) {
-  if(psi>=0.0) return(kxylemmax);
-  return(kxylemmax*exp(-pow(psi/d,c)));
-}
 
-//' @rdname hydraulics_conductancefunctions
-// [[Rcpp::export("hydraulics_xylemConductanceSigmoid")]]
-double xylemConductanceSigmoid(double psi, double kxylemmax, double P50, double slope){
-  if(psi>=0.0) return(kxylemmax);
-  return (kxylemmax * (1.0 - 1.0/(1.0 + exp(slope / 25.0 * (psi - P50)))));
-}
-
-//' @rdname hydraulics_conductancefunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_xylemPsi")]]
-double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
-  double psi = d*pow(-log(kxylem/kxylemmax),1.0/c);
-  if(psi< -40.0) psi = -40.0; //Minimum value
-  return(psi);
-}
-
-//' @rdname hydraulics_conductancefunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_psiCrit")]]
-double psiCrit(double c, double d, double pCrit = 0.001) {
-  return(d * pow(-log(pCrit), 1.0/c));
-}
-
-/**
- * Van genuchten-mualem conductance equation (m = 1 - 1/n; l = 0.5)
- */
-//' @rdname hydraulics_conductancefunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_vanGenuchtenConductance")]]
-double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha) {
-  double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
-  return(krhizomax*pow(v,(n-1.0)/(2.0*n))*pow(pow((1.0-v),(n-1.0)/n)-1.0,2.0));
-}
-
-//' @rdname hydraulics_conductancefunctions
-// [[Rcpp::export("hydraulics_correctConductanceForViscosity")]]
-double correctConductanceForViscosity(double kxylem, double temp) {
-  return(kxylem/waterDynamicViscosity(temp));
-}
 
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal
@@ -225,294 +73,6 @@ NumericVector psi2Weibull(double psi50, double psi88 = NA_REAL, double psi12 = N
   NumericVector par = NumericVector::create(c,d);
   par.attr("names") = CharacterVector::create("c","d");
   return(par);
-}
-
-
-// [[Rcpp::export(".Egamma")]]
-double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 0.0) {
-  if(psi>0.0) return(-Egamma(-psi, kxylemmax,c,d,0.0));
-  else if(psi==0.0) return(0.0);
-  double h = 1.0/c;
-  double z = pow(psi/d,c);
-  NumericVector pq = incgam(h,z);
-  double g = tgamma(h)*pq[0]; //Upper incomplete gamma, without the normalizing factor
-  double E = kxylemmax*(-d/c)*g;
-  if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
-    if(psiCav < psi) {
-      E = xylemConductance(psiCav,kxylemmax,c,d)*(-psi); //square integral
-    } else {
-      NumericVector pq = incgam(h,pow(psiCav/d,c));
-      double Epsimin = kxylemmax*(-d/c)*tgamma(h)*pq[0];
-      E = E - Epsimin + xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
-    }
-  }
-  return(E);
-}
-
-// [[Rcpp::export(".Egammainv")]]
-double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav = 0.0) {
-  if(psiCav<0.0) {
-    double Eq = xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav);
-    if(Eg > Eq) {
-      double Ec = Egamma(psiCav, kxylemmax, c, d) - Eq;
-      Eg = Eg + Ec; 
-    } else {
-      return(-1.0*(Eg/xylemConductance(psiCav,kxylemmax,c,d)));
-    }
-  }
-  double h = 1.0/c;
-  double g = (-c/d)*(Eg/kxylemmax);
-  double p = g/tgamma(h);
-  double q = 1.0 - p;//Upper incomplete gamma, without the normalizing factor
-  double x = invincgam(h,p,q);
-  double psi = d*pow(x, 1.0/c);
-  return(psi);
-}
-
-/*
- * Integral of the xylem vulnerability curve
- */
-//' Hydraulic supply functions
-//' 
-//' Set of functions used in the implementation of hydraulic supply functions (Sperry and Love 2015).
-//'
-//' @param v Proportion of fine roots within each soil layer.
-//' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-//' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-//' @param kleafmax Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-//' @param kstemmax Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
-//' @param E Flow per surface unit.
-//' @param Emax Maximum flow per surface unit.
-//' @param Erootcrown Flow per surface unit at the root crown.
-//' @param psiDownstream Water potential upstream (in MPa).
-//' @param psiUpstream Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.
-//' @param psiCav Minimum water potential (in MPa) experienced (for irreversible cavitation).
-//' @param minFlow Minimum flow in supply function.
-//' @param psiPlant Plant water potential (in MPa).
-//' @param hydraulicNetwork List with the hydraulic characteristics of nodes in the hydraulic network.
-//' @param psiSoil Soil water potential (in MPa). A scalar or a vector depending on the function.
-//' @param psiRhizo Soil water potential (in MPa) in the rhizosphere (root surface).
-//' @param psiRootCrown Soil water potential (in MPa) at the root crown.
-//' @param psiStep Water potential precision (in MPa).
-//' @param psiIni Vector of initial water potential values (in MPa).
-//' @param psiMax Minimum (maximum in absolute value) water potential to be considered (in MPa).
-//' @param pCrit Critical water potential (in MPa).
-//' @param dE Increment of flow per surface unit.
-//' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
-//' @param stemc,stemd Parameters of the Weibull function for stems (stem xylem vulnerability curve).
-//' @param leafc,leafd Parameters of the Weibull function for leaves (leaf vulnerability curve).
-//' @param n,alpha,l Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
-//' @param allowNegativeFlux A boolean to indicate whether negative flux (i.e. from plant to soil) is allowed.
-//' @param maxNsteps Maximum number of steps in the construction of supply functions.
-//' 
-//' @details 
-//' Function \code{hydraulics_supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
-//' 
-//' @return
-//' Values returned for each function are:
-//' \itemize{
-//'   \item{\code{hydraulics_E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
-//'   \item{\code{hydraulics_E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
-//'   \item{\code{hydraulics_E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
-//'   \item{\code{hydraulics_E2psiNetwork}: The rhizosphere, root crown and plant (leaf water potential (in MPa) corresponding to the input flow, according to the vulnerability curves of rhizosphere, root and stem elements in a network.}
-//'   \item{\code{hydraulics_Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
-//'   \item{\code{hydraulics_EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
-//'   \item{\code{hydraulics_EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
-//'   \item{\code{hydraulics_supplyFunctionOneXylem}, \code{hydraulics_supplyFunctionTwoElements} and
-//'     \code{hydraulics_supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
-//'     \itemize{
-//'       \item{\code{E}: Flow values (supply values).}
-//'       \item{\code{FittedE}: Fitted flow values (for \code{hydraulics_supplyFunctionTwoElements}).}
-//'       \item{\code{Elayers}: Flow values across the roots of each soil layer (only for \code{hydraulics_supplyFunctionNetwork}).}
-//'       \item{\code{PsiRhizo}: Water potential values at the root surface (only for \code{hydraulics_supplyFunctionNetwork}).}
-//'       \item{\code{PsiRoot}: Water potential values inside the root crown (not for \code{hydraulics_supplyFunctionOneXylem}).}
-//'       \item{\code{PsiPlant}: Water potential values at the canopy (leaf).}
-//'       \item{\code{dEdP}: Derivatives of the supply function.}
-//'     }
-//'   }
-//'   \item{\code{hydraulics_supplyFunctionPlot}: If \code{draw = FALSE} a list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
-//'   \item{\code{hydraulics_regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
-//'   \item{\code{hydraulics_regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
-//' }
-//' 
-//' @references
-//' Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell and Environment 21:347–359.
-//' 
-//' Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
-//' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' @seealso
-//' \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
-//' 
-//' @examples
-//' kstemmax = 4 # in mmol·m-2·s-1·MPa-1
-//' stemc = 3 
-//' stemd = -4 # in MPa
-//' psiVec = seq(-0.1, -7.0, by =-0.01)
-//' 
-//' #Vulnerability curve
-//' kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
-//' plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
-//'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
-//' 
-//' @name hydraulics_supplyfunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_EXylem")]]
-double EXylem(double psiPlant, double psiUpstream, 
-              double kxylemmax, double c, double d, 
-              bool allowNegativeFlux = true, double psiCav = 0.0) {
-  if((psiPlant > psiUpstream) && !allowNegativeFlux) throw std::range_error("Downstream potential larger (less negative) than upstream potential");
-  return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
-}
-
-//' @rdname hydraulics_supplyfunctions
-// [[Rcpp::export("hydraulics_E2psiXylem")]]
-double E2psiXylem(double E, double psiUpstream, 
-                  double kxylemmax, double c, double d, double psiCav = 0.0) {
-  if(E==0) return(psiUpstream);
-  double Eg = E + Egamma(psiUpstream, kxylemmax, c,d, psiCav);
-  return(Egammainv(Eg, kxylemmax, c, d, psiCav));
-}
-
-//' @rdname hydraulics_supplyfunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_E2psiXylemUp")]]
-double E2psiXylemUp(double E, double psiDownstream, 
-                  double kxylemmax, double c, double d, double psiCav = 0.0) {
-  if(E==0) return(psiDownstream);
-  double Eg = Egamma(psiDownstream, kxylemmax, c,d, psiCav) - E;
-  return(Egammainv(Eg, kxylemmax, c, d, psiCav));
-}
-
-/**
- * Analytical approximation to the integral of van genuchten model
- * Van Lier QDJ, Neto DD, Metselaar K (2009) Modeling of transpiration reduction in van genuchten-mualem type soils. 
- * Water Resour Res 45:1–9. doi: 10.1029/2008WR006938
- */
-//' @rdname hydraulics_supplyfunctions
-// [[Rcpp::export("hydraulics_EVanGenuchten")]]
-double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, 
-                     double n, double alpha, double l = 0.5) {
-  double m = 1.0 - (1.0/n);
-  double thetaR = pow(1.0+pow(alpha*std::abs(psiRhizo),n),-1.0*m);
-  double thetaS = pow(1.0+pow(alpha*std::abs(psiSoil),n),-1.0*m);
-  double a1 = (1.0/m) + l + 1.0;
-  double a2 = (2.0/m) + l + 1.0;
-  double a3 = (3.0/m) + l + 1.0;
-  double phi = m*(l+1.0);
-  double B1 = ((1.0+phi)*(2.0 + m))/(3.0*(2.0+phi));
-  double B2 = ((2.0+phi)*(3.0 + m))/(4.0*(3.0+phi));
-  double B3 = ((1.0+phi)*(2.0 - m))/(3.0*(2.0+phi));
-  double B4 = ((2.0+phi)*(3.0 - m))/(4.0*(3.0+phi));
-  
-  double GammaR1 = (2.0*m*pow(thetaR, a1));
-  double GammaS1 = (2.0*m*pow(thetaS, a1));
-  double Gamma2 = ((1.0 + m)*B1 - (1.0-m)*B3);
-  double Gamma3 = ((1.0 + m)*B1*B2 - (1.0-m)*B3*B4);
-  double GammaR = GammaR1 + Gamma2*pow(thetaR, a2) + Gamma3*pow(thetaR, a3);
-  double GammaS = GammaS1 + Gamma2*pow(thetaS, a2) + Gamma3*pow(thetaS, a3);
-  double E = ((m*(1.0-m)*krhizomax)/(2.0*alpha*(phi+1)))*(GammaR - GammaS);
-  return(-E);
-}
-// Numerical integral
-// double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double psiStep = -0.001, double psiTol = 0.0001, bool allowNegativeFlux = true) {
-//   if((psiRhizo>psiSoil) && !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
-//   bool reverse = false;
-//   if(psiRhizo>psiSoil) reverse = true;
-//   if(reverse) {
-//     double tmp = psiSoil;
-//     psiSoil = psiRhizo;
-//     psiRhizo = tmp;
-//   }
-//   double psi = psiSoil;
-//   double vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
-//   double E = 0.0, vgPrev = vg;
-//   psiStep = std::max(psiStep, (psiRhizo-psiSoil)/10.0); //Check that step is not too large
-//   do {
-//     psi = psi + psiStep;
-//     if(psi>psiRhizo) {
-//       vgPrev = vg;
-//       vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
-//       E += ((vg+vgPrev)/2.0)*std::abs(psiStep);
-//     } else {
-//       psi = psi - psiStep; //retrocedeix
-//       psiStep = psiStep/2.0; //canvia pas
-//     }
-//   } while (std::abs(psi-psiRhizo)>psiTol);
-//   if(reverse) E = -E;
-//   return(E);
-// }
-
-//' @rdname hydraulics_supplyfunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_ECrit")]]
-double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
-  return(EXylem(psiCrit(c,d, pCrit), psiUpstream, kxylemmax, c, d));
-}
-
-
-
-/*
- * Calculates drop in water potential along a segment with a given flow
- */
-// double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
-//                    double psiStep = -0.0001, double psiMax = -10.0) {
-//   // if(E<0.0) stop("E has to be positive");
-//   if(E==0) return(psiUpstream);
-//   double psi = psiUpstream;
-//   double k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
-//   double Eg = 0.0;
-//   double psiPrev = psi;
-//   double kprev = k;
-//   if(E<0.0) psiStep = -psiStep;
-//   while(std::abs(Eg)<std::abs(E)) {
-//     psiPrev = psi;
-//     kprev = k;
-//     psi = psi + psiStep;
-//     k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
-//     Eg = Eg + (-1.0*psiStep)*((kprev+k)/2.0);
-//     if(psi<psiMax) return(NA_REAL);
-//     if(NumericVector::is_na(Eg)) return(NA_REAL);
-//   }
-//   return(std::min(0.0,(psiPrev+psi)/2.0));
-// }
-
-
-
-//' @rdname hydraulics_supplyfunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_E2psiVanGenuchten")]]
-double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, double alpha, 
-                         double psiStep = -0.0001, double psiMax = -10.0) {
-  if(E<0.0) stop("E has to be positive");
-  if(E==0) return(psiSoil);
-  double psi = psiSoil;
-  double psiPrev = psi;
-  double vgPrev = vanGenuchtenConductance(psi, krhizomax, n, alpha);
-  double vg = vgPrev;
-  double Eg = 0.0;
-  while(Eg<E) {
-    psiPrev = psi;
-    vgPrev = vg;
-    psi = psi + psiStep;
-    vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
-    Eg = Eg + ((vg+vgPrev)/2.0)*std::abs(psiStep);
-    if(psi<psiMax) return(NA_REAL);
-  }
-  return(psiPrev);
-}
-
-//' @rdname hydraulics_supplyfunctions
-//' @keywords internal
-// [[Rcpp::export("hydraulics_E2psiTwoElements")]]
-double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
-                        double psiStep = -0.0001, double psiMax = -10.0) {
-  if(E<0.0) stop("E has to be positive");
-  if(E==0) return(psiSoil);
-  double psiRoot = E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, psiStep, psiMax);
-  if(NumericVector::is_na(psiRoot)) return(NA_REAL);
-  return(E2psiXylem(E, psiRoot, kxylemmax, c, d, psiCav));
 }
 
 
@@ -591,6 +151,7 @@ List E2psiBelowground(double E, List hydraulicNetwork,
   int ntrial = numericParams["ntrial"];
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
+  // Rcpp::Rcout<< "parameters: " << ntrial << " " << psiTol << " " << ETol << "\n";
   
   NumericVector psiSoil = hydraulicNetwork["psisoil"]; 
   NumericVector krhizomax = hydraulicNetwork["krhizomax"]; 
@@ -612,13 +173,14 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     for(int l=0;l<nlayers;l++) {
       x[l] =psiSoil[l];
       minPsi = std::min(minPsi, psiSoil[l]);
-      // Rcout<<"("<<x[l]<<") ";
     }
     x[nlayers] = minPsi;
-    // Rcout<<"("<<x[nlayers]<<")\n";
-    
+
   }
-  
+  // for(int l=0;l<nlayers +1;l++) {
+  //   Rcpp::Rcout << x[l]<<" ";
+  // }
+  // Rcpp::Rcout<<"\n";
   //Flow across root xylem and rhizosphere elements
   NumericVector Eroot(nlayers), Erhizo(nlayers);
   
@@ -633,11 +195,10 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     Esum = 0.0;
     bool stop = false;
     for(int l=0;l<nlayers;l++) {
-      Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd, true, 0.0);
-      // Rcout<<"("<<Eroot[l]<<"\n";
-      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
+      Eroot[l] = EXylem_c(x[nlayers], x[l], krootmax[l], rootc, rootd, true, 0.0);
+      Erhizo[l] = EVanGenuchten_c(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
       fvec[l] = Erhizo[l] - Eroot[l];
-      // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
+      // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" psiSoil"<<l <<": "<< psiSoil[l]<< " krhizo max"<<l<<": "<< krhizomax[l]<< " nsoil "<< nsoil[l] << " alphasoil "<< alphasoil[l] << " kroot max"<<l<<": "<< krootmax[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
       // Rcout<<"der psi_l "<<d_psi_l<<"der Eroot psi_l "<<d_Eroot_psi_l<<"  der psi_root "<<d_psi_root<<"\n";
       Esum +=Eroot[l];
     }
@@ -647,17 +208,17 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     for(int l1=0;l1<nlayers;l1++) { //funcio
       for(int l2=0;l2<nlayers;l2++) { //derivada
         if(l1==l2) {
-          fjac(l1,l2) = -vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
+          fjac(l1,l2) = -vanGenuchtenConductance_c(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance_c(x[l2], krootmax[l2], rootc, rootd);  
         }
         else fjac(l1,l2) = 0.0;
       }
     }
     fjac(nlayers,nlayers) = 0.0;
     for(int l=0;l<nlayers;l++) { 
-      fjac(l,nlayers) = xylemConductance(x[nlayers], krootmax[l], rootc, rootd); //funcio l derivada psi_rootcrown
-      fjac(nlayers,l) = xylemConductance(x[l], krootmax[l], rootc, rootd);//funcio nlayers derivada psi_l
+      fjac(l,nlayers) = xylemConductance_c(x[nlayers], krootmax[l], rootc, rootd); //funcio l derivada psi_rootcrown
+      fjac(nlayers,l) = xylemConductance_c(x[l], krootmax[l], rootc, rootd);//funcio nlayers derivada psi_l
       // funcio nlayers derivada psi_rootcrown
-      fjac(nlayers,nlayers) +=-xylemConductance(x[nlayers], krootmax[l], rootc, rootd);
+      fjac(nlayers,nlayers) +=-xylemConductance_c(x[nlayers], krootmax[l], rootc, rootd);
     }
     // for(int l1=0;l1<=nlayers;l1++) { //funcio
     //   for(int l2=0;l2<=nlayers;l2++) { //derivada
@@ -668,6 +229,7 @@ List E2psiBelowground(double E, List hydraulicNetwork,
     //Check function convergence
     double errf = 0.0;
     for(int fi=0;fi<=nlayers;fi++) errf += std::abs(fvec[fi]);
+    // Rcpp::Rcout<< "ERRF: "<< errf<<"\n";
     if(errf<=ETol) break;
     //Right-hand side of linear equations
     for(int fi=0;fi<=nlayers;fi++) p[fi] = -fvec[fi];
@@ -705,7 +267,7 @@ List E2psiBelowground(double E, List hydraulicNetwork,
   //Calculate final flows
   Esum = 0.0;
   for(int l=0;l<(nlayers-1);l++) {
-    Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
+    Erhizo[l] = EVanGenuchten_c(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
     Esum += Erhizo[l];
   }
   Erhizo[nlayers-1] = E - Esum; //Define as difference to match input
@@ -728,13 +290,17 @@ List E2psiAboveground(double E, double psiRootCrown,
   double PLCleaf = hydraulicNetwork["PLCleaf"];
   bool stemCavitationEffects = hydraulicNetwork["stemCavitationEffects"];
   bool leafCavitationEffects = hydraulicNetwork["leafCavitationEffects"];
-    
+  // Rcpp::Rcout<< " Stem PLC " << PLCstem << " Leaf PLC " << PLCleaf<< "\n";
+  // Rcpp::Rcout<< " kstemmax " << kstemmax << " kleafmax " << kleafmax<< "\n";
+  // Rcpp::Rcout<< " stem c " << stemc << " stem d " << stemd<< "\n";
+  // Rcpp::Rcout<< " leaf c " << leafc << " leaf d " << leafd<< "\n";
+  
   double psiPLCStem =  0.0;
-  if(stemCavitationEffects) psiPLCStem = apoplasticWaterPotential(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
-  double psiStem = E2psiXylem(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
+  if(stemCavitationEffects) psiPLCStem = apoplasticWaterPotential_c(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
+  double psiStem = E2psiXylem_c(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
   double psiPLCLeaf= 0.0;
-  if(leafCavitationEffects) psiPLCLeaf = apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
-  double psiLeaf = E2psiXylem(E, psiStem, kleafmax, leafc, leafd, psiPLCLeaf); 
+  if(leafCavitationEffects) psiPLCLeaf = apoplasticWaterPotential_c(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
+  double psiLeaf = E2psiXylem_c(E, psiStem, kleafmax, leafc, leafd, psiPLCLeaf); 
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf));
 }
 
@@ -750,10 +316,10 @@ List E2psiAbovegroundSymp(double E, double psiRootCrown,
   double PLCstem = hydraulicNetwork["PLCstem"];
   double PLCleaf = hydraulicNetwork["PLCleaf"];
   
-  double psiPLCStem =  apoplasticWaterPotential(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
-  double psiStem = E2psiXylem(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
-  double psiPLCLeaf=  apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
-  double psiLeafApo = E2psiXylem(E, psiStem, kleafapomax, leafc, leafd, psiPLCLeaf); 
+  double psiPLCStem =  apoplasticWaterPotential_c(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
+  double psiStem = E2psiXylem_c(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
+  double psiPLCLeaf=  apoplasticWaterPotential_c(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
+  double psiLeafApo = E2psiXylem_c(E, psiStem, kleafapomax, leafc, leafd, psiPLCLeaf); 
   double psiLeafSymp = psiLeafApo - E/kleafsymp;
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,
                        Named("psiLeaf") =psiLeafSymp));
@@ -807,7 +373,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
   NumericVector Psilayers(nlayers);
   //Calculate initial slope
   for(int l=0;l<nlayers;l++) {
-    Psilayers[l] = E2psiXylem(dE, psiSoil[l], 
+    Psilayers[l] = E2psiXylem_c(dE, psiSoil[l], 
                               kstemmax, stemc,stemd, psiCav);
     // Rcout<<Psilayers[l]<<" ";
   }
@@ -822,7 +388,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
     supplyE[i] = supplyE[i-1]+dE;
     // Rcout<<supplyE[i]<<" ";
     for(int l=0;l<nlayers;l++) {
-      Psilayers[l] = E2psiXylem(supplyE[i], psiSoil[l],
+      Psilayers[l] = E2psiXylem_c(supplyE[i], psiSoil[l],
                                 kstemmax, stemc,stemd, psiCav);
       // Rcout<<Psilayers[l]<<" ";
     }
@@ -888,9 +454,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
   double psiStep2 = -0.1;
   double psiRoot = psiSoil;
   double psiPlant = psiSoil;
-  double vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+  double vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
   double vg = 0.0;
-  double wPrev = xylemConductance(std::min(psiCav,psiPlant), kxylemmax, c, d); //conductance can decrease if psiCav < psiPlant
+  double wPrev = xylemConductance_c(std::min(psiCav,psiPlant), kxylemmax, c, d); //conductance can decrease if psiCav < psiPlant
   double w = 0.0;
   double incr = 0.0;
   supplyPsiRoot[0] = psiSoil;
@@ -901,9 +467,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
     supplyE[i] = supplyE[i-1]+dE;
     psiStep1 = -0.01;
     psiRoot = supplyPsiRoot[i-1];
-    vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+    vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
     while((psiStep1<psiPrec) && (psiRoot>psiMax))  {
-      vg = vanGenuchtenConductance(psiRoot+psiStep1, krhizomax, n, alpha);
+      vg = vanGenuchtenConductance_c(psiRoot+psiStep1, krhizomax, n, alpha);
       incr = ((vg+vgPrev)/2.0)*std::abs(psiStep1);
       if((Eg1+incr)>supplyE[i]) {
         psiStep1 = psiStep1*0.5;
@@ -919,9 +485,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
     psiStep2 = -0.01;
     Eg2 = 0.0;
     psiPlant = psiRoot;
-    wPrev = xylemConductance(std::min(psiCav,psiPlant), kxylemmax, c, d);
+    wPrev = xylemConductance_c(std::min(psiCav,psiPlant), kxylemmax, c, d);
     while((psiStep2<psiPrec) && (psiPlant>psiMax))  {
-      w = xylemConductance(std::min(psiCav,psiPlant+psiStep2), kxylemmax, c, d);
+      w = xylemConductance_c(std::min(psiCav,psiPlant+psiStep2), kxylemmax, c, d);
       incr = ((w+wPrev)/2.0)*std::abs(psiStep2);
       if((Eg2+incr)>supplyE[i]) {
         psiStep2 = psiStep2*0.5;
@@ -982,11 +548,11 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
   double psiRoot = psiSoil;
   double psiStem = psiSoil;
   double psiLeaf = psiSoil;
-  double vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+  double vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
   double vg = 0.0;
   //conductance can decrease if psiCav < psiStem/psiLeaf
-  double wPrevStem = xylemConductance(std::min(psiCav,psiStem), kxylemmax, stemc, stemd); 
-  double wPrevLeaf = xylemConductance(std::min(psiCav,psiLeaf), kleafmax, leafc, leafd); 
+  double wPrevStem = xylemConductance_c(std::min(psiCav,psiStem), kxylemmax, stemc, stemd); 
+  double wPrevLeaf = xylemConductance_c(std::min(psiCav,psiLeaf), kleafmax, leafc, leafd); 
   double w = 0.0;
   double incr = 0.0;
   supplyPsiRoot[0] = psiSoil;
@@ -1000,9 +566,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     
     // Root
     psiRoot = supplyPsiRoot[i-1];
-    vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+    vgPrev = vanGenuchtenConductance_c(psiRoot, krhizomax, n, alpha);
     while((psiStep1<psiPrec) && (psiRoot>psiMax))  {
-      vg = vanGenuchtenConductance(psiRoot+psiStep1, krhizomax, n, alpha);
+      vg = vanGenuchtenConductance_c(psiRoot+psiStep1, krhizomax, n, alpha);
       incr = ((vg+vgPrev)/2.0)*std::abs(psiStep1);
       if((Eg1+incr)>supplyE[i]) {
         psiStep1 = psiStep1*0.5;
@@ -1019,9 +585,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     psiStep2 = -0.01;
     Eg2 = 0.0;
     psiStem = psiRoot;
-    wPrevStem = xylemConductance(std::min(psiCav,psiStem), kxylemmax, stemc, stemd);
+    wPrevStem = xylemConductance_c(std::min(psiCav,psiStem), kxylemmax, stemc, stemd);
     while((psiStep2<psiPrec) && (psiStem>psiMax))  {
-      w = xylemConductance(std::min(psiCav,psiStem+psiStep2), kxylemmax, stemc, stemd);
+      w = xylemConductance_c(std::min(psiCav,psiStem+psiStep2), kxylemmax, stemc, stemd);
       incr = ((w+wPrevStem)/2.0)*std::abs(psiStep2);
       if((Eg2+incr)>supplyE[i]) {
         psiStep2 = psiStep2*0.5;
@@ -1038,9 +604,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     psiStep3 = -0.01;
     Eg3 = 0.0;
     psiLeaf = psiStem;
-    wPrevLeaf = xylemConductance(psiLeaf, kleafmax,  leafc, leafd);
+    wPrevLeaf = xylemConductance_c(psiLeaf, kleafmax,  leafc, leafd);
     while((psiStep3<psiPrec) && (psiLeaf>psiMax))  {
-      w = xylemConductance(psiLeaf+psiStep3, kleafmax,  leafc, leafd);
+      w = xylemConductance_c(psiLeaf+psiStep3, kleafmax,  leafc, leafd);
       incr = ((w+wPrevLeaf)/2.0)*std::abs(psiStep3);
       if((Eg3+incr)>supplyE[i]) {
         psiStep3 = psiStep3*0.5;
@@ -1262,11 +828,12 @@ List supplyFunctionNetwork(List hydraulicNetwork,
                            sol["x"]);
   double psiLeafI = solI["psiLeaf"];
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
-  
+  // Rcout<< " maxdEdp " << maxdEdp <<"\n";
+
   int nsteps = 1;
   double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
-    // if(i==3) stop("kk");
+    // Rcout<< " step: "<< i;
     supplyE[i] = supplyE[i-1]+dE;
     sol = E2psiNetwork(supplyE[i], hydraulicNetwork,
                        sol["x"]);
@@ -1279,6 +846,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
     supplyPsiRoot[i] = sol["psiRootCrown"];
 
     if(!NumericVector::is_na(supplyPsiLeaf[i])) {
+      // Rcout<< " psiRC: "<<supplyPsiRoot[i] <<" psileaf: "<< supplyPsiLeaf[i] <<"\n";
       if(i==1) {
         supplydEdp[0] = (supplyE[1]-supplyE[0])/std::abs(supplyPsiLeaf[1] - supplyPsiLeaf[0]);
       } else {
@@ -1315,6 +883,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
     supplyPsiStemDef[i] = supplyPsiStem[i];
     supplyPsiLeafDef[i] = supplyPsiLeaf[i];
   }
+
   return(List::create(Named("E") = supplyEDef,
                       Named("ERhizo") = supplyERhizoDef,
                       Named("psiRhizo")=supplyPsiRhizoDef,
@@ -1330,26 +899,26 @@ List supplyFunctionNetwork(List hydraulicNetwork,
 // [[Rcpp::export("hydraulics_regulatedPsiXylem")]]
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
   //If Ein > Ecrit then set Ein to Ecrit
-  double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, 0.0);
-  double Ec = ECrit(psiUpstream, kxylemmax,c,d);
+  double psiUnregulated = E2psiXylem_c(E, psiUpstream, kxylemmax, c, d, 0.0);
+  double Ec = ECrit_c(psiUpstream, kxylemmax,c,d);
   double Ein = E;
   if(Ein > Ec) {
     Ein = Ec;
-    psiUnregulated = psiCrit(c,d);
+    psiUnregulated = psiCrit_c(c,d, 0.001);
   }
   double deltaPsiUnregulated = psiUnregulated - psiUpstream;
-  double kp = xylemConductance(psiUpstream, kxylemmax, c, d);
-  double deltaPsiRegulated = deltaPsiUnregulated*(xylemConductance(psiUnregulated, kxylemmax, c, d)/kp);
+  double kp = xylemConductance_c(psiUpstream, kxylemmax, c, d);
+  double deltaPsiRegulated = deltaPsiUnregulated*(xylemConductance_c(psiUnregulated, kxylemmax, c, d)/kp);
   //replace by maximum if found for lower psi values
   // Rcout <<"Initial "<<psiUnregulated << " "<< deltaPsiRegulated <<"\n";
   for(double psi = psiUpstream; psi > psiUnregulated; psi +=psiStep) {
-    double deltaPsi = (psi-psiUpstream)*(xylemConductance(psi, kxylemmax, c,d)/kp);
+    double deltaPsi = (psi-psiUpstream)*(xylemConductance_c(psi, kxylemmax, c,d)/kp);
     // Rcout <<psi << " "<< deltaPsi<< " "<< deltaPsiRegulated <<"\n";
     if(NumericVector::is_na(deltaPsiRegulated)) deltaPsiRegulated = deltaPsi;
     else if(deltaPsi < deltaPsiRegulated) deltaPsiRegulated = deltaPsi;
   }
   double psiRegulated = psiUpstream + deltaPsiRegulated;
-  double Efin = EXylem(psiRegulated, psiUpstream, kxylemmax, c, d);
+  double Efin = EXylem_c(psiRegulated, psiUpstream, kxylemmax, c, d);
   double relativeConductance1 = Efin/Ein;
   double relativeConductance2 = Efin/E;
   return(NumericVector::create(psiUnregulated, psiRegulated, Ein, Efin, relativeConductance1, relativeConductance2));
@@ -1483,11 +1052,11 @@ List soilPlantResistancesSigmoid(NumericVector psiSoil, NumericVector psiRhizo,
    NumericVector rrhizo(nlayers, 0.0);
    NumericVector rroot(nlayers, 0.0);
    for(int i=0;i<nlayers;i++) {
-     rrhizo[i] = 1.0/vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
-     rroot[i] = 1.0/xylemConductanceSigmoid(psiRhizo[i], krootmax[i], root_P50, root_slope);
+     rrhizo[i] = 1.0/vanGenuchtenConductance_c(psiSoil[i], krhizomax[i], n[i], alpha[i]);
+     rroot[i] = 1.0/xylemConductanceSigmoid_c(psiRhizo[i], krootmax[i], root_P50, root_slope);
    }
-   double rstem = 1.0/(kstemmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid(psiStem, 1.0, stem_P50, stem_slope)));
-   double rleaf = 1.0/(kleafmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid(psiLeaf, kleafmax, leaf_P50, leaf_slope)));
+   double rstem = 1.0/(kstemmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid_c(psiStem, 1.0, stem_P50, stem_slope)));
+   double rleaf = 1.0/(kleafmax*std::min(1.0 - PLCstem, xylemConductanceSigmoid_c(psiLeaf, kleafmax, leaf_P50, leaf_slope)));
    List resistances = List::create(_["rhizosphere"] = rrhizo, 
                                    _["root"] = rroot, 
                                    _["stem"] = rstem, 
@@ -1509,11 +1078,11 @@ List soilPlantResistancesWeibull(NumericVector psiSoil, NumericVector psiRhizo,
   NumericVector rrhizo(nlayers, 0.0);
   NumericVector rroot(nlayers, 0.0);
   for(int i=0;i<nlayers;i++) {
-    rrhizo[i] = 1.0/vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
-    rroot[i] = 1.0/xylemConductance(psiRhizo[i], krootmax[i], rootc, rootd);
+    rrhizo[i] = 1.0/vanGenuchtenConductance_c(psiSoil[i], krhizomax[i], n[i], alpha[i]);
+    rroot[i] = 1.0/xylemConductance_c(psiRhizo[i], krootmax[i], rootc, rootd);
   }
-  double rstem = 1.0/(kstemmax*std::min(1.0-PLCstem, xylemConductance(psiStem, 1.0, stemc, stemd)));
-  double rleaf = 1.0/(kleafmax*std::min(1.0-PLCleaf, xylemConductance(psiLeaf, 1.0, leafc, leafd)));
+  double rstem = 1.0/(kstemmax*std::min(1.0-PLCstem, xylemConductance_c(psiStem, 1.0, stemc, stemd)));
+  double rleaf = 1.0/(kleafmax*std::min(1.0-PLCleaf, xylemConductance_c(psiLeaf, 1.0, leafc, leafd)));
   List resistances = List::create(_["rhizosphere"] = rrhizo, 
                                   _["root"] = rroot, 
                                   _["stem"] = rstem, 
@@ -1521,156 +1090,10 @@ List soilPlantResistancesWeibull(NumericVector psiSoil, NumericVector psiRhizo,
   return(resistances);
 }
 
-/*
- * Parametrization of rhizosphere conductance
- */
-double rhizosphereResistancePercent(double psiSoil, 
-                                    double krhizomax, double n, double alpha,
-                                    double krootmax, double rootc, double rootd,
-                                    double kstemmax, double stemc, double stemd,
-                                    double kleafmax, double leafc, double leafd) {
-  double krhizo = vanGenuchtenConductance(psiSoil, krhizomax, n, alpha);
-  double kroot = xylemConductance(psiSoil, krootmax, rootc, rootd);
-  double kstem = xylemConductance(psiSoil, kstemmax, stemc, stemd);
-  double kleaf = xylemConductance(psiSoil, kleafmax, leafc, leafd);
-  return(100.0*(1.0/krhizo)/((1.0/kroot)+(1.0/kstem)+(1.0/kleaf)+(1.0/krhizo)));
-}
-
-//' @rdname hydraulics_scalingconductance
-//' @keywords internal
-// [[Rcpp::export("hydraulics_averageRhizosphereResistancePercent")]]
-double averageRhizosphereResistancePercent(double krhizomax, double n, double alpha,
-                                           double krootmax, double rootc, double rootd,
-                                           double kstemmax, double stemc, double stemd, 
-                                           double kleafmax, double leafc, double leafd,
-                                           double psiStep = -0.01){
-  double psiC = psiCrit(stemc, stemd);
-  double cnt = 0.0;
-  double sum = 0.0;
-  for(double psi=0.0; psi>psiC;psi += psiStep) {
-    sum +=rhizosphereResistancePercent(psi, krhizomax, n,alpha,krootmax, rootc, rootd,
-                                       kstemmax, stemc,stemd,
-                                       kleafmax, leafc,leafd);
-    cnt+=1.0;
-  }
-  return(sum/cnt);
-}
 
 
 
 
-//' @rdname hydraulics_scalingconductance
-//' @keywords internal
-// [[Rcpp::export("hydraulics_findRhizosphereMaximumConductance")]]
-double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
-                                         double krootmax, double rootc, double rootd,
-                                         double kstemmax, double stemc, double stemd,
-                                         double kleafmax, double leafc, double leafd,
-                                         double initialValue = 0.0) {
-  double step = 1.0;
-  double fTol = 0.1;
-  
-  // Rcout<<exp(initialValue)<<"\n";
-  double krhizomaxlog = initialValue;
-  int nsteps = 0;
-  int max_nsteps = 100;
-  double f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
-                                                 kstemmax, stemc,stemd,
-                                                 kleafmax, leafc,leafd);
-  while((std::abs(f-averageResistancePercent)>fTol) && (nsteps < max_nsteps)) {
-    // Rcout<< nsteps<< " "<<exp(krhizomaxlog) << " "<< f << " "<< averageResistancePercent<< " "<< step<<"\n";
-    if(f>averageResistancePercent) {
-      if(step < 0) step = -step/2.0;
-    } else {
-      if(step > 0) step = -step/2.0;
-    }
-    krhizomaxlog += step; 
-    f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
-                                            kstemmax, stemc,stemd,
-                                            kleafmax, leafc,leafd);
-    nsteps++;
-  }
-  // Rcout<< nsteps<< " "<<exp(krhizomaxlog) << " "<< f << " "<< averageResistancePercent<< " "<< step<<"\n";
-  return(exp(krhizomaxlog));
-}
-
-
-
-/**
- * BIOMECHANICS
- * 
- * Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Reich, and E. I. von Allmen. 2010. Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants. Proceedings of the National Academy of Sciences of the United States of America 107:22722–7.
- * Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
- * 
- * height - Tree height in cm
- */
-//' @rdname hydraulics_scalingconductance
-//' @keywords internal
-// [[Rcpp::export("hydraulics_taperFactorSavage")]]
-double taperFactorSavage(double height) {
-  double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants (p = 1/3)
-  double a_p0 = 7.20E-13, a_p13 = 6.67E-13;
-  double n_ext = 2.0; //Number of daughter branches per parent
-  double N = ((3.0*log(1.0-(height/4.0)*(1.0-pow(n_ext, 1.0/3.0))))/log(n_ext))-1.0;
-  double K_0 = a_p0*pow(pow(n_ext, N/2.0),b_p0);
-  double K_13 = a_p13*pow(pow(n_ext, N/2.0),b_p13);
-  return(K_13/K_0);
-}
-
-/**
- *  Returns the terminal conduit radius (in micras)
- *  
- *  height - plant height in cm
- */
-//' @rdname hydraulics_scalingconductance
-//' @keywords internal
-// [[Rcpp::export("hydraulics_terminalConduitRadius")]]
-double terminalConduitRadius(double height) {
-  double dh  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
-  return(dh/2.0);
-}
-
-
-//' @rdname hydraulics_scalingconductance
-//' @keywords internal
-// [[Rcpp::export("hydraulics_referenceConductivityHeightFactor")]]
-double referenceConductivityHeightFactor(double refheight, double height) {
-  double rhref  = terminalConduitRadius(refheight);
-  double rh  = terminalConduitRadius(height);
-  double df = pow(rh/rhref,2.0);
-  return(df);
-}
-
-
-/**
- * Calculate maximum leaf-specific stem hydraulic conductance (in mmol·m-2·s-1·MPa-1)
- * 
- * xylemConductivity - Sapwood-specific conductivity of stem xylem (in kg·m-1·s-1·MPa-1), 
- *                     assumed to be measured at distal twigs
- * refheight - Reference plant height (on which xylem conductivity was measured)
- * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
- * height - plant height (in cm)
- * taper - boolean to apply taper
- */
-//' @rdname hydraulics_scalingconductance
-//' @keywords internal
-// [[Rcpp::export("hydraulics_maximumStemHydraulicConductance")]]
-double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, 
-                                       bool taper = false) {
-  
-  
-  // Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
-  double kmax = 0.0;
-  if(!taper) {
-    double xylemConductivityCorrected = xylemConductivity*referenceConductivityHeightFactor(refheight, height);
-    kmax =   (1000.0/0.018)*(xylemConductivityCorrected/Al2As)*(100.0/height);
-  } else {
-    double petioleConductivity = xylemConductivity*referenceConductivityHeightFactor(refheight, 100.0);
-    // Correct reference conductivity in relation to the reference plant height in which it was measured
-    kmax =   (1000.0/0.018)*(petioleConductivity/Al2As)*(100.0/height)*(taperFactorSavage(height)/(taperFactorSavage(100.0)));
-  } 
-  return(kmax); 
-}
 
 /**
  * Proportions of root xylem conductance
@@ -1687,70 +1110,9 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
 //' @keywords internal
 // [[Rcpp::export("hydraulics_rootxylemConductanceProportions")]]
 NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V) {
-  int nlayers = L.size();
-  //Weights
-  NumericVector w(nlayers, 0.0);
-  double wsum=0.0;
-  for(int i=0;i<nlayers;i++) {
-    if(L[i]>0.0) {
-      w[i]= V[i]*(1.0/L[i]);
-      wsum +=w[i];
-    }
-  }
-  for(int i=0;i<nlayers;i++) w[i] = w[i]/wsum;
-  return(w);
-}
-
-//' Hydraulic-related defoliation
-//' 
-//' Functions to calculate the proportion of crown defoliation due to hydraulic disconnection.
-//'
-//' @param psiLeaf Leaf water potential (in MPa).
-//' @param c,d Parameters of the Weibull function.
-//' @param P50,slope Parameters of the Sigmoid function.
-//' @param PLC_crit Critical leaf PLC corresponding to defoliation
-//' @param P50_cv Coefficient of variation (in percent) of leaf P50, to describe the
-//' variability in hydraulic vulnerability across crown leaves.
-//' 
-//' @details The functions assume that crowns are made of a population of leaves whose
-//' hydraulic vulnerability (i.e. the water potential corresponding to 50% loss of conductance) 
-//' follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (\code{P50_cv}).
-//' The slope parameter (or the c exponent in the case of a Weibull function) is considered constant.
-//' Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (\code{PLC_crit}).
-//' 
-//' @return The proportion of crown defoliation.
-//' 
-//' @author 
-//' Hervé Cochard, INRAE
-//' 
-//' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' @seealso
-//' \code{\link{hydraulics_conductancefunctions}}
-//' 
-//' @name hydraulics_defoliation
-//' @keywords internal
-// [[Rcpp::export("hydraulics_proportionDefoliationSigmoid")]]
-double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope, 
-                                 double PLC_crit = 0.88, double P50_cv = 10.0) {
-  double P50_crit = psiLeaf - (log((1.0 - PLC_crit)/PLC_crit)/(slope/25));
-  NumericVector P50_vec = NumericVector::create(P50_crit);
-  NumericVector PDEF_vec = Rcpp::pnorm(P50_vec, P50, std::abs((P50_cv/100.0)*P50));
-  double PDEF = (1.0-PDEF_vec[0]);
-  return(PDEF);
-}
-//' @name hydraulics_defoliation
-//' @keywords internal
-// [[Rcpp::export("hydraulics_proportionDefoliationWeibull")]]
-double proportionDefoliationWeibull(double psiLeaf, double c, double d, 
-                                 double PLC_crit = 0.88, double P50_cv = 10.0) {
-  double d_crit = psiLeaf/pow(-1.0*log(1.0 - PLC_crit), 1.0/c);
-  double P50 = xylemPsi(0.5,1.0, c, d);
-  double P50_crit = xylemPsi(0.5,1.0, c, d_crit);
-  NumericVector P50_vec = NumericVector::create(P50_crit);
-  NumericVector PDEF_vec = Rcpp::pnorm(P50_vec, P50, std::abs((P50_cv/100.0)*P50));
-  double PDEF = (1.0-PDEF_vec[0]);
-  return(PDEF);
+  return(Rcpp::wrap(rootxylemConductanceProportions_c( 
+      as<std::vector<double>>(L),
+      as<std::vector<double>>(V))));
 }
 
 /**

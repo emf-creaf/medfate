@@ -12,7 +12,7 @@ soil_thermalCapacity(soil, model = "SX")
 
 soil_thermalConductivity(soil, model = "SX")
 
-soil_temperatureGradient(widths, Temp)
+soil_temperatureGradient(gradTemp, widths, Temp)
 
 soil_temperatureChange(
   widths,
@@ -25,6 +25,8 @@ soil_temperatureChange(
   Gdown,
   tstep
 )
+
+soil_temperatureGradient(gradTemp, widths, Temp)
 }
 \arguments{
 \item{soil}{Soil object (returned by function \code{\link{soil}}).}

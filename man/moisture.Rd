@@ -4,6 +4,7 @@
 \name{moisture}
 \alias{moisture}
 \alias{moisture_sapwoodWaterCapacity}
+\alias{plant_water}
 \alias{moisture_leafWaterCapacity}
 \alias{moisture_turgorLossPoint}
 \alias{moisture_symplasticRWC}
@@ -11,11 +12,12 @@
 \alias{moisture_apoplasticRWC}
 \alias{moisture_apoplasticPsi}
 \alias{moisture_tissueRWC}
-\alias{plant_water}
 \alias{moisture_pressureVolumeCurvePlot}
 \title{Tissue moisture functions}
 \usage{
 moisture_sapwoodWaterCapacity(Al2As, height, V, L, wd)
+
+plant_water(x)
 
 moisture_leafWaterCapacity(SLA, ld)
 
@@ -30,8 +32,6 @@ moisture_apoplasticRWC(psiApo, c, d)
 moisture_apoplasticPsi(RWC, c, d)
 
 moisture_tissueRWC(psiSym, pi0, epsilon, psiApo, c, d, af)
-
-plant_water(x)
 
 moisture_pressureVolumeCurvePlot(
   x,
@@ -52,6 +52,8 @@ moisture_pressureVolumeCurvePlot(
 
 \item{wd}{Wood density (g·cm-3).}
 
+\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
+
 \item{SLA}{Specific leaf area (mm2·mg-1).}
 
 \item{ld}{Leaf tissue density (g·cm-3).}
@@ -67,8 +69,6 @@ moisture_pressureVolumeCurvePlot(
 \item{c, d}{Parameters of the xylem vulnerability curve.}
 
 \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
-
-\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
 
 \item{segment}{Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}
 (the latter only available if \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}

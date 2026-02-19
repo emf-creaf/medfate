@@ -1,15 +1,22 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "carbon.h"
+#include "carbon_c.h"
 #include "root.h"
+#include "root_c.h"
 #include "soil.h"
+#include "soil_c.h"
 #include "lightextinction_advanced.h"
 #include "photosynthesis.h"
+#include "photosynthesis_c.h"
 #include "woodformation.h"
 #include "forestutils.h"
+#include "modelInput_c.h"
 #include "paramutils.h"
 #include "tissuemoisture.h"
+#include "tissuemoisture_c.h"
 #include "fuelstructure.h"
 #include "hydraulics.h"
+#include "hydraulics_c.h"
 #include "stdlib.h"
 
 using namespace Rcpp;
@@ -185,7 +192,7 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
   //Calculate stem and leaf capacity per leaf area (in l·m-2)
   for(int c=0;c<numCohorts;c++){
     Vsapwood[c] = sapwoodWaterCapacity(Al2As[c], H[c], V, L, WoodDensity[c]); 
-    Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
+    Vleaf[c] = leafWaterCapacity_c(SLA[c], LeafDensity[c]); 
     maxMCstem[c] = 100*((1.0/std::max(0.5,WoodDensity[c])) - (1.0/1.53)); // Minimum 0.4 density to avoid overestimation
     maxMCleaf[c] = (maxFMC[c] - maxMCstem[c]*(1.0 - (1.0/r635[c])))*r635[c];
   }
@@ -309,8 +316,8 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
   for(int c=0;c<numCohorts;c++){
     
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
-    double xylem_root_kmax =maximumStemHydraulicConductance(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]); 
+    VCstem_kmax[c]=maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
+    double xylem_root_kmax =maximumStemHydraulicConductance_c(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]); 
     VCroottot_kmax[c] = 1.0/((1.0/xylem_root_kmax) + (1.0/rootRadialConductance));
     kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
     VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
@@ -442,8 +449,8 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
-    double xylem_root_kmax =maximumStemHydraulicConductance(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]);
+    VCstem_kmax[c]=maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
+    double xylem_root_kmax =maximumStemHydraulicConductance_c(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]);
     VCroottot_kmax[c] = 1.0/((1.0/xylem_root_kmax) + (1.0/rootRadialConductance));
     kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
     VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
@@ -484,7 +491,7 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
     //Slope of Gsw vs Ac/Cs relationship
     if(NumericVector::is_na(Gsw_AC_slope[c])) {
       NumericVector LP = leafphotosynthesis(2000.0,  386.0, Gswmax[c]/1.6, 25.0, Vmax298[c], Jmax298[c]); 
-      double An_max = LP[1] - 0.015*VmaxTemp(Vmax298[c], 25.0);
+      double An_max = LP[1] - 0.015*VmaxTemp_c(Vmax298[c], 25.0);
       Gsw_AC_slope[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
       Gsw_AC_slope[c] = std::min(10.0, std::max(3.0, Gsw_AC_slope[c]));
     }
@@ -586,9 +593,9 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
       L(c,_) = coarseRootLengths(V(c,_), widths, 0.5); //Arbitrary ratio (to revise some day)
       CRSV[c] = coarseRootSoilVolume(V(c,_), widths, 0.5);
       //Assume fine root biomass is half leaf structural biomass
-      double LA = leafArea(LAI_live[c], N[c]); //m2 leaf area per individual
+      double LA = leafArea_c(LAI_live[c], N[c]); //m2 leaf area per individual
       double fineRootArea = Ar2Al[c]*LA;//fine root area in m2
-      FRB[c] = fineRootArea/(specificRootSurfaceArea(SRL[c], FineRootDensity[c])*1e-4);
+      FRB[c] = fineRootArea/(specificRootSurfaceArea_c(SRL[c], FineRootDensity[c])*1e-4);
     }
     if(rhizosphereOverlap!="total") {
       belowdf = DataFrame::create(_["Z50"] = Z50,
@@ -636,7 +643,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
     
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
     RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(RhizoPsi.begin(), RhizoPsi.end(), -0.033);
+    std::fill(RhizoPsi.begin(), RhizoPsi.end(), fieldCapacityPsi);
 
     
     NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
@@ -659,10 +666,10 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
       NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
       for(int l=0;l<nlayers;l++) {
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
-        VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
+        VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance_c(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                      VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
                      VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],0.0);
         VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
       }
       FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
@@ -959,20 +966,20 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector starchSapwood(numCohorts,0.0);
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
-    double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
+    double lvol = leafStorageVolume_c(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
     double svol = sapwoodStorageVolume(SA[c], H[c], L(c,_), V(c,_),WoodDensity[c], conduit2sapwood[c]);
     
     // 70% in starch storage for sapwood and 1% in leaves
-    if(LAI_expanded[c]>0.0) starchLeaf[c] = (0.01/(lvol))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
+    if(LAI_expanded[c]>0.0) starchLeaf[c] = (0.01/(lvol))*leafStarchCapacity_c(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
     starchSapwood[c] = (0.7/(svol))*sapwoodStarchCapacity(SA[c], H[c], L, V(c,_), WoodDensity[c], conduit2sapwood[c]);
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0
     if(LAI_expanded[c]>0.0) {
-      double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
+      double lconc = sugarConcentration_c(LeafPI0[c],20.0, nonSugarConcentration);
       sugarLeaf[c] = lconc;
     }
-    double sconc = sugarConcentration(StemPI0[c],20.0, nonSugarConcentration);
+    double sconc = sugarConcentration_c(StemPI0[c],20.0, nonSugarConcentration);
     sugarSapwood[c] = sconc;
     // sugar[c] = sugarLeaf[c] + sugarSapwood[c];
   }
@@ -1145,16 +1152,16 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
   DataFrame df;
   if(transpirationMode=="Granier") {
-    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, -0.033),
+    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
-                           Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("RootCrownPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sureau") {
@@ -1162,11 +1169,11 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("Elim") = NumericVector(numCohorts, 0.0),
                            Named("Emin_L") = NumericVector(numCohorts, 0.0),
                            Named("Emin_S") = NumericVector(numCohorts, 0.0),
-                           Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
-                           Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("RootCrownPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
+                           Named("StemSympPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   }
@@ -2124,18 +2131,18 @@ void resetInputs(List x) {
     NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
     for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
-      RootCrownPsi[i] = -0.033;
-      StemPsi[i] = -0.033;
-      LeafPsi[i] = -0.033;
-      LeafSympPsi[i] = -0.033;
-      StemSympPsi[i] = -0.033;
+      RootCrownPsi[i] = fieldCapacityPsi;
+      StemPsi[i] = fieldCapacityPsi;
+      LeafPsi[i] = fieldCapacityPsi;
+      LeafSympPsi[i] = fieldCapacityPsi;
+      StemSympPsi[i] = fieldCapacityPsi;
       StemPLC[i] = 0.0;
-      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = -0.033;
+      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = fieldCapacityPsi;
     }
   } else {
     NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
     for(int i=0;i<StemPLC.length();i++) {
-      PlantPsi[i] = -0.033;
+      PlantPsi[i] = fieldCapacityPsi;
       StemPLC[i] = 0.0;
     }
   }
@@ -2461,4 +2468,11 @@ void modifyInputParam(List x, String paramType, String paramName,
                                      paramsGrowthdf,
                                      control);
   }
+}
+
+// [[Rcpp::export(.testModelInputToStructure)]]
+NumericVector testModelInputToStructure(List x) {
+  ModelInput input(x);
+  NumericVector sizes = {sizeof(x),sizeof(input)};
+  return(sizes);
 }

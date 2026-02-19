@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef ROOT_H
 #define ROOT_H
@@ -15,8 +15,6 @@ NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, Num
                               NumericVector treeZ100, NumericVector shrubZ100, NumericVector herbZ100, 
                               NumericVector d);
 
-double fineRootRadius(double specificRootLength, double rootTissueDensity);
-double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                          double specificRootLength, double rootTissueDensity,  
                          double rootLengthDensity );
@@ -26,8 +24,6 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo,  
 NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
                                          double specificRootLength, double rootTissueDensity,  
                                          double rootLengthDensity);
-
-double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity );
 
 double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
                                     NumericVector v, NumericVector d, NumericVector rfc);

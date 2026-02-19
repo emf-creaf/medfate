@@ -1,19 +1,26 @@
 // [[Rcpp::interfaces(r,cpp)]]
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
+#include "meteoland/utils_c.hpp"
 #include "carbon.h"
 #include "communication_structures.h"
 #include "forestutils.h"
 #include "growth_day.h"
+#include "growth_day_c.h"
 #include "hydrology.h"
 #include "modelInput.h"
 #include "phenology.h"
+#include "phenology_c.h"
 #include "spwb.h"
 #include "soil.h"
+#include "numerical_solving_c.h"
 #include "tissuemoisture.h"
-#include <meteoland.h>
+#include "meteoland/utils_c.hpp"
+#include "meteoland/radiation_c.hpp"
+#include "meteoland/pet_c.hpp"
 using namespace Rcpp;
 
 
@@ -554,6 +561,209 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
   
 }
 
+void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int iday) {
+  bool plantWaterPools = (x.control.rhizosphereOverlap!="total");
+  
+  DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
+  int numDays = DWB.nrow();
+  int numCohorts = x.cohorts.CohortCode.size();
+  
+  if(x.control.transpirationMode== "Granier") {
+    try {
+      auto& sDaybas = dynamic_cast<BasicGROWTH_RESULT&>(sDay);
+      fillWaterBalanceDailyOutput_c(DWB, sDaybas.BSPWBres.WaterBalance, iday);
+      if(x.control.results.soilResults) {
+        List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+        fillSoilDailyOutput_c(Soil, x.soil, sDaybas.BSPWBres.Soil,
+                              iday, numDays, 
+                              true);
+      }
+      if(x.control.results.standResults) {
+        DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
+        fillStandDailyOutput_c(Stand, sDaybas.BSPWBres.Stand, iday);
+      }
+      if(x.control.results.plantResults) {
+        List plantDWOL = l["Plants"];
+        fillPlantWaterDailyOutput_c(plantDWOL, sDaybas.BSPWBres, iday, 
+                                    x.control.transpirationMode, x.control.advancedWB.ndailysteps);
+      }
+      if(x.control.results.fireHazardResults) {
+        DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
+        fillFireHazardOutput_c(fireHazard, sDaybas.BSPWBres.fccs, iday);
+      }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to basic but result object is not basic");
+    }
+  } else {
+    try {
+      auto& sDayadv = dynamic_cast<AdvancedGROWTH_RESULT&>(sDay);
+      fillWaterBalanceDailyOutput_c(DWB, sDayadv.ASPWBres.WaterBalance, iday);
+      if(x.control.results.soilResults) {
+        List Soil = Rcpp::as<Rcpp::List>(l["Soil"]);
+        fillSoilDailyOutput_c(Soil, x.soil, sDayadv.ASPWBres.Soil,
+                              iday, numDays, 
+                              true);
+      }
+      if(x.control.results.standResults) {
+        DataFrame Stand = Rcpp::as<Rcpp::DataFrame>(l["Stand"]);
+        fillStandDailyOutput_c(Stand, sDayadv.ASPWBres.Stand, iday);
+      }
+      if(x.control.results.plantResults) {
+        List plantDWOL = l["Plants"];
+        fillPlantWaterDailyOutput_c(plantDWOL, sDayadv.ASPWBres, iday, 
+                                    x.control.transpirationMode, x.control.advancedWB.ndailysteps);
+        if(x.control.results.leafResults) {
+          List sunlitDO = l["SunlitLeaves"];
+          List shadeDO = l["ShadeLeaves"];
+          fillSunlitShadeLeavesDailyOutput_c(sunlitDO, shadeDO, sDayadv.ASPWBres.ATres, iday, x.cohorts.CohortCode.size());
+        }
+      }
+      List DEB = l["EnergyBalance"];
+      fillEnergyBalanceDailyOutput_c(DEB, sDayadv.ASPWBres.ATres.energy, iday, x.control.advancedWB.ndailysteps);
+      if(x.control.results.temperatureResults) {
+        List DT = l["Temperature"];
+        fillTemperatureDailyOutput_c(DT,sDayadv.ASPWBres.ATres.energy, iday, x.control.advancedWB.ndailysteps);
+        if(x.control.advancedWB.multiLayerBalance) {
+          NumericMatrix DLT = l["TemperatureLayers"];
+          fillTemperatureLayersDailyOutput_c(DLT, sDayadv.ASPWBres.ATres.energy, iday, 
+                                             x.canopy.Cair.size(), x.control.advancedWB.ndailysteps);
+        }
+      }
+      if(x.control.results.fireHazardResults) {
+        DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
+        fillFireHazardOutput_c(fireHazard, sDayadv.ASPWBres.fccs, iday);
+      }
+    } catch(const std::bad_cast&) {
+      throw medfate::MedfateInternalError("Control transpiration mode set to advanced but result object is not advanced");
+    }
+  }
+  if(x.control.results.soilPoolResults && plantWaterPools) {
+    List soilPools = Rcpp::as<Rcpp::List>(l["SoilPools"]);
+    fillSoilPoolDailyOutput_c(soilPools, x.soil, x.belowLayers.Wpool, iday);
+  }
+  if(x.control.results.snowResults) {
+    DataFrame Snow = Rcpp::as<Rcpp::DataFrame>(l["Snow"]);
+    fillSnowDailyOutput_c(Snow, x, iday);
+  }
+  if(x.control.results.subdailyResults) {
+    List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
+    subdailyRes[iday] = copyGROWTHResult_c(sDay, x); //Clones subdaily results because they are communication structures
+  }
+  if(x.control.results.labileCarbonBalanceResults) {
+    List labileCarbonBalance = Rcpp::as<Rcpp::List>(l["LabileCarbonBalance"]);
+    NumericMatrix LabileCarbonBalance = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["LabileCarbonBalance"]);
+    NumericMatrix GrossPhotosynthesis = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["GrossPhotosynthesis"]);
+    NumericMatrix GrowthCosts = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["GrowthCosts"]);
+    NumericMatrix RootExudation = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["RootExudation"]);
+    NumericMatrix MaintenanceRespiration = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["MaintenanceRespiration"]);
+    NumericMatrix PlantSugarLeaf = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarLeaf"]);
+    NumericMatrix PlantStarchLeaf = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["StarchLeaf"]);
+    NumericMatrix PlantSugarSapwood = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarSapwood"]);
+    NumericMatrix PlantStarchSapwood = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["StarchSapwood"]);
+    NumericMatrix PlantSugarTransport = Rcpp::as<Rcpp::NumericMatrix>(labileCarbonBalance["SugarTransport"]);
+    for(int i =0;i<numCohorts;i++) {
+      LabileCarbonBalance(iday,i) = sDay.LCBres.LabileCarbonBalance[i];
+      MaintenanceRespiration(iday,i) = sDay.LCBres.MaintenanceRespiration[i];
+      GrowthCosts(iday,i) = sDay.LCBres.GrowthCosts[i];
+      GrossPhotosynthesis(iday,i) = sDay.LCBres.GrossPhotosynthesis[i];
+      PlantSugarLeaf(iday,i) = sDay.LCBres.SugarLeaf[i];
+      PlantStarchLeaf(iday,i) = sDay.LCBres.StarchLeaf[i];
+      PlantSugarSapwood(iday,i) = sDay.LCBres.SugarSapwood[i];
+      PlantStarchSapwood(iday,i) = sDay.LCBres.StarchSapwood[i];
+      PlantSugarTransport(iday,i) = sDay.LCBres.SugarTransport[i];
+      RootExudation(iday,i) = sDay.LCBres.RootExudation[i];
+    }
+  }
+  if(x.control.results.plantStructureResults) {
+    List plantStructure = Rcpp::as<Rcpp::List>(l["PlantStructure"]);
+    NumericMatrix LeafBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafBiomass"]);
+    NumericMatrix SapwoodBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodBiomass"]);
+    NumericMatrix FineRootBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootBiomass"]);
+    NumericMatrix LeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafArea"]);
+    NumericMatrix SapwoodArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodArea"]);
+    NumericMatrix FineRootArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootArea"]);
+    NumericMatrix HuberValue = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["HuberValue"]);
+    NumericMatrix RootAreaLeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["RootAreaLeafArea"]);
+    NumericMatrix DBH = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["DBH"]);
+    NumericMatrix Height = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["Height"]);
+    for(int i =0;i<numCohorts;i++) {
+      SapwoodBiomass(iday,i) = sDay.PSres.SapwoodBiomass[i];
+      LeafBiomass(iday,i) = sDay.PSres.LeafBiomass[i];
+      FineRootBiomass(iday,i) = sDay.PSres.FineRootBiomass[i];
+      SapwoodArea(iday,i) = sDay.PSres.SapwoodArea[i];
+      LeafArea(iday,i) = sDay.PSres.LeafArea[i];
+      FineRootArea(iday,i) = sDay.PSres.FineRootArea[i];
+      HuberValue(iday,i) = sDay.PSres.HuberValue[i];
+      RootAreaLeafArea(iday,i) = sDay.PSres.RootAreaLeafArea[i];
+      DBH(iday,i) = sDay.PSres.DBH[i];
+      Height(iday,i) = sDay.PSres.Height[i];
+    }
+  }
+
+  List plantBiomassBalance = Rcpp::as<Rcpp::List>(l["PlantBiomassBalance"]);
+  NumericMatrix StructuralBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["StructuralBiomassBalance"]);
+  NumericMatrix LabileBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["LabileBiomassBalance"]);
+  NumericMatrix PlantBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["PlantBiomassBalance"]);
+  NumericMatrix MortalityBiomassLoss = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["MortalityBiomassLoss"]);
+  NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
+
+  for(int i =0;i<numCohorts;i++) {
+    StructuralBiomassBalance(iday,i) = sDay.PBBres.StructuralBiomassBalance[i];
+    LabileBiomassBalance(iday,i) = sDay.PBBres.LabileBiomassBalance[i];
+    PlantBiomassBalance(iday,i) = sDay.PBBres.PlantBiomassBalance[i];
+    MortalityBiomassLoss(iday,i) = sDay.PBBres.MortalityBiomassLoss[i];
+    CohortBiomassBalance(iday,i) = sDay.PBBres.CohortBiomassBalance[i];
+  }
+
+  if(x.control.results.growthMortalityResults) {
+    List growthMortality = Rcpp::as<Rcpp::List>(l["GrowthMortality"]);
+    NumericMatrix LAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["LAgrowth"]);
+    NumericMatrix SAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["SAgrowth"]);
+    NumericMatrix FRAgrowth = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["FRAgrowth"]);
+    NumericMatrix starvationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["StarvationRate"]);
+    NumericMatrix dessicationRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["DessicationRate"]);
+    NumericMatrix mortalityRate = Rcpp::as<Rcpp::NumericMatrix>(growthMortality["MortalityRate"]);
+    for(int i =0;i<numCohorts;i++) {
+      LAgrowth(iday,i) = sDay.GMres.LAgrowth[i];
+      SAgrowth(iday,i) = sDay.GMres.SAgrowth[i];
+      FRAgrowth(iday,i) = sDay.GMres.FRAgrowth[i];
+      starvationRate(iday,i) = sDay.GMres.StarvationRate[i];
+      dessicationRate(iday,i) = sDay.GMres.DessicationRate[i];
+      mortalityRate(iday,i) = sDay.GMres.MortalityRate[i];
+    }
+  }
+
+  if(x.control.results.decompositionPoolResults) {
+    NumericMatrix decompositionPool = Rcpp::as<Rcpp::NumericMatrix>(l["DecompositionPools"]);
+    decompositionPool(iday,0) = vecsum(x.internalSnags.SmallBranches) + vecsum(x.internalSnags.LargeWood);
+    decompositionPool(iday,1) = vecsum(x.internalLitter.Leaves) + vecsum(x.internalLitter.Twigs) + vecsum(x.internalLitter.SmallBranches) + vecsum(x.internalLitter.LargeWood);
+    decompositionPool(iday,2) = vecsum(x.internalLitter.FineRoots)+ vecsum(x.internalLitter.CoarseRoots);
+    decompositionPool(iday,3) = x.internalSOC.SurfaceMetabolic;
+    decompositionPool(iday,4) = x.internalSOC.SoilMetabolic;
+    decompositionPool(iday,5) = x.internalSOC.SurfaceActive;
+    decompositionPool(iday,6) = x.internalSOC.SoilActive;
+    decompositionPool(iday,7) = x.internalSOC.SurfaceSlow;
+    decompositionPool(iday,8) = x.internalSOC.SoilSlow;
+    decompositionPool(iday,9) = x.internalSOC.SoilPassive;
+  }
+
+  NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(l["BiomassBalance"]);
+  StandBiomassBalance(iday,0) = vecsum(sDay.PBBres.StructuralBiomassBalance);
+  StandBiomassBalance(iday,1) = vecsum(sDay.PBBres.LabileBiomassBalance);
+  StandBiomassBalance(iday,2) = vecsum(sDay.PBBres.PlantBiomassBalance);
+  StandBiomassBalance(iday,3) = vecsum(sDay.PBBres.MortalityBiomassLoss);
+  StandBiomassBalance(iday,4) = vecsum(sDay.PBBres.CohortBiomassBalance);
+  
+  NumericMatrix StandCarbonBalance = Rcpp::as<Rcpp::NumericMatrix>(l["CarbonBalance"]);
+  StandCarbonBalance(iday,0) = sDay.standCB.GrossPrimaryProduction;
+  StandCarbonBalance(iday,1) = sDay.standCB.MaintenanceRespiration;
+  StandCarbonBalance(iday,2) = sDay.standCB.SynthesisRespiration;
+  StandCarbonBalance(iday,3) = sDay.standCB.NetPrimaryProduction;
+  StandCarbonBalance(iday,4) = sDay.standCB.HeterotrophicRespiration;
+  StandCarbonBalance(iday,5) = sDay.standCB.FireCombustion;
+  StandCarbonBalance(iday,6) = sDay.standCB.NetEcosystemProduction;
+}
+
 //' Forest growth
 //' 
 //' Function \code{growth} is a process-based model that performs energy, water and carbon balances; 
@@ -696,7 +906,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
 List growth(List x, DataFrame meteo, double latitude, 
             double elevation, double slope = NA_REAL, double aspect = NA_REAL,
             NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
-
+  
   //Clone input
   x = clone(x);
   
@@ -709,13 +919,13 @@ List growth(List x, DataFrame meteo, double latitude,
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
   checkgrowthInput(x, transpirationMode, soilFunctions);
-
-
+  
+  
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   IntegerVector SPunique = uniqueSpp(SP);
-
+  
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
@@ -817,13 +1027,13 @@ List growth(List x, DataFrame meteo, double latitude,
   List outputList = defineGrowthDailyOutput(latitude, elevation, slope, aspect,
                                             dateStrings, x);
   outputList["weather"] = clone(meteo);
-
+  
   //Count years (times structural variables will be updated)
   int numYears = 0;
   for(int i=0;i<numDays;i++) {
     if(((DOY[i]==1) && (i>0)) || ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
   }
-
+  
   NumericVector initialSoilContent = water(soil, soilFunctions);
   NumericVector initialPlantContent = plantWaterContent(x);
   double initialSnowContent = x["snowpack"];
@@ -840,13 +1050,31 @@ List growth(List x, DataFrame meteo, double latitude,
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
-  //Instance communication structures
-  List internalCommunication = instanceCommunicationStructures(x, "growth");
 
   bool error_occurence = false;
+  
+  //Internal object
+  ModelInput x_c(x);
+  
+  // Build communication structures
+  int nlayers = x_c.soil.getNlayers();
+  int ncanlayers = x_c.canopy.zlow.size();
+  int numCohorts = x_c.cohorts.SpeciesIndex.size();
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
+  
+  
+  GROWTHCommunicationStructures GROWTHcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+  BasicTranspiration_RESULT BTres(numCohorts, nlayers);
+  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
+  BasicGROWTH_RESULT BGROWTHres(BSPWBres, numCohorts);
+  AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
+  AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
+  AdvancedGROWTH_RESULT AGROWTHres(ASPWBres, numCohorts, ntimesteps);
+  
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
   std::string yearString;
+  std::vector<double> lateralFlows(nlayers, 0.0);
   for(int i=0;i<numDays;i++) {
     std::string c = as<std::string>(dateStrings[i]);
     yearString = c.substr(0, 4);
@@ -882,16 +1110,16 @@ List growth(List x, DataFrame meteo, double latitude,
       for(int h=0;h<W.size();h++) W[h] = 1.0;
     }
     
-
+    
     //Julian day from either input column or date
     int J = NA_INTEGER;
     if(julianday_input) J = JulianDay[i];
     if(IntegerVector::is_na(J)){
       std::string c = as<std::string>(dateStrings[i]);
-      J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
-    double delta = meteoland::radiation_solarDeclination(J);
-    double solarConstant = meteoland::radiation_solarConstant(J);
+    double delta = solarDeclination_c(J);
+    double solarConstant = solarConstant_c(J);
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
@@ -902,7 +1130,7 @@ List growth(List x, DataFrame meteo, double latitude,
       tmax = swap;
     }
     double prec = Precipitation[i];
-    double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+    double tday = averageDaylightTemperature_c(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
@@ -910,8 +1138,8 @@ List growth(List x, DataFrame meteo, double latitude,
       rhmax = 100.0;
     }
     if(NumericVector::is_na(rhmin)) {
-      double vp_tmin = meteoland::utils_saturationVP(tmin);
-      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      double vp_tmin = saturationVapourPressure_c(tmin);
+      double vp_tmax = saturationVapourPressure_c(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
     }
     if(rhmin > rhmax) {
@@ -921,40 +1149,43 @@ List growth(List x, DataFrame meteo, double latitude,
       rhmax = swap;
     }
     if(NumericVector::is_na(rad)) {
-      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
-      rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
-                                                slorad, asprad, delta, tmax -tmin, tmax-tmin,
-                                                vpa, prec);
+      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+      rad = RDay_c(solarConstant, latrad, elevation,
+                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                   vpa, prec);
     }
-    PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
-                               tmin, tmax, rhmin, rhmax, rad, wind);
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J, 
+                         tmin, tmax, rhmin, rhmax, rad, wind);
     
     //1. Phenology (only leaf fall)
     if(leafPhenology) {
-      updatePhenology(x, DOY[i], Photoperiod[i], tday);
-      updateLeaves(x, wind, true);
+      updatePhenology_c(x_c, DOY[i], Photoperiod[i], tday);
+      updateLeaves_c(x_c, wind, true);
     }
     
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
-      NumericVector meteovec_inner = NumericVector::create(
-        Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-        Named("prec") = prec, 
-        Named("rhmin") = rhmin, Named("rhmax") = rhmax,
-        Named("rad") = rad, 
-        Named("wind") = wind, 
-        Named("pet") = PET[i],
-        Named("Catm") = Catm);
-      meteovec_inner.push_back(Patm[i], "Patm");
-      meteovec_inner.push_back(Rint, "rint");
-      meteovec_inner.push_back(FireProbability[i], "pfire"); 
+      WeatherInputVector meteovec;
+      meteovec.tday = tday;
+      meteovec.tmax = tmax;
+      meteovec.tmin = tmin;
+      meteovec.prec = prec;
+      meteovec.rhmin = rhmin;
+      meteovec.rhmax = rhmax;
+      meteovec.rad = rad; 
+      meteovec.wind = wind; 
+      meteovec.Catm = Catm;
+      meteovec.Patm = Patm[i];
+      meteovec.pet = PET[i];
+      meteovec.rint = Rint;
+      meteovec.pfire = FireProbability[i];
       try{
-        growthDay_private(internalCommunication, x, meteovec_inner,  
-                           latitude, elevation, slope, aspect,
-                           solarConstant, delta, 
-                           0.0, R_NilValue, waterTableDepth,
-                           false); //No Runon in simulations for a single cell
-        fillGrowthDailyOutput(outputList, x, internalCommunication["basicGROWTHOutput"], i);
+        growthDay_private_c(BGROWTHres, GROWTHcomm, x_c, 
+                            meteovec, 
+                            latitude, elevation, slope, aspect,
+                            solarConstant, delta, 
+                            0.0, lateralFlows, waterTableDepth);
+        fillGrowthDailyOutput_c(outputList, x_c, BGROWTHres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -968,30 +1199,30 @@ List growth(List x, DataFrame meteo, double latitude,
         tminPrev = MinTemperature[i-1];
       }
       if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
-      NumericVector meteovec = NumericVector::create(
-        Named("tday") = tday,
-        Named("tmin") = tmin, 
-        Named("tmax") = tmax,
-        Named("tminPrev") = tminPrev, 
-        Named("tmaxPrev") = tmaxPrev, 
-        Named("tminNext") = tminNext, 
-        Named("prec") = Precipitation[i],
-        Named("rhmin") = rhmin, 
-        Named("rhmax") = rhmax, 
-        Named("rad") = rad, 
-        Named("wind") = wind, 
-        Named("Catm") = Catm,
-        Named("Patm") = Patm[i],
-        Named("pet") = PET[i],
-        Named("rint") = Rint);
-      meteovec.push_back(FireProbability[i], "pfire"); 
+      WeatherInputVector meteovec;
+      meteovec.tmax = tmax;
+      meteovec.tmin = tmin;
+      meteovec.tday = tday;
+      meteovec.tminPrev = tminPrev;
+      meteovec.tminNext = tminNext;
+      meteovec.tmaxPrev = tmaxPrev;
+      meteovec.prec = Precipitation[i];
+      meteovec.rhmin = rhmin;
+      meteovec.rhmax = rhmax;
+      meteovec.rad = rad; 
+      meteovec.wind = wind; 
+      meteovec.Catm = Catm;
+      meteovec.Patm = Patm[i];
+      meteovec.pet = PET[i];
+      meteovec.rint = Rint;
+      meteovec.pfire = FireProbability[i]; 
       try{
-        growthDay_private(internalCommunication, x, meteovec, 
-                           latitude, elevation, slope, aspect,
-                           solarConstant, delta, 
-                           0.0, R_NilValue, waterTableDepth,
-                           verbose);
-        fillGrowthDailyOutput(outputList, x, internalCommunication["advancedGROWTHOutput"], i);
+        growthDay_private_c(AGROWTHres, GROWTHcomm, x_c, 
+                            meteovec, 
+                            latitude, elevation, slope, aspect,
+                            solarConstant, delta, 
+                            0.0, lateralFlows, waterTableDepth);
+        fillGrowthDailyOutput_c(outputList, x_c, AGROWTHres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -999,16 +1230,17 @@ List growth(List x, DataFrame meteo, double latitude,
     }    
     
     //Add cohort biomass sum
-    List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
-    NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
-    cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
+    // List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
+    // NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
+    // cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
   }
   if(verbose) Rcout << "\n\n";
   
   // Check biomass balance
-  DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
-  double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
+  x_c.copyStateToList(x);  
   if(verbose) {
+    DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
+    double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
     NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(outputList["BiomassBalance"]);
     
     Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
@@ -1028,5 +1260,345 @@ List growth(List x, DataFrame meteo, double latitude,
     }
   }
   
+  return(outputList);
+}
+
+// OLD GROWTH FUNCTION (NOT MAINTAINED)
+// [[Rcpp::export(".growth_old")]]
+List growth_old(List x, DataFrame meteo, double latitude,
+                double elevation, double slope = NA_REAL, double aspect = NA_REAL,
+                NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
+  
+  //Clone input
+  x = clone(x);
+
+  //Control params
+  List control =x["control"];
+  String transpirationMode = control["transpirationMode"];
+  String soilFunctions = control["soilFunctions"];
+  bool verbose = control["verbose"];
+  bool leafPhenology = control["leafPhenology"];
+  bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  checkgrowthInput(x, transpirationMode, soilFunctions);
+
+
+  //Cohort info
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
+  IntegerVector SPunique = uniqueSpp(SP);
+
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+
+  //Meteorological input
+  NumericVector MinTemperature, MaxTemperature;
+  NumericVector MinRelativeHumidity, MaxRelativeHumidity;
+  NumericVector Radiation;
+  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
+  NumericVector Precipitation = meteo["Precipitation"];
+  int numDays = Precipitation.size();
+  if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
+  Radiation = meteo["Radiation"];
+
+  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation' are not allowed");
+  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature' are not allowed");
+  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature' are not allowed");
+  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
+  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
+  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
+
+  NumericVector WindSpeed(numDays, NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+
+  NumericVector FireProbability(numDays, 0.0);
+  if(meteo.containsElementNamed("FireProbability")) FireProbability = meteo["FireProbability"];
+
+  NumericVector PET = NumericVector(numDays, NA_REAL);
+
+  NumericVector CO2(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("CO2")) {
+    CO2 = meteo["CO2"];
+    if(verbose) {
+      Rcout<<"CO2 taken from input column 'CO2'\n";
+    }
+    if(any(is_na(CO2))) stop("Missing values in 'CO2'");
+  }
+  NumericVector Patm(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) {
+    Patm = meteo["Patm"];
+    if(verbose) {
+      Rcout<<"Patm taken from input column 'Patm'\n";
+    }
+  }
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
+
+  IntegerVector DOY, JulianDay;
+  NumericVector Photoperiod;
+  bool doy_input = false, photoperiod_input = false, julianday_input = false;
+  if(meteo.containsElementNamed("DOY")) {
+    DOY = meteo["DOY"];
+    doy_input = true;
+    if(verbose) {
+      Rcout<<"DOY taken from input column 'DOY'\n";
+    }
+  }
+  if(meteo.containsElementNamed("Photoperiod")) {
+    Photoperiod = meteo["Photoperiod"];
+    photoperiod_input = true;
+    if(verbose) {
+      Rcout<<"Photoperiod taken from input column 'Photoperiod'\n";
+    }
+  }
+  if(meteo.containsElementNamed("JulianDay")) {
+    JulianDay = meteo["JulianDay"];
+    julianday_input = true;
+    if(verbose) {
+      Rcout<<"Julian day taken from input column 'JulianDay'\n";
+    }
+  }
+
+  // Dates
+  CharacterVector dateStrings = getWeatherDates(meteo);
+  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
+
+  //Soil params
+  DataFrame soil = Rcpp::as<Rcpp::DataFrame>(x["soil"]);
+
+  //Output list
+  List outputList = defineGrowthDailyOutput(latitude, elevation, slope, aspect,
+                                            dateStrings, x);
+  outputList["weather"] = clone(meteo);
+
+  //Count years (times structural variables will be updated)
+  int numYears = 0;
+  for(int i=0;i<numDays;i++) {
+    if(((DOY[i]==1) && (i>0)) || ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
+  }
+
+  NumericVector initialSoilContent = water(soil, soilFunctions);
+  NumericVector initialPlantContent = plantWaterContent(x);
+  double initialSnowContent = x["snowpack"];
+
+
+  DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
+  double cohortBiomassBalanceSum = 0.0;
+  double initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
+
+  if(verbose) {
+    Rcout<<"Initial plant cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
+    Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
+    Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
+    Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
+  }
+
+  //Instance communication structures
+  List internalCommunication = instanceCommunicationStructures(x, "growth");
+
+  bool error_occurence = false;
+  if(verbose) Rcout << "Performing daily simulations\n";
+  List s;
+  std::string yearString;
+  for(int i=0;i<numDays;i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    yearString = c.substr(0, 4);
+    if(verbose) {
+      if(DOY[i]==1 || i==0) {
+        Rcout<<"\n Year "<< yearString<< ":";
+      }
+      else if(i%30 == 0) Rcout<<".";//<<i;
+    }
+
+    double wind = WindSpeed[i];
+    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
+    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+
+    double Catm = CO2[i];
+    //If missing, use
+    if(NumericVector::is_na(Catm)) {
+      if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
+    }
+    //If still missing, use default control value
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["defaultCO2"];
+    }
+
+    double Rint = RainfallIntensity[i];
+    if(NumericVector::is_na(Rint)) {
+      int month = std::atoi(c.substr(5,2).c_str());
+      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
+    }
+
+    if(unlimitedSoilWater) {
+      NumericVector W = soil["W"];
+      for(int h=0;h<W.size();h++) W[h] = 1.0;
+    }
+
+
+    //Julian day from either input column or date
+    int J = NA_INTEGER;
+    if(julianday_input) J = JulianDay[i];
+    if(IntegerVector::is_na(J)){
+      std::string c = as<std::string>(dateStrings[i]);
+      J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+    }
+    double delta = solarDeclination_c(J);
+    double solarConstant = solarConstant_c(J);
+
+    double tmin = MinTemperature[i];
+    double tmax = MaxTemperature[i];
+    if(tmin > tmax) {
+      warning("tmin > tmax. Swapping values.");
+      double swap = tmin;
+      tmin = tmax;
+      tmax = swap;
+    }
+    double prec = Precipitation[i];
+    double tday = averageDaylightTemperature_c(tmin, tmax);
+    double rhmin = MinRelativeHumidity[i];
+    double rhmax = MaxRelativeHumidity[i];
+    double rad = Radiation[i];
+    if(NumericVector::is_na(rhmax)) {
+      rhmax = 100.0;
+    }
+    if(NumericVector::is_na(rhmin)) {
+      double vp_tmin = saturationVapourPressure_c(tmin);
+      double vp_tmax = saturationVapourPressure_c(tmax);
+      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
+    if(rhmin > rhmax) {
+      warning("rhmin > rhmax. Swapping values.");
+      double swap = rhmin;
+      rhmin = rhmax;
+      rhmax = swap;
+    }
+    if(NumericVector::is_na(rad)) {
+      double vpa = averageDailyVapourPressure_c(tmin, tmax, rhmin, rhmax);
+      rad = RDay_c(solarConstant, latrad, elevation,
+                   slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                   vpa, prec);
+    }
+    PET[i] = PenmanPET_c(latrad, elevation, slorad, asprad, J,
+                         tmin, tmax, rhmin, rhmax, rad, wind);
+
+    //1. Phenology (only leaf fall)
+    if(leafPhenology) {
+      updatePhenology(x, DOY[i], Photoperiod[i], tday);
+      updateLeaves(x, wind, true);
+    }
+
+    //2. Water balance and photosynthesis
+    if(transpirationMode=="Granier") {
+      NumericVector meteovec_inner = NumericVector::create(
+        Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
+              Named("prec") = prec,
+              Named("rhmin") = rhmin, Named("rhmax") = rhmax,
+              Named("rad") = rad,
+              Named("wind") = wind,
+              Named("pet") = PET[i],
+                                Named("Catm") = Catm);
+      meteovec_inner.push_back(Patm[i], "Patm");
+      meteovec_inner.push_back(Rint, "rint");
+      meteovec_inner.push_back(FireProbability[i], "pfire");
+      try{
+        growthDay_private(internalCommunication, x, meteovec_inner,
+                          latitude, elevation, slope, aspect,
+                          solarConstant, delta,
+                          0.0, R_NilValue, waterTableDepth,
+                          false); //No Runon in simulations for a single cell
+        fillGrowthDailyOutput(outputList, x, internalCommunication["basicGROWTHOutput"], i);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
+    } else {
+      double tmaxPrev = tmax;
+      double tminPrev = tmin;
+      double tminNext = tmin;
+      if(i>0) {
+        tmaxPrev = MaxTemperature[i-1];
+        tminPrev = MinTemperature[i-1];
+      }
+      if(i<(numDays-1)) tminNext = MinTemperature[i+1];
+      NumericVector meteovec = NumericVector::create(
+        Named("tday") = tday,
+        Named("tmin") = tmin,
+        Named("tmax") = tmax,
+        Named("tminPrev") = tminPrev,
+        Named("tmaxPrev") = tmaxPrev,
+        Named("tminNext") = tminNext,
+        Named("prec") = Precipitation[i],
+                                     Named("rhmin") = rhmin,
+                                     Named("rhmax") = rhmax,
+                                     Named("rad") = rad,
+                                     Named("wind") = wind,
+                                     Named("Catm") = Catm,
+                                     Named("Patm") = Patm[i],
+                                                         Named("pet") = PET[i],
+                                                                           Named("rint") = Rint);
+      meteovec.push_back(FireProbability[i], "pfire");
+      try{
+        growthDay_private(internalCommunication, x, meteovec,
+                          latitude, elevation, slope, aspect,
+                          solarConstant, delta,
+                          0.0, R_NilValue, waterTableDepth,
+                          verbose);
+        fillGrowthDailyOutput(outputList, x, internalCommunication["advancedGROWTHOutput"], i);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
+    }
+
+    //Add cohort biomass sum
+    List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
+    NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);
+    cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
+  }
+  if(verbose) Rcout << "\n\n";
+
+  // Check biomass balance
+  DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
+  double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
+  if(verbose) {
+    NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(outputList["BiomassBalance"]);
+
+    Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
+    Rcout<<"Change in plant cohort biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
+    Rcout<<"Plant biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
+    Rcout<<"Plant biomass balance components:\n";
+
+    Rcout<<"  Structural balance (g/m2) "  <<round(sum(StandBiomassBalance(_,0)))<<" Labile balance (g/m2) "  <<round(sum(StandBiomassBalance(_,1))) <<"\n";
+    Rcout<<"  Plant individual balance (g/m2) "  <<round(sum(StandBiomassBalance(_,2)))<<" Mortality loss (g/m2) "  <<round(sum(StandBiomassBalance(_,3))) <<"\n";
+
+    printWaterBalanceResult(outputList, x,
+                            initialPlantContent, initialSoilContent, initialSnowContent,
+                            transpirationMode);
+
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
+    }
+  }
+
   return(outputList);
 }

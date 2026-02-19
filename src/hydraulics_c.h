@@ -1,0 +1,64 @@
+#include "RcppArmadillo.h"
+
+#ifndef HYDRAULICS_C_H
+#define HYDRAULICS_C_H
+
+double const maxPsi = -0.000001; //Maximum Psi value to avoid numerical problems
+double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
+
+double K2Psi_c(double K, double psi_extract, double exp_extract);
+double Psi2K_c(double psi, double psi_extract, double exp_extract);
+
+double gmin_c(double leafTemperature, double gmin_20, 
+              double TPhase, double Q10_1, double Q10_2);
+
+double xylemConductance_c(double psi, double kxylemmax, double c, double d);
+double xylemPsi_c(double kxylem, double kxylemmax, double c, double d);
+double psiCrit_c(double c, double d, double pCrit);
+double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double alpha);
+double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope);
+
+double correctConductanceForViscosity_c(double kxylem, double temp);
+
+double averagePsi_c(const std::vector<double>& psi, const std::vector<double>& v, double exp_extract, double psi_extract);
+double averagePsiPool_c(const arma::mat& Psi, const arma::mat& RHOPcohV, double exp_extract, double psi_extract);
+
+double Egamma_c(double psi, double kxylemmax, double c, double d, double psiCav = 0.0);
+double Egammainv_c(double Eg, double kxylemmax, double c, double d, double psiCav = 0.0);
+double EXylem_c(double psiPlant, double psiUpstream, 
+                double kxylemmax, double c, double d, 
+                bool allowNegativeFlux = true, double psiCav = 0.0);
+double E2psiXylem_c(double E, double psiUpstream, 
+                    double kxylemmax, double c, double d, double psiCav = 0.0);
+double E2psiXylemUp_c(double E, double psiDownstream, 
+                      double kxylemmax, double c, double d, double psiCav = 0.0);
+double EVanGenuchten_c(double psiRhizo, double psiSoil, double krhizomax, 
+                       double n, double alpha, double l = 0.5);
+double ECrit_c(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001);
+double E2psiVanGenuchten_c(double E, double psiSoil, double krhizomax, double n, double alpha, 
+                           double psiStep = -0.0001, double psiMax = -10.0);
+double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
+                          double psiStep = -0.0001, double psiMax = -10.0);
+
+
+double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, 
+                                      double PLC_crit, double P50_cv);
+
+double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, 
+                                      double PLC_crit, double P50_cv);
+
+std::vector<double> rootxylemConductanceProportions_c(const std::vector<double>& L, const std::vector<double>& V);
+
+double findRhizosphereMaximumConductance_c(double averageResistancePercent, double n, double alpha,
+                                           double krootmax, double rootc, double rootd,
+                                           double kstemmax, double stemc, double stemd,
+                                           double kleafmax, double leafc, double leafd,
+                                           double initialValue = 0.0);
+
+double taperFactorSavage_c(double height);
+double terminalConduitRadius_c(double height);
+double referenceConductivityHeightFactor_c(double refheight, double height);
+
+double maximumStemHydraulicConductance_c(double xylemConductivity, double refheight, double Al2As,  double height, bool taper = false);
+
+#endif

@@ -1,19 +1,20 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
+#include <cmath>
 #include "soil.h"
+#include "soil_c.h"
 #include "root.h"
-#include "hydraulics.h"
-#include "communication_structures.h"
 #include "biophysicsutils.h"
+#include "biophysicsutils_c.h"
+#include "hydraulics.h"
+#include "hydraulics_c.h"
+#include "hydrology_c.h"
+#include "communication_structures.h"
 #include "numerical_solving.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
-//Old defaults
-//ERconv=0.05, ERsyn = 0.2
-//New defaults
-//Rconv = 5.6, Rsyn = 1.5
 
 //' @param month Month of the year (from 1 to 12).
 //' @param prec Precipitation for a given day (mm).
@@ -23,44 +24,12 @@ using namespace Rcpp;
 //' @keywords internal
 // [[Rcpp::export("hydrology_rainfallIntensity")]]
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth){
-  double Ri_month = rainfallIntensityPerMonth[month - 1];
-  double Ri = std::max(prec/24.0,Ri_month);
-  return(Ri);
+   // This makes a copy of the vector
+   std::vector<double> Ri_month = as<std::vector<double> >(rainfallIntensityPerMonth);
+   return(rainfallIntensity_c(month, prec, Ri_month));
 }
 
-// [[Rcpp::export(".hydrology_interceptionGashDay")]]
-double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05) {
-  double I = 0.0;
-  double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Rainfall need to saturate the canopy
-  if(Cm==0.0 || p==1.0) PG = 0.0; //Avoid NAs
-  if(Rainfall>PG) {
-    I = (1-p)*PG + (1-p)*ER*(Rainfall-PG);
-  } else {
-    I = (1-p)*Rainfall;
-  }
-  return(I);
-}
 
-// [[Rcpp::export(".hydrology_interceptionLiuDay")]]
-double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05){
-  double I = Cm*(1.0 - exp(-1.0*(Rainfall)*((1.0 - p)/Cm)))*(1.0 - (ER/(1.0 - p))) + (ER*Rainfall);
-  return(I);
-}
-
-//' @rdname hydrology_soilEvaporation
-//' 
-//' @param DEF Water deficit in the (topsoil) layer.
-//' @param PETs Potential evapotranspiration at the soil surface.
-//' @param Gsoil Gamma parameter (maximum daily evaporation).
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_soilEvaporationAmount")]]
-double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
-  double t = pow(DEF/Gsoil, 2.0);
-  double Esoil = 0.0;
-  Esoil = std::min(Gsoil*(sqrt(t + 1.0)-sqrt(t)), PETs);
-  return(Esoil);
-}
 
 //' Bare soil evaporation and herbaceous transpiration
 //'
@@ -98,20 +67,17 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
 double soilEvaporation(DataFrame soil, double snowpack, 
                        String soilFunctions, double pet, double LgroundSWR,
                        bool modifySoil = true) {
-  NumericVector W = soil["W"]; //Access to soil state variable
-  NumericVector widths = soil["widths"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector psiSoil = psi(soil, soilFunctions);
-  double Esoil = 0.0;
-  if(snowpack == 0.0) {
-    double PETsoil = pet*(LgroundSWR/100.0);
-    double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
-    // Allow evaporation only if water potential is higher than -2 MPa
-    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-    if(modifySoil){
-      W[0] = W[0] - (Esoil/Water_FC[0]);
+  Soil soil_c = Soil(soil, soilFunctions);
+
+  double Esoil = soilEvaporation_c(soil_c, 
+                                   snowpack, pet, LgroundSWR, modifySoil);
+  if(modifySoil) {
+    NumericVector W = soil["W"];
+    for(int l=0;l<W.size();l++) {
+      W[l] = soil_c.getW(l);
     }
   }
+                                                              
   return(Esoil);
 }
 
@@ -122,22 +88,60 @@ double soilEvaporation(DataFrame soil, double snowpack,
 // [[Rcpp::export("hydrology_herbaceousTranspiration")]]
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                       DataFrame soil, String soilFunctions, bool modifySoil = true){
-  if(NumericVector::is_na(herbLAI)) return(0.0);
-  double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
   NumericVector widths = soil["widths"];
-  NumericVector W = soil["W"];
-  int nlayers = widths.size();
-  NumericVector psiSoil = psi(soil, soilFunctions);
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector EherbVec(nlayers,0.0);
   NumericVector V = ldrRS_one(50, 500, NA_REAL, widths);
-  for(int l=0;l<nlayers;l++) {
-    EherbVec[l] = V[l]*Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0); 
-    if(modifySoil) {
-      W[l] = W[l] - (EherbVec[l]/Water_FC[l]);
+  int nlayers = widths.size();
+  NumericVector EherbVec(nlayers,0.0);
+  Soil soil_c = Soil(soil, soilFunctions);
+  std::vector<double> EherbVec_c = as<std::vector<double> >(EherbVec);
+  herbaceousTranspiration_c(EherbVec_c, 
+                            soil_c, 
+                            pet, LherbSWR, herbLAI,
+                            as<std::vector<double> >(V),
+                            modifySoil);
+  
+  // Copy values
+  for(int l=0;l<nlayers;l++) EherbVec[l] = EherbVec_c[l];
+  if(modifySoil) {
+    NumericVector W = soil["W"];
+    for(int l=0;l<nlayers;l++) {
+      W[l] = soil_c.getW(l);
     }
   }
   return(EherbVec);
+}
+
+
+
+
+
+
+
+
+
+
+//' @rdname hydrology_infiltration
+//' 
+//' @param I Soil infiltration (in mm of water).
+//' @param widths Width of soil layers (in mm).
+//' @param macro Macroporosity of soil layers (in %).
+//' @param a,b Parameters of the extinction function used for water infiltration.
+//' 
+//' @keywords internal
+// [[Rcpp::export("hydrology_infiltrationRepartition")]]
+NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVector macro, 
+                                      double a = -0.005, double b = 3.0) {
+
+  int nlayers = widths.size();
+  NumericVector Ivec(nlayers, 0.0);
+  std::vector<double> Ivec_c = as<std::vector<double> >(Ivec);
+  std::vector<double> widths_c = as<std::vector<double> >(widths);
+  std::vector<double> macro_c = as<std::vector<double> >(macro);
+  infiltrationRepartition_c(I, Ivec_c, widths_c, macro_c, a, b);
+  for(int i=0;i<nlayers;i++) {
+    Ivec[i] = Ivec_c[i];
+  }
+  return(Ivec);
 }
 
 
@@ -151,8 +155,12 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
 //'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
 //' }
 //' 
-//' @param input A numeric vector of (daily) water input (in mm of water).
-//' @param Ssoil Soil water storage capacity (can be referred to topsoil) (in mm of water).
+//' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
+//' @param soil A list containing the description of the soil (see \code{\link{soil}}).
+//' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+//' @param rainfallIntensity rainfall intensity rate (mm/h)
+//' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
+//' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 //' 
 //' 
 //' @return 
@@ -176,139 +184,21 @@ NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLA
 //' 
 //' @name hydrology_infiltration
 //' @keywords internal
-// [[Rcpp::export("hydrology_infiltrationBoughton")]]
-double infiltrationBoughton(double input, double Ssoil) {
-  double I = 0;
-  if(input>0.2*Ssoil) {
-    I = input-(pow(input-0.2*Ssoil,2.0)/(input+0.8*Ssoil));
-  } else {
-    I = input;
-  }
-  return(I);
-}
-
-double fGreenAmpt(double x, double t, double psi_w, double Ksat, double delta_theta) {
-  double f = Ksat*t + std::abs(psi_w)*delta_theta*log(1.0 + (x/(std::abs(psi_w)*delta_theta))) - x;
-  return(f);
-}
-double fGreenAmptDer(double x, double t, double psi_w, double Ksat, double delta_theta) {
-  double fder = (log(1.0 + (x/(std::abs(psi_w)*delta_theta)))/(1.0+ (x/(std::abs(psi_w)*delta_theta))))-1.0;
-  return(fder);
-}
-
+//' 
 //' @rdname hydrology_infiltration
-//' 
-//' @param t Time of the infiltration event
-//' @param psi_w Matric potential at the wetting front
-//' @param Ksat hydraulic conductivity at saturation
-//' @param theta_sat volumetric content at saturation
-//' @param theta_dry volumetric content at the dry side of the wetting front
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_infiltrationGreenAmpt")]]
-double infitrationGreenAmpt(double t, double psi_w, double Ksat, double theta_sat, double theta_dry) {
-  double delta_theta = theta_sat - theta_dry;
-  double x,x1,e,fx,fx1;
-  x1 = 0.0;//initial guess
-  e = 0.001; // accuracy in mm
-  int cnt = 0;
-  int mxiter = 100;
-  do {
-    x=x1; /*make x equal to the last calculated value of  x1*/
-    fx=fGreenAmpt(x, t, psi_w, Ksat, delta_theta);            //simplifying f(x)to fx
-    fx1=fGreenAmptDer(x, t, psi_w, Ksat, delta_theta);            //simplifying fprime(x) to fx1
-    x1=x-(fx/fx1);/*calculate x{1} from x, fx and fx1*/ 
-    cnt++;
-  } while ((std::abs(x1-x)>=e) && (cnt < mxiter));
-  return(x);
-}
-
-
-//' @rdname hydrology_infiltration
-//' 
-//' @param I Soil infiltration (in mm of water).
-//' @param widths Width of soil layers (in mm).
-//' @param macro Macroporosity of soil layers (in %).
-//' @param a,b Parameters of the extinction function used for water infiltration.
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_infiltrationRepartition")]]
-NumericVector infiltrationRepartition(double I, NumericVector widths, NumericVector macro, 
-                                      double a = -0.005, double b = 3.0) {
-  int nlayers = widths.length();
-  NumericVector Pvec = NumericVector(nlayers,0.0);
-  NumericVector Ivec = NumericVector(nlayers,0.0);
-  double z1 = 0.0;
-  double p1 = 1.0;
-  for(int i=0;i<nlayers;i++) {
-    double ai = a*pow(1.0-macro[i],b);
-    if(i<(nlayers-1)) {
-      Pvec[i] = p1*(1.0-exp(ai*widths[i]));
-    } else {
-      Pvec[i] = p1;
-    }
-    p1 = p1*exp(ai*widths[i]);
-    z1 = z1 + widths[i];
-    Ivec[i] = I*Pvec[i];
-  }
-  return(Ivec);
-}
-
-
-//' @rdname hydrology_infiltration
-//' 
-//' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
-//' @param soil A list containing the description of the soil (see \code{\link{soil}}).
-//' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
-//' @param rainfallIntensity rainfall intensity rate (mm/h)
-//' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
-//' @param K_correction Correction for saturated conductivity, to account for increased infiltration due to macropore presence
 //' 
 //' @keywords internal
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, DataFrame soil, 
                           String soilFunctions, String model = "GreenAmpt1911", double K_correction = 1.0) {
-  double infiltration = 0.0;
-  if(model=="GreenAmpt1911") {
-    NumericVector clay = soil["clay"];
-    NumericVector sand = soil["sand"];
-    NumericVector bd = soil["bd"];
-    NumericVector Ksat = soil["Ksat"];
-    String usda = USDAType(clay[0], sand[0]);
-    NumericVector cp = campbellParamsClappHornberger(usda);
-    NumericVector theta_dry = theta(soil, soilFunctions);
-    double t = std::min(24.0, rainfallInput/rainfallIntensity); // time in hours
-    double b = cp["b"];
-    double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
-    double theta_sat = cp["theta_sat"];
-    double K_sat_0 = K_correction*Ksat[0]/(24.0*cmdTOmmolm2sMPa); // from mmolH20*m-2*MPa-1*s-1 to cm_h
-    infiltration = infitrationGreenAmpt(t, psi_w, K_sat_0, theta_sat, theta_dry[0]);
-  } else if(model=="Boughton1989") {
-    NumericVector Water_FC = waterFC(soil, soilFunctions);
-    infiltration = infiltrationBoughton(rainfallInput, Water_FC[0]);
-  } else {
+  if(model!="GreenAmpt1911" && model!="Boughton1989") {
     stop("Wrong infiltration model!");
   }
-  infiltration = std::min(infiltration, rainfallInput);
-  return(infiltration);
-}
-
-//' @rdname hydrology_verticalInputs
-//' 
-//' @param tday Average day temperature (ºC).
-//' @param rad Solar radiation (in MJ/m2/day).
-//' @param elevation Altitude above sea level (m).
-//' 
-//' @keywords internal
-// [[Rcpp::export("hydrology_snowMelt")]]
-double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
-  if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
-  if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
-  double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-  double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
-  double ren = (rad*(LgroundSWR/100.0))*(0.1); //90% albedo of snow
-  double melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
-  return(melt);
+  Soil soil_c = Soil(soil, soilFunctions);
+  std::string model_string = model.get_cstring();
+  return(infiltrationAmount_c(rainfallInput, rainfallIntensity, 
+                              soil_c, 
+                              model_string, K_correction));
 }
 
 
@@ -364,123 +254,50 @@ NumericVector waterInputs(List x,
                           double pet, double tday, double rad, double elevation,
                           double Cm, double LgroundPAR, double LgroundSWR, 
                           bool modifyInput = true) {
-  //Soil input
-  List control = x["control"];
-  String soilFunctions = control["soilFunctions"];
-  String interceptionMode = control["interceptionMode"];
-  double swe = x["snowpack"]; //snow pack
-  double er = pet/(24.0*rainfallIntensity);
-  
-  //Snow pack dynamics
-  double snow = 0.0, rain=0.0;
-  double melt = 0.0;
-  //Turn rain into snow and add it into the snow pack
-  if(tday < 0.0) { 
-    snow = prec; 
-    swe = swe + snow;
-  } else {
-    rain = prec;
-  }
-  //Apply snow melting
-  if(swe > 0.0) {
-    melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
-    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-    swe = swe-melt;
-  }
-  
-  //Hydrologic input
-  double NetRain = 0.0, Interception = 0.0;
-  if(rain>0.0)  {
-    if(interceptionMode=="Gash1995") {
-      Interception = interceptionGashDay(rain,Cm,LgroundPAR/100.0,er);
-    } else if(interceptionMode =="Liu2001") {
-      Interception = interceptionLiuDay(rain,Cm,LgroundPAR/100.0,er);
-    } else {
-      stop("Wrong interception model!");
-    }
-    NetRain = rain - Interception; 
-  }
-  if(modifyInput) {
-    x["snowpack"] = swe;
-  }
-  NumericVector WI = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
-                                           _["Interception"] = Interception,
-                                           _["NetRain"] = NetRain, 
-                                           _["Snowmelt"] = melt);
+
+  WaterInputs_COMM waterInputs;
+  ModelInput x_c = ModelInput(x);
+  waterInputs_c(waterInputs, x_c,
+                 prec, rainfallIntensity,
+                 pet, tday, rad, elevation,
+                 Cm, LgroundPAR, LgroundSWR, 
+                 modifyInput);
+  x["snowpack"] = x_c.snowpack;
+  NumericVector WI = NumericVector::create(_["Rain"] = waterInputs.rain, _["Snow"] = waterInputs.snow,
+                                           _["Interception"] = waterInputs.interception,
+                                           _["NetRain"] = waterInputs.netrain, 
+                                           _["Snowmelt"] = waterInputs.melt);
   return(WI);
 }
 
 
-//Imbitition from macropores to micropores following Larsbo et al. 2005, eq. 6-7
-//Diffusion equation with gradients in water content as driving force
-//Returns m3/m3/s
-double microporeImbibitionRate(double theta_b, double theta_micro, 
-                               double D_theta_b, double D_theta_micro,
-                               double S_macro) {
-  double G_f = 3.0;//geometry factor
-  double gamma_w = 0.1; //Scaling factor
-  double D_w = ((D_theta_b + D_theta_micro)/2.0)*S_macro;//Effective water diffusivity
-  double d = 9.35*1e-3; //Effective diffusion pathlength in m
-  double S_w = std::max(0.0, ((G_f*D_w*gamma_w)/(d*d))*(theta_b - theta_micro));
-  // Rcout<< "D_w " << D_w << " S_w "<< S_w<<"\n";
-  return(S_w);
-}
-
-double rootFindingMacropores(double S_t, double K_up, double Ksat_ms, double Ksat_b_ms, double kin_exp,
-                             double e_macro, double lambda, double dZ_m, double sourceSink_macro_m3s, double tstep, 
-                             int Nmax = 100) {
-  double a = 0.0;
-  //function at 'a'
-  double Ka = (Ksat_ms - Ksat_b_ms)*pow(a, kin_exp);
-  double f_a = S_t - a + (tstep/(e_macro*lambda*dZ_m))*((K_up - Ka) + sourceSink_macro_m3s);
-  double b = a + 1.0;
-  //function at 'b'
-  double Kb = (Ksat_ms - Ksat_b_ms)*pow(b, kin_exp);
-  double f_b = S_t - b + (tstep/(e_macro*lambda*dZ_m))*((K_up - Kb) + sourceSink_macro_m3s);
-  while(f_b > 0.0) {
-    b = b + 1.0;
-    Kb = (Ksat_ms - Ksat_b_ms)*pow(b, kin_exp);
-    f_b = S_t - b + (tstep/(e_macro*lambda*dZ_m))*((K_up - Kb) + sourceSink_macro_m3s);
-    if(b>10.0) stop("Could not find appropriate bounds for macropore circulation");
-  }
-  // Rcout<< "Ka "<< Ka <<" f_a "<< f_a<<" Kb "<< Kb <<" f_b "<< f_b<<"\n";
+//' @name hydrology_verticalInputs
+//' @keywords internal
+// [[Rcpp::export("hydrology_agricultureWaterInputs")]]
+NumericVector agricultureWaterInputs(List x, 
+                                     double prec, double tday, double rad, double elevation,
+                                     double LgroundSWR, 
+                                     bool modifyInput = true) {
   
-  int N = 1;
-  double c = NA_REAL;
-  double Kc = NA_REAL;
-  double f_c = NA_REAL;
-  double tol = 1e-7;
-  bool has_to_stop = false;
-  bool found = false;
-  while(!has_to_stop) {
-    c = (a + b)/2.0; // new midpoint
-    //function at 'c'
-    Kc = (Ksat_ms - Ksat_b_ms)*pow(c, kin_exp);
-    f_c = S_t - c + (tstep/(e_macro*lambda*dZ_m))*((K_up - Kc) + sourceSink_macro_m3s);
-    // Rcout<<N << " std::abs((b - a)/2.0 "<< std::abs((b - a)/2.0) << " c "<< c <<" f_c "<< f_c<<"\n";
-    if((f_c == 0) || (std::abs((b - a)/2.0) < tol)) { // solution found
-      found = true;
-      has_to_stop = true;
-    }
-    if(((f_c > 0) && (f_a > 0)) || ((f_c < 0) && (f_a < 0)) ) { //new interval
-      a = c;
-      f_a = f_c;
-    } else {
-      b = c;
-      f_b = f_c;
-    }
-    N = N + 1; //Increment step counter
-    if(N == Nmax) {
-      has_to_stop = true;
-    }
-  }
-  if(!found) {
-    stop("Not found");
-  }
-  return(c);
+  WaterInputs_COMM waterInputs;
+  AgricultureModelInput x_c = AgricultureModelInput(x);
+  agricultureWaterInputs_c(waterInputs, x_c,
+                           prec, tday, rad, elevation,
+                           LgroundSWR, 
+                           modifyInput);
+  x["snowpack"] = x_c.snowpack;
+  
+  NumericVector WI = NumericVector::create(_["Rain"] = waterInputs.rain, _["Snow"] = waterInputs.snow,
+                                           _["Interception"] = waterInputs.interception,
+                                           _["NetRain"] = waterInputs.netrain, 
+                                           _["Snowmelt"] = waterInputs.melt);
+  return(WI);
 }
 
 
+
+
+// TO BE DELETED WHEN TRANSITION TO C++ IS COMPLETE
 NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, String soilFunctions, 
                                      double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                      double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
@@ -747,7 +564,7 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
       waterFluidity[l] = 1.0;
       if(!NumericVector::is_na(Tsoil[l])) {
         if(Tsoil[l]>0) {
-          waterFluidity[l] = 1.0/waterDynamicViscosity(Tsoil[l]); 
+          waterFluidity[l] = 1.0/waterDynamicViscosity_c(Tsoil[l]); 
         } else {
           waterFluidity[l] = 0.0;
         }
@@ -755,26 +572,26 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
       Ksat[l] = Ksat_ori[l]*lambda[l];//Multiply K for the space available for water movement
       Ksat_ms[l] = 0.01*waterFluidity[l]*Ksat[l]/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
       if(soilDomains=="single") {
-        Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]);
-        C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-        K[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-        Kbc[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_bc);
+        Psi[l] = theta2psiVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]);
+        C[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+        K[l] = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+        Kbc[l] = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_bc);
       } else {
         theta_sat_fict[l] = theta_sat[l] - macro[l];
         //Matching theta point and theta partitioning
         //This ensures theta_b < theta_sat - macro & e_macro > macro
-        theta_b[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat_fict[l], Psi_b);
+        theta_b[l] = psi2thetaVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat_fict[l], Psi_b);
         e_macro[l] = theta_sat[l] - theta_b[l];
         // Rcout<<e_macro[l]<< " "<< macro[l]<<"\n";
-        Ksat_b[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_b);
+        Ksat_b[l] = psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_b);
         theta_micro[l] = std::min(Theta[l], theta_b[l]);
         theta_macro[l] = std::max(Theta[l] - theta_b[l], 0.0);
         //Water potential, conductivity and capacitance in the micropore domain according to the modified retention
-        Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat_fict[l], theta_micro[l]);
-        C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
-        K[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+        Psi[l] = theta2psiVanGenuchten_c(n[l],alpha[l],theta_res[l], theta_sat_fict[l], theta_micro[l]);
+        C[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi[l]);
+        K[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                             Psi[l], Psi_b);
-        Kbc[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+        Kbc[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                               Psi_bc, Psi_b); 
         //Effective saturation and conductivity in the macropore domain
         S_macro[l] = theta_macro[l]/e_macro[l];
@@ -941,12 +758,12 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             if(prop_saturated[l]>0.0) {
               double theta_l= 0.0, quasi_sat_theta_l = 0.0;
               if(soilDomains =="single") {
-                theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
-                quasi_sat_theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
+                theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+                quasi_sat_theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
                 saturated_matrix_correction_m3s[l] = std::max(0.0, ((prop_saturated[l]*quasi_sat_theta_l - theta_l)*lambda[l]*widths[l]*0.001)/tsubstep);
               } else {
-                theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
-                quasi_sat_theta_l = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
+                theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+                quasi_sat_theta_l = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
                 saturated_matrix_correction_m3s[l] = std::max(0.0, ((prop_saturated[l]*theta_b[l] - theta_l)*lambda[l]*widths[l]*0.001)/tsubstep);
                 saturated_macropore_correction_m3s[l] = std::max(0.0, ((1.0 - S_macro_step[l])*(prop_saturated[l]*quasi_sat_theta_l - theta_b[l])*lambda[l]*widths[l]*0.001)/tsubstep);
               }
@@ -961,16 +778,16 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             if(micropore_imbibition) {
               for(int l=0;l<nlayers;l++) {
                 //Update imbibition rate (m3s)
-                double Ksat_fict_ms = psi2kVanGenuchtenMicropores(Ksat_b_ms[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                double Ksat_fict_ms = psi2kVanGenuchtenMicropores_c(Ksat_b_ms[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                                   0.0, Psi_b);
-                double D_theta_b_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                double D_theta_b_m2s = psi2DVanGenuchten_c(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                          Psi_b);
-                double D_theta_micro_m2s = psi2DVanGenuchten(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+                double D_theta_micro_m2s = psi2DVanGenuchten_c(Ksat_fict_ms, n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                              Psi_step[l]);
                 //Calculate imbibition rate in m3/m3/s = s-1
-                double imbibitionRate = microporeImbibitionRate(theta_b[l], theta_micro_step[l], 
-                                                                D_theta_b_m2s, D_theta_micro_m2s, 
-                                                                S_macro_step[l]);
+                double imbibitionRate = microporeImbibitionRate_c(theta_b[l], theta_micro_step[l], 
+                                                                  D_theta_b_m2s, D_theta_micro_m2s, 
+                                                                  S_macro_step[l]);
                 matrixImbibition_m3s[l] = dZ_m[l]*lambda[l]*imbibitionRate;
                 lateral_flows_step_mm[l] += imbibitionRate*widths[l]*lambda[l]*tsubstep; //From m3/m3/s to mm/step
               }
@@ -1043,11 +860,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
           //Calculate K and C at t05
           for(int l=0;l<nlayers;l++) {
             if(soilDomains=="single") {
-              C_step_05 = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
-              K_step_05 = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
+              C_step_05 = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
+              K_step_05 = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step_t05[l]);
             } else {
-              C_step_05 = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step_t05[l]);
-              K_step_05 = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+              C_step_05 = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step_t05[l]);
+              K_step_05 = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                                        Psi_step_t05[l], Psi_b);
             }
             K_step_ms05[l] = 0.01*K_step_05/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
@@ -1129,11 +946,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
             double new_theta, quasi_sat_theta;
             //Calculate new and sat theta depending on soilDomains
             if(soilDomains=="single") {
-              new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
-              quasi_sat_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
+              new_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+              quasi_sat_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_quasi_sat);
             } else {
-              new_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
-              quasi_sat_theta = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
+              new_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+              quasi_sat_theta = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_quasi_sat);
             }
             //Correct for positive psi
             if(Psi_step[l] > 0.0) {
@@ -1155,16 +972,16 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
               Psi_step[l] = Psi_quasi_sat;
             } else { // Update psi
               if(soilDomains=="single") {
-                Psi_step[l] = theta2psiVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], new_theta);
+                Psi_step[l] = theta2psiVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], new_theta);
               } else {
-                Psi_step[l] = theta2psiVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l],new_theta);
+                Psi_step[l] = theta2psiVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l],new_theta);
               }
             }
             // Rcout<<" step "<<s<<" layer " <<l<< " final "<< Psi_step[l]<<"\n";
             //If dual model, update theta and manage excess to macropores
             if((soilDomains=="dual")) {
               //Update theta_micro for the next substep
-              theta_micro_step[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+              theta_micro_step[l] = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
               //If needed, add exceeding moisture to the macropores and correct Psi
               double excess_theta_step = 0.0, excess_to_macro= 0.0;
               if(theta_micro_step[l] > theta_b[l]) {
@@ -1193,11 +1010,11 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
           //Update (micropore) capacitances and conductances for next substep 
           for(int l=0;l<nlayers;l++) {
             if(soilDomains=="single") {
-              C_step[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
-              K_step[l] = waterFluidity[l]*psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+              C_step[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+              K_step[l] = waterFluidity[l]*psi2kVanGenuchten_c(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
             } else {
-              C_step[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
-              K_step[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
+              C_step[l] = psi2cVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat_fict[l], Psi_step[l]);
+              K_step[l] = waterFluidity[l]*psi2kVanGenuchtenMicropores_c(Ksat_b[l], n[l], alpha[l], theta_res[l], theta_sat_fict[l], 
                                                                        Psi_step[l], Psi_b);
             }
             Psi_step_m[l]= Psi_step[l]/mTOMPa; // MPa to m
@@ -1242,8 +1059,8 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
                 ksat_b_i = 0.0;
               }
               //Find solution for half substep
-              double S_t1 = rootFindingMacropores(S_macro_step[l], K_up, ksat_i, ksat_b_i, kin_exp,
-                                                  e_macro[l], lambda[l], dZ_m[l], sourceSink_macro_m3s, tsubstep);
+              double S_t1 = rootFindingMacropores_c(S_macro_step[l], K_up, ksat_i, ksat_b_i, kin_exp,
+                                                    e_macro[l], lambda[l], dZ_m[l], sourceSink_macro_m3s, tsubstep, 100);
               // Rcout << "S " << S_macro_step[l] << " source/sink step " << sourceSink_macro_m3s<< " S1 "<< S_t1<<"\n";
               // 
               //Update macropore conductances for next step (sets K_up for next layer)
@@ -1301,7 +1118,7 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
         Vfin_macro_mm = 0.0;
         for(int l=0;l<nlayers;l++) {
           if(soilDomains=="single") {
-            Theta[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
+            Theta[l] = psi2thetaVanGenuchten_c(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_step[l]);
           } else {
             Theta[l] = theta_micro_step[l] + theta_macro_step[l];
             Vfin_micro_mm += theta_micro_step[l]*widths[l]*lambda[l];
@@ -1568,11 +1385,80 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", 
                                int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true) {
-  List SWBcommunication = communicationSoilWaterBalance(soil.nrow());
-  NumericVector res = soilWaterBalance_inner(SWBcommunication, soil, soilFunctions, 
-                                             rainfallInput, rainfallIntensity, snowmelt, sourceSink, 
-                                             runon, lateralFlows, waterTableDepth,
-                                             infiltrationMode, infiltrationCorrection, soilDomains, 
-                                             nsteps, max_nsubsteps, modifySoil);
+  std::string infiltrationMode_str = infiltrationMode.get_cstring();
+  std::string soilDomains_str = soilDomains.get_cstring();
+  SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow());
+  SoilWaterBalance_RESULT SWBres;
+  Soil soil_c = Soil(soil, soilFunctions);
+  std::vector<double> lateralFlows_c(soil.nrow(), 0.0);
+  NumericVector lateralFlows_mm;
+  if(lateralFlows.isNotNull()) {
+    lateralFlows_mm = NumericVector(lateralFlows);
+    for(int l=0;l<lateralFlows_mm.size();l++) {
+      lateralFlows_c[l] = lateralFlows_mm[l];
+    }
+  }
+  std::vector<double> sourceSink_c= Rcpp::as< std::vector<double> >(sourceSink);
+  soilWaterBalance_inner_c(SWBres, SWBcomm, soil_c,
+                           rainfallInput, rainfallIntensity, snowmelt, sourceSink_c,
+                           runon, lateralFlows_c, waterTableDepth,
+                           infiltrationMode_str, infiltrationCorrection,
+                           soilDomains_str,
+                           nsteps, max_nsubsteps);
+  NumericVector res;
+  if(soilDomains== "buckets") {
+    res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+                                _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+                                _["Infiltration"] = SWBres.infiltration_mm,
+                                _["InfiltrationExcess"] = SWBres.infiltrationExcess_mm,
+                                _["SaturationExcess"] = SWBres.saturationExcess_mm,
+                                _["Runoff"] = SWBres.runoff_mm,
+                                _["DeepDrainage"] = SWBres.deepDrainage_mm);
+  } else if(soilDomains == "single") {
+    res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+                                _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+                                _["Infiltration"] = SWBres.infiltration_mm,
+                                _["InfiltrationExcess"] = SWBres.infiltrationExcess_mm,
+                                _["SaturationExcess"] = SWBres.saturationExcess_mm,
+                                _["Runoff"] = SWBres.runoff_mm,
+                                _["DeepDrainage"] = SWBres.deepDrainage_mm,
+                                _["CapillarityRise"] = SWBres.capillarityRise_mm,
+                                _["Correction"] = SWBres.correction_mm,
+                                _["VolumeChange"] = SWBres.volumeChange_mm,
+                                _["Substeps"] = SWBres.substeps);
+  } else if(soilDomains == "dual") {
+    res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
+                                _["Lateral source/sinks"] = SWBres.lateralSourceSinks_mm,
+                                _["Matrix-macropore flow"] = SWBres.matrixMacroporeFlow_mm,
+                                _["InfiltrationMatrix"] = SWBres.infiltrationMatrix_mm,
+                                _["InfiltrationMacropores"] = SWBres.infiltrationMacropores_mm,
+                                _["InfiltrationExcessMatrix"] = SWBres.infiltrationExcessMatrix_mm,
+                                _["InfiltrationExcessMacropores"] = SWBres.infiltrationExcessMacropores_mm,
+                                _["SaturationExcessMatrix"] = SWBres.saturationExcessMatrix_mm,
+                                _["SaturationExcessMacropores"] = SWBres.saturationExcessMacropores_mm,
+                                _["DrainageMatrix"] = SWBres.drainageMatrix_mm,
+                                _["DrainageMacropores"] = SWBres.drainageMacropores_mm,
+                                _["CapillarityMatrix"] = SWBres.capillarityMatrix_mm,
+                                _["CapillarityMacropores"] = SWBres.capillarityMacropores_mm,
+                                _["CorrectionMatrix"] = SWBres.correctionMatrix_mm,
+                                _["CorrectionMacropores"] = SWBres.correctionMacropores_mm,
+                                _["MatrixVolumeChange"] = SWBres.matrixVolumeChange_mm,
+                                _["MacroporeVolumeChange"] = SWBres.macroporeVolumeChange_mm,
+                                _["Infiltration"] = SWBres.infiltration_mm,
+                                _["InfiltrationExcess"] = SWBres.infiltrationExcess_mm);
+    res.push_back(SWBres.saturationExcess_mm, "SaturationExcess");
+    res.push_back(SWBres.runoff_mm, "Runoff");
+    res.push_back(SWBres.deepDrainage_mm, "DeepDrainage");
+    res.push_back(SWBres.capillarityRise_mm, "CapillarityRise");
+    res.push_back(SWBres.correction_mm, "Correction");
+    res.push_back(SWBres.volumeChange_mm, "VolumeChange");
+    res.push_back((double) SWBres.substeps, "Substeps");
+  }
+  if(modifySoil) {
+    NumericVector W = soil["W"];
+    for(int l=0;l<W.size();l++) {
+      W[l] = soil_c.getW(l);
+    }
+  }
   return(res);
 }

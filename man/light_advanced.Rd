@@ -2,22 +2,18 @@
 % Please edit documentation in R/RcppExports.R
 \name{light_advanced}
 \alias{light_advanced}
-\alias{light_leafAngleCDF}
 \alias{light_leafAngleBetaParameters}
-\alias{light_directionalExtinctionCoefficient}
 \alias{light_layerDirectIrradianceFraction}
 \alias{light_layerDiffuseIrradianceFraction}
 \alias{light_cohortSunlitShadeAbsorbedRadiation}
 \alias{light_layerSunlitFraction}
 \alias{light_instantaneousLightExtinctionAbsortion}
 \alias{light_longwaveRadiationSHAW}
+\alias{light_leafAngleCDF}
+\alias{light_directionalExtinctionCoefficient}
 \title{Advanced radiation transfer functions}
 \usage{
-light_leafAngleCDF(leafAngle, p, q)
-
 light_leafAngleBetaParameters(leafAngle, leafAngleSD)
-
-light_directionalExtinctionCoefficient(p, q, solarElevation)
 
 light_layerDirectIrradianceFraction(
   LAIme,
@@ -82,15 +78,15 @@ light_longwaveRadiationSHAW(
   Tair,
   trunkExtinctionFraction = 0.1
 )
+
+light_leafAngleCDF(leafAngle, p, q)
+
+light_directionalExtinctionCoefficient(p, q, solarElevation)
 }
 \arguments{
 \item{leafAngle}{Average leaf inclination angle (in radians).}
 
-\item{p, q}{Parameters of the beta distribution for leaf angles}
-
 \item{leafAngleSD}{Standard deviation of leaf inclination angle (in radians).}
-
-\item{solarElevation}{Solar elevation (in radians).}
 
 \item{LAIme}{A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).}
 
@@ -116,6 +112,8 @@ light_longwaveRadiationSHAW(
 
 \item{Id0}{Above-canopy diffuse incident radiation.}
 
+\item{p, q}{Parameters of the beta distribution for leaf angles}
+
 \item{alphaSWR}{A vecfor of hort-wave absorbance coefficients for each cohort.}
 
 \item{gammaSWR}{A vector of short-wave reflectance coefficients (albedo) for each cohort.}
@@ -129,6 +127,8 @@ light_longwaveRadiationSHAW(
 \item{Tsoil}{Soil temperature (Celsius).}
 
 \item{Tair}{Canopy layer air temperature vector (Celsius).}
+
+\item{solarElevation}{Solar elevation (in radians).}
 }
 \value{
 Functions \code{light_layerDirectIrradianceFraction}, \code{light_layerDiffuseIrradianceFraction}

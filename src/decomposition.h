@@ -1,12 +1,19 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef DECOMPOSITION_H
 #define DECOMPOSITION_H
-#endif
+
 using namespace Rcpp;
 
-double litterMetabolicFraction(double ligninPercent, double Nmass);
-double annualLitterDecompositionRate(double AET, double lignin);
+const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
+const int LITDECOMPCOM_TRANSFER_SOIL_SLOW = 3;
+const int LITDECOMPCOM_FLUX_RESPIRATION = 4;
+
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int SNAGDECOMPCOM_FLUX_RESPIRATION = 2;
 
 void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter,
                        DataFrame litter, 
@@ -33,6 +40,7 @@ double DAYCENTInner(List commDecomp,
                     NumericVector baseAnnualRates, double annualTurnoverRate,
                     double airTemperature, double airRelativeHumidity, 
                     double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
-                    double soilO2 = 1.0, double cultfac = 1.0,
-                    double tstep = 1.0);
-  
+                    double soilO2, double cultfac,
+                    double tstep);
+
+#endif

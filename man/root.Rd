@@ -5,18 +5,18 @@
 \alias{root_conicDistribution}
 \alias{root_ldrDistribution}
 \alias{root_individualRootedGroundArea}
-\alias{root_specificRootSurfaceArea}
-\alias{root_fineRootRadius}
-\alias{root_fineRootHalfDistance}
 \alias{root_fineRootAreaIndex}
 \alias{root_fineRootBiomass}
 \alias{root_rhizosphereMaximumConductance}
-\alias{root_fineRootSoilVolume}
 \alias{root_coarseRootSoilVolumeFromConductance}
 \alias{root_coarseRootLengthsFromVolume}
 \alias{root_coarseRootLengths}
 \alias{root_coarseRootSoilVolume}
 \alias{root_horizontalProportions}
+\alias{root_fineRootRadius}
+\alias{root_specificRootSurfaceArea}
+\alias{root_fineRootSoilVolume}
+\alias{root_fineRootHalfDistance}
 \title{Root functions}
 \usage{
 root_conicDistribution(Zcone, d)
@@ -24,12 +24,6 @@ root_conicDistribution(Zcone, d)
 root_ldrDistribution(Z50, Z95, Z100, d)
 
 root_individualRootedGroundArea(VolInd, V, d, rfc)
-
-root_specificRootSurfaceArea(specificRootLength, rootTissueDensity)
-
-root_fineRootRadius(specificRootLength, rootTissueDensity)
-
-root_fineRootHalfDistance(rootLengthDensity)
 
 root_fineRootAreaIndex(
   Ksoil,
@@ -60,8 +54,6 @@ root_rhizosphereMaximumConductance(
   rootLengthDensity
 )
 
-root_fineRootSoilVolume(fineRootBiomass, specificRootLength, rootLengthDensity)
-
 root_coarseRootSoilVolumeFromConductance(
   Kmax_rootxylem,
   VCroot_kmax,
@@ -78,6 +70,24 @@ root_coarseRootLengths(v, d, depthWidthRatio = 1)
 root_coarseRootSoilVolume(v, d, depthWidthRatio = 1)
 
 root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
+
+root_fineRootRadius(specificRootLength, rootTissueDensity)
+
+root_specificRootSurfaceArea(specificRootLength, rootTissueDensity)
+
+root_fineRootSoilVolume(fineRootBiomass, specificRootLength, rootLengthDensity)
+
+root_fineRootHalfDistance(rootLengthDensity)
+
+root_rhizosphereMaximumConductance(
+  Ksoil,
+  fineRootBiomass,
+  lai,
+  N,
+  specificRootLength,
+  rootTissueDensity,
+  rootLengthDensity
+)
 }
 \arguments{
 \item{Zcone}{A vector of depths (in mm) corresponding to the root cone tip.}
@@ -96,17 +106,17 @@ root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
 
 \item{rfc}{Percentage of rock fragment content (volume basis) for each layer.}
 
-\item{specificRootLength}{Specific fine root length (length of fine roots over weight).}
-
-\item{rootTissueDensity}{Fine root tissue density (weight over volume at turgidity).}
-
-\item{rootLengthDensity}{Fine root length density (length of fine roots over soil volume; cm/cm3)}
-
 \item{Ksoil}{Soil saturated conductivity (mmol·m-1·s-1·MPa-1).}
 
 \item{krhizo}{Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).}
 
 \item{lai}{Leaf area index.}
+
+\item{specificRootLength}{Specific fine root length (length of fine roots over weight).}
+
+\item{rootTissueDensity}{Fine root tissue density (weight over volume at turgidity).}
+
+\item{rootLengthDensity}{Fine root length density (length of fine roots over soil volume; cm/cm3)}
 
 \item{N}{Density of individuals per hectare.}
 

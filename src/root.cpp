@@ -1,7 +1,8 @@
 #define STRICT_R_HEADERS
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <numeric>
 #include "hydraulics.h"
+#include "root_c.h"
 using namespace Rcpp;
 using namespace std;
 using std::exp;
@@ -14,26 +15,10 @@ using std::sqrt;
  *  Root distribution
  */
 NumericVector ldrRS_one(double Z50, double Z95, double Z100, NumericVector d){
-  int nlayer = d.size();
-  NumericVector dCum = clone(d);
-  NumericVector Vd(nlayer);
-  double c = 2.94/log(Z50/Z95);
-  Vd[0] = 1.0/(1.0+pow(d[0]/Z50,c));
-  for(int i=1;i<nlayer;i++) dCum[i] = dCum[i]+dCum[i-1];
-  for(int i=1;i<nlayer;i++){
-    Vd[i] = 1.0/(1.0+pow(dCum[i]/Z50,c)) -1.0/(1.0+pow(dCum[i-1]/Z50,c));
-  }
-  //Truncate distribution if cumulative depth of the previous layer is larger than maximum rooting depth
-  if(!NumericVector::is_na(Z100)) {
-    for(int i=1;i<nlayer;i++){
-      if(dCum[i-1]>Z100) Vd[i] = 0.0;
-    }
-  }
-  //Rescale proportions so that they sum 1
-  double Vtot = sum(Vd);
-  for(int i=0;i<nlayer; i++) {
-    Vd[i] = Vd[i]/Vtot;
-  }
+  std::vector<double> d_c = Rcpp::as<std::vector<double>>(d);
+  std::vector<double> lrd_c(d.size());
+  ldrRS_one_c(lrd_c, Z50, Z95, Z100, d_c);
+  NumericVector Vd = Rcpp::wrap(lrd_c);
   return(Vd);
 }
 NumericVector conicRS_one(double Zcone, NumericVector d){
@@ -316,56 +301,11 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
 
 
 
-/**
- *  specificRootSurfaceArea (SRSA; cm2/g) as function of: 
- *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
- *    . root tissue density (RTD; g/cm3) e.g. 0.165 g/cm3
- */
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_specificRootSurfaceArea")]]
-double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
-  return(2.0*sqrt(M_PI*specificRootLength/rootTissueDensity));
-}
 
-/**
- * Fine root radius in cm
- */
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_fineRootRadius")]]
-double fineRootRadius(double specificRootLength, double rootTissueDensity) {
-  return(sqrt(1.0/(M_PI*specificRootLength*rootTissueDensity)));
-}
 
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_fineRootHalfDistance")]]
-double fineRootHalfDistance(double rootLengthDensity) {
-  return(1.0/sqrt(M_PI*rootLengthDensity));
-}
 
-/**
- * Derivation of fine root length per ground area (m·m-2) 
- * from the conductance factor for cylindrical flow geometry of the rhizosphere
- * 
- */
-double fineRootLengthPerArea(double Ksoil, double krhizo, double lai,
-                      double radius, double rootLengthDensity) {
-  double Xi = krhizo*lai/Ksoil;
-  double rmax = fineRootHalfDistance(rootLengthDensity);
-  return(log(pow(rmax,2.0)/pow(radius,2.0))*Xi/(4.0*M_PI));
-}
-/**
- * Derivation of maximum rhizosphere conductance (mmol·m-2·s·MPa-1)
- * from the conductance factor for cylindrical flow geometry of the rhizosphere
- * 
- */
-double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, double lai,
-                                   double radius, double rootLengthDensity) {
-  double rmax = fineRootHalfDistance(rootLengthDensity);
-  return((fineRootLengthPerArea*Ksoil*4.0*M_PI)/(lai*log(pow(rmax,2.0)/pow(radius,2.0))));
-}
+
+
 
 //' @rdname root
 //' @keywords internal
@@ -373,11 +313,11 @@ double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, do
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  double r = fineRootRadius_c(specificRootLength, rootTissueDensity); //cm
   int numLayers = Ksoil.size();
   double frai = 0.0;
   for(int l=0;l<numLayers;l++) {
-    double LA = fineRootLengthPerArea(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
+    double LA = fineRootLengthPerArea_c(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
     // Rcout<<l<<" "<<LA<<"\n";
     frai += LA*2.0*M_PI*(r/100.0);
   }
@@ -392,15 +332,9 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
-  int numLayers = Ksoil.size();
-  double frb = 0.0;
-  for(int l=0;l<numLayers;l++) {
-    double LA = fineRootLengthPerArea(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
-    // Rcout<<l<<" "<<LA<<"\n";
-    frb += (10000.0*LA)/(N*0.01*specificRootLength);
-  }
-  return(frb);
+  return(fineRootBiomassPerIndividual_c(as<std::vector<double>>(Ksoil),
+                                        as<std::vector<double>>(krhizo),
+                                        lai, N, specificRootLength, rootTissueDensity, rootLengthDensity));
 }
 
 //' @rdname root
@@ -409,164 +343,84 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
 NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity) {
-  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
-  int numLayers = Ksoil.size();
-  NumericVector krhizo(numLayers, 0.0);
-  for(int l=0;l<numLayers;l++) {
-    double FRLA = 1e-6*fineRootBiomass[l]*N*specificRootLength;
-    krhizo[l] = fineRootMaximumConductance(Ksoil[l], FRLA, lai, r, rootLengthDensity);
-  }
-  return(krhizo);
+  std::vector<double> krhizo = rhizosphereMaximumConductance_c(as<std::vector<double>>(Ksoil),
+                                                         as<std::vector<double>>(fineRootBiomass),
+                                                         lai, N,
+                                                         specificRootLength, rootTissueDensity,
+                                                         rootLengthDensity);
+  return(Rcpp::wrap(krhizo));
 }
 
 
-/**
- *   Estimates soil volume (m3) occupied with fine roots
- *    . fine root biomass (g dry)
- *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
- *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
- */
-//' @rdname root
-//' @keywords internal
-// [[Rcpp::export("root_fineRootSoilVolume")]]
-double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity) {
-  return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
-}
 
-double frv(double vol, double B, NumericVector v, NumericVector ax, NumericVector ra) {
-  int numLayers = ax.size();
-  double s = 0.0;
-  double li = 0.0;
-  for(int i=0;i<numLayers;i++) {
-    li = ax[i]+sqrt(vol)*ra[i];
-    s +=(v[i]/li); //No taper effect
-    // s +=(V[i]/(li*taperFactorSavage(li*100.0))); //TODO: Improve usage of Savage taper factor for roots
-  }
-  return(B*s - 1.0);
-}
-/**
- *   Estimates soil volume (m3) occupied with coarse roots
- *    . sapwood area (cm2)
- *    . rooting depth (cm)
- */
 //' @rdname root
 //' @keywords internal
 // [[Rcpp::export("root_coarseRootSoilVolumeFromConductance")]]
 double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
-                                   NumericVector v, NumericVector d, NumericVector rfc) {
-  int numLayers = v.size();
-  NumericVector ra(numLayers, 0.0);
-  NumericVector ax(numLayers, 0.0);
-  for(int j=0;j<numLayers;j++) {
-    ra[j] = sqrt(v[j]/((d[j]/1000.0)*M_PI*(1.0 - (rfc[j]/100.0))));
-    if(j==0) ax[j] = (d[j]/1000.0);
-    else ax[j] = ax[j-1]+(d[j]/1000.0);
-    // Rcout<<j<<" "<<ax[j]<<" "<<ra[j]<<"\n";
-  }
-  double B = (1000.0/0.018)*Kmax_rootxylem/(VCroot_kmax*Al2As);
-  // Rcout<<" B: " << B<<"\n";
-  double step = 1.0;
-  double fTol = 0.005;
-  double vol = 0.0;
-  double f = frv(vol, B, v, ax, ra);
-  int nsteps = 0;
-  int maxnsteps = 200;
-  while((std::abs(f)>fTol) && (nsteps < maxnsteps)) {
-    // Rcout<<vol<<"\n";
-    if((f > 0.0)) {
-      vol += step; 
-    } else {
-      vol -= step;
-      step = step/2.0;
-    }
-    f = frv(vol,B,v, ax,ra);
-    nsteps++;
-  }
-  if(nsteps==maxnsteps) warning("Maximum number of steps reached in coarse root volume estimation");
-  // for(int j=0;j<numLayers;j++) {
-    // Rcout<<j<<" "<<ax[j]<<" "<<sqrt(vol)*ra[j]<<" "<<((d[j]/1000.0)*M_PI*pow(sqrt(vol)*ra[j],2.0))<<"\n";
-  // }
-  return(std::max(0.25,vol));
+                                           NumericVector v, NumericVector d, NumericVector rfc) {
+  return(coarseRootSoilVolumeFromConductance_c(Kmax_rootxylem, VCroot_kmax, Al2As,
+                                               as<std::vector<double>>(v),
+                                               as<std::vector<double>>(d),
+                                               as<std::vector<double>>(rfc)));
 }
 
-/**
- *  Root lengths
- * 
- * Calculates the sum of radial and vertical root lengths.
- * 
- * Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdowell, and W. T. Pockman. 2016. 
- * Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. 
- * New Phytologist 212:577–589.
- * 
- * Returs: coarse root length in mm (same units as d)
- * 
- */
+
 //' @rdname root
 //' @keywords internal
 // [[Rcpp::export("root_coarseRootLengthsFromVolume")]]
 NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, NumericVector d, NumericVector rfc) {
-  int nlayers = v.size();
-  NumericVector rl(nlayers), vl(nlayers), tl(nlayers);
-  for(int j=0;j<nlayers;j++) {
-    if(j==0) vl[j] = d[j];
-    else vl[j] = vl[j-1]+d[j];
-    rl[j] = 1000.0*sqrt((VolInd*v[j])/((d[j]/1000.0)*M_PI*(1.0 - (rfc[j]/100.0))));
-    // Rcout<<vl[j]<<" "<< rl[j]<<"\n";
-    tl[j] = vl[j] + rl[j];
-  }
-  return(tl);
+  std::vector<double> tl = coarseRootLengthsFromVolume_c(VolInd, 
+                                                         as<std::vector<double>>(v),
+                                                         as<std::vector<double>>(d),
+                                                         as<std::vector<double>>(rfc));
+  return(Rcpp::wrap(tl));
 }
 
-List coarseRootRadialAxialLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  int nlayers = v.size();
-  double maxRootDepth = 0.0;
-  //Vertical lengths
-  NumericVector vl(nlayers), zini(nlayers);
-  for(int i=0;i<nlayers;i++) {
-    if(i==0) {
-      zini[i] = 0.0;
-    } else {
-      zini[i] = zini[i-1]+ d[i-1];
-    }
-    if(v[i]>0.0) {
-      vl[i] = zini[i]+ d[i]/2.0;
-      maxRootDepth +=d[i];
-    } else {
-      vl[i] = 0.0;
-    }
-    // Rcout<<vl[i]<<" ";
-  }
-  // Rcout<<"\n";
-  int nlayerseff = nlayers;
-  for(int i=(nlayers-1);i>=0;i--) if(vl[i]>0.0) nlayerseff = i;
-  
-  //Radial lengths
-  NumericVector r(nlayers, 0.0), rl(nlayers, 0.0);
-  double maxr = 0.0;
-  for(int i=0;i<nlayerseff;i++) {
-    r[i] = sqrt(v[i]/(d[i]*M_PI));
-    maxr = std::max(r[i],maxr); 
-  }
-  // Rcout<<maxr<<"\n";
-  for(int i=0;i<nlayerseff;i++) {
-    rl[i] = maxRootDepth*depthWidthRatio*(r[i]/maxr);
-    // Rcout<<rl[i]<<" ";
-  }
-  return(List::create(_["radial"] = rl, _["axial"] = vl));
-}
+// List coarseRootRadialAxialLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+//   int nlayers = v.size();
+//   double maxRootDepth = 0.0;
+//   //Vertical lengths
+//   NumericVector vl(nlayers), zini(nlayers);
+//   for(int i=0;i<nlayers;i++) {
+//     if(i==0) {
+//       zini[i] = 0.0;
+//     } else {
+//       zini[i] = zini[i-1]+ d[i-1];
+//     }
+//     if(v[i]>0.0) {
+//       vl[i] = zini[i]+ d[i]/2.0;
+//       maxRootDepth +=d[i];
+//     } else {
+//       vl[i] = 0.0;
+//     }
+//     // Rcout<<vl[i]<<" ";
+//   }
+//   // Rcout<<"\n";
+//   int nlayerseff = nlayers;
+//   for(int i=(nlayers-1);i>=0;i--) if(vl[i]>0.0) nlayerseff = i;
+//   
+//   //Radial lengths
+//   NumericVector r(nlayers, 0.0), rl(nlayers, 0.0);
+//   double maxr = 0.0;
+//   for(int i=0;i<nlayerseff;i++) {
+//     r[i] = sqrt(v[i]/(d[i]*M_PI));
+//     maxr = std::max(r[i],maxr); 
+//   }
+//   // Rcout<<maxr<<"\n";
+//   for(int i=0;i<nlayerseff;i++) {
+//     rl[i] = maxRootDepth*depthWidthRatio*(r[i]/maxr);
+//     // Rcout<<rl[i]<<" ";
+//   }
+//   return(List::create(_["radial"] = rl, _["axial"] = vl));
+// }
 
 //' @rdname root
 //' @keywords internal
 // [[Rcpp::export("root_coarseRootLengths")]]
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
-  NumericVector rl = radax["radial"];
-  NumericVector vl = radax["axial"];
-  int nlayers = rl.size();
-  NumericVector l(nlayers, 0.0);
-  for(int i=0;i<nlayers;i++) {
-    l[i]= (rl[i]+vl[i]);
-  }
+  NumericVector l = Rcpp::wrap(coarseRootLengths_c(as<std::vector<double>>(v),
+                                                   as<std::vector<double>>(d),
+                                                   depthWidthRatio));
   return(l);
 }
 
@@ -574,15 +428,9 @@ NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWi
 //' @keywords internal
 // [[Rcpp::export("root_coarseRootSoilVolume")]]
 double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
-  NumericVector rl = radax["radial"];
-  int nlayers = rl.size();
-  //Weights
-  double volInd = 0.0;
-  for(int i=0;i<nlayers;i++) {
-    volInd += 1e-9*(std::pow(rl[i],2.0)*M_PI)*d[i];
-  }
-  return(volInd);
+  return(coarseRootSoilVolume_c(as<std::vector<double>>(v),
+                                as<std::vector<double>>(d),
+                                depthWidthRatio));
 }
 
 // List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 

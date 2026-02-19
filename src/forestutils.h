@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef FORESTUTILS_H
 #define FORESTUTILS_H
@@ -13,8 +13,6 @@ CharacterVector cohortIDs(List x, DataFrame SpParams,
 CharacterVector cohortType(CharacterVector IDs);
 IntegerVector cohortSpecies(List x, DataFrame SpParams);
 CharacterVector cohortSpeciesName(List x, DataFrame SpParams);
-
-double leafAreaProportion(double z1, double z2, double zmin, double zmax);
 
 NumericVector cohortHeight(List x, DataFrame SpParams);
 

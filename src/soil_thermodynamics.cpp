@@ -1,33 +1,13 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include "soil.h"
 #include "numerical_solving.h"
 #include "communication_structures.h"
+#include "soil_thermodynamics.h"
+#include "soil_thermodynamics_c.h"
 using namespace Rcpp;
 
-// sand 1.7-2.9 W·m-1·K-1, clay 0.8-6.3 W·m-1·K-1 [Geiger et al. The Climate near the Ground]
-const double thermalConductivitySand = 1.57025; //W·m-1·K-1 From Dharssi et al. 2009
-const double thermalConductivitySilt = 1.57025; //W·m-1·K-1 From Dharssi et al. 2009
-const double thermalConductivityClay = 1.16025; //W·m-1·K-1 From Dharssi et al. 2009
-const double thermalConductivityAir = 0.025; //W·m-1·K-1 From Dharssi et al. 2009
-const double capacitySand = 1.25*1e6; //kg·m-3 
-const double capacitySilt = 1.19*1e6; //kg·m-3 
-const double capacityClay = 1.23*1e6; //kg·m-3 
-
-/**
- * Calculates midpoints of soil layers
- */
-NumericVector midpoints(NumericVector widths) {
-  int nlayers = widths.length();
-  double sumz = 0.0;
-  NumericVector midZ(nlayers);
-  for(int l = 0;l<nlayers; l++) {
-    midZ[l] = sumz + widths[l]/2.0;
-    sumz = sumz + widths[l];
-  }
-  return(midZ);
-}
 
 /**
  * Soil thermal conductivity 
@@ -39,16 +19,12 @@ NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay,
                                        NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
                                        NumericVector Temp) {
   int nlayers = sand.length();
-  NumericVector thermalCond(nlayers,0.0);
-  for(int l=0;l<nlayers;l++) {
-    double silt = 100 - sand[l] - clay[l];
-    double lambda_m = ((thermalConductivitySand*sand[l])+(thermalConductivitySilt*silt)+(thermalConductivityClay*clay[l]))/(silt+sand[l]+clay[l]);
-    double lambda_dry = pow(thermalConductivityAir, Theta_FC[l])*pow(lambda_m, (1.0-Theta_FC[l]));
-    double Ke = 0.0;
-    if(W[l]>=0.1) Ke = log10(W[l]) + 1.0;
-    double lambda_s = std::max(1.58,std::min(2.2,1.58 + 12.4*(lambda_dry-0.25)));
-    thermalCond[l] = (lambda_s-lambda_dry)*Ke + lambda_dry;
-  }
+  std::vector<double> thermalCond_vec(nlayers);
+  layerThermalConductivity_c(thermalCond_vec,
+                             as<std::vector<double>>(sand), as<std::vector<double>>(clay),
+                             as<std::vector<double>>(W), as<std::vector<double>>(Theta_SAT), as<std::vector<double>>(Theta_FC),
+                             as<std::vector<double>>(Temp));
+  NumericVector thermalCond = Rcpp::wrap(thermalCond_vec);
   return(thermalCond);
 }
 
@@ -63,11 +39,12 @@ NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay,
                                    NumericVector W, NumericVector Theta_SAT, NumericVector Theta_FC,
                                    NumericVector Temp) {
   int nlayers = sand.length();
-  NumericVector thermalCap(nlayers,0.0);
-  for(int l=0;l<nlayers;l++) {
-    thermalCap[l] = ((sand[l]*capacitySand)+(clay[l]*capacityClay) + ((100.0-clay[l]-sand[l])*capacitySilt))/100.0;
-    thermalCap[l] = thermalCap[l] + 4.19*1e3*1000.0*Theta_FC[l]*W[l];//Add water
-  }
+  std::vector<double> thermalCap_vec(nlayers);
+  layerThermalCapacity_c(thermalCap_vec,
+                             as<std::vector<double>>(sand), as<std::vector<double>>(clay),
+                             as<std::vector<double>>(W), as<std::vector<double>>(Theta_SAT), as<std::vector<double>>(Theta_FC),
+                             as<std::vector<double>>(Temp));
+  NumericVector thermalCap = Rcpp::wrap(thermalCap_vec);
   return(thermalCap);
 }
 
@@ -159,15 +136,12 @@ NumericVector thermalConductivity(DataFrame soil, String model = "SX") {
 //' @keywords internal
 // [[Rcpp::export("soil_temperatureGradient")]]
 NumericVector temperatureGradient(NumericVector widths, NumericVector Temp) {
-  NumericVector midZ = midpoints(widths);
   int nlayers = Temp.length();
-  NumericVector gradTemp(nlayers,0.0);
-  if(nlayers>1) {
-    for(int l = 0;l<nlayers-1; l++) {
-      gradTemp[l] = (Temp[l+1]-Temp[l])/(0.001*(midZ[l+1]-midZ[l]));
-    }
-  }
-  gradTemp[nlayers-1] = (15.5-Temp[nlayers-1])/(0.001*(10000.0-midZ[nlayers-1])); //15.5º at 10 m
+  std::vector<double> gradTemp_vec(nlayers);
+  temperatureGradient_c(gradTemp_vec,
+                        as<std::vector<double>>(widths), 
+                        as<std::vector<double>>(Temp));
+  NumericVector gradTemp = Rcpp::wrap(gradTemp_vec);
   return(gradTemp);
 }
 

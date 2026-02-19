@@ -1,5 +1,5 @@
-#include <Rcpp.h>
-#include "struct_sureau.h"
+#include <RcppArmadillo.h>
+#include "inner_sureau_c.h"
 
 #ifndef INNER_COCHARD_H
 #define INNER_COCHARD_H
@@ -12,8 +12,6 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
                              NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                              NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha, 
                              List control, double sapFluidityDay = 1.0);
-void deleteSureauNetworkPointers(SureauNetwork &network);
-
 
 void innerSureau(List x, SureauNetwork* networks, List input, List output, int n, double tstep, 
                  bool verbose = false);

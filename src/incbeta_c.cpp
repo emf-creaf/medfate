@@ -1,15 +1,10 @@
-#include <Rcpp.h>
 #include <math.h>
-using namespace Rcpp;
+#include "incbeta_c.h"
+#include "medfate.h"
 
-// CODE TAKEN FROM NUMERICAL RECIPES in C++
-
-const int MAXIT = 100;
-const double EPS = 3.0e-7;
-const double FPMIN = 1.0e-30;
 
 // [[Rcpp::export(".gammln")]]
-double gammln(double xx) {
+double gammln_c(double xx) {
   static double cof[6] = {76.18009172947146,-86.50532032941677,
                           24.01409824083091, -1.231739572450155,
                           0.1208650973866179e-2, -0.5395239384953e-5};
@@ -27,7 +22,7 @@ double gammln(double xx) {
 
 // Used by betai: Evaluates continued fraction for incomplete beta function by modified Lentz’s method
 // [[Rcpp::export(".betacf")]]
-double betacf(double a, double b, double x) {
+double betacf_c(double a, double b, double x) {
   int m,m2;
   double aa,c,d,del,h,qab,qam,qap;
   qab = a + b; //These q’s will be used in factors that occur in the coefficients
@@ -57,23 +52,23 @@ double betacf(double a, double b, double x) {
     h = h*del;
     if (fabs(del-1.0) < EPS) break; //Are we done?
   }
-  if (m > MAXIT) stop("a or b too big, or MAXIT too small in betacf");
+  if (m > MAXIT) throw medfate::MedfateInternalError("a or b too big, or MAXIT too small in betacf");
   return h;
 }
 
 // Returns the regularized incomplete beta function Ix(a, b).
 // [[Rcpp::export(".incbeta")]]
-double incbeta(double a, double b, double x) {
+double incbeta_c(double a, double b, double x) {
   double bt;
-  if (x < 0.0 || x > 1.0) stop("Bad x in routine betai");
+  if (x < 0.0 || x > 1.0) throw medfate::MedfateInternalError("Bad x in routine betai");
   if (x == 0.0 || x == 1.0) {
     bt=0.0; 
   } else {//Factors in front of the continued fraction.
-    bt=exp(gammln(a+b)-gammln(a)-gammln(b)+a*log(x)+b*log(1.0-x));
+    bt=exp(gammln_c(a+b)-gammln_c(a)-gammln_c(b)+a*log(x)+b*log(1.0-x));
   }
   if (x < (a + 1.0)/(a + b + 2.0)){ //Use continued fraction directly.
-    return bt*betacf(a,b,x)/a;
+    return bt*betacf_c(a,b,x)/a;
   } else { //Use continued fraction after making the symmetry transformation.
-    return 1.0-bt*betacf(b,a,1.0-x)/b;
+    return 1.0-bt*betacf_c(b,a,1.0-x)/b;
   }
 }

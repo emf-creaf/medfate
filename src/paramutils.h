@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef PARAMUTILS_H
 #define PARAMUTILS_H

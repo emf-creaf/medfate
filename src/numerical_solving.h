@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 #ifndef NUMERICAL_SOLVING_H
 #define NUMERICAL_SOLVING_H
