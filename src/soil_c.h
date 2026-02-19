@@ -58,6 +58,7 @@ class Soil {
   std::vector<double> psi;
   std::vector<double> theta;
   std::vector<double> Temp;
+  double KsatMultiplier;
   public:
     Soil();
     Soil(int nlayersIn, 
@@ -87,6 +88,8 @@ class Soil {
     Soil(Rcpp::DataFrame x, Rcpp::String model);
     
     double getW(int layer);
+    double getKsatMultiplier();
+    void setKsatMultiplier(double mult);
     int getNlayers();
     std::string getModel();
     ClappHornberger getClappHornberger();

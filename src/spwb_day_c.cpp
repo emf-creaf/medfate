@@ -650,7 +650,6 @@ void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, A
   
   // Assume SWR is reduced with crop factor
   double LgroundSWR = 100.0 * (1.0 - crop_factor);
-  // Rcpp::Rcout << crop_factor << " " << LgroundSWR << "\n";
   
   //Snow pack dynamics and hydrology input (update snowpack)
   agricultureWaterInputs_c(AgrWBcomm.waterInputs, x,
@@ -727,6 +726,8 @@ void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, A
   for(int l=0;l<nlayers;l++) {
     AgrWBres.Soil.Psi[l] = x.soil.getPsi(l);
   }
+  // Rcpp::Rcout << " Tday " << tday << " PET " << pet << " Rad "<< rad << " CF: "<< crop_factor << " " << LgroundSWR <<  " E "<< AgrWBres.WaterBalance.Transpiration<<"\n";
+  
 }
 
 void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
@@ -735,15 +736,24 @@ void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
                const double runon, 
                const double rock_max_infiltration) {
   
+
   double tday = meteovec.tday;
   double prec = meteovec.prec;
   double rad = meteovec.rad;
-  if(tday>0.0) {
+  if(std::isnan(tday)) {
+    tday = averageDaylightTemperature_c(meteovec.tmin, meteovec.tmax);
+  }
+  if(tday<0.0) {
     NSWBres.WaterBalance.Snow = prec;
+    NSWBres.WaterBalance.Rain = 0.0;
     x.snowpack += prec;
+    // Rcpp::Rcout<< NSWBres.WaterBalance.Snow<< "  " << x.snowpack <<"\n";
   } else {
+    NSWBres.WaterBalance.Snow = 0.0;
     NSWBres.WaterBalance.Rain = prec;
   }
+  NSWBres.WaterBalance.NetRain = NSWBres.WaterBalance.Rain;
+  NSWBres.WaterBalance.Snowmelt = 0.0;
   if(x.snowpack>0.0) {
     double melt = snowMelt_c(tday, rad, 1.0, elevation);
     NSWBres.WaterBalance.Snowmelt = std::min(melt, x.snowpack);
@@ -753,10 +763,12 @@ void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
     //Part of the water is allowed to infiltrate (draining to the aquifer)
     NSWBres.WaterBalance.Infiltration = std::min(rock_max_infiltration, NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain);
     NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Infiltration;
-    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain - NSWBres.WaterBalance.DeepDrainage;
+    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain - NSWBres.WaterBalance.Infiltration;
     NSWBres.WaterBalance.Runoff = NSWBres.WaterBalance.InfiltrationExcess;
   } else if(x.land_cover_type=="artificial") {
     //all Precipitation becomes surface runoff if cell is rock artificial
+    NSWBres.WaterBalance.Infiltration = 0.0;
+    NSWBres.WaterBalance.DeepDrainage = 0.0;
     NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt + NSWBres.WaterBalance.Rain;
     NSWBres.WaterBalance.Runoff = NSWBres.WaterBalance.InfiltrationExcess;
   } else if(x.land_cover_type=="water") {
@@ -765,9 +777,17 @@ void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
     // any received water drains directly to the aquifer so that it can feed base flow
     NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Snowmelt+ NSWBres.WaterBalance.Rain;
     NSWBres.WaterBalance.Infiltration = NSWBres.WaterBalance.DeepDrainage;
+    NSWBres.WaterBalance.InfiltrationExcess = 0.0;
     NSWBres.WaterBalance.Runoff = 0.0;
+  } else {
+    throw medfate::MedfateInternalError("Wrong land cover type (should be water, rock or artificial)");
   }
-  NSWBres.WaterBalance.NetRain = NSWBres.WaterBalance.Rain;
+  NSWBres.WaterBalance.Transpiration = 0.0;
+  NSWBres.WaterBalance.HerbTranspiration = 0.0;
+  NSWBres.WaterBalance.CapillarityRise = 0.0;
+  NSWBres.WaterBalance.SoilEvaporation = 0.0;
+  NSWBres.WaterBalance.HydraulicRedistribution = 0.0;
+  NSWBres.WaterBalance.PlantExtraction = 0.0;
 }
 
 Rcpp::List copyNSWBResult_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x) {

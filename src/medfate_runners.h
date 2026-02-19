@@ -60,7 +60,9 @@ private:
 public:
   watershed_runner(List x_vec, 
                    NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec,
-                   List sf_routing);
+                   NumericVector snowpack_vec,
+                   List sf_routing,
+                   double KsatMultiplier = 1.0);
   ~watershed_runner();
   void run_day(CharacterVector date, DataFrame gridMeteo, 
                NumericVector waterTableDepth, 

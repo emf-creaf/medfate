@@ -55,6 +55,7 @@ Soil::Soil(int nlayersIn,
   theta = thetaIn;
   Temp = TempIn;
   clapp_hornberger = clapp_hornbergerIn;
+  KsatMultiplier = 1.0;
 }
 
 Soil::Soil(Rcpp::DataFrame x, Rcpp::String modelIn = "VG") {
@@ -97,13 +98,22 @@ Soil::Soil(Rcpp::DataFrame x, Rcpp::String modelIn = "VG") {
     setW(l, W[l]); // this fills psi and theta based on W
   }
   clapp_hornberger = ClappHornberger(usda_type[0]);
+  KsatMultiplier = 1.0;
 }
 
 Soil::Soil() {
   nlayers = 0;
+  KsatMultiplier = 1.0;
   model = "VG";
 }
 double Soil::getW(int layer) {return W[layer];}
+double Soil::getKsatMultiplier() {return KsatMultiplier;}
+void Soil::setKsatMultiplier(double mult) {
+  for(int l=0;l<nlayers;l++) {
+    Ksat[l] = Ksat[l]*(mult/KsatMultiplier);
+  }
+  KsatMultiplier = mult;
+}
 int Soil::getNlayers() {return nlayers; }
 std::string Soil::getModel() {return model; }
 ClappHornberger Soil::getClappHornberger() {return clapp_hornberger; }

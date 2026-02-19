@@ -310,7 +310,9 @@ Rcpp::List multiple_runner::get_output_at(int i) {
   return(l);
 }
 void multiple_runner::store_output_at(int i, List l_vec) {
-  l_vec[i-1] = get_output_at(i);  
+  if(l_vec.size()!= n) throw medfate::MedfateInternalError("Wrong output list size");
+  List l = get_output_at(i);
+  l_vec[i-1] = l;
 }
 
 //Updates state of (external) input object
@@ -335,7 +337,9 @@ watershed_runner::watershed_runner(List input_vec,
                                    NumericVector elevation, 
                                    NumericVector slope, 
                                    NumericVector aspect,
-                                   List sf_routingIn) :
+                                   NumericVector snowpack,
+                                   List sf_routingIn,
+                                   double KsatMultiplier) :
   n(input_vec.size()), latitude_vec(n), p_topo_vec(n), p_x_vec(n), p_result_vec(n), sf_routing(sf_routingIn) {
   size_t numCohorts_max = 0;
   size_t nlayers_max = 0;
@@ -353,6 +357,8 @@ watershed_runner::watershed_runner(List input_vec,
       p_result_vec[i] = std::make_unique<NSWB_RESULT>(NSWBres);
     } else if(input_class_i=="spwbInput") {
       ModelInput x_i = ModelInput(input_i);
+      x_i.snowpack = snowpack[i];
+      x_i.soil.setKsatMultiplier(KsatMultiplier);
       p_x_vec[i] = std::make_unique<ModelInput>(x_i);
       int numCohorts_i = x_i.cohorts.SpeciesIndex.size();
       int nlayers_i = x_i.soil.getNlayers();
@@ -374,6 +380,8 @@ watershed_runner::watershed_runner(List input_vec,
     } else if (input_class_i == "growthInput") {
       ModelInput x_i = ModelInput(input_i);
       p_x_vec[i] = std::make_unique<ModelInput>(x_i);
+      x_i.snowpack = snowpack[i];
+      x_i.soil.setKsatMultiplier(KsatMultiplier);
       int numCohorts_i = x_i.cohorts.SpeciesIndex.size();
       int nlayers_i = x_i.soil.getNlayers();
       int ncanlayers_i = x_i.canopy.zlow.size();
@@ -395,6 +403,8 @@ watershed_runner::watershed_runner(List input_vec,
       ntimesteps_max = std::max(ntimesteps_max, (size_t) x_i.control.advancedWB.ndailysteps);
     } else if (input_class_i == "aspwbInput") {
       AgricultureModelInput x_i = AgricultureModelInput(input_i);
+      x_i.snowpack = snowpack[i];
+      x_i.soil.setKsatMultiplier(KsatMultiplier);
       p_x_vec[i] = std::make_unique<AgricultureModelInput>(x_i);
       int nlayers_i = x_i.soil.getNlayers();
       nlayers_max = std::max(nlayers_max, (size_t) nlayers_i);
@@ -429,8 +439,7 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
   if(gridMeteo.nrow() != n) throw medfate::MedfateInternalError("Wrong grid input size");
   
   DataFrame outWB = Rcpp::as<Rcpp::DataFrame>(output["WatershedWaterBalance"]);
-  List localResults = output["LocalResults"];
-  
+
   //WATERSHED-LEVEL OUTPUT
   NumericVector Runoff=  outWB[WBCOM_Runoff];
   NumericVector Runon=  outWB[WBCOM_Runon];
@@ -527,21 +536,20 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
     //get next cell in order
     int iCell = waterOrder[i]-1; //Decrease index!!!!
     const std::string& input_class_iCell = p_x_vec[iCell]->getInputClass();
+    
+    //Soil cell: Prepare input
+    meteovec.tmin = tminVec[iCell];
+    meteovec.tmax = tmaxVec[iCell];
+    meteovec.rhmin = rhminVec[iCell];
+    meteovec.rhmax = rhmaxVec[iCell];
+    meteovec.prec = precVec[iCell];
+    meteovec.rad = radVec[iCell];
+    meteovec.wind = wsVec[iCell];
+    meteovec.Catm = C02Vec[iCell];
+    
     if((input_class_iCell == "spwbInput") || (input_class_iCell == "growthInput") || (input_class_iCell == "aspwbInput")) {
       
       WaterBalanceModelInput& x_iCell = dynamic_cast<WaterBalanceModelInput&>(*p_x_vec[iCell]);
-      
-      //Soil cell: Prepare input
-      meteovec.tmin = tminVec[iCell];
-      meteovec.tmax = tmaxVec[iCell];
-      meteovec.rhmin = rhminVec[iCell];
-      meteovec.rhmax = rhmaxVec[iCell];
-      meteovec.prec = precVec[iCell];
-      meteovec.rad = radVec[iCell];
-      meteovec.wind = wsVec[iCell];
-      meteovec.Catm = C02Vec[iCell];
-      
-      
       
       double wtd_c = waterTableDepth[iCell];
       // This effectively uncouples capillarity rise from aquifer elevation but helps avoiding instabilities 
@@ -628,7 +636,9 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
           InfiltrationExcess[iCell] = AgrWBres_iCell.WaterBalance.InfiltrationExcess;
           SaturationExcess[iCell] = AgrWBres_iCell.WaterBalance.SaturationExcess;
           DeepDrainage[iCell] = AgrWBres_iCell.WaterBalance.DeepDrainage;
-          CapillarityRise[iCell] = AgrWBres_iCell.WaterBalance.CapillarityRise;   
+          CapillarityRise[iCell] = AgrWBres_iCell.WaterBalance.CapillarityRise; 
+          Transpiration[iCell] = AgrWBres_iCell.WaterBalance.Transpiration;
+          HerbTranspiration[iCell] = AgrWBres_iCell.WaterBalance.HerbTranspiration; 
         }
       } else if(input_class_iCell == "growthInput") {
         ModelInput& x_iCell = dynamic_cast<ModelInput&>(*p_x_vec[iCell]);
@@ -750,16 +760,19 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
                 p_topo_vec[iCell]->elevation, p_topo_vec[iCell]->slope, p_topo_vec[iCell]->aspect,
                 Runon[iCell],
                 rock_max_infiltration);
-      PET[iCell] = medfate::NA_DOUBLE;
+      PET[iCell] = NSWBres_iCell.WaterBalance.PET;
       Snow[iCell] = NSWBres_iCell.WaterBalance.Snow;
-      Snowmelt[iCell] = NSWBres_iCell.WaterBalance.Snowmelt;
       Rain[iCell] =  NSWBres_iCell.WaterBalance.Rain;
+      Snowmelt[iCell] = NSWBres_iCell.WaterBalance.Snowmelt;
       Infiltration[iCell] = NSWBres_iCell.WaterBalance.Infiltration;
       InfiltrationExcess[iCell] = NSWBres_iCell.WaterBalance.InfiltrationExcess;
       DeepDrainage[iCell] = NSWBres_iCell.WaterBalance.DeepDrainage;
       Runoff[iCell] = NSWBres_iCell.WaterBalance.Runoff;
       NetRain[iCell] = NSWBres_iCell.WaterBalance.NetRain;
+    } else {
+      throw medfate::MedfateInternalError("Wrong input class for simulation launching");
     }
+    
     //Common cell output
     MinTemperature[iCell] = tminVec[iCell];
     MaxTemperature[iCell] = tmaxVec[iCell];
@@ -788,8 +801,8 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
           }
         }
         if(ri > 0.000001) {
-          Rcout<< i <<ni.size()<< " "<<qi.size()<<" "<<iCell<< " "<< sum(qi)<< " "<< ri<<"\n";
-          stop("Non-outlet or channel cell with runoff export");
+          // Rcout<< i <<ni.size()<< " "<<qi.size()<<" "<<iCell<< " "<< sum(qi)<< " "<< ri<<"\n";
+          throw medfate::MedfateInternalError("Non-outlet or channel cell with runoff export");
         }
       }
     }
@@ -822,7 +835,9 @@ Rcpp::List watershed_runner::get_output_at(int i) {
   return(l);
 }
 void watershed_runner::store_output_at(int i, List l_vec) {
-  l_vec[i-1] = get_output_at(i);  
+  if(l_vec.size()!= n) throw medfate::MedfateInternalError("Wrong output list size");
+  List l = get_output_at(i);
+  l_vec[i-1] = l;
 }
 //Updates state of (external) input object
 void watershed_runner::update_input_at(int i, List x_list) {
@@ -859,7 +874,7 @@ RCPP_MODULE(runners) {
     .method( "update_input_at", &multiple_runner::update_input_at)
   ;
   class_<watershed_runner>( "watershed_runner" )
-    .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector, Rcpp::List>()
+    .constructor<Rcpp::List, NumericVector, NumericVector, NumericVector, NumericVector, NumericVector, Rcpp::List, double>()
     .method( "run_day", &watershed_runner::run_day )
     .method( "get_output_at", &watershed_runner::get_output_at)
     .method( "store_output_at", &watershed_runner::update_input_at)
