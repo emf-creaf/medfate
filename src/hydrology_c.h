@@ -6,7 +6,6 @@
 #define HYDROLOGY_C_H
 
 
-
 struct WaterInputs_COMM {
   double rain;
   double snow;

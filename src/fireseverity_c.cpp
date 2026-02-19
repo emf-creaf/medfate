@@ -1,4 +1,6 @@
+#include <RcppArmadillo.h>
 #include <math.h>
+#include "vector"
 #include "fireseverity_c.h"
 
 double erfInv_c(double x){
