@@ -159,10 +159,10 @@ multiple_runner::multiple_runner(List input_vec,
                                  NumericVector slope, 
                                  NumericVector aspect) :
   n(input_vec.size()), latitude_vec(n), p_topo_vec(n), p_x_vec(n), p_result_vec(n) {
-  size_t numCohorts_max = 0;
-  size_t nlayers_max = 0;
-  size_t ncanlayers_max = 0;
-  size_t ntimesteps_max = 0;
+  numCohorts_max = 0;
+  nlayers_max = 0;
+  ncanlayers_max = 0;
+  ntimesteps_max = 0;
   for(int i=0; i< n;i++) {
     Rcpp::List input_i = input_vec[i];
     Rcpp::CharacterVector classVector_i = input_i.attr("class");
@@ -227,10 +227,6 @@ multiple_runner::multiple_runner(List input_vec,
     topo_i.aspect = aspect[i];
     p_topo_vec[i] = std::make_unique<Topography>(topo_i);
   } 
-  WBCommunicationStructures WBcomm = WBCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
-  p_WBcomm = std::make_unique<WBCommunicationStructures>(WBcomm);
-  GROWTHCommunicationStructures GROWTHcomm = GROWTHCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
-  p_GROWTHcomm = std::make_unique<GROWTHCommunicationStructures>(GROWTHcomm);
 }
 //  Destructor for multiple_runner
 multiple_runner::~multiple_runner() {}
@@ -247,17 +243,21 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
   std::string date_str = Rcpp::as<std::string>(date[0]);
   if(parallelize) {
     //build worker
-    DAY_worker worker(*p_WBcomm,
-                      *p_GROWTHcomm,
-                       date_str,
-                       p_x_vec,
-                       latitude_vec,
-                       p_topo_vec,
-                       p_weather_vec,
-                       p_result_vec);
+    DAY_worker worker(numCohorts_max,
+                      nlayers_max,
+                      ncanlayers_max,
+                      ntimesteps_max,
+                      date_str,
+                      p_x_vec,
+                      latitude_vec,
+                      p_topo_vec,
+                      p_weather_vec,
+                      p_result_vec);
     // call it with parallelFor
     parallelFor(0, n, worker);
   } else {
+    WBCommunicationStructures WBcomm = WBCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
+    GROWTHCommunicationStructures GROWTHcomm = GROWTHCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
     double runon = 0.0;
     double waterTableDepth = medfate::NA_DOUBLE;
     for(int i=0;i<n;i++) {
@@ -266,7 +266,7 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
         WB_RESULT& WBres_i = dynamic_cast<WB_RESULT&>(*p_result_vec[i]);
         int nlayers_i = x_i.soil.getNlayers();
         std::vector<double> lateralFlows_c(nlayers_i, 0.0);
-        wb_day_inner_c(WBres_i, *p_WBcomm, x_i,
+        wb_day_inner_c(WBres_i, WBcomm, x_i,
                        Rcpp::as<std::string>(date[0]),
                        *p_weather_vec[i],
                        latitude_vec[i], p_topo_vec[i]->elevation, p_topo_vec[i]->slope, p_topo_vec[i]->aspect,
@@ -277,7 +277,7 @@ void multiple_runner::run_day(Rcpp::CharacterVector date, Rcpp::List meteovec_li
         GROWTH_RESULT& GROWTHres_i = dynamic_cast<GROWTH_RESULT&>(*p_result_vec[i]);
         int nlayers_i = x_i.soil.getNlayers();
         std::vector<double> lateralFlows_c(nlayers_i, 0.0);
-        growthDay_inner_c(GROWTHres_i, *p_GROWTHcomm, x_i,
+        growthDay_inner_c(GROWTHres_i, GROWTHcomm, x_i,
                           Rcpp::as<std::string>(date[0]),
                           *p_weather_vec[i],
                           latitude_vec[i], p_topo_vec[i]->elevation, p_topo_vec[i]->slope, p_topo_vec[i]->aspect,

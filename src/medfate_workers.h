@@ -14,8 +14,10 @@ using namespace RcppParallel;
 struct DAY_worker : public Worker
 {
   // source vectors and date
-  WBCommunicationStructures& WBcomm;
-  GROWTHCommunicationStructures& GROWTHcomm;
+  size_t numCohorts_max;
+  size_t nlayers_max;
+  size_t ncanlayers_max;
+  size_t ntimesteps_max;
   const std::string& date;
   std::vector<std::unique_ptr<AbstractModelInput>>& p_x_vec;
   std::vector<double>& latitude_vec;
@@ -26,16 +28,20 @@ struct DAY_worker : public Worker
   std::vector<std::unique_ptr<ABSTRACTMODEL_RESULT>>& p_result_vec;
   
   // initialize with source and destination
-  DAY_worker(WBCommunicationStructures& WBcommIn,
-             GROWTHCommunicationStructures& GROWTHcommIn,
+  DAY_worker(size_t numCohorts_maxIn,
+             size_t nlayers_maxIn,
+             size_t ncanlayers_maxIn,
+             size_t ntimesteps_maxIn,
              std::string& dateIn, 
              std::vector<std::unique_ptr<AbstractModelInput>>& p_x_vecIn,
              std::vector<double>& latitude_vecIn,
              std::vector<std::unique_ptr<Topography>>& p_topo_vecIn,
              std::vector<std::unique_ptr<WeatherInputVector>>& p_weather_vecIn,
              std::vector<std::unique_ptr<ABSTRACTMODEL_RESULT>>& p_result_vecIn) : 
-    WBcomm(WBcommIn),
-    GROWTHcomm(GROWTHcommIn),
+    numCohorts_max(numCohorts_maxIn),
+    nlayers_max(nlayers_maxIn),
+    ncanlayers_max(ncanlayers_maxIn),
+    ntimesteps_max(ntimesteps_maxIn),
     date(dateIn), p_x_vec(p_x_vecIn), 
     latitude_vec(latitude_vecIn), 
     p_topo_vec(p_topo_vecIn), 

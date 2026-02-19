@@ -30,12 +30,14 @@ public:
 class multiple_runner {
 private:
   int n;
+  size_t numCohorts_max;
+  size_t nlayers_max;
+  size_t ncanlayers_max;
+  size_t ntimesteps_max;
   std::vector<double> latitude_vec;
   std::vector<std::unique_ptr<Topography>> p_topo_vec;
   std::vector<std::unique_ptr<AbstractModelInput>> p_x_vec;
   std::vector<std::unique_ptr<ABSTRACTMODEL_RESULT>> p_result_vec;
-  std::unique_ptr<WBCommunicationStructures> p_WBcomm;
-  std::unique_ptr<GROWTHCommunicationStructures> p_GROWTHcomm;
 public:
   multiple_runner(List x_vec, 
                   NumericVector latitude_vec, NumericVector elevation_vec, NumericVector slope_vec, NumericVector aspect_vec);

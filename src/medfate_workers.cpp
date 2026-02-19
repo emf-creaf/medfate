@@ -5,6 +5,8 @@ using namespace RcppParallel;
 
 // Implements simulation for the range of elements 
 void DAY_worker::operator()(std::size_t begin, std::size_t end) {
+  WBCommunicationStructures WBcomm = WBCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
+  GROWTHCommunicationStructures GROWTHcomm = GROWTHCommunicationStructures(numCohorts_max, nlayers_max, ncanlayers_max, ntimesteps_max);
   for(size_t i = begin; i< end; i++) {
     double runon = 0.0;
     double waterTableDepth = medfate::NA_DOUBLE;
