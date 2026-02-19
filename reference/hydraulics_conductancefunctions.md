@@ -1,4 +1,4 @@
-# Hydraulic confuctance functions
+# Hydraulic conductance functions
 
 Set of functions used in the calculation of soil and plant hydraulic
 conductance.
@@ -6,11 +6,13 @@ conductance.
 ## Usage
 
 ``` r
+hydraulics_averagePsi(psi, v, exp_extract, psi_extract)
+
+hydraulics_psi2Weibull(psi50, psi88 = NA_real_, psi12 = NA_real_)
+
 hydraulics_psi2K(psi, psi_extract, exp_extract = 3)
 
 hydraulics_K2Psi(K, psi_extract, exp_extract = 3)
-
-hydraulics_averagePsi(psi, v, exp_extract, psi_extract)
 
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
 
@@ -23,8 +25,6 @@ hydraulics_psiCrit(c, d, pCrit = 0.001)
 hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)
 
 hydraulics_correctConductanceForViscosity(kxylem, temp)
-
-hydraulics_psi2Weibull(psi50, psi88 = NA_real_, psi12 = NA_real_)
 
 hydraulics_vulnerabilityCurvePlot(
   x,
@@ -48,22 +48,27 @@ hydraulics_vulnerabilityCurvePlot(
   A scalar (or a vector, depending on the function) with water potential
   (in MPa).
 
-- psi_extract:
+- v:
 
-  Soil water potential (in MPa) corresponding to 50% whole-plant
-  relative transpiration.
+  Proportion of fine roots within each soil layer.
 
 - exp_extract:
 
   Exponent of the whole-plant relative transpiration Weibull function.
 
+- psi_extract:
+
+  Soil water potential (in MPa) corresponding to 50% whole-plant
+  relative transpiration.
+
+- psi50, psi88, psi12:
+
+  Water potentials (in MPa) corresponding to 50%, 88% and 12% percent
+  conductance loss.
+
 - K:
 
   Whole-plant relative conductance (0-1).
-
-- v:
-
-  Proportion of fine roots within each soil layer.
 
 - kxylemmax:
 
@@ -98,11 +103,6 @@ hydraulics_vulnerabilityCurvePlot(
 - temp:
 
   Temperature (in degrees Celsius).
-
-- psi50, psi88, psi12:
-
-  Water potentials (in MPa) corresponding to 50%, 88% and 12% percent
-  conductance loss.
 
 - x:
 

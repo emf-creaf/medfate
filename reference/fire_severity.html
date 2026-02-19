@@ -9,7 +9,7 @@ by Michaletz &amp;amp; Johnson (2008)"><meta property="og:image" content="https:
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,26 +66,19 @@ by Michaletz &amp; Johnson (2008)</p>
 <span>  <span class="va">t_res</span>,</span>
 <span>  <span class="va">bark_diffusivity</span>,</span>
 <span>  T_air <span class="op">=</span> <span class="fl">25</span>,</span>
-<span>  rho_air <span class="op">=</span> <span class="fl">1.169</span>,</span>
-<span>  T_necrosis <span class="op">=</span> <span class="fl">60</span></span>
+<span>  rho_air <span class="op">=</span> <span class="fl">1.169</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fire_leafThermalFactor</span><span class="op">(</span><span class="va">SLA</span>, h <span class="op">=</span> <span class="fl">130</span>, c <span class="op">=</span> <span class="fl">2500</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">fire_necrosisCriticalTemperature</span><span class="op">(</span></span>
-<span>  <span class="va">t_res</span>,</span>
-<span>  <span class="va">thermal_factor</span>,</span>
-<span>  T_air <span class="op">=</span> <span class="fl">25</span>,</span>
-<span>  T_necrosis <span class="op">=</span> <span class="fl">60</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">fire_necrosisCriticalTemperature</span><span class="op">(</span><span class="va">t_res</span>, <span class="va">thermal_factor</span>, T_air <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fire_necrosisHeight</span><span class="op">(</span></span>
 <span>  <span class="va">Ib_surf</span>,</span>
 <span>  <span class="va">t_res</span>,</span>
 <span>  <span class="va">thermal_factor</span>,</span>
 <span>  T_air <span class="op">=</span> <span class="fl">25</span>,</span>
-<span>  rho_air <span class="op">=</span> <span class="fl">1.169</span>,</span>
-<span>  T_necrosis <span class="op">=</span> <span class="fl">60</span></span>
+<span>  rho_air <span class="op">=</span> <span class="fl">1.169</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -123,10 +116,6 @@ by Michaletz &amp; Johnson (2008)</p>
 
 <dt id="arg-bark-diffusivity">bark_diffusivity<a class="anchor" aria-label="anchor" href="#arg-bark-diffusivity"></a></dt>
 <dd><p>Bark thermal diffusivity (m2/s).</p></dd>
-
-
-<dt id="arg-t-necrosis">T_necrosis<a class="anchor" aria-label="anchor" href="#arg-t-necrosis"></a></dt>
-<dd><p>Temperature of tissue necrosis (degrees Celsius).</p></dd>
 
 
 <dt id="arg-sla">SLA<a class="anchor" aria-label="anchor" href="#arg-sla"></a></dt>

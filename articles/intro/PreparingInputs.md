@@ -16,9 +16,9 @@ We begin by loading packages **medfate** and **meteoland**:
 
 ``` r
 library(medfate)
-#> Package 'medfate' [ver. 4.9.0]
+#> Package 'medfate' [ver. 5.0.0]
 library(meteoland)
-#> Package 'meteoland' [ver. 2.2.5]
+#> Package 'meteoland' [ver. 2.2.6]
 ```
 
 ## Building/manipulating forest objects

@@ -19,10 +19,6 @@ Soil infiltration functions:
 ## Usage
 
 ``` r
-hydrology_infiltrationBoughton(input, Ssoil)
-
-hydrology_infiltrationGreenAmpt(t, psi_w, Ksat, theta_sat, theta_dry)
-
 hydrology_infiltrationRepartition(I, widths, macro, a = -0.005, b = 3)
 
 hydrology_infiltrationAmount(
@@ -33,38 +29,13 @@ hydrology_infiltrationAmount(
   model = "GreenAmpt1911",
   K_correction = 1
 )
+
+hydrology_infiltrationBoughton(input, Ssoil)
+
+hydrology_infiltrationGreenAmpt(t, psi_w, Ksat, theta_sat, theta_dry)
 ```
 
 ## Arguments
-
-- input:
-
-  A numeric vector of (daily) water input (in mm of water).
-
-- Ssoil:
-
-  Soil water storage capacity (can be referred to topsoil) (in mm of
-  water).
-
-- t:
-
-  Time of the infiltration event
-
-- psi_w:
-
-  Matric potential at the wetting front
-
-- Ksat:
-
-  hydraulic conductivity at saturation
-
-- theta_sat:
-
-  volumetric content at saturation
-
-- theta_dry:
-
-  volumetric content at the dry side of the wetting front
 
 - I:
 
@@ -108,6 +79,35 @@ hydrology_infiltrationAmount(
 
   Correction for saturated conductivity, to account for increased
   infiltration due to macropore presence
+
+- input:
+
+  A numeric vector of (daily) water input (in mm of water).
+
+- Ssoil:
+
+  Soil water storage capacity (can be referred to topsoil) (in mm of
+  water).
+
+- t:
+
+  Time of the infiltration event
+
+- psi_w:
+
+  Matric potential at the wetting front
+
+- Ksat:
+
+  hydraulic conductivity at saturation
+
+- theta_sat:
+
+  volumetric content at saturation
+
+- theta_dry:
+
+  volumetric content at the dry side of the wetting front
 
 ## Value
 

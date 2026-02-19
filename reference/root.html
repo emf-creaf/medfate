@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,12 +60,6 @@
 <span></span>
 <span><span class="fu">root_individualRootedGroundArea</span><span class="op">(</span><span class="va">VolInd</span>, <span class="va">V</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">root_specificRootSurfaceArea</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">root_fineRootRadius</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">root_fineRootHalfDistance</span><span class="op">(</span><span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">root_fineRootAreaIndex</span><span class="op">(</span></span>
 <span>  <span class="va">Ksoil</span>,</span>
 <span>  <span class="va">krhizo</span>,</span>
@@ -95,8 +89,6 @@
 <span>  <span class="va">rootLengthDensity</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">root_fineRootSoilVolume</span><span class="op">(</span><span class="va">fineRootBiomass</span>, <span class="va">specificRootLength</span>, <span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">root_coarseRootSoilVolumeFromConductance</span><span class="op">(</span></span>
 <span>  <span class="va">Kmax_rootxylem</span>,</span>
 <span>  <span class="va">VCroot_kmax</span>,</span>
@@ -112,7 +104,25 @@
 <span></span>
 <span><span class="fu">root_coarseRootSoilVolume</span><span class="op">(</span><span class="va">v</span>, <span class="va">d</span>, depthWidthRatio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">root_horizontalProportions</span><span class="op">(</span><span class="va">poolProportions</span>, <span class="va">VolInd</span>, <span class="va">N</span>, <span class="va">V</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">root_horizontalProportions</span><span class="op">(</span><span class="va">poolProportions</span>, <span class="va">VolInd</span>, <span class="va">N</span>, <span class="va">V</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootRadius</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_specificRootSurfaceArea</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootSoilVolume</span><span class="op">(</span><span class="va">fineRootBiomass</span>, <span class="va">specificRootLength</span>, <span class="va">rootLengthDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootHalfDistance</span><span class="op">(</span><span class="va">rootLengthDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_rhizosphereMaximumConductance</span><span class="op">(</span></span>
+<span>  <span class="va">Ksoil</span>,</span>
+<span>  <span class="va">fineRootBiomass</span>,</span>
+<span>  <span class="va">lai</span>,</span>
+<span>  <span class="va">N</span>,</span>
+<span>  <span class="va">specificRootLength</span>,</span>
+<span>  <span class="va">rootTissueDensity</span>,</span>
+<span>  <span class="va">rootLengthDensity</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -151,18 +161,6 @@
 <dd><p>Percentage of rock fragment content (volume basis) for each layer.</p></dd>
 
 
-<dt id="arg-specificrootlength">specificRootLength<a class="anchor" aria-label="anchor" href="#arg-specificrootlength"></a></dt>
-<dd><p>Specific fine root length (length of fine roots over weight).</p></dd>
-
-
-<dt id="arg-roottissuedensity">rootTissueDensity<a class="anchor" aria-label="anchor" href="#arg-roottissuedensity"></a></dt>
-<dd><p>Fine root tissue density (weight over volume at turgidity).</p></dd>
-
-
-<dt id="arg-rootlengthdensity">rootLengthDensity<a class="anchor" aria-label="anchor" href="#arg-rootlengthdensity"></a></dt>
-<dd><p>Fine root length density (length of fine roots over soil volume; cm/cm3)</p></dd>
-
-
 <dt id="arg-ksoil">Ksoil<a class="anchor" aria-label="anchor" href="#arg-ksoil"></a></dt>
 <dd><p>Soil saturated conductivity (mmol·m-1·s-1·MPa-1).</p></dd>
 
@@ -173,6 +171,18 @@
 
 <dt id="arg-lai">lai<a class="anchor" aria-label="anchor" href="#arg-lai"></a></dt>
 <dd><p>Leaf area index.</p></dd>
+
+
+<dt id="arg-specificrootlength">specificRootLength<a class="anchor" aria-label="anchor" href="#arg-specificrootlength"></a></dt>
+<dd><p>Specific fine root length (length of fine roots over weight).</p></dd>
+
+
+<dt id="arg-roottissuedensity">rootTissueDensity<a class="anchor" aria-label="anchor" href="#arg-roottissuedensity"></a></dt>
+<dd><p>Fine root tissue density (weight over volume at turgidity).</p></dd>
+
+
+<dt id="arg-rootlengthdensity">rootLengthDensity<a class="anchor" aria-label="anchor" href="#arg-rootlengthdensity"></a></dt>
+<dd><p>Fine root length density (length of fine roots over soil volume; cm/cm3)</p></dd>
 
 
 <dt id="arg-n">N<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>

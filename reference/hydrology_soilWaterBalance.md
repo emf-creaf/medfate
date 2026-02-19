@@ -235,8 +235,8 @@ hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1),
 #>            -4.000000             0.000000            10.000000 
 #>   InfiltrationExcess     SaturationExcess               Runoff 
 #>             0.000000             0.000000             0.000000 
-#>         DeepDrainage      CapillarityRise 
-#>             4.121414             0.000000 
+#>         DeepDrainage 
+#>             4.121414 
                            
 # Water balance in a single-domain model (Richards equation)
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
@@ -258,7 +258,7 @@ hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1),
 #>        Matrix-macropore flow           InfiltrationMatrix 
 #>                 4.836043e+00                 4.481027e+00 
 #>       InfiltrationMacropores     InfiltrationExcessMatrix 
-#>                 5.518973e+00                 0.000000e+00 
+#>                 5.518973e+00                 5.518973e+00 
 #> InfiltrationExcessMacropores       SaturationExcessMatrix 
 #>                 0.000000e+00                 0.000000e+00 
 #>   SaturationExcessMacropores               DrainageMatrix 

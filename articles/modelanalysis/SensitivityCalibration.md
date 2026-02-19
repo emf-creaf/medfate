@@ -26,7 +26,7 @@ package and the example forest data:
 library(medfate)
 ```
 
-    ## Package 'medfate' [ver. 4.9.0]
+    ## Package 'medfate' [ver. 5.0.0]
 
 ``` r
 data(exampleforest)
@@ -84,8 +84,6 @@ the default parameter settings:
 ``` r
 S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
-
-    ## Package 'meteoland' [ver. 2.2.5]
 
     ## Initial plant water content (mm): 4.69853
     ## Initial soil water content (mm): 290.875

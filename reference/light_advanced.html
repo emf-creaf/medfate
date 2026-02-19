@@ -15,7 +15,7 @@ by cohort and vegetation layers, while differentiating between sunlit and shade 
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,11 +66,7 @@ by cohort and vegetation layers, while differentiating between sunlit and shade 
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">light_leafAngleCDF</span><span class="op">(</span><span class="va">leafAngle</span>, <span class="va">p</span>, <span class="va">q</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">light_leafAngleBetaParameters</span><span class="op">(</span><span class="va">leafAngle</span>, <span class="va">leafAngleSD</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">light_directionalExtinctionCoefficient</span><span class="op">(</span><span class="va">p</span>, <span class="va">q</span>, <span class="va">solarElevation</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">light_leafAngleBetaParameters</span><span class="op">(</span><span class="va">leafAngle</span>, <span class="va">leafAngleSD</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">light_layerDirectIrradianceFraction</span><span class="op">(</span></span>
 <span>  <span class="va">LAIme</span>,</span>
@@ -134,7 +130,11 @@ by cohort and vegetation layers, while differentiating between sunlit and shade 
 <span>  <span class="va">Tsoil</span>,</span>
 <span>  <span class="va">Tair</span>,</span>
 <span>  trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">light_leafAngleCDF</span><span class="op">(</span><span class="va">leafAngle</span>, <span class="va">p</span>, <span class="va">q</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">light_directionalExtinctionCoefficient</span><span class="op">(</span><span class="va">p</span>, <span class="va">q</span>, <span class="va">solarElevation</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -145,16 +145,8 @@ by cohort and vegetation layers, while differentiating between sunlit and shade 
 <dd><p>Average leaf inclination angle (in radians).</p></dd>
 
 
-<dt id="arg-p-q">p, q<a class="anchor" aria-label="anchor" href="#arg-p-q"></a></dt>
-<dd><p>Parameters of the beta distribution for leaf angles</p></dd>
-
-
 <dt id="arg-leafanglesd">leafAngleSD<a class="anchor" aria-label="anchor" href="#arg-leafanglesd"></a></dt>
 <dd><p>Standard deviation of leaf inclination angle (in radians).</p></dd>
-
-
-<dt id="arg-solarelevation">solarElevation<a class="anchor" aria-label="anchor" href="#arg-solarelevation"></a></dt>
-<dd><p>Solar elevation (in radians).</p></dd>
 
 
 <dt id="arg-laime">LAIme<a class="anchor" aria-label="anchor" href="#arg-laime"></a></dt>
@@ -205,6 +197,10 @@ by cohort and vegetation layers, while differentiating between sunlit and shade 
 <dd><p>Above-canopy diffuse incident radiation.</p></dd>
 
 
+<dt id="arg-p-q">p, q<a class="anchor" aria-label="anchor" href="#arg-p-q"></a></dt>
+<dd><p>Parameters of the beta distribution for leaf angles</p></dd>
+
+
 <dt id="arg-alphaswr">alphaSWR<a class="anchor" aria-label="anchor" href="#arg-alphaswr"></a></dt>
 <dd><p>A vecfor of hort-wave absorbance coefficients for each cohort.</p></dd>
 
@@ -231,6 +227,10 @@ by cohort and vegetation layers, while differentiating between sunlit and shade 
 
 <dt id="arg-tair">Tair<a class="anchor" aria-label="anchor" href="#arg-tair"></a></dt>
 <dd><p>Canopy layer air temperature vector (Celsius).</p></dd>
+
+
+<dt id="arg-solarelevation">solarElevation<a class="anchor" aria-label="anchor" href="#arg-solarelevation"></a></dt>
+<dd><p>Solar elevation (in radians).</p></dd>
 
 </dl></div>
     <div class="section level2">

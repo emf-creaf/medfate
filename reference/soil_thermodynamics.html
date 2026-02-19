@@ -13,7 +13,7 @@ given soil layer texture and water content (and possibly including heat flux fro
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@ given soil layer texture and water content (and possibly including heat flux fro
 <span></span>
 <span><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">widths</span>, <span class="va">Temp</span><span class="op">)</span></span>
+<span><span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">gradTemp</span>, <span class="va">widths</span>, <span class="va">Temp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_temperatureChange</span><span class="op">(</span></span>
 <span>  <span class="va">widths</span>,</span>
@@ -79,7 +79,9 @@ given soil layer texture and water content (and possibly including heat flux fro
 <span>  <span class="va">Theta_FC</span>,</span>
 <span>  <span class="va">Gdown</span>,</span>
 <span>  <span class="va">tstep</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">gradTemp</span>, <span class="va">widths</span>, <span class="va">Temp</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">

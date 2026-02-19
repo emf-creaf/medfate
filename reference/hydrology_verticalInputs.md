@@ -11,8 +11,6 @@ High-level functions to define water inputs into the soil of a stand:
 ## Usage
 
 ``` r
-hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
-
 hydrology_waterInputs(
   x,
   prec,
@@ -26,25 +24,21 @@ hydrology_waterInputs(
   LgroundSWR,
   modifyInput = TRUE
 )
+
+hydrology_agricultureWaterInputs(
+  x,
+  prec,
+  tday,
+  rad,
+  elevation,
+  LgroundSWR,
+  modifyInput = TRUE
+)
+
+hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 ```
 
 ## Arguments
-
-- tday:
-
-  Average day temperature (ºC).
-
-- rad:
-
-  Solar radiation (in MJ/m2/day).
-
-- LgroundSWR:
-
-  Percentage of short-wave radiation (SWR) reaching the ground.
-
-- elevation:
-
-  Altitude above sea level (m).
 
 - x:
 
@@ -65,6 +59,18 @@ hydrology_waterInputs(
 
   Potential evapotranspiration for the given day (mm)
 
+- tday:
+
+  Average day temperature (ºC).
+
+- rad:
+
+  Solar radiation (in MJ/m2/day).
+
+- elevation:
+
+  Altitude above sea level (m).
+
 - Cm:
 
   Canopy water storage capacity.
@@ -73,6 +79,10 @@ hydrology_waterInputs(
 
   Percentage of photosynthetically-active radiation (PAR) reaching the
   ground.
+
+- LgroundSWR:
+
+  Percentage of short-wave radiation (SWR) reaching the ground.
 
 - modifyInput:
 

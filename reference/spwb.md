@@ -544,21 +544,21 @@ S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 6.70498
-#> Final soil water content (mm): 274.666
+#> Final plant water content (mm): 6.70497
+#> Final soil water content (mm): 274.65
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00537377
-#> Plant water balance result (mm): -9.61028e-16
-#> Change in soil water content (mm): -16.2085
-#> Soil water balance result (mm): -16.2085
+#> Change in plant water content (mm): -0.00537981
+#> Plant water balance result (mm): 3.70817e-16
+#> Change in soil water content (mm): -16.2247
+#> Soil water balance result (mm): -16.2247
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
 #>   Infiltration (mm) 411 Infiltration excess (mm) 19 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 22  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 244
-#>   Plant extraction from soil (mm) 244  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4
+#>   Soil evaporation (mm) 22  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 245
+#>   Plant extraction from soil (mm) 245  Plant water balance (mm) 0 Hydraulic redistribution (mm) 4
 #>   Runoff (mm) 19 Deep drainage (mm) 161
 
 #Switch to 'Sureau' transpiration mode
@@ -576,15 +576,15 @@ S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 6.68375
-#> Final soil water content (mm): 279.062
+#> Final plant water content (mm): 6.6838
+#> Final soil water content (mm): 279.063
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.0266006
-#> Plant water balance result (mm): -0.127776
-#> Change in soil water content (mm): -11.8128
-#> Soil water balance result (mm): -11.8128
+#> Change in plant water content (mm): -0.0265481
+#> Plant water balance result (mm): -0.127223
+#> Change in soil water content (mm): -11.8121
+#> Soil water balance result (mm): -11.8121
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 7.10543e-15
+#> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 82 Net rainfall (mm) 380

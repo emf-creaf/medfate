@@ -174,8 +174,6 @@ sd1<-spwb_day(x, date, meteovec,
              latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
 ```
 
-    ## Package 'meteoland' [ver. 2.2.5]
-
 Function
 [`spwb_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md)
 is most useful when working with the complex transpiration model. This
@@ -221,7 +219,7 @@ sd1
     ##        tday        prec        tmin        tmax       rhmin       rhmax 
     ##   6.2323731   0.0000000   0.3881289  10.0320962  42.0207334  82.3036989 
     ##         rad        wind        Catm        Patm         pet        rint 
-    ##  28.7201692   3.3228840 386.0000000          NA   3.9023342   1.5000000 
+    ##  28.7201692   3.3228840 386.0000000         NaN   3.9023342   1.5000000 
     ## 
     ## $WaterBalance
     ##                     PET                    Rain                    Snow 

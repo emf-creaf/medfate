@@ -14,8 +14,6 @@ Functions:
 ## Usage
 
 ``` r
-hydrology_soilEvaporationAmount(DEF, PETs, Gsoil)
-
 hydrology_soilEvaporation(
   soil,
   snowpack,
@@ -33,21 +31,11 @@ hydrology_herbaceousTranspiration(
   soilFunctions,
   modifySoil = TRUE
 )
+
+hydrology_soilEvaporationAmount(DEF, PETs, Gsoil)
 ```
 
 ## Arguments
-
-- DEF:
-
-  Water deficit in the (topsoil) layer.
-
-- PETs:
-
-  Potential evapotranspiration at the soil surface.
-
-- Gsoil:
-
-  Gamma parameter (maximum daily evaporation).
 
 - soil:
 
@@ -84,6 +72,18 @@ hydrology_herbaceousTranspiration(
 - herbLAI:
 
   Leaf area index of the herbaceous layer.
+
+- DEF:
+
+  Water deficit in the (topsoil) layer.
+
+- PETs:
+
+  Potential evapotranspiration at the soil surface.
+
+- Gsoil:
+
+  Gamma parameter (maximum daily evaporation).
 
 ## Value
 

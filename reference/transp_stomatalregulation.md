@@ -18,18 +18,6 @@ transp_profitMaximization(
   Gswmin,
   Gswmax
 )
-
-transp_stomatalRegulationPlot(
-  x,
-  meteo,
-  day,
-  timestep,
-  latitude,
-  elevation,
-  slope = NA,
-  aspect = NA,
-  type = "E"
-)
 ```
 
 ## Arguments
@@ -47,42 +35,6 @@ transp_stomatalRegulationPlot(
 
   Minimum and maximum stomatal conductance to water vapour
   (mol·m-2·s-1).
-
-- x:
-
-  An object of class
-  [`spwbInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
-  built using the 'Sperry' transpiration mode.
-
-- meteo:
-
-  A data frame with daily meteorological data series (see
-  [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)).
-
-- day:
-
-  An integer to identify a day (a row) within `meteo`.
-
-- timestep:
-
-  An integer between 1 and `ndailysteps` specified in `x` (see
-  [`defaultControl`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)).
-
-- latitude:
-
-  Latitude (in degrees).
-
-- elevation, slope, aspect:
-
-  Elevation above sea level (in m), slope (in degrees) and aspect (in
-  degrees from North).
-
-- type:
-
-  A string with plot type, either `"E"` (transpiration flow), `"Ag"`
-  (gross photosynthesis), `"An"` (net photosynthesis), `"Gsw"` (stomatal
-  conductance to water vapour), `"T"` (temperature) or `"VPD"` (leaf
-  vapour pressure deficit).
 
 ## Value
 
@@ -117,31 +69,3 @@ hydraulic cost. Plant Cell and Environment 40, 816-830 (doi:
 ## Author
 
 Miquel De Cáceres Ainsa, CREAF
-
-## Examples
-
-``` r
-#Load example daily meteorological data
-data(examplemeteo)
-
-#Load example plot plant data
-data(exampleforest)
-
-#Default species parameterization
-data(SpParamsMED)
-
-#Define soil with default soil params (4 layers)
-examplesoil <- defaultSoilParams(4)
-
-#Initialize control parameters
-control <- defaultControl(transpirationMode="Sperry")
-
-#Initialize input
-x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-
-# Stomatal VPD curve and chosen value for the 12th time step at day 100
-transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
-                              latitude = 41.82592, elevation = 100, type="VPD")
-
- 
-```

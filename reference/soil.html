@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,7 +103,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Function <code>summary</code> prompts a description of soil characteristics and state variables (water content and temperature)
 according to a water retention curve (either Saxton's or Van Genuchten's).
-Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa.
+Volume at field capacity is calculated assuming a soil water potential equal to fieldCapacityPsi MPa.
 Parameter <code>Temp</code> is initialized as missing for all soil layers.</p>
 <p>If available, the user can specify columns <code>VG_alpha</code>, <code>VG_n</code>, <code>VG_theta_res</code>, <code>VG_theta_sat</code> and <code>K_sat</code>,
 to override Van Genuchten parameters an saturated conductivity estimated from pedotransfer functions when calling function <code>soil</code>.</p>

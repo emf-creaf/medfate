@@ -8,16 +8,6 @@ secondary growth.
 ``` r
 woodformation_initRing()
 
-woodformation_temperatureEffect(
-  Tc,
-  Y_T = 5,
-  DHa = 87500,
-  DSd = 1090,
-  DHd = 333000
-)
-
-woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
-
 woodformation_growRing(
   ring,
   psi,
@@ -32,45 +22,33 @@ woodformation_growRing(
   s = 1.8
 )
 
+woodformation_temperatureEffect(
+  Tc,
+  Y_T = 5,
+  DHa = 87500,
+  DSd = 1090,
+  DHd = 333000
+)
+
+woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
+
 woodformation_relativeGrowthRate(dbh1, dbh2, yeardiff, lower = -2, upper = 8)
 ```
 
 ## Arguments
 
-- Tc:
+- ring:
 
-  Temperature in Celsius.
-
-- Y_T:
-
-  Temperature yield threshold (in Celsius)
-
-- DHa, DSd, DHd:
-
-  Enthalpy of activation, enthalpy difference and entropy difference
-  between the catalytically active and inactive states of the enzymatic
-  system (Parent et al. 2010).
+  An object of class [`ring`](https://rdrr.io/r/grDevices/plotmath.html)
+  returned by function `woodformation_initRing`.
 
 - psi:
 
   Water potential (in MPa).
 
-- pi:
+- Tc:
 
-  Osmotic potential (in MPa)
-
-- phi:
-
-  Cell extensibility (in MPa-1 day-1)
-
-- Y_P:
-
-  Turgor pressure yield threshold (in MPa)
-
-- ring:
-
-  An object of class [`ring`](https://rdrr.io/r/grDevices/plotmath.html)
-  returned by function `woodformation_initRing`.
+  Temperature in Celsius.
 
 - Nc:
 
@@ -88,6 +66,14 @@ woodformation_relativeGrowthRate(dbh1, dbh2, yeardiff, lower = -2, upper = 8)
 
   Initial value of cell radial diameter
 
+- Y_P:
+
+  Turgor pressure yield threshold (in MPa)
+
+- Y_T:
+
+  Temperature yield threshold (in Celsius)
+
 - h:
 
   Cell wall hardening coefficient (in day-1)
@@ -95,6 +81,20 @@ woodformation_relativeGrowthRate(dbh1, dbh2, yeardiff, lower = -2, upper = 8)
 - s:
 
   Cell wall softening coefficient (unitless)
+
+- DHa, DSd, DHd:
+
+  Enthalpy of activation, enthalpy difference and entropy difference
+  between the catalytically active and inactive states of the enzymatic
+  system (Parent et al. 2010).
+
+- pi:
+
+  Osmotic potential (in MPa)
+
+- phi:
+
+  Cell extensibility (in MPa-1 day-1)
 
 - dbh1, dbh2:
 

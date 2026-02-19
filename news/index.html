@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,14 @@
       <small>Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="5.0.0" id="medfate-500">medfate 5.0.0<a class="anchor" aria-label="anchor" href="#medfate-500"></a></h2>
+<ul><li>Internal restructuration to avoid Rcpp structures (NumericVector, NumericMatrix, DataFrame,…)</li>
+<li>Approximate speed increase (Granier): spwb_day()/growth_day() x 4.5, spwb(1 yr) x 8.5, growth(1 yr) x 8.5</li>
+<li>Approximate speed increase (Sperry): spwb_day()/growth_day() x 2.5, spwb(1 yr) x 4.0, growth (1 yr) x 1.5</li>
+<li>Approximate speed increase (Sureau): spwb_day()/growth_day() x 2.0, spwb(1 yr) x 4.0, growth (1 yr) x 1.5</li>
+<li>Rcpp modules “runners” to run single-site, multiple-site and watershed simulations while avoiding unnecessary input/output.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.9.0" id="medfate-490">medfate 4.9.0<a class="anchor" aria-label="anchor" href="#medfate-490"></a></h2>
 <ul><li>Forest objects can now have a seedling bank, snag data and litter data</li>

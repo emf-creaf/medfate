@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,8 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">moisture_sapwoodWaterCapacity</span><span class="op">(</span><span class="va">Al2As</span>, <span class="va">height</span>, <span class="va">V</span>, <span class="va">L</span>, <span class="va">wd</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">plant_water</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">moisture_leafWaterCapacity</span><span class="op">(</span><span class="va">SLA</span>, <span class="va">ld</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">moisture_turgorLossPoint</span><span class="op">(</span><span class="va">pi0</span>, <span class="va">epsilon</span><span class="op">)</span></span>
@@ -69,8 +71,6 @@
 <span><span class="fu">moisture_apoplasticPsi</span><span class="op">(</span><span class="va">RWC</span>, <span class="va">c</span>, <span class="va">d</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">moisture_tissueRWC</span><span class="op">(</span><span class="va">psiSym</span>, <span class="va">pi0</span>, <span class="va">epsilon</span>, <span class="va">psiApo</span>, <span class="va">c</span>, <span class="va">d</span>, <span class="va">af</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">plant_water</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">moisture_pressureVolumeCurvePlot</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -105,6 +105,10 @@
 <dd><p>Wood density (g·cm-3).</p></dd>
 
 
+<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
+
+
 <dt id="arg-sla">SLA<a class="anchor" aria-label="anchor" href="#arg-sla"></a></dt>
 <dd><p>Specific leaf area (mm2·mg-1).</p></dd>
 
@@ -135,10 +139,6 @@
 
 <dt id="arg-af">af<a class="anchor" aria-label="anchor" href="#arg-af"></a></dt>
 <dd><p>Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).</p></dd>
-
-
-<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
 
 
 <dt id="arg-segment">segment<a class="anchor" aria-label="anchor" href="#arg-segment"></a></dt>

@@ -5,13 +5,13 @@ Functions related to litter and soil carbon decomposition processes
 ## Usage
 
 ``` r
+decomposition_pHEffect(x, pool)
+
 decomposition_annualLitterDecompositionRate(AET, lignin)
 
 decomposition_snagFallProbability(DBH, decayClass, durabilityEffect = 0)
 
 decomposition_litterMetabolicFraction(ligninPercent, Nmass)
-
-decomposition_pHEffect(x, pool)
 
 decomposition_moistureEffect(sand, clay, soilMoisture)
 
@@ -19,6 +19,14 @@ decomposition_temperatureEffect(soilTemperature)
 ```
 
 ## Arguments
+
+- x:
+
+  Soil water pH (0-14)
+
+- pool:
+
+  String indicating the decomposition pool
 
 - AET:
 
@@ -47,14 +55,6 @@ decomposition_temperatureEffect(soilTemperature)
 - Nmass:
 
   nitrogen content (mg N / g dry)
-
-- x:
-
-  Soil water pH (0-14)
-
-- pool:
-
-  String indicating the decomposition pool
 
 - sand, clay:
 

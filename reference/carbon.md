@@ -5,6 +5,18 @@ Low-level functions used in the calculation of carbon balance.
 ## Usage
 
 ``` r
+carbon_belowgroundSapwoodStructuralBiomass(SA, L, V, woodDensity)
+
+carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
+
+carbon_belowgroundHeartwoodStructuralBiomass(DBH, SA, L, V, woodDensity)
+
+carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
+
+carbon_sapwoodStarchCapacity(SA, H, L, V, woodDensity, conduit2sapwood)
+
+carbon_carbonCompartments(x, biomassUnits = "g_m2")
+
 carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
 
 carbon_sugarStarchDynamicsStem(sugarConc, starchConc, eqSugarConc)
@@ -23,31 +35,49 @@ carbon_leafStarchCapacity(LAI, N, SLA, leafDensity)
 
 carbon_abovegroundSapwoodStructuralBiomass(SA, H, woodDensity)
 
-carbon_belowgroundSapwoodStructuralBiomass(SA, L, V, woodDensity)
-
-carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
-
 carbon_abovegroundHeartwoodStructuralBiomass(DBH, SA, H, woodDensity)
-
-carbon_belowgroundHeartwoodStructuralBiomass(DBH, SA, L, V, woodDensity)
-
-carbon_heartwoodStructuralBiomass(DBH, SA, H, L, V, woodDensity)
-
-carbon_sapwoodStructuralLivingBiomass(
-  SA,
-  H,
-  L,
-  V,
-  woodDensity,
-  conduit2sapwood
-)
-
-carbon_sapwoodStarchCapacity(SA, H, L, V, woodDensity, conduit2sapwood)
-
-carbon_carbonCompartments(x, biomassUnits = "g_m2")
 ```
 
 ## Arguments
+
+- SA:
+
+  Sapwood area (cm2).
+
+- L:
+
+  Coarse root length (mm) for each soil layer.
+
+- V:
+
+  Proportion of fine roots in each soil layer.
+
+- woodDensity:
+
+  Wood density (dry weight over volume).
+
+- H:
+
+  Plant height (cm).
+
+- DBH:
+
+  Tree diameter (cm).
+
+- conduit2sapwood:
+
+  Proportion of sapwood corresponding to conducive elements (vessels or
+  tracheids) as opposed to parenchymatic tissue.
+
+- x:
+
+  An object of class
+  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md).
+
+- biomassUnits:
+
+  A string for output biomass units, either "g_ind" (g per individual)
+  or "g_m2" (g per square meter).
 
 - sugarConc:
 
@@ -88,45 +118,6 @@ carbon_carbonCompartments(x, biomassUnits = "g_m2")
 - leafDensity:
 
   Density of leaf tissue (dry weight over volume).
-
-- SA:
-
-  Sapwood area (cm2).
-
-- H:
-
-  Plant height (cm).
-
-- woodDensity:
-
-  Wood density (dry weight over volume).
-
-- L:
-
-  Coarse root length (mm) for each soil layer.
-
-- V:
-
-  Proportion of fine roots in each soil layer.
-
-- DBH:
-
-  Tree diameter (cm).
-
-- conduit2sapwood:
-
-  Proportion of sapwood corresponding to conducive elements (vessels or
-  tracheids) as opposed to parenchymatic tissue.
-
-- x:
-
-  An object of class
-  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md).
-
-- biomassUnits:
-
-  A string for output biomass units, either "g_ind" (g per individual)
-  or "g_m2" (g per square meter).
 
 ## Value
 
@@ -201,20 +192,24 @@ carbon_carbonCompartments(x1)
 #> 1                          4.625615         24.5772184            67.0477318
 #> 2                          4.625615          3.7381199            23.9433625
 #> 3                          4.625615          0.1553302             0.1413913
-#>   LeafStructuralBiomass TwigStructuralBiomass SapwoodStructuralBiomass
-#> 1            165.109206            171.234885              3201.235698
-#> 2            111.289246            138.097964              1146.794384
-#> 3              6.149703              4.769236                 3.738437
+#>   LeafStructuralBiomass TwigStructuralBiomass TwigLivingStructuralBiomass
+#> 1            165.109206             159.20266                   12.156616
+#> 2            111.289246              89.68486                   33.738323
+#> 3              6.149703               7.92975                    2.983073
+#>   DeadLeafStructuralBiomass DeadTwigStructuralBiomass SapwoodStructuralBiomass
+#> 1                         0                         0              3201.235698
+#> 2                         0                         0              1146.794384
+#> 3                         0                         0                 3.738437
 #>   SapwoodLivingStructuralBiomass HeartwoodStructuralBiomass
-#> 1                     244.444357                   6043.965
+#> 1                     244.444357                   6043.964
 #> 2                     431.409712                   2937.490
 #> 3                       1.406353                      0.000
-#>   AbovegroundWoodBiomass BelowgroundWoodBiomass FineRootBiomass
-#> 1            9044.809878             200.390824      23.2157679
-#> 2            3822.186939             262.097660      20.9930167
-#> 3               2.566923               1.171515       0.7933894
-#>   StructuralBiomass LabileBiomass TotalLivingBiomass TotalBiomass
-#> 1        9604.76056    199.895416          632.66475   9804.65598
-#> 2        4354.66483    159.784125          723.47610   4514.44895
-#> 3          15.45077      2.872282           11.22173     18.32305
+#>   AbovegroundWoodBiomass BelowgroundWoodBiomass FineRootBiomass LabileBiomass
+#> 1            9044.808881             200.390802      23.2157679    199.895416
+#> 2            3822.186517             262.097631      20.9930167    159.784125
+#> 3               2.566923               1.171515       0.7933894      2.872282
+#>   StructuralBiomass DeadBiomass TotalLivingBiomass TotalBiomass
+#> 1        3548.76334    6043.964           644.8214   9792.62274
+#> 2        1368.76151    2937.490           757.2144   4466.03540
+#> 3          18.61128       0.000            14.2048     21.48356
 ```

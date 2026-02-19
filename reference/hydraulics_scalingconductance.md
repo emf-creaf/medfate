@@ -50,6 +50,8 @@ hydraulics_soilPlantResistancesWeibull(
   leafd
 )
 
+hydraulics_rootxylemConductanceProportions(L, V)
+
 hydraulics_averageRhizosphereResistancePercent(
   krhizomax,
   n,
@@ -79,7 +81,7 @@ hydraulics_findRhizosphereMaximumConductance(
   kleafmax,
   leafc,
   leafd,
-  initialValue = 0
+  initialValue
 )
 
 hydraulics_taperFactorSavage(height)
@@ -93,10 +95,8 @@ hydraulics_maximumStemHydraulicConductance(
   refheight,
   Al2As,
   height,
-  taper = FALSE
+  taper
 )
-
-hydraulics_rootxylemConductanceProportions(L, V)
 ```
 
 ## Arguments
@@ -177,6 +177,15 @@ hydraulics_rootxylemConductanceProportions(L, V)
   Parameters of the Weibull function for leaves (leaf vulnerability
   curve).
 
+- L:
+
+  Vector with the length of coarse roots (mm) for each soil layer.
+
+- V:
+
+  Vector with the proportion \[0-1\] of fine roots within each soil
+  layer.
+
 - psiStep:
 
   Water potential precision (in MPa).
@@ -212,15 +221,6 @@ hydraulics_rootxylemConductanceProportions(L, V)
 
   A boolean flag to indicate correction by taper of xylem conduits
   (Christoffersen et al. 2017).
-
-- L:
-
-  Vector with the length of coarse roots (mm) for each soil layer.
-
-- V:
-
-  Vector with the proportion \[0-1\] of fine roots within each soil
-  layer.
 
 ## Value
 

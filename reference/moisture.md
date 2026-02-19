@@ -8,6 +8,8 @@ and viceversa.
 ``` r
 moisture_sapwoodWaterCapacity(Al2As, height, V, L, wd)
 
+plant_water(x)
+
 moisture_leafWaterCapacity(SLA, ld)
 
 moisture_turgorLossPoint(pi0, epsilon)
@@ -21,8 +23,6 @@ moisture_apoplasticRWC(psiApo, c, d)
 moisture_apoplasticPsi(RWC, c, d)
 
 moisture_tissueRWC(psiSym, pi0, epsilon, psiApo, c, d, af)
-
-plant_water(x)
 
 moisture_pressureVolumeCurvePlot(
   x,
@@ -56,6 +56,13 @@ moisture_pressureVolumeCurvePlot(
 
   Wood density (g·cm-3).
 
+- x:
+
+  An object of class
+  [`spwbInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
+  or
+  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md).
+
 - SLA:
 
   Specific leaf area (mm2·mg-1).
@@ -87,13 +94,6 @@ moisture_pressureVolumeCurvePlot(
 - af:
 
   Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).
-
-- x:
-
-  An object of class
-  [`spwbInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)
-  or
-  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md).
 
 - segment:
 

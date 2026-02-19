@@ -5,18 +5,6 @@ Set of functions used in the calculation of photosynthesis
 ## Usage
 
 ``` r
-photo_GammaTemp(Tleaf)
-
-photo_KmTemp(Tleaf, Oi = 209)
-
-photo_VmaxTemp(Vmax298, Tleaf)
-
-photo_JmaxTemp(Jmax298, Tleaf)
-
-photo_electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
-
-photo_rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
-
 photo_photosynthesis(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE)
 
 photo_photosynthesisBaldocchi(
@@ -107,17 +95,37 @@ photo_multilayerPhotosynthesisFunction(
   leafWidth = 1,
   verbose = FALSE
 )
+
+photo_GammaTemp(Tleaf)
+
+photo_KmTemp(Tleaf, Oi)
+
+photo_VmaxTemp(Vmax298, Tleaf)
+
+photo_JmaxTemp(Jmax298, Tleaf)
+
+photo_electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
+
+photo_rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 ```
 
 ## Arguments
 
+- Q:
+
+  Active photon flux density (micromol \* s-1 \* m-2).
+
+- Catm:
+
+  CO2 air concentration (micromol \* mol-1).
+
+- Gc:
+
+  CO2 leaf (stomatal) conductance (mol \* s-1 \* m-2).
+
 - Tleaf:
 
   Leaf temperature (in ºC).
-
-- Oi:
-
-  Oxigen concentration (mmol\*mol-1).
 
 - Vmax298, Vmax298SL, Vmax298SH:
 
@@ -132,39 +140,6 @@ photo_multilayerPhotosynthesisFunction(
   (micromol*s-1*m-2) (for each canopy layer in the case of
   `photo_multilayerPhotosynthesisFunction`). 'SH' stands for shade
   leaves, whereas 'SL' stands for sunlit leaves.
-
-- Q:
-
-  Active photon flux density (micromol \* s-1 \* m-2).
-
-- Ci:
-
-  CO2 internal concentration (micromol \* mol-1).
-
-- GT:
-
-  CO2 saturation point corrected by temperature (micromol \* mol-1).
-
-- Jmax:
-
-  Maximum electron transport rate per leaf area (micromol*s-1*m-2).
-
-- Km:
-
-  Km = Kc\*(1.0+(Oi/Ko)) - Michaelis-Menten term corrected by
-  temperature (in micromol \* mol-1).
-
-- Vmax:
-
-  Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).
-
-- Catm:
-
-  CO2 air concentration (micromol \* mol-1).
-
-- Gc:
-
-  CO2 leaf (stomatal) conductance (mol \* s-1 \* m-2).
 
 - verbose:
 
@@ -239,6 +214,31 @@ photo_multilayerPhotosynthesisFunction(
   Active photon flux density (micromol \* s-1 \* m-2) per unit of
   sunlit/shade leaf area (for each canopy layer in the case of
   `photo_multilayerPhotosynthesisFunction`).
+
+- Oi:
+
+  Oxigen concentration (mmol\*mol-1).
+
+- Ci:
+
+  CO2 internal concentration (micromol \* mol-1).
+
+- GT:
+
+  CO2 saturation point corrected by temperature (micromol \* mol-1).
+
+- Jmax:
+
+  Maximum electron transport rate per leaf area (micromol*s-1*m-2).
+
+- Km:
+
+  Km = Kc\*(1.0+(Oi/Ko)) - Michaelis-Menten term corrected by
+  temperature (in micromol \* mol-1).
+
+- Vmax:
+
+  Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).
 
 ## Value
 

@@ -12,12 +12,6 @@ root_ldrDistribution(Z50, Z95, Z100, d)
 
 root_individualRootedGroundArea(VolInd, V, d, rfc)
 
-root_specificRootSurfaceArea(specificRootLength, rootTissueDensity)
-
-root_fineRootRadius(specificRootLength, rootTissueDensity)
-
-root_fineRootHalfDistance(rootLengthDensity)
-
 root_fineRootAreaIndex(
   Ksoil,
   krhizo,
@@ -47,8 +41,6 @@ root_rhizosphereMaximumConductance(
   rootLengthDensity
 )
 
-root_fineRootSoilVolume(fineRootBiomass, specificRootLength, rootLengthDensity)
-
 root_coarseRootSoilVolumeFromConductance(
   Kmax_rootxylem,
   VCroot_kmax,
@@ -65,6 +57,24 @@ root_coarseRootLengths(v, d, depthWidthRatio = 1)
 root_coarseRootSoilVolume(v, d, depthWidthRatio = 1)
 
 root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
+
+root_fineRootRadius(specificRootLength, rootTissueDensity)
+
+root_specificRootSurfaceArea(specificRootLength, rootTissueDensity)
+
+root_fineRootSoilVolume(fineRootBiomass, specificRootLength, rootLengthDensity)
+
+root_fineRootHalfDistance(rootLengthDensity)
+
+root_rhizosphereMaximumConductance(
+  Ksoil,
+  fineRootBiomass,
+  lai,
+  N,
+  specificRootLength,
+  rootTissueDensity,
+  rootLengthDensity
+)
 ```
 
 ## Arguments
@@ -101,6 +111,18 @@ root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
 
   Percentage of rock fragment content (volume basis) for each layer.
 
+- Ksoil:
+
+  Soil saturated conductivity (mmol·m-1·s-1·MPa-1).
+
+- krhizo:
+
+  Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).
+
+- lai:
+
+  Leaf area index.
+
 - specificRootLength:
 
   Specific fine root length (length of fine roots over weight).
@@ -113,18 +135,6 @@ root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
 
   Fine root length density (length of fine roots over soil volume;
   cm/cm3)
-
-- Ksoil:
-
-  Soil saturated conductivity (mmol·m-1·s-1·MPa-1).
-
-- krhizo:
-
-  Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).
-
-- lai:
-
-  Leaf area index.
 
 - N:
 

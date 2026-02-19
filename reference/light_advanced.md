@@ -12,11 +12,7 @@ differentiating between sunlit and shade leaves.
 ## Usage
 
 ``` r
-light_leafAngleCDF(leafAngle, p, q)
-
 light_leafAngleBetaParameters(leafAngle, leafAngleSD)
-
-light_directionalExtinctionCoefficient(p, q, solarElevation)
 
 light_layerDirectIrradianceFraction(
   LAIme,
@@ -81,6 +77,10 @@ light_longwaveRadiationSHAW(
   Tair,
   trunkExtinctionFraction = 0.1
 )
+
+light_leafAngleCDF(leafAngle, p, q)
+
+light_directionalExtinctionCoefficient(p, q, solarElevation)
 ```
 
 ## Arguments
@@ -89,17 +89,9 @@ light_longwaveRadiationSHAW(
 
   Average leaf inclination angle (in radians).
 
-- p, q:
-
-  Parameters of the beta distribution for leaf angles
-
 - leafAngleSD:
 
   Standard deviation of leaf inclination angle (in radians).
-
-- solarElevation:
-
-  Solar elevation (in radians).
 
 - LAIme:
 
@@ -152,6 +144,10 @@ light_longwaveRadiationSHAW(
 
   Above-canopy diffuse incident radiation.
 
+- p, q:
+
+  Parameters of the beta distribution for leaf angles
+
 - alphaSWR:
 
   A vecfor of hort-wave absorbance coefficients for each cohort.
@@ -182,6 +178,10 @@ light_longwaveRadiationSHAW(
 - Tair:
 
   Canopy layer air temperature vector (Celsius).
+
+- solarElevation:
+
+  Solar elevation (in radians).
 
 ## Value
 

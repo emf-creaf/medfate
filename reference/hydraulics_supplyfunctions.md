@@ -6,48 +6,6 @@ functions (Sperry and Love 2015).
 ## Usage
 
 ``` r
-hydraulics_EXylem(
-  psiPlant,
-  psiUpstream,
-  kxylemmax,
-  c,
-  d,
-  allowNegativeFlux = TRUE,
-  psiCav = 0
-)
-
-hydraulics_E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiCav = 0)
-
-hydraulics_E2psiXylemUp(E, psiDownstream, kxylemmax, c, d, psiCav = 0)
-
-hydraulics_EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, l = 0.5)
-
-hydraulics_ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
-
-hydraulics_E2psiVanGenuchten(
-  E,
-  psiSoil,
-  krhizomax,
-  n,
-  alpha,
-  psiStep = -1e-04,
-  psiMax = -10
-)
-
-hydraulics_E2psiTwoElements(
-  E,
-  psiSoil,
-  krhizomax,
-  kxylemmax,
-  n,
-  alpha,
-  c,
-  d,
-  psiCav = 0,
-  psiStep = -1e-04,
-  psiMax = -10
-)
-
 hydraulics_E2psiBelowground(E, hydraulicNetwork, psiIni = as.numeric(c(0)))
 
 hydraulics_E2psiAboveground(E, psiRootCrown, hydraulicNetwork)
@@ -125,6 +83,40 @@ hydraulics_regulatedPsiTwoElements(
   psiMax = -10
 )
 
+hydraulics_EXylem(
+  psiPlant,
+  psiUpstream,
+  kxylemmax,
+  c,
+  d,
+  allowNegativeFlux,
+  psiCav
+)
+
+hydraulics_E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiCav)
+
+hydraulics_E2psiXylemUp(E, psiDownstream, kxylemmax, c, d, psiCav)
+
+hydraulics_EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, l)
+
+hydraulics_ECrit(psiUpstream, kxylemmax, c, d, pCrit)
+
+hydraulics_E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, psiStep, psiMax)
+
+hydraulics_E2psiTwoElements(
+  E,
+  psiSoil,
+  krhizomax,
+  kxylemmax,
+  n,
+  alpha,
+  c,
+  d,
+  psiCav,
+  psiStep,
+  psiMax
+)
+
 hydraulics_initSperryNetworks(x)
 
 hydraulics_supplyFunctionPlot(
@@ -138,75 +130,9 @@ hydraulics_supplyFunctionPlot(
 
 ## Arguments
 
-- psiPlant:
-
-  Plant water potential (in MPa).
-
-- psiUpstream:
-
-  Water potential upstream (in MPa). In a one-component model
-  corresponds to soil potential. In a two-component model corresponds to
-  the potential inside the roots.
-
-- kxylemmax:
-
-  Maximum xylem hydraulic conductance (defined as flow per leaf surface
-  unit and per pressure drop).
-
-- c, d:
-
-  Parameters of the Weibull function (generic xylem vulnerability
-  curve).
-
-- allowNegativeFlux:
-
-  A boolean to indicate whether negative flux (i.e. from plant to soil)
-  is allowed.
-
-- psiCav:
-
-  Minimum water potential (in MPa) experienced (for irreversible
-  cavitation).
-
 - E:
 
   Flow per surface unit.
-
-- psiDownstream:
-
-  Water potential upstream (in MPa).
-
-- psiRhizo:
-
-  Soil water potential (in MPa) in the rhizosphere (root surface).
-
-- psiSoil:
-
-  Soil water potential (in MPa). A scalar or a vector depending on the
-  function.
-
-- krhizomax:
-
-  Maximum rhizosphere hydraulic conductance (defined as flow per leaf
-  surface unit and per pressure drop).
-
-- n, alpha, l:
-
-  Parameters of the Van Genuchten function (rhizosphere vulnerability
-  curve).
-
-- pCrit:
-
-  Critical water potential (in MPa).
-
-- psiStep:
-
-  Water potential precision (in MPa).
-
-- psiMax:
-
-  Minimum (maximum in absolute value) water potential to be considered
-  (in MPa).
 
 - hydraulicNetwork:
 
@@ -220,6 +146,11 @@ hydraulics_supplyFunctionPlot(
 - psiRootCrown:
 
   Soil water potential (in MPa) at the root crown.
+
+- psiSoil:
+
+  Soil water potential (in MPa). A scalar or a vector depending on the
+  function.
 
 - v:
 
@@ -235,6 +166,11 @@ hydraulics_supplyFunctionPlot(
   Parameters of the Weibull function for stems (stem xylem vulnerability
   curve).
 
+- psiCav:
+
+  Minimum water potential (in MPa) experienced (for irreversible
+  cavitation).
+
 - maxNsteps:
 
   Maximum number of steps in the construction of supply functions.
@@ -246,6 +182,31 @@ hydraulics_supplyFunctionPlot(
 - Emax:
 
   Maximum flow per surface unit.
+
+- krhizomax:
+
+  Maximum rhizosphere hydraulic conductance (defined as flow per leaf
+  surface unit and per pressure drop).
+
+- kxylemmax:
+
+  Maximum xylem hydraulic conductance (defined as flow per leaf surface
+  unit and per pressure drop).
+
+- n, alpha, l:
+
+  Parameters of the Van Genuchten function (rhizosphere vulnerability
+  curve).
+
+- c, d:
+
+  Parameters of the Weibull function (generic xylem vulnerability
+  curve).
+
+- psiMax:
+
+  Minimum (maximum in absolute value) water potential to be considered
+  (in MPa).
 
 - kleafmax:
 
@@ -261,9 +222,40 @@ hydraulics_supplyFunctionPlot(
 
   Minimum flow in supply function.
 
+- pCrit:
+
+  Critical water potential (in MPa).
+
 - Erootcrown:
 
   Flow per surface unit at the root crown.
+
+- psiUpstream:
+
+  Water potential upstream (in MPa). In a one-component model
+  corresponds to soil potential. In a two-component model corresponds to
+  the potential inside the roots.
+
+- psiStep:
+
+  Water potential precision (in MPa).
+
+- psiPlant:
+
+  Plant water potential (in MPa).
+
+- allowNegativeFlux:
+
+  A boolean to indicate whether negative flux (i.e. from plant to soil)
+  is allowed.
+
+- psiDownstream:
+
+  Water potential upstream (in MPa).
+
+- psiRhizo:
+
+  Soil water potential (in MPa) in the rhizosphere (root surface).
 
 - x:
 

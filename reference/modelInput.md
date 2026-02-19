@@ -1150,7 +1150,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.9.0"
+#> [1] "5.0.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -1852,7 +1852,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.9.0"
+#> [1] "5.0.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2558,7 +2558,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.9.0"
+#> [1] "5.0.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -3223,7 +3223,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "4.9.0"
+#> [1] "5.0.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     

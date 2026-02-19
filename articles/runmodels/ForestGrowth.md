@@ -279,9 +279,7 @@ which has the same parameter names as
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Package 'meteoland' [ver. 2.2.5]
-
-    ## Initial plant cohort biomass (g/m2): 14337.4
+    ## Initial plant cohort biomass (g/m2): 14280.1
     ## Initial plant water content (mm): 4.69853
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
@@ -289,21 +287,21 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14727
-    ## Change in plant cohort biomass (g/m2): 389.538
-    ## Plant biomass balance result (g/m2): 149.294
+    ## Final plant cohort biomass (g/m2): 14669.8
+    ## Change in plant cohort biomass (g/m2): 389.651
+    ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
     ##   Structural balance (g/m2) 82 Labile balance (g/m2) 89
     ##   Plant individual balance (g/m2) 171 Mortality loss (g/m2) 22
-    ## Final plant water content (mm): 4.70545
-    ## Final soil water content (mm): 275.705
+    ## Final plant water content (mm): 4.7056
+    ## Final soil water content (mm): 275.692
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00691703
-    ## Plant water balance result (mm): -0.00138423
-    ## Change in soil water content (mm): -15.1704
-    ## Soil water balance result (mm): -15.1704
+    ## Change in plant water content (mm): 0.00707084
+    ## Plant water balance result (mm): -0.00138348
+    ## Change in soil water content (mm): -15.1834
+    ## Soil water balance result (mm): -15.1834
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
@@ -512,9 +510,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1254482 -18.4663618   0.1254482  18.4663618   0.9923190 
+    ##  12.0000000  -0.1255336 -18.4789326   0.1255336  18.4789326   0.9922950 
     ##         NSE     NSE.abs 
-    ##   0.9142804   0.7620308
+    ##   0.9143130   0.7618688
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

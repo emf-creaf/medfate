@@ -6,31 +6,6 @@ water content.
 ## Usage
 
 ``` r
-soil_saturatedConductivitySX(clay, sand, bd, om = NA_real_, mmol = TRUE)
-
-soil_unsaturatedConductivitySX(
-  theta,
-  clay,
-  sand,
-  bd,
-  om = NA_real_,
-  mmol = TRUE
-)
-
-soil_thetaSATSX(clay, sand, om = NA_real_)
-
-soil_theta2psiSX(clay, sand, theta, om = NA_real_)
-
-soil_psi2thetaSX(clay, sand, psi, om = NA_real_)
-
-soil_psi2kVG(ksat, n, alpha, theta_res, theta_sat, psi)
-
-soil_psi2cVG(n, alpha, theta_res, theta_sat, psi)
-
-soil_psi2thetaVG(n, alpha, theta_res, theta_sat, psi)
-
-soil_theta2psiVG(n, alpha, theta_res, theta_sat, theta)
-
 soil_USDAType(clay, sand)
 
 soil_thetaFC(soil, model = "SX")
@@ -68,6 +43,24 @@ soil_vanGenuchtenParamsCarsel(soilType)
 soil_campbellParamsClappHornberger(soilType)
 
 soil_vanGenuchtenParamsToth(clay, sand, om, bd, topsoil)
+
+soil_saturatedConductivitySX(clay, sand, bd, om, mmol = TRUE)
+
+soil_unsaturatedConductivitySX(theta, clay, sand, bd, om, mmol = TRUE)
+
+soil_thetaSATSX(clay, sand, om)
+
+soil_theta2psiSX(clay, sand, theta, om)
+
+soil_psi2thetaSX(clay, sand, psi, om)
+
+soil_psi2kVG(ksat, n, alpha, theta_res, theta_sat, psi)
+
+soil_psi2cVG(n, alpha, theta_res, theta_sat, psi)
+
+soil_psi2thetaVG(n, alpha, theta_res, theta_sat, psi)
+
+soil_theta2psiVG(n, alpha, theta_res, theta_sat, theta)
 ```
 
 ## Arguments
@@ -80,35 +73,6 @@ soil_vanGenuchtenParamsToth(clay, sand, om, bd, topsoil)
 
   Percentage of sand (in percent weight).
 
-- bd:
-
-  Bulk density (in g/cm3).
-
-- om:
-
-  Percentage of organic matter (optional, in percent weight).
-
-- mmol:
-
-  Boolean flag to indicate that saturated conductivity units should be
-  returned in mmol/m/s/MPa. If `mmol = FALSE` then units are cm/day.
-
-- theta:
-
-  Relative water content (in percent volume).
-
-- psi:
-
-  Water potential (in MPa).
-
-- ksat:
-
-  saturated hydraulic conductance
-
-- n, alpha, theta_res, theta_sat:
-
-  Parameters of the Van Genuchten-Mualem model (m = 1 - 1/n).
-
 - soil:
 
   Initialized soil object (returned by function
@@ -118,6 +82,10 @@ soil_vanGenuchtenParamsToth(clay, sand, om, bd, topsoil)
 
   Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention
   models.
+
+- psi:
+
+  Water potential (in MPa).
 
 - minPsi:
 
@@ -136,13 +104,38 @@ soil_vanGenuchtenParamsToth(clay, sand, om, bd, topsoil)
 
   Rock density (g/cm3).
 
+- mmol:
+
+  Boolean flag to indicate that saturated conductivity units should be
+  returned in mmol/m/s/MPa. If `mmol = FALSE` then units are cm/day.
+
 - soilType:
 
   A string indicating the soil type.
 
+- om:
+
+  Percentage of organic matter (optional, in percent weight).
+
+- bd:
+
+  Bulk density (in g/cm3).
+
 - topsoil:
 
   A boolean flag to indicate topsoil layer.
+
+- theta:
+
+  Relative water content (in percent volume).
+
+- ksat:
+
+  saturated hydraulic conductance
+
+- n, alpha, theta_res, theta_sat:
+
+  Parameters of the Van Genuchten-Mualem model (m = 1 - 1/n).
 
 ## Value
 

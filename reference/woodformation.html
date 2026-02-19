@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,16 +56,6 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">woodformation_initRing</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">woodformation_temperatureEffect</span><span class="op">(</span></span>
-<span>  <span class="va">Tc</span>,</span>
-<span>  Y_T <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  DHa <span class="op">=</span> <span class="fl">87500</span>,</span>
-<span>  DSd <span class="op">=</span> <span class="fl">1090</span>,</span>
-<span>  DHd <span class="op">=</span> <span class="fl">333000</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">woodformation_relativeExpansionRate</span><span class="op">(</span><span class="va">psi</span>, <span class="va">Tc</span>, <span class="va">pi</span>, <span class="va">phi</span>, <span class="va">Y_P</span>, <span class="va">Y_T</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">woodformation_growRing</span><span class="op">(</span></span>
 <span>  <span class="va">ring</span>,</span>
 <span>  <span class="va">psi</span>,</span>
@@ -80,6 +70,16 @@
 <span>  s <span class="op">=</span> <span class="fl">1.8</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">woodformation_temperatureEffect</span><span class="op">(</span></span>
+<span>  <span class="va">Tc</span>,</span>
+<span>  Y_T <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  DHa <span class="op">=</span> <span class="fl">87500</span>,</span>
+<span>  DSd <span class="op">=</span> <span class="fl">1090</span>,</span>
+<span>  DHd <span class="op">=</span> <span class="fl">333000</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">woodformation_relativeExpansionRate</span><span class="op">(</span><span class="va">psi</span>, <span class="va">Tc</span>, <span class="va">pi</span>, <span class="va">phi</span>, <span class="va">Y_P</span>, <span class="va">Y_T</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">woodformation_relativeGrowthRate</span><span class="op">(</span><span class="va">dbh1</span>, <span class="va">dbh2</span>, <span class="va">yeardiff</span>, lower <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, upper <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -87,36 +87,16 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-tc">Tc<a class="anchor" aria-label="anchor" href="#arg-tc"></a></dt>
-<dd><p>Temperature in Celsius.</p></dd>
-
-
-<dt id="arg-y-t">Y_T<a class="anchor" aria-label="anchor" href="#arg-y-t"></a></dt>
-<dd><p>Temperature yield threshold (in Celsius)</p></dd>
-
-
-<dt id="arg-dha-dsd-dhd">DHa, DSd, DHd<a class="anchor" aria-label="anchor" href="#arg-dha-dsd-dhd"></a></dt>
-<dd><p>Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).</p></dd>
+<dl><dt id="arg-ring">ring<a class="anchor" aria-label="anchor" href="#arg-ring"></a></dt>
+<dd><p>An object of class <code><a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">ring</a></code> returned by function <code>woodformation_initRing</code>.</p></dd>
 
 
 <dt id="arg-psi">psi<a class="anchor" aria-label="anchor" href="#arg-psi"></a></dt>
 <dd><p>Water potential (in MPa).</p></dd>
 
 
-<dt id="arg-pi">pi<a class="anchor" aria-label="anchor" href="#arg-pi"></a></dt>
-<dd><p>Osmotic potential (in MPa)</p></dd>
-
-
-<dt id="arg-phi">phi<a class="anchor" aria-label="anchor" href="#arg-phi"></a></dt>
-<dd><p>Cell extensibility (in MPa-1 day-1)</p></dd>
-
-
-<dt id="arg-y-p">Y_P<a class="anchor" aria-label="anchor" href="#arg-y-p"></a></dt>
-<dd><p>Turgor pressure yield threshold (in MPa)</p></dd>
-
-
-<dt id="arg-ring">ring<a class="anchor" aria-label="anchor" href="#arg-ring"></a></dt>
-<dd><p>An object of class <code><a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">ring</a></code> returned by function <code>woodformation_initRing</code>.</p></dd>
+<dt id="arg-tc">Tc<a class="anchor" aria-label="anchor" href="#arg-tc"></a></dt>
+<dd><p>Temperature in Celsius.</p></dd>
 
 
 <dt id="arg-nc">Nc<a class="anchor" aria-label="anchor" href="#arg-nc"></a></dt>
@@ -135,12 +115,32 @@
 <dd><p>Initial value of cell radial diameter</p></dd>
 
 
+<dt id="arg-y-p">Y_P<a class="anchor" aria-label="anchor" href="#arg-y-p"></a></dt>
+<dd><p>Turgor pressure yield threshold (in MPa)</p></dd>
+
+
+<dt id="arg-y-t">Y_T<a class="anchor" aria-label="anchor" href="#arg-y-t"></a></dt>
+<dd><p>Temperature yield threshold (in Celsius)</p></dd>
+
+
 <dt id="arg-h">h<a class="anchor" aria-label="anchor" href="#arg-h"></a></dt>
 <dd><p>Cell wall hardening coefficient (in day-1)</p></dd>
 
 
 <dt id="arg-s">s<a class="anchor" aria-label="anchor" href="#arg-s"></a></dt>
 <dd><p>Cell wall softening coefficient (unitless)</p></dd>
+
+
+<dt id="arg-dha-dsd-dhd">DHa, DSd, DHd<a class="anchor" aria-label="anchor" href="#arg-dha-dsd-dhd"></a></dt>
+<dd><p>Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).</p></dd>
+
+
+<dt id="arg-pi">pi<a class="anchor" aria-label="anchor" href="#arg-pi"></a></dt>
+<dd><p>Osmotic potential (in MPa)</p></dd>
+
+
+<dt id="arg-phi">phi<a class="anchor" aria-label="anchor" href="#arg-phi"></a></dt>
+<dd><p>Cell extensibility (in MPa-1 day-1)</p></dd>
 
 
 <dt id="arg-dbh-dbh-">dbh1, dbh2<a class="anchor" aria-label="anchor" href="#arg-dbh-dbh-"></a></dt>

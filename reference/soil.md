@@ -78,8 +78,9 @@ columns:
 Function `summary` prompts a description of soil characteristics and
 state variables (water content and temperature) according to a water
 retention curve (either Saxton's or Van Genuchten's). Volume at field
-capacity is calculated assuming a soil water potential equal to -0.033
-MPa. Parameter `Temp` is initialized as missing for all soil layers.
+capacity is calculated assuming a soil water potential equal to
+fieldCapacityPsi MPa. Parameter `Temp` is initialized as missing for all
+soil layers.
 
 If available, the user can specify columns `VG_alpha`, `VG_n`,
 `VG_theta_res`, `VG_theta_sat` and `K_sat`, to override Van Genuchten

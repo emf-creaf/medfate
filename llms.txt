@@ -256,6 +256,8 @@ Simulation model functions
   : Single-day forest growth
 - [`fordyn()`](https://emf-creaf.github.io/medfate/reference/fordyn.md)
   : Forest dynamics
+- [`runners`](https://emf-creaf.github.io/medfate/reference/runners-module.md)
+  : Rcpp module: Running simulations
 
 ## Plots and summaries
 
