@@ -97,6 +97,7 @@ reference:
   - growth
   - growth_day
   - fordyn
+  - runners
 - title: Plots and summaries
   desc:  Summaries, extraction and plots of simulation results
 - contents:

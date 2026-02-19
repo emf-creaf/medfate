@@ -2480,6 +2480,7 @@ hydraulics_initSperryNetworks <- function(x) {
 #' \code{\link{transp_transpirationSperry}}, \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 #' 
 #' @name transp_stomatalregulation
+#' @keywords internal
 transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gswmin, Gswmax) {
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
 }

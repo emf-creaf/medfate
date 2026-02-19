@@ -189,7 +189,7 @@ Soil water balance simulations will normally span periods of several months or y
 ```{r}
 date <- examplemeteo$dates[d]
 meteovec <- unlist(examplemeteo[d,])
-sd1<-spwb_day_old(x, date, meteovec, 
+sd1<-spwb_day(x, date, meteovec, 
               latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
 ```
 

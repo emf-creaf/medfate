@@ -217,6 +217,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
 //' \code{\link{transp_transpirationSperry}}, \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 //' 
 //' @name transp_stomatalregulation
+//' @keywords internal
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax) {
   NumericVector supplyE = supplyFunction["E"];
