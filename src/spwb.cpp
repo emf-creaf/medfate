@@ -1938,8 +1938,8 @@ List spwb(List x, DataFrame meteo,
   
   WBCommunicationStructures WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
   BasicTranspiration_RESULT BTres(numCohorts, nlayers);
-  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
   AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
+  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
   AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
   
   
@@ -2198,13 +2198,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
-  String stemCavitationRecovery = control["stemCavitationRecovery"];
-  String leafCavitationRecovery = control["leafCavitationRecovery"];
   bool verbose = control["verbose"];
-  bool subdailyResults = control["subdailyResults"];
-  bool leafPhenology = control["leafPhenology"];
-  bool multiLayerBalance = control["multiLayerBalance"];
-  
+
   //Store input
   List spwbInput = x; // Store initial object
   x = clone(x); //Ensure a copy will be modified
@@ -2323,8 +2318,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   
   
   //Soil input
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  int nlayers = Water_FC.size();
+  int nlayers = soil.nrow();
   
   //Detailed subday results
   List subdailyRes(numDays);
@@ -2360,17 +2354,24 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(dateStrings);
     
     
-  List internalCommunication = instanceCommunicationStructures(x, "spwb");
-  List SEBcommunication = internalCommunication["SEBcommunication"];
-  List transpOutput;
-  if(transpirationMode == "Granier") {
-    transpOutput  = internalCommunication["basicTranspirationOutput"];
-  } else {
-    transpOutput  = internalCommunication["advancedTranspirationOutput"];
-  }
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations ";
-  List s;
+  
+  
+  //Internal object
+  ModelInput x_c(x);
+  
+  // Build communication structures
+  int ntimesteps = x_c.control.advancedWB.ndailysteps;
+  
+  
+  WBCommunicationStructures WBcomm(numCohorts, nlayers, ncanlayers, ntimesteps);
+  BasicTranspiration_RESULT BTres(numCohorts, nlayers);
+  AdvancedTranspiration_RESULT ATres(numCohorts, nlayers, ncanlayers, ntimesteps); 
+  BasicSPWB_RESULT BSPWBres(BTres, nlayers);
+  AdvancedSPWB_RESULT ASPWBres(ATres, nlayers);
+  
+  
   std::string yearString;
   for(int i=0;i<numDays;i++) {
     std::string c = as<std::string>(dateStrings[i]);
@@ -2444,63 +2445,79 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                                tmin, tmax, rhmin, rhmax, rad, wind);
 
     //0. Soil moisture
-    soil["W"] = W(i,_);
-    Wdays(i,_) = W(i,_);
-    psidays(i,_) = psi(soil, soilFunctions); //Get soil water potential
-      
+    for(int l=0;l<nlayers;l++) {
+      Wdays(i,l) = W(i,l);
+      x_c.soil.setW(l, W(i,l));
+      psidays(i,l) = x_c.soil.getPsi(l); //Get soil water potential
+    }
+
     //If DOY == 1 reset PLC (Growth assumed)
-    if(stemCavitationRecovery=="annual") {
+    if(x_c.control.commonWB.stemCavitationRecovery=="annual") {
         if(DOY[i]==1) {
-          DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-          NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          for(int j=0;j<numCohorts;j++) x_c.internalWater.StemPLC[j] = 0.0;
           if(transpirationMode =="Sureau") {
-            NumericVector StemPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
-            NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
-            for(int j=0;j<StemPsi.length();j++) {
-              StemPsi[j] = fieldCapacityPsi;
-              StemSympPsi[j] = fieldCapacityPsi;
+            for(int j=0;j<numCohorts;j++) {
+              x_c.internalWater.StemPsi[j] = fieldCapacityPsi;
+              x_c.internalWater.StemSympPsi[j] = fieldCapacityPsi;
             } 
           }
         }
     }
-    if(leafCavitationRecovery=="annual") {
+    if(x_c.control.commonWB.leafCavitationRecovery=="annual") {
       if(DOY[i]==1) {
-        DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-        NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-        for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+        for(int j=0;j<numCohorts;j++) x_c.internalWater.LeafPLC[j] = 0.0;
         if(transpirationMode =="Sureau") {
-          NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-          NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
-          for(int j=0;j<LeafPsi.length();j++) {
-            LeafPsi[j] = fieldCapacityPsi;
-            LeafSympPsi[j] = fieldCapacityPsi;
+          for(int j=0;j<numCohorts;j++) {
+            x_c.internalWater.LeafPsi[j] = fieldCapacityPsi;
+            x_c.internalWater.LeafSympPsi[j] = fieldCapacityPsi;
           }
         }
       }
     }
       
     //1. Phenology and leaf fall
-    if(leafPhenology) {
-      updatePhenology(x, DOY[i], Photoperiod[i], tday);
-      updateLeaves(x, wind, false);
+    if(x_c.control.phenology.leafPhenology) {
+      updatePhenology_c(x_c, DOY[i], Photoperiod[i], tday);
+      updateLeaves_c(x_c, wind, false);
     }
       
-    
-    int ntimesteps = control["ndailysteps"];
-    
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
-      NumericVector meteovec = NumericVector::create(
-        Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-        Named("prec") = prec, Named("rhmin") = rhmin, Named("rhmax") = rhmax,
-        Named("rad") = rad, 
-        Named("wind") = wind, 
-        Named("Catm") = Catm,
-        Named("Patm") = Patm[i],
-        Named("pet") = PET[i]);
+      WeatherInputVector meteovec;
+      meteovec.tday = tday;
+      meteovec.tmax = tmax;
+      meteovec.tmin = tmin;
+      meteovec.prec = prec;
+      meteovec.rhmin = rhmin;
+      meteovec.rhmax = rhmax;
+      meteovec.rad = rad; 
+      meteovec.wind = wind; 
+      meteovec.Catm = Catm;
+      meteovec.Patm = Patm[i];
+      meteovec.pet = PET[i];
       try{
-        transpirationBasic(transpOutput, x, meteovec, elevation, true);
+        transpirationBasic_c(BTres, WBcomm.BTcomm, x_c, 
+                             meteovec, elevation);
+        LAI[i] = BTres.stand.LAI;
+        LAIlive[i] = BTres.stand.LAIlive;
+        LAIexpanded[i] = BTres.stand.LAIexpanded;
+        LAIdead[i] = BTres.stand.LAIdead;
+        for(int l=0;l<nlayers;l++) {
+          Eplantdays(i,l) = 0.0;
+          for(int c=0;c<numCohorts;c++) {
+            Eplantdays(i,l) += BTres.extraction(c,l);
+          }
+        }
+        PlantExtraction[i] = std::accumulate(BTres.plants.Extraction.begin(), BTres.plants.Extraction.end(),0.0);
+        Transpiration[i] = std::accumulate(BTres.plants.Transpiration.begin(), BTres.plants.Transpiration.end(),0.0);
+        if(x_c.control.results.plantResults) {
+          fillPlantWaterDailyOutput_c(plantDWOL, BSPWBres, i, transpirationMode, ntimesteps);
+        }
+        if(x_c.control.results.fireHazardResults) fillFireHazardOutput_c(fireHazard, BSPWBres.fccs, i);
+        if(x_c.control.results.subdailyResults) {
+          subdailyRes[i] = copyBasicTranspirationResult_c(BTres, x_c); //Clones subdaily results because they are communication structures
+        }
+        
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
@@ -2514,81 +2531,69 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         tminPrev = MinTemperature[i-1];
       }
       if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
-      NumericVector meteovec = NumericVector::create(
-        Named("tmin") = tmin, 
-        Named("tmax") = tmax,
-        Named("tminPrev") = tminPrev, 
-        Named("tmaxPrev") = tmaxPrev, 
-        Named("tminNext") = tminNext, 
-        Named("prec") = prec,
-        Named("rhmin") = rhmin, 
-        Named("rhmax") = rhmax, 
-        Named("rad") = rad, 
-        Named("wind") = wind, 
-        Named("Catm") = Catm,
-        Named("Patm") = Patm[i]);
+      
+      WeatherInputVector meteovec;
+      meteovec.tmax = tmax;
+      meteovec.tmin = tmin;
+      meteovec.tday = tday;
+      meteovec.tminPrev = tminPrev;
+      meteovec.tminNext = tminNext;
+      meteovec.tmaxPrev = tmaxPrev;
+      meteovec.prec = Precipitation[i];
+      meteovec.rhmin = rhmin;
+      meteovec.rhmax = rhmax;
+      meteovec.rad = rad; 
+      meteovec.wind = wind; 
+      meteovec.Catm = Catm;
+      meteovec.Patm = Patm[i];
+      meteovec.pet = PET[i];
       try{
-        transpirationAdvanced(SEBcommunication, transpOutput, x, meteovec, 
-                                latitude, elevation, slope, aspect,
+        transpirationAdvanced_c(ATres, WBcomm.ATcomm, x_c, 
+                                meteovec,
+                                latitude, elevation, slope, aspect, 
                                 solarConstant, delta,
                                 canopyEvaporation[i], snowMelt[i], soilEvaporation[i], herbTranspiration[i],
-                                verbose, NA_INTEGER, 
-                                false);
+                                verbose);
+        LAI[i] = ATres.stand.LAI;
+        LAIlive[i] = ATres.stand.LAIlive;
+        LAIexpanded[i] = ATres.stand.LAIexpanded;
+        LAIdead[i] = ATres.stand.LAIdead;
+        fillEnergyBalanceDailyOutput_c(DEB,ASPWBres.ATres.energy, i, ntimesteps);
+        for(int l=0;l<nlayers;l++) {
+          Eplantdays(i,l) = 0.0;
+          for(int c=0;c<numCohorts;c++) {
+            Eplantdays(i,l) += ATres.extraction(c,l);
+          }
+        }
+        PlantExtraction[i] = std::accumulate(ATres.plants.Extraction.begin(), ATres.plants.Extraction.end(),0.0);
+        Transpiration[i] = std::accumulate(ATres.plants.Transpiration.begin(), ATres.plants.Transpiration.end(),0.0);
+        if(x_c.control.results.temperatureResults) {
+          fillTemperatureDailyOutput_c(DT,ATres.energy, i, ntimesteps);
+          if(x_c.control.advancedWB.multiLayerBalance) {
+            fillTemperatureLayersDailyOutput_c(DLT,ATres.energy, i, ncanlayers, ntimesteps);
+          }
+        }
+        if(x_c.control.results.plantResults) {
+          fillPlantWaterDailyOutput_c(plantDWOL, ASPWBres, i, transpirationMode, ntimesteps);
+          if(x_c.control.results.leafResults) {
+            fillSunlitShadeLeavesDailyOutput_c(sunlitDO, shadeDO, ATres, i, numCohorts);
+          }
+        }
+        if(x_c.control.results.fireHazardResults) fillFireHazardOutput_c(fireHazard, ASPWBres.fccs, i);
+        if(x_c.control.results.subdailyResults) {
+          subdailyRes[i] = copyAdvancedTranspirationResult_c(ATres, x_c); //Clones subdaily results because they are communication structures
+        }
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
       }
-      fillEnergyBalanceDailyOutput(DEB,transpOutput, i, ntimesteps);
-      if(control["temperatureResults"]) {
-        fillTemperatureDailyOutput(DT,transpOutput, i, ntimesteps);
-        if(multiLayerBalance) {
-          fillTemperatureLayersDailyOutput(DLT,transpOutput, i, ncanlayers, ntimesteps);
-        }
-      }
-    }
-    
-    //Update plant daily water output
-    fillPlantWaterDailyOutput(plantDWOL, transpOutput, i, transpirationMode);
-    if(transpirationMode!="Granier") fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, transpOutput, i, numCohorts);
-    if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, transpOutput, i);
-    
-    List Plants = transpOutput["Plants"];
-    NumericVector EplantCoh = Plants["Transpiration"];
-    NumericMatrix SoilWaterExtract = transpOutput["Extraction"];
-    for(int l=0;l<nlayers;l++) {
-      Eplantdays(i,l) = sum(SoilWaterExtract(_,l));
-    }
-
-    PlantExtraction[i] = sum(SoilWaterExtract);
-    Transpiration[i] = sum(EplantCoh);
-    NumericVector HydrInVec(nlayers, 0.0);
-
-    if(transpirationMode=="Sperry")  {
-      NumericMatrix soilLayerExtractInst = transpOutput["ExtractionInst"];
-      for(int l=0;l<nlayers;l++) {
-        for(int n=0;n<ntimesteps;n++) {
-          HydrInVec[l] += (-1.0)*std::min(soilLayerExtractInst(l,n),0.0);
-        }
-      }
-      HydraulicRedistribution[i] = sum(HydrInVec);
-      HydrIndays(i,_) = HydrInVec;
-    } 
-    NumericVector stand = transpOutput["Stand"];
-    LAI[i] = stand["LAI"];
-    LAIlive[i] = stand["LAIlive"];
-    LAIexpanded[i] = stand["LAIexpanded"];
-    LAIdead[i] = stand["LAIdead"];
-        
-
-    if(subdailyResults) {
-      subdailyRes[i] = copyAdvancedTranspirationOutput(transpOutput, x);
     }
   }
   if(verbose) Rcout << "done\n";
-  
+
   if(verbose) {
     double Transpirationsum = sum(Transpiration);
-    
+
     Rcout<<"Transpiration (mm) "  <<round(Transpirationsum);
     Rcout<<" Plant extraction from soil (mm) " << round(sum(PlantExtraction));
     Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
@@ -2642,7 +2647,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("EnergyBalance") = DEB);
     if(control["temperatureResults"]) {
       l.push_back(DT, "Temperature");
-      if(multiLayerBalance) l.push_back(DLT,"TemperatureLayers");
+      if(x_c.control.advancedWB.multiLayerBalance) l.push_back(DLT,"TemperatureLayers");
     }
     if(control["soilResults"]) l.push_back(SWB, "Soil");
     if(control["standResults"]) l.push_back(Stand, "Stand");
