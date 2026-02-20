@@ -5,12 +5,6 @@
 
 using namespace Rcpp;
 
-
-
-List instanceCommunicationStructures(List x, String model);
-List generalCommunicationStructures(int numCohorts, int nlayers, int ncanlayers, int ntimesteps,
-                                    String model);
-
 const int SOILWBCOM_dZ_m = 0;
 const int SOILWBCOM_dZUp = 1;
 const int SOILWBCOM_dZDown = 2;
@@ -78,19 +72,12 @@ const int SOILEBCOM_k_down = 13;
 const int SOILEBCOM_tempch = 14;
 
 List communicationSoilEnergyBalance(int nlayers);
-
-
 NumericVector communicationLitterDecomposition();
-
-
 NumericVector communicationSnagDecomposition();
-  
 List communicationDecomposition();
-
 NumericVector communicationFireHazard();
+DataFrame communicationCarbonCompartments(int numCohorts);
 
-List basicTranspirationCommunicationOutput(int numCohorts, int nlayers);
-List advancedTranspirationCommunicationOutput(int numCohorts, int nlayers, int ncanlayers, int ntimesteps);
 List copyBasicTranspirationOutput(List btc, List x);
 List copyAdvancedTranspirationOutput(List atc, List x);
 List copyBasicSPWBOutput(List boc, List x);
@@ -99,5 +86,4 @@ List copyBasicGROWTHOutput(List boc, List x);
 List copyAdvancedGROWTHOutput(List aoc, List x);
 List copyModelOutput(List internalCommunication, List x, String model);
 
-DataFrame communicationCarbonCompartments(int numCohorts);
 #endif
