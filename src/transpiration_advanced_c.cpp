@@ -1063,14 +1063,14 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       for(int i=0;i<ncanlayers;i++) {
         rho[i] = airDensity_c(Tair[i],Patm);
         absSWRlayer[i] = 0.0;
-        for(int c; c< numCohorts; c++) absSWRlayer[i] += absSWR_SL_ML(i,c) + absSWR_SH_ML(i,c);
+        for(int c = 0; c< numCohorts; c++) absSWRlayer[i] += absSWR_SL_ML(i,c) + absSWR_SH_ML(i,c);
         //Radiation balance
         Rnlayer[i] = absSWRlayer[i] + LWRnet_layer[i];
         // std::vector<double> pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
         //Instantaneous layer transpiration
         //from mmolH2O/m2/s to kgH2O/m2/s
         double ElayerInst = 0.0;
-        for(int c; c< numCohorts; c++) ElayerInst += 0.001*0.01802*LAIme(i,c)*(outputSunlitInst.E(c,n)*fsunlit[i] + outputShadeInst.E(c,n)*(1.0-fsunlit[i]));
+        for(int c=0; c< numCohorts; c++) ElayerInst += 0.001*0.01802*LAIme(i,c)*(outputSunlitInst.E(c,n)*fsunlit[i] + outputShadeInst.E(c,n)*(1.0-fsunlit[i]));
         //Assumes Layers contribute to evaporation proportionally to their LAI fraction
         double layerEvapInst = (canEvapStep/tstep)*(LAIpe[i]/LAIcellexpanded);
         //Instantaneous herbaceous transpiration (for bottom layer)
@@ -1079,7 +1079,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         //Estimate instantaneous mgCO2/m2 absorption for the layer, taking into account the proportion of sunlit and shade leaves of each cohort
         //from micro.molCO2/m2/s to mgCO2/m2/s
         double Anlayer = 0.0;
-        for(int c; c< numCohorts; c++) Anlayer += (1e-3)*44.01*LAIme(i,c)*(outputSunlitInst.An(c,n)*fsunlit[i] + outputShadeInst.An(c,n)*(1.0-fsunlit[i]));
+        for(int c=0; c< numCohorts; c++) Anlayer += (1e-3)*44.01*LAIme(i,c)*(outputSunlitInst.An(c,n)*fsunlit[i] + outputShadeInst.An(c,n)*(1.0-fsunlit[i]));
         // 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer);
         double LEwat = (1e6)*latentHeatVaporisation_c(Tair[i])*(ElayerInst + layerEvapInst+ herbTranspInst);
         LElayer[i] = LEwat; //Energy spent in vaporisation
