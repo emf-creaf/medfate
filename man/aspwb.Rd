@@ -2,11 +2,21 @@
 % Please edit documentation in R/RcppExports.R
 \name{aspwbInput}
 \alias{aspwbInput}
-\alias{aspwb_day}
 \alias{aspwb}
+\alias{aspwb_day}
 \title{Simulation in agricultural areas}
 \usage{
 aspwbInput(crop_factor, control, soil)
+
+aspwb(
+  x,
+  meteo,
+  latitude,
+  elevation,
+  slope = NA_real_,
+  aspect = NA_real_,
+  waterTableDepth = NA_real_
+)
 
 aspwb_day(
   x,
@@ -21,16 +31,6 @@ aspwb_day(
   waterTableDepth = NA_real_,
   modifyInput = TRUE
 )
-
-aspwb(
-  x,
-  meteo,
-  latitude,
-  elevation,
-  slope = NA_real_,
-  aspect = NA_real_,
-  waterTableDepth = NA_real_
-)
 }
 \arguments{
 \item{crop_factor}{Agriculture crop factor.}
@@ -41,23 +41,23 @@ aspwb(
 
 \item{x}{An object of class \code{\link{aspwbInput}}.}
 
-\item{date}{Date as string "yyyy-mm-dd".}
-
-\item{meteovec}{A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.}
+\item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 
 \item{latitude}{Latitude (in degrees).}
 
 \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
+\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
+
+\item{date}{Date as string "yyyy-mm-dd".}
+
+\item{meteovec}{A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.}
+
 \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 
 \item{lateralFlows}{Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.}
 
-\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
-
 \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
-
-\item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 }
 \description{
 Function \code{aspwb_day} performs water balance for a single day in an agriculture location.

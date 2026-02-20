@@ -47,47 +47,6 @@ List aspwbInput(double crop_factor, List control, DataFrame soil) {
 }
 
 
-//' @rdname aspwb
-//' @keywords internal
-// [[Rcpp::export("aspwb_day")]]
-List aspwb_day_c(List x, CharacterVector date, NumericVector meteovec, 
-                 double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
-                 double runon =  0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
-                 bool modifyInput = true) {
-  
-  WeatherInputVector meteovec_c(meteovec);
-  AgricultureModelInput x_c(x);  
-  int nlayers = x_c.soil.getNlayers();
-  
-  // Prepare lateral flows
-  std::vector<double> lateralFlows_c(nlayers, 0.0);
-  NumericVector lateralFlows_mm;
-  if(lateralFlows.isNotNull()) {
-    lateralFlows_mm = NumericVector(lateralFlows);
-    for(int l=0;l<lateralFlows_mm.size();l++) {
-      lateralFlows_c[l] = lateralFlows_mm[l];
-    }
-  }
-
-  //Initialises a result
-  AgricultureWB_RESULT AgrWBres(nlayers);
-  SoilWaterBalance_COMM SWBcomm(nlayers);
-  WBCommunicationStructures WBcomm(0, nlayers, 0, 0);
-  
-  // Calls simulation
-  wb_day_inner_c(AgrWBres, WBcomm, x_c, 
-                 as<std::string>(date[0]),
-                 meteovec_c, 
-                 latitude, elevation, slope, aspect,
-                 runon, 
-                 lateralFlows_c, waterTableDepth);
-  //Copies result
-  List l = copyAgricultureWBResult_c(AgrWBres, x_c);
-  
-  if(modifyInput) x_c.copyStateToList(x);
-  return(l);
-}
-
 DataFrame defineAgricultureWaterBalanceDailyOutput(CharacterVector dateStrings) {
   int numDays = dateStrings.length();
   

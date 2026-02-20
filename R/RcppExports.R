@@ -11,12 +11,6 @@ aspwbInput <- function(crop_factor, control, soil) {
     .Call(`_medfate_aspwbInput`, crop_factor, control, soil)
 }
 
-#' @rdname aspwb
-#' @keywords internal
-aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
-    .Call(`_medfate_aspwb_day_c`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
-}
-
 .defineASPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
     .Call(`_medfate_defineASPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
@@ -348,20 +342,8 @@ carbon_abovegroundHeartwoodStructuralBiomass <- function(DBH, SA, H, woodDensity
 #' 
 #' @name communication
 #' @keywords internal
-copy_model_output <- function(internalCommunication, x, model) {
+.copy_model_output <- function(internalCommunication, x, model) {
     .Call(`_medfate_copyModelOutput`, internalCommunication, x, model)
-}
-
-#' @rdname communication
-#' @keywords internal
-general_communication_structures <- function(numCohorts, nlayers, ncanlayers, ntimesteps, model) {
-    .Call(`_medfate_generalCommunicationStructures`, numCohorts, nlayers, ncanlayers, ntimesteps, model)
-}
-
-#' @rdname communication
-#' @keywords internal
-instance_communication_structures <- function(x, model) {
-    .Call(`_medfate_instanceCommunicationStructures`, x, model)
 }
 
 .testControlListToStructure <- function(x) {
@@ -4312,6 +4294,12 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
 #' @name spwb_day
 spwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
     .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
+}
+
+#' @rdname aspwb
+#' @keywords internal
+aspwb_day <- function(x, date, meteovec, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, modifyInput = TRUE) {
+    .Call(`_medfate_aspwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, lateralFlows, waterTableDepth, modifyInput)
 }
 
 #' Tissue moisture functions

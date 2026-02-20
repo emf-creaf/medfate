@@ -2,22 +2,10 @@
 % Please edit documentation in R/RcppExports.R
 \name{communication}
 \alias{communication}
-\alias{copy_model_output}
-\alias{general_communication_structures}
-\alias{instance_communication_structures}
+\alias{.copy_model_output}
 \title{Internal communication}
 \usage{
-copy_model_output(internalCommunication, x, model)
-
-general_communication_structures(
-  numCohorts,
-  nlayers,
-  ncanlayers,
-  ntimesteps,
-  model
-)
-
-instance_communication_structures(x, model)
+.copy_model_output(internalCommunication, x, model)
 }
 \arguments{
 \item{internalCommunication}{List for internal communication.}

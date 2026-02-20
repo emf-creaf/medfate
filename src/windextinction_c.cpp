@@ -1,3 +1,4 @@
+#include "RcppArmadillo.h"
 #include <math.h> 
 #include "windextinction_c.h"
 
