@@ -18,8 +18,8 @@ struct NetworkSteadyState {
   double psiRootCrown;
   std::vector<double> psiRhizo;
   std::vector<double> x;
-  NetworkSteadyState(int nlayers, double E) {
-    E = E;
+  NetworkSteadyState(int nlayers, double Ein) {
+    E = Ein;
     ERhizo = std::vector<double>(nlayers, medfate::NA_DOUBLE);
     ERoot = std::vector<double>(nlayers, medfate::NA_DOUBLE);
     psiRhizo = std::vector<double>(nlayers, medfate::NA_DOUBLE);

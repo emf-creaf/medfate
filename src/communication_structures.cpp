@@ -843,14 +843,6 @@ List copyGROWTHOutput(List internalCommunication, List x) {
 //' 
 //' @param internalCommunication List for internal communication.
 //' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
-//' @param date Date as string "yyyy-mm-dd".
-//' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
-//' @param latitude Latitude (in degrees).
-//' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
-//' @param runon Surface water amount running on the target area from upslope (in mm).
-//' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
-//' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
-//' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 //' @param model String for model, either "spwb" or "growth".
 //' 
 //' @name communication
