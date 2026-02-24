@@ -11,7 +11,6 @@
 #include "growth_day_c.h"
 #include "hydrology.h"
 #include "modelInput.h"
-#include "phenology.h"
 #include "phenology_c.h"
 #include "spwb.h"
 #include "soil.h"

@@ -222,6 +222,8 @@ struct AllometryParams {
 struct LitterDecompositionParams {
   std::vector<std::string> Species;
   std::vector<double> LeafLignin;
+  std::vector<double> WoodLignin;
+  std::vector<double> FineRootLignin;
   std::vector<double> Nleaf;
   std::vector<double> Nsapwood;
   std::vector<double> Nfineroot;  

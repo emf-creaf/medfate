@@ -17,7 +17,6 @@
 #include "lowlevel_structures_c.h"
 #include "modelInput.h"
 #include "photosynthesis.h"
-#include "phenology.h"
 #include "phenology_c.h"
 #include "soil.h"
 #include "soil_c.h"

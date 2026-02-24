@@ -8,7 +8,6 @@
 #include "windKatul.h"
 #include "hydraulics.h"
 #include "hydrology.h"
-#include "phenology.h"
 #include "forestutils.h"
 #include "tissuemoisture_c.h"
 #include "carbon.h"

@@ -562,71 +562,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// addLeafTwigLitter
-void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter, DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector SOC);
-RcppExport SEXP _medfate_addLeafTwigLitter(SEXP species_litterSEXP, SEXP leaf_litterSEXP, SEXP twig_litterSEXP, SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP SOCSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_litter(leaf_litterSEXP);
-    Rcpp::traits::input_parameter< double >::type twig_litter(twig_litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
-    addLeafTwigLitter(species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC);
-    return R_NilValue;
-END_RCPP
-}
-// addSmallBranchLitter
-void addSmallBranchLitter(String species_litter, double smallbranch_litter, DataFrame litter);
-RcppExport SEXP _medfate_addSmallBranchLitter(SEXP species_litterSEXP, SEXP smallbranch_litterSEXP, SEXP litterSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
-    Rcpp::traits::input_parameter< double >::type smallbranch_litter(smallbranch_litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
-    addSmallBranchLitter(species_litter, smallbranch_litter, litter);
-    return R_NilValue;
-END_RCPP
-}
-// addLargeWoodLitter
-void addLargeWoodLitter(String species_litter, double largewood_litter, DataFrame litter);
-RcppExport SEXP _medfate_addLargeWoodLitter(SEXP species_litterSEXP, SEXP largewood_litterSEXP, SEXP litterSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
-    Rcpp::traits::input_parameter< double >::type largewood_litter(largewood_litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
-    addLargeWoodLitter(species_litter, largewood_litter, litter);
-    return R_NilValue;
-END_RCPP
-}
-// addCoarseRootLitter
-void addCoarseRootLitter(String species_litter, double coarsewood_litter, DataFrame litter);
-RcppExport SEXP _medfate_addCoarseRootLitter(SEXP species_litterSEXP, SEXP coarsewood_litterSEXP, SEXP litterSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
-    Rcpp::traits::input_parameter< double >::type coarsewood_litter(coarsewood_litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
-    addCoarseRootLitter(species_litter, coarsewood_litter, litter);
-    return R_NilValue;
-END_RCPP
-}
-// addFineRootLitter
-void addFineRootLitter(String species_litter, double fineroot_litter, DataFrame litter, DataFrame paramsLitterDecomposition, NumericVector SOC);
-RcppExport SEXP _medfate_addFineRootLitter(SEXP species_litterSEXP, SEXP fineroot_litterSEXP, SEXP litterSEXP, SEXP paramsLitterDecompositionSEXP, SEXP SOCSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type species_litter(species_litterSEXP);
-    Rcpp::traits::input_parameter< double >::type fineroot_litter(fineroot_litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type litter(litterSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type SOC(SOCSEXP);
-    addFineRootLitter(species_litter, fineroot_litter, litter, paramsLitterDecomposition, SOC);
-    return R_NilValue;
-END_RCPP
-}
 // pHEffect
 double pHEffect(double x, String pool);
 RcppExport SEXP _medfate_pHEffect(SEXP xSEXP, SEXP poolSEXP) {
@@ -6135,11 +6070,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_abovegroundHeartwoodStructuralBiomass_c", (DL_FUNC) &_medfate_abovegroundHeartwoodStructuralBiomass_c, 4},
     {"_medfate_copyModelOutput", (DL_FUNC) &_medfate_copyModelOutput, 3},
     {"_medfate_testControlListToStructure", (DL_FUNC) &_medfate_testControlListToStructure, 1},
-    {"_medfate_addLeafTwigLitter", (DL_FUNC) &_medfate_addLeafTwigLitter, 6},
-    {"_medfate_addSmallBranchLitter", (DL_FUNC) &_medfate_addSmallBranchLitter, 3},
-    {"_medfate_addLargeWoodLitter", (DL_FUNC) &_medfate_addLargeWoodLitter, 3},
-    {"_medfate_addCoarseRootLitter", (DL_FUNC) &_medfate_addCoarseRootLitter, 3},
-    {"_medfate_addFineRootLitter", (DL_FUNC) &_medfate_addFineRootLitter, 5},
     {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
     {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 5},
     {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},

@@ -296,6 +296,8 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
     Rcpp::DataFrame litterDF = Rcpp::as<Rcpp::DataFrame>(x["paramsLitterDecomposition"]);
     if(litterDF.containsElementNamed("Species")) paramsLitterDecomposition.Species = Rcpp::as< std::vector<std::string> >(litterDF["Species"]);
     if(litterDF.containsElementNamed("LeafLignin")) paramsLitterDecomposition.LeafLignin = Rcpp::as< std::vector<double> >(litterDF["LeafLignin"]);
+    if(litterDF.containsElementNamed("WoodLignin")) paramsLitterDecomposition.WoodLignin = Rcpp::as< std::vector<double> >(litterDF["WoodLignin"]);
+    if(litterDF.containsElementNamed("FineRootLignin")) paramsLitterDecomposition.FineRootLignin = Rcpp::as< std::vector<double> >(litterDF["FineRootLignin"]);
     if(litterDF.containsElementNamed("Nleaf")) paramsLitterDecomposition.Nleaf = Rcpp::as< std::vector<double> >(litterDF["Nleaf"]);
     if(litterDF.containsElementNamed("Nsapwood")) paramsLitterDecomposition.Nsapwood = Rcpp::as< std::vector<double> >(litterDF["Nsapwood"]);
     if(litterDF.containsElementNamed("Nfineroot")) paramsLitterDecomposition.Nfineroot = Rcpp::as< std::vector<double> >(litterDF["Nfineroot"]);

@@ -14,7 +14,6 @@
 #include "forestutils.h"
 #include "modelInput.h"
 #include "photosynthesis.h"
-#include "phenology.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
 #include "tissuemoisture.h"

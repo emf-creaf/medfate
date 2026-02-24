@@ -334,7 +334,7 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
 
 
 void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
-                         InternalSnags& snags,
+                         InternalSnags& snags, LitterDecompositionParams& paramsLitterDecomposition,
                          DecompositionAnnualBaseRates& baseAnnualRates,
                          double airTemperature, double airRelativeHumidity,
                          double tstep) {
@@ -355,8 +355,8 @@ void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
   double k, flig, loss;
 
   // STRUCTURAL small branches
-  flig = 0.25; //Lignin fraction for small branches
   for(int i=0;i<numSnagCohorts;i++) {
+    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.SmallBranches/365.25)*tempEff*moistEff*exp(-3.0*flig);
     loss = snags.SmallBranches[i]*k*tstep;
     sdo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -366,8 +366,8 @@ void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
   }
 
   // STRUCTURAL large wood
-  flig = 0.25; //Lignin fraction for large wood
   for(int i=0;i<numSnagCohorts;i++) {
+    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.LargeWood/365.25)*tempEff*moistEff*exp(-3.0*flig);
     loss = snags.LargeWood[i]*k*tstep;
     sdo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -414,9 +414,9 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   }
   
   // STRUCTURAL twigs
-  flig = 0.25; //Lignin fraction for small branches
   for(int i=0;i<numLitterCohorts;i++) {
     pHeff = pHEffect_c(soilPH, "Twigs");
+    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.Twigs/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
     loss = litter.Twigs[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -426,9 +426,9 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   }
   
   // STRUCTURAL small branches
-  flig = 0.25; //Lignin fraction for small branches
   for(int i=0;i<numLitterCohorts;i++) {
     pHeff = pHEffect_c(soilPH, "SmallBranches");
+    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.SmallBranches/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
     loss = litter.SmallBranches[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -438,9 +438,9 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   }
   
   // STRUCTURAL large wood
-  flig = 0.25; //Lignin fraction for large wood
   for(int i=0;i<numLitterCohorts;i++) {
     pHeff = pHEffect_c(soilPH, "LargeWood");
+    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.LargeWood/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
     loss = litter.LargeWood[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -450,9 +450,9 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   }
   
   // STRUCTURAL coarse root
-  flig = 0.25; //Lignin fraction for coarse root
   for(int i=0;i<numLitterCohorts;i++) {
     pHeff = pHEffect_c(soilPH, "CoarseRoots");
+    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.CoarseRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
     loss = litter.CoarseRoots[i]*k*tstep;
     ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.55);
@@ -462,10 +462,9 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   }
   
   // STRUCTURAL fineroots
-  //Fine root lignin fraction 0.349
-  flig = 0.349;
   for(int i=0;i<numLitterCohorts;i++) {
     pHeff = pHEffect_c(soilPH, "FineRoots");
+    flig = paramsLitterDecomposition.FineRootLignin[i]/100.0; //Lignin fraction for fine roots
     k = (baseAnnualRates.FineRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
     loss = litter.FineRoots[i]*k*tstep;
     ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -498,7 +497,7 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
   SOC_v[DECOMPCOM_SOIL_PASSIVE] = SOC.SoilPassive;
 
   DAYCENTsnagsInner_c(DECcomm.sdo,
-                      snags,
+                      snags, paramsLitterDecomposition,
                       baseAnnualRates,
                       airTemperature, airRelativeHumidity,
                       tstep);

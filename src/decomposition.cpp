@@ -2,93 +2,102 @@
 #include "fuelmoisture_c.h"
 #include "communication_structures.h"
 #include "decomposition_c.h"
-#include "decomposition.h"
 using namespace Rcpp;
 
 
+const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
+const int LITDECOMPCOM_TRANSFER_SOIL_SLOW = 3;
+const int LITDECOMPCOM_FLUX_RESPIRATION = 4;
 
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
+const int SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
+const int SNAGDECOMPCOM_FLUX_RESPIRATION = 2;
 
-// [[Rcpp::export(".decomposition_addLeafTwigLitter")]]
-void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter,
-                       DataFrame litter, 
-                       DataFrame paramsLitterDecomposition,
-                       NumericVector SOC) {
-  
-  NumericVector structural_litter_leaves = litter["Leaves"];
-  NumericVector structural_litter_twigs = litter["Twigs"];
-  NumericVector Nleaf = paramsLitterDecomposition["Nleaf"];
-  NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
-  
-  CharacterVector Species = litter["Species"];
-  int row = -1;
-  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-  if(row !=-1) {
-    double fmet = litterMetabolicFraction_c(LeafLignin[row], Nleaf[row]);
-    //Distribute between metabolic and structural
-    SOC["SurfaceMetabolic"] = SOC["SurfaceMetabolic"] + leaf_litter*fmet;
-    structural_litter_leaves[row] += leaf_litter*(1.0 - fmet);
-    structural_litter_twigs[row] += twig_litter;
-  }
-}
-
-// [[Rcpp::export(".decomposition_addSmallBranchLitter")]]
-void addSmallBranchLitter(String species_litter, double smallbranch_litter, 
-                          DataFrame litter) {
-  NumericVector structural_litter_smallbranches = litter["SmallBranches"];
-  // All small branch goes to structural litter compartment
-  CharacterVector Species = litter["Species"];
-  int row = -1;
-  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-  if(row !=-1) {
-    structural_litter_smallbranches[row] += smallbranch_litter;
-  }
-}
-
-// [[Rcpp::export(".decomposition_addLargeWoodLitter")]]
-void addLargeWoodLitter(String species_litter, double largewood_litter, 
-                        DataFrame litter) {
-  NumericVector structural_litter_largewood = litter["LargeWood"];
-  // All small branch goes to structural litter compartment
-  CharacterVector Species = litter["Species"];
-  int row = -1;
-  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-  if(row !=-1) {
-    structural_litter_largewood[row] += largewood_litter;
-  }
-}
-
-// [[Rcpp::export(".decomposition_addCoarseRootLitter")]]
-void addCoarseRootLitter(String species_litter, double coarsewood_litter, 
-                        DataFrame litter) {
-  NumericVector structural_litter_coarseroots = litter["CoarseRoots"];
-  // All small branch goes to structural litter compartment
-  CharacterVector Species = litter["Species"];
-  int row = -1;
-  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-  if(row !=-1) {
-    structural_litter_coarseroots[row] += coarsewood_litter;
-  }
-}
-
-// [[Rcpp::export(".decomposition_addFineRootLitter")]]
-void addFineRootLitter(String species_litter, double fineroot_litter, 
-                       DataFrame litter, 
-                       DataFrame paramsLitterDecomposition,
-                       NumericVector SOC) {
-  NumericVector structural_litter_fineroots = litter["FineRoots"];
-  NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
-
-  CharacterVector Species = litter["Species"];
-  int row = -1;
-  for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-  if(row !=-1) {
-    double fmet = litterMetabolicFraction_c(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
-    //Distribute between metabolic and structural
-    SOC["SoilMetabolic"] = SOC["SoilMetabolic"] + fineroot_litter*fmet;
-    structural_litter_fineroots[row] += fineroot_litter*(1.0 - fmet);
-  }
-}
-  
+// 
+// 
+// // [[Rcpp::export(".decomposition_addLeafTwigLitter")]]
+// void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter,
+//                        DataFrame litter, 
+//                        DataFrame paramsLitterDecomposition,
+//                        NumericVector SOC) {
+//   
+//   NumericVector structural_litter_leaves = litter["Leaves"];
+//   NumericVector structural_litter_twigs = litter["Twigs"];
+//   NumericVector Nleaf = paramsLitterDecomposition["Nleaf"];
+//   NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
+//   
+//   CharacterVector Species = litter["Species"];
+//   int row = -1;
+//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+//   if(row !=-1) {
+//     double fmet = litterMetabolicFraction_c(LeafLignin[row], Nleaf[row]);
+//     //Distribute between metabolic and structural
+//     SOC["SurfaceMetabolic"] = SOC["SurfaceMetabolic"] + leaf_litter*fmet;
+//     structural_litter_leaves[row] += leaf_litter*(1.0 - fmet);
+//     structural_litter_twigs[row] += twig_litter;
+//   }
+// }
+// 
+// // [[Rcpp::export(".decomposition_addSmallBranchLitter")]]
+// void addSmallBranchLitter(String species_litter, double smallbranch_litter, 
+//                           DataFrame litter) {
+//   NumericVector structural_litter_smallbranches = litter["SmallBranches"];
+//   // All small branch goes to structural litter compartment
+//   CharacterVector Species = litter["Species"];
+//   int row = -1;
+//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+//   if(row !=-1) {
+//     structural_litter_smallbranches[row] += smallbranch_litter;
+//   }
+// }
+// 
+// // [[Rcpp::export(".decomposition_addLargeWoodLitter")]]
+// void addLargeWoodLitter(String species_litter, double largewood_litter, 
+//                         DataFrame litter) {
+//   NumericVector structural_litter_largewood = litter["LargeWood"];
+//   // All small branch goes to structural litter compartment
+//   CharacterVector Species = litter["Species"];
+//   int row = -1;
+//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+//   if(row !=-1) {
+//     structural_litter_largewood[row] += largewood_litter;
+//   }
+// }
+// 
+// // [[Rcpp::export(".decomposition_addCoarseRootLitter")]]
+// void addCoarseRootLitter(String species_litter, double coarsewood_litter, 
+//                         DataFrame litter) {
+//   NumericVector structural_litter_coarseroots = litter["CoarseRoots"];
+//   // All small branch goes to structural litter compartment
+//   CharacterVector Species = litter["Species"];
+//   int row = -1;
+//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+//   if(row !=-1) {
+//     structural_litter_coarseroots[row] += coarsewood_litter;
+//   }
+// }
+// 
+// // [[Rcpp::export(".decomposition_addFineRootLitter")]]
+// void addFineRootLitter(String species_litter, double fineroot_litter, 
+//                        DataFrame litter, 
+//                        DataFrame paramsLitterDecomposition,
+//                        NumericVector SOC) {
+//   NumericVector structural_litter_fineroots = litter["FineRoots"];
+//   NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
+// 
+//   CharacterVector Species = litter["Species"];
+//   int row = -1;
+//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
+//   if(row !=-1) {
+//     double fmet = litterMetabolicFraction_c(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
+//     //Distribute between metabolic and structural
+//     SOC["SoilMetabolic"] = SOC["SoilMetabolic"] + fineroot_litter*fmet;
+//     structural_litter_fineroots[row] += fineroot_litter*(1.0 - fmet);
+//   }
+// }
+//   
 
 
 //' @param x Soil water pH (0-14)

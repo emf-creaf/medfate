@@ -888,12 +888,16 @@ DataFrame paramsLitterDecomposition(DataFrame internalLitter, DataFrame SpParams
   IntegerVector uniqueSP = speciesIndex(Species, SpParams);
 
   NumericVector LeafLignin = speciesNumericParameterWithImputation(uniqueSP, SpParams, "LigninPercent",fillMissingSpParams, fillWithGenus);
+  NumericVector WoodLignin = speciesNumericParameterWithImputation(uniqueSP, SpParams, "WoodLigninPercent",fillMissingSpParams, fillWithGenus);
+  NumericVector FineRootLignin = speciesNumericParameterWithImputation(uniqueSP, SpParams, "FineRootLigninPercent",fillMissingSpParams, fillWithGenus);
   NumericVector Nleaf = speciesNumericParameterWithImputation(uniqueSP, SpParams, "Nleaf",fillMissingSpParams, fillWithGenus);
   NumericVector Nsapwood = speciesNumericParameterWithImputation(uniqueSP, SpParams, "Nsapwood",fillMissingSpParams, fillWithGenus);
   NumericVector Nfineroot = speciesNumericParameterWithImputation(uniqueSP, SpParams, "Nfineroot",fillMissingSpParams, fillWithGenus);
   
   DataFrame paramsDecompositiondf = DataFrame::create(_["Species"] = Species,
                                                       _["LeafLignin"] = LeafLignin, 
+                                                      _["WoodLignin"] = WoodLignin, 
+                                                      _["FineRootLignin"] = FineRootLignin, 
                                                       _["Nleaf"] = Nleaf, 
                                                       _["Nsapwood"] = Nsapwood,
                                                       _["Nfineroot"] = Nfineroot);

@@ -342,26 +342,6 @@ carbon_abovegroundHeartwoodStructuralBiomass <- function(DBH, SA, H, woodDensity
     .Call(`_medfate_testControlListToStructure`, x)
 }
 
-.decomposition_addLeafTwigLitter <- function(species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC) {
-    invisible(.Call(`_medfate_addLeafTwigLitter`, species_litter, leaf_litter, twig_litter, litter, paramsLitterDecomposition, SOC))
-}
-
-.decomposition_addSmallBranchLitter <- function(species_litter, smallbranch_litter, litter) {
-    invisible(.Call(`_medfate_addSmallBranchLitter`, species_litter, smallbranch_litter, litter))
-}
-
-.decomposition_addLargeWoodLitter <- function(species_litter, largewood_litter, litter) {
-    invisible(.Call(`_medfate_addLargeWoodLitter`, species_litter, largewood_litter, litter))
-}
-
-.decomposition_addCoarseRootLitter <- function(species_litter, coarsewood_litter, litter) {
-    invisible(.Call(`_medfate_addCoarseRootLitter`, species_litter, coarsewood_litter, litter))
-}
-
-.decomposition_addFineRootLitter <- function(species_litter, fineroot_litter, litter, paramsLitterDecomposition, SOC) {
-    invisible(.Call(`_medfate_addFineRootLitter`, species_litter, fineroot_litter, litter, paramsLitterDecomposition, SOC))
-}
-
 #' @param x Soil water pH (0-14)
 #' @param pool String indicating the decomposition pool
 #' 

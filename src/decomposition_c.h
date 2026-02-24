@@ -94,7 +94,7 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
 
 
 void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
-                         InternalSnags& snags,
+                         InternalSnags& snags, LitterDecompositionParams& paramsLitterDecomposition,
                          DecompositionAnnualBaseRates& baseAnnualRates,
                          double airTemperature, double airRelativeHumidity,
                          double tstep);

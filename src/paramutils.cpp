@@ -351,10 +351,13 @@ NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParam
   }
   return(SLA);
 }
-NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+NumericVector leafLigninPercentWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector cohLigninPercent;
+  if(SpParams.containsElementNamed("LeafLigninPercent")) cohLigninPercent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafLigninPercent", fillWithGenus);
+  else if(SpParams.containsElementNamed("LigninPercent")) cohLigninPercent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LigninPercent", fillWithGenus);
+  else stop("Could not find lignin percent column in SpParams");
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector cohLigninPercent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LigninPercent", fillWithGenus);
   for(int i=0;i<cohLigninPercent.size();i++) {
     if(NumericVector::is_na(cohLigninPercent[i])) {
       if(leafShape[i]=="Scale") {
@@ -378,6 +381,26 @@ NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams, 
           cohLigninPercent[i] = 15.50;
         }
       }
+    }
+  }
+  return(cohLigninPercent);
+}
+NumericVector woodLigninPercentWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector cohLigninPercent(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("WoodLigninPercent")) cohLigninPercent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WoodLigninPercent", fillWithGenus);
+  for(int i=0;i<cohLigninPercent.size();i++) {
+    if(NumericVector::is_na(cohLigninPercent[i])) {
+      cohLigninPercent[i] = 25.0; // Default 25%
+    }
+  }
+  return(cohLigninPercent);
+}
+NumericVector finerootLigninPercentWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector cohLigninPercent(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("FineRootLigninPercent")) cohLigninPercent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "FineRootLigninPercent", fillWithGenus);
+  for(int i=0;i<cohLigninPercent.size();i++) {
+    if(NumericVector::is_na(cohLigninPercent[i])) {
+      cohLigninPercent[i] = 35.0; // Default 35%
     }
   }
   return(cohLigninPercent);
@@ -1602,7 +1625,9 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "g") return(gWithImputation(SP,SpParams, fillWithGenus));
     else if(parName == "r635") return(fineFoliarRatioWithImputation(SP,SpParams, fillWithGenus));
     else if(parName == "SLA") return(specificLeafAreaWithImputation(SP,SpParams, fillWithGenus));
-    else if(parName == "LigninPercent") return(ligninPercentWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "LigninPercent" || parName == "LeafLigninPercent") return(leafLigninPercentWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "WoodLigninPercent") return(woodLigninPercentWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "FineRootLigninPercent") return(finerootLigninPercentWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "SAV") return(surfaceToAreaRatioWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "HeatContent") return(heatContentWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "pDead") return(proportionDeadWithImputation(SP,SpParams, fillWithGenus));
