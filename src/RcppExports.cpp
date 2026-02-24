@@ -575,17 +575,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // DAYCENTsnags
-NumericVector DAYCENTsnags(DataFrame snags, NumericVector baseAnnualRates, double airTemperature, double airRelativeHumidity, double tstep);
-RcppExport SEXP _medfate_DAYCENTsnags(SEXP snagsSEXP, SEXP baseAnnualRatesSEXP, SEXP airTemperatureSEXP, SEXP airRelativeHumiditySEXP, SEXP tstepSEXP) {
+NumericVector DAYCENTsnags(DataFrame snags, NumericVector baseAnnualRates, DataFrame paramsLitterDecomposition, double airTemperature, double airRelativeHumidity, double tstep);
+RcppExport SEXP _medfate_DAYCENTsnags(SEXP snagsSEXP, SEXP baseAnnualRatesSEXP, SEXP paramsLitterDecompositionSEXP, SEXP airTemperatureSEXP, SEXP airRelativeHumiditySEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type snags(snagsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
     Rcpp::traits::input_parameter< double >::type airTemperature(airTemperatureSEXP);
     Rcpp::traits::input_parameter< double >::type airRelativeHumidity(airRelativeHumiditySEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(DAYCENTsnags(snags, baseAnnualRates, airTemperature, airRelativeHumidity, tstep));
+    rcpp_result_gen = Rcpp::wrap(DAYCENTsnags(snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6071,7 +6072,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_copyModelOutput", (DL_FUNC) &_medfate_copyModelOutput, 3},
     {"_medfate_testControlListToStructure", (DL_FUNC) &_medfate_testControlListToStructure, 1},
     {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
-    {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 5},
+    {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 6},
     {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},
     {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 16},
     {"_medfate_annualLitterDecompositionRate_c", (DL_FUNC) &_medfate_annualLitterDecompositionRate_c, 2},

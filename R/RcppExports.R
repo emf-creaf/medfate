@@ -352,8 +352,8 @@ decomposition_pHEffect <- function(x, pool) {
 
 #' @rdname decomposition_DAYCENT
 #' @keywords internal
-decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, airTemperature, airRelativeHumidity, tstep = 1.0) {
-    .Call(`_medfate_DAYCENTsnags`, snags, baseAnnualRates, airTemperature, airRelativeHumidity, tstep)
+decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep = 1.0) {
+    .Call(`_medfate_DAYCENTsnags`, snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep)
 }
 
 #' @rdname decomposition_DAYCENT

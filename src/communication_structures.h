@@ -72,9 +72,7 @@ const int SOILEBCOM_k_down = 13;
 const int SOILEBCOM_tempch = 14;
 
 List communicationSoilEnergyBalance(int nlayers);
-NumericVector communicationLitterDecomposition();
-NumericVector communicationSnagDecomposition();
-List communicationDecomposition();
+
 NumericVector communicationFireHazard();
 DataFrame communicationCarbonCompartments(int numCohorts);
 

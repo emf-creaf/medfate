@@ -9,6 +9,7 @@
 decomposition_DAYCENTsnags(
   snags,
   baseAnnualRates,
+  paramsLitterDecomposition,
   airTemperature,
   airRelativeHumidity,
   tstep = 1
@@ -52,6 +53,8 @@ decomposition_DAYCENT(
 
 \item{baseAnnualRates}{A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).}
 
+\item{paramsLitterDecomposition}{A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).}
+
 \item{airTemperature}{Mean daily air temperature (in Celsius).}
 
 \item{airRelativeHumidity}{Mean daily relative humidity (\%).}
@@ -59,8 +62,6 @@ decomposition_DAYCENT(
 \item{tstep}{Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.}
 
 \item{litter}{A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).}
-
-\item{paramsLitterDecomposition}{A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).}
 
 \item{sand, clay}{Soil texture (sand and sand) in percent volume (\%).}
 

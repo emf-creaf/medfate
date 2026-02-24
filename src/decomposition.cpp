@@ -5,101 +5,6 @@
 using namespace Rcpp;
 
 
-const int LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
-const int LITDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
-const int LITDECOMPCOM_TRANSFER_SOIL_ACTIVE = 2;
-const int LITDECOMPCOM_TRANSFER_SOIL_SLOW = 3;
-const int LITDECOMPCOM_FLUX_RESPIRATION = 4;
-
-const int SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE = 0;
-const int SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW = 1;
-const int SNAGDECOMPCOM_FLUX_RESPIRATION = 2;
-
-// 
-// 
-// // [[Rcpp::export(".decomposition_addLeafTwigLitter")]]
-// void addLeafTwigLitter(String species_litter, double leaf_litter, double twig_litter,
-//                        DataFrame litter, 
-//                        DataFrame paramsLitterDecomposition,
-//                        NumericVector SOC) {
-//   
-//   NumericVector structural_litter_leaves = litter["Leaves"];
-//   NumericVector structural_litter_twigs = litter["Twigs"];
-//   NumericVector Nleaf = paramsLitterDecomposition["Nleaf"];
-//   NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
-//   
-//   CharacterVector Species = litter["Species"];
-//   int row = -1;
-//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-//   if(row !=-1) {
-//     double fmet = litterMetabolicFraction_c(LeafLignin[row], Nleaf[row]);
-//     //Distribute between metabolic and structural
-//     SOC["SurfaceMetabolic"] = SOC["SurfaceMetabolic"] + leaf_litter*fmet;
-//     structural_litter_leaves[row] += leaf_litter*(1.0 - fmet);
-//     structural_litter_twigs[row] += twig_litter;
-//   }
-// }
-// 
-// // [[Rcpp::export(".decomposition_addSmallBranchLitter")]]
-// void addSmallBranchLitter(String species_litter, double smallbranch_litter, 
-//                           DataFrame litter) {
-//   NumericVector structural_litter_smallbranches = litter["SmallBranches"];
-//   // All small branch goes to structural litter compartment
-//   CharacterVector Species = litter["Species"];
-//   int row = -1;
-//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-//   if(row !=-1) {
-//     structural_litter_smallbranches[row] += smallbranch_litter;
-//   }
-// }
-// 
-// // [[Rcpp::export(".decomposition_addLargeWoodLitter")]]
-// void addLargeWoodLitter(String species_litter, double largewood_litter, 
-//                         DataFrame litter) {
-//   NumericVector structural_litter_largewood = litter["LargeWood"];
-//   // All small branch goes to structural litter compartment
-//   CharacterVector Species = litter["Species"];
-//   int row = -1;
-//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-//   if(row !=-1) {
-//     structural_litter_largewood[row] += largewood_litter;
-//   }
-// }
-// 
-// // [[Rcpp::export(".decomposition_addCoarseRootLitter")]]
-// void addCoarseRootLitter(String species_litter, double coarsewood_litter, 
-//                         DataFrame litter) {
-//   NumericVector structural_litter_coarseroots = litter["CoarseRoots"];
-//   // All small branch goes to structural litter compartment
-//   CharacterVector Species = litter["Species"];
-//   int row = -1;
-//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-//   if(row !=-1) {
-//     structural_litter_coarseroots[row] += coarsewood_litter;
-//   }
-// }
-// 
-// // [[Rcpp::export(".decomposition_addFineRootLitter")]]
-// void addFineRootLitter(String species_litter, double fineroot_litter, 
-//                        DataFrame litter, 
-//                        DataFrame paramsLitterDecomposition,
-//                        NumericVector SOC) {
-//   NumericVector structural_litter_fineroots = litter["FineRoots"];
-//   NumericVector Nfineroot = paramsLitterDecomposition["Nfineroot"];
-// 
-//   CharacterVector Species = litter["Species"];
-//   int row = -1;
-//   for(int j=0;j<Species.length();j++) if(Species[j]==species_litter) row = j;
-//   if(row !=-1) {
-//     double fmet = litterMetabolicFraction_c(34.9, Nfineroot[row]); //Fine root lignin fraction 0.349
-//     //Distribute between metabolic and structural
-//     SOC["SoilMetabolic"] = SOC["SoilMetabolic"] + fineroot_litter*fmet;
-//     structural_litter_fineroots[row] += fineroot_litter*(1.0 - fmet);
-//   }
-// }
-//   
-
-
 //' @param x Soil water pH (0-14)
 //' @param pool String indicating the decomposition pool
 //' 
@@ -110,304 +15,75 @@ double pHEffect(double x, String pool) {
   return(pHEffect_c(x, pool_c));
 }
 
-void updateBaseRates(List commDecomp,
-                     NumericVector baseAnnualRates, double annualTurnoverRate) {
-  NumericVector K = commDecomp["K"];
-
-  K[DECOMPCOM_SURFACE_METABOLIC] = baseAnnualRates["SurfaceMetabolic"]/365.25;
-  K[DECOMPCOM_SOIL_METABOLIC] = baseAnnualRates["SoilMetabolic"]/365.25;
-  K[DECOMPCOM_SURFACE_ACTIVE] = baseAnnualRates["SurfaceActive"]/365.25;
-  K[DECOMPCOM_SOIL_ACTIVE] = baseAnnualRates["SoilActive"]/365.25;
-  K[DECOMPCOM_SURFACE_SLOW] = baseAnnualRates["SurfaceActive"]/365.25;
-  K[DECOMPCOM_SOIL_SLOW] = baseAnnualRates["SoilActive"]/365.25;
-  K[DECOMPCOM_SOIL_PASSIVE] = baseAnnualRates["SoilPassive"]/365.25;
-  
-  commDecomp["Kmix"] = annualTurnoverRate/365.25;
-}
-  
-// Environmental scalar for each carbon pool adjusts base
-// rate for soil temperature and soil moisture scalars
-// (cdi) and additionally pH, lignin, texture, anaerobic,
-// and cultivation
-//  @param soilPH  soil pH
-//  @param soilO2 effect of soil anaerobic conditions on decomposition (0-1)
-//  @param sand,clay percent sand, clay
-//  @param strlig lignin fraction: (1) surface and (2) soil structural litter (g lignin/g biomass)
-//  @param cwdlig lignin fraction: (1) fine branch; (2) large wood; (3) coarse root
-//  @param cultfac effect of cultivation on decomposition (1:SOM1, 2:SOM2, 3:SOM3, 4:structural)
-// 
-// Updates
-//    K_s21       ! rate constant: total loss from SOM2(surface), 1/sec
-//    xi          ! environmental scalar
-void updateDecompositionRateScalars(List commDecomp, 
-                                     double sand, double clay,
-                                     double soilTemperature, double soilMoisture, double soilPH, 
-                                     double soilO2, double cultfac) {
-   
-   NumericVector xi = commDecomp["xi"];
-   NumericVector K = commDecomp["K"];
-   double Kmix = commDecomp["Kmix"];
-   
-   double pHeff, textureEff;
-   
-   double tempEff = temperatureEffect_c(soilTemperature);
-   double moistEff = moistureEffect_c(sand, clay, soilMoisture);
-   double cdi = tempEff*moistEff;
-   
-   //  metabolic litter (surface)
-   pHeff = pHEffect(soilPH, "SurfaceMetabolic");
-   xi[DECOMPCOM_SURFACE_METABOLIC] = cdi * pHeff;
-   //  metabolic litter (soil)
-   pHeff = pHEffect(soilPH, "SoilMetabolic");
-   xi[DECOMPCOM_SOIL_METABOLIC] = cdi * pHeff * soilO2;
-   //  active soil organic matter: SOM1 (surface)
-   pHeff = pHEffect(soilPH, "SurfaceActive");
-   xi[DECOMPCOM_SURFACE_ACTIVE] = cdi * pHeff;
-   //  active soil organic matter: SOM1 (SOIL)
-   pHeff = pHEffect(soilPH, "SoilActive");
-   textureEff = 0.25 + 0.75 * (sand/100.0);
-   xi[DECOMPCOM_SOIL_ACTIVE] = cdi * pHeff * soilO2 * textureEff * cultfac;
-   //  slow soil organic matter: SOM2 (surface)
-   // som2(surface) -> som1(surface)
-   pHeff = pHEffect(soilPH, "SurfaceSlow");
-   double K_s21_to_s11 = K[DECOMPCOM_SURFACE_SLOW] * pHeff;
-   // som2(surface) -> som2(soil): mixing
-   double K_s21_to_s22 = Kmix;
-   // total loss from som2(surface)
-   double K_s21 = K_s21_to_s11 + K_s21_to_s22;
-   // effective environmental scalar
-   xi[DECOMPCOM_SURFACE_SLOW] = cdi * (K_s21 / K[DECOMPCOM_SURFACE_SLOW]);
-   // slow soil organic matter: SOM2 (soil)
-   pHeff = pHEffect(soilPH, "SoilSlow");
-   xi[DECOMPCOM_SOIL_SLOW] = cdi * pHeff * soilO2 * cultfac;
-   //  passive soil organic matter: SOM3
-   pHeff = pHEffect(soilPH, "SoilPassive");
-   xi[DECOMPCOM_SOIL_PASSIVE] = cdi * pHeff * soilO2 * cultfac;
-   
-   commDecomp["K_s21"] = K_s21;
- }
-
-
-void updateCarbonTransferMatrices(List commDecomp, 
-                                   double sand, double clay, double soilO2) {
-   
-   int npool = 7;
-   NumericMatrix A = commDecomp["A"];
-   NumericMatrix respf = commDecomp["respf"];
-   NumericMatrix pathf = commDecomp["pathf"];
-   double Kmix = commDecomp["Kmix"];
-   double K_s21 = commDecomp["K_s21"];
-   
-   // anaerobic factor
-   double fanerb = 1.0 + 5.0 * (1.0 - soilO2);
-   
-   // Updates pathf: fractional carbon flow from pool j to pool i
-   pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_METABOLIC) = 1.0;
-   pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_METABOLIC) = 1.0;
-   pathf(DECOMPCOM_SURFACE_SLOW,DECOMPCOM_SURFACE_ACTIVE) = 1.0;
-   pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE) = (0.003 + 0.032 * clay/100) * fanerb;
-   pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE) = 1.0 - pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE);
-   pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW) = Kmix / K_s21;
-   pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_SLOW) = 1.0 - pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW);
-   pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW) = (0.003 + 0.009 * clay/100) * fanerb;
-   pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW) = 1.0 - pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW);
-   pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_PASSIVE) = 1.0;
-   
-   // Updates respf: fractional respiration loss for carbon flow from pool j to pool i
-   respf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_METABOLIC) = 0.55;
-   respf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_METABOLIC) = 0.55;
-   respf(DECOMPCOM_SURFACE_SLOW,DECOMPCOM_SURFACE_ACTIVE) = 0.60;
-   respf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE) = 0.0;
-   respf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE) = (0.17 + 0.68 * sand/100.0) / pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE);
-   respf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW) = 0.0;
-   respf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_SLOW) = 0.55;
-   respf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW) = 0.0;
-   respf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW) = 0.55 / pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW);
-   respf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_PASSIVE) = 0.55 * soilO2;
-   
-   // Update carbon transfer matrix: fractional carbon flow from pool j that enters pool i
-   for(int i=0;i<npool;i++) {
-     A(i,i) = -1.0; 
-     for(int j=0;j<npool;j++) {
-       if(j!=i) {
-         A(i,j) = pathf(i,j) * (1.0 - respf(i,j));
-       }
-     }
-   }
- }
-
-void DAYCENTsnagsInner(NumericVector snagDecompositionOutput, 
-                       DataFrame snags,
-                       NumericVector baseAnnualRates,
-                       double airTemperature, double airRelativeHumidity, 
-                       double tstep = 1.0) {
-  
-  NumericVector structural_smallbranches = snags["SmallBranches"];
-  NumericVector structural_largewood = snags["LargeWood"];
-  int numCohorts = snags.nrow();
-  
-  // Reset output
-  snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] = 0.0;
-  snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] = 0.0;
-  snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] = 0.0;
-  
-  
-  //Temperature effect
-  double tempEff = temperatureEffect_c(airTemperature);
-  //Moisture effect for fine texture
-  double fuelMaximumMoisture = 100.0; //% dry Depends on wood density
-  double fuelMoisture = EMCSimard_c(airTemperature, airRelativeHumidity); //Ranges between 0 and 30% dry
-  double moistEff = moistureEffect_c(0, 80, fuelMoisture/fuelMaximumMoisture);
-  
-  double k, flig, loss;
-  
-  // STRUCTURAL small branches
-  flig = 0.25; //Lignin fraction for small branches
-  for(int i=0;i<numCohorts;i++) {
-    k = (baseAnnualRates["SmallBranches"]/365.25)*tempEff*moistEff*exp(-3.0*flig);
-    loss = structural_smallbranches[i]*k*tstep;
-    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
-    snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_smallbranches[i] -= loss;
-  }
-  
-  // STRUCTURAL large wood
-  flig = 0.25; //Lignin fraction for large wood
-  for(int i=0;i<numCohorts;i++) {
-    k = (baseAnnualRates["LargeWood"]/365.25)*tempEff*moistEff*exp(-3.0*flig);
-    loss = structural_largewood[i]*k*tstep;
-    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
-    snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_largewood[i] -= loss;
-  }
-}
-
 //' @rdname decomposition_DAYCENT
 //' @keywords internal
 // [[Rcpp::export("decomposition_DAYCENTsnags")]]
 NumericVector DAYCENTsnags(DataFrame snags, 
-                           NumericVector baseAnnualRates,
+                           NumericVector baseAnnualRates, DataFrame paramsLitterDecomposition,
                            double airTemperature, double airRelativeHumidity, 
                            double tstep = 1.0) {
-  NumericVector snagDecompositionOutput = communicationSnagDecomposition();
-  DAYCENTsnagsInner(snagDecompositionOutput, 
-                    snags,  
-                    baseAnnualRates,
-                    airTemperature, airRelativeHumidity, 
-                    tstep);
-  return(snagDecompositionOutput);
+  
+  
+  Rcpp::CharacterVector Species_SN = snags["Species"];
+  Rcpp::NumericVector DBH_SN = snags["DBH"];
+  Rcpp::NumericVector Height_SN = snags["Height"];
+  Rcpp::NumericVector DeathAge_SN = snags["DeathAge"];
+  Rcpp::NumericVector SmallBranches_SN = snags["SmallBranches"];
+  Rcpp::NumericVector LargeWood_SN = snags["LargeWood"];
+  
+  InternalSnags internalSnags;
+  internalSnags.Species = Rcpp::as< std::vector<std::string> >(Species_SN);
+  internalSnags.DBH = Rcpp::as< std::vector<double> >(DBH_SN);
+  internalSnags.Height = Rcpp::as< std::vector<double> >(Height_SN);
+  internalSnags.DeathAge = Rcpp::as< std::vector<double> >(DeathAge_SN);
+  internalSnags.SmallBranches = Rcpp::as< std::vector<double> >(SmallBranches_SN);
+  internalSnags.LargeWood = Rcpp::as< std::vector<double> >(LargeWood_SN);
+  
+  LitterDecompositionParams paramsLitterDecomposition_c;
+  if(paramsLitterDecomposition.containsElementNamed("Species")) paramsLitterDecomposition_c.Species = Rcpp::as< std::vector<std::string> >(paramsLitterDecomposition["Species"]);
+  if(paramsLitterDecomposition.containsElementNamed("LeafLignin")) paramsLitterDecomposition_c.LeafLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["LeafLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("WoodLignin")) paramsLitterDecomposition_c.WoodLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["WoodLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("FineRootLignin")) paramsLitterDecomposition_c.FineRootLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["FineRootLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nleaf")) paramsLitterDecomposition_c.Nleaf = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nleaf"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nsapwood")) paramsLitterDecomposition_c.Nsapwood = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nsapwood"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nfineroot")) paramsLitterDecomposition_c.Nfineroot = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nfineroot"]);
+  
+  DecompositionAnnualBaseRates baseAnnualRates_c;
+  baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
+  baseAnnualRates_c.SoilMetabolic = baseAnnualRates["SoilMetabolic"];
+  baseAnnualRates_c.Leaves = baseAnnualRates["Leaves"];
+  baseAnnualRates_c.FineRoots = baseAnnualRates["FineRoots"];
+  baseAnnualRates_c.Twigs = baseAnnualRates["Twigs"];
+  baseAnnualRates_c.SmallBranches = baseAnnualRates["SmallBranches"];
+  baseAnnualRates_c.LargeWood = baseAnnualRates["LargeWood"];
+  baseAnnualRates_c.CoarseRoots = baseAnnualRates["CoarseRoots"];
+  baseAnnualRates_c.SurfaceActive = baseAnnualRates["SurfaceActive"];
+  baseAnnualRates_c.SurfaceSlow = baseAnnualRates["SurfaceSlow"];
+  baseAnnualRates_c.SoilActive = baseAnnualRates["SoilActive"];
+  baseAnnualRates_c.SoilSlow = baseAnnualRates["SoilSlow"];
+  baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
+  SnagDecomposition_COMM sdo;
+  DAYCENTsnagsInner_c(sdo,
+                      internalSnags, paramsLitterDecomposition_c,
+                      baseAnnualRates_c,
+                      airTemperature, airRelativeHumidity,
+                      tstep);
+  
+  for(int c = 0;c < Species_SN.size(); c++) {
+    Species_SN[c] = internalSnags.Species[c];
+    DBH_SN[c] = internalSnags.DBH[c];
+    Height_SN[c] = internalSnags.Height[c];
+    DeathAge_SN[c] = internalSnags.DeathAge[c];
+    SmallBranches_SN[c] = internalSnags.SmallBranches[c];
+    LargeWood_SN[c] = internalSnags.LargeWood[c];
+  }
+  
+  NumericVector output = NumericVector::create(_["transfer_surface_active"] = sdo.transfer_surface_active,
+                                               _["transfer_surface_slow"] = sdo.transfer_surface_slow,
+                                               _["flux_respiration"] = sdo.flux_respiration);
+  return(output);
 }
 
-void DAYCENTlitterInner(NumericVector litterDecompositionOutput, 
-                        DataFrame litter, DataFrame paramsLitterDecomposition,
-                        NumericVector baseAnnualRates,
-                        double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
-                        double soilO2 = 1.0, double cultfac = 1.0,
-                        double tstep = 1.0) {
-  
-  
-  NumericVector structural_leaves = litter["Leaves"];
-  NumericVector structural_twigs = litter["Twigs"];
-  NumericVector structural_smallbranches = litter["SmallBranches"];
-  NumericVector structural_largewood = litter["LargeWood"];
-  NumericVector structural_coarseroots = litter["CoarseRoots"];
-  NumericVector structural_fineroots = litter["FineRoots"];
-  
-  NumericVector LeafLignin = paramsLitterDecomposition["LeafLignin"];
-  int numCohorts = litter.nrow();
-
-  // Reset output
-  litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] = 0.0;
-  litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] = 0.0;
-  litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE] = 0.0;
-  litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW] = 0.0;
-  litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] = 0.0;
-
-  //Combined effect of temperature and moisture
-  double pHeff;
-  
-
-  double tempEff = temperatureEffect_c(soilTemperature);
-  double moistEff = moistureEffect_c(sand, clay, soilMoisture);
-
-  double k, flig, loss;
-  
-  // STRUCTURAL leaves
-  for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "Leaves");
-    flig = LeafLignin[i]/100.0;
-    k = (baseAnnualRates["Leaves"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
-    loss = structural_leaves[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
-    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_leaves[i] -= loss;
-    // if(i==0) Rcout<< structural_leaves[i] << " T" <<soilTemperature <<  " Teff"<< tempEff << " M"<< moistEff << " pH"<< pHeff << " K" << k << " Loss: "<< loss << "\n"; 
-  }
-  
-  // STRUCTURAL twigs
-  flig = 0.25; //Lignin fraction for small branches
-  for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "Twigs");
-    k = (baseAnnualRates["Twigs"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
-    loss = structural_twigs[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
-    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_twigs[i] -= loss;
-  }
-  
-  // STRUCTURAL small branches
-  flig = 0.25; //Lignin fraction for small branches
-  for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "SmallBranches");
-    k = (baseAnnualRates["SmallBranches"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
-    loss = structural_smallbranches[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
-    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_smallbranches[i] -= loss;
-  }
-
-  // STRUCTURAL large wood
-  flig = 0.25; //Lignin fraction for large wood
-  for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "LargeWood");
-    k = (baseAnnualRates["LargeWood"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
-    loss = structural_largewood[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW] += loss*flig*(1.0 - 0.30);
-    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_largewood[i] -= loss;
-  }
-
-  // STRUCTURAL coarse root
-  flig = 0.25; //Lignin fraction for coarse root
-  for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "CoarseRoots");
-    k = (baseAnnualRates["CoarseRoots"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
-    loss = structural_coarseroots[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.55);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW] += loss*flig*(1.0 - 0.30);
-    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.55);
-    structural_coarseroots[i] -= loss;
-  }
-  
-  // STRUCTURAL fineroots
-  //Fine root lignin fraction 0.349
-  flig = 0.349;
-  for(int i=0;i<numCohorts;i++) {
-    pHeff = pHEffect(soilPH, "FineRoots");
-    k = (baseAnnualRates["FineRoots"]/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
-    loss = structural_fineroots[i]*k*tstep;
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE] += loss*(1.0 - flig)*(1.0 - 0.45);
-    litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW] += loss*flig*(1.0 - 0.30);
-    litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION] += loss*(flig*0.30 + (1.0-flig)*0.45);
-    structural_fineroots[i] -= loss;
-  }
-}
 
 
 //' @rdname decomposition_DAYCENT
@@ -418,84 +94,63 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
                             double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                             double soilO2 = 1.0, double cultfac = 1.0,
                             double tstep = 1.0) {
-  NumericVector litterDecompositionOutput = communicationLitterDecomposition();
-  DAYCENTlitterInner(litterDecompositionOutput, 
-                     litter, paramsLitterDecomposition, 
-                     baseAnnualRates,
-                     sand, clay, soilTemperature, soilMoisture, soilPH,
-                     soilO2, cultfac,
-                     tstep);
-  return(litterDecompositionOutput);
+
+  LitterDecompositionParams paramsLitterDecomposition_c;
+  if(paramsLitterDecomposition.containsElementNamed("Species")) paramsLitterDecomposition_c.Species = Rcpp::as< std::vector<std::string> >(paramsLitterDecomposition["Species"]);
+  if(paramsLitterDecomposition.containsElementNamed("LeafLignin")) paramsLitterDecomposition_c.LeafLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["LeafLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("WoodLignin")) paramsLitterDecomposition_c.WoodLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["WoodLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("FineRootLignin")) paramsLitterDecomposition_c.FineRootLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["FineRootLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nleaf")) paramsLitterDecomposition_c.Nleaf = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nleaf"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nsapwood")) paramsLitterDecomposition_c.Nsapwood = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nsapwood"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nfineroot")) paramsLitterDecomposition_c.Nfineroot = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nfineroot"]);
+  
+  
+  DecompositionAnnualBaseRates baseAnnualRates_c;
+  baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
+  baseAnnualRates_c.SoilMetabolic = baseAnnualRates["SoilMetabolic"];
+  baseAnnualRates_c.Leaves = baseAnnualRates["Leaves"];
+  baseAnnualRates_c.FineRoots = baseAnnualRates["FineRoots"];
+  baseAnnualRates_c.Twigs = baseAnnualRates["Twigs"];
+  baseAnnualRates_c.SmallBranches = baseAnnualRates["SmallBranches"];
+  baseAnnualRates_c.LargeWood = baseAnnualRates["LargeWood"];
+  baseAnnualRates_c.CoarseRoots = baseAnnualRates["CoarseRoots"];
+  baseAnnualRates_c.SurfaceActive = baseAnnualRates["SurfaceActive"];
+  baseAnnualRates_c.SurfaceSlow = baseAnnualRates["SurfaceSlow"];
+  baseAnnualRates_c.SoilActive = baseAnnualRates["SoilActive"];
+  baseAnnualRates_c.SoilSlow = baseAnnualRates["SoilSlow"];
+  baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
+  
+  Rcpp::CharacterVector Species_LI = litter["Species"];
+  Rcpp::NumericVector Leaves_LI = litter["Leaves"];
+  Rcpp::NumericVector Twigs_LI = litter["Twigs"];
+  Rcpp::NumericVector SmallBranches_LI = litter["SmallBranches"];
+  Rcpp::NumericVector LargeWood_LI = litter["LargeWood"];
+  Rcpp::NumericVector CoarseRoots_LI = litter["CoarseRoots"];
+  Rcpp::NumericVector FineRoots_LI = litter["FineRoots"];
+  InternalLitter internalLitter;
+  internalLitter.Species = Rcpp::as< std::vector<std::string> >(Species_LI);
+  internalLitter.Leaves = Rcpp::as< std::vector<double> >(Leaves_LI);
+  internalLitter.Twigs = Rcpp::as< std::vector<double> >(Twigs_LI);
+  internalLitter.SmallBranches = Rcpp::as< std::vector<double> >(SmallBranches_LI);
+  internalLitter.LargeWood = Rcpp::as< std::vector<double> >(LargeWood_LI);
+  internalLitter.CoarseRoots = Rcpp::as< std::vector<double> >(CoarseRoots_LI);
+  internalLitter.FineRoots = Rcpp::as< std::vector<double> >(FineRoots_LI);
+  
+  LitterDecomposition_COMM ldo;
+  DAYCENTlitterInner_c(ldo, 
+                       internalLitter, paramsLitterDecomposition_c, 
+                       baseAnnualRates_c,
+                       sand, clay, soilTemperature, soilMoisture, soilPH,
+                       soilO2, cultfac,
+                       tstep);
+  NumericVector output = NumericVector::create(_["transfer_surface_active"] = ldo.transfer_surface_active,
+                                               _["transfer_surface_slow"] = ldo.transfer_surface_slow,
+                                               _["transfer_soil_active"] = ldo.transfer_soil_active,
+                                               _["transfer_soil_slow"] = ldo.transfer_soil_slow,
+                                               _["flux_respiration"] = ldo.flux_respiration);
+  return(output);
 }
 
-double DAYCENTInner(List commDecomp,
-                    DataFrame snags, DataFrame litter, NumericVector SOC,
-                    DataFrame paramsLitterDecomposition,
-                    NumericVector baseAnnualRates, double annualTurnoverRate,
-                    double airTemperature, double airRelativeHumidity, 
-                    double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
-                    double soilO2 = 1.0, double cultfac = 1.0,
-                    double tstep = 1.0) {
-  
-  int npool = 7;
-  NumericVector snagDecompositionOutput = commDecomp["sdo"];
-  DAYCENTsnagsInner(snagDecompositionOutput, 
-                    snags, 
-                    baseAnnualRates,
-                    airTemperature, airRelativeHumidity,
-                    tstep);
-  
-  NumericVector litterDecompositionOutput = commDecomp["ldo"];
-  DAYCENTlitterInner(litterDecompositionOutput, 
-                     litter, paramsLitterDecomposition, 
-                     baseAnnualRates,
-                     sand, clay, soilTemperature, soilMoisture, soilPH,
-                     tstep);
-  
-  updateBaseRates(commDecomp, baseAnnualRates, annualTurnoverRate);
-  updateDecompositionRateScalars(commDecomp, 
-                                 sand, clay,
-                                 soilTemperature, soilMoisture, soilPH, 
-                                 soilO2, cultfac);
-  updateCarbonTransferMatrices(commDecomp, 
-                               sand, clay, soilO2);
-
-  NumericMatrix respf = commDecomp["respf"];
-  NumericMatrix pathf = commDecomp["pathf"];
-  NumericVector xi = commDecomp["xi"];
-  NumericVector K = commDecomp["K"];
-  
-  NumericVector dC(npool, 0.0);
-  dC[DECOMPCOM_SURFACE_ACTIVE] = snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_ACTIVE] + litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_ACTIVE];
-  dC[DECOMPCOM_SURFACE_SLOW] = snagDecompositionOutput[SNAGDECOMPCOM_TRANSFER_SURFACE_SLOW] + litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SURFACE_SLOW];
-  dC[DECOMPCOM_SOIL_ACTIVE] = litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_ACTIVE];
-  dC[DECOMPCOM_SOIL_SLOW] = litterDecompositionOutput[LITDECOMPCOM_TRANSFER_SOIL_SLOW];
-  for(int i=0;i<npool;i++) {
-    // carbon transfer from pool j to pool i
-    for(int j=0;j<npool;j++) {
-      if(j!=i) {
-        dC[i] = dC[i] + (1.0 - respf(i,j)) * pathf(i,j) * xi[j] * K[j] * SOC[j]*tstep;
-      }
-    }
-    //  carbon loss from pool i
-    dC[i] = dC[i] - xi[i] * K[i] * SOC[i]*tstep;
-  }
-  //   heterotrophic respiration
-  double RH = snagDecompositionOutput[SNAGDECOMPCOM_FLUX_RESPIRATION] + litterDecompositionOutput[LITDECOMPCOM_FLUX_RESPIRATION];
-  for(int i=0;i<npool;i++) {
-    for(int j=0;j<npool;j++) {
-      if(j!=i) {
-        RH = RH + respf(i,j) * pathf(i,j) * xi[j] * K[j] * SOC[j] * tstep;
-      }
-    }
-  }
-  // update pools
-  for(int i=0;i<npool;i++) {
-    SOC[i] += dC[i];
-  }
-  //return respiration
-  return(RH);
-}
 
 //' DAYCENT decomposition
 //' 
@@ -553,13 +208,110 @@ double DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
                double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
                double soilO2 = 1.0, double cultfac = 1.0,
                double tstep = 1.0) {
-  List commDecomp = communicationDecomposition();
-  return(DAYCENTInner(commDecomp,
-                      snags, litter, SOC,
-                      paramsLitterDecomposition,
-                      baseAnnualRates, annualTurnoverRate,
-                      airTemperature, airRelativeHumidity,  
-                      sand, clay, soilTemperature, soilMoisture, soilPH, 
-                      soilO2, cultfac,
-                      tstep));
+  
+  Rcpp::CharacterVector Species_LI = litter["Species"];
+  Rcpp::NumericVector Leaves_LI = litter["Leaves"];
+  Rcpp::NumericVector Twigs_LI = litter["Twigs"];
+  Rcpp::NumericVector SmallBranches_LI = litter["SmallBranches"];
+  Rcpp::NumericVector LargeWood_LI = litter["LargeWood"];
+  Rcpp::NumericVector CoarseRoots_LI = litter["CoarseRoots"];
+  Rcpp::NumericVector FineRoots_LI = litter["FineRoots"];
+  InternalLitter internalLitter;
+  internalLitter.Species = Rcpp::as< std::vector<std::string> >(Species_LI);
+  internalLitter.Leaves = Rcpp::as< std::vector<double> >(Leaves_LI);
+  internalLitter.Twigs = Rcpp::as< std::vector<double> >(Twigs_LI);
+  internalLitter.SmallBranches = Rcpp::as< std::vector<double> >(SmallBranches_LI);
+  internalLitter.LargeWood = Rcpp::as< std::vector<double> >(LargeWood_LI);
+  internalLitter.CoarseRoots = Rcpp::as< std::vector<double> >(CoarseRoots_LI);
+  internalLitter.FineRoots = Rcpp::as< std::vector<double> >(FineRoots_LI);
+  
+  
+  Rcpp::CharacterVector Species_SN = snags["Species"];
+  Rcpp::NumericVector DBH_SN = snags["DBH"];
+  Rcpp::NumericVector Height_SN = snags["Height"];
+  Rcpp::NumericVector DeathAge_SN = snags["DeathAge"];
+  Rcpp::NumericVector SmallBranches_SN = snags["SmallBranches"];
+  Rcpp::NumericVector LargeWood_SN = snags["LargeWood"];
+  
+  InternalSnags internalSnags;
+  internalSnags.Species = Rcpp::as< std::vector<std::string> >(Species_SN);
+  internalSnags.DBH = Rcpp::as< std::vector<double> >(DBH_SN);
+  internalSnags.Height = Rcpp::as< std::vector<double> >(Height_SN);
+  internalSnags.DeathAge = Rcpp::as< std::vector<double> >(DeathAge_SN);
+  internalSnags.SmallBranches = Rcpp::as< std::vector<double> >(SmallBranches_SN);
+  internalSnags.LargeWood = Rcpp::as< std::vector<double> >(LargeWood_SN);
+  
+  LitterDecompositionParams paramsLitterDecomposition_c;
+  if(paramsLitterDecomposition.containsElementNamed("Species")) paramsLitterDecomposition_c.Species = Rcpp::as< std::vector<std::string> >(paramsLitterDecomposition["Species"]);
+  if(paramsLitterDecomposition.containsElementNamed("LeafLignin")) paramsLitterDecomposition_c.LeafLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["LeafLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("WoodLignin")) paramsLitterDecomposition_c.WoodLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["WoodLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("FineRootLignin")) paramsLitterDecomposition_c.FineRootLignin = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["FineRootLignin"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nleaf")) paramsLitterDecomposition_c.Nleaf = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nleaf"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nsapwood")) paramsLitterDecomposition_c.Nsapwood = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nsapwood"]);
+  if(paramsLitterDecomposition.containsElementNamed("Nfineroot")) paramsLitterDecomposition_c.Nfineroot = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nfineroot"]);
+  
+  
+  InternalSOC internalSOC;
+  internalSOC.SurfaceMetabolic = Rcpp::as<double>(SOC["SurfaceMetabolic"]);
+  internalSOC.SoilMetabolic = Rcpp::as<double>(SOC["SoilMetabolic"]);
+  internalSOC.SurfaceActive = Rcpp::as<double>(SOC["SurfaceActive"]);
+  internalSOC.SoilActive = Rcpp::as<double>(SOC["SoilActive"]);
+  internalSOC.SurfaceSlow = Rcpp::as<double>(SOC["SurfaceSlow"]);
+  internalSOC.SoilSlow = Rcpp::as<double>(SOC["SoilSlow"]);
+  internalSOC.SoilPassive = Rcpp::as<double>(SOC["SoilPassive"]);
+  
+  DecompositionAnnualBaseRates baseAnnualRates_c;
+  baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
+  baseAnnualRates_c.SoilMetabolic = baseAnnualRates["SoilMetabolic"];
+  baseAnnualRates_c.Leaves = baseAnnualRates["Leaves"];
+  baseAnnualRates_c.FineRoots = baseAnnualRates["FineRoots"];
+  baseAnnualRates_c.Twigs = baseAnnualRates["Twigs"];
+  baseAnnualRates_c.SmallBranches = baseAnnualRates["SmallBranches"];
+  baseAnnualRates_c.LargeWood = baseAnnualRates["LargeWood"];
+  baseAnnualRates_c.CoarseRoots = baseAnnualRates["CoarseRoots"];
+  baseAnnualRates_c.SurfaceActive = baseAnnualRates["SurfaceActive"];
+  baseAnnualRates_c.SurfaceSlow = baseAnnualRates["SurfaceSlow"];
+  baseAnnualRates_c.SoilActive = baseAnnualRates["SoilActive"];
+  baseAnnualRates_c.SoilSlow = baseAnnualRates["SoilSlow"];
+  baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
+  
+  
+  Decomposition_COMM dec_com;
+  double RH  = DAYCENTInner_c(dec_com,
+                              internalSnags, internalLitter, internalSOC,
+                              paramsLitterDecomposition_c,
+                              baseAnnualRates_c, annualTurnoverRate,
+                              airTemperature, airRelativeHumidity,  
+                              sand, clay, soilTemperature, soilMoisture, soilPH, 
+                              soilO2, cultfac,
+                              tstep);
+  
+
+  for(int c = 0;c < Species_SN.size(); c++) {
+    Species_SN[c] = internalSnags.Species[c];
+    DBH_SN[c] = internalSnags.DBH[c];
+    Height_SN[c] = internalSnags.Height[c];
+    DeathAge_SN[c] = internalSnags.DeathAge[c];
+    SmallBranches_SN[c] = internalSnags.SmallBranches[c];
+    LargeWood_SN[c] = internalSnags.LargeWood[c];
+  }
+  for(int c = 0;c < Species_LI.size(); c++) {
+    Species_LI[c] = internalLitter.Species[c];
+    Leaves_LI[c] = internalLitter.Leaves[c];
+    Twigs_LI[c] = internalLitter.Twigs[c];
+    SmallBranches_LI[c] = internalLitter.SmallBranches[c];
+    LargeWood_LI[c] = internalLitter.LargeWood[c];
+    CoarseRoots_LI[c] = internalLitter.CoarseRoots[c];
+    FineRoots_LI[c] = internalLitter.FineRoots[c];
+  }
+  
+  SOC["SurfaceMetabolic"] = internalSOC.SurfaceMetabolic;
+  SOC["SoilMetabolic"] = internalSOC.SoilMetabolic;
+  SOC["SurfaceActive"] = internalSOC.SurfaceActive;
+  SOC["SoilActive"] = internalSOC.SoilActive;
+  SOC["SurfaceSlow"] = internalSOC.SurfaceSlow;
+  SOC["SoilSlow"] = internalSOC.SoilSlow;
+  SOC["SoilPassive"] = internalSOC.SoilPassive;
+  
+  return(RH);
 }
