@@ -134,17 +134,6 @@ NumericVector communicationFireHazard() {
 }
 
 
-
-NumericVector communicationLitterDecomposition() {
-  NumericVector output = NumericVector::create(_["transfer_surface_active"] = 0.0,
-                                               _["transfer_surface_slow"] = 0.0,
-                                               _["transfer_soil_active"] = 0.0,
-                                               _["transfer_soil_slow"] = 0.0,
-                                               _["flux_respiration"] = 0.0);
-  return(output);
-}
-
-
 DataFrame communicationCarbonCompartments(int numCohorts) {
   DataFrame df = DataFrame::create(
     _["LeafStorageVolume"] = NumericVector(numCohorts, NA_REAL),
