@@ -303,7 +303,7 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   if(paramsLitterDecomposition.containsElementNamed("Nsapwood")) paramsLitterDecomposition_c.Nsapwood = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nsapwood"]);
   if(paramsLitterDecomposition.containsElementNamed("Nfineroot")) paramsLitterDecomposition_c.Nfineroot = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nfineroot"]);
   
-  Decomposition_COMM dec_com;
+  Decomposition_COMM dec_com(7);
   int nsteps = environmentalConditions.nrow();
   int nrow_prod = stepProduction.size();
   
@@ -313,12 +313,12 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
                           CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
                                                   "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
   
+  // Rcout<<"\nStarting simulation\n";
   for(int s = 0; s< nsteps; s++ ) {
     //Add Litter production
-    Rcout<<"Adding litter\n";
-    
     for(int i=0;i< nrow_prod;i++) {
-      if(stepProduction[i] == s) {
+      if(stepProduction[i] == (s+1)) {
+        // Rcout<<"Adding litter of row " << i << "\n";
         std::string species_litter = as<std::string>(speciesProduction[i]);
         addLeafTwigLitter_c(species_litter, 
                             leafProduction[i], twigProduction[i],
@@ -338,7 +338,7 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
       }
     }
     // decomposition
-    Rcout<<"Decomposition\n";
+    // Rcout<<"Entering decomposition: \n";
     heterotrophicRespiration[s]  = DAYCENTInner_c(dec_com,
                                                   internalSnags, internalLitter, internalSOC,
                                                   paramsLitterDecomposition_c,
@@ -348,6 +348,7 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
                                                   soilO2, cultfac,
                                                   tstep);
     
+    // Rcout<<"Storing state \n";
     decompositionPools(s,0) = std::accumulate(internalSnags.SmallBranches.begin(), internalSnags.SmallBranches.end(),0.0) + std::accumulate(internalSnags.LargeWood.begin(), internalSnags.LargeWood.end(),0.0);
     decompositionPools(s,1) = std::accumulate(internalLitter.Leaves.begin(), internalLitter.Leaves.end(),0.0);
     decompositionPools(s,1) += std::accumulate(internalLitter.Twigs.begin(), internalLitter.Twigs.end(),0.0);

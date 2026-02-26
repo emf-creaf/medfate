@@ -496,18 +496,21 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
   SOC_v[DECOMPCOM_SOIL_SLOW] = SOC.SoilSlow;
   SOC_v[DECOMPCOM_SOIL_PASSIVE] = SOC.SoilPassive;
 
+  // Rcpp::Rcout << "Snags-";
   DAYCENTsnagsInner_c(DECcomm.sdo,
                       snags, paramsLitterDecomposition,
                       baseAnnualRates,
                       airTemperature, airRelativeHumidity,
                       tstep);
 
+  // Rcpp::Rcout << "Litter-";
   DAYCENTlitterInner_c(DECcomm.ldo,
                        litter, paramsLitterDecomposition,
                        baseAnnualRates,
                        sand, clay, soilTemperature, soilMoisture, soilPH,
                        tstep);
 
+  // Rcpp::Rcout << "Update rates-";
   updateBaseRates_c(DECcomm, baseAnnualRates, annualTurnoverRate);
   updateDecompositionRateScalars_c(DECcomm,
                                    sand, clay,

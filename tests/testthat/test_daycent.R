@@ -89,7 +89,9 @@ sp_params <- function(rcentury_tree) {
 
 environmentalConditions <- env_daily(out_WaterTemp)
 litterProduction <- prd_daily(out_ForestC)
+
 paramsLitterDecomposition <- sp_params(tree$`1`)
+litterProduction$Species <- paramsLitterDecomposition$Species[1]
 
 nlitter <- 1
 litterData <- data.frame(Species = as.character(rep(paramsLitterDecomposition$Species[1], nlitter)),
