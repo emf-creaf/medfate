@@ -315,6 +315,8 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   
   for(int s = 0; s< nsteps; s++ ) {
     //Add Litter production
+    Rcout<<"Adding litter\n";
+    
     for(int i=0;i< nrow_prod;i++) {
       if(stepProduction[i] == s) {
         std::string species_litter = as<std::string>(speciesProduction[i]);
@@ -336,6 +338,7 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
       }
     }
     // decomposition
+    Rcout<<"Decomposition\n";
     heterotrophicRespiration[s]  = DAYCENTInner_c(dec_com,
                                                   internalSnags, internalLitter, internalSOC,
                                                   paramsLitterDecomposition_c,

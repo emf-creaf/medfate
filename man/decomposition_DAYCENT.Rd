@@ -75,10 +75,6 @@ A list with two elements:
 Function implementing a modification of the DAYCENT carbon decomposition model (Parton et al. 1988, 1993, 1998), inspired by the description given in Chapter 18 of Bonan (2019).
 }
 \details{
-Each call to functions \code{decomposition_DAYCENTlitter} or \code{decomposition_DAYCENTsnags} conducts one time step of the snag or litter dynamics, respectively.
-Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT
-model and returns the heterotrophic respiration for that day.
-
 \emph{IMPORTANT NOTE}: Decomposition functions modify the input data (i.e. \code{snags}, \code{litter} and/or \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 soil physical and chemical parameters correspond to the uppermost soil layer.
 }

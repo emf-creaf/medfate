@@ -394,9 +394,7 @@ decomposition_pHEffect <- function(x, pool) {
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @details Each call to functions \code{decomposition_DAYCENTlitter} or \code{decomposition_DAYCENTsnags} conducts one time step of the snag or litter dynamics, respectively. 
-#' Each call to function \code{decomposition_DAYCENT} conducts one time step of the whole DAYCENT 
-#' model and returns the heterotrophic respiration for that day. 
+#' @details
 #' 
 #' \emph{IMPORTANT NOTE}: Decomposition functions modify the input data (i.e. \code{snags}, \code{litter} and/or \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 #' soil physical and chemical parameters correspond to the uppermost soil layer.
