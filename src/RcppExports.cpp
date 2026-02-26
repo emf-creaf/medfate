@@ -612,8 +612,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // DAYCENT
-double DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, double airTemperature, double airRelativeHumidity, double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, double soilO2, double cultfac, double tstep);
-RcppExport SEXP _medfate_DAYCENT(SEXP snagsSEXP, SEXP litterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP airTemperatureSEXP, SEXP airRelativeHumiditySEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilTemperatureSEXP, SEXP soilMoistureSEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
+List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC, DataFrame paramsLitterDecomposition, NumericVector baseAnnualRates, double annualTurnoverRate, DataFrame environmentalConditions, DataFrame litterProduction, double sand, double clay, double soilPH, double soilO2, double cultfac, double tstep);
+RcppExport SEXP _medfate_DAYCENT(SEXP snagsSEXP, SEXP litterSEXP, SEXP SOCSEXP, SEXP paramsLitterDecompositionSEXP, SEXP baseAnnualRatesSEXP, SEXP annualTurnoverRateSEXP, SEXP environmentalConditionsSEXP, SEXP litterProductionSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP soilPHSEXP, SEXP soilO2SEXP, SEXP cultfacSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -623,17 +623,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type paramsLitterDecomposition(paramsLitterDecompositionSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type baseAnnualRates(baseAnnualRatesSEXP);
     Rcpp::traits::input_parameter< double >::type annualTurnoverRate(annualTurnoverRateSEXP);
-    Rcpp::traits::input_parameter< double >::type airTemperature(airTemperatureSEXP);
-    Rcpp::traits::input_parameter< double >::type airRelativeHumidity(airRelativeHumiditySEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type environmentalConditions(environmentalConditionsSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type litterProduction(litterProductionSEXP);
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type clay(claySEXP);
-    Rcpp::traits::input_parameter< double >::type soilTemperature(soilTemperatureSEXP);
-    Rcpp::traits::input_parameter< double >::type soilMoisture(soilMoistureSEXP);
     Rcpp::traits::input_parameter< double >::type soilPH(soilPHSEXP);
     Rcpp::traits::input_parameter< double >::type soilO2(soilO2SEXP);
     Rcpp::traits::input_parameter< double >::type cultfac(cultfacSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(DAYCENT(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep));
+    rcpp_result_gen = Rcpp::wrap(DAYCENT(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2, cultfac, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6074,7 +6072,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_pHEffect", (DL_FUNC) &_medfate_pHEffect, 2},
     {"_medfate_DAYCENTsnags", (DL_FUNC) &_medfate_DAYCENTsnags, 6},
     {"_medfate_DAYCENTlitter", (DL_FUNC) &_medfate_DAYCENTlitter, 11},
-    {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 16},
+    {"_medfate_DAYCENT", (DL_FUNC) &_medfate_DAYCENT, 14},
     {"_medfate_annualLitterDecompositionRate_c", (DL_FUNC) &_medfate_annualLitterDecompositionRate_c, 2},
     {"_medfate_snagFallProbability_c", (DL_FUNC) &_medfate_snagFallProbability_c, 3},
     {"_medfate_litterMetabolicFraction_c", (DL_FUNC) &_medfate_litterMetabolicFraction_c, 2},

@@ -350,35 +350,43 @@ decomposition_pHEffect <- function(x, pool) {
     .Call(`_medfate_pHEffect`, x, pool)
 }
 
-#' @rdname decomposition_DAYCENT
-#' @keywords internal
-decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep = 1.0) {
+.decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep = 1.0) {
     .Call(`_medfate_DAYCENTsnags`, snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep)
 }
 
-#' @rdname decomposition_DAYCENT
-#' @keywords internal
-decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
+.decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
     .Call(`_medfate_DAYCENTlitter`, litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
 }
 
 #' DAYCENT decomposition
 #' 
-#' Functions implementing a modification of the DAYCENT carbon decomposition model (Parton et al. 1988, 1993, 1998), inspired by the description given in Chapter 18 of Bonan (2019).
-#' Functions \code{decompositionDAYCENTsnags} and \code{decompositionDAYCENTlitter} conduct snag and litter decomposition, respectively, 
-#' whereas function \code{decomposition_DAYCENT} performs the whole model for carbon decomposition.
+#' Function implementing a modification of the DAYCENT carbon decomposition model (Parton et al. 1988, 1993, 1998), inspired by the description given in Chapter 18 of Bonan (2019).
 #' 
-#' @param snags A data frame with dead standing (snag) cohort information (see \code{\link{growthInput}}).
-#' @param litter A data frame with aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
-#' @param SOC A named numeric vector with metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
+#' @param snags A data frame with initial dead standing (snag) cohort information (see \code{\link{growthInput}}).
+#' @param litter A data frame with initial aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
+#' @param SOC A named numeric vector with initial metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 #' @param paramsLitterDecomposition A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).
 #' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 #' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
-#' @param sand,clay Soil texture (sand and sand) in percent volume (%). 
-#' @param airTemperature Mean daily air temperature (in Celsius).
-#' @param airRelativeHumidity Mean daily relative humidity (%).
-#' @param soilTemperature Soil temperature (in Celsius).
-#' @param soilMoisture Soil moisture content, relative to saturation (0-1).
+#' @param sand,clay Soil texture (sand and sand) in percent volume (percent). 
+#' @param environmentalConditions A data frame containing environmental conditions for each time step to simulate:
+#'   \itemize{
+#'     \item{\code{AirTempperature}: Mean air temperature (in Celsius).}
+#'     \item{\code{AirRelativeHumidity}: Mean relative humidity (percent).}
+#'     \item{\code{SoilTemperature}: Mean soil temperature (in Celsius).}
+#'     \item{\code{SoilMoisture}: Mean soil moisture, relative to saturation (0-1).}
+#'   }
+#' @param litterProduction A data frame containing litter inputs corresponding to time steps:
+#'   \itemize{
+#'     \item{\code{Step}: Integer indicating the time step where litter is generated.}
+#'     \item{\code{Species}: Mean relative humidity (percent).}
+#'     \item{\code{Leaves}: Leaf litter production (g C·m-2).}
+#'     \item{\code{Twigs}: Twig litter production (g C·m-2).}
+#'     \item{\code{SmallBranches}: Small branch litter production (g C·m-2).}
+#'     \item{\code{LargeWood}: Large wood litter production (g C·m-2).}
+#'     \item{\code{CoarseRoots}: Coarse root litter production (g C·m-2).}
+#'     \item{\code{FineRoots}: Fine root litter production (g C·m-2).}
+#'   }
 #' @param soilPH Soil pH (0-14).
 #' @param soilO2 Soil oxygen factor (0-1).
 #' @param cultfac Cultivation factor (0-1).
@@ -393,10 +401,11 @@ decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseA
 #' \emph{IMPORTANT NOTE}: Decomposition functions modify the input data (i.e. \code{snags}, \code{litter} and/or \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 #' soil physical and chemical parameters correspond to the uppermost soil layer.
 #' 
-#' @returns 
-#' Function \code{decomposition_DAYCENTsnags} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from snag decomposition.
-#' Function \code{decomposition_DAYCENTlitter} returns a vector containing transfer carbon flows to SOC pools and heterotrophic respiration from litter decomposition. 
-#' Function \code{decomposition_DAYCENT} returns scalar value with heterotrophic respiration (snags + litter + soil), in g C/m2.
+#' @returns A list with two elements:
+#'   \itemize{
+#'     \item{\code{"HeterotrophicRespiration"}: A numeric vector with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step.}
+#'     \item{\code{"DecompositionPools"}: A numeric matrix with the mass of different decomposition carbon pools, all in g C · m-2.}
+#'   }
 #' 
 #' @references
 #' Bonan, G. (2019). Climate change and terrestrial ecosystem modeling. Cambridge University Press, Cambridge, UK.
@@ -410,8 +419,8 @@ decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseA
 #' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
 #' @keywords internal
-decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
-    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, airTemperature, airRelativeHumidity, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2, cultfac, tstep)
+decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
+    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2, cultfac, tstep)
 }
 
 #' Low-level decomposition functions
