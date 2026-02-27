@@ -1,8 +1,5 @@
 library(medfate)
 
-load("~/OneDrive/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/century.RData")
-out_ForestC <- readRDS("~/OneDrive/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/out_ForestC.rds")
-
 #' Transforms Rcentury output for soil temperature and soil moisture from month to day resolution
 env_daily<-function(out, yearIni = 2000) {
   yearMax <- yearIni + max(out$time) - 1
@@ -87,37 +84,43 @@ sp_params <- function(rcentury_tree) {
   return(df)
 }
 
-environmentalConditions <- env_daily(out_WaterTemp)
-litterProduction <- prd_daily(out_ForestC)
-
-paramsLitterDecomposition <- sp_params(tree$`1`)
-litterProduction$Species <- paramsLitterDecomposition$Species[1]
-
-nlitter <- 1
-litterData <- data.frame(Species = as.character(rep(paramsLitterDecomposition$Species[1], nlitter)),
-                         Leaves = as.numeric(rep(0, nlitter)),
-                         Twigs = as.numeric(rep(0, nlitter)),
-                         SmallBranches = as.numeric(rep(0, nlitter)),
-                         LargeWood = as.numeric(rep(0, nlitter)),
-                         CoarseRoots = as.numeric(rep(0, nlitter)),
-                         FineRoots = as.numeric(rep(0, nlitter)))
-
-nsnag <- 0
-snagData<- data.frame(Species = as.character(rep(NA, nsnag)),
-                      DBH = as.numeric(rep(NA, nsnag)),
-                      Height = as.numeric(rep(NA, nsnag)),
-                      DeathAge = as.numeric(rep(NA, nsnag)),
-                      SmallBranches = as.numeric(rep(NA, nsnag)),
-                      LargeWood = as.numeric(rep(NA, nsnag)))
-
-SOCData <- c(SurfaceMetabolic = 0, SoilMetabolic = 0, SurfaceActive = 0, SoilActive = 0,
-             SurfaceSlow = 0, SoilSlow = 0, SoilPassive = 0)
-
-control <- defaultControl()
-baseAnnualRates <- control$decompositionAnnualBaseRates
-annualTurnoverRate <- control$decompositionAnnualTurnoverRate
-
 test_that("DAYCENT can be run", {
+  skip_on_ci()
+  skip_on_cran()
+  
+  load("~/OneDrive/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/century.RData")
+  out_ForestC <- readRDS("~/OneDrive/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/out_ForestC.rds")
+  
+  environmentalConditions <- env_daily(out_WaterTemp)
+  litterProduction <- prd_daily(out_ForestC)
+  
+  paramsLitterDecomposition <- sp_params(tree$`1`)
+  litterProduction$Species <- paramsLitterDecomposition$Species[1]
+  
+  nlitter <- 1
+  litterData <- data.frame(Species = as.character(rep(paramsLitterDecomposition$Species[1], nlitter)),
+                           Leaves = as.numeric(rep(0, nlitter)),
+                           Twigs = as.numeric(rep(0, nlitter)),
+                           SmallBranches = as.numeric(rep(0, nlitter)),
+                           LargeWood = as.numeric(rep(0, nlitter)),
+                           CoarseRoots = as.numeric(rep(0, nlitter)),
+                           FineRoots = as.numeric(rep(0, nlitter)))
+  
+  nsnag <- 0
+  snagData<- data.frame(Species = as.character(rep(NA, nsnag)),
+                        DBH = as.numeric(rep(NA, nsnag)),
+                        Height = as.numeric(rep(NA, nsnag)),
+                        DeathAge = as.numeric(rep(NA, nsnag)),
+                        SmallBranches = as.numeric(rep(NA, nsnag)),
+                        LargeWood = as.numeric(rep(NA, nsnag)))
+  
+  SOCData <- c(SurfaceMetabolic = 0, SoilMetabolic = 0, SurfaceActive = 0, SoilActive = 0,
+               SurfaceSlow = 0, SoilSlow = 0, SoilPassive = 0)
+  
+  control <- defaultControl()
+  baseAnnualRates <- control$decompositionAnnualBaseRates
+  annualTurnoverRate <- control$decompositionAnnualTurnoverRate
+  
   l <- decomposition_DAYCENT(snagData, litterData, SOCData,
                         paramsLitterDecomposition,
                         baseAnnualRates,
