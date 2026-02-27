@@ -318,7 +318,6 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     //Add Litter production
     for(int i=0;i< nrow_prod;i++) {
       if(stepProduction[i] == (s+1)) {
-        // Rcout<<"Adding litter of row " << i << "\n";
         std::string species_litter = as<std::string>(speciesProduction[i]);
         addLeafTwigLitter_c(species_litter, 
                             leafProduction[i], twigProduction[i],
