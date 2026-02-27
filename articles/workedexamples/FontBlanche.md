@@ -545,7 +545,7 @@ fb_SWB <- spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
     ## Final soil water content (mm): 235.051
     ## Final snowpack content (mm): 0
     ## Change in plant water content (mm): -0.0563292
-    ## Plant water balance result (mm): -9.36535e-16
+    ## Plant water balance result (mm): 4.76126e-16
     ## Change in soil water content (mm): 21.1652
     ## Soil water balance result (mm): 21.1652
     ## Change in snowpack water content (mm): 0
@@ -555,7 +555,7 @@ fb_SWB <- spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
     ##   Interception (mm) 141 Net rainfall (mm) 925
     ##   Infiltration (mm) 833 Infiltration excess (mm) 92 Saturation excess (mm) 272 Capillarity rise (mm) 0
     ##   Soil evaporation (mm) 21  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 323
-    ##   Plant extraction from soil (mm) 323  Plant water balance (mm) -0 Hydraulic redistribution (mm) 36
+    ##   Plant extraction from soil (mm) 323  Plant water balance (mm) 0 Hydraulic redistribution (mm) 36
     ##   Runoff (mm) 364 Deep drainage (mm) 195
 
 Console output provides the water balance totals for the period

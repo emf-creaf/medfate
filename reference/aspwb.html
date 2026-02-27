@@ -59,6 +59,16 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aspwbInput</span><span class="op">(</span><span class="va">crop_factor</span>, <span class="va">control</span>, <span class="va">soil</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">aspwb</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">meteo</span>,</span>
+<span>  <span class="va">latitude</span>,</span>
+<span>  <span class="va">elevation</span>,</span>
+<span>  slope <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  aspect <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  waterTableDepth <span class="op">=</span> <span class="cn">NA_real_</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">aspwb_day</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">date</span>,</span>
@@ -71,16 +81,6 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
 <span>  lateralFlows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  waterTableDepth <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  modifyInput <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">aspwb</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  <span class="va">meteo</span>,</span>
-<span>  <span class="va">latitude</span>,</span>
-<span>  <span class="va">elevation</span>,</span>
-<span>  slope <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
-<span>  aspect <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
-<span>  waterTableDepth <span class="op">=</span> <span class="cn">NA_real_</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,12 +104,8 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
 <dd><p>An object of class <code>aspwbInput</code>.</p></dd>
 
 
-<dt id="arg-date">date<a class="anchor" aria-label="anchor" href="#arg-date"></a></dt>
-<dd><p>Date as string "yyyy-mm-dd".</p></dd>
-
-
-<dt id="arg-meteovec">meteovec<a class="anchor" aria-label="anchor" href="#arg-meteovec"></a></dt>
-<dd><p>A named numerical vector with weather data. See variable names in parameter <code>meteo</code> of <code><a href="spwb.html">spwb</a></code>.</p></dd>
+<dt id="arg-meteo">meteo<a class="anchor" aria-label="anchor" href="#arg-meteo"></a></dt>
+<dd><p>A data frame with daily meteorological data series (see <code><a href="spwb.html">spwb</a></code>).</p></dd>
 
 
 <dt id="arg-latitude">latitude<a class="anchor" aria-label="anchor" href="#arg-latitude"></a></dt>
@@ -120,6 +116,18 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
 <dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).</p></dd>
 
 
+<dt id="arg-watertabledepth">waterTableDepth<a class="anchor" aria-label="anchor" href="#arg-watertabledepth"></a></dt>
+<dd><p>Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.</p></dd>
+
+
+<dt id="arg-date">date<a class="anchor" aria-label="anchor" href="#arg-date"></a></dt>
+<dd><p>Date as string "yyyy-mm-dd".</p></dd>
+
+
+<dt id="arg-meteovec">meteovec<a class="anchor" aria-label="anchor" href="#arg-meteovec"></a></dt>
+<dd><p>A named numerical vector with weather data. See variable names in parameter <code>meteo</code> of <code><a href="spwb.html">spwb</a></code>.</p></dd>
+
+
 <dt id="arg-runon">runon<a class="anchor" aria-label="anchor" href="#arg-runon"></a></dt>
 <dd><p>Surface water amount running on the target area from upslope (in mm).</p></dd>
 
@@ -128,16 +136,8 @@ Function <code>aspwb</code> performs water balance for multiple days in an agric
 <dd><p>Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.</p></dd>
 
 
-<dt id="arg-watertabledepth">waterTableDepth<a class="anchor" aria-label="anchor" href="#arg-watertabledepth"></a></dt>
-<dd><p>Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.</p></dd>
-
-
 <dt id="arg-modifyinput">modifyInput<a class="anchor" aria-label="anchor" href="#arg-modifyinput"></a></dt>
 <dd><p>Boolean flag to indicate that the input <code>x</code> object is allowed to be modified during the simulation.</p></dd>
-
-
-<dt id="arg-meteo">meteo<a class="anchor" aria-label="anchor" href="#arg-meteo"></a></dt>
-<dd><p>A data frame with daily meteorological data series (see <code><a href="spwb.html">spwb</a></code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

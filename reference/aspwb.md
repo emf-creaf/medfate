@@ -9,6 +9,16 @@ multiple days in an agriculture location.
 ``` r
 aspwbInput(crop_factor, control, soil)
 
+aspwb(
+  x,
+  meteo,
+  latitude,
+  elevation,
+  slope = NA_real_,
+  aspect = NA_real_,
+  waterTableDepth = NA_real_
+)
+
 aspwb_day(
   x,
   date,
@@ -21,16 +31,6 @@ aspwb_day(
   lateralFlows = NULL,
   waterTableDepth = NA_real_,
   modifyInput = TRUE
-)
-
-aspwb(
-  x,
-  meteo,
-  latitude,
-  elevation,
-  slope = NA_real_,
-  aspect = NA_real_,
-  waterTableDepth = NA_real_
 )
 ```
 
@@ -55,15 +55,10 @@ aspwb(
 
   An object of class `aspwbInput`.
 
-- date:
+- meteo:
 
-  Date as string "yyyy-mm-dd".
-
-- meteovec:
-
-  A named numerical vector with weather data. See variable names in
-  parameter `meteo` of
-  [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
+  A data frame with daily meteorological data series (see
+  [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)).
 
 - latitude:
 
@@ -74,6 +69,21 @@ aspwb(
   Elevation above sea level (in m), slope (in degrees) and aspect (in
   degrees from North).
 
+- waterTableDepth:
+
+  Water table depth (in mm). When not missing, capillarity rise will be
+  allowed if lower than total soil depth.
+
+- date:
+
+  Date as string "yyyy-mm-dd".
+
+- meteovec:
+
+  A named numerical vector with weather data. See variable names in
+  parameter `meteo` of
+  [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
+
 - runon:
 
   Surface water amount running on the target area from upslope (in mm).
@@ -83,20 +93,10 @@ aspwb(
   Lateral source/sink terms for each soil layer (interflow/to from
   adjacent locations) as mm/day.
 
-- waterTableDepth:
-
-  Water table depth (in mm). When not missing, capillarity rise will be
-  allowed if lower than total soil depth.
-
 - modifyInput:
 
   Boolean flag to indicate that the input `x` object is allowed to be
   modified during the simulation.
-
-- meteo:
-
-  A data frame with daily meteorological data series (see
-  [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md)).
 
 ## See also
 

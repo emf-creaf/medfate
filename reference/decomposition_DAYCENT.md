@@ -1,38 +1,12 @@
 # DAYCENT decomposition
 
-Functions implementing a modification of the DAYCENT carbon
-decomposition model (Parton et al. 1988, 1993, 1998), inspired by the
-description given in Chapter 18 of Bonan (2019). Functions
-`decompositionDAYCENTsnags` and `decompositionDAYCENTlitter` conduct
-snag and litter decomposition, respectively, whereas function
-`decomposition_DAYCENT` performs the whole model for carbon
-decomposition.
+Function implementing a modification of the DAYCENT carbon decomposition
+model (Parton et al. 1988, 1993, 1998), inspired by the description
+given in Chapter 18 of Bonan (2019).
 
 ## Usage
 
 ``` r
-decomposition_DAYCENTsnags(
-  snags,
-  baseAnnualRates,
-  airTemperature,
-  airRelativeHumidity,
-  tstep = 1
-)
-
-decomposition_DAYCENTlitter(
-  litter,
-  paramsLitterDecomposition,
-  baseAnnualRates,
-  sand,
-  clay,
-  soilTemperature,
-  soilMoisture,
-  soilPH,
-  soilO2 = 1,
-  cultfac = 1,
-  tstep = 1
-)
-
 decomposition_DAYCENT(
   snags,
   litter,
@@ -40,12 +14,10 @@ decomposition_DAYCENT(
   paramsLitterDecomposition,
   baseAnnualRates,
   annualTurnoverRate,
-  airTemperature,
-  airRelativeHumidity,
+  environmentalConditions,
+  litterProduction,
   sand,
   clay,
-  soilTemperature,
-  soilMoisture,
   soilPH,
   soilO2 = 1,
   cultfac = 1,
@@ -57,31 +29,19 @@ decomposition_DAYCENT(
 
 - snags:
 
-  A data frame with dead standing (snag) cohort information (see
+  A data frame with initial dead standing (snag) cohort information (see
   [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
-
-- baseAnnualRates:
-
-  A named vector of annual decomposition rates, in yr-1 (see
-  [`defaultControl`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)).
-
-- airTemperature:
-
-  Mean daily air temperature (in Celsius).
-
-- airRelativeHumidity:
-
-  Mean daily relative humidity (%).
-
-- tstep:
-
-  Time step in days. By default, one day. For annual time steps, use
-  `tstep = 365.25`.
 
 - litter:
 
-  A data frame with aboveground and belowground structural carbon pools
-  corresponding to plant cohorts, in g C/m2 (see
+  A data frame with initial aboveground and belowground structural
+  carbon pools corresponding to plant cohorts, in g C/m2 (see
+  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
+
+- SOC:
+
+  A named numeric vector with initial metabolic, active, slow and
+  passive carbon pools for surface and soil, in g C/m2 (see
   [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
 
 - paramsLitterDecomposition:
@@ -89,17 +49,53 @@ decomposition_DAYCENT(
   A data frame of species-specific litter decomposition parameters (see
   [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
 
+- baseAnnualRates:
+
+  A named vector of annual decomposition rates, in yr-1 (see
+  [`defaultControl`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)).
+
+- annualTurnoverRate:
+
+  Annual turnover rate, in yr-1 (see
+  [`defaultControl`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)).
+
+- environmentalConditions:
+
+  A data frame containing environmental conditions for each time step to
+  simulate:
+
+  - `AirTempperature`: Mean air temperature (in Celsius).
+
+  - `AirRelativeHumidity`: Mean relative humidity (percent).
+
+  - `SoilTemperature`: Mean soil temperature (in Celsius).
+
+  - `SoilMoisture`: Mean soil moisture, relative to saturation (0-1).
+
+- litterProduction:
+
+  A data frame containing litter inputs corresponding to time steps:
+
+  - `Step`: Integer indicating the time step where litter is generated,
+    corresponding to a row in `environmentalConditions`.
+
+  - `Species`: Mean relative humidity (percent).
+
+  - `Leaves`: Leaf litter production (g C·m-2).
+
+  - `Twigs`: Twig litter production (g C·m-2).
+
+  - `SmallBranches`: Small branch litter production (g C·m-2).
+
+  - `LargeWood`: Large wood litter production (g C·m-2).
+
+  - `CoarseRoots`: Coarse root litter production (g C·m-2).
+
+  - `FineRoots`: Fine root litter production (g C·m-2).
+
 - sand, clay:
 
-  Soil texture (sand and sand) in percent volume (%).
-
-- soilTemperature:
-
-  Soil temperature (in Celsius).
-
-- soilMoisture:
-
-  Soil moisture content, relative to saturation (0-1).
+  Soil texture (sand and sand) in percent volume (percent).
 
 - soilPH:
 
@@ -113,34 +109,26 @@ decomposition_DAYCENT(
 
   Cultivation factor (0-1).
 
-- SOC:
+- tstep:
 
-  A named numeric vector with metabolic, active, slow and passive carbon
-  pools for surface and soil, in g C/m2 (see
-  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
-
-- annualTurnoverRate:
-
-  Annual turnover rate, in yr-1 (see
-  [`defaultControl`](https://emf-creaf.github.io/medfate/reference/defaultControl.md)).
+  Time step in days. By default, one day. For annual time steps, use
+  `tstep = 365.25`.
 
 ## Value
 
-Function `decomposition_DAYCENTsnags` returns a vector containing
-transfer carbon flows to SOC pools and heterotrophic respiration from
-snag decomposition. Function `decomposition_DAYCENTlitter` returns a
-vector containing transfer carbon flows to SOC pools and heterotrophic
-respiration from litter decomposition. Function `decomposition_DAYCENT`
-returns scalar value with heterotrophic respiration (snags + litter +
-soil), in g C/m2.
+A list with two elements:
+
+- `"HeterotrophicRespiration"`: A numeric vector with the heterotrophic
+  respiration (g C·m-2) corresponding to the decomposition in each time
+  step.
+
+- `"DecompositionPools"`: A numeric matrix with the mass of different
+  decomposition carbon pools, all in g C · m-2.
 
 ## Details
 
-Each call to functions `decomposition_DAYCENTlitter` or
-`decomposition_DAYCENTsnags` conducts one time step of the snag or
-litter dynamics, respectively. Each call to function
-`decomposition_DAYCENT` conducts one time step of the whole DAYCENT
-model and returns the heterotrophic respiration for that day.
+Species names must match between inputs `paramsLitterDecomposition`,
+`litter` and `litterProduction`.
 
 *IMPORTANT NOTE*: Decomposition functions modify the input data (i.e.
 `snags`, `litter` and/or `SOC`) according to decomposition rates and
@@ -175,3 +163,7 @@ surface submodel: Description and testing. Global and Planetary Change,
 ## Author
 
 Miquel De Cáceres Ainsa, CREAF
+
+Roberto Molowny-Horas, CREAF
+
+Inés Delsman Valderrama, CREAF
