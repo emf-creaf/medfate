@@ -44,7 +44,7 @@ decomposition_DAYCENT(
 
 \item{litterProduction}{A data frame containing litter inputs corresponding to time steps:
 \itemize{
-\item{\code{Step}: Integer indicating the time step where litter is generated.}
+\item{\code{Step}: Integer indicating the time step where litter is generated, corresponding to a row in \code{environmentalConditions}.}
 \item{\code{Species}: Mean relative humidity (percent).}
 \item{\code{Leaves}: Leaf litter production (g C·m-2).}
 \item{\code{Twigs}: Twig litter production (g C·m-2).}
@@ -75,6 +75,8 @@ A list with two elements:
 Function implementing a modification of the DAYCENT carbon decomposition model (Parton et al. 1988, 1993, 1998), inspired by the description given in Chapter 18 of Bonan (2019).
 }
 \details{
+Species names must match between inputs \code{paramsLitterDecomposition}, \code{litter} and \code{litterProduction}.
+
 \emph{IMPORTANT NOTE}: Decomposition functions modify the input data (i.e. \code{snags}, \code{litter} and/or \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 soil physical and chemical parameters correspond to the uppermost soil layer.
 }
@@ -92,5 +94,9 @@ Parton WJ, Hartman M, Ojima DS, Schimel D (1998). DAYCENT and its land surface s
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+
+Roberto Molowny-Horas, CREAF
+
+Inés Delsman Valderrama, CREAF
 }
 \keyword{internal}

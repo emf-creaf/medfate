@@ -168,7 +168,7 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //'   }
 //' @param litterProduction A data frame containing litter inputs corresponding to time steps:
 //'   \itemize{
-//'     \item{\code{Step}: Integer indicating the time step where litter is generated.}
+//'     \item{\code{Step}: Integer indicating the time step where litter is generated, corresponding to a row in \code{environmentalConditions}.}
 //'     \item{\code{Species}: Mean relative humidity (percent).}
 //'     \item{\code{Leaves}: Leaf litter production (g C·m-2).}
 //'     \item{\code{Twigs}: Twig litter production (g C·m-2).}
@@ -182,9 +182,14 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //' @param cultfac Cultivation factor (0-1).
 //' @param tstep Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.
 //' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' @author 
+//' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @details
+//' Roberto Molowny-Horas, CREAF
+//' 
+//' Inés Delsman Valderrama, CREAF
+//' 
+//' @details Species names must match between inputs \code{paramsLitterDecomposition}, \code{litter} and \code{litterProduction}.
 //' 
 //' \emph{IMPORTANT NOTE}: Decomposition functions modify the input data (i.e. \code{snags}, \code{litter} and/or \code{SOC}) according to decomposition rates and carbon transfer rates. When used as part of \code{\link{growth}} simulations,
 //' soil physical and chemical parameters correspond to the uppermost soil layer.
