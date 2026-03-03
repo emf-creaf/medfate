@@ -129,6 +129,6 @@ test_that("DAYCENT can be run", {
                         litterProduction,
                         sand = 30,
                         clay = 20,
-                        soilPH = 7)  
+                        soilPH = 7, balanceCheck = FALSE)  
   expect_type(l, "list")
 })

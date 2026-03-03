@@ -343,7 +343,7 @@ void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
   // Reset output
   sdo.transfer_surface_active = 0.0;
   sdo.transfer_surface_slow = 0.0;
-  sdo.flux_respiration = 0.0;
+  sdo.surface_flux_respiration = 0.0;
 
   //Temperature effect
   double tempEff = temperatureEffect_c(airTemperature);
@@ -361,7 +361,7 @@ void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
     loss = snags.SmallBranches[i]*k*tstep;
     sdo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     sdo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
-    sdo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    sdo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     snags.SmallBranches[i] -= loss;
   }
 
@@ -372,7 +372,7 @@ void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
     loss = snags.LargeWood[i]*k*tstep;
     sdo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     sdo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
-    sdo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    sdo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     snags.LargeWood[i] -= loss;
   }
 }
@@ -391,7 +391,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   ldo.transfer_surface_slow = 0.0;
   ldo.transfer_soil_active = 0.0;
   ldo.transfer_soil_slow = 0.0;
-  ldo.flux_respiration = 0.0;
+  ldo.surface_flux_respiration = 0.0;
+  ldo.soil_flux_respiration = 0.0;
   
   //Combined effect of temperature and moisture
   double pHeff;
@@ -408,7 +409,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     loss = litter.Leaves[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
-    ldo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.Leaves[i] -= loss;
     // if(i==0) Rcout<< structural_leaves[i] << " T" <<soilTemperature <<  " Teff"<< tempEff << " M"<< moistEff << " pH"<< pHeff << " K" << k << " Loss: "<< loss << "\n"; 
   }
@@ -421,7 +422,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     loss = litter.Twigs[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
-    ldo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.Twigs[i] -= loss;
   }
   
@@ -433,7 +434,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     loss = litter.SmallBranches[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
-    ldo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.SmallBranches[i] -= loss;
   }
   
@@ -445,7 +446,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     loss = litter.LargeWood[i]*k*tstep;
     ldo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
-    ldo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.LargeWood[i] -= loss;
   }
   
@@ -457,7 +458,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     loss = litter.CoarseRoots[i]*k*tstep;
     ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.55);
     ldo.transfer_soil_slow += loss*flig*(1.0 - 0.30);
-    ldo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.55);
+    ldo.soil_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.55);
     litter.CoarseRoots[i] -= loss;
   }
   
@@ -469,7 +470,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     loss = litter.FineRoots[i]*k*tstep;
     ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.45);
     ldo.transfer_soil_slow += loss*flig*(1.0 - 0.30);
-    ldo.flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    ldo.soil_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.FineRoots[i] -= loss;
   }
 }
@@ -535,13 +536,15 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
     dC[i] = dC[i] - DECcomm.xi[i] * DECcomm.K[i] * SOC_v[i]*tstep;
   }
   //   heterotrophic respiration
-  RH += DECcomm.sdo.flux_respiration + DECcomm.ldo.flux_respiration;
+  RH += DECcomm.sdo.surface_flux_respiration + DECcomm.ldo.surface_flux_respiration + DECcomm.ldo.soil_flux_respiration;
   for(int i=0;i<npool;i++) {
+    DECcomm.flux_respiration_pools[i] = 0.0;
     for(int j=0;j<npool;j++) {
       if(j!=i) {
-        RH = RH + DECcomm.respf(i,j) * DECcomm.pathf(i,j) * DECcomm.xi[j] * DECcomm.K[j] * SOC_v[j] * tstep;
+        DECcomm.flux_respiration_pools[i] += DECcomm.respf(i,j) * DECcomm.pathf(i,j) * DECcomm.xi[j] * DECcomm.K[j] * SOC_v[j] * tstep;
       }
     }
+    RH = RH + DECcomm.flux_respiration_pools[i];
   }
   // update pools
   for(int i=0;i<npool;i++) {

@@ -18,7 +18,8 @@ decomposition_DAYCENT(
   soilPH,
   soilO2 = 1,
   cultfac = 1,
-  tstep = 1
+  tstep = 1,
+  balanceCheck = FALSE
 )
 }
 \arguments{
@@ -63,12 +64,14 @@ decomposition_DAYCENT(
 \item{cultfac}{Cultivation factor (0-1).}
 
 \item{tstep}{Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.}
+
+\item{balanceCheck}{Flag to print carbon balance check (for debugging).}
 }
 \value{
 A list with two elements:
 \itemize{
-\item{\code{"HeterotrophicRespiration"}: A numeric vector with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step.}
-\item{\code{"DecompositionPools"}: A numeric matrix with the mass of different decomposition carbon pools, all in g C · m-2.}
+\item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to the different carbon pools.}
+\item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2.}
 }
 }
 \description{

@@ -16,15 +16,16 @@ const int DECOMPCOM_SOIL_PASSIVE = 6;
 
 //communication structures
 struct SnagDecomposition_COMM {
-  double transfer_surface_active, transfer_surface_slow, flux_respiration;
+  double transfer_surface_active, transfer_surface_slow, surface_flux_respiration;
   SnagDecomposition_COMM() {
-    transfer_surface_active = transfer_surface_slow = flux_respiration = 0.0;
+    transfer_surface_active = transfer_surface_slow = surface_flux_respiration = 0.0;
   }
 };
 struct LitterDecomposition_COMM {
-  double transfer_surface_active, transfer_surface_slow, transfer_soil_active, transfer_soil_slow, flux_respiration;
+  double transfer_surface_active, transfer_surface_slow, transfer_soil_active, transfer_soil_slow;
+  double surface_flux_respiration, soil_flux_respiration;
   LitterDecomposition_COMM() {
-    transfer_surface_active = transfer_surface_slow = transfer_soil_active = transfer_soil_slow = flux_respiration = 0.0;
+    transfer_surface_active = transfer_surface_slow = transfer_soil_active = transfer_soil_slow = surface_flux_respiration = soil_flux_respiration = 0.0;
   }
 };
 // Structure with the following matrices/vectors:
@@ -37,13 +38,14 @@ struct LitterDecomposition_COMM {
 struct Decomposition_COMM {
   SnagDecomposition_COMM sdo;
   LitterDecomposition_COMM ldo;
-  std::vector<double> xi, K;
+  std::vector<double> xi, K, flux_respiration_pools;
   arma::mat A, pathf, respf;
   double Kmix, K_s21;
   Decomposition_COMM(size_t npool) {
     Kmix = K_s21 = 0.0;
     K = std::vector<double>(npool, 0.0);
     xi = std::vector<double>(npool, 0.0);
+    flux_respiration_pools = std::vector<double>(npool, 0.0);
     A = arma::mat(npool, npool);
     pathf = arma::mat(npool, npool);
     respf = arma::mat(npool, npool);

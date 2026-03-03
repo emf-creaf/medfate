@@ -78,7 +78,7 @@ NumericVector DAYCENTsnags(DataFrame snags,
   
   NumericVector output = NumericVector::create(_["transfer_surface_active"] = sdo.transfer_surface_active,
                                                _["transfer_surface_slow"] = sdo.transfer_surface_slow,
-                                               _["flux_respiration"] = sdo.flux_respiration);
+                                               _["surface_flux_respiration"] = sdo.surface_flux_respiration);
   return(output);
 }
 
@@ -143,7 +143,8 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
                                                _["transfer_surface_slow"] = ldo.transfer_surface_slow,
                                                _["transfer_soil_active"] = ldo.transfer_soil_active,
                                                _["transfer_soil_slow"] = ldo.transfer_soil_slow,
-                                               _["flux_respiration"] = ldo.flux_respiration);
+                                               _["surface_flux_respiration"] = ldo.surface_flux_respiration,
+                                               _["soil_flux_respiration"] = ldo.soil_flux_respiration);
   return(output);
 }
 
@@ -181,6 +182,7 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //' @param soilO2 Soil oxygen factor (0-1).
 //' @param cultfac Cultivation factor (0-1).
 //' @param tstep Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.
+//' @param balanceCheck Flag to print carbon balance check (for debugging).
 //' 
 //' @author 
 //' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -196,8 +198,8 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //' 
 //' @returns A list with two elements:
 //'   \itemize{
-//'     \item{\code{"HeterotrophicRespiration"}: A numeric vector with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step.}
-//'     \item{\code{"DecompositionPools"}: A numeric matrix with the mass of different decomposition carbon pools, all in g C · m-2.}
+//'     \item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to the different carbon pools.}
+//'     \item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2.}
 //'   }
 //' 
 //' @references
@@ -220,7 +222,7 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
              DataFrame litterProduction, 
              double sand, double clay,  double soilPH, 
              double soilO2 = 1.0, double cultfac = 1.0,
-             double tstep = 1.0) {
+             double tstep = 1.0, bool balanceCheck = false) {
   
   // Environmental vectors
   NumericVector airTemperature = environmentalConditions["AirTemperature"];
@@ -312,12 +314,39 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   int nsteps = environmentalConditions.nrow();
   int nrow_prod = stepProduction.size();
   
-  NumericVector heterotrophicRespiration(nsteps, 0.0);
+  NumericMatrix heterotrophicRespiration(nsteps, 10);
+  heterotrophicRespiration.attr("dimnames") = List::create(seq(1, nsteps), 
+                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
+                                                  "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
   NumericMatrix decompositionPools(nsteps, 10);
   decompositionPools.attr("dimnames") = List::create(seq(1, nsteps), 
                           CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
                                                   "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
   
+  double litterInput = 0.0;
+  double initialStock = 0.0;
+  if(balanceCheck) {
+    initialStock += std::accumulate(internalSnags.SmallBranches.begin(), internalSnags.SmallBranches.end(),0.0) + std::accumulate(internalSnags.LargeWood.begin(), internalSnags.LargeWood.end(),0.0);
+    initialStock += std::accumulate(internalLitter.Leaves.begin(), internalLitter.Leaves.end(),0.0);
+    initialStock += std::accumulate(internalLitter.Twigs.begin(), internalLitter.Twigs.end(),0.0);
+    initialStock += std::accumulate(internalLitter.SmallBranches.begin(), internalLitter.SmallBranches.end(),0.0);
+    initialStock += std::accumulate(internalLitter.LargeWood.begin(), internalLitter.LargeWood.end(),0.0);
+    initialStock += std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0) + std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
+    initialStock += internalSOC.SurfaceMetabolic;
+    initialStock += internalSOC.SoilMetabolic;
+    initialStock += internalSOC.SurfaceActive;
+    initialStock += internalSOC.SoilActive;
+    initialStock += internalSOC.SurfaceSlow;
+    initialStock += internalSOC.SoilSlow;
+    initialStock += internalSOC.SoilPassive;
+    litterInput += sum(leafProduction);
+    litterInput += sum(twigProduction); 
+    litterInput += sum(smallBranchProduction);
+    litterInput += sum(largeWoodProduction);
+    litterInput += sum(coarseRootProduction);
+    litterInput += sum(fineRootProduction);
+  }
+
   // Rcout<<"\nStarting simulation\n";
   for(int s = 0; s< nsteps; s++ ) {
     //Add Litter production
@@ -343,14 +372,25 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     }
     // decomposition
     // Rcout<<"Entering decomposition: \n";
-    heterotrophicRespiration[s]  = DAYCENTInner_c(dec_com,
-                                                  internalSnags, internalLitter, internalSOC,
-                                                  paramsLitterDecomposition_c,
-                                                  baseAnnualRates_c, annualTurnoverRate,
-                                                  airTemperature[s], airRelativeHumidity[s],  
-                                                  sand, clay, soilTemperature[s], soilMoisture[s], soilPH, 
-                                                  soilO2, cultfac,
-                                                  tstep);
+    DAYCENTInner_c(dec_com,
+                   internalSnags, internalLitter, internalSOC,
+                   paramsLitterDecomposition_c,
+                   baseAnnualRates_c, annualTurnoverRate,
+                   airTemperature[s], airRelativeHumidity[s],  
+                   sand, clay, soilTemperature[s], soilMoisture[s], soilPH, 
+                   soilO2, cultfac,
+                   tstep);
+    // Rcout << "Storing respiration \n";
+    heterotrophicRespiration(s,0) = dec_com.sdo.surface_flux_respiration; // respiration from snags
+    heterotrophicRespiration(s,1) = dec_com.ldo.surface_flux_respiration; // surface structural litter respiration
+    heterotrophicRespiration(s,2) = dec_com.ldo.soil_flux_respiration; // soil structural litter respiration
+    heterotrophicRespiration(s,3) = dec_com.flux_respiration_pools[DECOMPCOM_SURFACE_METABOLIC];
+    heterotrophicRespiration(s,4) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_METABOLIC];
+    heterotrophicRespiration(s,5) = dec_com.flux_respiration_pools[DECOMPCOM_SURFACE_ACTIVE];
+    heterotrophicRespiration(s,6) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_ACTIVE];
+    heterotrophicRespiration(s,7) = dec_com.flux_respiration_pools[DECOMPCOM_SURFACE_SLOW];
+    heterotrophicRespiration(s,8) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_SLOW];
+    heterotrophicRespiration(s,9) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_PASSIVE];
     
     // Rcout<<"Storing state \n";
     decompositionPools(s,0) = std::accumulate(internalSnags.SmallBranches.begin(), internalSnags.SmallBranches.end(),0.0) + std::accumulate(internalSnags.LargeWood.begin(), internalSnags.LargeWood.end(),0.0);
@@ -367,6 +407,18 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     decompositionPools(s,8) = internalSOC.SoilSlow;
     decompositionPools(s,9) = internalSOC.SoilPassive;
   }
+  
+  //Check balance
+  if(balanceCheck) {
+    double finalStock = sum(decompositionPools(nsteps-1,_));
+    double stockChange = finalStock - initialStock;
+    double respirationTotal = sum(heterotrophicRespiration);
+    double inputOutput = litterInput - respirationTotal;
+    Rcout<< "Balance check\n";
+    Rcout<< "  Carbon stock initial: " << initialStock << ", final: " << finalStock << ", change: " << stockChange << "\n";
+    Rcout<< "  Litter production: " << litterInput << ", Heterotrophic respiration: " << respirationTotal << ", Carbon flow balance: " << inputOutput <<  "\n";  
+  }
+  
   
   // Update inputs for snag stock
   for(int c = 0;c < Species_SN.size(); c++) {

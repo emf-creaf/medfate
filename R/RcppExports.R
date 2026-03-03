@@ -391,6 +391,7 @@ decomposition_pHEffect <- function(x, pool) {
 #' @param soilO2 Soil oxygen factor (0-1).
 #' @param cultfac Cultivation factor (0-1).
 #' @param tstep Time step in days. By default, one day. For annual time steps, use \code{tstep = 365.25}.
+#' @param balanceCheck Flag to print carbon balance check (for debugging).
 #' 
 #' @author 
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -406,8 +407,8 @@ decomposition_pHEffect <- function(x, pool) {
 #' 
 #' @returns A list with two elements:
 #'   \itemize{
-#'     \item{\code{"HeterotrophicRespiration"}: A numeric vector with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step.}
-#'     \item{\code{"DecompositionPools"}: A numeric matrix with the mass of different decomposition carbon pools, all in g C · m-2.}
+#'     \item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to the different carbon pools.}
+#'     \item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2.}
 #'   }
 #' 
 #' @references
@@ -422,8 +423,8 @@ decomposition_pHEffect <- function(x, pool) {
 #' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
 #' @keywords internal
-decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
-    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2, cultfac, tstep)
+decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0, balanceCheck = FALSE) {
+    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2, cultfac, tstep, balanceCheck)
 }
 
 #' Low-level decomposition functions
