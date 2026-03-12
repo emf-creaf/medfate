@@ -4,6 +4,7 @@
 * Approximate speed increase (Sperry): spwb_day()/growth_day() x 2.5, spwb(1 yr) x 4.0, growth (1 yr) x 1.5
 * Approximate speed increase (Sureau): spwb_day()/growth_day() x 2.0, spwb(1 yr) x 4.0, growth (1 yr) x 1.5
 * Rcpp modules "runners" to run single-site, multiple-site and watershed simulations while avoiding unnecessary input/output.
+* Default values for leaf/stem cavitation recovery set to "rate" to avoid anomalous behavior observed with "annual"
 
 # medfate 4.9.0
 * Forest objects can now have a seedling bank, snag data and litter data

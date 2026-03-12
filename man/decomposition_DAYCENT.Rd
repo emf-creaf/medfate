@@ -70,8 +70,39 @@ decomposition_DAYCENT(
 \value{
 A list with two elements:
 \itemize{
-\item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to the different carbon pools.}
-\item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2.}
+\item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to different carbon pools:
+\itemize{
+\item{\code{"SurfaceSnags"}: Respiration from decomposing snags (i.e. small branches and large wood).}
+\item{\code{"SurfaceLitter"}: Respiration from decomposing litter in the surface (i.e. leaves, twigs, small branches and large wood).}
+\item{\code{"SoilLitter"}: Respiration from decomposing litter belowground (i.e. coarse roots and fine roots).}
+\item{\code{"SurfaceMetabolic"}: Respiration from surface metabolic pool.}
+\item{\code{"SoilMetabolic"}: Respiration from soil metabolic pool.}
+\item{\code{"SurfaceActive"}: Respiration from surface active pool.}
+\item{\code{"SoilActive"}: Respiration from soil active pool.}
+\item{\code{"SurfaceSlow"}: Respiration from surface slow pool.}
+\item{\code{"SoilSlow"}: Respiration from soil slow pool.}
+\item{\code{"SoilPassive"}: Respiration from soil passive pool.}
+}
+}
+\item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2:
+\itemize{
+\item{\code{"SmallBranchSnags"}: Carbon of (standing) small dead branches (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).}
+\item{\code{"LargeWoodSnags"}: Carbon of (standing) large dead wood (diameters larger than 7.5 cm; 1000h and 10000h fuels).}
+\item{\code{"LeafLitter"}: Carbon of leaf litter.}
+\item{\code{"TwigLitter"}: Carbon of twig litter.}
+\item{\code{"SmallBranchLitter"}: Carbon of (downed) small dead branches (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).}
+\item{\code{"LargeWoodLitter"}: Carbon of (downed) large dead wood (diameters larger than 7.5 cm; 1000h and 10000h).}
+\item{\code{"CoarseRootLitter"}: Carbon of dead coarse roots.}
+\item{\code{"FineRootLitter"}: Carbon of fine root litter.}
+\item{\code{"SurfaceMetabolic"}: Metabolic carbon in the surface.}
+\item{\code{"SoilMetabolic"}: Metabolic carbon in the soil.}
+\item{\code{"SurfaceActive"}: Active decomposition carbon pool in the surface.}
+\item{\code{"SoilActive"}: Active decomposition carbon pool in the soil.}
+\item{\code{"SurfaceSlow"}: Slow decomposition carbon pool in the surface.}
+\item{\code{"SoilSlow"}: Slow decomposition carbon pool in the soil.}
+\item{\code{"SoilPassive"}: Passive decomposition carbon pool in the soil.}
+}
+}
 }
 }
 \description{

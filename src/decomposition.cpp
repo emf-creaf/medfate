@@ -198,8 +198,39 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //' 
 //' @returns A list with two elements:
 //'   \itemize{
-//'     \item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to the different carbon pools.}
-//'     \item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2.}
+//'     \item{\code{"HeterotrophicRespiration"}: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to different carbon pools:
+//'       \itemize{
+//'         \item{\code{"SurfaceSnags"}: Respiration from decomposing snags (i.e. small branches and large wood).}
+//'         \item{\code{"SurfaceLitter"}: Respiration from decomposing litter in the surface (i.e. leaves, twigs, small branches and large wood).}
+//'         \item{\code{"SoilLitter"}: Respiration from decomposing litter belowground (i.e. coarse roots and fine roots).}
+//'         \item{\code{"SurfaceMetabolic"}: Respiration from surface metabolic pool.}
+//'         \item{\code{"SoilMetabolic"}: Respiration from soil metabolic pool.}
+//'         \item{\code{"SurfaceActive"}: Respiration from surface active pool.}
+//'         \item{\code{"SoilActive"}: Respiration from soil active pool.}
+//'         \item{\code{"SurfaceSlow"}: Respiration from surface slow pool.}
+//'         \item{\code{"SoilSlow"}: Respiration from soil slow pool.}
+//'         \item{\code{"SoilPassive"}: Respiration from soil passive pool.}
+//'       }
+//'     }
+//'     \item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2:
+//'       \itemize{
+//'         \item{\code{"SmallBranchSnags"}: Carbon of (standing) small dead branches (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).}
+//'         \item{\code{"LargeWoodSnags"}: Carbon of (standing) large dead wood (diameters larger than 7.5 cm; 1000h and 10000h fuels).}
+//'         \item{\code{"LeafLitter"}: Carbon of leaf litter.}
+//'         \item{\code{"TwigLitter"}: Carbon of twig litter.}
+//'         \item{\code{"SmallBranchLitter"}: Carbon of (downed) small dead branches (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).}
+//'         \item{\code{"LargeWoodLitter"}: Carbon of (downed) large dead wood (diameters larger than 7.5 cm; 1000h and 10000h).}
+//'         \item{\code{"CoarseRootLitter"}: Carbon of dead coarse roots.}
+//'         \item{\code{"FineRootLitter"}: Carbon of fine root litter.}
+//'         \item{\code{"SurfaceMetabolic"}: Metabolic carbon in the surface.}
+//'         \item{\code{"SoilMetabolic"}: Metabolic carbon in the soil.}
+//'         \item{\code{"SurfaceActive"}: Active decomposition carbon pool in the surface.}
+//'         \item{\code{"SoilActive"}: Active decomposition carbon pool in the soil.}
+//'         \item{\code{"SurfaceSlow"}: Slow decomposition carbon pool in the surface.}
+//'         \item{\code{"SoilSlow"}: Slow decomposition carbon pool in the soil.}
+//'         \item{\code{"SoilPassive"}: Passive decomposition carbon pool in the soil.}
+//'       }
+//'     }
 //'   }
 //' 
 //' @references
@@ -318,9 +349,12 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   heterotrophicRespiration.attr("dimnames") = List::create(seq(1, nsteps), 
                           CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
                                                   "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
-  NumericMatrix decompositionPools(nsteps, 10);
+  NumericMatrix decompositionPools(nsteps, 15);
   decompositionPools.attr("dimnames") = List::create(seq(1, nsteps), 
-                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
+                          CharacterVector::create("SmallBranchSnags", "LargeWoodSnags",
+                                                  "LeafLitter", "TwigLitter", "SmallBranchLitter", "LargeWoodLitter",
+                                                  "CoarseRootLitter", "FineRootLitter",
+                                                  "SurfaceMetabolic", "SoilMetabolic",
                                                   "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
   
   double litterInput = 0.0;
@@ -393,19 +427,21 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     heterotrophicRespiration(s,9) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_PASSIVE];
     
     // Rcout<<"Storing state \n";
-    decompositionPools(s,0) = std::accumulate(internalSnags.SmallBranches.begin(), internalSnags.SmallBranches.end(),0.0) + std::accumulate(internalSnags.LargeWood.begin(), internalSnags.LargeWood.end(),0.0);
-    decompositionPools(s,1) = std::accumulate(internalLitter.Leaves.begin(), internalLitter.Leaves.end(),0.0);
-    decompositionPools(s,1) += std::accumulate(internalLitter.Twigs.begin(), internalLitter.Twigs.end(),0.0);
-    decompositionPools(s,1) += std::accumulate(internalLitter.SmallBranches.begin(), internalLitter.SmallBranches.end(),0.0);
-    decompositionPools(s,1) += std::accumulate(internalLitter.LargeWood.begin(), internalLitter.LargeWood.end(),0.0);
-    decompositionPools(s,2) = std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0) + std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
-    decompositionPools(s,3) = internalSOC.SurfaceMetabolic;
-    decompositionPools(s,4) = internalSOC.SoilMetabolic;
-    decompositionPools(s,5) = internalSOC.SurfaceActive;
-    decompositionPools(s,6) = internalSOC.SoilActive;
-    decompositionPools(s,7) = internalSOC.SurfaceSlow;
-    decompositionPools(s,8) = internalSOC.SoilSlow;
-    decompositionPools(s,9) = internalSOC.SoilPassive;
+    decompositionPools(s,0) = std::accumulate(internalSnags.SmallBranches.begin(), internalSnags.SmallBranches.end(),0.0);
+    decompositionPools(s,1) = std::accumulate(internalSnags.LargeWood.begin(), internalSnags.LargeWood.end(),0.0);
+    decompositionPools(s,2) = std::accumulate(internalLitter.Leaves.begin(), internalLitter.Leaves.end(),0.0);
+    decompositionPools(s,3) = std::accumulate(internalLitter.Twigs.begin(), internalLitter.Twigs.end(),0.0);
+    decompositionPools(s,4) = std::accumulate(internalLitter.SmallBranches.begin(), internalLitter.SmallBranches.end(),0.0);
+    decompositionPools(s,5) = std::accumulate(internalLitter.LargeWood.begin(), internalLitter.LargeWood.end(),0.0);
+    decompositionPools(s,6) = std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0);
+    decompositionPools(s,7) = std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
+    decompositionPools(s,8) = internalSOC.SurfaceMetabolic;
+    decompositionPools(s,9) = internalSOC.SoilMetabolic;
+    decompositionPools(s,10) = internalSOC.SurfaceActive;
+    decompositionPools(s,11) = internalSOC.SoilActive;
+    decompositionPools(s,12) = internalSOC.SurfaceSlow;
+    decompositionPools(s,13) = internalSOC.SoilSlow;
+    decompositionPools(s,14) = internalSOC.SoilPassive;
   }
   
   //Check balance
