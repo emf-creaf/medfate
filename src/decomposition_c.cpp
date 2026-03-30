@@ -222,8 +222,8 @@ void updateBaseRates_c(Decomposition_COMM& DECcomm,
   DECcomm.K[DECOMPCOM_SOIL_METABOLIC] = baseAnnualRates.SoilMetabolic/365.25;
   DECcomm.K[DECOMPCOM_SURFACE_ACTIVE] = baseAnnualRates.SurfaceActive/365.25;
   DECcomm.K[DECOMPCOM_SOIL_ACTIVE] = baseAnnualRates.SoilActive/365.25;
-  DECcomm.K[DECOMPCOM_SURFACE_SLOW] = baseAnnualRates.SurfaceActive/365.25;
-  DECcomm.K[DECOMPCOM_SOIL_SLOW] = baseAnnualRates.SoilActive/365.25;
+  DECcomm.K[DECOMPCOM_SURFACE_SLOW] = baseAnnualRates.SurfaceSlow/365.25;
+  DECcomm.K[DECOMPCOM_SOIL_SLOW] = baseAnnualRates.SoilSlow/365.25;
   DECcomm.K[DECOMPCOM_SOIL_PASSIVE] = baseAnnualRates.SoilPassive/365.25;
   
   DECcomm.Kmix = annualTurnoverRate/365.25;
@@ -288,12 +288,7 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
                                     double sand, double clay, double soilO2) {
   
   int npool = DECcomm.K.size();
-  // NumericMatrix A = commDecomp["A"];
-  // NumericMatrix respf = commDecomp["respf"];
-  // NumericMatrix pathf = commDecomp["pathf"];
-  // double Kmix = commDecomp["Kmix"];
-  // double K_s21 = commDecomp["K_s21"];
-  
+
   // anaerobic factor
   double fanerb = 1.0 + 5.0 * (1.0 - soilO2);
   
@@ -301,11 +296,11 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
   DECcomm.pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_METABOLIC) = 1.0;
   DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_METABOLIC) = 1.0;
   DECcomm.pathf(DECOMPCOM_SURFACE_SLOW,DECOMPCOM_SURFACE_ACTIVE) = 1.0;
-  DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE) = (0.003 + 0.032 * clay/100) * fanerb;
+  DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE) = (0.003 + 0.032 * clay/100.0) * fanerb;
   DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE) = 1.0 - DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE);
   DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW) = DECcomm.Kmix / DECcomm.K_s21;
   DECcomm.pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_SLOW) = 1.0 - DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW);
-  DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW) = (0.003 + 0.009 * clay/100) * fanerb;
+  DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW) = (0.003 + 0.009 * clay/100.0) * fanerb;
   DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW) = 1.0 - DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW);
   DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_PASSIVE) = 1.0;
   
