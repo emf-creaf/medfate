@@ -433,8 +433,8 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     decompositionPools(s,3) = std::accumulate(internalLitter.Twigs.begin(), internalLitter.Twigs.end(),0.0);
     decompositionPools(s,4) = std::accumulate(internalLitter.SmallBranches.begin(), internalLitter.SmallBranches.end(),0.0);
     decompositionPools(s,5) = std::accumulate(internalLitter.LargeWood.begin(), internalLitter.LargeWood.end(),0.0);
-    decompositionPools(s,6) = std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0);
-    decompositionPools(s,7) = std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
+    decompositionPools(s,6) = std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
+    decompositionPools(s,7) = std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0);
     decompositionPools(s,8) = internalSOC.SurfaceMetabolic;
     decompositionPools(s,9) = internalSOC.SoilMetabolic;
     decompositionPools(s,10) = internalSOC.SurfaceActive;
