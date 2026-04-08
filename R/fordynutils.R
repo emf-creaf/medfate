@@ -38,16 +38,18 @@
       ageSnag <- snagData$DeathAge[s]
       smallBranchFallAmount <- 0.0
       largeWoodFallAmount <- 0.0
-      decayClass <- 1
-      if(ageSnag >= 2  && ageSnag <= 4) { # 50% branch fall after 2 years
-        smallBranchFallAmount <- snagData$SmallBranches[s]/2
+      decayClass <- 1 # Class 1: Standing dead tree with most of its branches intact
+      if(ageSnag >= 4  && ageSnag < 10) { # Class 2: Dead tree with  < 50% branch left and loose bark
         decayClass <- 2
-      } else if(ageSnag > 4) { # 100% branch fall after 5 years
-        smallBranchFallAmount <- snagData$SmallBranches[s];
+        if(ageSnag == 4) smallBranchFallAmount <- snagData$SmallBranches[s]/2 # 50% of branches fall at age 5
+      } else if(ageSnag >= 10 && ageSnag < 20) { # Class 3 : dead tree without branches or bark
         decayClass <- 3
-        if(ageSnag > 8) { 
-          decayClass <- 4
-        }
+        if(ageSnag == 10) smallBranchFallAmount <- snagData$SmallBranches[s] # All branches fall at age 10  
+      } else if(ageSnag >= 20) { # Class 4/5: Broken stem
+        decayClass <- 4
+        if(ageSnag == 20) largeWoodFallAmount <- snagData$LargeWood[s]/2 # 50% of large wood falls
+      } else if(ageSnag >= 30) {
+        decayClass <- 5
       }
       if(!is.na(dbhSnag)) {
         p_fall<- decomposition_snagFallProbability(DBH = dbhSnag, decayClass = decayClass)
@@ -55,8 +57,8 @@
         p_fall <- 0.5
       }
       # To prevent infinite accumulation of snag cohorts
-      if(ageSnag > 30) p_fall <- 1.0
-      if(runif(1) < p_fall) {
+      if(ageSnag > 50) p_fall <- 1.0
+      if(runif(1) < p_fall) { # If falls, all remaining wood goes to the ground
         largeWoodFallAmount <- snagData$LargeWood[s]
         smallBranchFallAmount <- snagData$SmallBranches[s]
       }

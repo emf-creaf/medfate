@@ -13,7 +13,7 @@ decomposition_pHEffect(x, pool)
 
 decomposition_annualLitterDecompositionRate(AET, lignin)
 
-decomposition_snagFallProbability(DBH, decayClass, durabilityEffect = 0)
+decomposition_snagFallProbability(DBH, decayClass, durability = 1)
 
 decomposition_litterMetabolicFraction(ligninPercent, Nmass)
 
@@ -34,7 +34,7 @@ decomposition_temperatureEffect(soilTemperature)
 
 \item{decayClass}{Decay class, from 1 to 5}
 
-\item{durabilityEffect}{Effect of wood durability}
+\item{durability}{Wood durability, from 0 (less resistant) to 4 (see Oberle et al. 2018)}
 
 \item{ligninPercent}{lignin content (\% of dry)}
 

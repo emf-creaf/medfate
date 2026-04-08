@@ -496,11 +496,11 @@ decomposition_annualLitterDecompositionRate <- function(AET, lignin) {
 
 #' @param DBH Diameter at breast height
 #' @param decayClass Decay class, from 1 to 5
-#' @param durabilityEffect Effect of wood durability
+#' @param durability Wood durability, from 0 (less resistant) to 4 (see Oberle et al. 2018)
 #' 
 #' @rdname decomposition_annualLitterDecompositionRate
-decomposition_snagFallProbability <- function(DBH, decayClass, durabilityEffect = 0.0) {
-    .Call(`_medfate_snagFallProbability_c`, DBH, decayClass, durabilityEffect)
+decomposition_snagFallProbability <- function(DBH, decayClass, durability = 1.0) {
+    .Call(`_medfate_snagFallProbability_c`, DBH, decayClass, durability)
 }
 
 #' @param ligninPercent lignin content (% of dry)

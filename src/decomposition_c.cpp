@@ -45,11 +45,11 @@ double annualLitterDecompositionRate_c(double AET, double lignin) {
 
 //' @param DBH Diameter at breast height
 //' @param decayClass Decay class, from 1 to 5
-//' @param durabilityEffect Effect of wood durability
+//' @param durability Wood durability, from 0 (less resistant) to 4 (see Oberle et al. 2018)
 //' 
 //' @rdname decomposition_annualLitterDecompositionRate
 // [[Rcpp::export("decomposition_snagFallProbability")]]
-double snagFallProbability_c(double DBH, int decayClass, double durabilityEffect = 0.0) {
+double snagFallProbability_c(double DBH, int decayClass, double durability = 1.0) {
   double gamma_dur[5];
   gamma_dur[0] = 0.0;
   gamma_dur[1] = 0.177;
@@ -57,8 +57,14 @@ double snagFallProbability_c(double DBH, int decayClass, double durabilityEffect
   gamma_dur[3] = 0.702;
   gamma_dur[4] = 0.528;
   
+  // durability = 1 (e.g. Acer saccharum) results in 0.0
+  // durability = 2 results in -0.8
+  // durability = 3 results in -1.6
+  // durability = 4 (highest) results in -2.4
+  durability = std::max(0.0, std::min(4.0, durability));
+  double beta_durability = -0.96*durability + 0.96;
   double lnDBH = log(DBH);
-  double lp  = 5.691 + durabilityEffect + gamma_dur[decayClass - 1] - 3.777*lnDBH + 0.531*pow(lnDBH,2.0);
+  double lp  = 5.691 + beta_durability + gamma_dur[decayClass - 1] - 3.777*lnDBH + 0.531*pow(lnDBH,2.0);
   double p5 = exp(lp)/(1.0 + exp(lp));
   double p1 = 1.0 - pow(1.0 - p5, 1.0/5.0);
   return(p1);

@@ -649,15 +649,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // snagFallProbability_c
-double snagFallProbability_c(double DBH, int decayClass, double durabilityEffect);
-RcppExport SEXP _medfate_snagFallProbability_c(SEXP DBHSEXP, SEXP decayClassSEXP, SEXP durabilityEffectSEXP) {
+double snagFallProbability_c(double DBH, int decayClass, double durability);
+RcppExport SEXP _medfate_snagFallProbability_c(SEXP DBHSEXP, SEXP decayClassSEXP, SEXP durabilitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type DBH(DBHSEXP);
     Rcpp::traits::input_parameter< int >::type decayClass(decayClassSEXP);
-    Rcpp::traits::input_parameter< double >::type durabilityEffect(durabilityEffectSEXP);
-    rcpp_result_gen = Rcpp::wrap(snagFallProbability_c(DBH, decayClass, durabilityEffect));
+    Rcpp::traits::input_parameter< double >::type durability(durabilitySEXP);
+    rcpp_result_gen = Rcpp::wrap(snagFallProbability_c(DBH, decayClass, durability));
     return rcpp_result_gen;
 END_RCPP
 }
