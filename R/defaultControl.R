@@ -83,6 +83,7 @@
 #'           }
 #'       }
 #'       \item{\code{cavitationRecoveryMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
+#'       \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf cavitation induces proportional defoliation.}
 #'       \item{\code{lfmcComponent [= "fine"]}: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).}
 #'     }
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"} only):
@@ -244,6 +245,7 @@ defaultControl<-function(transpirationMode = "Granier",
     stemCavitationRecovery = "rate",
     leafCavitationRecovery = "rate",
     lfmcComponent = "fine",
+    cavitationInducedDefoliation = TRUE,
     
     #spwb with granier
     hydraulicRedistributionFraction = 0.1,

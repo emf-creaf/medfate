@@ -1308,6 +1308,11 @@ void spwbInputVersionUpdate(List x) {
   update_4_8_3_to_4_8_4(x);
   
   if(x.containsElementNamed("version")) x["version"] = medfateVersionString();
+  List control = x["control"];
+  if(!control.containsElementNamed("cavitationInducedDefoliation")) {
+    control.push_back(true, "cavitationInducedDefoliation");
+    x["control"] = control;
+  }
 }
 // [[Rcpp::export(".growthInputVersionUpdate")]]
 void growthInputVersionUpdate(List x) {

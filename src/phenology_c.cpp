@@ -133,14 +133,26 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
           x.internalPhenology.leafSenescence[j] = false;
         } 
         else if(x.internalPhenology.leafUnfolding[j]) {
-          x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j])*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          if(x.control.commonWB.cavitationInducedDefoliation) {
+            x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j])*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          } else {
+            x.above.LAI_expanded[j] = x.above.LAI_live[j]*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          }
         } else {
           //Apply defoliation effects to deciduous
-          x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j]);
+          if(x.control.commonWB.cavitationInducedDefoliation) {
+            x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j]);
+          } else {
+            x.above.LAI_expanded[j] = x.above.LAI_live[j];
+          }
         }
       } else {
         //Apply defoliation effects to evergreens
-        x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j]);
+        if(x.control.commonWB.cavitationInducedDefoliation) {
+          x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j]);
+        } else {
+          x.above.LAI_expanded[j] = x.above.LAI_live[j];
+        }
       } 
     }
   }    
