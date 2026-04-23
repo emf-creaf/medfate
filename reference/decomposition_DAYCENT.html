@@ -68,7 +68,8 @@
 <span>  <span class="va">soilPH</span>,</span>
 <span>  soilO2 <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  cultfac <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  tstep <span class="op">=</span> <span class="fl">1</span></span>
+<span>  tstep <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  balanceCheck <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -139,11 +140,42 @@
 <dt id="arg-tstep">tstep<a class="anchor" aria-label="anchor" href="#arg-tstep"></a></dt>
 <dd><p>Time step in days. By default, one day. For annual time steps, use <code>tstep = 365.25</code>.</p></dd>
 
+
+<dt id="arg-balancecheck">balanceCheck<a class="anchor" aria-label="anchor" href="#arg-balancecheck"></a></dt>
+<dd><p>Flag to print carbon balance check (for debugging).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with two elements:</p><ul><li><p><code>"HeterotrophicRespiration"</code>: A numeric vector with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step.</p></li>
-<li><p><code>"DecompositionPools"</code>: A numeric matrix with the mass of different decomposition carbon pools, all in g C · m-2.</p></li>
+    <p>A list with two elements:</p><ul><li><p><code>"HeterotrophicRespiration"</code>: A numeric matrix with the heterotrophic respiration (g C·m-2) corresponding to the decomposition in each time step corresponding to different carbon pools:
+</p><ul><li><p><code>"SurfaceSnags"</code>: Respiration from decomposing snags (i.e. small branches and large wood).</p></li>
+<li><p><code>"SurfaceLitter"</code>: Respiration from decomposing litter in the surface (i.e. leaves, twigs, small branches and large wood).</p></li>
+<li><p><code>"SoilLitter"</code>: Respiration from decomposing litter belowground (i.e. coarse roots and fine roots).</p></li>
+<li><p><code>"SurfaceMetabolic"</code>: Respiration from surface metabolic pool.</p></li>
+<li><p><code>"SoilMetabolic"</code>: Respiration from soil metabolic pool.</p></li>
+<li><p><code>"SurfaceActive"</code>: Respiration from surface active pool.</p></li>
+<li><p><code>"SoilActive"</code>: Respiration from soil active pool.</p></li>
+<li><p><code>"SurfaceSlow"</code>: Respiration from surface slow pool.</p></li>
+<li><p><code>"SoilSlow"</code>: Respiration from soil slow pool.</p></li>
+<li><p><code>"SoilPassive"</code>: Respiration from soil passive pool.</p></li>
+</ul></li>
+<li><p><code>"DecompositionPools"</code>: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2:
+</p><ul><li><p><code>"SmallBranchSnags"</code>: Carbon of (standing) small dead branches (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).</p></li>
+<li><p><code>"LargeWoodSnags"</code>: Carbon of (standing) large dead wood (diameters larger than 7.5 cm; 1000h and 10000h fuels).</p></li>
+<li><p><code>"LeafLitter"</code>: Carbon of leaf litter.</p></li>
+<li><p><code>"TwigLitter"</code>: Carbon of twig litter.</p></li>
+<li><p><code>"SmallBranchLitter"</code>: Carbon of (downed) small dead branches (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).</p></li>
+<li><p><code>"LargeWoodLitter"</code>: Carbon of (downed) large dead wood (diameters larger than 7.5 cm; 1000h and 10000h).</p></li>
+<li><p><code>"CoarseRootLitter"</code>: Carbon of dead coarse roots.</p></li>
+<li><p><code>"FineRootLitter"</code>: Carbon of fine root litter.</p></li>
+<li><p><code>"SurfaceMetabolic"</code>: Metabolic carbon in the surface.</p></li>
+<li><p><code>"SoilMetabolic"</code>: Metabolic carbon in the soil.</p></li>
+<li><p><code>"SurfaceActive"</code>: Active decomposition carbon pool in the surface.</p></li>
+<li><p><code>"SoilActive"</code>: Active decomposition carbon pool in the soil.</p></li>
+<li><p><code>"SurfaceSlow"</code>: Slow decomposition carbon pool in the surface.</p></li>
+<li><p><code>"SoilSlow"</code>: Slow decomposition carbon pool in the soil.</p></li>
+<li><p><code>"SoilPassive"</code>: Passive decomposition carbon pool in the soil.</p></li>
+</ul></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

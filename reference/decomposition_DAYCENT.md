@@ -21,7 +21,8 @@ decomposition_DAYCENT(
   soilPH,
   soilO2 = 1,
   cultfac = 1,
-  tstep = 1
+  tstep = 1,
+  balanceCheck = FALSE
 )
 ```
 
@@ -114,16 +115,77 @@ decomposition_DAYCENT(
   Time step in days. By default, one day. For annual time steps, use
   `tstep = 365.25`.
 
+- balanceCheck:
+
+  Flag to print carbon balance check (for debugging).
+
 ## Value
 
 A list with two elements:
 
-- `"HeterotrophicRespiration"`: A numeric vector with the heterotrophic
+- `"HeterotrophicRespiration"`: A numeric matrix with the heterotrophic
   respiration (g C·m-2) corresponding to the decomposition in each time
-  step.
+  step corresponding to different carbon pools:
 
-- `"DecompositionPools"`: A numeric matrix with the mass of different
-  decomposition carbon pools, all in g C · m-2.
+  - `"SurfaceSnags"`: Respiration from decomposing snags (i.e. small
+    branches and large wood).
+
+  - `"SurfaceLitter"`: Respiration from decomposing litter in the
+    surface (i.e. leaves, twigs, small branches and large wood).
+
+  - `"SoilLitter"`: Respiration from decomposing litter belowground
+    (i.e. coarse roots and fine roots).
+
+  - `"SurfaceMetabolic"`: Respiration from surface metabolic pool.
+
+  - `"SoilMetabolic"`: Respiration from soil metabolic pool.
+
+  - `"SurfaceActive"`: Respiration from surface active pool.
+
+  - `"SoilActive"`: Respiration from soil active pool.
+
+  - `"SurfaceSlow"`: Respiration from surface slow pool.
+
+  - `"SoilSlow"`: Respiration from soil slow pool.
+
+  - `"SoilPassive"`: Respiration from soil passive pool.
+
+- `"DecompositionPools"`: A numeric matrix with the carbon mass of
+  different carbon pools, all in g C · m-2:
+
+  - `"SmallBranchSnags"`: Carbon of (standing) small dead branches
+    (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).
+
+  - `"LargeWoodSnags"`: Carbon of (standing) large dead wood (diameters
+    larger than 7.5 cm; 1000h and 10000h fuels).
+
+  - `"LeafLitter"`: Carbon of leaf litter.
+
+  - `"TwigLitter"`: Carbon of twig litter.
+
+  - `"SmallBranchLitter"`: Carbon of (downed) small dead branches
+    (diameters between 0.635 cm and 7.5 cm; 10h and 100h fuels).
+
+  - `"LargeWoodLitter"`: Carbon of (downed) large dead wood (diameters
+    larger than 7.5 cm; 1000h and 10000h).
+
+  - `"CoarseRootLitter"`: Carbon of dead coarse roots.
+
+  - `"FineRootLitter"`: Carbon of fine root litter.
+
+  - `"SurfaceMetabolic"`: Metabolic carbon in the surface.
+
+  - `"SoilMetabolic"`: Metabolic carbon in the soil.
+
+  - `"SurfaceActive"`: Active decomposition carbon pool in the surface.
+
+  - `"SoilActive"`: Active decomposition carbon pool in the soil.
+
+  - `"SurfaceSlow"`: Slow decomposition carbon pool in the surface.
+
+  - `"SoilSlow"`: Slow decomposition carbon pool in the soil.
+
+  - `"SoilPassive"`: Passive decomposition carbon pool in the soil.
 
 ## Details
 

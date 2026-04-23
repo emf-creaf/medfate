@@ -12,6 +12,10 @@
   spwb(1 yr) x 4.0, growth (1 yr) x 1.5
 - Rcpp modules “runners” to run single-site, multiple-site and watershed
   simulations while avoiding unnecessary input/output.
+- Default values for leaf/stem cavitation recovery set to “rate” to
+  avoid anomalous behavior observed with “annual”
+- Leaf defoliation for “spwb” simulations made coherent with defoliation
+  in “growth”. Control parameter “cavitationInducedDefoliation” added.
 
 ## medfate 4.9.0
 

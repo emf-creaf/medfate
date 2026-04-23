@@ -131,13 +131,14 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 <li><p><code>windMeasurementHeight [= 200]</code>: Height (in cm) over the canopy corresponding to wind measurements.</p></li>
 <li><p><code>segmentedXylemVulnerability [= TRUE/FALSE]</code>: If <code>FALSE</code> leaf and root vulnerability curves will be equal to those of stem. By default, <code>segmentedXylemVulnerability = TRUE</code> for <code>transpirationMode = "Sperry"</code> and <code>segmentedXylemVulnerability = FALSE</code> for <code>transpirationMode = "Sureau"</code>.</p></li>
 <li><p><code>leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]</code>: A flag indicating whether cavitation effects on conductance of leaves and stem are applied. Only relevant for <code>transpirationMode = "Sperry"</code>.</p></li>
-<li><p><code>leafCavitationRecovery, stemCavitationRecovery [= "annual"]</code>: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb_day.html">spwb_day</a></code>):
+<li><p><code>leafCavitationRecovery, stemCavitationRecovery [= "rate"]</code>: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb_day.html">spwb_day</a></code>):
 </p><ul><li><p>"none" - no recovery.</p></li>
 <li><p>"annual" - every first day of the year.</p></li>
 <li><p>"rate" - following a rate of new leaf or sapwood formation.</p></li>
 <li><p>"total" - instantaneous complete recovery.</p></li>
 </ul></li>
 <li><p><code>cavitationRecoveryMaximumRate [= 0.05]</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
+<li><p><code>cavitationInducedDefoliation [= TRUE]</code>: Whether leaf cavitation induces proportional defoliation.</p></li>
 <li><p><code>lfmcComponent [= "fine"]</code>: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="pwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Granier"</code> only):</p><ul><li><p><code>hydraulicRedistributionFraction [= 0.1]</code>: Fraction of plant transpiration corresponding to hydraulic redistribution.</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="pwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Sperry"</code> or <code>traspirationMode = "Sureau"</code>):</p><ul><li><p><code>nsubsteps_canopy [= 3600]</code>: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.</p></li>
@@ -191,7 +192,7 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 <li><p><code>recrTreeDensity [= 3000]</code>: Default density (ind·ha-1) for recruited trees  (when species parameter <code>RecrTreeDensity</code> is missing).</p></li>
 <li><p><code>ingrowthTreeDBH [= 7.5]</code>: Default DBH (cm) for ingrowth trees  (when species parameter <code>IngrowthTreeDBH</code> is missing).</p></li>
 <li><p><code>ingrowthTreeDensity [= 127]</code>: Default density (ind·ha-1) for ingrowth trees  (when species parameter <code>IngrowthTreeDensity</code> is missing).</p></li>
-<li><p><code>decompositionBaseAnnualRates</code>: Vector of base annual decomposition rates (in yr-1) for different pools.</p></li>
+<li><p><code>decompositionAnnualBaseRates</code>: Vector of base annual decomposition rates (in yr-1) for different pools.</p></li>
 <li><p><code>decompositionAnnualTurnoverRate [= 0.1]</code>: Annual turnover time for biome in the CENTURY model.</p></li>
 </ul><p><b>Forest dynamics</b> (function <code><a href="fordyn.html">fordyn</a></code>):</p><ul><li><p><code>allowSeedBankDynamics [= TRUE]</code>: Boolean flag to indicate that seed production and seed bank dynamics is simulated.</p></li>
 <li><p><code>allowRecruitment [= TRUE]</code>: Boolean flag to indicate that recruitment from seeds is allowed.</p></li>

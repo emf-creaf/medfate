@@ -221,7 +221,7 @@ A list, with the following options (default values in brackets):
     and stem are applied. Only relevant for
     `transpirationMode = "Sperry"`.
 
-  - `leafCavitationRecovery, stemCavitationRecovery [= "annual"]`: A
+  - `leafCavitationRecovery, stemCavitationRecovery [= "rate"]`: A
     string indicating how recovery of previous cavitation leaf/stem
     xylem is done (only relevant for functions
     [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md) and
@@ -238,6 +238,9 @@ A list, with the following options (default values in brackets):
   - `cavitationRecoveryMaximumRate [= 0.05]`: Maximum rate of daily
     refilling of embolized conduits as sapwood area per leaf area (in
     cm2·m-2·day-1).
+
+  - `cavitationInducedDefoliation [= TRUE]`: Whether leaf cavitation
+    induces proportional defoliation.
 
   - `lfmcComponent [= "fine"]`: Plant component used to estimate LFMC,
     either "leaf" or "fine" (for fine fuel).
@@ -449,7 +452,7 @@ A list, with the following options (default values in brackets):
     ingrowth trees (when species parameter `IngrowthTreeDensity` is
     missing).
 
-  - `decompositionBaseAnnualRates`: Vector of base annual decomposition
+  - `decompositionAnnualBaseRates`: Vector of base annual decomposition
     rates (in yr-1) for different pools.
 
   - `decompositionAnnualTurnoverRate [= 0.1]`: Annual turnover time for

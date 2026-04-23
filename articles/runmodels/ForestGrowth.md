@@ -287,21 +287,21 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14669.8
-    ## Change in plant cohort biomass (g/m2): 389.651
+    ## Final plant cohort biomass (g/m2): 14673.8
+    ## Change in plant cohort biomass (g/m2): 393.616
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 82 Labile balance (g/m2) 89
-    ##   Plant individual balance (g/m2) 171 Mortality loss (g/m2) 22
-    ## Final plant water content (mm): 4.7056
-    ## Final soil water content (mm): 275.692
+    ##   Structural balance (g/m2) 84 Labile balance (g/m2) 89
+    ##   Plant individual balance (g/m2) 173 Mortality loss (g/m2) 22
+    ## Final plant water content (mm): 4.70561
+    ## Final soil water content (mm): 275.693
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00707084
-    ## Plant water balance result (mm): -0.00138348
-    ## Change in soil water content (mm): -15.1834
-    ## Soil water balance result (mm): -15.1834
+    ## Change in plant water content (mm): 0.00707859
+    ## Plant water balance result (mm): -0.00137996
+    ## Change in soil water content (mm): -15.1817
+    ## Soil water balance result (mm): -15.1817
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): -7.10543e-15
+    ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
@@ -510,9 +510,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1255336 -18.4789326   0.1255336  18.4789326   0.9922950 
+    ##  12.0000000  -0.1253629 -18.4538082   0.1253629  18.4538082   0.9922881 
     ##         NSE     NSE.abs 
-    ##   0.9143130   0.7618688
+    ##   0.9145258   0.7621925
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

@@ -122,7 +122,7 @@ with researchers from
   processes to forecast long-term changes in Mediterranean forests under
   climate change (IMPROMED). **Financial Entity**: Ministerio de Ciencia
   e Innovación (PID2023-152644NB-I00). **Duration from**: 01/09/2024
-  **to**: 31/08/2025. **PI**: Miquel De Cáceres/Josep Mª Espelta.
+  **to**: 31/08/2027. **PI**: Miquel De Cáceres/Josep Mª Espelta.
 
 ## References
 

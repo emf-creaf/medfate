@@ -619,13 +619,16 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$stemCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$leafCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$lfmcComponent
 #> [1] "fine"
+#> 
+#> $control$cavitationInducedDefoliation
+#> [1] TRUE
 #> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
@@ -1283,13 +1286,16 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$stemCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$leafCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$lfmcComponent
 #> [1] "fine"
+#> 
+#> $control$cavitationInducedDefoliation
+#> [1] TRUE
 #> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
@@ -1985,13 +1991,16 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] FALSE
 #> 
 #> $control$stemCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$leafCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$lfmcComponent
 #> [1] "fine"
+#> 
+#> $control$cavitationInducedDefoliation
+#> [1] TRUE
 #> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
@@ -2692,13 +2701,16 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$stemCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$leafCavitationRecovery
-#> [1] "annual"
+#> [1] "rate"
 #> 
 #> $control$lfmcComponent
 #> [1] "fine"
+#> 
+#> $control$cavitationInducedDefoliation
+#> [1] TRUE
 #> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
