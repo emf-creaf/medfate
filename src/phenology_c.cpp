@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include "phenology_c.h"
+#include "hydraulics_c.h"
 #include "modelInput_c.h"
 #include "carbon_c.h"
 #include "decomposition_c.h"
@@ -125,6 +126,7 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
     } 
     //Leaf unfolding, senescence and defoliation only dealt with if called from spwb
     if(!fromGrowthModel) {
+      double psiLeafPLC = xylemPsi_c(1.0 - x.internalWater.LeafPLC[j],1.0, x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j]);
       if(x.paramsPhenology.phenoType[j] == "winter-deciduous" || x.paramsPhenology.phenoType[j] == "winter-semideciduous") {
         if((x.internalPhenology.leafSenescence[j]) && (x.above.LAI_expanded[j]>0.0)) {
           double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
@@ -134,14 +136,14 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
         } 
         else if(x.internalPhenology.leafUnfolding[j]) {
           if(x.control.commonWB.cavitationInducedDefoliation) {
-            x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j])*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+            x.above.LAI_expanded[j] = x.above.LAI_live[j]*x.internalPhenology.phi[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j], 0.88, 10)); //Update expanded leaf area (will decrease if LAI_live decreases)
           } else {
             x.above.LAI_expanded[j] = x.above.LAI_live[j]*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
           }
         } else {
           //Apply defoliation effects to deciduous
           if(x.control.commonWB.cavitationInducedDefoliation) {
-            x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j]);
+            x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j], 0.88, 10));
           } else {
             x.above.LAI_expanded[j] = x.above.LAI_live[j];
           }
@@ -149,7 +151,7 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
       } else {
         //Apply defoliation effects to evergreens
         if(x.control.commonWB.cavitationInducedDefoliation) {
-          x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - x.internalWater.LeafPLC[j]);
+          x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j], 0.88, 10));
         } else {
           x.above.LAI_expanded[j] = x.above.LAI_live[j];
         }
