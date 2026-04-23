@@ -12,6 +12,7 @@ decomposition_DAYCENT(
   litter,
   SOC,
   paramsLitterDecomposition,
+  paramsAnatomy,
   baseAnnualRates,
   annualTurnoverRate,
   environmentalConditions,
@@ -48,6 +49,11 @@ decomposition_DAYCENT(
 - paramsLitterDecomposition:
 
   A data frame of species-specific litter decomposition parameters (see
+  [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
+
+- paramsAnatomy:
+
+  A data frame of species-specific anatomy parameters (see
   [`growthInput`](https://emf-creaf.github.io/medfate/reference/modelInput.md)).
 
 - baseAnnualRates:

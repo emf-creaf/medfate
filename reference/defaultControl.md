@@ -239,8 +239,9 @@ A list, with the following options (default values in brackets):
     refilling of embolized conduits as sapwood area per leaf area (in
     cm2·m-2·day-1).
 
-  - `cavitationInducedDefoliation [= TRUE]`: Whether leaf cavitation
-    induces proportional defoliation.
+  - `cavitationInducedDefoliation [= TRUE]`: Whether leaf hydraulic
+    impairment induces defoliation (88 % PLC will correspond to 50 %
+    defoliation).
 
   - `lfmcComponent [= "fine"]`: Plant component used to estimate LFMC,
     either "leaf" or "fine" (for fine fuel).

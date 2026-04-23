@@ -319,7 +319,7 @@ of_stress(parMin)
 of_stress(parMax)
 ```
 
-    ## [1] 6.907407
+    ## [1] 6.907408
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in

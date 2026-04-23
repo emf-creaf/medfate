@@ -135,13 +135,13 @@ S <- aspwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Final soil water content (mm): 287.448
 #> Final snowpack content (mm): 0
 #> Change in soil water content (mm): 0
-#> Soil water balance result (mm): -114.235
+#> Soil water balance result (mm): -42.5459
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): 0
 #> Water balance components:
-#>   Precipitation (mm) 0
-#>   Rain (mm) 0 Snow (mm) 0
-#>   Infiltration (mm) 0 Infiltration excess (mm) 0 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 0 Transpiration (mm) 114
-#>   Runoff (mm) 0 Deep drainage (mm) 0
+#>   Precipitation (mm) 513
+#>   Rain (mm) 462 Snow (mm) 51
+#>   Infiltration (mm) 507 Infiltration excess (mm) 6 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 4 Transpiration (mm) 446
+#>   Runoff (mm) 6 Deep drainage (mm) 100
 ```
