@@ -1509,6 +1509,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   heterotrophicRespiration = DAYCENTInner_c(GROWTHcomm.DECcomm,
                                             x.internalSnags, x.internalLitter, x.internalSOC,
                                             x.paramsLitterDecomposition,
+                                            x.paramsAnatomy,
                                             x.control.decomposition.annualBaseRates, x.control.decomposition.decompositionAnnualTurnoverRate,
                                             tday, rhmean,
                                             x.soil.getSand(0), x.soil.getClay(0), x.soil.getTemp(0), soilMoisture, soilPH,

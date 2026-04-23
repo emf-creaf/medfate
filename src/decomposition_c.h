@@ -96,7 +96,9 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
 
 
 void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
-                         InternalSnags& snags, LitterDecompositionParams& paramsLitterDecomposition,
+                         InternalSnags& snags, 
+                         LitterDecompositionParams& paramsLitterDecomposition,
+                         AnatomyParams& paramsAnatomy,
                          DecompositionAnnualBaseRates& baseAnnualRates,
                          double airTemperature, double airRelativeHumidity,
                          double tstep);
@@ -111,6 +113,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
 double DAYCENTInner_c(Decomposition_COMM& DECcomm,
                       InternalSnags& snags, InternalLitter& litter, InternalSOC& SOC,
                       LitterDecompositionParams& paramsLitterDecomposition,
+                      AnatomyParams& paramsAnatomy,
                       DecompositionAnnualBaseRates& baseAnnualRates, double annualTurnoverRate,
                       double airTemperature, double airRelativeHumidity, 
                       double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 

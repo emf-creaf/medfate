@@ -350,8 +350,8 @@ decomposition_pHEffect <- function(x, pool) {
     .Call(`_medfate_pHEffect`, x, pool)
 }
 
-.decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep = 1.0) {
-    .Call(`_medfate_DAYCENTsnags`, snags, baseAnnualRates, paramsLitterDecomposition, airTemperature, airRelativeHumidity, tstep)
+.decomposition_DAYCENTsnags <- function(snags, baseAnnualRates, paramsLitterDecomposition, paramsAnatomy, airTemperature, airRelativeHumidity, tstep = 1.0) {
+    .Call(`_medfate_DAYCENTsnags`, snags, baseAnnualRates, paramsLitterDecomposition, paramsAnatomy, airTemperature, airRelativeHumidity, tstep)
 }
 
 .decomposition_DAYCENTlitter <- function(litter, paramsLitterDecomposition, baseAnnualRates, sand, clay, soilTemperature, soilMoisture, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0) {
@@ -366,6 +366,7 @@ decomposition_pHEffect <- function(x, pool) {
 #' @param litter A data frame with initial aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 #' @param SOC A named numeric vector with initial metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 #' @param paramsLitterDecomposition A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).
+#' @param paramsAnatomy A data frame of species-specific anatomy parameters (see \code{\link{growthInput}}).
 #' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 #' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
 #' @param sand,clay Soil texture (sand and sand) in percent volume (percent). 
@@ -454,8 +455,8 @@ decomposition_pHEffect <- function(x, pool) {
 #' @seealso \code{\link{decomposition_temperatureEffect}}, \code{\link{growthInput}}, \code{\link{growth}}
 #' 
 #' @keywords internal
-decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0, balanceCheck = FALSE) {
-    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2, cultfac, tstep, balanceCheck)
+decomposition_DAYCENT <- function(snags, litter, SOC, paramsLitterDecomposition, paramsAnatomy, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2 = 1.0, cultfac = 1.0, tstep = 1.0, balanceCheck = FALSE) {
+    .Call(`_medfate_DAYCENT`, snags, litter, SOC, paramsLitterDecomposition, paramsAnatomy, baseAnnualRates, annualTurnoverRate, environmentalConditions, litterProduction, sand, clay, soilPH, soilO2, cultfac, tstep, balanceCheck)
 }
 
 #' Low-level decomposition functions

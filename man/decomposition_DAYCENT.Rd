@@ -9,6 +9,7 @@ decomposition_DAYCENT(
   litter,
   SOC,
   paramsLitterDecomposition,
+  paramsAnatomy,
   baseAnnualRates,
   annualTurnoverRate,
   environmentalConditions,
@@ -30,6 +31,8 @@ decomposition_DAYCENT(
 \item{SOC}{A named numeric vector with initial metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).}
 
 \item{paramsLitterDecomposition}{A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).}
+
+\item{paramsAnatomy}{A data frame of species-specific anatomy parameters (see \code{\link{growthInput}}).}
 
 \item{baseAnnualRates}{A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).}
 

@@ -163,7 +163,12 @@ double temperatureEffect_c(double soilTemperature) {
   return(tEff);
 }
 
-
+int getRowParamsLitter_c(std::string& species_litter, LitterDecompositionParams& paramsLitterDecomposition) {
+  int row = -1;
+  int nlitter = paramsLitterDecomposition.Species.size();
+  for(int j=0;j<nlitter;j++) if(paramsLitterDecomposition.Species[j]==species_litter) row = j;
+  return(row);
+}
 int getRowLitter_c(std::string& species_litter, InternalLitter& litter) {
   int row = -1;
   int nlitter = litter.Species.size();
@@ -335,7 +340,9 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
 
 
 void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
-                         InternalSnags& snags, LitterDecompositionParams& paramsLitterDecomposition,
+                         InternalSnags& snags, 
+                         LitterDecompositionParams& paramsLitterDecomposition,
+                         AnatomyParams& paramsAnatomy,
                          DecompositionAnnualBaseRates& baseAnnualRates,
                          double airTemperature, double airRelativeHumidity,
                          double tstep) {
@@ -348,27 +355,29 @@ void DAYCENTsnagsInner_c(SnagDecomposition_COMM& sdo,
 
   //Temperature effect
   double tempEff = temperatureEffect_c(airTemperature);
-  //Moisture effect for fine texture
-  double fuelMaximumMoisture = 100.0; //% dry Depends on wood density
   double fuelMoisture = EMCSimard_c(airTemperature, airRelativeHumidity); //Ranges between 0 and 30% dry
-  double moistEff = moistureEffect_c(0, 80, fuelMoisture/fuelMaximumMoisture);
 
   double k, flig, loss;
 
-  // STRUCTURAL small branches
   for(int i=0;i<numSnagCohorts;i++) {
-    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
+    int rowParams = getRowParamsLitter_c(snags.Species[i], paramsLitterDecomposition);
+    //Estimate maximum fuel moisture from wood density
+    double fuelMaximumMoisture =  100*((1.0/std::max(0.5, paramsAnatomy.WoodDensity[rowParams])) - (1.0/1.53)); // Minimum 0.4 density to avoid overestimation
+    if(std::isnan(fuelMaximumMoisture)) fuelMaximumMoisture = 100.0;
+    //Moisture effect for fine texture
+    double moistEff = moistureEffect_c(0, 80, fuelMoisture/fuelMaximumMoisture);
+    //Fraction of lignin
+    flig = paramsLitterDecomposition.WoodLignin[rowParams]/100.0; //Lignin fraction for wood
+    
+    // STRUCTURAL small branches
     k = (baseAnnualRates.SmallBranches/365.25)*tempEff*moistEff*exp(-3.0*flig);
     loss = snags.SmallBranches[i]*k*tstep;
     sdo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
     sdo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
     sdo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     snags.SmallBranches[i] -= loss;
-  }
-
-  // STRUCTURAL large wood
-  for(int i=0;i<numSnagCohorts;i++) {
-    flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
+    
+    // STRUCTURAL large wood
     k = (baseAnnualRates.LargeWood/365.25)*tempEff*moistEff*exp(-3.0*flig);
     loss = snags.LargeWood[i]*k*tstep;
     sdo.transfer_surface_active += loss*(1.0 - flig)*(1.0 - 0.45);
@@ -402,8 +411,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
   
   double k, flig, loss;
   
-  // STRUCTURAL leaves
   for(int i=0;i<numLitterCohorts;i++) {
+    // STRUCTURAL leaves
     pHeff = pHEffect_c(soilPH, "Leaves");
     flig = paramsLitterDecomposition.LeafLignin[i]/100.0;
     k = (baseAnnualRates.Leaves/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
@@ -412,11 +421,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
     ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.Leaves[i] -= loss;
-    // if(i==0) Rcout<< structural_leaves[i] << " T" <<soilTemperature <<  " Teff"<< tempEff << " M"<< moistEff << " pH"<< pHeff << " K" << k << " Loss: "<< loss << "\n"; 
-  }
-  
-  // STRUCTURAL twigs
-  for(int i=0;i<numLitterCohorts;i++) {
+
+    // STRUCTURAL twigs
     pHeff = pHEffect_c(soilPH, "Twigs");
     flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.Twigs/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
@@ -425,10 +431,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
     ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.Twigs[i] -= loss;
-  }
-  
-  // STRUCTURAL small branches
-  for(int i=0;i<numLitterCohorts;i++) {
+    
+    // STRUCTURAL small branches
     pHeff = pHEffect_c(soilPH, "SmallBranches");
     flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.SmallBranches/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
@@ -437,10 +441,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
     ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.SmallBranches[i] -= loss;
-  }
-  
-  // STRUCTURAL large wood
-  for(int i=0;i<numLitterCohorts;i++) {
+    
+    // STRUCTURAL large wood
     pHeff = pHEffect_c(soilPH, "LargeWood");
     flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.LargeWood/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
@@ -449,10 +451,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     ldo.transfer_surface_slow += loss*flig*(1.0 - 0.30);
     ldo.surface_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
     litter.LargeWood[i] -= loss;
-  }
-  
-  // STRUCTURAL coarse root
-  for(int i=0;i<numLitterCohorts;i++) {
+    
+    // STRUCTURAL coarse root
     pHeff = pHEffect_c(soilPH, "CoarseRoots");
     flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
     k = (baseAnnualRates.CoarseRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
@@ -461,10 +461,8 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     ldo.transfer_soil_slow += loss*flig*(1.0 - 0.30);
     ldo.soil_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.55);
     litter.CoarseRoots[i] -= loss;
-  }
-  
-  // STRUCTURAL fineroots
-  for(int i=0;i<numLitterCohorts;i++) {
+
+    // STRUCTURAL fineroots
     pHeff = pHEffect_c(soilPH, "FineRoots");
     flig = paramsLitterDecomposition.FineRootLignin[i]/100.0; //Lignin fraction for fine roots
     k = (baseAnnualRates.FineRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
@@ -479,6 +477,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
 double DAYCENTInner_c(Decomposition_COMM& DECcomm,
                       InternalSnags& snags, InternalLitter& litter, InternalSOC& SOC,
                       LitterDecompositionParams& paramsLitterDecomposition,
+                      AnatomyParams& paramsAnatomy,
                       DecompositionAnnualBaseRates& baseAnnualRates, double annualTurnoverRate,
                       double airTemperature, double airRelativeHumidity, 
                       double sand, double clay, double soilTemperature, double soilMoisture, double soilPH, 
@@ -500,7 +499,9 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
 
   // Rcpp::Rcout << "Snags-";
   DAYCENTsnagsInner_c(DECcomm.sdo,
-                      snags, paramsLitterDecomposition,
+                      snags, 
+                      paramsLitterDecomposition,
+                      paramsAnatomy,
                       baseAnnualRates,
                       airTemperature, airRelativeHumidity,
                       tstep);

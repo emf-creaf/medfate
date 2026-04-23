@@ -17,7 +17,9 @@ double pHEffect(double x, String pool) {
 
 // [[Rcpp::export(".decomposition_DAYCENTsnags")]]
 NumericVector DAYCENTsnags(DataFrame snags, 
-                           NumericVector baseAnnualRates, DataFrame paramsLitterDecomposition,
+                           NumericVector baseAnnualRates, 
+                           DataFrame paramsLitterDecomposition,
+                           DataFrame paramsAnatomy,
                            double airTemperature, double airRelativeHumidity, 
                            double tstep = 1.0) {
   
@@ -45,6 +47,9 @@ NumericVector DAYCENTsnags(DataFrame snags,
   if(paramsLitterDecomposition.containsElementNamed("Nleaf")) paramsLitterDecomposition_c.Nleaf = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nleaf"]);
   if(paramsLitterDecomposition.containsElementNamed("Nsapwood")) paramsLitterDecomposition_c.Nsapwood = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nsapwood"]);
   if(paramsLitterDecomposition.containsElementNamed("Nfineroot")) paramsLitterDecomposition_c.Nfineroot = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nfineroot"]);
+
+  AnatomyParams paramsAnatomy_c;
+  if(paramsAnatomy.containsElementNamed("WoodDensity")) paramsAnatomy_c.WoodDensity = Rcpp::as< std::vector<double> >(paramsAnatomy["WoodDensity"]);
   
   DecompositionAnnualBaseRates baseAnnualRates_c;
   baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
@@ -62,7 +67,9 @@ NumericVector DAYCENTsnags(DataFrame snags,
   baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
   SnagDecomposition_COMM sdo;
   DAYCENTsnagsInner_c(sdo,
-                      internalSnags, paramsLitterDecomposition_c,
+                      internalSnags, 
+                      paramsLitterDecomposition_c,
+                      paramsAnatomy_c,
                       baseAnnualRates_c,
                       airTemperature, airRelativeHumidity,
                       tstep);
@@ -157,6 +164,7 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //' @param litter A data frame with initial aboveground and belowground structural carbon pools corresponding to plant cohorts, in g C/m2  (see \code{\link{growthInput}}).
 //' @param SOC A named numeric vector with initial metabolic, active, slow and passive carbon pools for surface and soil, in g C/m2  (see \code{\link{growthInput}}).
 //' @param paramsLitterDecomposition A data frame of species-specific litter decomposition parameters (see \code{\link{growthInput}}).
+//' @param paramsAnatomy A data frame of species-specific anatomy parameters (see \code{\link{growthInput}}).
 //' @param baseAnnualRates A named vector of annual decomposition rates, in yr-1 (see \code{\link{defaultControl}}).
 //' @param annualTurnoverRate Annual turnover rate, in yr-1  (see \code{\link{defaultControl}}).
 //' @param sand,clay Soil texture (sand and sand) in percent volume (percent). 
@@ -248,6 +256,7 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 // [[Rcpp::export("decomposition_DAYCENT")]]
 List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
              DataFrame paramsLitterDecomposition,
+             DataFrame paramsAnatomy,
              NumericVector baseAnnualRates, double annualTurnoverRate,
              DataFrame environmentalConditions,
              DataFrame litterProduction, 
@@ -341,6 +350,9 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   if(paramsLitterDecomposition.containsElementNamed("Nsapwood")) paramsLitterDecomposition_c.Nsapwood = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nsapwood"]);
   if(paramsLitterDecomposition.containsElementNamed("Nfineroot")) paramsLitterDecomposition_c.Nfineroot = Rcpp::as< std::vector<double> >(paramsLitterDecomposition["Nfineroot"]);
   
+  AnatomyParams paramsAnatomy_c;
+  if(paramsAnatomy.containsElementNamed("WoodDensity")) paramsAnatomy_c.WoodDensity = Rcpp::as< std::vector<double> >(paramsAnatomy["WoodDensity"]);
+
   Decomposition_COMM dec_com(7);
   int nsteps = environmentalConditions.nrow();
   int nrow_prod = stepProduction.size();
@@ -409,6 +421,7 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     DAYCENTInner_c(dec_com,
                    internalSnags, internalLitter, internalSOC,
                    paramsLitterDecomposition_c,
+                   paramsAnatomy_c,
                    baseAnnualRates_c, annualTurnoverRate,
                    airTemperature[s], airRelativeHumidity[s],  
                    sand, clay, soilTemperature[s], soilMoisture[s], soilPH, 

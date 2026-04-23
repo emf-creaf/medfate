@@ -95,6 +95,8 @@ test_that("DAYCENT can be run", {
   litterProduction <- prd_daily(out_ForestC)
   
   paramsLitterDecomposition <- sp_params(tree$`1`)
+  paramsAnatomy <- paramsLitterDecomposition[,c("Species"), drop = FALSE]
+  paramsAnatomy$WoodDensity <- 0.5
   litterProduction$Species <- paramsLitterDecomposition$Species[1]
   
   nlitter <- 1
@@ -122,13 +124,14 @@ test_that("DAYCENT can be run", {
   annualTurnoverRate <- control$decompositionAnnualTurnoverRate
   
   l <- decomposition_DAYCENT(snagData, litterData, SOCData,
-                        paramsLitterDecomposition,
-                        baseAnnualRates,
-                        annualTurnoverRate,
-                        environmentalConditions,
-                        litterProduction,
-                        sand = 30,
-                        clay = 20,
-                        soilPH = 7, balanceCheck = FALSE)  
+                             paramsLitterDecomposition,
+                             paramsAnatomy,
+                             baseAnnualRates,
+                             annualTurnoverRate,
+                             environmentalConditions,
+                             litterProduction,
+                             sand = 30,
+                             clay = 20,
+                             soilPH = 7, balanceCheck = FALSE)  
   expect_type(l, "list")
 })
