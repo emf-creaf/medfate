@@ -414,12 +414,12 @@ decomposition_pHEffect <- function(x, pool) {
 #'         \item{\code{"SurfaceLitter"}: Respiration from decomposing litter in the surface (i.e. leaves, twigs, small branches and large wood).}
 #'         \item{\code{"SoilLitter"}: Respiration from decomposing litter belowground (i.e. coarse roots and fine roots).}
 #'         \item{\code{"SurfaceMetabolic"}: Respiration from surface metabolic pool.}
-#'         \item{\code{"SoilMetabolic"}: Respiration from soil metabolic pool.}
+#'         \item{\code{"BelowgroundMetabolic"}: Respiration from belowground metabolic pool.}
 #'         \item{\code{"SurfaceActive"}: Respiration from surface active pool.}
-#'         \item{\code{"SoilActive"}: Respiration from soil active pool.}
+#'         \item{\code{"BelowgroundActive"}: Respiration from belowground active pool.}
 #'         \item{\code{"SurfaceSlow"}: Respiration from surface slow pool.}
-#'         \item{\code{"SoilSlow"}: Respiration from soil slow pool.}
-#'         \item{\code{"SoilPassive"}: Respiration from soil passive pool.}
+#'         \item{\code{"BelowgroundSlow"}: Respiration from belowground slow pool.}
+#'         \item{\code{"BelowgroundPassive"}: Respiration from belowground passive pool.}
 #'       }
 #'     }
 #'     \item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2:
@@ -433,12 +433,12 @@ decomposition_pHEffect <- function(x, pool) {
 #'         \item{\code{"CoarseRootLitter"}: Carbon of dead coarse roots.}
 #'         \item{\code{"FineRootLitter"}: Carbon of fine root litter.}
 #'         \item{\code{"SurfaceMetabolic"}: Metabolic carbon in the surface.}
-#'         \item{\code{"SoilMetabolic"}: Metabolic carbon in the soil.}
+#'         \item{\code{"BelowgroundMetabolic"}: Metabolic carbon in the soil.}
 #'         \item{\code{"SurfaceActive"}: Active decomposition carbon pool in the surface.}
-#'         \item{\code{"SoilActive"}: Active decomposition carbon pool in the soil.}
+#'         \item{\code{"BelowgroundActive"}: Belowground active decomposition carbon pool.}
 #'         \item{\code{"SurfaceSlow"}: Slow decomposition carbon pool in the surface.}
-#'         \item{\code{"SoilSlow"}: Slow decomposition carbon pool in the soil.}
-#'         \item{\code{"SoilPassive"}: Passive decomposition carbon pool in the soil.}
+#'         \item{\code{"BelowgroundSlow"}: Belowground slow decomposition carbon pool.}
+#'         \item{\code{"BelowgroundPassive"}: Belowground passive decomposition carbon pool.}
 #'       }
 #'     }
 #'   }

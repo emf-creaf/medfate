@@ -96,7 +96,7 @@ double pHEffect_c(double x, const std::string& pool) {
   double a, b, c, d;
   if(pool=="SurfaceMetabolic") {
     a = 4.8; b=0.5; c=1.14; d = 0.7;
-  } else if(pool=="SoilMetabolic") {
+  } else if(pool=="BelowgroundMetabolic") {
     a = 4.8; b=0.5; c=1.14; d = 0.7;
   } else if(pool=="Leaves") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
@@ -112,13 +112,13 @@ double pHEffect_c(double x, const std::string& pool) {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
   } else if(pool=="SurfaceActive") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilActive") {
+  } else if(pool=="BelowgroundActive") {
     a = 4.8; b= 0.5; c = 1.14; d = 0.7;
   } else if(pool=="SurfaceSlow") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilSlow") {
+  } else if(pool=="BelowgroundSlow") {
     a = 4.0; b= 0.5; c = 1.1; d = 0.7;
-  } else if(pool=="SoilPassive") {
+  } else if(pool=="BelowgroundPassive") {
     a = 3.0; b= 0.5; c = 1.1; d = 0.7;
   } else {
     stop("Wrong carbon pool");
@@ -159,7 +159,7 @@ double moistureEffect_c(double sand, double clay, double soilMoisture) {
 // [[Rcpp::export("decomposition_temperatureEffect")]]
 double temperatureEffect_c(double soilTemperature) {
   double pi = 3.141592;
-  double tEff = 0.56  + (1.46/pi) * atan(0.031*pi*(soilTemperature - 15.7)); //15.7 Celsius = 288.85 K
+  double tEff = 0.56  + (1.46/pi) * atan(0.0309*pi*(soilTemperature - 15.7)); //15.7 Celsius = 288.85 K
   return(tEff);
 }
 
@@ -221,7 +221,7 @@ void addFineRootLitter_c(std::string& species_litter, double fineroot_litter,
   if(row !=-1) {
     double fmet = litterMetabolicFraction_c(34.9, paramsLitterDecomposition.Nfineroot[row]); //Fine root lignin fraction 0.349
     //Distribute between metabolic and structural
-    SOC.SoilMetabolic += fineroot_litter*fmet;
+    SOC.BelowgroundMetabolic += fineroot_litter*fmet;
     litter.FineRoots[row] += fineroot_litter*(1.0 - fmet);
   }
 }
@@ -230,12 +230,12 @@ void updateBaseRates_c(Decomposition_COMM& DECcomm,
                        DecompositionAnnualBaseRates& baseAnnualRates, double annualTurnoverRate) {
 
   DECcomm.K[DECOMPCOM_SURFACE_METABOLIC] = baseAnnualRates.SurfaceMetabolic/365.25;
-  DECcomm.K[DECOMPCOM_SOIL_METABOLIC] = baseAnnualRates.SoilMetabolic/365.25;
+  DECcomm.K[DECOMPCOM_BELOWGROUND_METABOLIC] = baseAnnualRates.BelowgroundMetabolic/365.25;
   DECcomm.K[DECOMPCOM_SURFACE_ACTIVE] = baseAnnualRates.SurfaceActive/365.25;
-  DECcomm.K[DECOMPCOM_SOIL_ACTIVE] = baseAnnualRates.SoilActive/365.25;
+  DECcomm.K[DECOMPCOM_BELOWGROUND_ACTIVE] = baseAnnualRates.BelowgroundActive/365.25;
   DECcomm.K[DECOMPCOM_SURFACE_SLOW] = baseAnnualRates.SurfaceSlow/365.25;
-  DECcomm.K[DECOMPCOM_SOIL_SLOW] = baseAnnualRates.SoilSlow/365.25;
-  DECcomm.K[DECOMPCOM_SOIL_PASSIVE] = baseAnnualRates.SoilPassive/365.25;
+  DECcomm.K[DECOMPCOM_BELOWGROUND_SLOW] = baseAnnualRates.BelowgroundSlow/365.25;
+  DECcomm.K[DECOMPCOM_BELOWGROUND_PASSIVE] = baseAnnualRates.BelowgroundPassive/365.25;
   
   DECcomm.Kmix = annualTurnoverRate/365.25;
 }
@@ -268,15 +268,15 @@ void updateDecompositionRateScalars_c(Decomposition_COMM& DECcomm,
    pHeff = pHEffect_c(soilPH, "SurfaceMetabolic");
    DECcomm.xi[DECOMPCOM_SURFACE_METABOLIC] = cdi * pHeff;
    //  metabolic litter (soil)
-   pHeff = pHEffect_c(soilPH, "SoilMetabolic");
-   DECcomm.xi[DECOMPCOM_SOIL_METABOLIC] = cdi * pHeff * soilO2;
+   pHeff = pHEffect_c(soilPH, "BelowgroundMetabolic");
+   DECcomm.xi[DECOMPCOM_BELOWGROUND_METABOLIC] = cdi * pHeff * soilO2;
    //  active soil organic matter: SOM1 (surface)
    pHeff = pHEffect_c(soilPH, "SurfaceActive");
    DECcomm.xi[DECOMPCOM_SURFACE_ACTIVE] = cdi * pHeff;
    //  active soil organic matter: SOM1 (SOIL)
-   pHeff = pHEffect_c(soilPH, "SoilActive");
+   pHeff = pHEffect_c(soilPH, "BelowgroundActive");
    textureEff = 0.25 + 0.75 * (sand/100.0);
-   DECcomm.xi[DECOMPCOM_SOIL_ACTIVE] = cdi * pHeff * soilO2 * textureEff * cultfac;
+   DECcomm.xi[DECOMPCOM_BELOWGROUND_ACTIVE] = cdi * pHeff * soilO2 * textureEff * cultfac;
    //  slow soil organic matter: SOM2 (surface)
    // som2(surface) -> som1(surface)
    pHeff = pHEffect_c(soilPH, "SurfaceSlow");
@@ -288,11 +288,11 @@ void updateDecompositionRateScalars_c(Decomposition_COMM& DECcomm,
    // effective environmental scalar
    DECcomm.xi[DECOMPCOM_SURFACE_SLOW] = cdi * (DECcomm.K_s21 / DECcomm.K[DECOMPCOM_SURFACE_SLOW]);
    // slow soil organic matter: SOM2 (soil)
-   pHeff = pHEffect_c(soilPH, "SoilSlow");
-   DECcomm.xi[DECOMPCOM_SOIL_SLOW] = cdi * pHeff * soilO2 * cultfac;
+   pHeff = pHEffect_c(soilPH, "BelowgroundSlow");
+   DECcomm.xi[DECOMPCOM_BELOWGROUND_SLOW] = cdi * pHeff * soilO2 * cultfac;
    //  passive soil organic matter: SOM3
-   pHeff = pHEffect_c(soilPH, "SoilPassive");
-   DECcomm.xi[DECOMPCOM_SOIL_PASSIVE] = cdi * pHeff * soilO2 * cultfac;
+   pHeff = pHEffect_c(soilPH, "BelowgroundPassive");
+   DECcomm.xi[DECOMPCOM_BELOWGROUND_PASSIVE] = cdi * pHeff * soilO2 * cultfac;
  }
 
 void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm, 
@@ -305,27 +305,27 @@ void updateCarbonTransferMatrices_c(Decomposition_COMM& DECcomm,
   
   // Updates pathf: fractional carbon flow from pool j to pool i
   DECcomm.pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_METABOLIC) = 1.0;
-  DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_METABOLIC) = 1.0;
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_METABOLIC) = 1.0;
   DECcomm.pathf(DECOMPCOM_SURFACE_SLOW,DECOMPCOM_SURFACE_ACTIVE) = 1.0;
-  DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE) = (0.003 + 0.032 * clay/100.0) * fanerb;
-  DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE) = 1.0 - DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE);
-  DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW) = DECcomm.Kmix / DECcomm.K_s21;
-  DECcomm.pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_SLOW) = 1.0 - DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW);
-  DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW) = (0.003 + 0.009 * clay/100.0) * fanerb;
-  DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW) = 1.0 - DECcomm.pathf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW);
-  DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_PASSIVE) = 1.0;
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_PASSIVE,DECOMPCOM_BELOWGROUND_ACTIVE) = (0.003 + 0.032 * clay/100.0) * fanerb;
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_SLOW,DECOMPCOM_BELOWGROUND_ACTIVE) = 1.0 - DECcomm.pathf(DECOMPCOM_BELOWGROUND_PASSIVE,DECOMPCOM_BELOWGROUND_ACTIVE);
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_SLOW,DECOMPCOM_SURFACE_SLOW) = DECcomm.Kmix / DECcomm.K_s21;
+  DECcomm.pathf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_SLOW) = 1.0 - DECcomm.pathf(DECOMPCOM_BELOWGROUND_SLOW,DECOMPCOM_SURFACE_SLOW);
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_PASSIVE,DECOMPCOM_BELOWGROUND_SLOW) = (0.003 + 0.009 * clay/100.0) * fanerb;
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_SLOW) = 1.0 - DECcomm.pathf(DECOMPCOM_BELOWGROUND_PASSIVE,DECOMPCOM_BELOWGROUND_SLOW);
+  DECcomm.pathf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_PASSIVE) = 1.0;
   
   // Updates respf: fractional respiration loss for carbon flow from pool j to pool i
   DECcomm.respf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_METABOLIC) = 0.55;
-  DECcomm.respf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_METABOLIC) = 0.55;
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_METABOLIC) = 0.55;
   DECcomm.respf(DECOMPCOM_SURFACE_SLOW,DECOMPCOM_SURFACE_ACTIVE) = 0.60;
-  DECcomm.respf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_ACTIVE) = 0.0;
-  DECcomm.respf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE) = (0.17 + 0.68 * sand/100.0) / DECcomm.pathf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SOIL_ACTIVE);
-  DECcomm.respf(DECOMPCOM_SOIL_SLOW,DECOMPCOM_SURFACE_SLOW) = 0.0;
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_PASSIVE,DECOMPCOM_BELOWGROUND_ACTIVE) = 0.0;
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_SLOW,DECOMPCOM_BELOWGROUND_ACTIVE) = (0.17 + 0.68 * sand/100.0) / DECcomm.pathf(DECOMPCOM_BELOWGROUND_SLOW,DECOMPCOM_BELOWGROUND_ACTIVE);
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_SLOW,DECOMPCOM_SURFACE_SLOW) = 0.0;
   DECcomm.respf(DECOMPCOM_SURFACE_ACTIVE,DECOMPCOM_SURFACE_SLOW) = 0.55;
-  DECcomm.respf(DECOMPCOM_SOIL_PASSIVE,DECOMPCOM_SOIL_SLOW) = 0.0;
-  DECcomm.respf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW) = 0.55 / DECcomm.pathf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_SLOW);
-  DECcomm.respf(DECOMPCOM_SOIL_ACTIVE,DECOMPCOM_SOIL_PASSIVE) = 0.55 * soilO2;
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_PASSIVE,DECOMPCOM_BELOWGROUND_SLOW) = 0.0;
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_SLOW) = 0.55 / DECcomm.pathf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_SLOW);
+  DECcomm.respf(DECOMPCOM_BELOWGROUND_ACTIVE,DECOMPCOM_BELOWGROUND_PASSIVE) = 0.55 * soilO2;
   
   // Update carbon transfer matrix: fractional carbon flow from pool j that enters pool i
   for(int i=0;i<npool;i++) {
@@ -455,7 +455,7 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     // STRUCTURAL coarse root
     pHeff = pHEffect_c(soilPH, "CoarseRoots");
     flig = paramsLitterDecomposition.WoodLignin[i]/100.0; //Lignin fraction for wood
-    k = (baseAnnualRates.CoarseRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig);
+    k = (baseAnnualRates.CoarseRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2;
     loss = litter.CoarseRoots[i]*k*tstep;
     ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.55);
     ldo.transfer_soil_slow += loss*flig*(1.0 - 0.30);
@@ -467,9 +467,9 @@ void DAYCENTlitterInner_c(LitterDecomposition_COMM& ldo,
     flig = paramsLitterDecomposition.FineRootLignin[i]/100.0; //Lignin fraction for fine roots
     k = (baseAnnualRates.FineRoots/365.25)*tempEff*moistEff*pHeff*exp(-3.0*flig)*soilO2*cultfac;
     loss = litter.FineRoots[i]*k*tstep;
-    ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.45);
+    ldo.transfer_soil_active += loss*(1.0 - flig)*(1.0 - 0.55);
     ldo.transfer_soil_slow += loss*flig*(1.0 - 0.30);
-    ldo.soil_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.45);
+    ldo.soil_flux_respiration += loss*(flig*0.30 + (1.0-flig)*0.55);
     litter.FineRoots[i] -= loss;
   }
 }
@@ -490,12 +490,12 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
   // Rcpp::Rcout << "n pools " << npool <<"\n";
   std::vector<double> SOC_v(npool);
   SOC_v[DECOMPCOM_SURFACE_METABOLIC] = SOC.SurfaceMetabolic;
-  SOC_v[DECOMPCOM_SOIL_METABOLIC] = SOC.SoilMetabolic;
+  SOC_v[DECOMPCOM_BELOWGROUND_METABOLIC] = SOC.BelowgroundMetabolic;
   SOC_v[DECOMPCOM_SURFACE_ACTIVE] = SOC.SurfaceActive;
-  SOC_v[DECOMPCOM_SOIL_ACTIVE] = SOC.SoilActive;
+  SOC_v[DECOMPCOM_BELOWGROUND_ACTIVE] = SOC.BelowgroundActive;
   SOC_v[DECOMPCOM_SURFACE_SLOW] = SOC.SurfaceSlow;
-  SOC_v[DECOMPCOM_SOIL_SLOW] = SOC.SoilSlow;
-  SOC_v[DECOMPCOM_SOIL_PASSIVE] = SOC.SoilPassive;
+  SOC_v[DECOMPCOM_BELOWGROUND_SLOW] = SOC.BelowgroundSlow;
+  SOC_v[DECOMPCOM_BELOWGROUND_PASSIVE] = SOC.BelowgroundPassive;
 
   // Rcpp::Rcout << "Snags-";
   DAYCENTsnagsInner_c(DECcomm.sdo,
@@ -525,8 +525,8 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
   std::vector<double> dC(npool, 0.0);
   dC[DECOMPCOM_SURFACE_ACTIVE] = DECcomm.sdo.transfer_surface_active + DECcomm.ldo.transfer_surface_active;
   dC[DECOMPCOM_SURFACE_SLOW] = DECcomm.sdo.transfer_surface_slow + DECcomm.ldo.transfer_surface_slow;
-  dC[DECOMPCOM_SOIL_ACTIVE] = DECcomm.ldo.transfer_soil_active;
-  dC[DECOMPCOM_SOIL_SLOW] = DECcomm.ldo.transfer_soil_slow;
+  dC[DECOMPCOM_BELOWGROUND_ACTIVE] = DECcomm.ldo.transfer_soil_active;
+  dC[DECOMPCOM_BELOWGROUND_SLOW] = DECcomm.ldo.transfer_soil_slow;
   for(int i=0;i<npool;i++) {
     // carbon transfer from pool j to pool i
     for(int j=0;j<npool;j++) {
@@ -553,12 +553,12 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
     SOC_v[i] += dC[i];
   }
   SOC.SurfaceMetabolic = SOC_v[DECOMPCOM_SURFACE_METABOLIC];
-  SOC.SoilMetabolic = SOC_v[DECOMPCOM_SOIL_METABOLIC];
+  SOC.BelowgroundMetabolic = SOC_v[DECOMPCOM_BELOWGROUND_METABOLIC];
   SOC.SurfaceActive = SOC_v[DECOMPCOM_SURFACE_ACTIVE];
-  SOC.SoilActive = SOC_v[DECOMPCOM_SOIL_ACTIVE];
+  SOC.BelowgroundActive = SOC_v[DECOMPCOM_BELOWGROUND_ACTIVE];
   SOC.SurfaceSlow = SOC_v[DECOMPCOM_SURFACE_SLOW];
-  SOC.SoilSlow = SOC_v[DECOMPCOM_SOIL_SLOW];
-  SOC.SoilPassive = SOC_v[DECOMPCOM_SOIL_PASSIVE];
+  SOC.BelowgroundSlow = SOC_v[DECOMPCOM_BELOWGROUND_SLOW];
+  SOC.BelowgroundPassive = SOC_v[DECOMPCOM_BELOWGROUND_PASSIVE];
 
   //return respiration
   return(RH);

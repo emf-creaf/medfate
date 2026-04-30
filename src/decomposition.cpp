@@ -53,7 +53,7 @@ NumericVector DAYCENTsnags(DataFrame snags,
   
   DecompositionAnnualBaseRates baseAnnualRates_c;
   baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
-  baseAnnualRates_c.SoilMetabolic = baseAnnualRates["SoilMetabolic"];
+  baseAnnualRates_c.BelowgroundMetabolic = baseAnnualRates["BelowgroundMetabolic"];
   baseAnnualRates_c.Leaves = baseAnnualRates["Leaves"];
   baseAnnualRates_c.FineRoots = baseAnnualRates["FineRoots"];
   baseAnnualRates_c.Twigs = baseAnnualRates["Twigs"];
@@ -62,9 +62,9 @@ NumericVector DAYCENTsnags(DataFrame snags,
   baseAnnualRates_c.CoarseRoots = baseAnnualRates["CoarseRoots"];
   baseAnnualRates_c.SurfaceActive = baseAnnualRates["SurfaceActive"];
   baseAnnualRates_c.SurfaceSlow = baseAnnualRates["SurfaceSlow"];
-  baseAnnualRates_c.SoilActive = baseAnnualRates["SoilActive"];
-  baseAnnualRates_c.SoilSlow = baseAnnualRates["SoilSlow"];
-  baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
+  baseAnnualRates_c.BelowgroundActive = baseAnnualRates["BelowgroundActive"];
+  baseAnnualRates_c.BelowgroundSlow = baseAnnualRates["BelowgroundSlow"];
+  baseAnnualRates_c.BelowgroundPassive = baseAnnualRates["BelowgroundPassive"];  
   SnagDecomposition_COMM sdo;
   DAYCENTsnagsInner_c(sdo,
                       internalSnags, 
@@ -110,7 +110,7 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
   
   DecompositionAnnualBaseRates baseAnnualRates_c;
   baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
-  baseAnnualRates_c.SoilMetabolic = baseAnnualRates["SoilMetabolic"];
+  baseAnnualRates_c.BelowgroundMetabolic = baseAnnualRates["BelowgroundMetabolic"];
   baseAnnualRates_c.Leaves = baseAnnualRates["Leaves"];
   baseAnnualRates_c.FineRoots = baseAnnualRates["FineRoots"];
   baseAnnualRates_c.Twigs = baseAnnualRates["Twigs"];
@@ -119,9 +119,9 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
   baseAnnualRates_c.CoarseRoots = baseAnnualRates["CoarseRoots"];
   baseAnnualRates_c.SurfaceActive = baseAnnualRates["SurfaceActive"];
   baseAnnualRates_c.SurfaceSlow = baseAnnualRates["SurfaceSlow"];
-  baseAnnualRates_c.SoilActive = baseAnnualRates["SoilActive"];
-  baseAnnualRates_c.SoilSlow = baseAnnualRates["SoilSlow"];
-  baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
+  baseAnnualRates_c.BelowgroundActive = baseAnnualRates["BelowgroundActive"];
+  baseAnnualRates_c.BelowgroundSlow = baseAnnualRates["BelowgroundSlow"];
+  baseAnnualRates_c.BelowgroundPassive = baseAnnualRates["BelowgroundPassive"];  
   
   Rcpp::CharacterVector Species_LI = litter["Species"];
   Rcpp::NumericVector Leaves_LI = litter["Leaves"];
@@ -212,12 +212,12 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //'         \item{\code{"SurfaceLitter"}: Respiration from decomposing litter in the surface (i.e. leaves, twigs, small branches and large wood).}
 //'         \item{\code{"SoilLitter"}: Respiration from decomposing litter belowground (i.e. coarse roots and fine roots).}
 //'         \item{\code{"SurfaceMetabolic"}: Respiration from surface metabolic pool.}
-//'         \item{\code{"SoilMetabolic"}: Respiration from soil metabolic pool.}
+//'         \item{\code{"BelowgroundMetabolic"}: Respiration from belowground metabolic pool.}
 //'         \item{\code{"SurfaceActive"}: Respiration from surface active pool.}
-//'         \item{\code{"SoilActive"}: Respiration from soil active pool.}
+//'         \item{\code{"BelowgroundActive"}: Respiration from belowground active pool.}
 //'         \item{\code{"SurfaceSlow"}: Respiration from surface slow pool.}
-//'         \item{\code{"SoilSlow"}: Respiration from soil slow pool.}
-//'         \item{\code{"SoilPassive"}: Respiration from soil passive pool.}
+//'         \item{\code{"BelowgroundSlow"}: Respiration from belowground slow pool.}
+//'         \item{\code{"BelowgroundPassive"}: Respiration from belowground passive pool.}
 //'       }
 //'     }
 //'     \item{\code{"DecompositionPools"}: A numeric matrix with the carbon mass of different carbon pools, all in g C · m-2:
@@ -231,12 +231,12 @@ NumericVector DAYCENTlitter(DataFrame litter, DataFrame paramsLitterDecompositio
 //'         \item{\code{"CoarseRootLitter"}: Carbon of dead coarse roots.}
 //'         \item{\code{"FineRootLitter"}: Carbon of fine root litter.}
 //'         \item{\code{"SurfaceMetabolic"}: Metabolic carbon in the surface.}
-//'         \item{\code{"SoilMetabolic"}: Metabolic carbon in the soil.}
+//'         \item{\code{"BelowgroundMetabolic"}: Metabolic carbon in the soil.}
 //'         \item{\code{"SurfaceActive"}: Active decomposition carbon pool in the surface.}
-//'         \item{\code{"SoilActive"}: Active decomposition carbon pool in the soil.}
+//'         \item{\code{"BelowgroundActive"}: Belowground active decomposition carbon pool.}
 //'         \item{\code{"SurfaceSlow"}: Slow decomposition carbon pool in the surface.}
-//'         \item{\code{"SoilSlow"}: Slow decomposition carbon pool in the soil.}
-//'         \item{\code{"SoilPassive"}: Passive decomposition carbon pool in the soil.}
+//'         \item{\code{"BelowgroundSlow"}: Belowground slow decomposition carbon pool.}
+//'         \item{\code{"BelowgroundPassive"}: Belowground passive decomposition carbon pool.}
 //'       }
 //'     }
 //'   }
@@ -316,18 +316,18 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   // Build structure InternalSOC
   InternalSOC internalSOC;
   internalSOC.SurfaceMetabolic = Rcpp::as<double>(SOC["SurfaceMetabolic"]);
-  internalSOC.SoilMetabolic = Rcpp::as<double>(SOC["SoilMetabolic"]);
+  internalSOC.BelowgroundMetabolic = Rcpp::as<double>(SOC["BelowgroundMetabolic"]);
   internalSOC.SurfaceActive = Rcpp::as<double>(SOC["SurfaceActive"]);
-  internalSOC.SoilActive = Rcpp::as<double>(SOC["SoilActive"]);
+  internalSOC.BelowgroundActive = Rcpp::as<double>(SOC["BelowgroundActive"]);
   internalSOC.SurfaceSlow = Rcpp::as<double>(SOC["SurfaceSlow"]);
-  internalSOC.SoilSlow = Rcpp::as<double>(SOC["SoilSlow"]);
-  internalSOC.SoilPassive = Rcpp::as<double>(SOC["SoilPassive"]);
+  internalSOC.BelowgroundSlow = Rcpp::as<double>(SOC["BelowgroundSlow"]);
+  internalSOC.BelowgroundPassive = Rcpp::as<double>(SOC["BelowgroundPassive"]);
   
   
   // Build decomposition annual base rates
   DecompositionAnnualBaseRates baseAnnualRates_c;
   baseAnnualRates_c.SurfaceMetabolic = baseAnnualRates["SurfaceMetabolic"];
-  baseAnnualRates_c.SoilMetabolic = baseAnnualRates["SoilMetabolic"];
+  baseAnnualRates_c.BelowgroundMetabolic = baseAnnualRates["BelowgroundMetabolic"];
   baseAnnualRates_c.Leaves = baseAnnualRates["Leaves"];
   baseAnnualRates_c.FineRoots = baseAnnualRates["FineRoots"];
   baseAnnualRates_c.Twigs = baseAnnualRates["Twigs"];
@@ -336,9 +336,9 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   baseAnnualRates_c.CoarseRoots = baseAnnualRates["CoarseRoots"];
   baseAnnualRates_c.SurfaceActive = baseAnnualRates["SurfaceActive"];
   baseAnnualRates_c.SurfaceSlow = baseAnnualRates["SurfaceSlow"];
-  baseAnnualRates_c.SoilActive = baseAnnualRates["SoilActive"];
-  baseAnnualRates_c.SoilSlow = baseAnnualRates["SoilSlow"];
-  baseAnnualRates_c.SoilPassive = baseAnnualRates["SoilPassive"];  
+  baseAnnualRates_c.BelowgroundActive = baseAnnualRates["BelowgroundActive"];
+  baseAnnualRates_c.BelowgroundSlow = baseAnnualRates["BelowgroundSlow"];
+  baseAnnualRates_c.BelowgroundPassive = baseAnnualRates["BelowgroundPassive"];  
   
   // Copy species decomposition params
   LitterDecompositionParams paramsLitterDecomposition_c;
@@ -359,15 +359,15 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   
   NumericMatrix heterotrophicRespiration(nsteps, 10);
   heterotrophicRespiration.attr("dimnames") = List::create(seq(1, nsteps), 
-                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
-                                                  "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
+                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "BelowgroundMetabolic",
+                                                  "SurfaceActive", "BelowgroundActive", "SurfaceSlow", "BelowgroundSlow", "BelowgroundPassive"));
   NumericMatrix decompositionPools(nsteps, 15);
   decompositionPools.attr("dimnames") = List::create(seq(1, nsteps), 
                           CharacterVector::create("SmallBranchSnags", "LargeWoodSnags",
                                                   "LeafLitter", "TwigLitter", "SmallBranchLitter", "LargeWoodLitter",
                                                   "CoarseRootLitter", "FineRootLitter",
-                                                  "SurfaceMetabolic", "SoilMetabolic",
-                                                  "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
+                                                  "SurfaceMetabolic", "BelowgroundMetabolic",
+                                                  "SurfaceActive", "BelowgroundActive", "SurfaceSlow", "BelowgroundSlow", "BelowgroundPassive"));
   
   double litterInput = 0.0;
   double initialStock = 0.0;
@@ -379,12 +379,12 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     initialStock += std::accumulate(internalLitter.LargeWood.begin(), internalLitter.LargeWood.end(),0.0);
     initialStock += std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0) + std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
     initialStock += internalSOC.SurfaceMetabolic;
-    initialStock += internalSOC.SoilMetabolic;
+    initialStock += internalSOC.BelowgroundMetabolic;
     initialStock += internalSOC.SurfaceActive;
-    initialStock += internalSOC.SoilActive;
+    initialStock += internalSOC.BelowgroundActive;
     initialStock += internalSOC.SurfaceSlow;
-    initialStock += internalSOC.SoilSlow;
-    initialStock += internalSOC.SoilPassive;
+    initialStock += internalSOC.BelowgroundSlow;
+    initialStock += internalSOC.BelowgroundPassive;
     litterInput += sum(leafProduction);
     litterInput += sum(twigProduction); 
     litterInput += sum(smallBranchProduction);
@@ -432,12 +432,12 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     heterotrophicRespiration(s,1) = dec_com.ldo.surface_flux_respiration; // surface structural litter respiration
     heterotrophicRespiration(s,2) = dec_com.ldo.soil_flux_respiration; // soil structural litter respiration
     heterotrophicRespiration(s,3) = dec_com.flux_respiration_pools[DECOMPCOM_SURFACE_METABOLIC];
-    heterotrophicRespiration(s,4) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_METABOLIC];
+    heterotrophicRespiration(s,4) = dec_com.flux_respiration_pools[DECOMPCOM_BELOWGROUND_METABOLIC];
     heterotrophicRespiration(s,5) = dec_com.flux_respiration_pools[DECOMPCOM_SURFACE_ACTIVE];
-    heterotrophicRespiration(s,6) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_ACTIVE];
+    heterotrophicRespiration(s,6) = dec_com.flux_respiration_pools[DECOMPCOM_BELOWGROUND_ACTIVE];
     heterotrophicRespiration(s,7) = dec_com.flux_respiration_pools[DECOMPCOM_SURFACE_SLOW];
-    heterotrophicRespiration(s,8) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_SLOW];
-    heterotrophicRespiration(s,9) = dec_com.flux_respiration_pools[DECOMPCOM_SOIL_PASSIVE];
+    heterotrophicRespiration(s,8) = dec_com.flux_respiration_pools[DECOMPCOM_BELOWGROUND_SLOW];
+    heterotrophicRespiration(s,9) = dec_com.flux_respiration_pools[DECOMPCOM_BELOWGROUND_PASSIVE];
     
     // Rcout<<"Storing state \n";
     decompositionPools(s,0) = std::accumulate(internalSnags.SmallBranches.begin(), internalSnags.SmallBranches.end(),0.0);
@@ -449,12 +449,12 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
     decompositionPools(s,6) = std::accumulate(internalLitter.CoarseRoots.begin(), internalLitter.CoarseRoots.end(),0.0) ;
     decompositionPools(s,7) = std::accumulate(internalLitter.FineRoots.begin(), internalLitter.FineRoots.end(),0.0);
     decompositionPools(s,8) = internalSOC.SurfaceMetabolic;
-    decompositionPools(s,9) = internalSOC.SoilMetabolic;
+    decompositionPools(s,9) = internalSOC.BelowgroundMetabolic;
     decompositionPools(s,10) = internalSOC.SurfaceActive;
-    decompositionPools(s,11) = internalSOC.SoilActive;
+    decompositionPools(s,11) = internalSOC.BelowgroundActive;
     decompositionPools(s,12) = internalSOC.SurfaceSlow;
-    decompositionPools(s,13) = internalSOC.SoilSlow;
-    decompositionPools(s,14) = internalSOC.SoilPassive;
+    decompositionPools(s,13) = internalSOC.BelowgroundSlow;
+    decompositionPools(s,14) = internalSOC.BelowgroundPassive;
   }
   
   //Check balance
@@ -490,12 +490,12 @@ List DAYCENT(DataFrame snags, DataFrame litter, NumericVector SOC,
   }
   // Update inputs for SOC
   SOC["SurfaceMetabolic"] = internalSOC.SurfaceMetabolic;
-  SOC["SoilMetabolic"] = internalSOC.SoilMetabolic;
+  SOC["BelowgroundMetabolic"] = internalSOC.BelowgroundMetabolic;
   SOC["SurfaceActive"] = internalSOC.SurfaceActive;
-  SOC["SoilActive"] = internalSOC.SoilActive;
+  SOC["SoilActive"] = internalSOC.BelowgroundActive;
   SOC["SurfaceSlow"] = internalSOC.SurfaceSlow;
-  SOC["SoilSlow"] = internalSOC.SoilSlow;
-  SOC["SoilPassive"] = internalSOC.SoilPassive;
+  SOC["BelowgroundSlow"] = internalSOC.BelowgroundSlow;
+  SOC["BelowgroundPassive"] = internalSOC.BelowgroundPassive;
   
   //Assemble output
   List l = List::create(_["HeterotrophicRespiration"] = heterotrophicRespiration,

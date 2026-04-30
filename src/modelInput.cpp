@@ -1131,26 +1131,26 @@ DataFrame internalLitterDataFrame(CharacterVector Species, DataFrame litterData)
 
 NumericVector internalSOC(NumericVector SOCData) {
   double surface_metabolic = 0.0;
-  double soil_metabolic = 0.0;
+  double belowground_metabolic = 0.0;
   double surface_active = 0.0;
-  double soil_active = 0.0;
+  double belowground_active = 0.0;
   double surface_slow = 0.0;
-  double soil_slow = 0.0;
-  double soil_passive = 0.0;
+  double belowground_slow = 0.0;
+  double belowground_passive = 0.0;
   if(SOCData.containsElementNamed("SurfaceMetabolic")) surface_metabolic += SOCData["SurfaceMetabolic"];
-  if(SOCData.containsElementNamed("SoilMetabolic")) soil_metabolic += SOCData["SoilMetabolic"];
+  if(SOCData.containsElementNamed("BelowgroundMetabolic")) belowground_metabolic += SOCData["BelowgroundMetabolic"];
   if(SOCData.containsElementNamed("SurfaceActive")) surface_active += SOCData["SurfaceActive"];
-  if(SOCData.containsElementNamed("SoilActive")) soil_active += SOCData["SoilActive"];
+  if(SOCData.containsElementNamed("BelowgroundActive")) belowground_active += SOCData["BelowgroundActive"];
   if(SOCData.containsElementNamed("SurfaceSlow")) surface_slow += SOCData["SurfaceSlow"];
-  if(SOCData.containsElementNamed("SoilSlow")) soil_slow += SOCData["SoilSlow"];
-  if(SOCData.containsElementNamed("SoilPassive")) soil_passive += SOCData["SoilPassive"];
+  if(SOCData.containsElementNamed("BelowgroundSlow")) belowground_slow += SOCData["BelowgroundSlow"];
+  if(SOCData.containsElementNamed("BelowgroundPassive")) belowground_passive += SOCData["BelowgroundPassive"];
   return(NumericVector::create(Named("SurfaceMetabolic") = surface_metabolic,
-                               Named("SoilMetabolic") = soil_metabolic,
+                               Named("BelowgroundMetabolic") = belowground_metabolic,
                                Named("SurfaceActive") = surface_active, 
-                               Named("SoilActive")=soil_active, 
+                               Named("BelowgroundActive")=belowground_active, 
                                Named("SurfaceSlow") = surface_slow,
-                               Named("SoilSlow") = soil_slow,
-                               Named("SoilPassive") = soil_passive));
+                               Named("BelowgroundSlow") = belowground_slow,
+                               Named("BelowgroundPassive") = belowground_passive));
 }
 DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();

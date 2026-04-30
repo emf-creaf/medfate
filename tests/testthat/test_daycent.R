@@ -116,8 +116,8 @@ test_that("DAYCENT can be run", {
                         SmallBranches = as.numeric(rep(NA, nsnag)),
                         LargeWood = as.numeric(rep(NA, nsnag)))
   
-  SOCData <- c(SurfaceMetabolic = 0, SoilMetabolic = 0, SurfaceActive = 0, SoilActive = 0,
-               SurfaceSlow = 0, SoilSlow = 0, SoilPassive = 0)
+  SOCData <- c(SurfaceMetabolic = 0, BelowgroundMetabolic = 0, SurfaceActive = 0, BelowgroundActive = 0,
+               SurfaceSlow = 0, BelowgroundSlow = 0, BelowgroundPassive = 0)
   
   control <- defaultControl()
   baseAnnualRates <- control$decompositionAnnualBaseRates

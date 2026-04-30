@@ -407,12 +407,12 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(x.containsElementNamed("internalSOC")) {
     Rcpp::NumericVector internalSOCDF = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
     internalSOC.SurfaceMetabolic = Rcpp::as<double>(internalSOCDF["SurfaceMetabolic"]);
-    internalSOC.SoilMetabolic = Rcpp::as<double>(internalSOCDF["SoilMetabolic"]);
+    internalSOC.BelowgroundMetabolic = Rcpp::as<double>(internalSOCDF["BelowgroundMetabolic"]);
     internalSOC.SurfaceActive = Rcpp::as<double>(internalSOCDF["SurfaceActive"]);
-    internalSOC.SoilActive = Rcpp::as<double>(internalSOCDF["SoilActive"]);
+    internalSOC.BelowgroundActive = Rcpp::as<double>(internalSOCDF["BelowgroundActive"]);
     internalSOC.SurfaceSlow = Rcpp::as<double>(internalSOCDF["SurfaceSlow"]);
-    internalSOC.SoilSlow = Rcpp::as<double>(internalSOCDF["SoilSlow"]);
-    internalSOC.SoilPassive = Rcpp::as<double>(internalSOCDF["SoilPassive"]);
+    internalSOC.BelowgroundSlow = Rcpp::as<double>(internalSOCDF["BelowgroundSlow"]);
+    internalSOC.BelowgroundPassive = Rcpp::as<double>(internalSOCDF["BelowgroundPassive"]);
   }
   
   //Internal FCCS variables
@@ -828,12 +828,12 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   if(x.containsElementNamed("internalSOC")) {
     Rcpp::NumericVector internalSOCDF = Rcpp::as<Rcpp::NumericVector>(x["internalSOC"]);
     internalSOCDF["SurfaceMetabolic"] = internalSOC.SurfaceMetabolic;
-    internalSOCDF["SoilMetabolic"] = internalSOC.SoilMetabolic;
+    internalSOCDF["BelowgroundMetabolic"] = internalSOC.BelowgroundMetabolic;
     internalSOCDF["SurfaceActive"] = internalSOC.SurfaceActive;
-    internalSOCDF["SoilActive"] = internalSOC.SoilActive;
+    internalSOCDF["BelowgroundActive"] = internalSOC.BelowgroundActive;
     internalSOCDF["SurfaceSlow"] = internalSOC.SurfaceSlow;
-    internalSOCDF["SoilSlow"] = internalSOC.SoilSlow;
-    internalSOCDF["SoilPassive"] = internalSOC.SoilPassive;
+    internalSOCDF["BelowgroundSlow"] = internalSOC.BelowgroundSlow;
+    internalSOCDF["BelowgroundPassive"] = internalSOC.BelowgroundPassive;
   }
 
   //Internal FCCS variables

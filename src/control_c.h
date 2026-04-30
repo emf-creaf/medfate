@@ -161,7 +161,7 @@ struct RecruitmentParams {
 };
 struct DecompositionAnnualBaseRates {
   double SurfaceMetabolic;
-  double SoilMetabolic;
+  double BelowgroundMetabolic;
   double Leaves;
   double FineRoots;
   double Twigs;
@@ -169,10 +169,10 @@ struct DecompositionAnnualBaseRates {
   double LargeWood;
   double CoarseRoots;
   double SurfaceActive;
-  double SoilActive;
+  double BelowgroundActive;
   double SurfaceSlow;
-  double SoilSlow;
-  double SoilPassive;
+  double BelowgroundSlow;
+  double BelowgroundPassive;
 };
 
 struct DecompositionParams {

@@ -308,12 +308,12 @@ struct InternalLitter {
 
 struct InternalSOC {
   double SurfaceMetabolic;
-  double SoilMetabolic;
+  double BelowgroundMetabolic;
   double SurfaceActive;
-  double SoilActive;
+  double BelowgroundActive;
   double SurfaceSlow;
-  double SoilSlow;
-  double SoilPassive;
+  double BelowgroundSlow;
+  double BelowgroundPassive;
 };
 
 struct InternalLAIDistribution{

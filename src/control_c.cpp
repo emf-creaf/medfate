@@ -143,7 +143,7 @@ ControlParameters::ControlParameters(List x) {
     NumericVector decompRates = x["decompositionAnnualBaseRates"];  
     decomposition.decompositionAnnualTurnoverRate = as<double>(x["decompositionAnnualTurnoverRate"]);
     decomposition.annualBaseRates.SurfaceMetabolic = decompRates["SurfaceMetabolic"];
-    decomposition.annualBaseRates.SoilMetabolic = decompRates["SoilMetabolic"];
+    decomposition.annualBaseRates.BelowgroundMetabolic = decompRates["BelowgroundMetabolic"];
     decomposition.annualBaseRates.Leaves = decompRates["Leaves"];
     decomposition.annualBaseRates.FineRoots = decompRates["FineRoots"];
     decomposition.annualBaseRates.Twigs = decompRates["Twigs"];
@@ -152,9 +152,9 @@ ControlParameters::ControlParameters(List x) {
     decomposition.annualBaseRates.CoarseRoots = decompRates["CoarseRoots"];
     decomposition.annualBaseRates.SurfaceActive = decompRates["SurfaceActive"];
     decomposition.annualBaseRates.SurfaceSlow = decompRates["SurfaceSlow"];
-    decomposition.annualBaseRates.SoilActive = decompRates["SoilActive"];
-    decomposition.annualBaseRates.SoilSlow = decompRates["SoilSlow"];
-    decomposition.annualBaseRates.SoilPassive = decompRates["SoilPassive"];  
+    decomposition.annualBaseRates.BelowgroundActive = decompRates["BelowgroundActive"];
+    decomposition.annualBaseRates.BelowgroundSlow = decompRates["BelowgroundSlow"];
+    decomposition.annualBaseRates.BelowgroundPassive = decompRates["BelowgroundPassive"];  
   }
 }
 

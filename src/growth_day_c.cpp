@@ -640,7 +640,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   initialStand_gC_m2 += vecsum(x.internalLitter.Leaves) + vecsum(x.internalLitter.Twigs) + vecsum(x.internalLitter.SmallBranches);
   initialStand_gC_m2 += vecsum(x.internalLitter.LargeWood) + vecsum(x.internalLitter.CoarseRoots) + vecsum(x.internalLitter.FineRoots);
   initialStand_gC_m2 += x.internalSOC.SurfaceActive + x.internalSOC.SurfaceMetabolic + x.internalSOC.SurfaceSlow;
-  initialStand_gC_m2 += x.internalSOC.SoilActive + x.internalSOC.SoilMetabolic + x.internalSOC.SoilSlow + x.internalSOC.SoilPassive;
+  initialStand_gC_m2 += x.internalSOC.BelowgroundActive + x.internalSOC.BelowgroundMetabolic + x.internalSOC.BelowgroundSlow + x.internalSOC.BelowgroundPassive;
   initialStand_gC_m2 += vecsum(x.internalSnags.SmallBranches) + vecsum(x.internalSnags.LargeWood);
   
   std::vector<double> LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
@@ -1066,8 +1066,8 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
                           x.internalLitter, x.paramsLitterDecomposition,
                           x.internalSOC);
       //From g gluc/g ind to g C/m2
-      double metabolicSoil = (6.0*carbonMolarMass/glucoseMolarMass) * GROWTHres.LCBres.RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0);
-      x.internalSOC.SoilMetabolic += metabolicSoil;
+      double metabolicBelowground = (6.0*carbonMolarMass/glucoseMolarMass) * GROWTHres.LCBres.RootExudation[j]*TotalLivingBiomass[j]*(N[j]/10000.0);
+      x.internalSOC.BelowgroundMetabolic += metabolicBelowground;
       
       //For shrubs, convert SA senescence into mass of standing dead branches (g C/m2)
       if(ctype[j]=="shrub") {
@@ -1544,7 +1544,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   finalStand_gC_m2 += vecsum(x.internalLitter.Leaves) + vecsum(x.internalLitter.Twigs) + vecsum(x.internalLitter.SmallBranches);
   finalStand_gC_m2 += vecsum(x.internalLitter.LargeWood) + vecsum(x.internalLitter.CoarseRoots) + vecsum(x.internalLitter.FineRoots);
   finalStand_gC_m2 += x.internalSOC.SurfaceActive + x.internalSOC.SurfaceMetabolic + x.internalSOC.SurfaceSlow;
-  finalStand_gC_m2 += x.internalSOC.SoilActive + x.internalSOC.SoilMetabolic + x.internalSOC.SoilSlow + x.internalSOC.SoilPassive;
+  finalStand_gC_m2 += x.internalSOC.BelowgroundActive + x.internalSOC.BelowgroundMetabolic + x.internalSOC.BelowgroundSlow + x.internalSOC.BelowgroundPassive;
   finalStand_gC_m2 += vecsum(x.internalSnags.SmallBranches) + vecsum(x.internalSnags.LargeWood);
   
   double changeStand_gC_m2 = finalStand_gC_m2 - initialStand_gC_m2;

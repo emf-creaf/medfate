@@ -27,3 +27,5 @@
 ^LICENSE\.md$
 featured.png
 metadata.yml
+^\.positai$
+^\.claude$

@@ -137,8 +137,8 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
   }
 
   if(SOC) {
-    l$SOCData = c(SurfaceMetabolic = 0, SoilMetabolic = 0, SurfaceActive = 0, SoilActive = 0,
-                  SurfaceSlow = 0, SoilSlow = 0, SoilPassive = 0)
+    l$SOCData = c(SurfaceMetabolic = 0, BelowgroundMetabolic = 0, SurfaceActive = 0, BelowgroundActive = 0,
+                  SurfaceSlow = 0, BelowgroundSlow = 0, BelowgroundPassive = 0)
   }  
   class(l)<-c("forest","list")
   return(l)

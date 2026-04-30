@@ -265,8 +265,8 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 
   NumericMatrix DecompositionPools(numDays, 10);
   DecompositionPools.attr("dimnames") = List::create(dateStrings, 
-                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "SoilLitter", "SurfaceMetabolic", "SoilMetabolic",
-                                                  "SurfaceActive", "SoilActive", "SurfaceSlow", "SoilSlow", "SoilPassive"));
+                          CharacterVector::create("SurfaceSnags","SurfaceLitter", "BelowgroundLitter", "SurfaceMetabolic", "BelowgroundMetabolic",
+                                                  "SurfaceActive", "BelowgroundActive", "SurfaceSlow", "BelowgroundSlow", "BelowgroundPassive"));
   
   List l;
   if(transpirationMode=="Granier") {
@@ -543,12 +543,12 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     decompositionPool(iday,1) = sum(structural_litter_leaves) + sum(structural_litter_twigs) +sum(structural_litter_smallbranches) + sum(structural_litter_largewood);
     decompositionPool(iday,2) = sum(structural_litter_fineroots)+ sum(structural_litter_coarseroots);
     decompositionPool(iday,3) = internalSOC["SurfaceMetabolic"];
-    decompositionPool(iday,4) = internalSOC["SoilMetabolic"];
+    decompositionPool(iday,4) = internalSOC["BelowgroundMetabolic"];
     decompositionPool(iday,5) = internalSOC["SurfaceActive"];
-    decompositionPool(iday,6) = internalSOC["SoilActive"];
+    decompositionPool(iday,6) = internalSOC["BelowgroundActive"];
     decompositionPool(iday,7) = internalSOC["SurfaceSlow"];
-    decompositionPool(iday,8) = internalSOC["SoilSlow"];
-    decompositionPool(iday,9) = internalSOC["SoilPassive"];
+    decompositionPool(iday,8) = internalSOC["BelowgroundSlow"];
+    decompositionPool(iday,9) = internalSOC["BelowgroundPassive"];
   }
   
   NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(l["BiomassBalance"]);
@@ -737,12 +737,12 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
     decompositionPool(iday,1) = vecsum(x.internalLitter.Leaves) + vecsum(x.internalLitter.Twigs) + vecsum(x.internalLitter.SmallBranches) + vecsum(x.internalLitter.LargeWood);
     decompositionPool(iday,2) = vecsum(x.internalLitter.FineRoots)+ vecsum(x.internalLitter.CoarseRoots);
     decompositionPool(iday,3) = x.internalSOC.SurfaceMetabolic;
-    decompositionPool(iday,4) = x.internalSOC.SoilMetabolic;
+    decompositionPool(iday,4) = x.internalSOC.BelowgroundMetabolic;
     decompositionPool(iday,5) = x.internalSOC.SurfaceActive;
-    decompositionPool(iday,6) = x.internalSOC.SoilActive;
+    decompositionPool(iday,6) = x.internalSOC.BelowgroundActive;
     decompositionPool(iday,7) = x.internalSOC.SurfaceSlow;
-    decompositionPool(iday,8) = x.internalSOC.SoilSlow;
-    decompositionPool(iday,9) = x.internalSOC.SoilPassive;
+    decompositionPool(iday,8) = x.internalSOC.BelowgroundSlow;
+    decompositionPool(iday,9) = x.internalSOC.BelowgroundPassive;
   }
 
   NumericMatrix StandBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(l["BiomassBalance"]);
