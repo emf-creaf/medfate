@@ -824,14 +824,16 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
-#>           8.0000          18.5000           2.0000           4.9000 
-#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
-#>           1.8000           1.5000           0.0200           0.1000 
-#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
-#>           6.0000          11.0000           0.0800           0.4000 
-#>      SoilPassive 
-#>           0.0033 
+#>     SurfaceMetabolic BelowgroundMetabolic               Leaves 
+#>               8.0000              18.5000               2.0000 
+#>            FineRoots                Twigs        SmallBranches 
+#>               4.9000               1.8000               1.5000 
+#>            LargeWood          CoarseRoots        SurfaceActive 
+#>               0.0200               0.1000               6.0000 
+#>    BelowgroundActive          SurfaceSlow      BelowgroundSlow 
+#>              11.0000               0.0800               0.4000 
+#>   BelowgroundPassive 
+#>               0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1
@@ -1491,14 +1493,16 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
-#>           8.0000          18.5000           2.0000           4.9000 
-#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
-#>           1.8000           1.5000           0.0200           0.1000 
-#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
-#>           6.0000          11.0000           0.0800           0.4000 
-#>      SoilPassive 
-#>           0.0033 
+#>     SurfaceMetabolic BelowgroundMetabolic               Leaves 
+#>               8.0000              18.5000               2.0000 
+#>            FineRoots                Twigs        SmallBranches 
+#>               4.9000               1.8000               1.5000 
+#>            LargeWood          CoarseRoots        SurfaceActive 
+#>               0.0200               0.1000               6.0000 
+#>    BelowgroundActive          SurfaceSlow      BelowgroundSlow 
+#>              11.0000               0.0800               0.4000 
+#>   BelowgroundPassive 
+#>               0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1
@@ -2196,14 +2200,16 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
-#>           8.0000          18.5000           2.0000           4.9000 
-#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
-#>           1.8000           1.5000           0.0200           0.1000 
-#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
-#>           6.0000          11.0000           0.0800           0.4000 
-#>      SoilPassive 
-#>           0.0033 
+#>     SurfaceMetabolic BelowgroundMetabolic               Leaves 
+#>               8.0000              18.5000               2.0000 
+#>            FineRoots                Twigs        SmallBranches 
+#>               4.9000               1.8000               1.5000 
+#>            LargeWood          CoarseRoots        SurfaceActive 
+#>               0.0200               0.1000               6.0000 
+#>    BelowgroundActive          SurfaceSlow      BelowgroundSlow 
+#>              11.0000               0.0800               0.4000 
+#>   BelowgroundPassive 
+#>               0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1
@@ -2906,14 +2912,16 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] 127
 #> 
 #> $control$decompositionAnnualBaseRates
-#> SurfaceMetabolic    SoilMetabolic           Leaves        FineRoots 
-#>           8.0000          18.5000           2.0000           4.9000 
-#>            Twigs    SmallBranches        LargeWood      CoarseRoots 
-#>           1.8000           1.5000           0.0200           0.1000 
-#>    SurfaceActive       SoilActive      SurfaceSlow         SoilSlow 
-#>           6.0000          11.0000           0.0800           0.4000 
-#>      SoilPassive 
-#>           0.0033 
+#>     SurfaceMetabolic BelowgroundMetabolic               Leaves 
+#>               8.0000              18.5000               2.0000 
+#>            FineRoots                Twigs        SmallBranches 
+#>               4.9000               1.8000               1.5000 
+#>            LargeWood          CoarseRoots        SurfaceActive 
+#>               0.0200               0.1000               6.0000 
+#>    BelowgroundActive          SurfaceSlow      BelowgroundSlow 
+#>              11.0000               0.0800               0.4000 
+#>   BelowgroundPassive 
+#>               0.0033 
 #> 
 #> $control$decompositionAnnualTurnoverRate
 #> [1] 0.1

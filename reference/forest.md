@@ -132,21 +132,23 @@ soil carbon:
 
   - `SurfaceMetabolic`: Metabolic carbon in the surface (in g C/m2).
 
-  - `SoilMetabolic`: Metabolic carbon in the soil (in g C/m2)
+  - `BelowgroundMetabolic`: Belowground metabolic carbon pool (in g
+    C/m2)
 
   - `SurfaceActive`: Active decomposition carbon pool in the surface (in
     g C/m2)
 
-  - `SoilActive`: Active decomposition carbon pool in the soil (in g
-    C/m2)
+  - `BelowgroundActive`: Belowground active decomposition carbon pool
+    (in g C/m2)
 
   - `SurfaceSlow`: Slow decomposition carbon pool in the surface (in g
     C/m2)
 
-  - `SoilSlow`: Slow decomposition carbon pool in the soil (in g C/m2)
-
-  - `SoilPassive`: Passive decomposition carbon pool in the soil (in g
+  - `BelowgroundSlow`: Belowground slow decomposition carbon pool (in g
     C/m2)
+
+  - `BelowgroundPassive`: Belowground passive decomposition carbon pool
+    (in g C/m2)
 
 ## Source
 

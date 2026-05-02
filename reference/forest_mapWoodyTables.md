@@ -118,6 +118,7 @@ Miquel De Cáceres Ainsa, EMF-CREAF
 ## Examples
 
 ``` r
+
 # Load species parameters
 data(SpParamsMED)
 

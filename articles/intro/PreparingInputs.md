@@ -15,6 +15,7 @@ processing his/her own data.
 We begin by loading packages **medfate** and **meteoland**:
 
 ``` r
+
 library(medfate)
 #> Package 'medfate' [ver. 5.0.0]
 library(meteoland)
@@ -37,12 +38,14 @@ density of stems per individual.
 We begin by loading the tree data from Poblet:
 
 ``` r
+
 data("poblet_trees")
 ```
 
 and we inspect its content, for example using:
 
 ``` r
+
 summary(poblet_trees)
 #>   Plot.Code            Indv.Ref       Species           Diameter.cm   
 #>  Length:717         Min.   :  1.0   Length:717         Min.   : 7.50  
@@ -57,6 +60,7 @@ The data frame includes tree data corresponding to three forest
 inventories:
 
 ``` r
+
 table(poblet_trees$Plot.Code)
 #> 
 #>     POBL_CTL POBL_THI_AFT POBL_THI_BEF 
@@ -75,6 +79,7 @@ We initialize an empty forest object using function
 from package **medfate**:
 
 ``` r
+
 pobl_ctl <- emptyforest()
 pobl_ctl
 #> $treeData
@@ -97,6 +102,7 @@ variable names in `treeData` and vector elements are strings of the
 variable names in `poblet_trees`:
 
 ``` r
+
 mapping <- c("Species.name" = "Species", "DBH" = "Diameter.cm")
 ```
 
@@ -105,6 +111,7 @@ We can now replace the empty `treeData` in `pobl_ctl` using functions
 [`forest_mapTreeTable()`](https://emf-creaf.github.io/medfate/reference/forest_mapWoodyTables.md):
 
 ``` r
+
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"), 
                                          mapping_x = mapping, SpParams = SpParamsMED)
 ```
@@ -112,6 +119,7 @@ pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_C
 We can inspect the result using:
 
 ``` r
+
 summary(pobl_ctl$treeData)
 #>    Species                N      Height             DBH          Z50         
 #>  Length:267         Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  
@@ -135,6 +143,7 @@ of the `forest` object using the `summary` function defined in
 **medfate** for this object class:
 
 ``` r
+
 summary(pobl_ctl, SpParamsMED)
 #> Tree BA (m2/ha): 3.0179815  adult trees: 3.0179815  saplings: 0 
 #> Density (ind/ha) adult trees: 267  saplings: 0  shrubs (estimated): 0 
@@ -153,6 +162,7 @@ We are told that forest stand sampling was done using a circular plot
 whose radius was 15 m. We can calculate the sampled area using:
 
 ``` r
+
 sampled_area <- pi*15^2
 ```
 
@@ -160,6 +170,7 @@ and use this information to map the tree data again, where we specify
 parameter `plot_size_x`:
 
 ``` r
+
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"),
                                          mapping_x = mapping, SpParams = SpParamsMED, 
                                          plot_size_x = sampled_area)
@@ -168,6 +179,7 @@ pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_C
 We run again the summary:
 
 ``` r
+
 summary(pobl_ctl, SpParamsMED)
 #> Tree BA (m2/ha): 42.6957047  adult trees: 42.6957047  saplings: 0 
 #> Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 
@@ -187,6 +199,7 @@ heights are missing. Thus, we should somehow estimate tree heights, for
 example using an allometric relationship:
 
 ``` r
+
 poblet_trees$Height.cm <- 100 * 1.806*poblet_trees$Diameter.cm^0.518
 summary(poblet_trees$Height.cm)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -197,12 +210,14 @@ So trees are between 5 and 10 m height. Once tree heights are defined,
 we can include them in our mapping:
 
 ``` r
+
 mapping = c("Species.name" = "Species", "DBH" = "Diameter.cm", "Height" = "Height.cm")
 ```
 
 and rerun the tree data mapping:
 
 ``` r
+
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"),
                                          mapping_x = mapping, SpParams = SpParamsMED, 
                                          plot_size_x = sampled_area)
@@ -211,6 +226,7 @@ pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_C
 Now the summary of the control forest stand looks like:
 
 ``` r
+
 summary(pobl_ctl, SpParamsMED)
 #> Tree BA (m2/ha): 42.6957047  adult trees: 42.6957047  saplings: 0 
 #> Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 
@@ -230,6 +246,7 @@ two codes corresponding to before and after the thinning intervention.
 Let us first address the pre-thinning state:
 
 ``` r
+
 pobl_thi_bef  <- emptyforest()
 pobl_thi_bef$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_BEF"),
                                              mapping_x = mapping, SpParams = SpParamsMED, 
@@ -244,12 +261,14 @@ humilis*) is a synonym and needs to be replaced by its accepted name
 (*Quercus pubescens*), which we can do:
 
 ``` r
+
 poblet_trees$Species[poblet_trees$Species=="Quercus humilis"] <- "Quercus pubescens"
 ```
 
 Now we repeat our mapping:
 
 ``` r
+
 pobl_thi_bef$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_BEF"),
                                              mapping_x = mapping, SpParams = SpParamsMED, 
                                              plot_size_x = sampled_area)
@@ -268,6 +287,7 @@ can repeat the same operations with the forest plot after the thinning
 intervention:
 
 ``` r
+
 pobl_thi_aft = emptyforest()
 pobl_thi_aft$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_AFT"),
                                              mapping_x = mapping, SpParams = SpParamsMED, 
@@ -292,6 +312,7 @@ woody cohort. We can check the number of tree cohorts in each `forest`
 structure using:
 
 ``` r
+
 nrow(pobl_ctl$treeData)
 #> [1] 267
 nrow(pobl_thi_bef$treeData)
@@ -307,6 +328,7 @@ of doing this is via function
 from package **medfate**:
 
 ``` r
+
 pobl_ctl <- forest_mergeTrees(pobl_ctl)
 pobl_thi_bef <- forest_mergeTrees(pobl_thi_bef)
 pobl_thi_aft <- forest_mergeTrees(pobl_thi_aft)
@@ -317,6 +339,7 @@ diameter class (defined every 5 cm). We can check the new number of tree
 cohorts using again:
 
 ``` r
+
 nrow(pobl_ctl$treeData)
 #> [1] 9
 nrow(pobl_thi_bef$treeData)
@@ -329,6 +352,7 @@ We can check whether stand properties were altered using the
 [`summary()`](https://rdrr.io/r/base/summary.html) function:
 
 ``` r
+
 summary(pobl_thi_aft, SpParamsMED)
 #> Tree BA (m2/ha): 31.6162035  adult trees: 31.6162035  saplings: 0 
 #> Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 
@@ -359,6 +383,7 @@ Retrieval of soil properties from SoilGrids can be done using function
 plot coordinates, we first create an object `sf` (see package **sf**):
 
 ``` r
+
 sf_pt <- sf::st_sfc(sf::st_point(c(1.0219, 41.3443)), crs = 4326)
 ```
 
@@ -366,6 +391,7 @@ With this function we will obtain, for each location, a data frame of
 soil properties:
 
 ``` r
+
 pobl_soil_props
 #>   widths     clay     sand       om       bd  rfc
 #> 1    300 26.43333 31.06667 4.133333 1.166667 18.0
@@ -378,12 +404,14 @@ additional parameters and state variables is done using function
 [`soil()`](https://emf-creaf.github.io/medfate/reference/soil.md):
 
 ``` r
+
 pobl_soil <- soil(pobl_soil_props)
 ```
 
 We can inspect the soil definition using:
 
 ``` r
+
 summary(pobl_soil)
 #> Soil depth (mm): 2000 
 #> 
@@ -426,6 +454,7 @@ holding capacity by increasing the column `rfc`. For example, here we
 will assume that the third layer contains 80% of rocks:
 
 ``` r
+
 pobl_soil_props$rfc[3] <- 80
 ```
 
@@ -433,6 +462,7 @@ If we rebuild the soil object and inspect its properties we will see the
 effect on the soil water holding capacity and soil extractable water:
 
 ``` r
+
 pobl_soil <- soil(pobl_soil_props)
 summary(pobl_soil)
 #> Soil depth (mm): 2000 
@@ -477,6 +507,7 @@ Here we illustrate one way of obtaining such data using package
 object:
 
 ``` r
+
 pobl_spt <- sf::st_sf(sf_pt) |>
             dplyr::mutate(elevation = 850,
                           slope = 15.1, 
@@ -501,6 +532,7 @@ such an object is already available, by using the example object
 provided in the **meteoland** package.
 
 ``` r
+
 data("meteoland_interpolator_example")
 ```
 
@@ -510,6 +542,7 @@ of target points is rather straightforward using function
 from **meteoland**:
 
 ``` r
+
 meteo <- interpolate_data(pobl_spt, meteoland_interpolator_example)
 #> ℹ Starting interpolation...
 #> ℹ Temperature interpolation is needed also...
@@ -531,6 +564,7 @@ The output of function
 is an object of class `sf`:
 
 ``` r
+
 meteo
 #> Simple feature collection with 1 feature and 4 fields
 #> Geometry type: POINT
@@ -547,6 +581,7 @@ We can access the weather data frame by subsetting the appropriate
 element of `interpolated_data`:
 
 ``` r
+
 pobl_weather <- meteo$interpolated_data[[1]]
 head(pobl_weather)
 #> # A tibble: 6 × 13

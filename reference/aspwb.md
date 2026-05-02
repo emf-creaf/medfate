@@ -110,6 +110,7 @@ Miquel De Cáceres Ainsa, CREAF
 ## Examples
 
 ``` r
+
 control <- defaultControl()
 examplesoil <- defaultSoilParams(4)
 

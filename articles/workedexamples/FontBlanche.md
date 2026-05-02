@@ -39,10 +39,12 @@ of the data can be found in Moreno et al. (2021). We can use a data list
 `fb` with all the necessary inputs:
 
 ``` r
+
 fb <- medfatereports::load_list("FONBLA")
 ```
 
 ``` r
+
 fb <- readRDS("fb_data.rds")
 names(fb)
 ```
@@ -67,6 +69,7 @@ physical attributes are already defined in the data bundled for
 FontBlanche:
 
 ``` r
+
 spar <- fb$soilData
 print(spar)
 ```
@@ -83,6 +86,7 @@ actually an object of class `soil` that is created using a function with
 the same name:
 
 ``` r
+
 fb_soil <- soil(spar)
 ```
 
@@ -91,6 +95,7 @@ The [`print()`](https://rdrr.io/r/base/print.html) function for objects
 water capacity:
 
 ``` r
+
 print(fb_soil)
 ```
 
@@ -111,6 +116,7 @@ moisture content - the proportion of moisture **relative to field
 capacity** - which is by default initialized to 1 for each layer:
 
 ``` r
+
 fb_soil$W
 ```
 
@@ -125,6 +131,7 @@ resulting from bibliographic search, fit to empirical data or
 expert-based guesses:
 
 ``` r
+
 data("SpParamsMED")
 ```
 
@@ -133,6 +140,7 @@ values. In the case of FontBlanche there is a table of preferred
 parameters:
 
 ``` r
+
 fb$customParams
 ```
 
@@ -159,6 +167,7 @@ to replace the values of parameters for the desired traits, leaving the
 rest unaltered:
 
 ``` r
+
 SpParamsFB <- modifySpParams(SpParamsMED, fb$customParams)
 SpParamsFB
 ```
@@ -280,6 +289,7 @@ important items are two data frames, `treeData` (for trees) and
 `shrubData` for shrubs:
 
 ``` r
+
 fb_forest <- emptyforest()
 fb_forest
 ```
@@ -305,6 +315,7 @@ code 168). In order to run the model, one has to prepare a data table
 like this one, already prepared for Font-Blanche:
 
 ``` r
+
 fb$treeData
 ```
 
@@ -324,6 +335,7 @@ In order to use this data, we need to replace the part corresponding to
 trees into the forest object that we created before:
 
 ``` r
+
 fb_forest$treeData <- fb$treeData
 fb_forest
 ```
@@ -353,6 +365,7 @@ users can build their input data themselves, we use internal function
 on the object `fb_forest` to show how should the data look like:
 
 ``` r
+
 fb_above <- forest2aboveground(fb_forest, SpParamsFB)
 fb_above
 ```
@@ -387,6 +400,7 @@ easily inspected using function
 [`vprofile_leafAreaDensity()`](https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.md):
 
 ``` r
+
 vprofile_leafAreaDensity(fb_forest, SpParamsFB, byCohorts = T, bySpecies = T)
 ```
 
@@ -399,6 +413,7 @@ soil layer. As before, we use internal function
 on the object `fb_forest` to show how should the data look like:
 
 ``` r
+
 fb_below <- forest2belowground(fb_forest, fb_soil, SpParamsFB)
 fb_below
 ```
@@ -415,6 +430,7 @@ function
 [`vprofile_rootDistribution()`](https://emf-creaf.github.io/medfate/reference/vprofile_leafAreaDensity.md):
 
 ``` r
+
 vprofile_rootDistribution(fb_forest, SpParamsFB, bySpecies = T)
 ```
 
@@ -439,6 +455,7 @@ have a data frame with the daily meteorology measured at Font-Blanche
 for year 2014:
 
 ``` r
+
 fb_meteo <- fb$meteoData
 head(fb_meteo)
 ```
@@ -473,6 +490,7 @@ parameter values are obtained using function
 [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md):
 
 ``` r
+
 fb_control <- defaultControl()
 fb_control$transpirationMode <- "Sperry"
 fb_control$subdailyResults <- TRUE
@@ -503,6 +521,7 @@ directly from it, avoiding the need to explicitly build `fb_above` and
 `fb_below` data frames:
 
 ``` r
+
 fb_x <- spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
 ```
 
@@ -531,6 +550,7 @@ Now we are ready to call function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md):
 
 ``` r
+
 fb_SWB <- spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
 ```
 
@@ -564,6 +584,7 @@ considered, which may span several years. The output of function
 object of class with the same name, actually a list:
 
 ``` r
+
 class(fb_SWB)
 ```
 
@@ -573,6 +594,7 @@ If we inspect its elements, we realize that there are several
 components:
 
 ``` r
+
 names(fb_SWB)
 ```
 
@@ -585,6 +607,7 @@ For example, `WaterBalance` contains water balance components in form of
 a data frame with days in rows:
 
 ``` r
+
 head(fb_SWB$WaterBalance)
 ```
 
@@ -643,6 +666,7 @@ We first load the measured data into the workspace and filter for the
 dates used in the simulation:
 
 ``` r
+
 fb_observed <- fb$measuredData
 fb_observed <- fb_observed[fb_observed$dates %in% fb_meteo$dates,]
 row.names(fb_observed) <- fb_observed$dates
@@ -678,6 +702,7 @@ model results. We can first compare the observed vs modelled total
 evapotranspiration. We can plot the two time series:
 
 ``` r
+
 evaluation_plot(fb_SWB, fb_observed, type = "ETR", plotType="dynamics")+
   theme(legend.position = c(0.8,0.85))
 ```
@@ -689,6 +714,7 @@ much higher than that of the observed data. We repeat the comparison but
 excluding the intercepted water from modeled results:
 
 ``` r
+
 evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="dynamics")+
   theme(legend.position = c(0.8,0.85))
 ```
@@ -698,6 +724,7 @@ evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="dynamics")+
 The relationship can be shown in a scatter plot:
 
 ``` r
+
 evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="scatter")
 ```
 
@@ -708,6 +735,7 @@ evapotranspiration during seasons with low evaporative demand. Function
 allows us to generate evaluation statistics:
 
 ``` r
+
 evaluation_stats(fb_SWB, fb_observed, type = "SE+TR")
 ```
 
@@ -722,6 +750,7 @@ We can compare observed vs modelled soil moisture content in a similar
 way as we did for total evapotranspiration:
 
 ``` r
+
 evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="dynamics")
 ```
 
@@ -730,6 +759,7 @@ evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="dynamics")
 As before, we can generate a scatter plot:
 
 ``` r
+
 evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="scatter")
 ```
 
@@ -738,6 +768,7 @@ evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="scatter")
 or examine evaluation statistics:
 
 ``` r
+
 evaluation_stats(fb_SWB, fb_observed, type = "SWC")
 ```
 
@@ -752,6 +783,7 @@ The following plots display the observed and predicted transpiration
 dynamics for *Pinus halepensis* and *Quercus ilex*:
 
 ``` r
+
 g1<-evaluation_plot(fb_SWB, fb_observed, 
                             cohort = "T2_148",
                             type="E", plotType = "dynamics")+
@@ -772,6 +804,7 @@ also overestimated in spring and autumn. We can also inspect the
 evaluation statistics for both species using:
 
 ``` r
+
 evaluation_stats(fb_SWB, fb_observed, cohort = "T2_148", type="E")
 ```
 
@@ -781,6 +814,7 @@ evaluation_stats(fb_SWB, fb_observed, cohort = "T2_148", type="E")
     ## -11.6115114  -2.3116876
 
 ``` r
+
 evaluation_stats(fb_SWB, fb_observed, cohort = "T3_168", type="E")
 ```
 
@@ -796,6 +830,7 @@ this case measurements are available for three dates, but they include
 the standard deviation of several measurements.
 
 ``` r
+
 g1<-evaluation_plot(fb_SWB, fb_observed, 
                             cohort = "T2_148",
                             type="WP", plotType = "dynamics")+
@@ -821,6 +856,7 @@ resolution within four different selected 3-day periods that we define
 here:
 
 ``` r
+
 d1 = seq(as.Date("2014-03-01"), as.Date("2014-03-03"), by="day")
 d2 = seq(as.Date("2014-06-01"), as.Date("2014-06-03"), by="day")
 d3 = seq(as.Date("2014-08-01"), as.Date("2014-08-03"), by="day")
@@ -833,6 +869,7 @@ Function [`plot()`](https://rdrr.io/r/graphics/plot.default.html) can be
 used to show the meteorological input:
 
 ``` r
+
 plot(fb_SWB, type = "PET_Precipitation")
 ```
 
@@ -845,6 +882,7 @@ water that the model predicts to leave the forest via surface runoff or
 drainage to lower water compartments.
 
 ``` r
+
 plot(fb_SWB, type = "Export")
 ```
 
@@ -857,6 +895,7 @@ via deep drainage. One can also display the evapotranspiration flows,
 which we do in the following plot that also combines the two previous:
 
 ``` r
+
 g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
 g2<-plot(fb_SWB, "Evapotranspiration")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.13,0.73))
 g3<-plot(fb_SWB, "Export")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.35,0.60))
@@ -871,6 +910,7 @@ It is also useful to plot the dynamics of soil state variables by layer,
 such as the percentage of moisture in relation to field capacity:
 
 ``` r
+
 plot(fb_SWB, type="SoilTheta")
 ```
 
@@ -882,6 +922,7 @@ model incorporates. We can also display the dynamics of the
 corresponding soil layer water potentials:
 
 ``` r
+
 plot(fb_SWB, type="SoilPsi")
 ```
 
@@ -889,6 +930,7 @@ plot(fb_SWB, type="SoilPsi")
 composite plot including absolute soil water volume:
 
 ``` r
+
 g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
 g2<-plot(fb_SWB, "SoilVol")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.65))
 g3<-plot(fb_SWB, "SoilPsi")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.5))
@@ -904,6 +946,7 @@ release) from different soil layers, and the daily amount of water
 entering soil layers due to hydraulic redistribution:
 
 ``` r
+
 g1<-plot(fb_SWB, "SoilPsi")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")+ylab("Soil wp (MPa)")
 g2<-plot(fb_SWB, "PlantExtraction")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.68))
 g3<-plot(fb_SWB, "HydraulicRedistribution")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.5))
@@ -917,6 +960,7 @@ patterns, we can further understand the redistribution flows created by
 the model during different periods:
 
 ``` r
+
 g0<-plot(fb_SWB, "PlantExtraction")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.68))
 g1<-plot(fb_SWB, "PlantExtraction", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(-0.05,0.13))
 g2<-plot(fb_SWB, "PlantExtraction", subdaily = T, dates = d2)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-0.05,0.13))
@@ -935,6 +979,7 @@ seasonal dynamics of cohort-level variables, such as plant transpiration
 per leaf area:
 
 ``` r
+
 par(mar=c(5,5,1,1))
 plot(fb_SWB, type="TranspirationPerLeaf", bySpecies = T)
 ```
@@ -944,6 +989,7 @@ observe that some species transpire more than others due to their
 vertical position within the canopy.
 
 ``` r
+
 g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
 g2<-plot(fb_SWB, "TranspirationPerLeaf", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.1,0.75))
 g21<-plot(fb_SWB, "LeafTranspiration", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(0,0.32))
@@ -963,6 +1009,7 @@ In the model, reduction of (whole-plant) plant transpiration is what
 used to define drought stress, which depends on the species identity:
 
 ``` r
+
 plot(fb_SWB, type="PlantStress", bySpecies = T)
 ```
 
@@ -974,6 +1021,7 @@ stem percent loss of conductance derived from embolism, as we do in the
 following composite plot:
 
 ``` r
+
 g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
 g2<-plot(fb_SWB, "SoilPlantConductance", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+
   ylab(expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1}))))+
@@ -988,6 +1036,7 @@ plot_grid(g1, g2,g3,
 ### Leaf water potentials
 
 ``` r
+
 g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
 g2<-plot(fb_SWB, "LeafPsiRange", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.1,0.25)) + ylab("Leaf water potential (MPa)")
 g21<-plot(fb_SWB, "LeafPsi", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(-7,0))
@@ -1004,6 +1053,7 @@ plot_grid(g1, g2,
 ### Stomatal conductance
 
 ``` r
+
 g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
 g2<-plot(fb_SWB, "GSWMax_SL", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.5,0.74))+ylab("Sunlit leaf stomatal conductance")+ylim(c(0,0.3))
 g21<-plot(fb_SWB, "LeafStomatalConductance", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(0,0.2))
@@ -1027,6 +1077,7 @@ can be used to summarize the model’s output at different temporal steps
 soil moisture and water potentials by months one can use:
 
 ``` r
+
 summary(fb_SWB, freq="months",FUN=sum, output="WaterBalance")
 ```
 
@@ -1101,6 +1152,7 @@ for which we desire summaries. Similarly, it is possible to calculate
 the average stress of the three tree species by months:
 
 ``` r
+
 summary(fb_SWB, freq="months",FUN=mean, output="PlantStress", bySpecies = TRUE)
 ```
 

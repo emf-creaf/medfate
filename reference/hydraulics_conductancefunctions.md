@@ -203,6 +203,7 @@ Miquel De Cáceres Ainsa, CREAF
 ## Examples
 
 ``` r
+
 #Manual display of vulnerability curve
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1
 stemc = 3 

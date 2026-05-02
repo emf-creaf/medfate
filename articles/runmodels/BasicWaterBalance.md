@@ -31,6 +31,7 @@ function
 [`defaultSoilParams()`](https://emf-creaf.github.io/medfate/reference/defaultSoilParams.md):
 
 ``` r
+
 examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
@@ -46,6 +47,7 @@ primarily designed to be ran on **forest inventory plots**. Here we use
 the example object provided with the package:
 
 ``` r
+
 data(exampleforest)
 exampleforest
 ```
@@ -67,6 +69,7 @@ simulated is required. Here we use the default data frame included with
 the package:
 
 ``` r
+
 data(examplemeteo)
 head(examplemeteo)
 ```
@@ -90,6 +93,7 @@ Finally, simulations in `medfate` require a data frame with species
 parameter values, which we load using defaults for Catalonia (NE Spain):
 
 ``` r
+
 data("SpParamsMED")
 ```
 
@@ -101,6 +105,7 @@ parameterization is obtained using function
 [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md):
 
 ``` r
+
 control <- defaultControl("Granier")
 ```
 
@@ -123,6 +128,7 @@ values for each plant cohort. The object can be generated using function
 [`spwbInput()`](https://emf-creaf.github.io/medfate/reference/modelInput.md):
 
 ``` r
+
 x <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
@@ -134,6 +140,7 @@ can be inspected by accessing the different elements of this object,
 whose names are.
 
 ``` r
+
 names(x)
 ```
 
@@ -167,6 +174,7 @@ In the following code we select day 100 from the meteorological input
 data and perform soil water balance for that day only:
 
 ``` r
+
 d <- 100
 date <- examplemeteo$dates[d]
 meteovec <- unlist(examplemeteo[d,])
@@ -182,6 +190,7 @@ is why so many meteorological variables are required. The output of
 is a list with five elements:
 
 ``` r
+
 names(sd1)
 ```
 
@@ -202,6 +211,7 @@ names(sd1)
   transpiration, water potential, drought stress index, …).
 
 ``` r
+
 sd1
 ```
 
@@ -276,6 +286,7 @@ by default modifies the state variables of the input objects. In
 particular, the values of soil moisture are now:
 
 ``` r
+
 x$soil$W
 ```
 
@@ -286,6 +297,7 @@ simulations are not affected by the end state of the previous
 simulation:
 
 ``` r
+
 resetInputs(x)
 x$soil$W
 ```
@@ -296,6 +308,7 @@ Now we are ready to call function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md):
 
 ``` r
+
 S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
@@ -328,6 +341,7 @@ Function
 returns an object of class with the same name, actually a list:
 
 ``` r
+
 class(S)
 ```
 
@@ -338,6 +352,7 @@ differently than in
 [`spwb_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md):
 
 ``` r
+
 names(S)
 ```
 
@@ -348,6 +363,7 @@ In particular, element `spwbInput` contains a copy of the input
 parameters that were used to run the model:
 
 ``` r
+
 names(S$spwbInput)
 ```
 
@@ -366,6 +382,7 @@ As before, `WaterBalance` contains water balance components, but in this
 case in form of a data frame with days in rows:
 
 ``` r
+
 head(S$WaterBalance)
 ```
 
@@ -409,6 +426,7 @@ Element `Plants` is in turn a list with several dataframes with plant
 output variables, for example plant water potentials are in:
 
 ``` r
+
 head(S$Plants$PlantPsi)
 ```
 
@@ -429,24 +447,28 @@ Package `medfate` provides a simple `plot` function for objects of class
 different components of the water balance:
 
 ``` r
+
 plot(S, type = "PET_Precipitation")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-19-1.png)
 
 ``` r
+
 plot(S, type = "Snow")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-19-2.png)
 
 ``` r
+
 plot(S, type = "Export")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-19-3.png)
 
 ``` r
+
 plot(S, type = "Evapotranspiration")
 ```
 
@@ -457,24 +479,28 @@ layer, which can be done in four different ways (the first two only
 imply a change in axis units):
 
 ``` r
+
 plot(S, type="SoilTheta")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-21-1.png)
 
 ``` r
+
 plot(S, type="SoilRWC")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-21-2.png)
 
 ``` r
+
 plot(S, type="SoilPsi")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-21-3.png)
 
 ``` r
+
 plot(S, type="SoilVol")
 ```
 
@@ -485,18 +511,21 @@ plant variables by cohorts, such as transpiration, gross photosynthesis
 or water potential:
 
 ``` r
+
 plot(S, type="Transpiration")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-22-1.png)
 
 ``` r
+
 plot(S, type="GrossPhotosynthesis")
 ```
 
 ![](BasicWaterBalance_files/figure-html/unnamed-chunk-22-2.png)
 
 ``` r
+
 plot(S, type="PlantPsi")
 ```
 
@@ -506,6 +535,7 @@ Finally, one can interactively create plots using function `shinyplot`,
 e.g.:
 
 ``` r
+
 shinyplot(S)
 ```
 
@@ -517,6 +547,7 @@ easy to handle. Functions are provided to extract model outputs as
 stand-level variables, including their units:
 
 ``` r
+
 extract(S, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
@@ -546,6 +577,7 @@ And a similar code can be used to daily series of cohort-level
 variables:
 
 ``` r
+
 extract(S, "cohort", addunits = TRUE) |>
   tibble::as_tibble()
 ```
@@ -578,6 +610,7 @@ annual, …). For example, to obtain the water balance by months one can
 use:
 
 ``` r
+
 summary(S, freq="months",FUN=mean, output="WaterBalance")
 ```
 
@@ -652,6 +685,7 @@ for which we desire summaries. Similarly, it is possible to calculate
 the average stress of plant cohorts by months:
 
 ``` r
+
 summary(S, freq="months",FUN=mean, output="PlantStress")
 ```
 
@@ -677,6 +711,7 @@ may average the daily drought stress across cohorts of the same species
 output):
 
 ``` r
+
 head(summary(S, freq="day", output="PlantStress", bySpecies = TRUE))
 ```
 
@@ -692,6 +727,7 @@ Or we can combine the aggregation by species with a temporal aggregation
 (here monthly averages):
 
 ``` r
+
 summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
 ```
 
@@ -719,6 +755,7 @@ allows calculating several plant stress indices, such as the number of
 days with drought stress \> 0.5 or the maximum drought stress:
 
 ``` r
+
 droughtStress(S, index = "NDD", freq = "years", draw=FALSE)
 ```
 
@@ -726,6 +763,7 @@ droughtStress(S, index = "NDD", freq = "years", draw=FALSE)
     ## 2001-01-01      0      0      0
 
 ``` r
+
 droughtStress(S, index = "MDS", freq = "years", draw=FALSE)
 ```
 
@@ -739,6 +777,7 @@ example the water stress index (integral of water potential values) can
 be calculated and drawn for every month:
 
 ``` r
+
 droughtStress(S, index = "WSI", freq = "months", draw=TRUE)
 ```
 
@@ -752,6 +791,7 @@ and transpiration at the desired scale. In this case it is equal to the
 value of the input species parameter `WUE`:
 
 ``` r
+
 waterUseEfficiency(S, type = "Stand Ag/E", freq = "months", draw=FALSE)
 ```
 

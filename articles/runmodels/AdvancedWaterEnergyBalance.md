@@ -32,6 +32,7 @@ function
 [`defaultSoilParams()`](https://emf-creaf.github.io/medfate/reference/defaultSoilParams.md):
 
 ``` r
+
 examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
@@ -47,6 +48,7 @@ primarily designed to be ran on **forest inventory plots**. Here we use
 the example object provided with the package:
 
 ``` r
+
 data(exampleforest)
 exampleforest
 ```
@@ -68,6 +70,7 @@ simulated is required. Here we use the default data frame included with
 the package:
 
 ``` r
+
 data(examplemeteo)
 head(examplemeteo)
 ```
@@ -91,6 +94,7 @@ Finally, simulations in `medfate` require a data frame with species
 parameter values, which we load using defaults for Catalonia (NE Spain):
 
 ``` r
+
 data("SpParamsMED")
 ```
 
@@ -102,6 +106,7 @@ obtained using function
 [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md):
 
 ``` r
+
 control <- defaultControl("Sperry")
 ```
 
@@ -113,6 +118,7 @@ Since we will be inspecting subdaily results, we need to set the flag to
 obtain subdaily output:
 
 ``` r
+
 control$subdailyResults <- TRUE
 ```
 
@@ -125,6 +131,7 @@ plant cohort. This is done by calling function
 [`spwbInput()`](https://emf-creaf.github.io/medfate/reference/modelInput.md):
 
 ``` r
+
 x <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
@@ -134,6 +141,7 @@ Information about the cohort species is found in element `cohorts`,
 i.e. the cohort code, the species index and species name:
 
 ``` r
+
 x$cohorts
 ```
 
@@ -146,6 +154,7 @@ Element `soil` contains soil layer parameters and state variables
 (moisture and temperature):
 
 ``` r
+
 x$soil
 ```
 
@@ -168,6 +177,7 @@ initialization function called
 Element `canopy` contains state variables within the canopy:
 
 ``` r
+
 x$canopy
 ```
 
@@ -212,6 +222,7 @@ As you may already known, element `above` contains the aboveground
 structure data that we already know:
 
 ``` r
+
 x$above
 ```
 
@@ -223,6 +234,7 @@ x$above
 Belowground parameters can be seen in `below`:
 
 ``` r
+
 x$below
 ```
 
@@ -234,6 +246,7 @@ x$below
 and in `belowLayers`:
 
 ``` r
+
 x$belowLayers
 ```
 
@@ -278,6 +291,7 @@ kinds of traits. For example, plant anatomy parameters are described in
 `paramsAnatomy`:
 
 ``` r
+
 x$paramsAnatomy
 ```
 
@@ -294,6 +308,7 @@ Parameters related to plant transpiration and photosynthesis can be seen
 in `paramsTranspiration`:
 
 ``` r
+
 x$paramsTranspiration
 ```
 
@@ -322,6 +337,7 @@ Parameters related to pressure-volume curves and water storage capacity
 of leaf and stem organs are in `paramsWaterStorage`:
 
 ``` r
+
 x$paramsWaterStorage
 ```
 
@@ -357,24 +373,28 @@ and each of the different segments of the soil-plant hydraulic network:
 rhizosphere, roots, stems and leaves:
 
 ``` r
+
 hydraulics_vulnerabilityCurvePlot(x, type="leaf")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-1.png)
 
 ``` r
+
 hydraulics_vulnerabilityCurvePlot(x, type="stem")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-2.png)
 
 ``` r
+
 hydraulics_vulnerabilityCurvePlot(x, type="root")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-3.png)
 
 ``` r
+
 hydraulics_vulnerabilityCurvePlot(x, examplesoil, type="rhizo")
 ```
 
@@ -403,24 +423,28 @@ hydraulic network. Function
 can be used to inspect any of this variables:
 
 ``` r
+
 hydraulics_supplyFunctionPlot(x, type="E")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-1.png)
 
 ``` r
+
 hydraulics_supplyFunctionPlot(x, type="ERhizo")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-2.png)
 
 ``` r
+
 hydraulics_supplyFunctionPlot(x, type="dEdP")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-3.png)
 
 ``` r
+
 hydraulics_supplyFunctionPlot(x, type="StemPsi")
 ```
 
@@ -436,24 +460,28 @@ for different values of soil moisture.
 ### Pressure volume curves
 
 ``` r
+
 moisture_pressureVolumeCurvePlot(x, segment="leaf", fraction="symplastic")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-1.png)
 
 ``` r
+
 moisture_pressureVolumeCurvePlot(x, segment="leaf", fraction="apoplastic")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-2.png)
 
 ``` r
+
 moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="symplastic")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-3.png)
 
 ``` r
+
 moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="apoplastic")
 ```
 
@@ -473,6 +501,7 @@ meteorological input data and perform soil water balance for that day
 only:
 
 ``` r
+
 date <- examplemeteo$dates[d]
 meteovec <- unlist(examplemeteo[d,])
 sd1<-spwb_day(x, date, meteovec, 
@@ -484,6 +513,7 @@ The output of
 is a list with several elements:
 
 ``` r
+
 names(sd1)
 ```
 
@@ -501,6 +531,7 @@ Element `WaterBalance` contains the soil water balance flows of the day
 (precipitation, infiltration, transpiration, …)
 
 ``` r
+
 sd1$WaterBalance
 ```
 
@@ -521,6 +552,7 @@ And `Soil` contains water evaporated from each soil layer, water
 transpired from each soil layer and the final soil water potential:
 
 ``` r
+
 sd1$Soil
 ```
 
@@ -537,6 +569,7 @@ canopy and soil temperatures, as well as canopy and soil energy balance
 components.
 
 ``` r
+
 names(sd1$EnergyBalance)
 ```
 
@@ -550,18 +583,21 @@ variables. For example, we can use it to display temperature variations
 (only the temperature of the topmost soil layer is drawn):
 
 ``` r
+
 plot(sd1, type = "Temperature")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-1.png)
 
 ``` r
+
 plot(sd1, type = "CanopyEnergyBalance")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-2.png)
 
 ``` r
+
 plot(sd1, type = "SoilEnergyBalance")
 ```
 
@@ -573,6 +609,7 @@ Element `Plants` contains output values by plant cohort. Several output
 variables can be inspected in this element.
 
 ``` r
+
 sd1$Plants
 ```
 
@@ -603,24 +640,28 @@ L·m$`^{-2}`$), plant net photosynthesis (in g C·m$`^{-2}`$), and plant
 water potential (in MPa):
 
 ``` r
+
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-1.png)
 
 ``` r
+
 plot(sd1, type = "TranspirationPerLeaf", bySpecies = T)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-2.png)
 
 ``` r
+
 plot(sd1, type = "NetPhotosynthesis", bySpecies = T)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-3.png)
 
 ``` r
+
 plot(sd1, type = "LeafPsiAverage", bySpecies = T)
 ```
 
@@ -633,6 +674,7 @@ regulation. Static properties of sunlit and shade leaves, for each
 cohort, can be accessed via:
 
 ``` r
+
 sd1$SunlitLeaves
 ```
 
@@ -642,6 +684,7 @@ sd1$SunlitLeaves
     ## S1_165  -1.122060 -0.04703362 0.007561899 0.09612847 1.267823 17.32016
 
 ``` r
+
 sd1$ShadeLeaves
 ```
 
@@ -655,6 +698,7 @@ also use the `plot` function for objects of class `spwb_day` to draw
 instantaneous variations in temperature for sunlit and shade leaves:
 
 ``` r
+
 plot(sd1, type = "LeafTemperature", bySpecies=TRUE)
 ```
 
@@ -665,12 +709,14 @@ the canopy. We can also plot variations in instantaneous gross and net
 photosynthesis rates:
 
 ``` r
+
 plot(sd1, type = "LeafGrossPhotosynthesis", bySpecies=TRUE)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-31-1.png)
 
 ``` r
+
 plot(sd1, type = "LeafNetPhotosynthesis", bySpecies=TRUE)
 ```
 
@@ -679,6 +725,7 @@ plot(sd1, type = "LeafNetPhotosynthesis", bySpecies=TRUE)
 Or variations in stomatal conductance:
 
 ``` r
+
 plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
 ```
 
@@ -687,6 +734,7 @@ plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
 Or variations in vapour pressure deficit:
 
 ``` r
+
 plot(sd1, type = "LeafVPD", bySpecies=TRUE)
 ```
 
@@ -695,18 +743,21 @@ plot(sd1, type = "LeafVPD", bySpecies=TRUE)
 Or variations in leaf water potential:
 
 ``` r
+
 plot(sd1, type = "LeafPsi", bySpecies=TRUE)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-35-1.png)
 
 ``` r
+
 plot(sd1, type = "LeafCi", bySpecies=TRUE)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-36-1.png)
 
 ``` r
+
 plot(sd1, type = "LeafIntrinsicWUE", bySpecies=TRUE)
 ```
 
@@ -726,6 +777,7 @@ modified the input objects. In particular, the soil moisture at the end
 of the simulation was:
 
 ``` r
+
 x$soil$W
 ```
 
@@ -734,6 +786,7 @@ x$soil$W
 And the temperature of soil layers:
 
 ``` r
+
 x$soil$Temp
 ```
 
@@ -742,6 +795,7 @@ x$soil$Temp
 We can also see the current state of canopy variables:
 
 ``` r
+
 x$canopy
 ```
 
@@ -781,6 +835,7 @@ to reset state variables to their default values, so that the new
 simulation is not affected by the end state of the previous simulation:
 
 ``` r
+
 resetInputs(x)
 x$soil$W
 ```
@@ -788,12 +843,14 @@ x$soil$W
     ## [1] 1 1 1 1
 
 ``` r
+
 x$soil$Temp
 ```
 
     ## [1] NA NA NA NA
 
 ``` r
+
 x$canopy
 ```
 
@@ -831,6 +888,7 @@ Now we are ready to call function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md):
 
 ``` r
+
 S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
@@ -865,6 +923,7 @@ realize that the output is arranged differently than in
 [`spwb_day()`](https://emf-creaf.github.io/medfate/reference/spwb_day.md):
 
 ``` r
+
 names(S)
 ```
 
@@ -877,6 +936,7 @@ In particular, element `spwbInput` contains a copy of the input
 parameters that were used to run the model:
 
 ``` r
+
 names(S$spwbInput)
 ```
 
@@ -895,6 +955,7 @@ As before, `WaterBalance` contains water balance components, but in this
 case in form of a data frame with days in rows:
 
 ``` r
+
 head(S$WaterBalance)
 ```
 
@@ -939,6 +1000,7 @@ daily output results by plant cohorts, for example leaf minimum (midday)
 water potentials are:
 
 ``` r
+
 head(S$Plants$LeafPsiMin)
 ```
 
@@ -959,24 +1021,28 @@ we draw water fluxes, soil water potentials, plant transpiration and
 plant (mid-day) water potential:
 
 ``` r
+
 plot(S, type="Evapotranspiration")
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-47-1.png)
 
 ``` r
+
 plot(S, type="SoilPsi", bySpecies = TRUE)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-47-2.png)
 
 ``` r
+
 plot(S, type="PlantTranspiration", bySpecies = TRUE)
 ```
 
 ![](AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-47-3.png)
 
 ``` r
+
 plot(S, type="LeafPsiMin", bySpecies = TRUE)
 ```
 
@@ -986,6 +1052,7 @@ Alternatively, one can interactively create plots using function
 `shinyplot`, e.g.:
 
 ``` r
+
 shinyplot(S)
 ```
 
@@ -996,6 +1063,7 @@ model’s output at different temporal steps (i.e. weekly, annual, …). For
 example, to obtain the water balance by months one can use:
 
 ``` r
+
 summary(S, freq="months",FUN=mean, output="WaterBalance")
 ```
 
@@ -1070,6 +1138,7 @@ for which we desire summaries. Similarly, it is possible to calculate
 the average stress of plant cohorts by months:
 
 ``` r
+
 summary(S, freq="months",FUN=mean, output="PlantStress")
 ```
 
@@ -1095,6 +1164,7 @@ may average the daily drought stress across cohorts of the same species
 output):
 
 ``` r
+
 head(summary(S, freq="day", output="PlantStress", bySpecies = TRUE))
 ```
 
@@ -1110,6 +1180,7 @@ Or we can combine the aggregation by species with a temporal aggregation
 (here monthly averages):
 
 ``` r
+
 summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
 ```
 

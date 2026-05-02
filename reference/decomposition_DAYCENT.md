@@ -144,17 +144,18 @@ A list with two elements:
 
   - `"SurfaceMetabolic"`: Respiration from surface metabolic pool.
 
-  - `"SoilMetabolic"`: Respiration from soil metabolic pool.
+  - `"BelowgroundMetabolic"`: Respiration from belowground metabolic
+    pool.
 
   - `"SurfaceActive"`: Respiration from surface active pool.
 
-  - `"SoilActive"`: Respiration from soil active pool.
+  - `"BelowgroundActive"`: Respiration from belowground active pool.
 
   - `"SurfaceSlow"`: Respiration from surface slow pool.
 
-  - `"SoilSlow"`: Respiration from soil slow pool.
+  - `"BelowgroundSlow"`: Respiration from belowground slow pool.
 
-  - `"SoilPassive"`: Respiration from soil passive pool.
+  - `"BelowgroundPassive"`: Respiration from belowground passive pool.
 
 - `"DecompositionPools"`: A numeric matrix with the carbon mass of
   different carbon pools, all in g C · m-2:
@@ -181,17 +182,18 @@ A list with two elements:
 
   - `"SurfaceMetabolic"`: Metabolic carbon in the surface.
 
-  - `"SoilMetabolic"`: Metabolic carbon in the soil.
+  - `"BelowgroundMetabolic"`: Metabolic carbon in the soil.
 
   - `"SurfaceActive"`: Active decomposition carbon pool in the surface.
 
-  - `"SoilActive"`: Active decomposition carbon pool in the soil.
+  - `"BelowgroundActive"`: Belowground active decomposition carbon pool.
 
   - `"SurfaceSlow"`: Slow decomposition carbon pool in the surface.
 
-  - `"SoilSlow"`: Slow decomposition carbon pool in the soil.
+  - `"BelowgroundSlow"`: Belowground slow decomposition carbon pool.
 
-  - `"SoilPassive"`: Passive decomposition carbon pool in the soil.
+  - `"BelowgroundPassive"`: Belowground passive decomposition carbon
+    pool.
 
 ## Details
 

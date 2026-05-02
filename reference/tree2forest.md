@@ -103,6 +103,7 @@ Miquel De Cáceres Ainsa, CREAF
 ## Examples
 
 ``` r
+
 oak_forest <-tree2forest("Quercus ilex", Height= 200, LAI = 2)
 oak_forest
 #> $treeData

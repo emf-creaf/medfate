@@ -35,6 +35,7 @@ number of layers, using function
 [`defaultSoilParams()`](https://emf-creaf.github.io/medfate/reference/defaultSoilParams.md):
 
 ``` r
+
 examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
@@ -50,6 +51,7 @@ primarily designed to be ran on **forest inventory plots**. Here we use
 the example forest object provided with the package:
 
 ``` r
+
 data(exampleforest)
 exampleforest
 ```
@@ -71,6 +73,7 @@ simulated is required. Here we use the default data frame included with
 the package:
 
 ``` r
+
 data(examplemeteo)
 head(examplemeteo)
 ```
@@ -101,6 +104,7 @@ parameter values, for which we load using defaults for Catalonia (NE
 Spain):
 
 ``` r
+
 data("SpParamsMED")
 ```
 
@@ -112,6 +116,7 @@ parameterization is obtained using function
 [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md):
 
 ``` r
+
 control = defaultControl("Granier")
 ```
 
@@ -129,6 +134,7 @@ simulations. The object can be obtained by using function
 [`growthInput()`](https://emf-creaf.github.io/medfate/reference/modelInput.md):
 
 ``` r
+
 x <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
@@ -137,6 +143,7 @@ can be inspected by printing different elements of the input object,
 whose names are:
 
 ``` r
+
 names(x)
 ```
 
@@ -160,6 +167,7 @@ As with `spwbInput` objects, information about the cohort species is
 found in element `cohorts` (i.e. code, species and name):
 
 ``` r
+
 x$cohorts
 ```
 
@@ -173,6 +181,7 @@ know, but with an additional columns that describes the estimated
 initial amount of *sapwood area*:
 
 ``` r
+
 x$above
 ```
 
@@ -195,6 +204,7 @@ An important set of new cohort-specific parameters for the forest growth
 model are `paramsGrowth`:
 
 ``` r
+
 x$paramsGrowth
 ```
 
@@ -216,6 +226,7 @@ respiration rages. Another important set of parameters is given in
 `paramsAllometries`:
 
 ``` r
+
 x$paramsAllometries
 ```
 
@@ -241,6 +252,7 @@ keep track of plant status. For example, the metabolic and storage
 carbon levels can be seen in `internalCarbon`:
 
 ``` r
+
 x$internalCarbon
 ```
 
@@ -252,6 +264,7 @@ x$internalCarbon
 and `internalAllocation` stores the carbon allocation targets:
 
 ``` r
+
 x$internalAllocation
 ```
 
@@ -276,6 +289,7 @@ which has the same parameter names as
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md):
 
 ``` r
+
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
@@ -320,6 +334,7 @@ Function
 returns an object of class with the same name, actually a list:
 
 ``` r
+
 class(G1)
 ```
 
@@ -330,6 +345,7 @@ returned by
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md):
 
 ``` r
+
 names(G1)
 ```
 
@@ -366,6 +382,7 @@ Function
 allow extracting model outputs in form of data frame:
 
 ``` r
+
 extract(G1, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
@@ -406,6 +423,7 @@ daily gross photosynthesis expressed as the carbon fixation relative to
 dry biomass:
 
 ``` r
+
 plot(G1, "GrossPhotosynthesis", bySpecies = T)
 ```
 
@@ -415,6 +433,7 @@ Then we can draw the maintenance respiration costs (which include the
 sum of leaf, sapwood and fine root respiration) in the same units:
 
 ``` r
+
 plot(G1, "MaintenanceRespiration", bySpecies = T)
 ```
 
@@ -423,6 +442,7 @@ can display the daily negative or positive balance of the plant storage,
 which determines changes in plant carbon pools:
 
 ``` r
+
 plot(G1, "LabileCarbonBalance", bySpecies = T)
 ```
 
@@ -433,6 +453,7 @@ carbon. The most important storage compartment is sapwood starch, whose
 dynamics can be shown using:
 
 ``` r
+
 plot(G1, "StarchSapwood", bySpecies = T)
 ```
 
@@ -442,12 +463,14 @@ Leaf and sapwood area dynamics arising from the interplay between growth
 and senescence of tissues can be inspected using:
 
 ``` r
+
 plot(G1, "LeafArea", bySpecies = T)
 ```
 
 ![](ForestGrowth_files/figure-html/unnamed-chunk-22-1.png)
 
 ``` r
+
 plot(G1, "SapwoodArea", bySpecies = T)
 ```
 
@@ -457,6 +480,7 @@ We can also inspect carbon balance at the stand level, here displayed at
 monthly resolution:
 
 ``` r
+
 plot(G1, "CarbonBalance", summary.freq = "months")
 ```
 
@@ -468,6 +492,7 @@ Finally, recall that one can interactively create plots using function
 `shinyplot`, e.g.:
 
 ``` r
+
 shinyplot(G1)
 ```
 
@@ -482,6 +507,7 @@ using a fake data set, consisting on the predicted values and some added
 error.
 
 ``` r
+
 data(exampleobs)
 ```
 
@@ -493,6 +519,7 @@ observed and predicted values using function
 [`evaluation_plot()`](https://emf-creaf.github.io/medfate/reference/evaluation.md):
 
 ``` r
+
 evaluation_plot(G1, exampleobs, "BAI", cohort = "T1_148", 
                 temporalResolution = "month", plotType = "scatter")
 ```
@@ -505,6 +532,7 @@ And the following would help us quantifying the strength of the
 relationship:
 
 ``` r
+
 evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148", 
                  temporalResolution = "month")
 ```
@@ -519,6 +547,7 @@ good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series together:
 
 ``` r
+
 evaluation_plot(G1, exampleobs, "DI", cohort = "T1_148", 
                 temporalResolution = "day")
 ```
@@ -532,6 +561,7 @@ also accepts an observed data frame as second argument, which allows
 performing model evaluation interactively:
 
 ``` r
+
 shinyplot(G1, exampleobs)
 ```
 

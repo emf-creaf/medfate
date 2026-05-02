@@ -30,6 +30,7 @@ Package **medfate** can be found at
 every few months. Installation from CRAN can be done via:
 
 ``` r
+
 install.packages("medfate")
 ```
 
@@ -37,6 +38,7 @@ Users can also download and install the latest stable versions GitHub as
 follows (required package `remotes` should be installed/updated first):
 
 ``` r
+
 remotes::install_github("emf-creaf/medfate")
 ```
 

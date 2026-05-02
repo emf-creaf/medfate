@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2026-04-23</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/Metamodelling.Rmd" class="external-link"><code>vignettes/parametrization/Metamodelling.Rmd</code></a></small>
       <div class="d-none name"><code>Metamodelling.Rmd</code></div>
@@ -565,7 +565,7 @@ available to the plant cohort, the annual transpiration and annual
 photosynthesis produced by each model.</p>
 <p>Additional simulations with increasing carbon dioxide concentration
 were conducted using the Sperry transpiration mode and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[CO_2]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[CO_2]</annotation></semantics></math>
 values increasing from 350 ppm to 900 ppm. We also avoided soil water
 limitations using <code>control$unlimitedSoilWater = TRUE</code>. For
 each plot we recorded the annual gross photosynthesis per leaf area
@@ -963,9 +963,9 @@ among species.</p>
 <p>The parameter <code>WUE_co2</code>, which specifies the dependency of
 WUE on air CO2 concentration is estimated by fitting a non-linear
 function on the ratio of photosynthesis under a given
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[CO_2]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[CO_2]</annotation></semantics></math>
 value over the photosynthesis at
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>386</mn></mrow><annotation encoding="application/x-tex">[CO_2] = 386</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>C</mi><msub><mi>O</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">]</mo><mo>=</mo><mn>386</mn></mrow><annotation encoding="application/x-tex">[CO_2] = 386</annotation></semantics></math>
 ppm:</p>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="700"></p>
 </div>

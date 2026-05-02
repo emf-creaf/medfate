@@ -48,6 +48,7 @@ function
 [`defaultSoilParams()`](https://emf-creaf.github.io/medfate/reference/defaultSoilParams.md):
 
 ``` r
+
 examplesoil <- defaultSoilParams(4)
 examplesoil
 ```
@@ -63,6 +64,7 @@ primarily designed to be ran on **forest inventory plots**. Here we use
 the example object provided with the package:
 
 ``` r
+
 data(exampleforest)
 exampleforest
 ```
@@ -84,6 +86,7 @@ tree or shrub data, for example let us assume we know the age of the two
 tree cohorts:
 
 ``` r
+
 exampleforest$treeData$Age <- c(40, 24)
 ```
 
@@ -92,6 +95,7 @@ simulated is required. Here we use the default data frame included with
 the package:
 
 ``` r
+
 data(examplemeteo)
 head(examplemeteo)
 ```
@@ -115,6 +119,7 @@ Finally, simulations in `medfate` require a data frame with species
 parameter values, which we load using defaults for Catalonia (NE Spain):
 
 ``` r
+
 data("SpParamsMED")
 ```
 
@@ -126,6 +131,7 @@ parameterization is obtained using function
 [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md):
 
 ``` r
+
 control <- defaultControl("Granier")
 ```
 
@@ -145,6 +151,7 @@ In this vignette we will fake a ten-year weather input by repeating the
 example weather data frame ten times.
 
 ``` r
+
 meteo <- rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
                     examplemeteo, examplemeteo, examplemeteo, examplemeteo,
                     examplemeteo, examplemeteo)
@@ -158,6 +165,7 @@ intermediate input object is needed, as in
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)):
 
 ``` r
+
 fd<-fordyn(exampleforest, examplesoil, SpParamsMED, meteo, control, 
            latitude = 41.82592, elevation = 100)
 ```
@@ -197,6 +205,7 @@ compositional state of the forest at each time step. For example, we can
 access stand-level statistics using:
 
 ``` r
+
 fd$StandSummary
 ```
 
@@ -252,6 +261,7 @@ fd$StandSummary
 Species-level analogous statistics are shown using:
 
 ``` r
+
 fd$SpeciesSummary
 ```
 
@@ -329,6 +339,7 @@ Package `medfate` provides a simple `plot` function for objects of class
 stand-level basal area using:
 
 ``` r
+
 plot(fd, type = "StandBasalArea")
 ```
 
@@ -343,6 +354,7 @@ are tables in long format with cohort structural information (i.e. DBH,
 height, density, etc) for each time step:
 
 ``` r
+
 fd$TreeTable
 ```
 
@@ -398,6 +410,7 @@ fd$TreeTable
 The same can be shown for dead trees:
 
 ``` r
+
 fd$DeadTreeTable
 ```
 
@@ -456,6 +469,7 @@ the following shows the leaf area for individuals of the three cohorts
 during the second year:
 
 ``` r
+
 plot(fd$GrowthResults[[2]], "LeafArea", bySpecies = T)
 ```
 
@@ -466,6 +480,7 @@ results by passing a `fordyn` object to the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:
 
 ``` r
+
 plot(fd, "LeafArea")
 ```
 
@@ -477,6 +492,7 @@ We can also create interactive plots for particular steps using function
 e.g.:
 
 ``` r
+
 shinyplot(fd$GrowthResults[[1]])
 ```
 
@@ -486,6 +502,7 @@ will extract and bind outputs for all the internal calls to function
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md):
 
 ``` r
+
 extract(fd, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
@@ -527,6 +544,7 @@ function
 Here we provide an example of simulations including forest management:
 
 ``` r
+
 # Default arguments
 args <- defaultManagementArguments()
 # Here one can modify defaults before calling fordyn()
@@ -553,6 +571,7 @@ When management is included in simulations, two additional tables are
 produced, corresponding to the trees and shrubs that were cut, e.g.:
 
 ``` r
+
 fd$CutTreeTable
 ```
 
@@ -568,12 +587,14 @@ interventions from ‘below’, indicating that smaller trees were to be cut
 earlier:
 
 ``` r
+
 args$type
 ```
 
     ## [1] "irregular"
 
 ``` r
+
 args$thinning
 ```
 
@@ -584,6 +605,7 @@ the thinning intervention, evidenced by the new cohort (T3_168)
 appearing in year 2001:
 
 ``` r
+
 fd$TreeTable
 ```
 

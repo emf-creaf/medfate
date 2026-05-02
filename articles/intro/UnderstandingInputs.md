@@ -26,6 +26,7 @@ data bases, bibliographic searches, fit to empirical data or
 expert-based guesses:
 
 ``` r
+
 data("SpParamsMED") # For the Spanish forest inventory (including taxon groups)
 ```
 
@@ -215,6 +216,7 @@ that contains several elements. Among them, the most important items are
 two data frames, `treeData` (for trees) and `shrubData` (for shrubs):
 
 ``` r
+
 data(exampleforest)
 exampleforest
 ```
@@ -247,6 +249,7 @@ While the former example illustrates the standard structure of a
 area index and crown ratio of woody cohorts and the herb layer:
 
 ``` r
+
 data(exampleforest2)
 exampleforest2
 ```
@@ -282,6 +285,7 @@ oak (*Quercus ilex*) forest of 4-m height and having a leaf area index
 of $`2\, m^2\cdot m^{-2}`$ can be defined using:
 
 ``` r
+
 oak_forest <-tree2forest("Quercus ilex", Height= 400, LAI = 2)
 ```
 
@@ -289,6 +293,7 @@ The function will return a `forest` object where most attributes are
 empty:
 
 ``` r
+
 oak_forest
 ```
 
@@ -315,6 +320,7 @@ We can obtain a summary of the forest object using function
 table of species parameters:
 
 ``` r
+
 summary(exampleforest, SpParamsMED)
 ```
 
@@ -330,6 +336,7 @@ Function [`plot()`](https://rdrr.io/r/graphics/plot.default.html) for
 properties. For example, leaf area distribution can be examined using:
 
 ``` r
+
 plot(exampleforest, SpParamsMED, type = "LeafAreaDensity", 
      byCohorts = FALSE)
 ```
@@ -340,6 +347,7 @@ Similarly, we can visually inspect the distribution of fine roots for
 each cohort of a`forest` object using:
 
 ``` r
+
 plot(exampleforest, SpParamsMED, type = "RootDistribution")
 ```
 
@@ -357,6 +365,7 @@ values, for a given number of layers, using function
 [`defaultSoilParams()`](https://emf-creaf.github.io/medfate/reference/defaultSoilParams.md):
 
 ``` r
+
 spar <- defaultSoilParams(4)
 print(spar)
 ```
@@ -383,6 +392,7 @@ soil input for simulations is an object of class `soil` (also a data
 frame) that is created using a function with the same name:
 
 ``` r
+
 examplesoil <- soil(spar)
 class(examplesoil)
 ```
@@ -394,6 +404,7 @@ parameters and state variables needed for soil water balance
 simulations:
 
 ``` r
+
 examplesoil
 ```
 
@@ -417,6 +428,7 @@ At any time, one can show the characteristics and status of the soil
 object using its `summary` function:
 
 ``` r
+
 summary(examplesoil, model = "SX")
 ```
 
@@ -466,6 +478,7 @@ that represents moisture content - the proportion of moisture **relative
 to field capacity** - which is normally initialized to 1 for each layer:
 
 ``` r
+
 examplesoil$W
 ```
 
@@ -476,6 +489,7 @@ considering the temperature of soil. Hence, `Temp` contains the
 temperature (in degrees) of soil layers:
 
 ``` r
+
 examplesoil$Temp
 ```
 
@@ -502,6 +516,7 @@ follow Van Genuchten - Mualem equations, which will give slightly
 different values for the same texture:
 
 ``` r
+
 summary(examplesoil, model="VG")
 ```
 
@@ -554,6 +569,7 @@ Genuchten parameters). The following code calls function
 the difference between the two water retention models in this soil:
 
 ``` r
+
 plot(examplesoil, model="both")
 ```
 
@@ -585,6 +601,7 @@ wind speed, atmospheric pressure or CO2 concentration are optional. Here
 we show an example of meteorological forcing data.
 
 ``` r
+
 data(examplemeteo)
 head(examplemeteo)
 ```
@@ -618,6 +635,7 @@ parameterization is obtained using function
 [`defaultControl()`](https://emf-creaf.github.io/medfate/reference/defaultControl.md):
 
 ``` r
+
 control <- defaultControl()
 names(control)
 ```

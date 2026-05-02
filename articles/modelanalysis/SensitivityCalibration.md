@@ -23,12 +23,14 @@ illustrate simulation functions in **medfate**. We begin by loading the
 package and the example forest data:
 
 ``` r
+
 library(medfate)
 ```
 
     ## Package 'medfate' [ver. 5.0.0]
 
 ``` r
+
 data(exampleforest)
 exampleforest
 ```
@@ -49,6 +51,7 @@ We also load the species parameter table and the example weather
 dataset:
 
 ``` r
+
 data(SpParamsMED)
 data(examplemeteo)
 ```
@@ -58,6 +61,7 @@ data(examplemeteo)
 We will focus on three species/cohorts of the example data set:
 
 ``` r
+
 PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
 QI_coh = paste0("T2_", SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"])
 QC_coh = paste0("S1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"])
@@ -73,6 +77,7 @@ simulation function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md):
 
 ``` r
+
 examplesoil <- defaultSoilParams(4)
 x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control = defaultControl())
 ```
@@ -82,6 +87,7 @@ Although it is not necessary, we make an initial call to the model
 the default parameter settings:
 
 ``` r
+
 S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
@@ -144,24 +150,28 @@ soil layer 1 and 2). In total, eleven model parameters will be studied.
 The following shows the initial values for plant trait parameters:
 
 ``` r
+
 x1$above$LAI_live
 ```
 
     ## [1] 0.84874773 0.70557382 0.03062604
 
 ``` r
+
 x1$below$Z50
 ```
 
     ## [1] 100 300 200
 
 ``` r
+
 x1$paramsTransp$Psi_Extract
 ```
 
     ## [1] -0.9218219 -1.9726871 -2.1210726
 
 ``` r
+
 x1$soil$rfc[1:2]
 ```
 
@@ -174,6 +184,7 @@ as well as the input variability space, defined by the minimum and
 maximum parameter values:
 
 ``` r
+
 #Parameter names of interest
 parNames = c(paste0(PH_coh,"/LAI_live"), paste0(QI_coh,"/LAI_live"), paste0(QC_coh,"/LAI_live"),
              paste0(PH_coh,"/Z50"), paste0(QI_coh,"/Z50"), paste0(QC_coh,"/Z50"),
@@ -188,6 +199,7 @@ parNames
     ## [10] "rfc@1"              "rfc@2"
 
 ``` r
+
 #Parameter minimum and maximum values
 parMin = c(0.1,0.1,0.1,
            100,100,50,
@@ -217,6 +229,7 @@ that, given a simulation result, calculates total transpiration (mm)
 over the simulated period (one year):
 
 ``` r
+
 sf_transp<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 sf_transp(S1)
 ```
@@ -229,6 +242,7 @@ drought stress of plants (measured using the water stress index) over
 the simulated period:
 
 ``` r
+
 sf_stress<-function(x) {
   lai <- x$spwbInput$above$LAI_live
   lai_p <- lai/sum(lai)
@@ -260,6 +274,7 @@ The following code defines one of such functions focusing on total
 transpiration:
 
 ``` r
+
 of_transp<-optimization_function(parNames = parNames,
                                  x = x1,
                                  meteo = examplemeteo, 
@@ -275,12 +290,14 @@ which we can call with parameter values (or sets of parameter values) as
 input:
 
 ``` r
+
 of_transp(parMin)
 ```
 
     ## [1] 47.63932
 
 ``` r
+
 of_transp(parMax)
 ```
 
@@ -305,6 +322,7 @@ is in the specification of `sf_stress` as summary function, instead of
 `sf_transp`).
 
 ``` r
+
 of_stress<-optimization_function(parNames = parNames,
                                  x = x1, 
                                  meteo = examplemeteo, 
@@ -316,6 +334,7 @@ of_stress(parMin)
     ## [1] 0.6602433
 
 ``` r
+
 of_stress(parMax)
 ```
 
@@ -328,6 +347,7 @@ set of ‘observed’ values (actually simulated values with gaussian error)
 as reference:
 
 ``` r
+
 data(exampleobs)
 head(exampleobs)
 ```
@@ -353,6 +373,7 @@ which we calculate for the initial run using function
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md):
 
 ``` r
+
 evaluation_metric(S1, measuredData = exampleobs, type = "SWC", 
                   metric = "NSE")
 ```
@@ -368,6 +389,7 @@ factory to define a model output function that takes input factors as
 inputs, runs the model and performs the evaluation:
 
 ``` r
+
 of_eval<-optimization_evaluation_function(parNames = parNames,
                 x = x1,
                 meteo = examplemeteo, latitude = 41.82592, elevation = 100,
@@ -380,12 +402,14 @@ conducting simulations and the data needed for evaluating simulation
 results, so that we only need to provide values for the input factors:
 
 ``` r
+
 of_eval(parMin)
 ```
 
     ## [1] 0.3326834
 
 ``` r
+
 of_eval(parMax)
 ```
 
@@ -400,6 +424,7 @@ taken into account (global). Here we will conduct global sensitivity
 analyses using package **sensitivity** (Ioss et al. 2020):
 
 ``` r
+
 library(sensitivity)
 ```
 
@@ -423,6 +448,7 @@ this function to analyze sensitivity of total transpiration simulated by
 input factors (500 runs are done, so be patient):
 
 ``` r
+
 sa_transp <- morris(of_transp, parNames, r = 50, 
              design = list(type = "oat", levels = 10, grid.jump = 3), 
              binf = parMin, bsup = parMax, scale=TRUE, verbose=FALSE)
@@ -435,6 +461,7 @@ the response model function (in our case `of_transp`), the parameter
 names and parameter value boundaries (i.e. `parMin` and `parMax`).
 
 ``` r
+
 print(sa_transp)
 ```
 
@@ -466,6 +493,7 @@ rock fragment content in the soil and the water potentials corresponding
 to whole-plant conductance reduction (i.e. `Psi_Extract`).
 
 ``` r
+
 plot(sa_transp, xlim=c(0,150))
 ```
 
@@ -476,12 +504,14 @@ factors relevant for predicted plant drought stress (i.e. using
 `of_stress` as model output function):
 
 ``` r
+
 sa_stress <- morris(of_stress, parNames, r = 50, 
              design = list(type = "oat", levels = 10, grid.jump = 3), 
              binf = parMin, bsup = parMax, scale=TRUE, verbose=FALSE)
 ```
 
 ``` r
+
 print(sa_stress)
 ```
 
@@ -510,6 +540,7 @@ parameters of fine root distribution (`Z50`) and rock fragment content
 (`rfc`).
 
 ``` r
+
 plot(sa_stress, xlim=c(0,300))
 ```
 
@@ -520,12 +551,14 @@ performance in terms of soil water content dynamics (i.e. using
 `of_eval` as model output function):
 
 ``` r
+
 sa_eval <- morris(of_eval, parNames, r = 50, 
              design = list(type = "oat", levels = 10, grid.jump = 3), 
              binf = parMin, bsup = parMax, scale=TRUE, verbose=FALSE)
 ```
 
 ``` r
+
 print(sa_eval)
 ```
 
@@ -553,6 +586,7 @@ appear as more relevant than the water potentials corresponding to
 whole-plant conductance reduction (i.e. `Psi_Extract`).
 
 ``` r
+
 plot(sa_eval, xlim=c(0,15))
 ```
 
@@ -573,6 +607,7 @@ fine root distribution. Below we redefine vectors `parNames`, `parMin`,
 and `parMax`; and we specify a vector of initial values.
 
 ``` r
+
 #Parameter names of interest
 parNames = c(paste0(PH_coh,"/Z50"), paste0(QI_coh,"/Z50"), paste0(QC_coh,"/Z50"))
 #Parameter minimum and maximum values
@@ -589,6 +624,7 @@ but in this case we specify a log-likelihood with Gaussian error as the
 evaluation metric for `of_eval()`.
 
 ``` r
+
 of_eval<-optimization_evaluation_function(parNames = parNames,
                 x = x1,
                 meteo = examplemeteo, latitude = 41.82592, elevation = 100,
@@ -612,6 +648,7 @@ control parameter `fnscale` to turn the process into a maximization of
 maximum likelihood:
 
 ``` r
+
 opt_cal = optim(parIni, of_eval, method = "L-BFGS-B",
                 control = list(fnscale = -1), verbose = FALSE)
 ```
@@ -619,6 +656,7 @@ opt_cal = optim(parIni, of_eval, method = "L-BFGS-B",
 The calibration result is the following:
 
 ``` r
+
 print(opt_cal)
 ```
 
@@ -642,6 +680,7 @@ Note that the optimized parameters are relatively close to those of
 `Z50` in the original `x1`.
 
 ``` r
+
 cbind( x1$below[,"Z50", drop = FALSE], opt_cal$par)
 ```
 
@@ -661,6 +700,7 @@ a Bayesian calibration analysis using package **BayesianTools** (Hartig
 et al. 2019):
 
 ``` r
+
 library(BayesianTools)
 ```
 
@@ -680,6 +720,7 @@ the **BayesianTools** package can be done using function
 [`createUniformPrior()`](https://rdrr.io/pkg/BayesianTools/man/createUniformPrior.html):
 
 ``` r
+
 prior <- createUniformPrior(parMin, parMax, parIni)
 mcmc_setup <- createBayesianSetup(likelihood = of_eval, 
                                   prior = prior, 
@@ -695,6 +736,7 @@ function is the main wrapper for all other implemented MCMC functions.
 Here we call it with nine chains of 1000 iterations each.
 
 ``` r
+
 mcmc_out <- runMCMC(
   bayesianSetup = mcmc_setup, 
   sampler = "DEzs",
@@ -710,6 +752,7 @@ A summary function is provided to inspect convergence results and
 correlation between parameters:
 
 ``` r
+
 summary(mcmc_out)
 ```
 
@@ -753,6 +796,7 @@ accepted because the multivariate potential scale reduction factor was ≤
 distribution of parameters that they generate using:
 
 ``` r
+
 plot(mcmc_out)
 ```
 
@@ -766,6 +810,7 @@ kermes oak is low, so that it has small influence on soil water dynamics
 regardless of its root distribution.
 
 ``` r
+
 marginalPlot(mcmc_out, prior = T)
 ```
 
@@ -775,6 +820,7 @@ Plots can also be produced to display the correlation between parameter
 values.
 
 ``` r
+
 correlationPlot(mcmc_out)
 ```
 
@@ -789,6 +835,7 @@ samples from the Markov chains and use them to perform simulations (here
 we use sample size of 100 but a larger value is preferred).
 
 ``` r
+
 s = getSample(mcmc_out, numSamples = 100)
 head(s)
 ```
@@ -809,6 +856,7 @@ values. For example, the following code runs
 all combinations of fine root distribution specified in `s`.
 
 ``` r
+
 MS = multiple_runs(s, x = x1, meteo = examplemeteo,
                    latitude = 41.82592, elevation = 100, verbose = FALSE)
 ```
@@ -821,6 +869,7 @@ the posterior distribution of several prediction variables, for example
 total transpiration:
 
 ``` r
+
 plot(density(unlist(lapply(MS, sf_transp))), main = "Posterior transpiration", 
      xlab = "Total transpiration (mm)")
 ```
@@ -830,6 +879,7 @@ plot(density(unlist(lapply(MS, sf_transp))), main = "Posterior transpiration",
 or average plant drought stress:
 
 ``` r
+
 plot(density(unlist(lapply(MS, sf_stress))), 
      xlab = "Average plant stress", main="Posterior stress")
 ```
@@ -850,6 +900,7 @@ Finally, we can use object `prior` to generate another sample under the
 prior parameter distribution, perform simulations:
 
 ``` r
+
 s_prior = prior$sampler(100)
 colnames(s_prior)<- parNames
 MS_prior = multiple_runs(s_prior, x = x1, meteo = examplemeteo,
@@ -860,6 +911,7 @@ and compare the prior prediction uncertainty with the posterior
 prediction uncertainty for the same output variables:
 
 ``` r
+
 plot(density(unlist(lapply(MS_prior, sf_transp))), main = "Transpiration", 
      xlab = "Total transpiration (mm)",
      xlim = c(100,200), ylim = c(0,6))
@@ -871,6 +923,7 @@ legend("topleft", legend = c("Prior", "Posterior"),
 ![](SensitivityCalibration_files/figure-html/unnamed-chunk-50-1.png)
 
 ``` r
+
 plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress", 
      xlab = "Average plant stress",
      xlim = c(0,30), ylim = c(0,2))
@@ -888,6 +941,7 @@ plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress",
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ``` r
+
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
 ```
 
@@ -902,6 +956,7 @@ lines(density(unlist(lapply(MS, sf_stress))), col = "red")
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ``` r
+
 legend("topleft", legend = c("Prior", "Posterior"), col = c("black", "red"), lty=1, bty="n")
 ```
 
