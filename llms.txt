@@ -413,9 +413,9 @@ Articles explaining advanced modelling tasks
   Description of a calibration procedure used for growth and senescence
   parameters
 
-### Model performance evaluation
+### Model verification and evaluation
 
-Model benchmark evaluation at stand level
+Model verification and evaluation against observations
 
 - [Model evaluation in experimental
   plots](https://emf-creaf.github.io/medfate/articles/evaluation/StandLevelEvaluation.md):
@@ -423,6 +423,12 @@ Model benchmark evaluation at stand level
   Benchmark evaluation at stand-level, using soil moisture, sapflow,
   leaf water potential and eddy covariance data from instrumentalized
   forest plots
+
+- [Verification of carbon decomposition
+  (DAYCENT)](https://emf-creaf.github.io/medfate/articles/evaluation/CENTURYVerification.md):
+
+  Verification of carbon decomposition implemented from DAYCENT against
+  the output from CENTURY (4.7)
 
 ### Application examples
 
