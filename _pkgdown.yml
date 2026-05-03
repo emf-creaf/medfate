@@ -39,10 +39,11 @@ articles:
   - parametrization/Metamodelling
   - parametrization/GrowthCalibration
 
-- title: Model performance evaluation
-  desc: Model benchmark evaluation at stand level
+- title: Model verification and evaluation
+  desc: Model verification and evaluation against observations 
   contents:
   - evaluation/StandLevelEvaluation
+  - evaluation/CENTURYVerification
 
 - title: Application examples
   desc: Examples of model application
