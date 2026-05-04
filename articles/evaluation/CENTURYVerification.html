@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Inés Delsman
 Valderrama (CREAF), Miquel De Cáceres (CREAF)</h4>
             
-            <h4 data-toc-skip class="date">2026-05-03</h4>
+            <h4 data-toc-skip class="date">2026-05-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/CENTURYVerification.Rmd" class="external-link"><code>vignettes/evaluation/CENTURYVerification.Rmd</code></a></small>
       <div class="d-none name"><code>CENTURYVerification.Rmd</code></div>
@@ -89,220 +89,397 @@ Valderrama (CREAF), Miquel De Cáceres (CREAF)</h4>
 
     
     
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>This document presents an exercise to verify the implementation of
+the carbon decomposition process of DAYCENT into MEDFATE. The
+verification is done against the outputs of CENTURY (ver. 4.7)
+corresponding to simulation of Duke and Harvard forests.</p>
+</div>
+<div class="section level2">
+<h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
+</h2>
 <div class="section level3">
-<h3 id="initial-surfacesoil-plant-residue">Initial surface/soil plant residue<a class="anchor" aria-label="anchor" href="#initial-surfacesoil-plant-residue"></a>
+<h3 id="initial-soil-carbon-content">Initial soil carbon content<a class="anchor" aria-label="anchor" href="#initial-soil-carbon-content"></a>
 </h3>
-<p>In the Duke example, surface structural = 72 g m2. This value is
-applied to the leaves pool (strucc(1)).</p>
-<p>Additionaly, soil structural = 57.75 g m2. This value is applied to
-the fine roots pools (strucc(2)).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Initialize litter pools</span></span>
-<span><span class="va">nlitter</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span></span>
-<span><span class="va">strucc1</span> <span class="op">&lt;-</span> <span class="va">out_duke</span><span class="op">$</span><span class="va">strucc.1.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">strucc2</span> <span class="op">&lt;-</span> <span class="va">out_duke</span><span class="op">$</span><span class="va">strucc.2.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">litterData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">paramsLitterDecomposition</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         Leaves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">strucc1</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         Twigs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         SmallBranches <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         LargeWood <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         CoarseRoots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                         FineRoots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">strucc2</span>, <span class="va">nlitter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Snags are not relevant at this point in time. No changes will be
-made.</p>
+<ul>
+<li><p>Surface structural (<code>strucc(1)</code>) was applied as the
+initial carbon content for the <code>Leaves</code> pool. Similarly,
+belowground structural (<code>strucc(2)</code>) was applied to the
+<code>FineRoots</code> pool. The remaining litter pools (snags, small
+branches, large wood and coarse roots) are set to zero initial
+value.</p></li>
+<li><p>We took the soil organic carbon (SOC) initial values from the
+CENTURY <code>site.100</code> input file, and the surface and
+belowground metabolic data from the first row of the output file of our
+CENTURY simulation of the Duke site.</p></li>
+</ul>
+<table class="table">
+<colgroup>
+<col width="36%">
+<col width="25%">
+<col width="18%">
+<col width="18%">
+</colgroup>
+<thead><tr class="header">
+<th>MEDFATE pool</th>
+<th>CENTURY parameter</th>
+<th>DUKE</th>
+<th>HARVARD</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>Leaves</code></td>
+<td><code>strucc.1.</code></td>
+<td>72</td>
+<td>311</td>
+</tr>
+<tr class="even">
+<td><code>FineRoots</code></td>
+<td><code>strucc.2.</code></td>
+<td>58</td>
+<td>223</td>
+</tr>
+<tr class="odd">
+<td><code>SurfaceMetabolic</code></td>
+<td><code>metabc.1.</code></td>
+<td>28</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td><code>BelowgroundMetabolic</code></td>
+<td><code>metabc.2.</code></td>
+<td>42</td>
+<td>477</td>
+</tr>
+<tr class="odd">
+<td><code>SurfaceActive</code></td>
+<td><code>SOM1CI(1,1)</code></td>
+<td>65</td>
+<td>105</td>
+</tr>
+<tr class="even">
+<td><code>BelowgroundActive</code></td>
+<td><code>SOM1CI(2,1)</code></td>
+<td>60</td>
+<td>120</td>
+</tr>
+<tr class="odd">
+<td><code>SurfaceSlow</code></td>
+<td><code>SOM2CI(1,1)</code></td>
+<td>850</td>
+<td>1400</td>
+</tr>
+<tr class="even">
+<td><code>BelowgroundSlow</code></td>
+<td><code>SOM2CI(2,1)</code></td>
+<td>1100</td>
+<td>1800</td>
+</tr>
+<tr class="odd">
+<td><code>BelowgroundPassive</code></td>
+<td><code>SOM3CI(1)</code></td>
+<td>1200</td>
+<td>1200</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
-<h3 id="soc-pools">SOC pools<a class="anchor" aria-label="anchor" href="#soc-pools"></a>
+<h3 id="decomposition-parameters">Decomposition parameters<a class="anchor" aria-label="anchor" href="#decomposition-parameters"></a>
 </h3>
-<p>We took the SOC data from the site.100 file and the surface and soil
-metabolic data from the output file of our Rcentury simulation of the
-Duke site.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Initialize SOC pools</span></span>
-<span><span class="va">SOM1C1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`organic matter`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"SOM1CI(1,1)"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
-<span><span class="va">SOM1C2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`organic matter`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"SOM1CI(2,1)"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
-<span><span class="va">SOM2C1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`organic matter`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"SOM2CI(1,1)"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
-<span><span class="va">SOM2C2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`organic matter`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"SOM2CI(2,1)"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
-<span><span class="va">SOM3C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`organic matter`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"SOM3CI(1)"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
-<span></span>
-<span><span class="va">Metabc1</span> <span class="op">&lt;-</span>   <span class="va">out_duke</span><span class="op">$</span><span class="va">metabc.1.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">Metabc2</span> <span class="op">&lt;-</span> <span class="va">out_duke</span><span class="op">$</span><span class="va">metabc.2.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">SOCData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>SurfaceMetabolic <span class="op">=</span> <span class="va">Metabc1</span>, BelowgroundMetabolic <span class="op">=</span> <span class="va">Metabc2</span>, SurfaceActive <span class="op">=</span> <span class="va">SOM1C1</span>, BelowgroundActive <span class="op">=</span> <span class="va">SOM1C2</span>, SurfaceSlow <span class="op">=</span> <span class="va">SOM2C1</span>, BelowgroundSlow <span class="op">=</span> <span class="va">SOM2C2</span>, BelowgroundPassive <span class="op">=</span> <span class="va">SOM3C</span><span class="op">)</span></span></code></pre></div>
-<p>The base rates from RC2m have been changed to match the base rates
-from Rcentury. These can be found in the fix.100 file under the name
-‘decx(x)’. As Rcentury does not distinguish between leaves, small
-branches etc., the base rate for surface structural has been applied to
-leaves while Twigs, Smallbranches and LargeWood remain unchanges. The
-same counts for the soil structural. Fineroots has been changed and
-Coarse roots remain the same.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Change base rates</span></span>
-<span><span class="va">baseAnnualRates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>SurfaceMetabolic <span class="op">=</span> <span class="fl">14.8</span>, BelowgroundMetabolic <span class="op">=</span> <span class="fl">18.5</span>, Leaves <span class="op">=</span> <span class="fl">3.9</span> , FineRoots <span class="op">=</span> <span class="fl">4.9</span>, Twigs <span class="op">=</span> <span class="fl">1.8</span>,  SmallBranches <span class="op">=</span> <span class="fl">1.5</span>,LargeWood <span class="op">=</span> <span class="fl">0.02</span> , CoarseRoots <span class="op">=</span> <span class="fl">0.1</span>,SurfaceActive <span class="op">=</span> <span class="fl">6</span>, BelowgroundActive <span class="op">=</span> <span class="fl">7.3</span>, SurfaceSlow <span class="op">=</span> <span class="fl">0.03</span>, BelowgroundSlow <span class="op">=</span> <span class="fl">0.07</span>, BelowgroundPassive <span class="op">=</span> <span class="fl">0.0008</span><span class="op">)</span></span>
-<span><span class="co"># baseAnnualRates &lt;- c(SurfaceMetabolic = 14.8, BelowgroundMetabolic = 18.5, Leaves = 3.9 , FineRoots = 4.9, Twigs = 3.9,  SmallBranches = 3.9,LargeWood = 3.9 , CoarseRoots = 3.9,SurfaceActive = 6, BelowgroundActive = 7.3, SurfaceSlow = 0.03, BelowgroundSlow = 0.07, BelowgroundPassive = 0.0008)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="litter-decomposition-parameters">Litter decomposition parameters<a class="anchor" aria-label="anchor" href="#litter-decomposition-parameters"></a>
+</h4>
+<table class="table">
+<colgroup>
+<col width="9%">
+<col width="12%">
+<col width="12%">
+<col width="17%">
+<col width="10%">
+<col width="10%">
+<col width="11%">
+<col width="14%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Species</th>
+<th align="right">LeafLignin</th>
+<th align="right">WoodLignin</th>
+<th align="right">FineRootLignin</th>
+<th align="right">Nleaf</th>
+<th align="right">Nsapwood</th>
+<th align="right">Nfineroot</th>
+<th align="right">LeafLigninN</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">DUKE</td>
+<td align="right">20.0</td>
+<td align="right">25</td>
+<td align="right">20</td>
+<td align="right">5.000000</td>
+<td align="right">1.744186</td>
+<td align="right">10</td>
+<td align="right">40.000</td>
+</tr>
+<tr class="even">
+<td align="left">HARVF</td>
+<td align="right">20.3</td>
+<td align="right">25</td>
+<td align="right">8</td>
+<td align="right">8.474576</td>
+<td align="right">4.658385</td>
+<td align="right">10</td>
+<td align="right">23.954</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="section level3">
-<h3 id="texture-ph">Texture &amp; pH<a class="anchor" aria-label="anchor" href="#texture-ph"></a>
-</h3>
+<div class="section level4">
+<h4 id="maximum-decomposition-rates">Maximum decomposition rates<a class="anchor" aria-label="anchor" href="#maximum-decomposition-rates"></a>
+</h4>
+<p>The maximum (base) decomposition rates for the different soil pools
+in MEDFATE (i.e. control parameter <code>baseAnnualRates</code>) were
+adapted to match the maximum rates from CENTURY (these can be found in
+the <code>fix.100</code> file).</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="44%">
+<col width="19%">
+<col width="26%">
+<col width="9%">
+</colgroup>
+<thead><tr class="header">
+<th>Element in <code>baseAnnualRates</code>
+</th>
+<th>CENTURY pool</th>
+<th>CENTURY parameter</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>Leaves</code></td>
+<td>Surface structural</td>
+<td><code>DEC1(1)</code></td>
+<td>3.9</td>
+</tr>
+<tr class="even">
+<td><code>FineRoots</code></td>
+<td>Belowground structural</td>
+<td><code>DEC1(2)</code></td>
+<td>4.9</td>
+</tr>
+<tr class="odd">
+<td><code>SurfaceMetabolic</code></td>
+<td>Surface metabolic</td>
+<td><code>DEC2(1)</code></td>
+<td>14.8</td>
+</tr>
+<tr class="even">
+<td><code>BelowgroundMetabolic</code></td>
+<td>Belowground metabolic</td>
+<td><code>DEC2(2)</code></td>
+<td>18.5</td>
+</tr>
+<tr class="odd">
+<td><code>SurfaceActive</code></td>
+<td>Surface active</td>
+<td><code>DEC3(1)</code></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td><code>BelowgroundActive</code></td>
+<td>Soil active</td>
+<td><code>DEC3(2)</code></td>
+<td>7.3</td>
+</tr>
+<tr class="odd">
+<td><code>BelowgroundPassive</code></td>
+<td>Soil slow turnover</td>
+<td><code>DEC4</code></td>
+<td>8^{-4}</td>
+</tr>
+<tr class="even">
+<td><code>SurfaceSlow</code></td>
+<td>Surface intermediate</td>
+<td><code>DEC5(1)</code></td>
+<td>0.03</td>
+</tr>
+<tr class="odd">
+<td><code>BelowgroundSlow</code></td>
+<td>Soil intermediate</td>
+<td><code>DEC5(2)</code></td>
+<td>0.07</td>
+</tr>
+</tbody>
+</table>
+<p>Maximum decomposition rates for dead wood pools (small branches,
+large wood and coarse roots) were taken from elements
+<code>DECW1</code>, <code>DECW2</code> and <code>DECW3</code> of
+<code>tree.fix</code>.</p>
+<table class="table">
+<colgroup>
+<col width="46%">
+<col width="27%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th>Element in <code>baseAnnualRates</code>
+</th>
+<th>CENTURY parameter</th>
+<th>DUKE</th>
+<th>Harvard</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>SmallBranches</code></td>
+<td><code>DECW1</code></td>
+<td>1.5</td>
+<td>1.5</td>
+</tr>
+<tr class="even">
+<td><code>LargeWood</code></td>
+<td><code>DECW2</code></td>
+<td>0.5</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td><code>CoarseRoots</code></td>
+<td><code>DECW3</code></td>
+<td>0.6</td>
+<td>0.6</td>
+</tr>
+</tbody>
+</table>
+<p>Rate of mixing between surface slow and belowground slow compartments
+was taken from <code>tree.100</code>:</p>
+<table class="table">
+<colgroup>
+<col width="46%">
+<col width="27%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th>Element in <code>control</code>
+</th>
+<th>CENTURY parameter</th>
+<th>DUKE</th>
+<th>Harvard</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td><code>annualTurnoverRate</code></td>
+<td><code>TMIX</code></td>
+<td>0.11</td>
+<td>0.11</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="soil-texture-and-ph">Soil texture and pH<a class="anchor" aria-label="anchor" href="#soil-texture-and-ph"></a>
+</h4>
 <p>We took the the sand and clay values (and multiplied them by 100 to
-obtain the fractions) and the pH value from the site.100 file.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Retrieve soil site data</span></span>
-<span><span class="va">sand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`site and control`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"SAND"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span> <span class="op">*</span> <span class="fl">100</span></span>
-<span><span class="va">clay</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`site and control`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"CLAY"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span> <span class="op">*</span> <span class="fl">100</span></span>
-<span><span class="va">soilPH</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">site_d</span><span class="op">$</span><span class="va">`site and control`</span><span class="op">$</span><span class="va">df</span>, <span class="va">field</span> <span class="op">==</span> <span class="st">"PH"</span><span class="op">)</span><span class="op">$</span><span class="va">value</span> </span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
-</h3>
-<p>The monthly results from the Rcentury simulation are transformed to
-daily data to make it comparable to the results from medfate. The
-results are further divided into total C stock, soil organic matter
-pools (SOM pools) and litter pools.</p>
-<div class="section level4">
-<h4 id="total">Total<a class="anchor" aria-label="anchor" href="#total"></a>
-</h4>
-<p>The SOM and Litter pools are summed manually to calculate the total C
-stock for both models. For Rcentury, there is also the option to use the
-parameter ‘tomres’, which should already include the total C stock. In
-this case, the manual option was preferable to main.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get dimensions</span></span>
-<span><span class="va">n_days</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">DecompositionPools</span><span class="op">)</span>  </span>
-<span><span class="va">n_months</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">out_duke</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="co"># Create data frames with time indices</span></span>
-<span><span class="va">RC2m_duke</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">DecompositionPools</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  day <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_days</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"RC2m"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Calculate days per month (approximately equal)</span></span>
-<span><span class="va">days_per_month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_days</span> <span class="op">/</span> <span class="va">n_months</span><span class="op">)</span>, <span class="va">n_months</span><span class="op">)</span></span>
-<span><span class="co"># Adjust last month to match exactly</span></span>
-<span><span class="va">days_per_month</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">days_per_month</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">n_days</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">days_per_month</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">days_per_month</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Expand monthly data to daily</span></span>
-<span><span class="va">Rcentury_duke</span> <span class="op">&lt;-</span> <span class="va">RC_total</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    days <span class="op">=</span> <span class="va">days_per_month</span>,</span>
-<span>    monthly_value <span class="op">=</span> <span class="va">value</span>  </span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rowwise</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    daily_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">monthly_value</span>, <span class="va">days</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">unnest</span><span class="op">(</span><span class="va">daily_values</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    day <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    type <span class="op">=</span> <span class="st">"Rcentury"</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">day</span>, value <span class="op">=</span> <span class="va">daily_values</span>, <span class="va">type</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Combine</span></span>
-<span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">RC2m_duke</span>, <span class="va">Rcentury_duke</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Plot</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">combined</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">day</span>, y <span class="op">=</span> <span class="va">value</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Total C stock"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"Time (20 years in days)"</span>, </span>
-<span>       y <span class="op">=</span> <span class="st">"C stocks (g/m2)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ylim</span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">4500</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">xlim</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">7671</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="700">
-This figure shows a similar pattern for both models: a small decrease in
-the beginning and then a an increase later on. However, RC2m increases
-faster than Rcentury and there is a ~500 g/m2 difference in total C
-stock.</p>
-</div>
-<div class="section level4">
-<h4 id="som-pool-analysis">SOM pool analysis<a class="anchor" aria-label="anchor" href="#som-pool-analysis"></a>
-</h4>
-<p>To further analyze the results, all SOM pools are selected from the
-models results and compared.</p>
-<p>Then we rename the Century pool codes to the names used in Bonan.</p>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="700"></p>
-<p>This figure shows that the results of both the Rcentury model and
-RC2m model are very similar, which indicates that the simulation of the
-SOM pools in RC2m appears to function well.</p>
-</div>
-<div class="section level4">
-<h4 id="litter-pool-analysis">Litter pool analysis<a class="anchor" aria-label="anchor" href="#litter-pool-analysis"></a>
-</h4>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="700"></p>
-<p>Contrary to the SOM pools, RC2m shows a rapid increase in total and
-Surface litter after 2000 days. Soil litter increases as well, while the
-other pools remain near 0. In Rcentury, all pools decrease slowly and
-remain near 0.</p>
+obtain the fractions) and the pH value from the CENTURY
+<code>site.100</code> file.</p>
+<table class="table">
+<colgroup>
+<col width="46%">
+<col width="27%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th>Soil property</th>
+<th>CENTURY parameter</th>
+<th>DUKE</th>
+<th>Harvard</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Percent sand</td>
+<td><code>SAND</code></td>
+<td>28</td>
+<td>80</td>
+</tr>
+<tr class="even">
+<td>Percent clay</td>
+<td><code>CLAY</code></td>
+<td>12</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Soil pH</td>
+<td><code>PH</code></td>
+<td>5</td>
+<td>5.16</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="section level3">
-<h3 id="structural-litter">Structural litter<a class="anchor" aria-label="anchor" href="#structural-litter"></a>
+<h3 id="environmental-variation">Environmental variation<a class="anchor" aria-label="anchor" href="#environmental-variation"></a>
 </h3>
-<p>The Century model only includes leaves and fine roots in the
-structural pools, while RC2m also includes fine branches, large wood
-litter and coarse roots. These are included in the Century model, but in
-the dead wood compartments. Two new simulations of the models are
-created to compare both models with all structural litter and with only
-leaves and fine roots.</p>
-<div class="section level4">
-<h4 id="all-structural-litter">All structural litter<a class="anchor" aria-label="anchor" href="#all-structural-litter"></a>
-</h4>
-<p>A new selection of litter data has been made, which adapts the
-SurfaceStructural pool to include C in dead fine branches and large
-wood, and the SoilStructural to include coarse roots.</p>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="700"></p>
-<p>The total litter has improved on the previous version. There are
-still some differences between the Surface litter and Soil litter pools,
-but overall less severe than before. Both now also include a total of
-all pools.</p>
-<div class="section level5">
-<h5 id="total-1">Total<a class="anchor" aria-label="anchor" href="#total-1"></a>
-</h5>
-<p>If we include the dead wood in Rcentury, we can see an improvement in
-the total C stock as well.</p>
+<p>Variation of environmental conditions for carbon decomposition were
+drawn from CENTURY outputs. Specifically, soil temperature was taken
+from CENTURY variable <code>stemp</code>, whereas CENTURY variable
+<code>asmos.1.</code> was used to estimate soil relative moisture.</p>
+<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 </div>
+<div class="section level3">
+<h3 id="litter-input">Litter input<a class="anchor" aria-label="anchor" href="#litter-input"></a>
+</h3>
+<p>Litter inputs (senescence of leaves, small branches, large wood, fine
+roots and coarse roots) are estimated using CENTURY output corresponding
+to variation in live carbon pools in the forest system
+(i.e. <code>rleavc</code>, <code>fbrchc</code>, <code>rlwodc</code>,
+<code>frootc</code> and <code>crootc</code>) and the CENTURY parameters
+specifying monthly death rates for those live pools (i.e. leaf death
+rates <code>leafdr(x)</code> for each month and <code>wooddr(2-5)</code>
+for the remaining four pools)</p>
+<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="700"></p>
 </div>
-<div class="section level4">
-<h4 id="only-leaves">Only leaves<a class="anchor" aria-label="anchor" href="#only-leaves"></a>
-</h4>
-<p>In this simulation, only the leaf litter and !Coarse root! litter
-pools are selected and shown with the regular Rcentury run.</p>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="700"></p>
-<p>The difference between RC2m and Rcentury is much less in the
-structural litter pools (leaf litter) compared to the original litter
-pool analysis. The Rcentury results are slightly higher, but do show
-similar patternes.</p>
+<div class="section level3">
+<h3 id="simulations">Simulations<a class="anchor" aria-label="anchor" href="#simulations"></a>
+</h3>
+<p>MEDFATE simulations were run using function
+<code><a href="../../reference/decomposition_DAYCENT.html">decomposition_DAYCENT()</a></code>.</p>
+</div>
+<div class="section level3">
+<h3 id="comparison">Comparison<a class="anchor" aria-label="anchor" href="#comparison"></a>
+</h3>
+<p>The monthly results from the CENTURY simulation are transformed to
+daily data to make it comparable to the results from MEDFATE. The
+results are compared in terms of total soil C stock, soil organic matter
+pools (SOM pools), (leaf and fine root) litter pools and dead wood
+pools.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="harvard">Harvard<a class="anchor" aria-label="anchor" href="#harvard"></a>
+<h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h2>
 <div class="section level3">
-<h3 id="total-2">Total<a class="anchor" aria-label="anchor" href="#total-2"></a>
+<h3 id="total-soil-carbon">Total soil carbon<a class="anchor" aria-label="anchor" href="#total-soil-carbon"></a>
 </h3>
-<p>For this simulation, all structural litter has been taken into
-consideration by default. So for the total C stock, wood1c, wood2c, etc.
-have been included.</p>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-32-1.png" class="r-plt" alt="" width="700"></p>
-<p>Here you can see</p>
+<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
-<h3 id="som-pool-analysis-1">SOM pool analysis<a class="anchor" aria-label="anchor" href="#som-pool-analysis-1"></a>
+<h3 id="som-pools">SOM pools<a class="anchor" aria-label="anchor" href="#som-pools"></a>
 </h3>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
-<h3 id="litter">Litter<a class="anchor" aria-label="anchor" href="#litter"></a>
+<h3 id="structural-leaf-and-fine-root-and-metabolic-pools">Structural (leaf and fine root) and metabolic pools<a class="anchor" aria-label="anchor" href="#structural-leaf-and-fine-root-and-metabolic-pools"></a>
 </h3>
-<p>Again, all structural components are included here (so not just
-leaves and fine roots).</p>
-<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-38-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="768"></p>
+</div>
+<div class="section level3">
+<h3 id="dead-wood-pools">Dead wood pools<a class="anchor" aria-label="anchor" href="#dead-wood-pools"></a>
+</h3>
+<p><img src="CENTURYVerification_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

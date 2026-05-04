@@ -1,230 +1,142 @@
 # Verification of carbon decomposition (DAYCENT)
 
-### Initial surface/soil plant residue
+## Introduction
 
-In the Duke example, surface structural = 72 g m2. This value is applied
-to the leaves pool (strucc(1)).
+This document presents an exercise to verify the implementation of the
+carbon decomposition process of DAYCENT into MEDFATE. The verification
+is done against the outputs of CENTURY (ver. 4.7) corresponding to
+simulation of Duke and Harvard forests.
 
-Additionaly, soil structural = 57.75 g m2. This value is applied to the
-fine roots pools (strucc(2)).
+## Methods
 
-``` r
+### Initial soil carbon content
 
-# Initialize litter pools
-nlitter <- 1
+- Surface structural (`strucc(1)`) was applied as the initial carbon
+  content for the `Leaves` pool. Similarly, belowground structural
+  (`strucc(2)`) was applied to the `FineRoots` pool. The remaining
+  litter pools (snags, small branches, large wood and coarse roots) are
+  set to zero initial value.
 
-strucc1 <- out_duke$strucc.1.[1]
-strucc2 <- out_duke$strucc.2.[1]
+- We took the soil organic carbon (SOC) initial values from the CENTURY
+  `site.100` input file, and the surface and belowground metabolic data
+  from the first row of the output file of our CENTURY simulation of the
+  Duke site.
 
-litterData <- data.frame(Species = as.character(rep(paramsLitterDecomposition$Species[1], nlitter)),
-                         Leaves = as.numeric(rep(strucc1, nlitter)),
-                         Twigs = as.numeric(rep(0, nlitter)),
-                         SmallBranches = as.numeric(rep(0, nlitter)),
-                         LargeWood = as.numeric(rep(0, nlitter)),
-                         CoarseRoots = as.numeric(rep(0, nlitter)),
-                         FineRoots = as.numeric(rep(strucc2, nlitter)))
-```
+| MEDFATE pool           | CENTURY parameter | DUKE | HARVARD |
+|------------------------|-------------------|------|---------|
+| `Leaves`               | `strucc.1.`       | 72   | 311     |
+| `FineRoots`            | `strucc.2.`       | 58   | 223     |
+| `SurfaceMetabolic`     | `metabc.1.`       | 28   | 89      |
+| `BelowgroundMetabolic` | `metabc.2.`       | 42   | 477     |
+| `SurfaceActive`        | `SOM1CI(1,1)`     | 65   | 105     |
+| `BelowgroundActive`    | `SOM1CI(2,1)`     | 60   | 120     |
+| `SurfaceSlow`          | `SOM2CI(1,1)`     | 850  | 1400    |
+| `BelowgroundSlow`      | `SOM2CI(2,1)`     | 1100 | 1800    |
+| `BelowgroundPassive`   | `SOM3CI(1)`       | 1200 | 1200    |
 
-Snags are not relevant at this point in time. No changes will be made.
+### Decomposition parameters
 
-### SOC pools
+#### Litter decomposition parameters
 
-We took the SOC data from the site.100 file and the surface and soil
-metabolic data from the output file of our Rcentury simulation of the
-Duke site.
+| Species | LeafLignin | WoodLignin | FineRootLignin | Nleaf | Nsapwood | Nfineroot | LeafLigninN |
+|:---|---:|---:|---:|---:|---:|---:|---:|
+| DUKE | 20.0 | 25 | 20 | 5.000000 | 1.744186 | 10 | 40.000 |
+| HARVF | 20.3 | 25 | 8 | 8.474576 | 4.658385 | 10 | 23.954 |
 
-``` r
+#### Maximum decomposition rates
 
-# Initialize SOC pools
-SOM1C1 <- subset(site_d$`organic matter`$df, field == "SOM1CI(1,1)")$value
-SOM1C2 <- subset(site_d$`organic matter`$df, field == "SOM1CI(2,1)")$value
-SOM2C1 <- subset(site_d$`organic matter`$df, field == "SOM2CI(1,1)")$value
-SOM2C2 <- subset(site_d$`organic matter`$df, field == "SOM2CI(2,1)")$value
-SOM3C <- subset(site_d$`organic matter`$df, field == "SOM3CI(1)")$value
+The maximum (base) decomposition rates for the different soil pools in
+MEDFATE (i.e. control parameter `baseAnnualRates`) were adapted to match
+the maximum rates from CENTURY (these can be found in the `fix.100`
+file).
 
-Metabc1 <-   out_duke$metabc.1.[1]
-Metabc2 <- out_duke$metabc.2.[1]
+| Element in `baseAnnualRates` | CENTURY pool | CENTURY parameter | Value |
+|----|----|----|----|
+| `Leaves` | Surface structural | `DEC1(1)` | 3.9 |
+| `FineRoots` | Belowground structural | `DEC1(2)` | 4.9 |
+| `SurfaceMetabolic` | Surface metabolic | `DEC2(1)` | 14.8 |
+| `BelowgroundMetabolic` | Belowground metabolic | `DEC2(2)` | 18.5 |
+| `SurfaceActive` | Surface active | `DEC3(1)` | 6 |
+| `BelowgroundActive` | Soil active | `DEC3(2)` | 7.3 |
+| `BelowgroundPassive` | Soil slow turnover | `DEC4` | 8^{-4} |
+| `SurfaceSlow` | Surface intermediate | `DEC5(1)` | 0.03 |
+| `BelowgroundSlow` | Soil intermediate | `DEC5(2)` | 0.07 |
 
-SOCData <- c(SurfaceMetabolic = Metabc1, BelowgroundMetabolic = Metabc2, SurfaceActive = SOM1C1, BelowgroundActive = SOM1C2, SurfaceSlow = SOM2C1, BelowgroundSlow = SOM2C2, BelowgroundPassive = SOM3C)
-```
+Maximum decomposition rates for dead wood pools (small branches, large
+wood and coarse roots) were taken from elements `DECW1`, `DECW2` and
+`DECW3` of `tree.fix`.
 
-The base rates from RC2m have been changed to match the base rates from
-Rcentury. These can be found in the fix.100 file under the name
-‘decx(x)’. As Rcentury does not distinguish between leaves, small
-branches etc., the base rate for surface structural has been applied to
-leaves while Twigs, Smallbranches and LargeWood remain unchanges. The
-same counts for the soil structural. Fineroots has been changed and
-Coarse roots remain the same.
+| Element in `baseAnnualRates` | CENTURY parameter | DUKE | Harvard |
+|------------------------------|-------------------|------|---------|
+| `SmallBranches`              | `DECW1`           | 1.5  | 1.5     |
+| `LargeWood`                  | `DECW2`           | 0.5  | 0.5     |
+| `CoarseRoots`                | `DECW3`           | 0.6  | 0.6     |
 
-``` r
+Rate of mixing between surface slow and belowground slow compartments
+was taken from `tree.100`:
 
-#Change base rates
-baseAnnualRates <- c(SurfaceMetabolic = 14.8, BelowgroundMetabolic = 18.5, Leaves = 3.9 , FineRoots = 4.9, Twigs = 1.8,  SmallBranches = 1.5,LargeWood = 0.02 , CoarseRoots = 0.1,SurfaceActive = 6, BelowgroundActive = 7.3, SurfaceSlow = 0.03, BelowgroundSlow = 0.07, BelowgroundPassive = 0.0008)
-# baseAnnualRates <- c(SurfaceMetabolic = 14.8, BelowgroundMetabolic = 18.5, Leaves = 3.9 , FineRoots = 4.9, Twigs = 3.9,  SmallBranches = 3.9,LargeWood = 3.9 , CoarseRoots = 3.9,SurfaceActive = 6, BelowgroundActive = 7.3, SurfaceSlow = 0.03, BelowgroundSlow = 0.07, BelowgroundPassive = 0.0008)
-```
+| Element in `control` | CENTURY parameter | DUKE | Harvard |
+|----------------------|-------------------|------|---------|
+| `annualTurnoverRate` | `TMIX`            | 0.11 | 0.11    |
 
-### Texture & pH
+#### Soil texture and pH
 
 We took the the sand and clay values (and multiplied them by 100 to
-obtain the fractions) and the pH value from the site.100 file.
+obtain the fractions) and the pH value from the CENTURY `site.100` file.
 
-``` r
+| Soil property | CENTURY parameter | DUKE | Harvard |
+|---------------|-------------------|------|---------|
+| Percent sand  | `SAND`            | 28   | 80      |
+| Percent clay  | `CLAY`            | 12   | 5       |
+| Soil pH       | `PH`              | 5    | 5.16    |
 
-# Retrieve soil site data
-sand <- subset(site_d$`site and control`$df, field == "SAND")$value * 100
-clay <- subset(site_d$`site and control`$df, field == "CLAY")$value * 100
-soilPH <- subset(site_d$`site and control`$df, field == "PH")$value 
-```
+### Environmental variation
 
-### Results
+Variation of environmental conditions for carbon decomposition were
+drawn from CENTURY outputs. Specifically, soil temperature was taken
+from CENTURY variable `stemp`, whereas CENTURY variable `asmos.1.` was
+used to estimate soil relative moisture.
 
-The monthly results from the Rcentury simulation are transformed to
-daily data to make it comparable to the results from medfate. The
-results are further divided into total C stock, soil organic matter
-pools (SOM pools) and litter pools.
+![](CENTURYVerification_files/figure-html/unnamed-chunk-9-1.png)
 
-#### Total
+### Litter input
 
-The SOM and Litter pools are summed manually to calculate the total C
-stock for both models. For Rcentury, there is also the option to use the
-parameter ‘tomres’, which should already include the total C stock. In
-this case, the manual option was preferable to main.
+Litter inputs (senescence of leaves, small branches, large wood, fine
+roots and coarse roots) are estimated using CENTURY output corresponding
+to variation in live carbon pools in the forest system (i.e. `rleavc`,
+`fbrchc`, `rlwodc`, `frootc` and `crootc`) and the CENTURY parameters
+specifying monthly death rates for those live pools (i.e. leaf death
+rates `leafdr(x)` for each month and `wooddr(2-5)` for the remaining
+four pools)
 
-``` r
+![](CENTURYVerification_files/figure-html/unnamed-chunk-11-1.png)
 
-# Get dimensions
-n_days <- nrow(res$DecompositionPools)  
-n_months <- nrow(out_duke) 
+### Simulations
 
-# Create data frames with time indices
-RC2m_duke <- data.frame(
-  value = rowSums(res$DecompositionPools[,c(3,8:15)], na.rm = TRUE),
-  day = 1:n_days,
-  type = "RC2m"
-)
+MEDFATE simulations were run using function
+[`decomposition_DAYCENT()`](https://emf-creaf.github.io/medfate/reference/decomposition_DAYCENT.md).
 
-# Calculate days per month (approximately equal)
-days_per_month <- rep(round(n_days / n_months), n_months)
-# Adjust last month to match exactly
-days_per_month[length(days_per_month)] <- n_days - sum(days_per_month[-length(days_per_month)])
+### Comparison
 
-# Expand monthly data to daily
-Rcentury_duke <- RC_total |>
-  mutate(
-    days = days_per_month,
-    monthly_value = value  
-  ) |>
-  rowwise() |>
-  mutate(
-    daily_values = list(rep(monthly_value, days))
-  ) |>
-  unnest(daily_values) |>
-  mutate(
-    day = 1:n(),
-    type = "Rcentury"
-  ) |>
-  select(day, value = daily_values, type)
+The monthly results from the CENTURY simulation are transformed to daily
+data to make it comparable to the results from MEDFATE. The results are
+compared in terms of total soil C stock, soil organic matter pools (SOM
+pools), (leaf and fine root) litter pools and dead wood pools.
 
-# Combine
-combined <- bind_rows(RC2m_duke, Rcentury_duke)
+## Results
 
-# Plot
-ggplot(combined, aes(x = day, y = value, color = type)) +
-  geom_line() +
-  labs(title = "Total C stock",
-       x = "Time (20 years in days)", 
-       y = "C stocks (g/m2)") +
-  ylim(1400,4500) +
-  xlim(0,7671) +
-  theme_minimal() 
-```
-
-![](CENTURYVerification_files/figure-html/unnamed-chunk-11-1.png) This
-figure shows a similar pattern for both models: a small decrease in the
-beginning and then a an increase later on. However, RC2m increases
-faster than Rcentury and there is a ~500 g/m2 difference in total C
-stock.
-
-#### SOM pool analysis
-
-To further analyze the results, all SOM pools are selected from the
-models results and compared.
-
-Then we rename the Century pool codes to the names used in Bonan.
+### Total soil carbon
 
 ![](CENTURYVerification_files/figure-html/unnamed-chunk-14-1.png)
 
-This figure shows that the results of both the Rcentury model and RC2m
-model are very similar, which indicates that the simulation of the SOM
-pools in RC2m appears to function well.
+### SOM pools
 
-#### Litter pool analysis
+![](CENTURYVerification_files/figure-html/unnamed-chunk-15-1.png)
+
+### Structural (leaf and fine root) and metabolic pools
 
 ![](CENTURYVerification_files/figure-html/unnamed-chunk-16-1.png)
 
-Contrary to the SOM pools, RC2m shows a rapid increase in total and
-Surface litter after 2000 days. Soil litter increases as well, while the
-other pools remain near 0. In Rcentury, all pools decrease slowly and
-remain near 0.
+### Dead wood pools
 
-### Structural litter
-
-The Century model only includes leaves and fine roots in the structural
-pools, while RC2m also includes fine branches, large wood litter and
-coarse roots. These are included in the Century model, but in the dead
-wood compartments. Two new simulations of the models are created to
-compare both models with all structural litter and with only leaves and
-fine roots.
-
-#### All structural litter
-
-A new selection of litter data has been made, which adapts the
-SurfaceStructural pool to include C in dead fine branches and large
-wood, and the SoilStructural to include coarse roots.
-
-![](CENTURYVerification_files/figure-html/unnamed-chunk-20-1.png)
-
-The total litter has improved on the previous version. There are still
-some differences between the Surface litter and Soil litter pools, but
-overall less severe than before. Both now also include a total of all
-pools.
-
-##### Total
-
-If we include the dead wood in Rcentury, we can see an improvement in
-the total C stock as well.
-
-#### Only leaves
-
-In this simulation, only the leaf litter and !Coarse root! litter pools
-are selected and shown with the regular Rcentury run.
-
-![](CENTURYVerification_files/figure-html/unnamed-chunk-23-1.png)
-
-The difference between RC2m and Rcentury is much less in the structural
-litter pools (leaf litter) compared to the original litter pool
-analysis. The Rcentury results are slightly higher, but do show similar
-patternes.
-
-## Harvard
-
-### Total
-
-For this simulation, all structural litter has been taken into
-consideration by default. So for the total C stock, wood1c, wood2c, etc.
-have been included.
-
-![](CENTURYVerification_files/figure-html/unnamed-chunk-32-1.png)
-
-Here you can see
-
-### SOM pool analysis
-
-![](CENTURYVerification_files/figure-html/unnamed-chunk-35-1.png)
-
-### Litter
-
-Again, all structural components are included here (so not just leaves
-and fine roots).
-
-![](CENTURYVerification_files/figure-html/unnamed-chunk-38-1.png)
+![](CENTURYVerification_files/figure-html/unnamed-chunk-17-1.png)

@@ -47,13 +47,13 @@ and we inspect its content, for example using:
 ``` r
 
 summary(poblet_trees)
-#>   Plot.Code            Indv.Ref       Species           Diameter.cm   
-#>  Length:717         Min.   :  1.0   Length:717         Min.   : 7.50  
-#>  Class :character   1st Qu.: 45.0   Class :character   1st Qu.: 9.10  
-#>  Mode  :character   Median : 97.0   Mode  :character   Median :11.10  
-#>                     Mean   :103.4                      Mean   :11.62  
-#>                     3rd Qu.:156.0                      3rd Qu.:13.40  
-#>                     Max.   :261.0                      Max.   :26.00
+#>      Plot.Code      Indv.Ref          Species     Diameter.cm   
+#>  Length   :717   Min.   :  1.0   Length   :717   Min.   : 7.50  
+#>  N.unique :  3   1st Qu.: 45.0   N.unique :  5   1st Qu.: 9.10  
+#>  N.blank  :  0   Median : 97.0   N.blank  :  0   Median :11.10  
+#>  Min.nchar:  8   Mean   :103.4   Min.nchar: 12   Mean   :11.62  
+#>  Max.nchar: 12   3rd Qu.:156.0   Max.nchar: 19   3rd Qu.:13.40  
+#>                  Max.   :261.0                   Max.   :26.00
 ```
 
 The data frame includes tree data corresponding to three forest
@@ -121,16 +121,16 @@ We can inspect the result using:
 ``` r
 
 summary(pobl_ctl$treeData)
-#>    Species                N      Height             DBH          Z50         
-#>  Length:267         Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  
-#>  Class :character   1st Qu.:1   NA's:267       1st Qu.: 9.00   NA's:267      
-#>  Mode  :character   Median :1                  Median :10.70                 
-#>                     Mean   :1                  Mean   :11.53                 
-#>                     3rd Qu.:1                  3rd Qu.:13.30                 
-#>                     Max.   :1                  Max.   :26.00                 
+#>       Species          N      Height             DBH          Z50         
+#>  Length   :267   Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  
+#>  N.unique :  4   1st Qu.:1   NAs :267       1st Qu.: 9.00   NAs :267      
+#>  N.blank  :  0   Median :1                  Median :10.70                 
+#>  Min.nchar: 12   Mean   :1                  Mean   :11.53                 
+#>  Max.nchar: 19   3rd Qu.:1                  3rd Qu.:13.30                 
+#>                  Max.   :1                  Max.   :26.00                 
 #>    Z95         
 #>  Mode:logical  
-#>  NA's:267      
+#>  NAs :267      
 #>                
 #>                
 #>                
