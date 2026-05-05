@@ -301,28 +301,28 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14673.8
-    ## Change in plant cohort biomass (g/m2): 393.616
+    ## Final plant cohort biomass (g/m2): 14670.5
+    ## Change in plant cohort biomass (g/m2): 390.348
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 84 Labile balance (g/m2) 89
-    ##   Plant individual balance (g/m2) 173 Mortality loss (g/m2) 22
-    ## Final plant water content (mm): 4.70561
+    ##   Structural balance (g/m2) 83 Labile balance (g/m2) 89
+    ##   Plant individual balance (g/m2) 172 Mortality loss (g/m2) 22
+    ## Final plant water content (mm): 4.7054
     ## Final soil water content (mm): 275.693
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00707859
-    ## Plant water balance result (mm): -0.00137996
-    ## Change in soil water content (mm): -15.1817
-    ## Soil water balance result (mm): -15.1817
+    ## Change in plant water content (mm): 0.00687363
+    ## Plant water balance result (mm): -0.00151337
+    ## Change in soil water content (mm): -15.1821
+    ## Soil water balance result (mm): -15.1869
     ## Change in snowpack water content (mm): 0
     ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
     ##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
-    ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
-    ##   Runoff (mm) 21 Deep drainage (mm) 152
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 245
+    ##   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Runoff (mm) 21 Deep drainage (mm) 154
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -538,9 +538,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1253629 -18.4538082   0.1253629  18.4538082   0.9922881 
+    ##  12.0000000  -0.1456519 -21.4404192   0.1456519  21.4404192   0.9794766 
     ##         NSE     NSE.abs 
-    ##   0.9145258   0.7621925
+    ##   0.8690250   0.7237052
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

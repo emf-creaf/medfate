@@ -107,7 +107,7 @@ to variation in live carbon pools in the forest system (i.e. `rleavc`,
 `fbrchc`, `rlwodc`, `frootc` and `crootc`) and the CENTURY parameters
 specifying monthly death rates for those live pools (i.e. leaf death
 rates `leafdr(x)` for each month and `wooddr(2-5)` for the remaining
-four pools)
+four pools, and `wooddr(1)` in case of a deciduous forest).
 
 ![](CENTURYVerification_files/figure-html/unnamed-chunk-11-1.png)
 

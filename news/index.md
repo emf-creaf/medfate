@@ -2,6 +2,7 @@
 
 ## medfate 5.0.0
 
+- Partial rhizosphere overlap set to default
 - Internal restructuration to avoid Rcpp structures (NumericVector,
   NumericMatrix, DataFrame,…)
 - Approximate speed increase (Granier): spwb_day()/growth_day() x 4.5,

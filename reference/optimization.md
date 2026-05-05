@@ -274,13 +274,13 @@ sf<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 multiple_runs(parMatrix, 
               x1, examplemeteo, latitude = 42, elevation = 100,
               summary_function = sf)
-#> 1. Parameter values = [200, 500] f = 249.1035212183
-#> 2. Parameter values = [300, 1000] f = 249.741784385252
+#> 1. Parameter values = [200, 500] f = 248.681530225628
+#> 2. Parameter values = [300, 1000] f = 249.697095989555
 #> [[1]]
-#> [1] 249.1035
+#> [1] 248.6815
 #> 
 #> [[2]]
-#> [1] 249.7418
+#> [1] 249.6971
 #> 
 
 #Load observed data (in this case the same simulation results with some added error)  
@@ -294,9 +294,9 @@ of<-optimization_function(parNames = parNames,
 
 # Evaluate for the values of the parameter matrix
 of(parMatrix[1, ])
-#> [1] 249.1997
+#> [1] 248.7787
 of(parMatrix)
-#> [1] 249.1997 249.8394
+#> [1] 248.7787 249.7946
 
 
 # Generate a loglikelihood function for soil water content
@@ -310,8 +310,8 @@ oef<-optimization_evaluation_function(parNames = parNames,
 
 # Loglikelihood for the values of the parameter matrix
 oef(parMatrix[1, ])
-#> [1] 891.1724
+#> [1] 890.4503
 oef(parMatrix)
-#> [1] 891.1724 855.0995
+#> [1] 890.4503 854.8334
 # }
 ```

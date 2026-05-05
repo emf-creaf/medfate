@@ -8,7 +8,7 @@ Creates a list control parameters default values for simulations
 defaultControl(
   transpirationMode = "Granier",
   soilDomains = "buckets",
-  rhizosphereOverlap = "total"
+  rhizosphereOverlap = "partial"
 )
 ```
 
@@ -190,12 +190,13 @@ A list, with the following options (default values in brackets):
     dual-permeability model). See
     [`hydrology_soilWaterBalance`](https://emf-creaf.github.io/medfate/reference/hydrology_soilWaterBalance.md).
 
-  - `rhizosphereOverlap [= "total"]`: A string indicating the degree of
-    rhizosphere spatial overlap between plant cohorts:
+  - `rhizosphereOverlap [= "partial"]`: A string indicating the degree
+    of rhizosphere spatial overlap between plant cohorts:
 
     - "none" - no overlap (independent water pools).
 
-    - "partial" - partial overlap determined by coarse root volume.
+    - "partial" - plants partially share water pools, depending on soil
+      moisture.
 
     - "total" - total overlap (plants extract from common soil pools).
 

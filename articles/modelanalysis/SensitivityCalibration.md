@@ -98,22 +98,22 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  [Year 2001]:............
     ## 
-    ## Final plant water content (mm): 4.69673
+    ## Final plant water content (mm): 4.69657
     ## Final soil water content (mm): 275.597
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.00180112
-    ## Plant water balance result (mm): -0.00180112
-    ## Change in soil water content (mm): -15.2779
-    ## Soil water balance result (mm): -15.2779
+    ## Change in plant water content (mm): -0.00195716
+    ## Plant water balance result (mm): -0.00195716
+    ## Change in soil water content (mm): -15.278
+    ## Soil water balance result (mm): -15.278
     ## Change in snowpack water content (mm): 0
     ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
-    ##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 248
-    ##   Plant extraction from soil (mm) 248  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
-    ##   Runoff (mm) 21 Deep drainage (mm) 152
+    ##   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+    ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Runoff (mm) 21 Deep drainage (mm) 153
 
 Function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) will
@@ -234,7 +234,7 @@ sf_transp<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 sf_transp(S1)
 ```
 
-    ## [1] 247.8721
+    ## [1] 245.7651
 
 Another prediction function can focus on plant drought stress. We define
 a function that, given a simulation result, calculates the average
@@ -252,7 +252,7 @@ sf_stress<-function(x) {
 sf_stress(S1)
 ```
 
-    ## [1] 3.036613
+    ## [1] 3.658696
 
 Sensitivity analysis requires model output functions whose parameters
 are the input factors to be studied.
@@ -294,14 +294,14 @@ input:
 of_transp(parMin)
 ```
 
-    ## [1] 47.63932
+    ## [1] 47.63977
 
 ``` r
 
 of_transp(parMax)
 ```
 
-    ## [1] 2576387
+    ## [1] 2379266
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -331,14 +331,14 @@ of_stress<-optimization_function(parNames = parNames,
 of_stress(parMin)
 ```
 
-    ## [1] 0.6602433
+    ## [1] 0.6670933
 
 ``` r
 
 of_stress(parMax)
 ```
 
-    ## [1] 6.907408
+    ## [1] 39.21625
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -378,7 +378,7 @@ evaluation_metric(S1, measuredData = exampleobs, type = "SWC",
                   metric = "NSE")
 ```
 
-    ## [1] 0.9272707
+    ## [1] 0.9241196
 
 A call to
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md)
@@ -406,14 +406,14 @@ results, so that we only need to provide values for the input factors:
 of_eval(parMin)
 ```
 
-    ## [1] 0.3326834
+    ## [1] 0.334091
 
 ``` r
 
 of_eval(parMax)
 ```
 
-    ## [1] -0.6466376
+    ## [1] 0.3627331
 
 ### Global sensitivity analyses
 
@@ -892,7 +892,6 @@ plot(density(unlist(lapply(MS, sf_stress))),
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ![](SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png)
 
@@ -937,15 +936,12 @@ plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress",
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ``` r
 
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
 ```
 
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf

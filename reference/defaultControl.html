@@ -57,7 +57,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">defaultControl</span><span class="op">(</span></span>
 <span>  transpirationMode <span class="op">=</span> <span class="st">"Granier"</span>,</span>
 <span>  soilDomains <span class="op">=</span> <span class="st">"buckets"</span>,</span>
-<span>  rhizosphereOverlap <span class="op">=</span> <span class="st">"total"</span></span>
+<span>  rhizosphereOverlap <span class="op">=</span> <span class="st">"partial"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -121,9 +121,9 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 <li><p><code>infiltrationMode [= "GreenAmpt1911"]</code>: Infiltration model, either "GreenAmpt1911" or "Boughton1989".</p></li>
 <li><p><code>infiltrationCorrection [= 5.0]</code>: Factor to correct infiltration amount in the GreenAmpt1911 model in single-domain simulations.</p></li>
 <li><p><code>soilDomains [= "buckets"]</code>: Either 'buckets' (for multi-bucket model), 'single' (for single-domain Richards model) or 'dual' (for dual-permeability model). See <code><a href="hydrology_soilWaterBalance.html">hydrology_soilWaterBalance</a></code>.</p></li>
-<li><p><code>rhizosphereOverlap [= "total"]</code>: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
+<li><p><code>rhizosphereOverlap [= "partial"]</code>: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
 </p><ul><li><p>"none" - no overlap (independent water pools).</p></li>
-<li><p>"partial" - partial overlap determined by coarse root volume.</p></li>
+<li><p>"partial" - plants partially share water pools, depending on soil moisture.</p></li>
 <li><p>"total" - total overlap (plants extract from common soil pools).</p></li>
 </ul></li>
 <li><p><code>fullRhizosphereOverlapConductivity [= 0.01]</code>: The minimum soil hydraulic conductivity (in cm/day) allowing a full connectivity of water pools, when <code>rhizosphereOverlap = "partial"</code>.</p></li>

@@ -559,7 +559,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] "buckets"
 #> 
 #> $control$rhizosphereOverlap
-#> [1] "total"
+#> [1] "partial"
 #> 
 #> $control$truncateRootDistribution
 #> [1] FALSE
@@ -964,10 +964,10 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  <NA>
 #> 
 #> $below
-#>        Z50  Z95 Z100
-#> T1_148 100  300   NA
-#> T2_168 300 1000   NA
-#> S1_165 200 1000   NA
+#>        Z50  Z95 Z100 poolProportions
+#> T1_148 100  300   NA      0.53550523
+#> T2_168 300 1000   NA      0.44517171
+#> S1_165 200 1000   NA      0.01932306
 #> 
 #> $belowLayers
 #> $belowLayers$V
@@ -987,6 +987,26 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> T1_148 1 1 1 1
 #> T2_168 1 1 1 1
 #> S1_165 1 1 1 1
+#> 
+#> $belowLayers$RHOP
+#> $belowLayers$RHOP$T1_148
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
+#> $belowLayers$RHOP$T2_168
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
+#> $belowLayers$RHOP$S1_165
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
 #> 
 #> 
 #> $paramsPhenology
@@ -1228,7 +1248,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] "buckets"
 #> 
 #> $control$rhizosphereOverlap
-#> [1] "total"
+#> [1] "partial"
 #> 
 #> $control$truncateRootDistribution
 #> [1] FALSE
@@ -1633,10 +1653,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  <NA>
 #> 
 #> $below
-#>        Z50  Z95 Z100
-#> T1_148 100  300   NA
-#> T2_168 300 1000   NA
-#> S1_165 200 1000   NA
+#>        Z50  Z95 Z100 poolProportions
+#> T1_148 100  300   NA      0.53550523
+#> T2_168 300 1000   NA      0.44517171
+#> S1_165 200 1000   NA      0.01932306
 #> 
 #> $belowLayers
 #> $belowLayers$V
@@ -1674,6 +1694,26 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> T1_148 -0.033 -0.033 -0.033 -0.033
 #> T2_168 -0.033 -0.033 -0.033 -0.033
 #> S1_165 -0.033 -0.033 -0.033 -0.033
+#> 
+#> $belowLayers$RHOP
+#> $belowLayers$RHOP$T1_148
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
+#> $belowLayers$RHOP$T2_168
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
+#> $belowLayers$RHOP$S1_165
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
 #> 
 #> 
 #> $paramsPhenology
@@ -1935,7 +1975,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] "buckets"
 #> 
 #> $control$rhizosphereOverlap
-#> [1] "total"
+#> [1] "partial"
 #> 
 #> $control$truncateRootDistribution
 #> [1] FALSE
@@ -2340,10 +2380,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  <NA>
 #> 
 #> $below
-#>        Z50  Z95 Z100
-#> T1_148 100  300   NA
-#> T2_168 300 1000   NA
-#> S1_165 200 1000   NA
+#>        Z50  Z95 Z100 poolProportions
+#> T1_148 100  300   NA      0.53550523
+#> T2_168 300 1000   NA      0.44517171
+#> S1_165 200 1000   NA      0.01932306
 #> 
 #> $belowLayers
 #> $belowLayers$V
@@ -2381,6 +2421,26 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> T1_148 -0.033 -0.033 -0.033 -0.033
 #> T2_168 -0.033 -0.033 -0.033 -0.033
 #> S1_165 -0.033 -0.033 -0.033 -0.033
+#> 
+#> $belowLayers$RHOP
+#> $belowLayers$RHOP$T1_148
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
+#> $belowLayers$RHOP$T2_168
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
+#> $belowLayers$RHOP$S1_165
+#>                 1          2          3          4
+#> T1_148 0.53550523 0.53550523 0.53550523 0.53550523
+#> T2_168 0.44517171 0.44517171 0.44517171 0.44517171
+#> S1_165 0.01932306 0.01932306 0.01932306 0.01932306
+#> 
 #> 
 #> 
 #> $paramsPhenology
@@ -2647,7 +2707,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] "buckets"
 #> 
 #> $control$rhizosphereOverlap
-#> [1] "total"
+#> [1] "partial"
 #> 
 #> $control$truncateRootDistribution
 #> [1] FALSE
@@ -3052,10 +3112,10 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> S1_165  80 0.80     0.03         0.03        0  NA  <NA>
 #> 
 #> $below
-#>        Z50  Z95 Z100
-#> T1_148 100  300   NA
-#> T2_168 300 1000   NA
-#> S1_165 200 1000   NA
+#>        Z50  Z95 Z100 poolProportions
+#> T1_148 100  300   NA      0.60150376
+#> T2_168 300 1000   NA      0.37593985
+#> S1_165 200 1000   NA      0.02255639
 #> 
 #> $belowLayers
 #> $belowLayers$V
@@ -3075,6 +3135,26 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> T1_148 1 1 1 1
 #> T2_168 1 1 1 1
 #> S1_165 1 1 1 1
+#> 
+#> $belowLayers$RHOP
+#> $belowLayers$RHOP$T1_148
+#>                 1          2          3          4
+#> T1_148 0.60150376 0.60150376 0.60150376 0.60150376
+#> T2_168 0.37593985 0.37593985 0.37593985 0.37593985
+#> S1_165 0.02255639 0.02255639 0.02255639 0.02255639
+#> 
+#> $belowLayers$RHOP$T2_168
+#>                 1          2          3          4
+#> T1_148 0.60150376 0.60150376 0.60150376 0.60150376
+#> T2_168 0.37593985 0.37593985 0.37593985 0.37593985
+#> S1_165 0.02255639 0.02255639 0.02255639 0.02255639
+#> 
+#> $belowLayers$RHOP$S1_165
+#>                 1          2          3          4
+#> T1_148 0.60150376 0.60150376 0.60150376 0.60150376
+#> T2_168 0.37593985 0.37593985 0.37593985 0.37593985
+#> S1_165 0.02255639 0.02255639 0.02255639 0.02255639
+#> 
 #> 
 #> 
 #> $paramsPhenology

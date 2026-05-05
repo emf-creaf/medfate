@@ -278,22 +278,22 @@ S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.69673
+#> Final plant water content (mm): 4.69657
 #> Final soil water content (mm): 275.597
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00180112
-#> Plant water balance result (mm): -0.00180112
-#> Change in soil water content (mm): -15.2779
-#> Soil water balance result (mm): -15.2779
+#> Change in plant water content (mm): -0.00195716
+#> Plant water balance result (mm): -0.00195716
+#> Change in soil water content (mm): -15.278
+#> Soil water balance result (mm): -15.278
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
-#>   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 25  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 248
-#>   Plant extraction from soil (mm) 248  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2
-#>   Runoff (mm) 21 Deep drainage (mm) 152
+#>   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+#>   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+#>   Runoff (mm) 21 Deep drainage (mm) 153
 
 #Load observed data (in this case the same simulation results with some added error)  
 data(exampleobs)
@@ -301,13 +301,13 @@ data(exampleobs)
 #Evaluation statistics for soil water content
 evaluation_stats(S1, exampleobs)
 #>            n         Bias     Bias.rel          MAE      MAE.rel            r 
-#> 3.650000e+02 1.388999e-03 5.098285e-01 6.705763e-03 2.461333e+00 9.652032e-01 
+#> 3.650000e+02 1.512155e-03 5.550328e-01 6.841029e-03 2.510982e+00 9.651308e-01 
 #>          NSE      NSE.abs 
-#> 9.272707e-01 7.112257e-01 
+#> 9.241196e-01 7.054007e-01 
 
 #NSE only
 evaluation_metric(S1, exampleobs, metric="NSE")
-#> [1] 0.9272707
+#> [1] 0.9241196
 
 #Comparison of temporal dynamics
 evaluation_plot(S1, exampleobs)
@@ -315,6 +315,6 @@ evaluation_plot(S1, exampleobs)
 
 #Loglikelihood value
 evaluation_metric(S1, exampleobs)
-#> [1] 906.3782
+#> [1] 905.8047
 # }
 ```
