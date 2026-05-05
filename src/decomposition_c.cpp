@@ -541,11 +541,15 @@ double DAYCENTInner_c(Decomposition_COMM& DECcomm,
   RH += DECcomm.sdo.surface_flux_respiration + DECcomm.ldo.surface_flux_respiration + DECcomm.ldo.soil_flux_respiration;
   for(int i=0;i<npool;i++) {
     DECcomm.flux_respiration_pools[i] = 0.0;
+  }
+  for(int i=0;i<npool;i++) {
     for(int j=0;j<npool;j++) {
-      if(j!=i) {
-        DECcomm.flux_respiration_pools[i] += DECcomm.respf(i,j) * DECcomm.pathf(i,j) * DECcomm.xi[j] * DECcomm.K[j] * SOC_v[j] * tstep;
+      if(j!=i) { //Respiration is attributed to the origin pool
+        DECcomm.flux_respiration_pools[j] += DECcomm.respf(i,j) * DECcomm.pathf(i,j) * DECcomm.xi[j] * DECcomm.K[j] * SOC_v[j] * tstep;
       }
     }
+  }
+  for(int i=0;i<npool;i++) {
     RH = RH + DECcomm.flux_respiration_pools[i];
   }
   // update pools
