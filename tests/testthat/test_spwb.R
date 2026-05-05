@@ -5,6 +5,11 @@ data(exampleforest)
 forest_herbs <- exampleforest
 forest_herbs$herbData <- forest_herbs$shrubData
 
+forest_single <- exampleforest
+forest_single$treeData <- forest_single$treeData[1,,drop = FALSE]
+forest_single$shrubData <- forest_single$shrubData[numeric(0),]
+
+
 data(SpParamsMED)
 data(examplemeteo)
 examplemeteo2 <- examplemeteo
@@ -60,6 +65,15 @@ test_that("spwb can be run in example, herbs and empty forests",{
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
   expect_s3_class(spwb(spwbInput(forest_herbs, examplesoil, SpParamsMED, control_sureau), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(forest_single, examplesoil, SpParamsMED, control_granier), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(forest_single, examplesoil, SpParamsMED, control_sperry), 
+                       examplemeteo[1:10,],
+                       latitude = 41.82592, elevation = 100), "spwb")
+  expect_s3_class(spwb(spwbInput(forest_single, examplesoil, SpParamsMED, control_sureau), 
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
 })

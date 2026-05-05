@@ -344,7 +344,7 @@ plot_grid(g1, g2, nrow = 2)
 
 ### Litter input
 
-Litter inputs (senescence of leaves, small branches, large wood, fine roots and coarse roots) are estimated using CENTURY output corresponding to variation in live carbon pools in the forest system (i.e. `rleavc`, `fbrchc`, `rlwodc`, `frootc` and `crootc`) and the CENTURY parameters specifying monthly death rates for those live pools (i.e. leaf death rates `leafdr(x)` for each month and `wooddr(2-5)` for the remaining four pools)
+Litter inputs (senescence of leaves, small branches, large wood, fine roots and coarse roots) are estimated using CENTURY output corresponding to variation in live carbon pools in the forest system (i.e. `rleavc`, `fbrchc`, `rlwodc`, `frootc` and `crootc`) and the CENTURY parameters specifying monthly death rates for those live pools (i.e. leaf death rates `leafdr(x)` for each month and `wooddr(2-5)` for the remaining four pools, and `wooddr(1)` in case of a deciduous forest).
 
 ```{r, include=FALSE, fig.width=8, fig.height=8}
 prd_daily_new<-function(out, rcentury_tree, yearIni = 2000) {
@@ -374,7 +374,7 @@ prd_daily_new<-function(out, rcentury_tree, yearIni = 2000) {
   wooddr4 <- rcentury_tree$df[rcentury_tree$df[,2]=="WOODDR(4)",1] #monthly death rate fraction for large wood component
   wooddr5 <- rcentury_tree$df[rcentury_tree$df[,2]=="WOODDR(5)",1] #monthly death rate fraction for coarse root component
   # Trim out to the complete years
-  out <- out_duke[1:length(unique_months), , drop = FALSE]
+  out <- out[1:length(unique_months), , drop = FALSE]
   # fbrchc -> C in forest system fine branch component (g m-2).
   # crootc -> C in forest system coarse root component (g m-2).
   # rlwodc -> C in forest system large wood component (g m-2).

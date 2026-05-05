@@ -7,7 +7,7 @@
 defaultControl(
   transpirationMode = "Granier",
   soilDomains = "buckets",
-  rhizosphereOverlap = "total"
+  rhizosphereOverlap = "partial"
 )
 }
 \arguments{
@@ -69,10 +69,10 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{infiltrationMode [= "GreenAmpt1911"]}: Infiltration model, either "GreenAmpt1911" or "Boughton1989".}
 \item{\code{infiltrationCorrection [= 5.0]}: Factor to correct infiltration amount in the GreenAmpt1911 model in single-domain simulations.}
 \item{\code{soilDomains [= "buckets"]}: Either 'buckets' (for multi-bucket model), 'single' (for single-domain Richards model) or 'dual' (for dual-permeability model). See \code{\link{hydrology_soilWaterBalance}}.}
-\item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
+\item{\code{rhizosphereOverlap [= "partial"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
 \itemize{
 \item{"none" - no overlap (independent water pools).}
-\item{"partial" - partial overlap determined by coarse root volume.}
+\item{"partial" - plants partially share water pools, depending on soil moisture.}
 \item{"total" - total overlap (plants extract from common soil pools).}
 }
 }

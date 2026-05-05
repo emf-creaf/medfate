@@ -538,21 +538,22 @@
     if("HerbTranspiration" %in% names(WaterBalance)) {
       df[["Herbaceous transpiration"]] <- WaterBalance$HerbTranspiration
     }
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates), , drop = FALSE]
     if(!is.null(summary.freq)) {
       date.factor = cut(as.Date(row.names(df)), breaks=summary.freq)
-      df = data.frame(row.names = as.Date(as.character(levels(date.factor))),
+      df_summary = data.frame(row.names = as.Date(as.character(levels(date.factor))),
                       "Total evapotranspiration" = tapply(df[["Total evapotranspiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       "Interception evaporation" = NA,
                       "Woody transpiration" = tapply(df[["Woody transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       "Bare soil evaporation" = tapply(df[["Bare soil evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Herbaceous transpiration" = NA)
+                      "Herbaceous transpiration" = NA, check.names = FALSE)
       if("Interception" %in% names(WaterBalance))  {
-        df[["Interception evaporation"]] = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
+        df_summary[["Interception evaporation"]] = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
       }
       if("HerbTranspiration" %in% names(WaterBalance))  {
-        df[["Herbaceous transpiration"]] = tapply(df[["Herbaceous transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
+        df_summary[["Herbaceous transpiration"]] = tapply(df[["Herbaceous transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
       }
+      df <- df_summary
     }
     return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
   } 
