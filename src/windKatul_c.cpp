@@ -161,7 +161,7 @@ void windCanopyTurbulenceModel_inner_c(CanopyTurbulenceModel_RESULT& comm,
   for(int i=nn;i<N;i++) {
     Lmix[i] = kv*(zm[i] - d0);
   }
-  Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0;
+  Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0; // VALGRIND : Invalid read of size 8
   
   double am3=-(Aq*Aq*Aq)*((AAu*AAu)-(AAw*AAw))/((AAw*AAw)-(Aq*Aq)/3.0);
 

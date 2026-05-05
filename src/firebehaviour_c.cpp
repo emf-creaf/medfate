@@ -46,21 +46,21 @@ void FCCSbehaviour_c(FCCSBehaviour_RESULT& res,
                      double slope, double windSpeedSI) {
   //Extract vectors
   const std::vector<double>& wSI = FCCSpropsSI.w;
-  const std::vector<double>&  cover = FCCSpropsSI.cover;
-  const std::vector<double>&  hbcSI = FCCSpropsSI.hbc;
-  const std::vector<double>&  htcSI = FCCSpropsSI.htc;
-  const std::vector<double>&  deltaSI = FCCSpropsSI.delta;
-  const std::vector<double>&  rhopSI = FCCSpropsSI.rhop;
-  const std::vector<double>&  PVSI = FCCSpropsSI.PV;
-  const std::vector<double>&  beta = FCCSpropsSI.beta; //unitless
-  const std::vector<double>&  betarel = FCCSpropsSI.betarel; //unitless
-  const std::vector<double>&  etabetarel = FCCSpropsSI.etabetarel; //unitless
-  const std::vector<double>&  sigmaSI = FCCSpropsSI.sigma;
-  const std::vector<double>&  pDead = FCCSpropsSI.pDead;
-  const std::vector<double>&  FAI = FCCSpropsSI.FAI; //unitless
-  const std::vector<double>&  hdefSI = FCCSpropsSI.h;
-  const std::vector<double>&  RVSI = FCCSpropsSI.RV;
-  const std::vector<double>&  ActFMC = FCCSpropsSI.ActFMC;
+  const std::vector<double>& cover = FCCSpropsSI.cover;
+  const std::vector<double>& hbcSI = FCCSpropsSI.hbc;
+  const std::vector<double>& htcSI = FCCSpropsSI.htc;
+  const std::vector<double>& deltaSI = FCCSpropsSI.delta;
+  const std::vector<double>& rhopSI = FCCSpropsSI.rhop;
+  const std::vector<double>& PVSI = FCCSpropsSI.PV;
+  const std::vector<double>& beta = FCCSpropsSI.beta; //unitless
+  const std::vector<double>& betarel = FCCSpropsSI.betarel; //unitless
+  const std::vector<double>& etabetarel = FCCSpropsSI.etabetarel; //unitless
+  const std::vector<double>& sigmaSI = FCCSpropsSI.sigma;
+  const std::vector<double>& pDead = FCCSpropsSI.pDead;
+  const std::vector<double>& FAI = FCCSpropsSI.FAI; //unitless
+  const std::vector<double>& hdefSI = FCCSpropsSI.h;
+  const std::vector<double>& RVSI = FCCSpropsSI.RV;
+  const std::vector<double>& ActFMC = FCCSpropsSI.ActFMC;
   
   //Replace fuel moisture if available
   if(!std::isnan(ActFMC[0])) MliveSI[0] = ActFMC[0];
@@ -68,7 +68,7 @@ void FCCSbehaviour_c(FCCSBehaviour_RESULT& res,
   if(!std::isnan(ActFMC[2])) MliveSI[2] = ActFMC[2];
   
   //Rescale variables to British units
-  double* Mlive = new double[5];
+  double* Mlive = new double[3];
   double* Mdead = new double[5];
   double* w = new double[5];
   double* delta = new double[5];
@@ -78,7 +78,7 @@ void FCCSbehaviour_c(FCCSBehaviour_RESULT& res,
   double* hdef = new double[5];
   double* RV = new double[5];
   for(int i=0;i<5;i++) {
-    Mlive[i] = MliveSI[i]/100.0; //from percent to proportions
+    if(i<3) Mlive[i] = MliveSI[i]/100.0; //from percent to proportions
     Mdead[i] = MdeadSI[i]/100.0; //from percent to proportions
     w[i] = wSI[i] * 0.204918; //from kg/m2 to lb/ft2
     delta[i] = deltaSI[i] * 3.2808399; //from m to ft

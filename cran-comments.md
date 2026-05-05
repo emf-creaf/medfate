@@ -1,10 +1,10 @@
 ## Minor change submission
 
-This submission (v4.8.4) incorporates revised functionality and bug corrections.
+This submission (v5.0.0) several improvements, including new dependencies.
 
 ## Tested environments
 
-* local R installation (Arch Linux), R 4.5.1
+* local R installation (Arch Linux), R 4.6.0
 * windows-latest (on github actions), R release
 * macOS-latest (on github actions), R release
 * ubuntu-latest (on github actions), R release
@@ -20,4 +20,5 @@ In all CI tests only NOTEs are generated
 
 ## Reverse/Downstream dependencies
 
-`medfate` has a reverse dependency with `medfateland`, under our responsibility, which should not be affected by this update. 
+`medfate` has a reverse dependency with `medfateland`, under our responsibility, whose current CRAN version will not pass checks with `medfate` v. 5.0.0. 
+A new version of `medfateland` complying with `medfate` ver. 5.0.0 will be submitted immediately after this submission is accepted.

@@ -1236,7 +1236,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   double pfire = meteovec.pfire;
   FCCSBehaviour_RESULT fccsbeh;
   FCCS_RESULT fireBehavior;
-  if(std::isnan(pfire)) {
+  if(!std::isnan(pfire)) {
     if(R::runif(0.0,1.0) < pfire) {
       fccsHazard_c(fccsbeh, fireBehavior, x, 
                    meteovec, 
