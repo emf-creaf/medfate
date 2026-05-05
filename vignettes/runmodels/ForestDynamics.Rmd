@@ -143,7 +143,7 @@ shinyplot(fd$GrowthResults[[1]])
 
 Finally, calling function `extract()` will extract and bind outputs for all the internal calls to function `growth()`:
 ```{r}
-extract(fd, "forest", addunits = TRUE) |>
+medfate::extract(fd, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 

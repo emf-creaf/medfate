@@ -67,7 +67,7 @@
   
   if(output_vec[1] %in% c("Snow", "Stand", "Temperature", 
                           "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance",
-                          "FireHazard")) {
+                          "FireHazard", "DecompositionPools")) {
     OM = object[[output_vec[1]]]
   } else if(output_vec[1]=="Plants" && output_vec[2]=="LAI") {
     OM = object$Plants$LAI

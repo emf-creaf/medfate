@@ -7,7 +7,7 @@
 * Rcpp modules "runners" to run single-site, multiple-site and watershed simulations while avoiding unnecessary input/output.
 * Default values for leaf/stem cavitation recovery set to "rate" to avoid anomalous behavior observed with "annual"
 * Leaf defoliation for "spwb" simulations made coherent with defoliation in "growth". Control parameter "cavitationInducedDefoliation" added.
-
+* New plot type 'DecompositionPools'
 
 # medfate 4.9.0
 * Forest objects can now have a seedling bank, snag data and litter data

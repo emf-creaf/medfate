@@ -410,6 +410,12 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                         xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                         summary.freq = summary.freq, ...))
   }
+  else if(type == "DecompositionPools") {
+    return(.plot_decompositionpools(DecompositionPools= x$DecompositionPools,
+                        type = type, dates = dates, 
+                        xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                        summary.freq = summary.freq, ...))
+  }
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                       "LabileCarbonBalance", 
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation")) {
@@ -595,6 +601,13 @@ plot.fordyn<-function(x, type="StandBasalArea",
       if(type=="CarbonBalance") {
         OM = summary(x, freq = "days", output = "CarbonBalance")
         return(.plot_carbon(OM, type,  
+                            dates = dates, 
+                            xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                            summary.freq = summary.freq, ...))
+      }
+      if(type=="DecompositionPools") {
+        OM = summary(x, freq = "days", output = "DecompositionPools", FUN = "mean")
+        return(.plot_decompositionpools(OM, type,  
                             dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))

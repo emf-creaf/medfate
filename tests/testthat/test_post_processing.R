@@ -268,6 +268,7 @@ test_that("Can produce all basic growth plots and summaries",{
   
   expect_type(fireHazard(G1, SpParamsMED, exampleforest), "double")
   expect_s3_class(plot(G1, "CarbonBalance"), "ggplot")
+  expect_s3_class(plot(G1, "DecompositionPools"), "ggplot")
   expect_s3_class(plot(G1, "BiomassBalance"), "ggplot")
   expect_s3_class(plot(G1, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(G1, "MaintenanceRespiration"), "ggplot")
@@ -427,6 +428,7 @@ test_that("Can produce all fordyn plots",{
   expect_s3_class(plot(fd, "PlantGrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(fd, "GrossPhotosynthesisPerLeaf"), "ggplot")
   expect_s3_class(plot(fd, "CarbonBalance"), "ggplot")
+  expect_s3_class(plot(fd, "DecompositionPools"), "ggplot")
   expect_s3_class(plot(fd, "BiomassBalance"), "ggplot")
   expect_s3_class(plot(fd, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(fd, "MaintenanceRespiration"), "ggplot")
