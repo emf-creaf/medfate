@@ -83,6 +83,9 @@ struct WeatherInputVector {
     if(meteovec.containsElementNamed("PET")) pet = meteovec["PET"];
     else pet = medfate::NA_DOUBLE;
     
+    if(meteovec.containsElementNamed("FireProbability")) pfire = meteovec["FireProbability"];
+    else pfire = medfate::NA_DOUBLE;
+    
   }
 };
 Rcpp::NumericVector copyWeather_c(const WeatherInputVector& meteo, const std::string& transpirationMode);

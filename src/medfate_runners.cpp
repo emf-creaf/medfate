@@ -84,6 +84,11 @@ void single_runner::run_day(Rcpp::CharacterVector date, Rcpp::NumericVector mete
     NumericVector lateralFlows_mm;
     if(lateralFlows.isNotNull()) {
       lateralFlows_mm = NumericVector(lateralFlows);
+      
+      if(lateralFlows_mm.size() != nlayers) {
+        throw medfate::MedfateInternalError("lateralFlows length does not match number of layers");
+      }
+      
       for(int l=0;l<nlayers;l++) {
         lateralFlows_c[l] = lateralFlows_mm[l];
       }
