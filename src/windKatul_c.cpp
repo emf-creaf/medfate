@@ -152,16 +152,24 @@ void windCanopyTurbulenceModel_inner_c(CanopyTurbulenceModel_RESULT& comm,
   // Mixing Length model
   double alpha = kv*(hm-d0)/hm;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
   std::vector<double> Lmix(N, alpha*hm);
-  std::vector<bool> bw(N);
-  for(int i=0;i<N;i++) bw[i] = zm[i] < hm;
-  std::vector<int> c1 = which_c(bw);
+  // Find maximum index of zm[i] < hm
   int nn = 0;
-  int cN = c1.size();
-  for(int i=0;i<cN;i++) nn = std::max(nn, c1[i]);
+  for(int i=0;i<N;i++) {
+    if(zm[i] < hm) {
+      nn = i;
+    }
+  }
   for(int i=nn;i<N;i++) {
     Lmix[i] = kv*(zm[i] - d0);
   }
-  Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0; // VALGRIND : Invalid read of size 8
+  // Patch to avoid access to illegal positions
+  if((nn==0) && (N > 1)) {
+    Lmix[nn]=(Lmix[nn] + Lmix[nn+1])/2.0; 
+  } else if(nn == (N - 1)) {
+    Lmix[nn]=(Lmix[nn-1] + Lmix[nn])/2.0; 
+  } else {
+    Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0; 
+  }
   
   double am3=-(Aq*Aq*Aq)*((AAu*AAu)-(AAw*AAw))/((AAw*AAw)-(Aq*Aq)/3.0);
 
