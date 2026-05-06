@@ -922,7 +922,7 @@ S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## Final soil water content (mm): 274.534
     ## Final snowpack content (mm): 0
     ## Change in plant water content (mm): -0.00496375
-    ## Plant water balance result (mm): -1.45973e-15
+    ## Plant water balance result (mm): -1.47911e-15
     ## Change in soil water content (mm): -16.3406
     ## Soil water balance result (mm): -16.3406
     ## Change in snowpack water content (mm): 0
