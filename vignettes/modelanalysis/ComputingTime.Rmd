@@ -47,9 +47,11 @@ if(!file.exists(file_out)) {
                                              rep("Sperry", 3),
                                              rep("Sureau", 3)),
                        soilDomains = rep(c("buckets", "single", "dual"),3),
+                       rhizosphereOverlap = c(rep("total", 9)),
                        Elapsed_time_sec = NA)
   for(i in 1:nrow(df_res_spwb)) {
-    control <- defaultControl(df_res_spwb$transpirationMode[i], df_res_spwb$soilDomains[i])
+    control <- defaultControl(df_res_spwb$transpirationMode[i], df_res_spwb$soilDomains[i],
+                              df_res_spwb$rhizosphereOverlap[i])
     control$verbose <- FALSE
     st <- system.time({spwb(spwbInput(exampleforest,examplesoil, SpParamsMED, control), 
                                     examplemeteo, latitude = 41.82592, elevation = 100)})
@@ -61,9 +63,11 @@ if(!file.exists(file_out)) {
                                              rep("Sperry", 3),
                                              rep("Sureau", 3)),
                        soilDomains = rep(c("buckets", "single", "dual"),3),
+                       rhizosphereOverlap = c(rep("total", 9)),
                        Elapsed_time_sec = NA)
   for(i in 1:nrow(df_res_growth)) {
-    control <- defaultControl(df_res_growth$transpirationMode[i], df_res_growth$soilDomains[i])
+    control <- defaultControl(df_res_growth$transpirationMode[i], df_res_growth$soilDomains[i],
+                              df_res_growth$rhizosphereOverlap[i])
     control$verbose <- FALSE
     st <- system.time({growth(growthInput(exampleforest,examplesoil, SpParamsMED, control), 
                                     examplemeteo, latitude = 41.82592, elevation = 100)})
@@ -75,16 +79,18 @@ if(!file.exists(file_out)) {
                                              rep("Sperry", 3),
                                              rep("Sureau", 3)),
                        soilDomains = rep(c("buckets", "single", "dual"),3),
+                       rhizosphereOverlap = c(rep("total", 9)),
                        Elapsed_time_sec = NA)
   for(i in 1:nrow(df_res_fordyn)) {
-    control <- defaultControl(df_res_fordyn$transpirationMode[i], df_res_fordyn$soilDomains[i])
+    control <- defaultControl(df_res_fordyn$transpirationMode[i], df_res_fordyn$soilDomains[i],
+                              df_res_fordyn$rhizosphereOverlap[i])
     control$verbose <- FALSE
     st <- system.time({fordyn(exampleforest,examplesoil, SpParamsMED, control = control, 
                               meteo = examplemeteo, latitude = 41.82592, elevation = 100)})
     df_res_fordyn$Elapsed_time_sec[i] <- st[[3]]
   }
   df_res <- dplyr::bind_rows(df_res_spwb, df_res_growth, df_res_fordyn)
-  names(df_res)[4] <- as.character(medfate_ver)
+  names(df_res)[5] <- as.character(medfate_ver)
   write.csv2(df_res, file = file_out, row.names = FALSE)
 }
 ```
@@ -98,12 +104,17 @@ files <- list.files("computing_times/", full.names = TRUE)
 df_res <- NULL
 for(i in 1:length(files)) {
   df_res_i <- read.csv2(files[i])
-  names(df_res_i)[4] <- substr(names(df_res_i)[4], 2, nchar(names(df_res_i)[4]))
+  if(!("rhizosphereOverlap" %in% names(df_res_i))) {
+    df_res_i <- df_res_i |>
+      dplyr::mutate(rhizosphereOverlap = "total") |>
+      dplyr::relocate("rhizosphereOverlap", .after = soilDomains)
+  }
+  names(df_res_i)[5] <- substr(names(df_res_i)[5], 2, nchar(names(df_res_i)[5]))
   if(is.null(df_res)) {
     df_res <- df_res_i
   } else {
     df_res <- df_res |>
-      dplyr::left_join(df_res_i, by = c("model", "transpirationMode", "soilDomains"))
+      dplyr::left_join(df_res_i, by = c("model", "transpirationMode", "soilDomains", "rhizosphereOverlap"))
   }
 }
 df_res |>

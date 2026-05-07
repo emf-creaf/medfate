@@ -1,6 +1,6 @@
 ## Minor change submission
 
-This submission (v5.0.0) several improvements, including new dependencies.
+This submission (ver. 5.0.0) several improvements, including new dependencies.
 
 ## Tested environments
 
@@ -16,7 +16,7 @@ This submission (v5.0.0) several improvements, including new dependencies.
 
 ## R CMD check results
 
-In all CI tests only NOTEs are generated
+In all CI tests only NOTEs are generated, except in clang18 and clang-asan, where RcppParallel could not be installed.
 
 ## Reverse/Downstream dependencies
 
