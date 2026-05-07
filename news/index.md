@@ -2,6 +2,8 @@
 
 ## medfate 5.0.0
 
+CRAN release: 2026-05-06
+
 - Partial rhizosphere overlap set to default
 - Internal restructuration to avoid Rcpp structures (NumericVector,
   NumericMatrix, DataFrame,…)
