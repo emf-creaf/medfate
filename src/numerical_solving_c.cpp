@@ -1,4 +1,5 @@
 #include "numerical_solving_c.h"
+#include "algorithm"
 #include "math.h"
 
 // a,b,c,d are input vectors
@@ -26,5 +27,5 @@ void tridiagonalSolving_c(const std::vector<double> &a, const std::vector<double
 
 
 double normal_cdf(double x, double mean, double stddev) {
-  return 0.5 * (1 + std::erf((x - mean) / (stddev * std::sqrt(2.0))));
+  return 0.5 * (1 + std::erf((x - mean) / (stddev * sqrt(2.0))));
 }

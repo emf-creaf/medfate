@@ -116,7 +116,7 @@ double gmin_c(double leafTemperature, double gmin_20,
   double gmin;
   if (leafTemperature<= TPhase) {
     gmin = gmin_20 * pow(Q10_1,(leafTemperature - 20.0) / 10.0);
-  } else if (leafTemperature > TPhase) {
+  } else {
     gmin = gmin_20 * pow(Q10_1, (TPhase - 20.0) / 10.0) * pow(Q10_2, (leafTemperature- TPhase) / 10.0);
   }
   return(gmin);
