@@ -120,6 +120,7 @@ SpParamsMED[62,tree_all_cols] = SpParamsMED[116,tree_all_cols]
 pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata", "Pinus radiata", "Pinus pinaster")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
+traits4models::check_medfate_params(SpParamsMED)
 #Save data
 usethis::use_data(SpParamsMED, overwrite = T)
 
