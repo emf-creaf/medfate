@@ -43,6 +43,10 @@ SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsDefinitio
 SpParamsDefinition$Definition = stringi::stri_enc_toascii(SpParamsDefinition$Definition)
 SpParamsDefinition$Units = stringi::stri_enc_toascii(SpParamsDefinition$Units)
 SpParamsDefinition$Strict = as.logical(SpParamsDefinition$Strict)
+if(any(is.na(SpParamsDefinition$ParameterName))) stop("Missing values in ParameterName")
+if(any(is.na(SpParamsDefinition$Definition))) stop("Missing values in Definition")
+if(any(is.na(SpParamsDefinition$Type))) stop("Missing values in Type")
+if(any(is.na(SpParamsDefinition$Strict))) stop("Missing values in Strict")
 usethis::use_data(SpParamsDefinition, overwrite = T)
 
 

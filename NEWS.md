@@ -1,3 +1,7 @@
+# medfate 5.0.1
+* Compilation patch for C++ 20
+
+
 # medfate 5.0.0
 * Partial rhizosphere overlap set to default
 * Internal restructuration to avoid Rcpp structures (NumericVector, NumericMatrix, DataFrame,...)
