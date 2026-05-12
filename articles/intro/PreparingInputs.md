@@ -19,7 +19,7 @@ We begin by loading packages **medfate** and **meteoland**:
 library(medfate)
 #> Package 'medfate' [ver. 5.0.0]
 library(meteoland)
-#> Package 'meteoland' [ver. 2.2.6]
+#> Package 'meteoland' [ver. 2.2.7]
 ```
 
 ## Building/manipulating forest objects
