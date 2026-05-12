@@ -67,9 +67,9 @@ knitr::include_graphics("man/figures/packages.png")
 
 ## Authorship
 
-Package **medfate** is developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) unit at [*CREAF*](https://www.creaf.cat/) (in Spain), in close collaboration with researchers from [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/) (in France) and [*CTFC*](https://www.ctfc.cat/) (in Spain).
+Package **medfate** is developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) unit at [*CREAF*](https://www.creaf.cat/) with funding from [*CSIC*](https://www.csic.es/), in close collaboration with researchers from other institutions such as [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/) and [*CTFC*](https://www.ctfc.cat/).
 
-```{r, out.width='50%', fig.align="center", echo=FALSE}
+```{r, out.width='80%', fig.align="center", echo=FALSE}
 knitr::include_graphics("man/figures/institution_logos.png")
 ```
 
