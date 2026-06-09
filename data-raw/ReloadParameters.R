@@ -138,11 +138,24 @@ rm(SpParamsMED)
 # usethis::use_data(SpParamsMED, overwrite = T)
 
 
-## Trait family means
-trait_family_means = read.csv2("data-raw/trait_family_means.csv", dec=".")
+# Trait family means ------------------------------------------------------
+harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources"
+trait_family_means <- traits4models::get_taxon_trait_means(harmonized_trait_path, taxon_level = "family", 
+                                                           traits =c("WoodDensity", "LeafDensity", "WoodC", 
+                                                                     "LeafPI0", "LeafEPS", "LeafAF",
+                                                                     "Gswmin", "Gswmax",
+                                                                     "Nleaf", "Nsapwood", "Nfineroot",
+                                                                     "Ks", "VCstem_P50", 
+                                                                     "Al2As", "conduit2sapwood")) |>
+  dplyr::filter(!is.na(family)) |>
+  dplyr::rename("Kmax_stemxylem" = "Ks")
+row.names(trait_family_means) <- trait_family_means$family
+trait_family_means <- trait_family_means |> dplyr::select(-family)
+write.table(trait_family_means, "data-raw/trait_family_means.csv", sep=";")
 usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
 
-## Modify exampleforest (after rebuilding)
+
+# Modify exampleforest (after rebuilding) ---------------------------------
 data(exampleforest)
 data("SpParamsMED")
 exampleforest$treeData$Species[1] = "Pinus halepensis"
