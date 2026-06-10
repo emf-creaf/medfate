@@ -11,6 +11,7 @@
 #' \itemize{
 #'  \item{\code{Z100}: A numeric vector with maximum rooting depth in mm.}
 #'  \item{\code{LAI}: Leaf area index (m2/m2).}
+#'  \item{\code{LAIMistletoe}: Leaf area index (m2/m2) of mistletoes.}
 #'  \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2).}
 #'  \item{\code{FuelLoading}: Fine fuel loading (kg/m2).}
 #'  \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
@@ -97,7 +98,7 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
   
   if(!is.null(addcolumns)) {
     if(!is.character(addcolumns)) stop("`addcolumns` should be a character vector")
-    addcolumns <- match.arg(addcolumns, c("Z100", "LAI", "FoliarBiomass", "FuelLoading", "CrownRatio", "Age", "ObsID") , several.ok = TRUE)
+    addcolumns <- match.arg(addcolumns, c("Z100", "LAI", "LAIMistletoe", "FoliarBiomass", "FuelLoading", "CrownRatio", "Age", "ObsID") , several.ok = TRUE)
     if("Z100" %in% addcolumns) {
       l$treeData$Z100 <- as.numeric(rep(NA, ntree))
       l$shrubData$Z100 <- as.numeric(rep(NA, nshrub))
@@ -113,6 +114,11 @@ emptyforest <- function(ntree = 0, nshrub = 0, nherb = 0, nseedling = 0, nseed =
       l$treeData$LAI <- as.numeric(rep(NA, ntree))
       l$shrubData$LAI <- as.numeric(rep(NA, nshrub))
       if(nherb>0) l$herbData$LAI <- as.numeric(rep(NA, nherb))
+    }
+    if("LAIMistletoe" %in% addcolumns) {
+      l$treeData$LAIMistletoe <- as.numeric(rep(NA, ntree))
+      l$shrubData$LAIMistletoe <- as.numeric(rep(NA, nshrub))
+      if(nherb>0) l$herbData$LAIMistletoe <- as.numeric(rep(NA, nherb))
     }
     if("FoliarBiomass" %in% addcolumns) {
       l$treeData$FoliarBiomass <- as.numeric(rep(NA, ntree))

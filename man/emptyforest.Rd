@@ -31,6 +31,7 @@ emptyforest(
 \itemize{
 \item{\code{Z100}: A numeric vector with maximum rooting depth in mm.}
 \item{\code{LAI}: Leaf area index (m2/m2).}
+\item{\code{LAIMistletoe}: Leaf area index (m2/m2) of mistletoes.}
 \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2).}
 \item{\code{FuelLoading}: Fine fuel loading (kg/m2).}
 \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}

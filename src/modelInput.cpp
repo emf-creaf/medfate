@@ -1374,6 +1374,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector LAI_mistletoe = above["LAI_mistletoe"];
   NumericVector H = above["H"];
   NumericVector DBH = above["DBH"];
   NumericVector CR = above["CR"];
@@ -1407,6 +1408,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead,
+                                         _["LAI_mistletoe"] = LAI_mistletoe,
                                          _["Age"] = Age,
                                          _["ObsID"] = ObsID);
   if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
@@ -1495,6 +1497,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector LAI_nocomp = above["LAI_nocomp"];
+  NumericVector LAI_mistletoe = above["LAI_mistletoe"];
   NumericVector N = above["N"];
   NumericVector DBH = above["DBH"];
   NumericVector Cover = above["Cover"];
@@ -1566,6 +1569,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                          _["LAI_expanded"]=LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead,
                                          _["LAI_nocomp"] = LAI_nocomp,
+                                         _["LAI_mistletoe"] = LAI_mistletoe,
                                          _["Loading"] = Loading,
                                          _["Age"] = Age,
                                          _["ObsID"] = ObsID);

@@ -25,6 +25,7 @@ struct Above {
   std::vector<double> LAI_expanded;
   std::vector<double> LAI_dead;
   std::vector<double> LAI_nocomp;
+  std::vector<double> LAI_mistletoe;
   std::vector<double> Loading;
   std::vector<double> Age;
   std::vector<std::string> ObsID;

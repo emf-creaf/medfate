@@ -1884,7 +1884,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   NumericVector LAI_expanded = cohortLAI(x, SpParams, gdd, true, true);
   // Maximum LAI assuming no competition effect
   NumericVector LAI_nocomp = cohortLAI(x, SpParams, NA_REAL, true, false);
-  
+  // LAI of hemiparasitic mistletoe
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
@@ -1894,6 +1894,10 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   NumericVector shrubAge(nshrub, NA_REAL);
   if(treeData.containsElementNamed("Age")) treeAge = treeData["Age"];
   if(shrubData.containsElementNamed("Age")) shrubAge = shrubData["Age"];
+  NumericVector treeLAImistletoe(ntree, 0.0);
+  NumericVector shrubLAImistletoe(nshrub, 0.0);
+  if(treeData.containsElementNamed("LAIMistletoe")) treeLAImistletoe = treeData["LAIMistletoe"];
+  if(shrubData.containsElementNamed("LAIMistletoe")) shrubLAImistletoe = shrubData["LAIMistletoe"];
   CharacterVector treeObsID(ntree, NA_STRING);
   CharacterVector shrubObsID(nshrub, NA_STRING);
   if(treeData.containsElementNamed("ObsID")) treeObsID = treeData["ObsID"];
@@ -1902,6 +1906,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   
   int nherb = 0;
   NumericVector herbAge;
+  NumericVector herbLAImistletoe;
   CharacterVector herbObsID;
   if(x.containsElementNamed("herbData")) {
     DataFrame herbData = Rcpp::as<Rcpp::DataFrame>(x["herbData"]);
@@ -1912,6 +1917,11 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
       } else {
         herbAge = NumericVector(nherb, NA_REAL);
       }
+      if(herbData.containsElementNamed("LAIMistletoe")) {
+        herbLAImistletoe = herbData["LAIMistletoe"];
+      } else {
+        herbLAImistletoe = NumericVector(nherb, 0.0);
+      }
       if(herbData.containsElementNamed("ObsID")) {
         herbObsID = herbData["ObsID"]; 
       } else {
@@ -1921,6 +1931,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
   }
   
   NumericVector LAI_dead(ntree+nshrub+nherb, 0.0);
+  NumericVector LAI_mistletoe(ntree+nshrub+nherb, 0.0);
   NumericVector DBH(ntree+nshrub+nherb, NA_REAL);
   NumericVector Age(ntree+nshrub+nherb, NA_REAL);
   CharacterVector ObsID(ntree+nshrub+nherb, NA_STRING);
@@ -1931,23 +1942,26 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, b
     Cover[i] = NA_REAL;
     Age[i] = treeAge[i];
     ObsID[i] = treeObsID[i];
+    LAI_mistletoe[i] = treeLAImistletoe[i];
   }
   for(int i=0;i<nshrub;i++) {
     DBH[ntree+i] = NA_REAL;
     LAI_dead[ntree+i] = 0.0;
     Age[ntree+i] = shrubAge[i];
     ObsID[ntree+i] = shrubObsID[i];
+    LAI_mistletoe[ntree+i] = shrubLAImistletoe[i];
   }
   for(int i=0;i<nherb;i++) {
     DBH[ntree+nshrub+i] = NA_REAL;
     LAI_dead[ntree+nshrub+i] = 0.0;
     Age[ntree+nshrub+i] = herbAge[i];
     ObsID[ntree+nshrub+i] = herbObsID[i];
+    LAI_mistletoe[ntree+nshrub+i] = herbLAImistletoe[i];
   }
   
   DataFrame above = DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
                     _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead, 
-                    _["LAI_nocomp"] = LAI_nocomp, _["Age"] = Age, _["ObsID"] = ObsID);
+                    _["LAI_nocomp"] = LAI_nocomp, _["LAI_mistletoe"] = LAI_mistletoe, _["Age"] = Age, _["ObsID"] = ObsID);
   if(loading) {
     NumericVector cohLoading = cohortFuelLoading(x, SpParams, gdd, true);
     above.push_back(cohLoading, "Loading");
