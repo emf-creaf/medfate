@@ -335,6 +335,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   std::vector<double>& LAIlive = x.above.LAI_live;
   std::vector<double>& LAIphe = x.above.LAI_expanded;
   std::vector<double>& LAIdead = x.above.LAI_dead;
+  std::vector<double>& LAImistletoe = x.above.LAI_mistletoe;
   std::vector<double>& H = x.above.H;
   std::vector<double>& CR = x.above.CR;
   
@@ -455,7 +456,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   ////////////////////////////////////////
   // STEP 1. Estimate stand-level leaf area values and leaf distribution across layers from leaf-level live/expanded area
   ////////////////////////////////////////
-  double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0;
+  double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcellmistletoe = 0.0;
   double sum_abs_exp = 0.0, sum_abs_dead = 0.0;
   double canopyHeight = 100.0; //Minimum canopy height of 1 m
   for(int c=0;c<numCohorts;c++) {
@@ -463,9 +464,10 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
     LAIcellexpanded +=LAIphe[c];
+    LAIcellmistletoe +=LAImistletoe[c];
     sum_abs_exp += std::abs(LAIphe[c] - PrevLAIexpanded[c]);
     sum_abs_dead += std::abs(LAIdead[c] - PrevLAIdead[c]);
-    if((canopyHeight<H[c]) && ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
+    if((canopyHeight<H[c]) && ((LAIphe[c]+LAIdead[c]+LAImistletoe[c])>0.0)) canopyHeight = H[c];
   }
 
   std::vector<double> lad(ncanlayers,0.0);
@@ -484,7 +486,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       std::vector<double> z(ncanlayers+1,0.0);
       for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
       for(int i=0; i<numCohorts;i++) {
-        PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, x.paramsInterception.kPAR, CR);
+        PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, LAImistletoe, x.paramsInterception.kPAR, CR, x.control.mistletoe.kPAR);
         PrevLAIexpanded[i] = LAIphe[i];
         PrevLAIdead[i] = LAIdead[i];
       }
@@ -1267,6 +1269,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   outputStand.LAIlive = LAIcelllive;
   outputStand.LAIexpanded = LAIcellexpanded;
   outputStand.LAIdead = LAIcelldead;
+  outputStand.LAImistletoe = LAIcellmistletoe;
   
   // Copy output plants
   for(int c =0;c<numCohorts;c++) {

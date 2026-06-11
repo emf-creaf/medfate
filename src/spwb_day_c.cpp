@@ -108,9 +108,9 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]) + (x.control.mistletoe.kPAR*LAImistletoe[c]));
     LAIcell += LAIphe[c]+LAIdead[c]+LAImistletoe[c];
     LAIcelldead += LAIdead[c];
-    LAIcelllive += LAIlive[c];
-    LAIcellexpanded +=LAIphe[c];
-    Cm += (LAIphe[c]+LAIdead[c]+LAImistletoe[c])*gRainIntercept[c]; //LAI dead also counts on interception
+    LAIcelllive += LAIlive[c]+LAImistletoe[c];
+    LAIcellexpanded +=LAIphe[c]+LAImistletoe[c];
+    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c] + (LAImistletoe[c]*x.control.mistletoe.g); //LAI dead also counts on interception
   }
   
   //Percentage of irradiance reaching the herb layer

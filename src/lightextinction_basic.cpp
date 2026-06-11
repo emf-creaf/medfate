@@ -10,24 +10,32 @@ using namespace Rcpp;
 /***
  * FUNCTIONS FOR LIGHT EXTINCTION (BASIC)
  */
-double availableLight(double h, NumericVector H, NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector k, NumericVector CR) {
+double availableLight(double h, 
+                      NumericVector H, NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector LAI_mistletoe, 
+                      NumericVector k, NumericVector CR, 
+                      double k_mistletoe) {
   return(availableLight_c(h, 
                           Rcpp::as<std::vector<double>>(H),
                           Rcpp::as<std::vector<double>>(LAI_expanded),
                           Rcpp::as<std::vector<double>>(LAI_dead),
+                          Rcpp::as<std::vector<double>>(LAI_mistletoe),
                           Rcpp::as<std::vector<double>>(k),
-                          Rcpp::as<std::vector<double>>(CR)));
+                          Rcpp::as<std::vector<double>>(CR),
+                          k_mistletoe));
 }
 
-NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVector LAI_dead, NumericVector k, NumericVector CR){
+NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVector LAI_dead, NumericVector LAI_mistletoe,
+                         NumericVector k, NumericVector CR, double k_mistletoe){
   int n = H.size();
   std::vector<double> PARcohort(n, 0.0);
   parcohortC_c(PARcohort, 
                Rcpp::as<std::vector<double>>(H),
                Rcpp::as<std::vector<double>>(LAI_expanded),
                Rcpp::as<std::vector<double>>(LAI_dead),
+               Rcpp::as<std::vector<double>>(LAI_mistletoe),
                Rcpp::as<std::vector<double>>(k),
-               Rcpp::as<std::vector<double>>(CR));
+               Rcpp::as<std::vector<double>>(CR),
+               k_mistletoe);
   NumericVector ci = Rcpp::wrap(PARcohort);
   ci.attr("names") = H.attr("names");
   return(ci);
@@ -36,9 +44,9 @@ NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVe
 // [[Rcpp::export(".parcohort")]]
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector LAI_dead(n, 0.0);
+  NumericVector LAI_dead(n, 0.0), LAI_mistletoe(n, 0.0);
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);  
-  return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
+  return(parcohortC(H,LAI,LAI_dead,LAI_mistletoe, kPAR,CR, 0.5));
 }
 
 //' Radiation extinction functions used in basic transpiration sub-model
@@ -70,21 +78,21 @@ NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H
   int n = SP.size();
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);  
   NumericVector LAI_dead(n, 0.0);
+  NumericVector LAI_mistletoe(n, 0.0);
   NumericVector AL(heights.size());
-  for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, kPAR,CR);
+  for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, LAI_mistletoe, kPAR,CR, 0.5);
   return(AL);
 }
 
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);  
-  NumericVector kSWR(n), LAI_dead(n);
+  NumericVector kSWR(n), LAI_dead(n,0.0), LAI_mistletoe(n,0.0);
   for(int i=0; i<n;i++) {
     kSWR[i] = kPAR[i]/1.35;
-    LAI_dead[i]=0.0;
   }
   NumericVector AL(heights.size());
-  for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI, LAI_dead, kSWR,CR);
+  for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI, LAI_dead, LAI_mistletoe, kSWR,CR, 0.5);
   return(AL);
 }
 

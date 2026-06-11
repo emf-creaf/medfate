@@ -14,14 +14,18 @@ double availableLight_c(double h,
                         const std::vector<double>& H, 
                         const std::vector<double>& LAI_expanded, 
                         const std::vector<double>& LAI_dead, 
+                        const std::vector<double>& LAI_mistletoe,
                         const std::vector<double>& k, 
-                        const std::vector<double>& CR);
+                        const std::vector<double>& CR,
+                        double k_mistletoe);
 void parcohortC_c(std::vector<double>& PARcohort,
                   const std::vector<double>& H, 
                   const std::vector<double>& LAI_expanded, 
                   const std::vector<double>& LAI_dead, 
+                  const std::vector<double>& LAI_mistletoe,
                   const std::vector<double>& k, 
-                  const std::vector<double>& CR);
+                  const std::vector<double>& CR,
+                  double k_mistletoe);
 void cohortAbsorbedSWRFraction_c(std::vector<double>& SWRfraction, 
                                  AbsorbedSWR_COMM& AbSWRcomm,
                                  const arma::mat& LAIme, 

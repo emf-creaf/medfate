@@ -92,6 +92,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>& LAIlive = x.above.LAI_live;
   std::vector<double>& LAIphe = x.above.LAI_expanded;
   std::vector<double>& LAIdead = x.above.LAI_dead;
+  std::vector<double>& LAImistletoe = x.above.LAI_mistletoe;
   std::vector<double>& H = x.above.H;
   std::vector<double>& CR = x.above.CR;
   int numCohorts = LAIphe.size();
@@ -174,14 +175,15 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>&  Extraction = outputPlants.Extraction;
 
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0, LAIcellmistletoe = 0.0;
   double sum_abs_exp = 0.0, sum_abs_dead = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-    LAIcell += LAIphe[c]+LAIdead[c];
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]) + (x.control.mistletoe.kPAR*LAImistletoe[c]));
+    LAIcell += LAIphe[c]+LAIdead[c]+LAImistletoe[c];
     LAIcelldead += LAIdead[c];
     LAIcellexpanded +=LAIphe[c];
     LAIcelllive += LAIlive[c];
+    LAIcellmistletoe +=LAImistletoe[c];
     sum_abs_exp += std::abs(LAIphe[c] - PrevLAIexpanded[c]);
     sum_abs_dead += std::abs(LAIdead[c] - PrevLAIdead[c]);
   }
@@ -201,7 +203,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       std::vector<double> z(ncanlayers+1,0.0);
       for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
       for(int i=0; i<numCohorts;i++) {
-        PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, kPAR, CR);
+        PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, LAImistletoe, kPAR, CR, x.control.mistletoe.kPAR);
         PrevLAIexpanded[i] = LAIphe[i];
         PrevLAIdead[i] = LAIdead[i];
       }
@@ -511,7 +513,8 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   outputStand.LAIlive = LAIcelllive;
   outputStand.LAIexpanded = LAIcellexpanded;
   outputStand.LAIdead = LAIcelldead;
-
+  outputStand.LAImistletoe = LAIcellmistletoe;
+  
   // Copy output plants
   for(int c =0;c<numCohorts;c++) {
     outputPlants.LAI[c] = LAIphe[c];

@@ -9,8 +9,10 @@ double availableLight_c(double h,
                         const std::vector<double>& H, 
                         const std::vector<double>& LAI_expanded, 
                         const std::vector<double>& LAI_dead, 
+                        const std::vector<double>& LAI_mistletoe, 
                         const std::vector<double>& k, 
-                        const std::vector<double>& CR) {
+                        const std::vector<double>& CR,
+                        double k_mistletoe) {
   double s= 0.0, p=0.0;
   int n = H.size();
   for(int j=0; j< n; j++) {
@@ -19,7 +21,7 @@ double availableLight_c(double h,
     p = leafAreaProportion_c(h, H[j], cbh, H[j]);
     if(p<0.0) p = 0.0;
     else if(p>1.0) p=1.0;
-    s = s + k[j]*p*(LAI_expanded[j]+LAI_dead[j]);
+    s = s + p*(k[j]*(LAI_expanded[j]+LAI_dead[j]) + k_mistletoe*LAI_mistletoe[j]);
   }
   return(100*exp((-1)*s));
 }
@@ -28,10 +30,12 @@ void parcohortC_c(std::vector<double>& PARcohort,
                   const std::vector<double>& H, 
                   const std::vector<double>& LAI_expanded, 
                   const std::vector<double>& LAI_dead, 
+                  const std::vector<double>& LAI_mistletoe, 
                   const std::vector<double>& k, 
-                  const std::vector<double>& CR){
+                  const std::vector<double>& CR,
+                  double k_mistletoe){
   int n = H.size();
-  for(int i=0; i<n;i++) PARcohort[i] = availableLight_c( H[i]*(1.0-(1.0-CR[i])/2.0), H, LAI_expanded, LAI_dead, k, CR);
+  for(int i=0; i<n;i++) PARcohort[i] = availableLight_c( H[i]*(1.0-(1.0-CR[i])/2.0), H, LAI_expanded, LAI_dead, LAI_mistletoe, k, CR, k_mistletoe);
 }
 
 
