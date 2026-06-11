@@ -46,6 +46,15 @@ ControlParameters::ControlParameters(List x) {
   
   fireHazard.lfmcComponent = as<std::string>(x["lfmcComponent"]);
 
+  if(x.containsElementNamed("mistletoeParams")) {
+    List mistletoeParams = x["mistletoeParams"];
+    mistletoe.kPAR = mistletoeParams["kPAR"];
+    mistletoe.g = mistletoeParams["g"];
+    mistletoe.Tmax_LAI = mistletoeParams["Tmax_LAI"];
+    mistletoe.Tmax_LAIsq = mistletoeParams["Tmax_LAIsq"];
+    mistletoe.Gs_P50 = mistletoeParams["Gs_P50"];
+    mistletoe.Gs_slope = mistletoeParams["Gs_slope"];
+  }
   if(x.containsElementNamed("truncateRootDistribution")) commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
   commonWB.fullRhizosphereOverlapConductivity = 0.01;
   if(x.containsElementNamed("fullRhizosphereOverlapConductivity")) commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);

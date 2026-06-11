@@ -95,6 +95,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   std::vector<double>& LAIlive = x.above.LAI_live;
   std::vector<double>& LAIphe = x.above.LAI_expanded;
   std::vector<double>& LAIdead = x.above.LAI_dead;
+  std::vector<double>& LAImistletoe = x.above.LAI_mistletoe;
   int numCohorts = LAIphe.size();
   
   //Parameters
@@ -104,12 +105,12 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   //STEP 1 - Update leaf area values according to the phenology of species and recalculate radiation extinction
   double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-    LAIcell += LAIphe[c]+LAIdead[c];
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]) + (x.control.mistletoe.kPAR*LAImistletoe[c]));
+    LAIcell += LAIphe[c]+LAIdead[c]+LAImistletoe[c];
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
     LAIcellexpanded +=LAIphe[c];
-    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
+    Cm += (LAIphe[c]+LAIdead[c]+LAImistletoe[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
   
   //Percentage of irradiance reaching the herb layer

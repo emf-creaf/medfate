@@ -92,6 +92,16 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{cavitationRecoveryMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
 \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (88 \% PLC will correspond to 50 \% defoliation).}
 \item{\code{lfmcComponent [= "fine"]}: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).}
+\item{\code{mistletoeParams}: A list with the following elements:
+\itemize{
+\item{\code{kPAR [= 0.5]}: Mistletoe light extinction coefficient.}
+\item{\code{g [= 0.8]}: Mistletoe water storage capacity per LAI unit.}
+\item{\code{Tmax_LAI [= 0.134]}: Empirical coefficient relating mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
+\item{\code{Tmax_LAIsq [= -0.006]}: Empirical coefficient relating squared mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
+\item{\code{Gs_P50 [= -5.0]}: Water potential corresponding to 50\% reduction of mistletoe stomatal conductance.}
+\item{\code{Gs_slope [= 30]}: Rate of decrease in mistletoe stomatal conductance at Gs_P50.}
+}
+}
 }
 \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"} only):
 \itemize{

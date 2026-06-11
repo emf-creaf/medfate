@@ -38,6 +38,15 @@ struct PhenologyControlParams {
   double unfoldingDD;
 };
 
+struct MistletoeParams {
+  double kPAR = 0.5;
+  double g = 0.8;
+  double Tmax_LAI = 0.134;
+  double Tmax_LAIsq = -0.006;
+  double Gs_P50 = -5.0;
+  double Gs_slope = 30.0;
+};
+
 struct CommonWBParams {
   double verticalLayerSize;
   bool bareSoilEvaporation;
@@ -200,6 +209,7 @@ struct ControlParameters {
   AdvancedWBParams advancedWB;
   SperryWBParams sperry;
   SureauWBParams sureau;
+  MistletoeParams mistletoe;
   FireHazardParams fireHazard;
   GrowthControlParams growth;
   MortalityParams mortality;
