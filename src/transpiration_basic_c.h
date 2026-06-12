@@ -87,13 +87,13 @@ Rcpp::List copyBasicTranspirationResult_c(const BasicTranspiration_RESULT& BTres
 struct BasicTranspiration_COMM {
   AbsorbedSWR_COMM AbSWRcomm;
   std::vector<double> CohASWRF;
-  std::vector<double> Tmax;
+  std::vector<double> TmaxMist;
   std::vector<double> TmaxCoh;
   arma::mat RHOPCohDyn;
   BasicTranspiration_COMM(size_t numCohorts, size_t ncanlayers, size_t nlayers) : 
     AbSWRcomm(numCohorts, ncanlayers), 
     CohASWRF(numCohorts),
-    Tmax(numCohorts),
+    TmaxMist(numCohorts),
     TmaxCoh(numCohorts), 
     RHOPCohDyn(numCohorts, nlayers){}
 };

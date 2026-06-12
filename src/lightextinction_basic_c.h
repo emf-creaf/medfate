@@ -30,5 +30,7 @@ void cohortAbsorbedSWRFraction_c(std::vector<double>& SWRfraction,
                                  AbsorbedSWR_COMM& AbSWRcomm,
                                  const arma::mat& LAIme, 
                                  const arma::mat& LAImd, 
-                                 const std::vector<double>& kSWR);
+                                 const arma::mat& LAIms, 
+                                 const std::vector<double>& kSWR,
+                                 double kSWR_mistletoe);
 #endif

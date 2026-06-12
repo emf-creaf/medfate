@@ -45,13 +45,15 @@ void parcohortC_c(std::vector<double>& PARcohort,
 void layerAbsorbedSWRFractionIncident_c(std::vector<double>& f,
                                         const arma::mat& LAIme, 
                                         const arma::mat& LAImd, 
-                                        const std::vector<double>& kSWR) {
+                                        const arma::mat& LAIms, 
+                                        const std::vector<double>& kSWR,
+                                        double kSWR_mistletoe) {
   int ncanlayers = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
   double s;
   for(int l = 0;l<ncanlayers;l++) {
     s = 0.0;
-    for(int c=0;c<ncoh; c++) s+=kSWR[c]*(LAIme(l,c)+LAImd(l,c));
+    for(int c=0;c<ncoh; c++) s+=(kSWR[c]*(LAIme(l,c)+LAImd(l,c)) + kSWR_mistletoe*LAIms(l,c));
     f[l] = 1.0 - exp(-1.0*s);
   }
 }
@@ -63,15 +65,17 @@ void cohortLayerAbsorbedSWRFractionIncident_c(arma::mat& fij,
                                               const std::vector<double>& fi, 
                                               const arma::mat& LAIme, 
                                               const arma::mat& LAImd, 
-                                              const std::vector<double>& kSWR) {
+                                              const arma::mat& LAIms, 
+                                              const std::vector<double>& kSWR,
+                                              double kSWR_mistletoe) {
   int ncanlayers = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
   double s = 0.0;
   for(int l = 0;l<ncanlayers;l++) {
     s = 0.0;
-    for(int c=0;c<ncoh; c++) s+=kSWR[c]*(LAIme(l,c)+LAImd(l,c));
+    for(int c=0;c<ncoh; c++) s+=(kSWR[c]*(LAIme(l,c)+LAImd(l,c)) + kSWR_mistletoe*LAIms(l,c));
     if(s>0.0) {
-      for(int c=0;c<ncoh; c++) fij(l,c) = fi[l]*kSWR[c]*LAIme(l,c)/s; 
+      for(int c=0;c<ncoh; c++) fij(l,c) = fi[l]*(kSWR[c]*(LAIme(l,c)+LAImd(l,c)) + kSWR_mistletoe*LAIms(l,c))/s; 
     }
   }
 }
@@ -83,12 +87,14 @@ void cohortAbsorbedSWRFraction_c(std::vector<double>& SWRfraction,
                                  AbsorbedSWR_COMM& AbSWRcomm,
                                  const arma::mat& LAIme, 
                                  const arma::mat& LAImd, 
-                                 const std::vector<double>& kSWR) {
+                                 const arma::mat& LAIms, 
+                                 const std::vector<double>& kSWR,
+                                 double kSWR_mistletoe) {
   int ncoh = LAIme.n_cols;
   int ncanlayers = LAIme.n_rows;
   
-  layerAbsorbedSWRFractionIncident_c(AbSWRcomm.fi, LAIme, LAImd, kSWR);
-  cohortLayerAbsorbedSWRFractionIncident_c(AbSWRcomm.fij, AbSWRcomm.fi, LAIme, LAImd, kSWR);
+  layerAbsorbedSWRFractionIncident_c(AbSWRcomm.fi, LAIme, LAImd, LAIms, kSWR, kSWR_mistletoe);
+  cohortLayerAbsorbedSWRFractionIncident_c(AbSWRcomm.fij, AbSWRcomm.fi, LAIme, LAImd, LAIms, kSWR, kSWR_mistletoe);
   for(int i = 0;i<ncanlayers;i++) {
     AbSWRcomm.rem[i] = 1.0;
     for(int h = (ncanlayers-1);h>i;h--) {
