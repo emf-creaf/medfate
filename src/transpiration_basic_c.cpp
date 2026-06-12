@@ -148,8 +148,10 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   std::vector<double>& LeafPLC = x.internalWater.LeafPLC;
   arma::mat& LAIme = x.internalLAIDistribution.expanded;
   arma::mat& LAImd = x.internalLAIDistribution.dead;
+  arma::mat& LAIms = x.internalLAIDistribution.mistletoe;
   std::vector<double>& PrevLAIexpanded = x.internalLAIDistribution.PrevLAIexpanded;
   std::vector<double>& PrevLAIdead = x.internalLAIDistribution.PrevLAIdead;
+  std::vector<double>& PrevLAImistletoe = x.internalLAIDistribution.PrevLAImistletoe;
   std::vector<double>& PARcohort = x.internalLAIDistribution.PARcohort;
 
   
@@ -190,7 +192,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
   if(numCohorts>0) {
     bool recalc_LAI = false;
-    if(std::isnan(PrevLAIexpanded[0]) || std::isnan(PrevLAIdead[0])) {
+    if(std::isnan(PrevLAIexpanded[0]) || std::isnan(PrevLAIdead[0]) || std::isnan(PrevLAImistletoe[0])) {
       recalc_LAI = true;
     } else{
       if(sum_abs_exp>0.001) {
@@ -206,10 +208,13 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
         PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, LAImistletoe, kPAR, CR, x.control.mistletoe.kPAR);
         PrevLAIexpanded[i] = LAIphe[i];
         PrevLAIdead[i] = LAIdead[i];
+        PrevLAImistletoe[i] = LAImistletoe[i];
       }
       //Update LAI distribution if necessary
+      // Rcout<<"recalc dist\n";
       updateLAIdistributionVectors_c(LAIme, z, LAIphe, H, CR);
       updateLAIdistributionVectors_c(LAImd, z, LAIdead, H, CR);
+      updateLAIdistributionVectors_c(LAIms, z, LAImistletoe, H, CR);
     }
   }
   

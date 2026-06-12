@@ -1190,23 +1190,29 @@ List internalLAIDistribution(DataFrame above, DataFrame canopyParams) {
   NumericVector PARcohort(numCohorts,0.0);
   NumericVector PrevLAIexpanded(numCohorts,NA_REAL);
   NumericVector PrevLAIdead(numCohorts,NA_REAL);
+  NumericVector PrevLAImistletoe(numCohorts,NA_REAL);
   
   // double h1, h2;
   NumericMatrix LAImx(ncanlayers, numCohorts);
   NumericMatrix LAIme(ncanlayers, numCohorts);
   NumericMatrix LAImd(ncanlayers, numCohorts);
+  NumericMatrix LAIms(ncanlayers, numCohorts);
   LAImx.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
   LAIme.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
   LAImd.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
+  LAIms.attr("dimnames") = List::create(seq(1,ncanlayers), above.attr("row.names"));
   LAImx.fill(0.0);
   LAIme.fill(0.0);
   LAImd.fill(0.0);
+  LAIms.fill(0.0);
   return(List::create(_["PrevLAIexpanded"] = PrevLAIexpanded,
                       _["PrevLAIdead"] = PrevLAIdead,
+                      _["PrevLAImistletoe"] = PrevLAImistletoe,
                       _["PARcohort"] = PARcohort,
                       _["live"] = LAImx,
                       _["expanded"] = LAIme,
-                      _["dead"] = LAImd));
+                      _["dead"] = LAImd,
+                      _["mistletoe"] = LAIms));
 }
 
 

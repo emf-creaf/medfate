@@ -55,6 +55,7 @@ Rcpp::NumericVector copyStandResult_c(const Stand_RESULT& Sres) {
                                               _["LAIlive"] = Sres.LAIlive,  
                                               _["LAIexpanded"] = Sres.LAIexpanded,
                                               _["LAIdead"] = Sres.LAIdead,
+                                              _["LAImistletoe"] = Sres.LAImistletoe,
                                               _["Cm"] = Sres.Cm, 
                                               _["LgroundPAR"] = Sres.LgroundPAR, 
                                               _["LgroundSWR"] = Sres.LgroundSWR);
@@ -87,6 +88,7 @@ Rcpp::NumericVector copyWaterBalanceResult_c(const StandWB_RESULT& SWBres) {
                                                      _["HerbTranspiration"] = SWBres.HerbTranspiration,
                                                      _["PlantExtraction"] = SWBres.PlantExtraction, 
                                                      _["Transpiration"] = SWBres.Transpiration,
+                                                     _["MistletoeTranspiration"] = SWBres.MistletoeTranspiration,
                                                      _["HydraulicRedistribution"] = SWBres.HydraulicRedistribution);
   return(WaterBalance);
 }

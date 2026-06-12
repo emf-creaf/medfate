@@ -333,6 +333,18 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
     internalLAIDistribution.live = Rcpp::as<arma::mat>(liveMat);
     internalLAIDistribution.dead = Rcpp::as<arma::mat>(deadMat);
     internalLAIDistribution.expanded = Rcpp::as<arma::mat>(expandedMat);
+    if(intLAIDist.containsElementNamed("PrevLAImistletoe")) {
+      internalLAIDistribution.PrevLAImistletoe = Rcpp::as< std::vector<double> >(intLAIDist["PrevLAImistletoe"]);
+    } else {
+      internalLAIDistribution.PrevLAImistletoe = std::vector<double>(internalLAIDistribution.live.size(), 0.0);
+    }
+    if(intLAIDist.containsElementNamed("mistletoe")) {
+      Rcpp::NumericMatrix mistletoeMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["mistletoe"]);
+      internalLAIDistribution.mistletoe = Rcpp::as<arma::mat>(mistletoeMat);
+    } else {
+      internalLAIDistribution.mistletoe = arma::mat(liveMat.nrow(), liveMat.ncol());
+      internalLAIDistribution.mistletoe.fill(0.0);
+    }
   }
   //Internal water variables
   if(x.containsElementNamed("internalWater")) {
@@ -661,6 +673,21 @@ void ModelInput::copyStateToList(Rcpp::List x) {
         liveMat(l,c) = internalLAIDistribution.live(l,c);
         expandedMat(l,c) = internalLAIDistribution.expanded(l,c);
         deadMat(l,c) = internalLAIDistribution.dead(l,c);
+        // Rcpp::Rcout<< "In copy state: "<< l << " " << c << " "<< expandedMat(l,c)<<"\n";
+      }
+    }
+    if(intLAIDist.containsElementNamed("PrevLAIMistletoe")) {
+      Rcpp::NumericVector PrevLAIMistletoe = intLAIDist["PrevLAIMistletoe"];
+      for(int c = 0;c < numCohorts; c++) {
+        PrevLAIMistletoe[c] = internalLAIDistribution.PrevLAImistletoe[c];
+      }
+    }
+    if(intLAIDist.containsElementNamed("mistletoe")) {
+      Rcpp::NumericMatrix mistletoeMat = Rcpp::as<Rcpp::NumericMatrix>(intLAIDist["mistletoe"]);
+      for(int c = 0;c < numCohorts; c++) {
+        for(int l = 0;l < ncanlayers; l++) {
+          mistletoeMat(l,c) = internalLAIDistribution.mistletoe(l,c);
+        }
       }
     }
   }

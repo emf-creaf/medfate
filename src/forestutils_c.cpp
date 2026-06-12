@@ -37,6 +37,7 @@ void updateLAIdistributionVectors_c(arma::mat& LAIdist,
       } else {
         LAIdist(hi,ci) = 0.0;
       }
+      // Rcout<< hi << " " << ci << " "<< LAIdist(hi,ci)<<"\n";
     }
   }
 }

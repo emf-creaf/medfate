@@ -107,14 +107,14 @@ struct StandWB_RESULT {
   double NetRain, Snowmelt, Runon;
   double Infiltration, InfiltrationExcess, SaturationExcess, Runoff;
   double DeepDrainage, CapillarityRise, SoilEvaporation, HerbTranspiration;
-  double PlantExtraction, Transpiration, HydraulicRedistribution;
+  double PlantExtraction, Transpiration, MistletoeTranspiration, HydraulicRedistribution;
   
   StandWB_RESULT() {
     PET = Rain = Snow = medfate::NA_DOUBLE;
     NetRain = Snowmelt = Runon = medfate::NA_DOUBLE;
     Infiltration = InfiltrationExcess = SaturationExcess = Runoff = medfate::NA_DOUBLE;
     DeepDrainage = CapillarityRise = SoilEvaporation = HerbTranspiration = medfate::NA_DOUBLE;
-    PlantExtraction = Transpiration = HydraulicRedistribution = medfate::NA_DOUBLE;
+    PlantExtraction = Transpiration = MistletoeTranspiration = HydraulicRedistribution = medfate::NA_DOUBLE;
   }
   
 };
@@ -133,10 +133,10 @@ struct Soil_RESULT {
 Rcpp::DataFrame copySoilResult_c(const Soil_RESULT& Soil);
 
 struct Stand_RESULT {
-  double LAI, LAIherb, LAIlive, LAIexpanded, LAIdead;
+  double LAI, LAIherb, LAIlive, LAIexpanded, LAIdead, LAImistletoe;
   double Cm, LgroundPAR, LgroundSWR;
   Stand_RESULT() {
-    LAI = LAIherb = LAIlive = LAIexpanded = LAIdead = medfate::NA_DOUBLE;
+    LAI = LAIherb = LAIlive = LAIexpanded = LAIdead = LAImistletoe = medfate::NA_DOUBLE;
     Cm = LgroundPAR = LgroundSWR = medfate::NA_DOUBLE;
   }
 };

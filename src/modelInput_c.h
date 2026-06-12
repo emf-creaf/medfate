@@ -320,10 +320,12 @@ struct InternalSOC {
 struct InternalLAIDistribution{
   std::vector<double> PrevLAIexpanded;
   std::vector<double> PrevLAIdead;
+  std::vector<double> PrevLAImistletoe;
   std::vector<double> PARcohort;
   arma::mat live;
   arma::mat expanded;
   arma::mat dead;
+  arma::mat mistletoe;
 };
 
 struct InternalFCCS {
