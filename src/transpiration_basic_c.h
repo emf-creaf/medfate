@@ -17,6 +17,7 @@ struct PlantsBasicTranspiration_RESULT {
   std::vector<double> AbsorbedSWRFraction;
   std::vector<double> Extraction;
   std::vector<double> Transpiration;
+  std::vector<double> MistletoeTranspiration;
   std::vector<double> GrossPhotosynthesis;
   std::vector<double> PlantPsi;
   std::vector<double> DDS;
@@ -33,6 +34,7 @@ struct PlantsBasicTranspiration_RESULT {
     FPAR = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     AbsorbedSWRFraction = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     Extraction = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    MistletoeTranspiration = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     Transpiration = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     GrossPhotosynthesis = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     PlantPsi = std::vector<double>(numCohorts, medfate::NA_DOUBLE);

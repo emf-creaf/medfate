@@ -301,6 +301,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   BSPWBres.WaterBalance.HerbTranspiration = std::accumulate(EherbVec.begin(), EherbVec.end(), 0.0);
   BSPWBres.WaterBalance.PlantExtraction = std::accumulate(BSPWBres.Soil.PlantExtraction.begin(), BSPWBres.Soil.PlantExtraction.end(), 0.0);
   BSPWBres.WaterBalance.Transpiration = std::accumulate(BTres.plants.Transpiration.begin(), BTres.plants.Transpiration.end(), 0.0);
+  BSPWBres.WaterBalance.MistletoeTranspiration = std::accumulate(BTres.plants.MistletoeTranspiration.begin(), BTres.plants.MistletoeTranspiration.end(), 0.0);
   BSPWBres.WaterBalance.HydraulicRedistribution =std::accumulate(BSPWBres.Soil.HydraulicInput.begin(), BSPWBres.Soil.HydraulicInput.end(), 0.0);
   
   BSPWBres.Stand.LAI = LAIcell;
@@ -601,6 +602,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
   ASPWBres.WaterBalance.HerbTranspiration = std::accumulate(EherbVec.begin(), EherbVec.end(), 0.0);
   ASPWBres.WaterBalance.PlantExtraction = std::accumulate(ASPWBres.Soil.PlantExtraction.begin(), ASPWBres.Soil.PlantExtraction.end(), 0.0);
   ASPWBres.WaterBalance.Transpiration = std::accumulate(ATres.plants.Transpiration.begin(), ATres.plants.Transpiration.end(), 0.0);
+  ASPWBres.WaterBalance.MistletoeTranspiration = std::accumulate(ATres.plants.MistletoeTranspiration.begin(), ATres.plants.MistletoeTranspiration.end(), 0.0);
   ASPWBres.WaterBalance.HydraulicRedistribution =std::accumulate(ASPWBres.Soil.HydraulicInput.begin(), ASPWBres.Soil.HydraulicInput.end(), 0.0);
   
   ASPWBres.Stand.LAI = LAIcell;

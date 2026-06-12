@@ -20,6 +20,7 @@ Rcpp::DataFrame copyPlantAdvancedTranspirationResult_c(const PlantsAdvancedTrans
     _["FPAR"] = Rcpp::wrap(plants.FPAR),
     _["Extraction"] = Rcpp::wrap(plants.Extraction),
     _["Transpiration"] = Rcpp::wrap(plants.Transpiration),
+    _["MistletoeTranspiration"] = Rcpp::wrap(plants.MistletoeTranspiration),
     _["GrossPhotosynthesis"] = Rcpp::wrap(plants.GrossPhotosynthesis),
     _["NetPhotosynthesis"] = Rcpp::wrap(plants.NetPhotosynthesis),
     _["RootPsi"] = Rcpp::wrap(plants.RootPsi),

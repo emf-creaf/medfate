@@ -168,6 +168,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   
   //Output vectors
   std::vector<double>&  Eplant = outputPlants.Transpiration;
+  std::vector<double>&  Emistletoe = outputPlants.MistletoeTranspiration;
   std::vector<double>&  Agplant = outputPlants.GrossPhotosynthesis;
   std::vector<double>&  DDS = outputPlants.DDS;
   std::vector<double>&  LFMC = outputPlants.LFMC;
@@ -366,6 +367,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     //Transpiration is now equal to extraction
     Extraction[c] = arma::sum(outputExtraction.row(c));
     Eplant[c] = Extraction[c];
+    Emistletoe[c] = 0.0;
     // Rcout<< c << " : E = "  <<Extraction[c]<<"\n";
     
     //For deciduous species, make water potential follow soil during winter
@@ -540,6 +542,7 @@ Rcpp::DataFrame copyPlantBasicTranspirationResult_c(const PlantsBasicTranspirati
     _["AbsorbedSWRFraction"] = Rcpp::wrap(plants.AbsorbedSWRFraction),
     _["Extraction"] = Rcpp::wrap(plants.Extraction),
     _["Transpiration"] = Rcpp::wrap(plants.Transpiration),
+    _["MistletoeTranspiration"] = Rcpp::wrap(plants.MistletoeTranspiration),
     _["GrossPhotosynthesis"] = Rcpp::wrap(plants.GrossPhotosynthesis),
     _["PlantPsi"] = Rcpp::wrap(plants.PlantPsi),
     _["DDS"] = Rcpp::wrap(plants.DDS),
