@@ -87,6 +87,7 @@ struct SureauNetwork {
   double Emin_L_SL;
   double Emin_L_SH;
   double Emin_S;
+  double Emist;
   int Diag_nwhile_cavit;
   double Diag_deltaRegulMax;
   double Diag_deltaPLCMax;

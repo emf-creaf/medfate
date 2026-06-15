@@ -101,15 +101,18 @@ NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD) {
 //' @rdname light_advanced
 //' @keywords internal
 // [[Rcpp::export("light_layerDirectIrradianceFraction")]]
-NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, NumericMatrix LAIms, 
                                             NumericVector kb, NumericVector ClumpingIndex, 
-                                            NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
+                                            NumericVector alpha, NumericVector gamma, 
+                                            double kb_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
+                                            double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.nrow();
   std::vector<double> Ifraction_vec(nlayer, 0.0);
   layerDirectIrradianceFraction_c(Ifraction_vec,
-                                  as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                  as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx), as<arma::mat>(LAIms),
                                   as<std::vector<double>>(kb),as<std::vector<double>>(ClumpingIndex),
                                   as<std::vector<double>>(alpha),as<std::vector<double>>(gamma),
+                                  kb_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe,
                                   trunkExtinctionFraction);
   NumericVector Ifraction = Rcpp::wrap(Ifraction_vec);
   return(Ifraction);
@@ -119,17 +122,20 @@ NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix L
 //' @rdname light_advanced
 //' @keywords internal
 // [[Rcpp::export("light_layerDiffuseIrradianceFraction")]]
-NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms,
                                              NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF,
-                                             NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
+                                             NumericVector alpha, NumericVector gamma, 
+                                             NumericVector K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
+                                             double trunkExtinctionFraction = 0.1) {
    int nlayer = LAIme.nrow();
    int nZ = ZF.size();
   
   arma::mat Ifraction_mat(nZ,nlayer); //Fraction of irradiance from direction k in each layer
   layerDiffuseIrradianceFraction_c(Ifraction_mat,
-                                  as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                  as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx), as<arma::mat>(LAIms),
                                   as<arma::mat>(K), as<std::vector<double>>(ClumpingIndex), as<std::vector<double>>(ZF),
                                   as<std::vector<double>>(alpha), as<std::vector<double>>(gamma),
+                                  as<std::vector<double>>(K_mistletoe), CI_mistletoe, alpha_mistletoe, gamma_mistletoe,
                                   trunkExtinctionFraction);
   
   // Rcout << nlayer << " " << ncoh << " " << nZ<<"\n";
@@ -148,18 +154,21 @@ NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix 
 //' @keywords internal
 // [[Rcpp::export("light_cohortSunlitShadeAbsorbedRadiation")]]
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
-                                        NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx,
+                                        NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms,
                                         NumericVector kb, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, 
-                                        NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
+                                        NumericVector alpha, NumericVector gamma, 
+                                        double kb_mistletoe, NumericVector K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
+                                        double trunkExtinctionFraction = 0.1) {
   int ncoh = alpha.size();
   int nlayer = LAIme.nrow();
   arma::mat I_sunlit(nlayer, ncoh);
   arma::mat I_shade(nlayer, ncoh);
   cohortSunlitShadeAbsorbedRadiation_c(I_sunlit, I_shade, 
                                        Ib0, Id0,
-                                       as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                       as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx), as<arma::mat>(LAIms),
                                        as<std::vector<double>>(kb), as<arma::mat>(K), as<std::vector<double>>(ClumpingIndex), as<std::vector<double>>(ZF), 
                                        as<std::vector<double>>(alpha), as<std::vector<double>>(gamma), 
+                                       kb_mistletoe, as<std::vector<double>>(K_mistletoe), CI_mistletoe, alpha_mistletoe, gamma_mistletoe,
                                        trunkExtinctionFraction);
   return(Rcpp::List::create(
       Rcpp::Named("I_sunlit") = Rcpp::wrap(I_sunlit), 
@@ -175,13 +184,15 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
 //' @rdname light_advanced
 //' @keywords internal
 // [[Rcpp::export("light_layerSunlitFraction")]]
-NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
-                                  NumericVector kb, NumericVector ClumpingIndex) {
+NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAIms, 
+                                  NumericVector kb, NumericVector ClumpingIndex,
+                                  double kb_mistletoe, double CI_mistletoe) {
   int nlayer = LAIme.nrow();
   std::vector<double> fSL_vec(nlayer, 0.0);
   layerSunlitFraction_c(fSL_vec,
-                        as<arma::mat>(LAIme), as<arma::mat>(LAImd),
-                        as<std::vector<double>>(kb), as<std::vector<double>>(ClumpingIndex));
+                        as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAIms),
+                        as<std::vector<double>>(kb), as<std::vector<double>>(ClumpingIndex),
+                        kb_mistletoe, CI_mistletoe);
   NumericVector fSL = Rcpp::wrap(fSL_vec);
   return(fSL);
 }
@@ -192,9 +203,10 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd,
 //' @rdname light_advanced
 //' @keywords internal
 // [[Rcpp::export("light_instantaneousLightExtinctionAbsortion")]]
-List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms,
                                            NumericVector p, NumericVector q, NumericVector ClumpingIndex, 
                                            NumericVector alphaSWR, NumericVector gammaSWR,
+                                           double p_mistletoe, double q_mistletoe, double CI_mistletoe, double alphaSWR_mistletoe, double gammaSWR_mistletoe,
                                            DataFrame ddd, int ntimesteps = 24, double trunkExtinctionFraction = 0.1) {
 
   int numCohorts = LAIme.ncol();
@@ -210,9 +222,10 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   directDiffuseDay.PAR_diffuse = as<std::vector<double>> (ddd["PAR_diffuse"]); //in kW·m-2
   
   instantaneousLightExtinctionAbsortion_c(lightExtinctionAbsortion,
-                                          as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                          as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx), as<arma::mat>(LAIms),
                                           as<std::vector<double>>(p), as<std::vector<double>>(q), as<std::vector<double>>(ClumpingIndex),
                                           as<std::vector<double>>(alphaSWR), as<std::vector<double>>(gammaSWR),
+                                          p_mistletoe, q_mistletoe, CI_mistletoe, alphaSWR_mistletoe, gammaSWR_mistletoe,
                                           directDiffuseDay, ntimesteps, trunkExtinctionFraction);
   
   return(copyInstantaneousLightExtinctionAbsortionResult_c(lightExtinctionAbsortion));

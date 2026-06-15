@@ -2585,32 +2585,32 @@ light_leafAngleBetaParameters <- function(leafAngle, leafAngleSD) {
 
 #' @rdname light_advanced
 #' @keywords internal
-light_layerDirectIrradianceFraction <- function(LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_layerDirectIrradianceFraction`, LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
+light_layerDirectIrradianceFraction <- function(LAIme, LAImd, LAImx, LAIms, kb, ClumpingIndex, alpha, gamma, kb_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_layerDirectIrradianceFraction`, LAIme, LAImd, LAImx, LAIms, kb, ClumpingIndex, alpha, gamma, kb_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
 #' @keywords internal
-light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_layerDiffuseIrradianceFraction`, LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
+light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, LAIms, K, ClumpingIndex, ZF, alpha, gamma, K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_layerDiffuseIrradianceFraction`, LAIme, LAImd, LAImx, LAIms, K, ClumpingIndex, ZF, alpha, gamma, K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
 #' @keywords internal
-light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
+light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, LAIms, kb, K, ClumpingIndex, ZF, alpha, gamma, kb_mistletoe, K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, LAIms, kb, K, ClumpingIndex, ZF, alpha, gamma, kb_mistletoe, K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
 #' @keywords internal
-light_layerSunlitFraction <- function(LAIme, LAImd, kb, ClumpingIndex) {
-    .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb, ClumpingIndex)
+light_layerSunlitFraction <- function(LAIme, LAImd, LAIms, kb, ClumpingIndex, kb_mistletoe, CI_mistletoe) {
+    .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, LAIms, kb, ClumpingIndex, kb_mistletoe, CI_mistletoe)
 }
 
 #' @rdname light_advanced
 #' @keywords internal
-light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
+light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, LAIms, p, q, ClumpingIndex, alphaSWR, gammaSWR, p_mistletoe, q_mistletoe, CI_mistletoe, alphaSWR_mistletoe, gammaSWR_mistletoe, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, LAIms, p, q, ClumpingIndex, alphaSWR, gammaSWR, p_mistletoe, q_mistletoe, CI_mistletoe, alphaSWR_mistletoe, gammaSWR_mistletoe, ddd, ntimesteps, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced

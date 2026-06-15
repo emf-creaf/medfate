@@ -47,9 +47,10 @@ double directionalExtinctionCoefficient_c(double p, double q, double solarElevat
 
 
 void layerDirectIrradianceFraction_c(std::vector<double>& Ifraction,
-                                     const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                     const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
                                      const std::vector<double>& kb, const std::vector<double>& ClumpingIndex, 
                                      const std::vector<double>& alpha, const std::vector<double>& gamma, 
+                                     double kb_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
                                      double trunkExtinctionFraction) {
   int nlayer = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
@@ -63,9 +64,14 @@ void layerDirectIrradianceFraction_c(std::vector<double>& Ifraction,
     double gsum = 0.0;
     double lsum = 0.0;
     for(int j =0;j<ncoh;j++) {
-      gsum = gamma[j]*(LAIme(i,j)+LAImd(i,j));
-      lsum = LAIme(i,j)+LAImd(i,j);
+      gsum += gamma[j]*(LAIme(i,j)+LAImd(i,j));
+      lsum += LAIme(i,j)+LAImd(i,j);
       s = s + (kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+      if(LAIms(i,j)>0.0) {
+        gsum += gamma_mistletoe*LAIms(i,j);
+        lsum += LAIms(i,j);
+        s = s + (kb_mistletoe*std::sqrt(alpha_mistletoe)*CI_mistletoe*LAIms(i,j));
+      }
     }
     //Average gamma according to LAI
     gamma_i = gsum/lsum;
@@ -74,9 +80,10 @@ void layerDirectIrradianceFraction_c(std::vector<double>& Ifraction,
 }
 
 void layerDiffuseIrradianceFraction_c(arma::mat& Ifraction,
-                                      const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                      const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
                                       const arma::mat& K, const std::vector<double>& ClumpingIndex, const std::vector<double>& ZF,
                                       const std::vector<double>& alpha, const std::vector<double>& gamma, 
+                                      const std::vector<double>& K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
                                       double trunkExtinctionFraction) {
   int nlayer = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
@@ -95,9 +102,14 @@ void layerDiffuseIrradianceFraction_c(arma::mat& Ifraction,
       double gsum = 0.0;
       double lsum = 0.0;
       for(int j =0;j<ncoh;j++) {
-        gsum = gamma[j]*(LAIme(i,j)+LAImd(i,j));
-        lsum = LAIme(i,j)+LAImd(i,j);
+        gsum += gamma[j]*(LAIme(i,j)+LAImd(i,j));
+        lsum += LAIme(i,j)+LAImd(i,j);
         s = s + (K(k,j)*sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+        if(LAIms(i,j)>0.0) {
+          gsum += gamma_mistletoe*LAIms(i,j);
+          lsum += LAIms(i,j);
+          s = s + (K_mistletoe[k]*std::sqrt(alpha_mistletoe)*CI_mistletoe*LAIms(i,j));
+        }
       }
       //Average gamma according to LAI
       gamma_i = gsum/lsum;
@@ -106,9 +118,10 @@ void layerDiffuseIrradianceFraction_c(arma::mat& Ifraction,
   }
 }
 
-double groundDirectIrradianceFraction_c(const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+double groundDirectIrradianceFraction_c(const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms,
                                         const std::vector<double>& kb, const std::vector<double>& ClumpingIndex, 
                                         const std::vector<double>& alpha,
+                                        double kb_mistletoe, double CI_mistletoe, double alpha_mistletoe,
                                         double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
@@ -118,14 +131,17 @@ double groundDirectIrradianceFraction_c(const arma::mat& LAIme, const arma::mat&
     //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
     for(int j =0;j<ncoh;j++) {
       s = s + (kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+      // Mistletoe extinction
+      if(LAIms(i,j)>0.0) s = s + (kb_mistletoe*std::sqrt(alpha_mistletoe)*CI_mistletoe*LAIms(i,j));
     }
   }
   return(exp(-1.0*s));
 }
 
-double groundDiffuseIrradianceFraction_c(const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
-                                         const arma::mat& K, const std::vector<double>& ClumpingIndex, const std::vector<double>& ZF,
-                                         const std::vector<double>& alpha, double trunkExtinctionFraction = 0.1) {
+double groundDiffuseIrradianceFraction_c(const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
+                                         const arma::mat& K, const std::vector<double>& ClumpingIndex, const std::vector<double>& ZF, const std::vector<double>& alpha, 
+                                         const std::vector<double>& K_mistletoe, double CI_mistletoe, double alpha_mistletoe,
+                                         double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.n_rows;
   int ncoh = LAIme.n_cols;
   int nZ = ZF.size();
@@ -138,6 +154,8 @@ double groundDiffuseIrradianceFraction_c(const arma::mat& LAIme, const arma::mat
       //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
       for(int j =0;j<ncoh;j++) {
         s = s + (K(k,j)*std::sqrt(alpha[j])*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+        // Mistletoe extinction
+        if(LAIms(i,j)>0.0) s = s + (K_mistletoe[k]*std::sqrt(alpha_mistletoe)*CI_mistletoe*LAIms(i,j));
       }
     }
     // I fraction for the current layer (no extinction for top layer)
@@ -151,9 +169,10 @@ double groundDiffuseIrradianceFraction_c(const arma::mat& LAIme, const arma::mat
  *  I_{da, ij}
  */
 void cohortDiffuseAbsorbedRadiation_c(arma::mat& Ida, double Id0, const arma::mat& Idf, 
-                                      const arma::mat& LAIme, const arma::mat& LAImd, 
+                                      const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAIms, 
                                       const arma::mat& K, const std::vector<double>& ClumpingIndex,
-                                      const std::vector<double>& alpha, const std::vector<double>& gamma) {
+                                      const std::vector<double>& alpha, const std::vector<double>& gamma,
+                                      const std::vector<double>& K_mistletoe, double CI_mistletoe, double alpha_mistletoe) {
   int ncoh = alpha.size();
   int nlayer = LAIme.n_rows;
   int nZ = K.n_rows;
@@ -164,7 +183,13 @@ void cohortDiffuseAbsorbedRadiation_c(arma::mat& Ida, double Id0, const arma::ma
     for(int k = 0;k<nZ;k++) { //Over all sky zones
       if(std::isnan(Idf(k,i))) throw medfate::MedfateInternalError("NA Idf");
       double s = 0.0;
-      for(int j = 0;j<ncoh;j++) s += K(k,j)*std::sqrt(alpha[j])*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      for(int j = 0;j<ncoh;j++) {
+        s += K(k,j)*std::sqrt(alpha[j])*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+        //Mistletoe extinction effects
+        if(LAIms(i,j)>0.0) {
+          s += K_mistletoe[k]*std::sqrt(alpha_mistletoe)*CI_mistletoe*LAIms(i,j);
+        }
+      }
       for(int j = 0;j<ncoh;j++) {
         Ida(i,j) = Ida(i,j) + Id0*(1.0-gamma[j])*Idf(k,i)*std::sqrt(alpha[j])*K(k,j)*exp(-1.0*s);
       }
@@ -177,9 +202,10 @@ void cohortDiffuseAbsorbedRadiation_c(arma::mat& Ida, double Id0, const arma::ma
  *  I_{bsa, ij}
  */
 void cohortScatteredAbsorbedRadiation_c(arma::mat& Ibsa, double Ib0, const std::vector<double>& Ibf, 
-                                        const arma::mat& LAIme, const arma::mat& LAImd, 
+                                        const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAIms, 
                                         const std::vector<double>& kb, const std::vector<double>& ClumpingIndex,
-                                        const std::vector<double>& alpha, const std::vector<double>& gamma) {
+                                        const std::vector<double>& alpha, const std::vector<double>& gamma,
+                                        double kb_mistletoe, double CI_mistletoe, double alpha_mistletoe) {
   int ncoh = alpha.size();
   int nlayer = Ibf.size();
   for(int i = 0;i<nlayer;i++) {
@@ -187,6 +213,11 @@ void cohortScatteredAbsorbedRadiation_c(arma::mat& Ibsa, double Ib0, const std::
     for(int j = 0;j<ncoh;j++) {
       s1 += kb[j]*std::sqrt(alpha[j])*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
       s2 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      //Mistletoe extinction effects
+      if(LAIms(i,j)>0.0) {
+        s1 += kb_mistletoe*std::sqrt(alpha_mistletoe)*CI_mistletoe*LAIms(i,j);
+        s2 += kb_mistletoe*CI_mistletoe*LAIms(i,j);
+      }
     }
     for(int j = 0;j<ncoh;j++) {
       double diff = std::sqrt(alpha[j])*exp(-1.0*s1) - alpha[j]*exp(-1.0*s2);
@@ -199,9 +230,11 @@ void cohortScatteredAbsorbedRadiation_c(arma::mat& Ibsa, double Ib0, const std::
 
 void cohortSunlitShadeAbsorbedRadiation_c(arma::mat& I_sunlit, arma::mat& I_shade,
                                           double Ib0, double Id0,
-                                          const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx,
+                                          const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms,
                                           const std::vector<double>& kb, const arma::mat& K, const std::vector<double>& ClumpingIndex, const std::vector<double>& ZF, 
-                                          const std::vector<double>& alpha, const std::vector<double>& gamma, double trunkExtinctionFraction) {
+                                          const std::vector<double>& alpha, const std::vector<double>& gamma, 
+                                          double kb_mistletoe, const std::vector<double>& K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
+                                          double trunkExtinctionFraction) {
   int ncoh = alpha.size();
   int nlayer = LAIme.n_rows;
   int nZ = ZF.size();
@@ -210,20 +243,22 @@ void cohortSunlitShadeAbsorbedRadiation_c(arma::mat& I_sunlit, arma::mat& I_shad
   arma::mat Idf(nZ,nlayer);
   arma::mat Ida(nlayer, ncoh);
   arma::mat Ibsa(nlayer, ncoh);
-  layerDirectIrradianceFraction_c(Ibf, LAIme,LAImd,LAImx, 
-                                  kb, ClumpingIndex, 
-                                  alpha, gamma, trunkExtinctionFraction);
-  layerDiffuseIrradianceFraction_c(Idf, LAIme,LAImd,LAImx, 
-                                   K, ClumpingIndex, ZF, 
-                                   alpha, gamma, trunkExtinctionFraction);
+  layerDirectIrradianceFraction_c(Ibf, LAIme,LAImd,LAImx, LAIms,
+                                  kb, ClumpingIndex, alpha, gamma,
+                                  kb_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe,
+                                  trunkExtinctionFraction);
+  layerDiffuseIrradianceFraction_c(Idf, LAIme,LAImd,LAImx, LAIms,
+                                   K, ClumpingIndex, ZF, alpha, gamma,
+                                   K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe,
+                                   trunkExtinctionFraction);
   cohortDiffuseAbsorbedRadiation_c(Ida, Id0, Idf, 
-                                   LAIme, LAImd,
-                                   K, ClumpingIndex, 
-                                   alpha, gamma);
+                                   LAIme, LAImd, LAIms,
+                                   K, ClumpingIndex, alpha, gamma,
+                                   K_mistletoe, CI_mistletoe, alpha_mistletoe);
   cohortScatteredAbsorbedRadiation_c(Ibsa, Ib0, Ibf, 
-                                     LAIme, LAImd, 
-                                     kb, ClumpingIndex,
-                                     alpha, gamma);
+                                     LAIme, LAImd, LAIms,
+                                     kb, ClumpingIndex, alpha, gamma,
+                                     kb_mistletoe, CI_mistletoe, alpha_mistletoe);
   
   // Rcout << Id0 << " " << Ib0 <<"\n";
   // Rcout<<Ib0<<" "<<beta<<" "<<sinb <<" "<<Ib0*alpha[0]*(0.5/sinb)<<"\n";
@@ -231,9 +266,10 @@ void cohortSunlitShadeAbsorbedRadiation_c(arma::mat& I_sunlit, arma::mat& I_shad
     for(int j = 0;j<ncoh;j++) {
       if(std::isnan(Ida(i,j))) throw medfate::MedfateInternalError("NA Ida");
       if(std::isnan(Ibsa(i,j))) throw medfate::MedfateInternalError("NA Ibsa");
-      // Ish(i,j) = Ida(i,j)+Ibsa(i,j); //Absorbed radiation in shade leaves (i.e. diffuse+scatter)
+      //Absorbed radiation in shade leaves (i.e. diffuse+scatter)
       I_shade(i,j) = Ida(i,j)+Ibsa(i,j);
-      I_sunlit(i,j) = I_shade(i,j)+Ib0*kb[j]*alpha[j]; //Absorbed radiation in sunlit leaves (i.e. diffuse+scatter+direct)
+      //Absorbed radiation in sunlit leaves (i.e. diffuse+scatter+direct)
+      I_sunlit(i,j) = I_shade(i,j)+Ib0*kb[j]*alpha[j]; 
       // Rcout<<i<< " "<< j<<" "<< Ida(i,j)<<" "<< Ibsa(i,j)<<"\n";
     }
   }
@@ -241,8 +277,9 @@ void cohortSunlitShadeAbsorbedRadiation_c(arma::mat& I_sunlit, arma::mat& I_shad
 
 
 void layerSunlitFraction_c(std::vector<double>& fSL,
-                           const arma::mat& LAIme, const arma::mat& LAImd, 
-                           const std::vector<double>& kb, const std::vector<double>& ClumpingIndex) {
+                           const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAIms, 
+                           const std::vector<double>& kb, const std::vector<double>& ClumpingIndex,
+                           double kb_mistletoe, double CI_mistletoe) {
   int ncoh = kb.size();
   int nlayer = LAIme.n_rows;
   double s1=0.0;
@@ -251,6 +288,11 @@ void layerSunlitFraction_c(std::vector<double>& fSL,
     for(int j = 0;j<ncoh;j++) {
       s1 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
       s2 += kb[j]*ClumpingIndex[j]*0.5*(LAIme(i,j)+LAImd(i,j));
+      //Mistletoe extinction
+      if(LAIms(i,j)>0.0) {
+        s1 += kb_mistletoe*CI_mistletoe*LAIms(i,j);
+        s2 += kb_mistletoe*CI_mistletoe*0.5*LAIms(i,j);
+      }
     }
     fSL[i] = exp(-1.0*s1)*exp(-1.0*s2);
     if(fSL[i]<0.00001) fSL[i] = 0.0; //Avoids overestimation of absorbed radiation per leaf area when sunlit fraction is close to zero
@@ -258,9 +300,10 @@ void layerSunlitFraction_c(std::vector<double>& fSL,
 }
 
 void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsortion_RESULT& res,
-                                             const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                             const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
                                              const std::vector<double>& p, const std::vector<double>& q, const std::vector<double>& ClumpingIndex, 
                                              const std::vector<double>& alphaSWR, const std::vector<double>& gammaSWR,
+                                             double p_mistletoe, double q_mistletoe, double CI_mistletoe, double alphaSWR_mistletoe, double gammaSWR_mistletoe,
                                              const DirectDiffuseDay_RESULT& ddd, int ntimesteps = 24, double trunkExtinctionFraction = 0.1) {
   
   int numCohorts = LAIme.n_cols;
@@ -271,20 +314,26 @@ void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsorti
   std::vector<double> gammaLWR(numCohorts, 0.03); //3% albedo of LWR
   std::vector<double> alphaPAR(numCohorts), alphaLWR(numCohorts);
   std::vector<double> kDIR(numCohorts, NA_REAL);
+  double kDIR_mistletoe = NA_REAL;
   std::vector<double> ZF = {0.178, 0.514, 0.308}; //Standard overcast sky
   std::vector<double> Zangles = {15.0, 45.0, 75.0}; 
   int nZ = ZF.size(); 
   arma::mat K9DIR(nZ, numCohorts); //Goudriaan 1988
+  std::vector<double> K9DIR_mistletoe(nZ, NA_REAL);
   for(int k=0;k<nZ;k++){
     for(int c=0;c<numCohorts;c++) {
       K9DIR(k,c) = directionalExtinctionCoefficient_c(p[c], q[c], Zangles[k]*(M_PI/180.0));
     }
+    K9DIR_mistletoe[k] = directionalExtinctionCoefficient_c(p_mistletoe, q_mistletoe, Zangles[k]*(M_PI/180.0));
   }
+  
   for(int c=0;c<numCohorts;c++) {
     alphaPAR[c] = alphaSWR[c]*1.35;
     gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
     alphaLWR[c] = 0.97; //Longwave coefficients
   }
+  double alphaPAR_mistletoe = alphaSWR_mistletoe*1.35;
+  double gammaPAR_mistletoe = gammaSWR_mistletoe*0.8;
   
   for(int n=0;n<ntimesteps;n++) {
     arma::mat& abs_PAR_sunlit = res.multilayer.PAR_SL[n];
@@ -302,31 +351,39 @@ void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsorti
     for(int c=0;c<numCohorts;c++) {
       kDIR[c] = directionalExtinctionCoefficient_c(p[c], q[c], std::max(0.0001, ddd.SolarElevation[n]));
     }
+    kDIR_mistletoe = directionalExtinctionCoefficient_c(p_mistletoe, q_mistletoe, std::max(0.0001, ddd.SolarElevation[n]));
     
     //Average sunlit fraction
-    layerSunlitFraction_c(fsunlit, LAIme, LAImd, kDIR, ClumpingIndex);
+    layerSunlitFraction_c(fsunlit, 
+                          LAIme, LAImd, LAIms,
+                          kDIR, ClumpingIndex, 
+                          kDIR_mistletoe, CI_mistletoe);
 
     //Fraction of incoming diffuse/direct SWR radiation and LWR radiation reaching the ground
-    res.gbf[n] = groundDirectIrradianceFraction_c(LAIme,LAImd,LAImx, 
-                                                  kDIR, ClumpingIndex, 
-                                                  alphaSWR, trunkExtinctionFraction);
-    res.gdf[n] = groundDiffuseIrradianceFraction_c(LAIme,LAImd,LAImx, 
-                                                   K9DIR, ClumpingIndex, ZF, 
-                                                   alphaSWR, trunkExtinctionFraction);
+    res.gbf[n] = groundDirectIrradianceFraction_c(LAIme,LAImd,LAImx,LAIms,
+                                                  kDIR, ClumpingIndex, alphaSWR, 
+                                                  kDIR_mistletoe, CI_mistletoe, alphaSWR_mistletoe,
+                                                  trunkExtinctionFraction);
+    res.gdf[n] = groundDiffuseIrradianceFraction_c(LAIme,LAImd,LAImx, LAIms,
+                                                   K9DIR, ClumpingIndex, ZF, alphaSWR, 
+                                                   K9DIR_mistletoe, CI_mistletoe, alphaSWR_mistletoe,
+                                                   trunkExtinctionFraction);
     
     //Calculate PAR absorbed radiation for sunlit and shade leaves
     cohortSunlitShadeAbsorbedRadiation_c(abs_PAR_sunlit, abs_PAR_shade, 
                                          ddd.PAR_direct[n]*1000.0, ddd.PAR_diffuse[n]*1000.0, 
-                                         LAIme, LAImd, LAImx,
+                                         LAIme, LAImd, LAImx, LAIms,
                                          kDIR, K9DIR, ClumpingIndex, ZF,
-                                         alphaPAR, gammaPAR);
+                                         alphaPAR, gammaPAR,
+                                         kDIR_mistletoe, K9DIR_mistletoe, CI_mistletoe, alphaPAR_mistletoe, gammaPAR_mistletoe);
     
     //Calculate SWR absorbed radiation for sunlit and shade leaves
     cohortSunlitShadeAbsorbedRadiation_c(abs_SWR_sunlit, abs_SWR_shade, 
                                          ddd.SWR_direct[n]*1000.0, ddd.SWR_diffuse[n]*1000.0, 
-                                         LAIme, LAImd, LAImx,
+                                         LAIme, LAImd, LAImx, LAIms,
                                          kDIR, K9DIR, ClumpingIndex, ZF, 
-                                         alphaSWR, gammaSWR);
+                                         alphaSWR, gammaSWR,
+                                         kDIR_mistletoe, K9DIR_mistletoe, CI_mistletoe, alphaSWR_mistletoe, gammaSWR_mistletoe);
 
     //Aggregate light (PAR, SWR, LWR) for sunlit leaves and shade leaves
     for(int c=0;c<numCohorts;c++){

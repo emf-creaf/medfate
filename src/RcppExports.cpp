@@ -3080,45 +3080,55 @@ BEGIN_RCPP
 END_RCPP
 }
 // layerDirectIrradianceFraction
-NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector kb, NumericVector ClumpingIndex, NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction);
-RcppExport SEXP _medfate_layerDirectIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP kbSEXP, SEXP ClumpingIndexSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP trunkExtinctionFractionSEXP) {
+NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, NumericVector kb, NumericVector ClumpingIndex, NumericVector alpha, NumericVector gamma, double kb_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_layerDirectIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP LAImsSEXP, SEXP kbSEXP, SEXP ClumpingIndexSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP kb_mistletoeSEXP, SEXP CI_mistletoeSEXP, SEXP alpha_mistletoeSEXP, SEXP gamma_mistletoeSEXP, SEXP trunkExtinctionFractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIms(LAImsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type kb(kbSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ClumpingIndex(ClumpingIndexSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< double >::type kb_mistletoe(kb_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type CI_mistletoe(CI_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha_mistletoe(alpha_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_mistletoe(gamma_mistletoeSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(layerDirectIrradianceFraction(LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction));
+    rcpp_result_gen = Rcpp::wrap(layerDirectIrradianceFraction(LAIme, LAImd, LAImx, LAIms, kb, ClumpingIndex, alpha, gamma, kb_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction));
     return rcpp_result_gen;
 END_RCPP
 }
 // layerDiffuseIrradianceFraction
-NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction);
-RcppExport SEXP _medfate_layerDiffuseIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP KSEXP, SEXP ClumpingIndexSEXP, SEXP ZFSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP trunkExtinctionFractionSEXP) {
+NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, NumericVector alpha, NumericVector gamma, NumericVector K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_layerDiffuseIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP LAImsSEXP, SEXP KSEXP, SEXP ClumpingIndexSEXP, SEXP ZFSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP K_mistletoeSEXP, SEXP CI_mistletoeSEXP, SEXP alpha_mistletoeSEXP, SEXP gamma_mistletoeSEXP, SEXP trunkExtinctionFractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIms(LAImsSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type K(KSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ClumpingIndex(ClumpingIndexSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ZF(ZFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type K_mistletoe(K_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type CI_mistletoe(CI_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha_mistletoe(alpha_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_mistletoe(gamma_mistletoeSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(layerDiffuseIrradianceFraction(LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction));
+    rcpp_result_gen = Rcpp::wrap(layerDiffuseIrradianceFraction(LAIme, LAImd, LAImx, LAIms, K, ClumpingIndex, ZF, alpha, gamma, K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction));
     return rcpp_result_gen;
 END_RCPP
 }
 // cohortSunlitShadeAbsorbedRadiation
-List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector kb, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction);
-RcppExport SEXP _medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP kbSEXP, SEXP KSEXP, SEXP ClumpingIndexSEXP, SEXP ZFSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP trunkExtinctionFractionSEXP) {
+List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, NumericVector kb, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, NumericVector alpha, NumericVector gamma, double kb_mistletoe, NumericVector K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP LAImsSEXP, SEXP kbSEXP, SEXP KSEXP, SEXP ClumpingIndexSEXP, SEXP ZFSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP kb_mistletoeSEXP, SEXP K_mistletoeSEXP, SEXP CI_mistletoeSEXP, SEXP alpha_mistletoeSEXP, SEXP gamma_mistletoeSEXP, SEXP trunkExtinctionFractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3127,49 +3137,64 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIms(LAImsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type kb(kbSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type K(KSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ClumpingIndex(ClumpingIndexSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ZF(ZFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< double >::type kb_mistletoe(kb_mistletoeSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type K_mistletoe(K_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type CI_mistletoe(CI_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha_mistletoe(alpha_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_mistletoe(gamma_mistletoeSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction));
+    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, LAIme, LAImd, LAImx, LAIms, kb, K, ClumpingIndex, ZF, alpha, gamma, kb_mistletoe, K_mistletoe, CI_mistletoe, alpha_mistletoe, gamma_mistletoe, trunkExtinctionFraction));
     return rcpp_result_gen;
 END_RCPP
 }
 // layerSunlitFraction
-NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector ClumpingIndex);
-RcppExport SEXP _medfate_layerSunlitFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP ClumpingIndexSEXP) {
+NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAIms, NumericVector kb, NumericVector ClumpingIndex, double kb_mistletoe, double CI_mistletoe);
+RcppExport SEXP _medfate_layerSunlitFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImsSEXP, SEXP kbSEXP, SEXP ClumpingIndexSEXP, SEXP kb_mistletoeSEXP, SEXP CI_mistletoeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIms(LAImsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type kb(kbSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ClumpingIndex(ClumpingIndexSEXP);
-    rcpp_result_gen = Rcpp::wrap(layerSunlitFraction(LAIme, LAImd, kb, ClumpingIndex));
+    Rcpp::traits::input_parameter< double >::type kb_mistletoe(kb_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type CI_mistletoe(CI_mistletoeSEXP);
+    rcpp_result_gen = Rcpp::wrap(layerSunlitFraction(LAIme, LAImd, LAIms, kb, ClumpingIndex, kb_mistletoe, CI_mistletoe));
     return rcpp_result_gen;
 END_RCPP
 }
 // instantaneousLightExtinctionAbsortion
-List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector p, NumericVector q, NumericVector ClumpingIndex, NumericVector alphaSWR, NumericVector gammaSWR, DataFrame ddd, int ntimesteps, double trunkExtinctionFraction);
-RcppExport SEXP _medfate_instantaneousLightExtinctionAbsortion(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP pSEXP, SEXP qSEXP, SEXP ClumpingIndexSEXP, SEXP alphaSWRSEXP, SEXP gammaSWRSEXP, SEXP dddSEXP, SEXP ntimestepsSEXP, SEXP trunkExtinctionFractionSEXP) {
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, NumericVector p, NumericVector q, NumericVector ClumpingIndex, NumericVector alphaSWR, NumericVector gammaSWR, double p_mistletoe, double q_mistletoe, double CI_mistletoe, double alphaSWR_mistletoe, double gammaSWR_mistletoe, DataFrame ddd, int ntimesteps, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_instantaneousLightExtinctionAbsortion(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP LAImsSEXP, SEXP pSEXP, SEXP qSEXP, SEXP ClumpingIndexSEXP, SEXP alphaSWRSEXP, SEXP gammaSWRSEXP, SEXP p_mistletoeSEXP, SEXP q_mistletoeSEXP, SEXP CI_mistletoeSEXP, SEXP alphaSWR_mistletoeSEXP, SEXP gammaSWR_mistletoeSEXP, SEXP dddSEXP, SEXP ntimestepsSEXP, SEXP trunkExtinctionFractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIms(LAImsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ClumpingIndex(ClumpingIndexSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alphaSWR(alphaSWRSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gammaSWR(gammaSWRSEXP);
+    Rcpp::traits::input_parameter< double >::type p_mistletoe(p_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type q_mistletoe(q_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type CI_mistletoe(CI_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type alphaSWR_mistletoe(alphaSWR_mistletoeSEXP);
+    Rcpp::traits::input_parameter< double >::type gammaSWR_mistletoe(gammaSWR_mistletoeSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type ddd(dddSEXP);
     Rcpp::traits::input_parameter< int >::type ntimesteps(ntimestepsSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction));
+    rcpp_result_gen = Rcpp::wrap(instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx, LAIms, p, q, ClumpingIndex, alphaSWR, gammaSWR, p_mistletoe, q_mistletoe, CI_mistletoe, alphaSWR_mistletoe, gammaSWR_mistletoe, ddd, ntimesteps, trunkExtinctionFraction));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6217,11 +6242,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_initSureauNetworks", (DL_FUNC) &_medfate_initSureauNetworks, 1},
     {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 5},
     {"_medfate_leafAngleBetaParameters", (DL_FUNC) &_medfate_leafAngleBetaParameters, 2},
-    {"_medfate_layerDirectIrradianceFraction", (DL_FUNC) &_medfate_layerDirectIrradianceFraction, 8},
-    {"_medfate_layerDiffuseIrradianceFraction", (DL_FUNC) &_medfate_layerDiffuseIrradianceFraction, 9},
-    {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 12},
-    {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 4},
-    {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 11},
+    {"_medfate_layerDirectIrradianceFraction", (DL_FUNC) &_medfate_layerDirectIrradianceFraction, 13},
+    {"_medfate_layerDiffuseIrradianceFraction", (DL_FUNC) &_medfate_layerDiffuseIrradianceFraction, 14},
+    {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 18},
+    {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 7},
+    {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 17},
     {"_medfate_longwaveRadiationSHAW", (DL_FUNC) &_medfate_longwaveRadiationSHAW, 7},
     {"_medfate_leafAngleCDF_c", (DL_FUNC) &_medfate_leafAngleCDF_c, 3},
     {"_medfate_directionalExtinctionCoefficient_c", (DL_FUNC) &_medfate_directionalExtinctionCoefficient_c, 3},

@@ -45,6 +45,11 @@ struct MistletoeParams {
   double Tmax_LAIsq = -0.006;
   double Gs_P50 = -5.0;
   double Gs_slope = 30.0;
+  double Beta_p =  1.907817;
+  double Beta_q = 1.289641;
+  double ClumpingIndex = 0.75;
+  double alphaSWR = 0.7;
+  double gammaSWR = 0.14;
 };
 
 struct CommonWBParams {

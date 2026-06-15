@@ -100,30 +100,36 @@ double leafAngleCDF_c(double leafAngle, double p, double q);
 double directionalExtinctionCoefficient_c(double p, double q, double solarElevation);
 
 void layerDirectIrradianceFraction_c(std::vector<double>& Ifraction,
-                                     const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                     const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
                                      const std::vector<double>& kb, const std::vector<double>& ClumpingIndex, 
                                      const std::vector<double>& alpha, const std::vector<double>& gamma, 
+                                     double kb_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
                                      double trunkExtinctionFraction = 0.1);
 void layerDiffuseIrradianceFraction_c(arma::mat& Ifraction,
-                                      const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                      const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
                                       const arma::mat& K, const std::vector<double>& ClumpingIndex, const std::vector<double>& ZF,
                                       const std::vector<double>& alpha, const std::vector<double>& gamma, 
+                                      const std::vector<double>& K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
                                       double trunkExtinctionFraction = 0.1);
 
 void cohortSunlitShadeAbsorbedRadiation_c(arma::mat& I_sunlit, arma::mat& I_shade,
                                           double Ib0, double Id0,
-                                          const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx,
+                                          const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms,
                                           const std::vector<double>& kb, const arma::mat& K, const std::vector<double>& ClumpingIndex, const std::vector<double>& ZF, 
-                                          const std::vector<double>& alpha, const std::vector<double>& gamma, double trunkExtinctionFraction = 0.1);
+                                          const std::vector<double>& alpha, const std::vector<double>& gamma, 
+                                          double kb_mistletoe, const std::vector<double>& K_mistletoe, double CI_mistletoe, double alpha_mistletoe, double gamma_mistletoe,
+                                          double trunkExtinctionFraction = 0.1);
 
 void layerSunlitFraction_c(std::vector<double>& fSL,
-                           const arma::mat& LAIme, const arma::mat& LAImd, 
-                           const std::vector<double>& kb, const std::vector<double>& ClumpingIndex);
+                           const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAIms,
+                           const std::vector<double>& kb, const std::vector<double>& ClumpingIndex,
+                           double kb_mistletoe, double CI_mistletoe);
 
 void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsortion_RESULT& res,
-                                             const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                             const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms, 
                                              const std::vector<double>& p, const std::vector<double>& q, const std::vector<double>& ClumpingIndex, 
                                              const std::vector<double>& alphaSWR, const std::vector<double>& gammaSWR,
+                                             double p_mistletoe, double q_mistletoe, double CI_mistletoe, double alphaSWR_mistletoe, double gammaSWR_mistletoe,
                                              const DirectDiffuseDay_RESULT& ddd, int ntimesteps, double trunkExtinctionFraction);
 
 void longwaveRadiationSHAW_inner_c(LongWaveRadiation_RESULT& res, 

@@ -594,9 +594,10 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
   ////////////////////////////////////////
   instantaneousLightExtinctionAbsortion_c(ATres.lightExtinctionAbsortion,
-                                          LAIme, LAImd, LAImx,
+                                          LAIme, LAImd, LAImx, LAIms,
                                           x.paramsInterception.Beta_p, x.paramsInterception.Beta_q, x.paramsInterception.ClumpingIndex,
                                           x.paramsInterception.alphaSWR, x.paramsInterception.gammaSWR,
+                                          x.control.mistletoe.Beta_p, x.control.mistletoe.Beta_q, x.control.mistletoe.ClumpingIndex, x.control.mistletoe.alphaSWR, x.control.mistletoe.gammaSWR,
                                           ATres.directDiffuseDay, ntimesteps, 0.1);
 
   std::vector<std::vector<double>>& abs_PAR_SL_COH_list = ATres.lightExtinctionAbsortion.sunshade.PAR_SL;
