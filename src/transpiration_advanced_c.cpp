@@ -438,6 +438,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
 
   //Reset output data
   std::fill(outputPlants.Transpiration.begin(), outputPlants.Transpiration.end(), 0.0);
+  std::fill(outputPlants.MistletoeTranspiration.begin(), outputPlants.MistletoeTranspiration.end(), 0.0);
   std::fill(outputPlants.GrossPhotosynthesis.begin(), outputPlants.GrossPhotosynthesis.end(), 0.0);
   std::fill(outputPlants.NetPhotosynthesis.begin(), outputPlants.NetPhotosynthesis.end(), 0.0);
   std::fill(outputPlants.WaterBalance.begin(), outputPlants.WaterBalance.end(), 0.0);
@@ -503,7 +504,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       
       //Update LAI profile per layer
       for(int i=0;i<ncanlayers;i++) {
-        LAIpx[i] = LAIpd[i] = LAIpe[i] = 0.0;
+        LAIpx[i] = LAIpd[i] = LAIpe[i] = LAIps[i] = 0.0;
         for(int j=0;j<numCohorts;j++) {
           LAIpx[i] += LAImx(i,j);
           LAIpe[i] += LAIme(i,j);
@@ -576,8 +577,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   double numSum = 0.0;
   double denSum = 0.0;
   for(int i=0;i<ncanlayers;i++) {
-    numSum +=Tair[i]*(LAIpx[i] + LAIpd[i] + LAIps[i]);
-    denSum +=(LAIpx[i] + LAIpd[i] + LAIps[i]);
+    numSum +=Tair[i]*(LAIpx[i] + LAIpd[i]+LAIps[i]);
+    denSum +=(LAIpx[i] + LAIpd[i]+LAIps[i]);
+    
   }
   Tcan[0] = numSum/denSum;
   // Rcout <<ncanlayers << " "<< numSum<< " " <<  denSum << " "<< Tcan[0] << "\n";

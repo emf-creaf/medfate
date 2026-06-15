@@ -479,7 +479,7 @@ void longwaveRadiationSHAW_inner_c(LongWaveRadiation_RESULT& res,
     double lai_layer = 0.0;
     sumTauComp[i] = 0.0;
     for(int j=0;j<ncoh;j++) {
-      lai_ij(i,j) = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j)) + LAIms(i,j);
+      lai_ij(i,j) = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))+ LAIms(i,j);
       tauM(i,j) = exp(-Kdlw*lai_ij(i,j));
       sumTauComp[i] += (1.0-tauM(i,j)); 
       lai_layer +=lai_ij(i,j);
