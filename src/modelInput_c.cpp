@@ -77,6 +77,11 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   canopy.LAIlive = Rcpp::as< std::vector<double> >(canopyDF["LAIlive"]);
   canopy.LAIexpanded = Rcpp::as< std::vector<double> >(canopyDF["LAIexpanded"]);
   canopy.LAIdead = Rcpp::as< std::vector<double> >(canopyDF["LAIdead"]);
+  if(canopyDF.containsElementNamed("LAImistletoe")) {
+    canopy.LAImistletoe = Rcpp::as< std::vector<double> >(canopyDF["LAImistletoe"]);
+  } else {
+    canopy.LAImistletoe = std::vector<double>(canopyDF.nrows(), 0.0);
+  }
   canopy.Tair = Rcpp::as< std::vector<double> >(canopyDF["Tair"]);
   canopy.Cair = Rcpp::as< std::vector<double> >(canopyDF["Cair"]);
   canopy.VPair = Rcpp::as< std::vector<double> >(canopyDF["VPair"]);
@@ -504,6 +509,12 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Cair[l] = canopy.Cair[l];
     VPair[l] = canopy.VPair[l];
     // Rcpp::Rcout << l << ": " <<  canopy.LAIexpanded[l] << "\n";
+  }
+  if(canopyDF.containsElementNamed("LAImistletoe")) {
+    Rcpp::NumericVector LAImistletoe = canopyDF["LAImistletoe"];
+    for(int l = 0;l < ncanlayers; l++) {
+      LAImistletoe[l] = canopy.LAImistletoe[l];
+    }
   }
 
   //Cohort definition does not change with spwb/growth simulations

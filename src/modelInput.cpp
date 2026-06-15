@@ -1220,6 +1220,11 @@ DataFrame paramsCanopy(DataFrame above, List control) {
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector LAI_mistletoe;
+  bool isMistletoe = above.containsElementNamed("LAI_mistletoe");
+  if(isMistletoe) {
+    LAI_mistletoe = above["LAI_mistletoe"];
+  } 
   NumericVector H = above["H"];
   int numCohorts = H.size();
   //Determine number of vertical layers
@@ -1227,7 +1232,11 @@ DataFrame paramsCanopy(DataFrame above, List control) {
   double boundaryLayerSize = control["boundaryLayerSize"];
   double canopyHeight = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    if((canopyHeight<H[c]) && ((LAI_live[c]+LAI_dead[c])>0.0)) canopyHeight = H[c];
+    if(!isMistletoe) {
+      if((canopyHeight<H[c]) && ((LAI_live[c]+LAI_dead[c])>0.0)) canopyHeight = H[c]; 
+    } else {
+      if((canopyHeight<H[c]) && ((LAI_live[c]+LAI_dead[c] + LAI_mistletoe[c])>0.0)) canopyHeight = H[c];
+    }
   }
   int nz = ceil((canopyHeight+boundaryLayerSize)/verticalLayerSize); //Number of vertical layers (adding 2 m above to match wind measurement height)
   NumericVector zlow(nz,0.0);
@@ -1244,6 +1253,7 @@ DataFrame paramsCanopy(DataFrame above, List control) {
                                              _["LAIlive"]= NumericVector(nz, NA_REAL),
                                              _["LAIexpanded"]= NumericVector(nz, NA_REAL),
                                              _["LAIdead"]= NumericVector(nz, NA_REAL),
+                                             _["LAImistletoe"]= NumericVector(nz, NA_REAL),
                                              _["Tair"] = NumericVector(nz, NA_REAL),
                                              _["Cair"] = NumericVector(nz, NA_REAL),
                                              _["VPair"] = NumericVector(nz, NA_REAL));

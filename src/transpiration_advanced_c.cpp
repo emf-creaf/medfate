@@ -353,6 +353,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   std::vector<double>& LAIpx = x.canopy.LAIlive;
   std::vector<double>& LAIpe = x.canopy.LAIexpanded;
   std::vector<double>& LAIpd = x.canopy.LAIdead;
+  std::vector<double>& LAIps = x.canopy.LAImistletoe;
   std::vector<double>& Tair = x.canopy.Tair;
   std::vector<double>& VPair = x.canopy.VPair;
   std::vector<double>& Cair = x.canopy.Cair;
@@ -368,8 +369,10 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   arma::mat& LAImx = x.internalLAIDistribution.live;
   arma::mat& LAIme = x.internalLAIDistribution.expanded;
   arma::mat& LAImd = x.internalLAIDistribution.dead;
+  arma::mat& LAIms = x.internalLAIDistribution.mistletoe;
   std::vector<double>& PrevLAIexpanded = x.internalLAIDistribution.PrevLAIexpanded;
   std::vector<double>& PrevLAIdead = x.internalLAIDistribution.PrevLAIdead;
+  std::vector<double>& PrevLAImistletoe = x.internalLAIDistribution.PrevLAImistletoe;
   std::vector<double>& PARcohort = x.internalLAIDistribution.PARcohort;
 
   if(std::isnan(aspect)) aspect = 0.0;
@@ -474,7 +477,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   std::vector<double> lad(ncanlayers,0.0);
   if(numCohorts>0) {
     bool recalc_LAI = false;
-    if(std::isnan(PrevLAIexpanded[0]) || std::isnan(PrevLAIdead[0])) {
+    if(std::isnan(PrevLAIexpanded[0]) || std::isnan(PrevLAIdead[0]) || std::isnan(PrevLAImistletoe[0])) {
       recalc_LAI = true;
     } else{
       if(sum_abs_exp>0.001) {
@@ -490,11 +493,14 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         PARcohort[i] = availableLight_c(H[i]*(1.0-(1.0-CR[i])/2.0), H, LAIphe, LAIdead, LAImistletoe, x.paramsInterception.kPAR, CR, x.control.mistletoe.kPAR);
         PrevLAIexpanded[i] = LAIphe[i];
         PrevLAIdead[i] = LAIdead[i];
+        PrevLAImistletoe[i] = LAImistletoe[i];
       }
       //Update LAI distribution if necessary
       updateLAIdistributionVectors_c(LAIme, z, LAIphe, H, CR);
       updateLAIdistributionVectors_c(LAImd, z, LAIdead, H, CR);
       updateLAIdistributionVectors_c(LAImx, z, LAIlive, H, CR);//Maximum leaf expansion
+      updateLAIdistributionVectors_c(LAIms, z, LAImistletoe, H, CR); //Mistletoe distribution
+      
       //Update LAI profile per layer
       for(int i=0;i<ncanlayers;i++) {
         LAIpx[i] = LAIpd[i] = LAIpe[i] = 0.0;
@@ -502,12 +508,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           LAIpx[i] += LAImx(i,j);
           LAIpe[i] += LAIme(i,j);
           LAIpd[i] += LAImd(i,j);
+          LAIps[i] += LAIms(i,j);
         }
         // Rcout<< i << " " << LAIpx[i] << " " << LAIpe[i] <<" "<< LAImx[i]<<"\n";
       }
     }
     // Add LAImax to leaf area density to have a wind speed profile in deciduous canopies
-    for(int i=0;i<ncanlayers;i++) lad[i] = 100.0*((0.9*LAIpe[i] + 0.1*LAIpx[i]) + LAIpd[i])/verticalLayerSize;
+    for(int i=0;i<ncanlayers;i++) lad[i] = 100.0*((0.9*LAIpe[i] + 0.1*LAIpx[i]) + LAIpd[i] + LAIps[i])/verticalLayerSize;
     for(int i=0; i<numCohorts;i++) {
       outputPlants.FPAR[i] = PARcohort[i];
     }
@@ -569,8 +576,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   double numSum = 0.0;
   double denSum = 0.0;
   for(int i=0;i<ncanlayers;i++) {
-    numSum +=Tair[i]*LAIpx[i];
-    denSum +=LAIpx[i];
+    numSum +=Tair[i]*(LAIpx[i] + LAIpd[i] + LAIps[i]);
+    denSum +=(LAIpx[i] + LAIpd[i] + LAIps[i]);
   }
   Tcan[0] = numSum/denSum;
   // Rcout <<ncanlayers << " "<< numSum<< " " <<  denSum << " "<< Tcan[0] << "\n";

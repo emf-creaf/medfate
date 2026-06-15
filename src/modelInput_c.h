@@ -57,6 +57,7 @@ struct CanopyParams {
   std::vector<double> LAIlive;
   std::vector<double> LAIexpanded;
   std::vector<double> LAIdead;
+  std::vector<double> LAImistletoe;
   std::vector<double> Tair;
   std::vector<double> Cair;
   std::vector<double> VPair;

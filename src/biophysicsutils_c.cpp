@@ -19,7 +19,7 @@
 //' 
 //' Function \code{biophysics_temperatureDiurnalPattern} determines diurnal temperature pattern assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset and a linear change in temperature between sunset and Tmin of the day after (McMurtrie et al. 1990). 
 //' 
-//' Function \code{biophysics_waterDynamicViscosity} calculates water dynamic viscosity following the Vogel (1921) equation.
+//' Function \code{biophysics_waterDynamicViscosity} calculates water dynamic viscosity following the Vogel (1921) equation, as described in Cochard (2021).
 //' 
 //' @return
 //' Values returned for each function are:
@@ -41,6 +41,8 @@
 //' McMurtrie, R. E., D. A. Rook, and F. M. Kelliher. 1990. Modelling the yield of Pinus radiata on a site limited by water and nitrogen. Forest Ecology and Management 30:381–413.
 //' 
 //' H. Vogel, "Das Temperaturabhangigkeitsgesetz der Viskositat von Flussigkeiten", Physikalische Zeitschrift, vol. 22, pp. 645–646, 1921.
+//' 
+//' Cochard, H 2021. A new mechanism for tree mortality due to drought and heatwaves. Peer Community Journal, 1: e36 (https://doi.org/10.24072/pcjournal.45).
 //' 
 //' @seealso \code{\link{spwb}}
 //' 
