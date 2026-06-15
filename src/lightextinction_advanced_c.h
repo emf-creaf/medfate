@@ -133,6 +133,6 @@ void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsorti
                                              const DirectDiffuseDay_RESULT& ddd, int ntimesteps, double trunkExtinctionFraction);
 
 void longwaveRadiationSHAW_inner_c(LongWaveRadiation_RESULT& res, 
-                                   const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, 
+                                   const arma::mat& LAIme, const arma::mat& LAImd, const arma::mat& LAImx, const arma::mat& LAIms,
                                    double LWRatm, double Tsoil, const std::vector<double>& Tair, double trunkExtinctionFraction);
 #endif

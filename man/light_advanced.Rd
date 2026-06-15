@@ -103,6 +103,7 @@ light_longwaveRadiationSHAW(
   LAIme,
   LAImd,
   LAImx,
+  LAIms,
   LWRatm,
   Tsoil,
   Tair,

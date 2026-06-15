@@ -3199,19 +3199,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // longwaveRadiationSHAW
-List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction);
-RcppExport SEXP _medfate_longwaveRadiationSHAW(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP LWRatmSEXP, SEXP TsoilSEXP, SEXP TairSEXP, SEXP trunkExtinctionFractionSEXP) {
+List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_longwaveRadiationSHAW(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP LAImsSEXP, SEXP LWRatmSEXP, SEXP TsoilSEXP, SEXP TairSEXP, SEXP trunkExtinctionFractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIms(LAImsSEXP);
     Rcpp::traits::input_parameter< double >::type LWRatm(LWRatmSEXP);
     Rcpp::traits::input_parameter< double >::type Tsoil(TsoilSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Tair(TairSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(longwaveRadiationSHAW(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction));
+    rcpp_result_gen = Rcpp::wrap(longwaveRadiationSHAW(LAIme, LAImd, LAImx, LAIms, LWRatm, Tsoil, Tair, trunkExtinctionFraction));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6247,7 +6248,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 18},
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 7},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 17},
-    {"_medfate_longwaveRadiationSHAW", (DL_FUNC) &_medfate_longwaveRadiationSHAW, 7},
+    {"_medfate_longwaveRadiationSHAW", (DL_FUNC) &_medfate_longwaveRadiationSHAW, 8},
     {"_medfate_leafAngleCDF_c", (DL_FUNC) &_medfate_leafAngleCDF_c, 3},
     {"_medfate_directionalExtinctionCoefficient_c", (DL_FUNC) &_medfate_directionalExtinctionCoefficient_c, 3},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},

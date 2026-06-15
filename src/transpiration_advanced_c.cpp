@@ -868,7 +868,7 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
     longwaveRadiationSHAW_inner_c(ATres.lwrExtinction[n], 
-                                  LAIme, LAImd, LAImx,
+                                  LAIme, LAImd, LAImx, LAIms,
                                   lwdr[n], x.soil.getTemp(0), Tair, 0.1);
     outputEnergyBalance.LWRsoil[n] = ATres.lwrExtinction[n].Lnet_ground;
     outputEnergyBalance.LWRcan[n]= ATres.lwrExtinction[n].Lnet_canopy; 

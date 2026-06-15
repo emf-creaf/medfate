@@ -2615,8 +2615,8 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, LAI
 
 #' @rdname light_advanced
 #' @keywords internal
-light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
+light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LAIms, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LAIms, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
 }
 
 #' @name light_advanced

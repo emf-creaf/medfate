@@ -231,7 +231,8 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   return(copyInstantaneousLightExtinctionAbsortionResult_c(lightExtinctionAbsortion));
 }
 
-void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
+void longwaveRadiationSHAW_inner(List internalLWR, 
+                                 NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, 
                                  double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
 
   int ncanlayers = Tair.size();
@@ -239,7 +240,7 @@ void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericM
   LongWaveRadiation_RESULT res(ncanlayers, numCohorts);
   
   longwaveRadiationSHAW_inner_c(res, 
-                                as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx), as<arma::mat>(LAIms),
                                 LWRatm, Tsoil, as<std::vector<double>>(Tair), trunkExtinctionFraction);
   Rcpp::NumericMatrix LnetM = Rcpp::wrap(res.Lnet_cohort_layer);
   if(numCohorts>0) LnetM.attr("dimnames") =  Rcpp::List::create(Rcpp::seq(1,ncanlayers), Rcpp::seq(1,numCohorts));
@@ -268,14 +269,14 @@ void longwaveRadiationSHAW_inner(List internalLWR, NumericMatrix LAIme, NumericM
 //' @rdname light_advanced
 //' @keywords internal
 // [[Rcpp::export("light_longwaveRadiationSHAW")]]
-List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
+List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericMatrix LAIms, 
                             double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
   int ncanlayers = Tair.size();
   int numCohorts = LAIme.ncol();
   LongWaveRadiation_RESULT LWRres(ncanlayers, numCohorts);
 
   longwaveRadiationSHAW_inner_c(LWRres, 
-                                as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx),
+                                as<arma::mat>(LAIme), as<arma::mat>(LAImd), as<arma::mat>(LAImx), as<arma::mat>(LAIms),
                                 LWRatm, Tsoil, as<std::vector<double>>(Tair), trunkExtinctionFraction);
   
   return(copyLongWaveRadiationResult_c(LWRres));
