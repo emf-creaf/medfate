@@ -1161,6 +1161,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
+                           Named("Emist") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("LeafPsi") = NumericVector(numCohorts, fieldCapacityPsi),
                            Named("StemPsi") = NumericVector(numCohorts, fieldCapacityPsi),
@@ -1170,6 +1171,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sureau") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
+                           Named("Emist") = NumericVector(numCohorts, 0.0),
                            Named("Elim") = NumericVector(numCohorts, 0.0),
                            Named("Emin_L") = NumericVector(numCohorts, 0.0),
                            Named("Emin_S") = NumericVector(numCohorts, 0.0),

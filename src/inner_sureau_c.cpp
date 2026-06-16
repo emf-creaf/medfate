@@ -407,6 +407,7 @@ void copyNetwork_c(SureauNetwork& network, SureauNetwork& sinkNetwork) {
   sinkNetwork.Emin_L_SL = network.Emin_L_SL;
   sinkNetwork.Emin_L_SH = network.Emin_L_SH;
   sinkNetwork.Emin_S = network.Emin_S;
+  sinkNetwork.Emist = network.Emist;
   sinkNetwork.Diag_nwhile_cavit = network.Diag_nwhile_cavit;
   sinkNetwork.Diag_deltaRegulMax = network.Diag_deltaRegulMax;
   sinkNetwork.Diag_deltaPLCMax = network.Diag_deltaPLCMax;
@@ -562,6 +563,7 @@ void initSureauNetwork_inner_c(SureauNetwork& network, int c,
   network.Emin_L_SL = medfate::NA_DOUBLE; //Leaf cuticular transpiration (sunlit leaves)
   network.Emin_L_SH = medfate::NA_DOUBLE; //Leaf cuticular transpiration (shade leaves)
   network.Emin_S = internalWater.Emin_S[c]; //Stem cuticular transpiration
+  network.Emist = internalWater.Emist[c]; //Mistletoe transpiration
   
   //Diagnostics
   network.Diag_nwhile_cavit = medfate::NA_INTEGER;
@@ -693,7 +695,8 @@ void innerSureau_c(ModelInput& x,
 
   const std::vector<double>& LAIphe = x.above.LAI_expanded;
   const std::vector<double>& LAIlive = x.above.LAI_live;
-
+  const std::vector<double>& LAImistletoe = x.above.LAI_mistletoe;
+  
   // Extract parameters
   const std::vector<double>& Tair = x.canopy.Tair;
   const std::vector<double>& VPair = x.canopy.VPair;
@@ -785,6 +788,7 @@ void innerSureau_c(ModelInput& x,
         Agsum = 0.0;
         Ansum = 0.0;
         x.internalWater.Einst[c] = 0.0;
+        x.internalWater.Emist[c] = 0.0;
         x.internalWater.Elim[c] = 0.0;
         x.internalWater.Emin_L[c] = 0.0;
         x.internalWater.Emin_S[c] = 0.0;

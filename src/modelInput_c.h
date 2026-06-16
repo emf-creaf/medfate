@@ -244,6 +244,7 @@ struct InternalPhenology {
 
 struct InternalWater {
   std::vector<double> Einst;
+  std::vector<double> Emist;
   std::vector<double> Elim;
   std::vector<double> Emin_L;
   std::vector<double> Emin_S;

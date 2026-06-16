@@ -355,6 +355,7 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(x.containsElementNamed("internalWater")) {
     Rcpp::DataFrame internalWaterDF = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
     if(internalWaterDF.containsElementNamed("Einst")) internalWater.Einst = Rcpp::as< std::vector<double> >(internalWaterDF["Einst"]);
+    if(internalWaterDF.containsElementNamed("Emist")) internalWater.Emist = Rcpp::as< std::vector<double> >(internalWaterDF["Emist"]);
     if(internalWaterDF.containsElementNamed("Elim")) internalWater.Elim = Rcpp::as< std::vector<double> >(internalWaterDF["Elim"]);
     if(internalWaterDF.containsElementNamed("Emin_L")) internalWater.Emin_L = Rcpp::as< std::vector<double> >(internalWaterDF["Emin_L"]);
     if(internalWaterDF.containsElementNamed("Emin_S")) internalWater.Emin_S = Rcpp::as< std::vector<double> >(internalWaterDF["Emin_S"]);
@@ -709,6 +710,10 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     if(internalWaterDF.containsElementNamed("Einst")) {
       Rcpp::NumericVector Einst = internalWaterDF["Einst"];
       for(int c = 0;c < numCohorts; c++) Einst[c] = internalWater.Einst[c];
+    }
+    if(internalWaterDF.containsElementNamed("Emist")) {
+      Rcpp::NumericVector Emist = internalWaterDF["Emist"];
+      for(int c = 0;c < numCohorts; c++) Emist[c] = internalWater.Emist[c];
     }
     if(internalWaterDF.containsElementNamed("Elim")) {
       Rcpp::NumericVector Elim = internalWaterDF["Elim"];
