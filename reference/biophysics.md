@@ -137,7 +137,8 @@ temperature between sunset and Tmin of the day after (McMurtrie et al.
 1990).
 
 Function `biophysics_waterDynamicViscosity` calculates water dynamic
-viscosity following the Vogel (1921) equation.
+viscosity following the Vogel (1921) equation, as described in Cochard
+(2021).
 
 ## References
 
@@ -154,6 +155,10 @@ Ecology and Management 30:381–413.
 
 H. Vogel, "Das Temperaturabhangigkeitsgesetz der Viskositat von
 Flussigkeiten", Physikalische Zeitschrift, vol. 22, pp. 645–646, 1921.
+
+Cochard, H 2021. A new mechanism for tree mortality due to drought and
+heatwaves. Peer Community Journal, 1: e36
+(https://doi.org/10.24072/pcjournal.45).
 
 ## See also
 

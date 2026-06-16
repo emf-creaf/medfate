@@ -156,6 +156,9 @@ List elements are as follows:
 
   - `"Transpiration"`: Woody plant transpiration (in mm).
 
+  - `"MistletoeTranspiration"`: Transpiration of hemi-parasitic
+    mistletoe plants (in mm).
+
   - `"HydraulicRedistribution"`: Water redistributed among soil layers,
     transported through the plant hydraulic network.
 
@@ -213,6 +216,8 @@ List elements are as follows:
 
   - `"LAIdead"`: LAI of the woody plants corresponding to dead leaves
     (in m2/m2).
+
+  - `"LAImistletoe"`: LAI of hemi-parasitic mistletoe plants (in m2/m2).
 
   - `"Cm"`: Water retention capacity of the canopy (in mm) (accounting
     for leaf phenology).
@@ -525,7 +530,7 @@ S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
 #>   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 246  Mistletoe transpiration (mm) 0
 #>   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
 #>   Runoff (mm) 21 Deep drainage (mm) 153
 
@@ -544,22 +549,22 @@ S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 6.70539
-#> Final soil water content (mm): 274.534
+#> Final plant water content (mm): 6.70544
+#> Final soil water content (mm): 274.676
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00496375
-#> Plant water balance result (mm): -1.47911e-15
-#> Change in soil water content (mm): -16.3406
-#> Soil water balance result (mm): -16.3406
+#> Change in plant water content (mm): -0.00491043
+#> Plant water balance result (mm): 7.67535e-16
+#> Change in soil water content (mm): -16.1991
+#> Soil water balance result (mm): -16.1991
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
-#>   Infiltration (mm) 413 Infiltration excess (mm) 18 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 23  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 236
-#>   Plant extraction from soil (mm) 236  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3
-#>   Runoff (mm) 18 Deep drainage (mm) 169
+#>   Infiltration (mm) 412 Infiltration excess (mm) 18 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 233  Mistletoe transpiration (mm) 0
+#>   Plant extraction from soil (mm) 233  Plant water balance (mm) 0 Hydraulic redistribution (mm) 3
+#>   Runoff (mm) 18 Deep drainage (mm) 172
 
 #Switch to 'Sureau' transpiration mode
 control <- defaultControl("Sureau")
@@ -576,22 +581,22 @@ S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 6.69456
-#> Final soil water content (mm): 278.957
+#> Final plant water content (mm): 6.69501
+#> Final soil water content (mm): 279.681
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.0157898
-#> Plant water balance result (mm): -0.481138
-#> Change in soil water content (mm): -11.9184
-#> Soil water balance result (mm): -11.9184
+#> Change in plant water content (mm): -0.0153441
+#> Plant water balance result (mm): -0.46633
+#> Change in soil water content (mm): -11.1944
+#> Soil water balance result (mm): -11.1944
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): 0
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
 #>   Interception (mm) 83 Net rainfall (mm) 379
-#>   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 31  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 191
-#>   Plant extraction from soil (mm) 190  Plant water balance (mm) -0 Hydraulic redistribution (mm) 0
-#>   Runoff (mm) 21 Deep drainage (mm) 201
+#>   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 32  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 175  Mistletoe transpiration (mm) 0
+#>   Plant extraction from soil (mm) 175  Plant water balance (mm) -0 Hydraulic redistribution (mm) 0
+#>   Runoff (mm) 21 Deep drainage (mm) 214
 # }
                 
 ```

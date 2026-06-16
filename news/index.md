@@ -1,5 +1,10 @@
 # Changelog
 
+## medfate 5.1.0
+
+- Compilation patch for C++ 20
+- Mistletoe effects on water balance
+
 ## medfate 5.0.0
 
 CRAN release: 2026-05-06

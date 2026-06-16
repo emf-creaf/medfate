@@ -110,7 +110,9 @@ below:
 | StemAF | Apoplastic fraction (proportion of water outside the living cells) in stem xylem | Numeric | % | FALSE |
 | SAV | Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches \< 6.35mm) | Numeric | m2/m3 | FALSE |
 | HeatContent | High fuel heat content | Numeric | kJ/kg | FALSE |
-| LigninPercent | Percent of lignin+cutin over dry weight in leaves | Numeric | % | FALSE |
+| LeafLigninPercent | Percent of lignin+cutin over dry weight in leaves | Numeric | % | FALSE |
+| WoodLigninPercent | Percent of lignin+cutin over dry weight in wood | Numeric | % | FALSE |
+| FineRootLigninPercent | Percent of lignin+cutin over dry weight in fine roots | Numeric | % | FALSE |
 | LeafAngle | The angle between the leaf plane and the horizontal plane (i.e. leaf zenith angle) | Numeric | degrees | FALSE |
 | LeafAngleSD | Standard deviation of the leaf angle | Numeric | degrees | FALSE |
 | ClumpingIndex | Canopy clumping index | Numeric | \[0-1\] | FALSE |
@@ -181,7 +183,7 @@ below:
 | MinTempRecr | Minimum average temperature of the coldest month for successful recruitment | Numeric | Degrees C | FALSE |
 | MinMoistureRecr | Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment | Numeric | unitless | FALSE |
 | MinFPARRecr | Minimum percentage of PAR at the ground level for successful recruitment | Numeric | % | FALSE |
-| RecrAge | Age of recruiment | Numeric | yr | NA |
+| RecrAge | Age of recruiment | Numeric | yr | FALSE |
 | RecrTreeHeight | Recruitment tree (sapling) height | Numeric | cm | FALSE |
 | RecrShrubHeight | Recruitment shrub height | Numeric | cm | FALSE |
 | RecrTreeDensity | Recruitment tree (sapling) density | Numeric | ind/ha | FALSE |
@@ -662,43 +664,44 @@ names(control)
     ##  [39] "verticalLayerSize"                  "windMeasurementHeight"             
     ##  [41] "segmentedXylemVulnerability"        "stemCavitationRecovery"            
     ##  [43] "leafCavitationRecovery"             "lfmcComponent"                     
-    ##  [45] "cavitationInducedDefoliation"       "hydraulicRedistributionFraction"   
-    ##  [47] "nsubsteps_canopy"                   "taper"                             
-    ##  [49] "multiLayerBalance"                  "sapFluidityVariation"              
-    ##  [51] "TPhase_gmin"                        "Q10_1_gmin"                        
-    ##  [53] "Q10_2_gmin"                         "rootRadialConductance"             
-    ##  [55] "averageFracRhizosphereResistance"   "thermalCapacityLAI"                
-    ##  [57] "boundaryLayerSize"                  "cavitationRecoveryMaximumRate"     
-    ##  [59] "sunlitShade"                        "numericParams"                     
-    ##  [61] "leafCavitationEffects"              "stemCavitationEffects"             
-    ##  [63] "stomatalSubmodel"                   "plantCapacitance"                  
-    ##  [65] "cavitationFlux"                     "leafCuticularTranspiration"        
-    ##  [67] "stemCuticularTranspiration"         "C_SApoInit"                        
-    ##  [69] "C_LApoInit"                         "k_SSym"                            
-    ##  [71] "fractionLeafSymplasm"               "gs_NightFrac"                      
-    ##  [73] "JarvisPAR"                          "fTRBToLeaf"                        
-    ##  [75] "subdailyCarbonBalance"              "allowDessication"                  
-    ##  [77] "allowStarvation"                    "sinkLimitation"                    
-    ##  [79] "shrubDynamics"                      "herbDynamics"                      
-    ##  [81] "allocationStrategy"                 "phloemConductanceFactor"           
-    ##  [83] "nonSugarConcentration"              "equilibriumOsmoticConcentration"   
-    ##  [85] "minimumRelativeStarchForGrowth"     "constructionCosts"                 
-    ##  [87] "senescenceRates"                    "maximumRelativeGrowthRates"        
-    ##  [89] "mortalityMode"                      "mortalityBaselineRate"             
-    ##  [91] "mortalityRelativeSugarThreshold"    "mortalityRWCThreshold"             
-    ##  [93] "recrTreeDBH"                        "recrTreeDensity"                   
-    ##  [95] "ingrowthTreeDBH"                    "ingrowthTreeDensity"               
-    ##  [97] "decompositionAnnualBaseRates"       "decompositionAnnualTurnoverRate"   
-    ##  [99] "allowSeedBankDynamics"              "allowRecruitment"                  
-    ## [101] "allowResprouting"                   "recruitmentMode"                   
-    ## [103] "removeEmptyCohorts"                 "minimumTreeCohortDensity"          
-    ## [105] "minimumShrubCohortCover"            "dynamicallyMergeCohorts"           
-    ## [107] "keepCohortsWithObsID"               "seedRain"                          
-    ## [109] "seedProductionTreeHeight"           "seedProductionShrubHeight"         
-    ## [111] "probRecr"                           "minTempRecr"                       
-    ## [113] "minMoistureRecr"                    "minFPARRecr"                       
-    ## [115] "recrAge"                            "recrTreeHeight"                    
-    ## [117] "recrShrubCover"                     "recrShrubHeight"
+    ##  [45] "cavitationInducedDefoliation"       "mistletoeParams"                   
+    ##  [47] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  
+    ##  [49] "taper"                              "multiLayerBalance"                 
+    ##  [51] "sapFluidityVariation"               "TPhase_gmin"                       
+    ##  [53] "Q10_1_gmin"                         "Q10_2_gmin"                        
+    ##  [55] "rootRadialConductance"              "averageFracRhizosphereResistance"  
+    ##  [57] "thermalCapacityLAI"                 "boundaryLayerSize"                 
+    ##  [59] "cavitationRecoveryMaximumRate"      "sunlitShade"                       
+    ##  [61] "numericParams"                      "leafCavitationEffects"             
+    ##  [63] "stemCavitationEffects"              "stomatalSubmodel"                  
+    ##  [65] "plantCapacitance"                   "cavitationFlux"                    
+    ##  [67] "leafCuticularTranspiration"         "stemCuticularTranspiration"        
+    ##  [69] "C_SApoInit"                         "C_LApoInit"                        
+    ##  [71] "k_SSym"                             "fractionLeafSymplasm"              
+    ##  [73] "gs_NightFrac"                       "JarvisPAR"                         
+    ##  [75] "fTRBToLeaf"                         "subdailyCarbonBalance"             
+    ##  [77] "allowDessication"                   "allowStarvation"                   
+    ##  [79] "sinkLimitation"                     "shrubDynamics"                     
+    ##  [81] "herbDynamics"                       "allocationStrategy"                
+    ##  [83] "phloemConductanceFactor"            "nonSugarConcentration"             
+    ##  [85] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    
+    ##  [87] "constructionCosts"                  "senescenceRates"                   
+    ##  [89] "maximumRelativeGrowthRates"         "mortalityMode"                     
+    ##  [91] "mortalityBaselineRate"              "mortalityRelativeSugarThreshold"   
+    ##  [93] "mortalityRWCThreshold"              "recrTreeDBH"                       
+    ##  [95] "recrTreeDensity"                    "ingrowthTreeDBH"                   
+    ##  [97] "ingrowthTreeDensity"                "decompositionAnnualBaseRates"      
+    ##  [99] "decompositionAnnualTurnoverRate"    "allowSeedBankDynamics"             
+    ## [101] "allowRecruitment"                   "allowResprouting"                  
+    ## [103] "recruitmentMode"                    "removeEmptyCohorts"                
+    ## [105] "minimumTreeCohortDensity"           "minimumShrubCohortCover"           
+    ## [107] "dynamicallyMergeCohorts"            "keepCohortsWithObsID"              
+    ## [109] "seedRain"                           "seedProductionTreeHeight"          
+    ## [111] "seedProductionShrubHeight"          "probRecr"                          
+    ## [113] "minTempRecr"                        "minMoistureRecr"                   
+    ## [115] "minFPARRecr"                        "recrAge"                           
+    ## [117] "recrTreeHeight"                     "recrShrubCover"                    
+    ## [119] "recrShrubHeight"
 
 Control parameters should normally be left to their default value until
 their effect on simulations is fully understood.

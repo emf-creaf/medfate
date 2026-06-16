@@ -88,6 +88,9 @@ columns (rows are identified as specified by function
 - `LAI_nocomp`: Leaf area index (m2/m2) (one-side leaf area relative to
   plot area) assuming no aboveground competition.
 
+- `LAI_mistletoe`: Leaf area index (m2/m2) (one-side leaf area relative
+  to plot area) of hemi-parasitic mistletoe plants.
+
 - `Loading`: Fine fuel loading (kg/m2), only if `loading = TRUE`.
 
 - `Age`: A numeric vector indicating age of cohorts in years. Used to
@@ -140,23 +143,23 @@ forest2aboveground(exampleforest, SpParamsMED)
 #> T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0
 #> T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0
 #> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03062604   0.03062604        0
-#>        LAI_nocomp Age ObsID
-#> T1_148 1.29720268  NA  <NA>
-#> T2_168 1.01943205  NA  <NA>
-#> S1_165 0.04412896  NA  <NA>
+#>        LAI_nocomp LAI_mistletoe Age ObsID
+#> T1_148 1.29720268             0  NA  <NA>
+#> T2_168 1.01943205             0  NA  <NA>
+#> S1_165 0.04412896             0  NA  <NA>
 
 # Example of aboveground parameters taken from a forest
 # described using LAI and crown ratio
 data(exampleforest2)
 forest2aboveground(exampleforest2, SpParamsMED)
-#>         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead LAI_nocomp Age
-#> T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0       0.80  NA
-#> T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0       0.50  NA
-#> S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0       0.03  NA
-#>        ObsID
-#> T1_148  <NA>
-#> T2_168  <NA>
-#> S1_165  <NA>
+#>         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead LAI_nocomp
+#> T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0       0.80
+#> T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0       0.50
+#> S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0       0.03
+#>        LAI_mistletoe Age ObsID
+#> T1_148             0  NA  <NA>
+#> T2_168             0  NA  <NA>
+#> S1_165             0  NA  <NA>
 
 # Define soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)

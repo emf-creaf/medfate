@@ -51,6 +51,8 @@ emptyforest(
 
   - `LAI`: Leaf area index (m2/m2).
 
+  - `LAIMistletoe`: Leaf area index (m2/m2) of mistletoes.
+
   - `FoliarBiomass`: Standing dry biomass of leaves (kg/m2).
 
   - `FuelLoading`: Fine fuel loading (kg/m2).

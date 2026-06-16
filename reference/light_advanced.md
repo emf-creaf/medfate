@@ -18,10 +18,15 @@ light_layerDirectIrradianceFraction(
   LAIme,
   LAImd,
   LAImx,
+  LAIms,
   kb,
   ClumpingIndex,
   alpha,
   gamma,
+  kb_mistletoe,
+  CI_mistletoe,
+  alpha_mistletoe,
+  gamma_mistletoe,
   trunkExtinctionFraction = 0.1
 )
 
@@ -29,11 +34,16 @@ light_layerDiffuseIrradianceFraction(
   LAIme,
   LAImd,
   LAImx,
+  LAIms,
   K,
   ClumpingIndex,
   ZF,
   alpha,
   gamma,
+  K_mistletoe,
+  CI_mistletoe,
+  alpha_mistletoe,
+  gamma_mistletoe,
   trunkExtinctionFraction = 0.1
 )
 
@@ -43,26 +53,46 @@ light_cohortSunlitShadeAbsorbedRadiation(
   LAIme,
   LAImd,
   LAImx,
+  LAIms,
   kb,
   K,
   ClumpingIndex,
   ZF,
   alpha,
   gamma,
+  kb_mistletoe,
+  K_mistletoe,
+  CI_mistletoe,
+  alpha_mistletoe,
+  gamma_mistletoe,
   trunkExtinctionFraction = 0.1
 )
 
-light_layerSunlitFraction(LAIme, LAImd, kb, ClumpingIndex)
+light_layerSunlitFraction(
+  LAIme,
+  LAImd,
+  LAIms,
+  kb,
+  ClumpingIndex,
+  kb_mistletoe,
+  CI_mistletoe
+)
 
 light_instantaneousLightExtinctionAbsortion(
   LAIme,
   LAImd,
   LAImx,
+  LAIms,
   p,
   q,
   ClumpingIndex,
   alphaSWR,
   gammaSWR,
+  p_mistletoe,
+  q_mistletoe,
+  CI_mistletoe,
+  alphaSWR_mistletoe,
+  gammaSWR_mistletoe,
   ddd,
   ntimesteps = 24L,
   trunkExtinctionFraction = 0.1
@@ -72,6 +102,7 @@ light_longwaveRadiationSHAW(
   LAIme,
   LAImd,
   LAImx,
+  LAIms,
   LWRatm,
   Tsoil,
   Tair,

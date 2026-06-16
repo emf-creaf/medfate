@@ -630,6 +630,38 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $control$cavitationInducedDefoliation
 #> [1] TRUE
 #> 
+#> $control$mistletoeParams
+#> $control$mistletoeParams$kPAR
+#> [1] 0.5
+#> 
+#> $control$mistletoeParams$g
+#> [1] 0.8
+#> 
+#> $control$mistletoeParams$LeafWidth
+#> [1] 1
+#> 
+#> $control$mistletoeParams$Tmax_LAI
+#> [1] 0.134
+#> 
+#> $control$mistletoeParams$Tmax_LAIsq
+#> [1] -0.006
+#> 
+#> $control$mistletoeParams$Gs_P50
+#> [1] -4
+#> 
+#> $control$mistletoeParams$Gs_slope
+#> [1] 30
+#> 
+#> $control$mistletoeParams$Gsw_AC_slope
+#> [1] 6
+#> 
+#> $control$mistletoeParams$Vmax298
+#> [1] 80
+#> 
+#> $control$mistletoeParams$Jmax298
+#> [1] 120
+#> 
+#> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
 #> 
@@ -915,35 +947,35 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] 0
 #> 
 #> $canopy
-#>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair
-#> 1     0   50  100      NA          NA      NA   NA   NA    NA
-#> 2   100  150  200      NA          NA      NA   NA   NA    NA
-#> 3   200  250  300      NA          NA      NA   NA   NA    NA
-#> 4   300  350  400      NA          NA      NA   NA   NA    NA
-#> 5   400  450  500      NA          NA      NA   NA   NA    NA
-#> 6   500  550  600      NA          NA      NA   NA   NA    NA
-#> 7   600  650  700      NA          NA      NA   NA   NA    NA
-#> 8   700  750  800      NA          NA      NA   NA   NA    NA
-#> 9   800  850  900      NA          NA      NA   NA   NA    NA
-#> 10  900  950 1000      NA          NA      NA   NA   NA    NA
-#> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA
-#> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA
-#> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA
-#> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA
-#> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA
-#> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA
-#> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA
-#> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA
-#> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA
-#> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA
-#> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA
-#> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA
-#> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA
-#> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA
-#> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA
-#> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA
-#> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA
-#> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
+#>    zlow zmid  zup LAIlive LAIexpanded LAIdead LAImistletoe Tair Cair VPair
+#> 1     0   50  100      NA          NA      NA           NA   NA   NA    NA
+#> 2   100  150  200      NA          NA      NA           NA   NA   NA    NA
+#> 3   200  250  300      NA          NA      NA           NA   NA   NA    NA
+#> 4   300  350  400      NA          NA      NA           NA   NA   NA    NA
+#> 5   400  450  500      NA          NA      NA           NA   NA   NA    NA
+#> 6   500  550  600      NA          NA      NA           NA   NA   NA    NA
+#> 7   600  650  700      NA          NA      NA           NA   NA   NA    NA
+#> 8   700  750  800      NA          NA      NA           NA   NA   NA    NA
+#> 9   800  850  900      NA          NA      NA           NA   NA   NA    NA
+#> 10  900  950 1000      NA          NA      NA           NA   NA   NA    NA
+#> 11 1000 1050 1100      NA          NA      NA           NA   NA   NA    NA
+#> 12 1100 1150 1200      NA          NA      NA           NA   NA   NA    NA
+#> 13 1200 1250 1300      NA          NA      NA           NA   NA   NA    NA
+#> 14 1300 1350 1400      NA          NA      NA           NA   NA   NA    NA
+#> 15 1400 1450 1500      NA          NA      NA           NA   NA   NA    NA
+#> 16 1500 1550 1600      NA          NA      NA           NA   NA   NA    NA
+#> 17 1600 1650 1700      NA          NA      NA           NA   NA   NA    NA
+#> 18 1700 1750 1800      NA          NA      NA           NA   NA   NA    NA
+#> 19 1800 1850 1900      NA          NA      NA           NA   NA   NA    NA
+#> 20 1900 1950 2000      NA          NA      NA           NA   NA   NA    NA
+#> 21 2000 2050 2100      NA          NA      NA           NA   NA   NA    NA
+#> 22 2100 2150 2200      NA          NA      NA           NA   NA   NA    NA
+#> 23 2200 2250 2300      NA          NA      NA           NA   NA   NA    NA
+#> 24 2300 2350 2400      NA          NA      NA           NA   NA   NA    NA
+#> 25 2400 2450 2500      NA          NA      NA           NA   NA   NA    NA
+#> 26 2500 2550 2600      NA          NA      NA           NA   NA   NA    NA
+#> 27 2600 2650 2700      NA          NA      NA           NA   NA   NA    NA
+#> 28 2700 2750 2800      NA          NA      NA           NA   NA   NA    NA
 #> 
 #> $herbLAI
 #> [1] 0
@@ -958,10 +990,10 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> S1_165 165 Quercus coccifera
 #> 
 #> $above
-#>          H        CR   LAI_live LAI_expanded LAI_dead Age ObsID
-#> T1_148 800 0.6605196 0.84874773   0.84874773        0  NA  <NA>
-#> T2_168 660 0.6055642 0.70557382   0.70557382        0  NA  <NA>
-#> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  <NA>
+#>          H        CR   LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID
+#> T1_148 800 0.6605196 0.84874773   0.84874773        0             0  NA  <NA>
+#> T2_168 660 0.6055642 0.70557382   0.70557382        0             0  NA  <NA>
+#> S1_165  80 0.8032817 0.03062604   0.03062604        0             0  NA  <NA>
 #> 
 #> $below
 #>        Z50  Z95 Z100 poolProportions
@@ -1074,6 +1106,9 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $internalLAIDistribution$PrevLAIdead
 #> [1] NA NA NA
 #> 
+#> $internalLAIDistribution$PrevLAImistletoe
+#> [1] NA NA NA
+#> 
 #> $internalLAIDistribution$PARcohort
 #> [1] 0 0 0
 #> 
@@ -1170,12 +1205,43 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 27      0      0      0
 #> 28      0      0      0
 #> 
+#> $internalLAIDistribution$mistletoe
+#>    T1_148 T2_168 S1_165
+#> 1       0      0      0
+#> 2       0      0      0
+#> 3       0      0      0
+#> 4       0      0      0
+#> 5       0      0      0
+#> 6       0      0      0
+#> 7       0      0      0
+#> 8       0      0      0
+#> 9       0      0      0
+#> 10      0      0      0
+#> 11      0      0      0
+#> 12      0      0      0
+#> 13      0      0      0
+#> 14      0      0      0
+#> 15      0      0      0
+#> 16      0      0      0
+#> 17      0      0      0
+#> 18      0      0      0
+#> 19      0      0      0
+#> 20      0      0      0
+#> 21      0      0      0
+#> 22      0      0      0
+#> 23      0      0      0
+#> 24      0      0      0
+#> 25      0      0      0
+#> 26      0      0      0
+#> 27      0      0      0
+#> 28      0      0      0
+#> 
 #> 
 #> $internalFCCS
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.0.0"
+#> [1] "5.1.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -1319,6 +1385,38 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$cavitationInducedDefoliation
 #> [1] TRUE
 #> 
+#> $control$mistletoeParams
+#> $control$mistletoeParams$kPAR
+#> [1] 0.5
+#> 
+#> $control$mistletoeParams$g
+#> [1] 0.8
+#> 
+#> $control$mistletoeParams$LeafWidth
+#> [1] 1
+#> 
+#> $control$mistletoeParams$Tmax_LAI
+#> [1] 0.134
+#> 
+#> $control$mistletoeParams$Tmax_LAIsq
+#> [1] -0.006
+#> 
+#> $control$mistletoeParams$Gs_P50
+#> [1] -4
+#> 
+#> $control$mistletoeParams$Gs_slope
+#> [1] 30
+#> 
+#> $control$mistletoeParams$Gsw_AC_slope
+#> [1] 6
+#> 
+#> $control$mistletoeParams$Vmax298
+#> [1] 80
+#> 
+#> $control$mistletoeParams$Jmax298
+#> [1] 120
+#> 
+#> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
 #> 
@@ -1604,35 +1702,35 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] 0
 #> 
 #> $canopy
-#>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair
-#> 1     0   50  100      NA          NA      NA   NA   NA    NA
-#> 2   100  150  200      NA          NA      NA   NA   NA    NA
-#> 3   200  250  300      NA          NA      NA   NA   NA    NA
-#> 4   300  350  400      NA          NA      NA   NA   NA    NA
-#> 5   400  450  500      NA          NA      NA   NA   NA    NA
-#> 6   500  550  600      NA          NA      NA   NA   NA    NA
-#> 7   600  650  700      NA          NA      NA   NA   NA    NA
-#> 8   700  750  800      NA          NA      NA   NA   NA    NA
-#> 9   800  850  900      NA          NA      NA   NA   NA    NA
-#> 10  900  950 1000      NA          NA      NA   NA   NA    NA
-#> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA
-#> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA
-#> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA
-#> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA
-#> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA
-#> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA
-#> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA
-#> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA
-#> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA
-#> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA
-#> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA
-#> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA
-#> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA
-#> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA
-#> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA
-#> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA
-#> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA
-#> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
+#>    zlow zmid  zup LAIlive LAIexpanded LAIdead LAImistletoe Tair Cair VPair
+#> 1     0   50  100      NA          NA      NA           NA   NA   NA    NA
+#> 2   100  150  200      NA          NA      NA           NA   NA   NA    NA
+#> 3   200  250  300      NA          NA      NA           NA   NA   NA    NA
+#> 4   300  350  400      NA          NA      NA           NA   NA   NA    NA
+#> 5   400  450  500      NA          NA      NA           NA   NA   NA    NA
+#> 6   500  550  600      NA          NA      NA           NA   NA   NA    NA
+#> 7   600  650  700      NA          NA      NA           NA   NA   NA    NA
+#> 8   700  750  800      NA          NA      NA           NA   NA   NA    NA
+#> 9   800  850  900      NA          NA      NA           NA   NA   NA    NA
+#> 10  900  950 1000      NA          NA      NA           NA   NA   NA    NA
+#> 11 1000 1050 1100      NA          NA      NA           NA   NA   NA    NA
+#> 12 1100 1150 1200      NA          NA      NA           NA   NA   NA    NA
+#> 13 1200 1250 1300      NA          NA      NA           NA   NA   NA    NA
+#> 14 1300 1350 1400      NA          NA      NA           NA   NA   NA    NA
+#> 15 1400 1450 1500      NA          NA      NA           NA   NA   NA    NA
+#> 16 1500 1550 1600      NA          NA      NA           NA   NA   NA    NA
+#> 17 1600 1650 1700      NA          NA      NA           NA   NA   NA    NA
+#> 18 1700 1750 1800      NA          NA      NA           NA   NA   NA    NA
+#> 19 1800 1850 1900      NA          NA      NA           NA   NA   NA    NA
+#> 20 1900 1950 2000      NA          NA      NA           NA   NA   NA    NA
+#> 21 2000 2050 2100      NA          NA      NA           NA   NA   NA    NA
+#> 22 2100 2150 2200      NA          NA      NA           NA   NA   NA    NA
+#> 23 2200 2250 2300      NA          NA      NA           NA   NA   NA    NA
+#> 24 2300 2350 2400      NA          NA      NA           NA   NA   NA    NA
+#> 25 2400 2450 2500      NA          NA      NA           NA   NA   NA    NA
+#> 26 2500 2550 2600      NA          NA      NA           NA   NA   NA    NA
+#> 27 2600 2650 2700      NA          NA      NA           NA   NA   NA    NA
+#> 28 2700 2750 2800      NA          NA      NA           NA   NA   NA    NA
 #> 
 #> $herbLAI
 #> [1] 0
@@ -1647,10 +1745,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165 165 Quercus coccifera
 #> 
 #> $above
-#>          H        CR   LAI_live LAI_expanded LAI_dead Age ObsID
-#> T1_148 800 0.6605196 0.84874773   0.84874773        0  NA  <NA>
-#> T2_168 660 0.6055642 0.70557382   0.70557382        0  NA  <NA>
-#> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  <NA>
+#>          H        CR   LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID
+#> T1_148 800 0.6605196 0.84874773   0.84874773        0             0  NA  <NA>
+#> T2_168 660 0.6055642 0.70557382   0.70557382        0             0  NA  <NA>
+#> S1_165  80 0.8032817 0.03062604   0.03062604        0             0  NA  <NA>
 #> 
 #> $below
 #>        Z50  Z95 Z100 poolProportions
@@ -1785,10 +1883,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165   0   0        FALSE         FALSE          FALSE        FALSE   0
 #> 
 #> $internalWater
-#>        Einst RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC
-#> T1_148     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
-#> T2_168     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
-#> S1_165     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
+#>        Einst Emist RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC
+#> T1_148     0     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
+#> T2_168     0     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
+#> S1_165     0     0       -0.033  -0.033  -0.033      -0.033      -0.033       0
 #>        StemPLC
 #> T1_148       0
 #> T2_168       0
@@ -1799,6 +1897,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] NA NA NA
 #> 
 #> $internalLAIDistribution$PrevLAIdead
+#> [1] NA NA NA
+#> 
+#> $internalLAIDistribution$PrevLAImistletoe
 #> [1] NA NA NA
 #> 
 #> $internalLAIDistribution$PARcohort
@@ -1897,12 +1998,43 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 27      0      0      0
 #> 28      0      0      0
 #> 
+#> $internalLAIDistribution$mistletoe
+#>    T1_148 T2_168 S1_165
+#> 1       0      0      0
+#> 2       0      0      0
+#> 3       0      0      0
+#> 4       0      0      0
+#> 5       0      0      0
+#> 6       0      0      0
+#> 7       0      0      0
+#> 8       0      0      0
+#> 9       0      0      0
+#> 10      0      0      0
+#> 11      0      0      0
+#> 12      0      0      0
+#> 13      0      0      0
+#> 14      0      0      0
+#> 15      0      0      0
+#> 16      0      0      0
+#> 17      0      0      0
+#> 18      0      0      0
+#> 19      0      0      0
+#> 20      0      0      0
+#> 21      0      0      0
+#> 22      0      0      0
+#> 23      0      0      0
+#> 24      0      0      0
+#> 25      0      0      0
+#> 26      0      0      0
+#> 27      0      0      0
+#> 28      0      0      0
+#> 
 #> 
 #> $internalFCCS
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.0.0"
+#> [1] "5.1.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2046,6 +2178,38 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$cavitationInducedDefoliation
 #> [1] TRUE
 #> 
+#> $control$mistletoeParams
+#> $control$mistletoeParams$kPAR
+#> [1] 0.5
+#> 
+#> $control$mistletoeParams$g
+#> [1] 0.8
+#> 
+#> $control$mistletoeParams$LeafWidth
+#> [1] 1
+#> 
+#> $control$mistletoeParams$Tmax_LAI
+#> [1] 0.134
+#> 
+#> $control$mistletoeParams$Tmax_LAIsq
+#> [1] -0.006
+#> 
+#> $control$mistletoeParams$Gs_P50
+#> [1] -4
+#> 
+#> $control$mistletoeParams$Gs_slope
+#> [1] 30
+#> 
+#> $control$mistletoeParams$Gsw_AC_slope
+#> [1] 6
+#> 
+#> $control$mistletoeParams$Vmax298
+#> [1] 80
+#> 
+#> $control$mistletoeParams$Jmax298
+#> [1] 120
+#> 
+#> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
 #> 
@@ -2331,35 +2495,35 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] 0
 #> 
 #> $canopy
-#>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair
-#> 1     0   50  100      NA          NA      NA   NA   NA    NA
-#> 2   100  150  200      NA          NA      NA   NA   NA    NA
-#> 3   200  250  300      NA          NA      NA   NA   NA    NA
-#> 4   300  350  400      NA          NA      NA   NA   NA    NA
-#> 5   400  450  500      NA          NA      NA   NA   NA    NA
-#> 6   500  550  600      NA          NA      NA   NA   NA    NA
-#> 7   600  650  700      NA          NA      NA   NA   NA    NA
-#> 8   700  750  800      NA          NA      NA   NA   NA    NA
-#> 9   800  850  900      NA          NA      NA   NA   NA    NA
-#> 10  900  950 1000      NA          NA      NA   NA   NA    NA
-#> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA
-#> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA
-#> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA
-#> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA
-#> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA
-#> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA
-#> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA
-#> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA
-#> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA
-#> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA
-#> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA
-#> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA
-#> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA
-#> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA
-#> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA
-#> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA
-#> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA
-#> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
+#>    zlow zmid  zup LAIlive LAIexpanded LAIdead LAImistletoe Tair Cair VPair
+#> 1     0   50  100      NA          NA      NA           NA   NA   NA    NA
+#> 2   100  150  200      NA          NA      NA           NA   NA   NA    NA
+#> 3   200  250  300      NA          NA      NA           NA   NA   NA    NA
+#> 4   300  350  400      NA          NA      NA           NA   NA   NA    NA
+#> 5   400  450  500      NA          NA      NA           NA   NA   NA    NA
+#> 6   500  550  600      NA          NA      NA           NA   NA   NA    NA
+#> 7   600  650  700      NA          NA      NA           NA   NA   NA    NA
+#> 8   700  750  800      NA          NA      NA           NA   NA   NA    NA
+#> 9   800  850  900      NA          NA      NA           NA   NA   NA    NA
+#> 10  900  950 1000      NA          NA      NA           NA   NA   NA    NA
+#> 11 1000 1050 1100      NA          NA      NA           NA   NA   NA    NA
+#> 12 1100 1150 1200      NA          NA      NA           NA   NA   NA    NA
+#> 13 1200 1250 1300      NA          NA      NA           NA   NA   NA    NA
+#> 14 1300 1350 1400      NA          NA      NA           NA   NA   NA    NA
+#> 15 1400 1450 1500      NA          NA      NA           NA   NA   NA    NA
+#> 16 1500 1550 1600      NA          NA      NA           NA   NA   NA    NA
+#> 17 1600 1650 1700      NA          NA      NA           NA   NA   NA    NA
+#> 18 1700 1750 1800      NA          NA      NA           NA   NA   NA    NA
+#> 19 1800 1850 1900      NA          NA      NA           NA   NA   NA    NA
+#> 20 1900 1950 2000      NA          NA      NA           NA   NA   NA    NA
+#> 21 2000 2050 2100      NA          NA      NA           NA   NA   NA    NA
+#> 22 2100 2150 2200      NA          NA      NA           NA   NA   NA    NA
+#> 23 2200 2250 2300      NA          NA      NA           NA   NA   NA    NA
+#> 24 2300 2350 2400      NA          NA      NA           NA   NA   NA    NA
+#> 25 2400 2450 2500      NA          NA      NA           NA   NA   NA    NA
+#> 26 2500 2550 2600      NA          NA      NA           NA   NA   NA    NA
+#> 27 2600 2650 2700      NA          NA      NA           NA   NA   NA    NA
+#> 28 2700 2750 2800      NA          NA      NA           NA   NA   NA    NA
 #> 
 #> $herbLAI
 #> [1] 0
@@ -2374,10 +2538,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165 165 Quercus coccifera
 #> 
 #> $above
-#>          H        CR   LAI_live LAI_expanded LAI_dead Age ObsID
-#> T1_148 800 0.6605196 0.84874773   0.84874773        0  NA  <NA>
-#> T2_168 660 0.6055642 0.70557382   0.70557382        0  NA  <NA>
-#> S1_165  80 0.8032817 0.03062604   0.03062604        0  NA  <NA>
+#>          H        CR   LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID
+#> T1_148 800 0.6605196 0.84874773   0.84874773        0             0  NA  <NA>
+#> T2_168 660 0.6055642 0.70557382   0.70557382        0             0  NA  <NA>
+#> S1_165  80 0.8032817 0.03062604   0.03062604        0             0  NA  <NA>
 #> 
 #> $below
 #>        Z50  Z95 Z100 poolProportions
@@ -2475,9 +2639,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> $paramsTranspiration
 #>             Gswmin    Gswmax Gsw_AC_slope    Gs_P50 Gs_slope  Vmax298  Jmax298
-#> T1_148 0.003086667 0.2850000     6.238912 -2.303772       30 72.19617 124.1687
-#> T2_168 0.004473333 0.2007222     4.957957 -1.964085       30 68.51600 118.7863
-#> S1_165 0.010455247 0.2830167     6.590920 -2.663333       30 62.78100 118.4486
+#> T1_148 0.003086667 0.2850000     6.238912 -1.677633       30 72.19617 124.1687
+#> T2_168 0.004473333 0.2007222     4.957957 -1.349507       30 68.51600 118.7863
+#> S1_165 0.010455247 0.2830167     6.590920 -2.483999       30 62.78100 118.4486
 #>        Kmax_stemxylem Kmax_rootxylem VCleaf_kmax VCleafapo_kmax VCleaf_slope
 #> T1_148           0.15           0.60    4.000000        8.00000     68.30291
 #> T2_168           0.40           1.60    4.000000        8.00000     14.60786
@@ -2516,10 +2680,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_165   0   0        FALSE         FALSE          FALSE        FALSE   0
 #> 
 #> $internalWater
-#>        Einst Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi
-#> T1_148     0    0      0      0       -0.033  -0.033  -0.033      -0.033
-#> T2_168     0    0      0      0       -0.033  -0.033  -0.033      -0.033
-#> S1_165     0    0      0      0       -0.033  -0.033  -0.033      -0.033
+#>        Einst Emist Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi
+#> T1_148     0     0    0      0      0       -0.033  -0.033  -0.033      -0.033
+#> T2_168     0     0    0      0      0       -0.033  -0.033  -0.033      -0.033
+#> S1_165     0     0    0      0      0       -0.033  -0.033  -0.033      -0.033
 #>        StemSympPsi LeafPLC StemPLC
 #> T1_148      -0.033       0       0
 #> T2_168      -0.033       0       0
@@ -2530,6 +2694,9 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] NA NA NA
 #> 
 #> $internalLAIDistribution$PrevLAIdead
+#> [1] NA NA NA
+#> 
+#> $internalLAIDistribution$PrevLAImistletoe
 #> [1] NA NA NA
 #> 
 #> $internalLAIDistribution$PARcohort
@@ -2628,12 +2795,43 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 27      0      0      0
 #> 28      0      0      0
 #> 
+#> $internalLAIDistribution$mistletoe
+#>    T1_148 T2_168 S1_165
+#> 1       0      0      0
+#> 2       0      0      0
+#> 3       0      0      0
+#> 4       0      0      0
+#> 5       0      0      0
+#> 6       0      0      0
+#> 7       0      0      0
+#> 8       0      0      0
+#> 9       0      0      0
+#> 10      0      0      0
+#> 11      0      0      0
+#> 12      0      0      0
+#> 13      0      0      0
+#> 14      0      0      0
+#> 15      0      0      0
+#> 16      0      0      0
+#> 17      0      0      0
+#> 18      0      0      0
+#> 19      0      0      0
+#> 20      0      0      0
+#> 21      0      0      0
+#> 22      0      0      0
+#> 23      0      0      0
+#> 24      0      0      0
+#> 25      0      0      0
+#> 26      0      0      0
+#> 27      0      0      0
+#> 28      0      0      0
+#> 
 #> 
 #> $internalFCCS
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.0.0"
+#> [1] "5.1.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2778,6 +2976,38 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$cavitationInducedDefoliation
 #> [1] TRUE
 #> 
+#> $control$mistletoeParams
+#> $control$mistletoeParams$kPAR
+#> [1] 0.5
+#> 
+#> $control$mistletoeParams$g
+#> [1] 0.8
+#> 
+#> $control$mistletoeParams$LeafWidth
+#> [1] 1
+#> 
+#> $control$mistletoeParams$Tmax_LAI
+#> [1] 0.134
+#> 
+#> $control$mistletoeParams$Tmax_LAIsq
+#> [1] -0.006
+#> 
+#> $control$mistletoeParams$Gs_P50
+#> [1] -4
+#> 
+#> $control$mistletoeParams$Gs_slope
+#> [1] 30
+#> 
+#> $control$mistletoeParams$Gsw_AC_slope
+#> [1] 6
+#> 
+#> $control$mistletoeParams$Vmax298
+#> [1] 80
+#> 
+#> $control$mistletoeParams$Jmax298
+#> [1] 120
+#> 
+#> 
 #> $control$hydraulicRedistributionFraction
 #> [1] 0.1
 #> 
@@ -3063,35 +3293,35 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] 0
 #> 
 #> $canopy
-#>    zlow zmid  zup LAIlive LAIexpanded LAIdead Tair Cair VPair
-#> 1     0   50  100      NA          NA      NA   NA   NA    NA
-#> 2   100  150  200      NA          NA      NA   NA   NA    NA
-#> 3   200  250  300      NA          NA      NA   NA   NA    NA
-#> 4   300  350  400      NA          NA      NA   NA   NA    NA
-#> 5   400  450  500      NA          NA      NA   NA   NA    NA
-#> 6   500  550  600      NA          NA      NA   NA   NA    NA
-#> 7   600  650  700      NA          NA      NA   NA   NA    NA
-#> 8   700  750  800      NA          NA      NA   NA   NA    NA
-#> 9   800  850  900      NA          NA      NA   NA   NA    NA
-#> 10  900  950 1000      NA          NA      NA   NA   NA    NA
-#> 11 1000 1050 1100      NA          NA      NA   NA   NA    NA
-#> 12 1100 1150 1200      NA          NA      NA   NA   NA    NA
-#> 13 1200 1250 1300      NA          NA      NA   NA   NA    NA
-#> 14 1300 1350 1400      NA          NA      NA   NA   NA    NA
-#> 15 1400 1450 1500      NA          NA      NA   NA   NA    NA
-#> 16 1500 1550 1600      NA          NA      NA   NA   NA    NA
-#> 17 1600 1650 1700      NA          NA      NA   NA   NA    NA
-#> 18 1700 1750 1800      NA          NA      NA   NA   NA    NA
-#> 19 1800 1850 1900      NA          NA      NA   NA   NA    NA
-#> 20 1900 1950 2000      NA          NA      NA   NA   NA    NA
-#> 21 2000 2050 2100      NA          NA      NA   NA   NA    NA
-#> 22 2100 2150 2200      NA          NA      NA   NA   NA    NA
-#> 23 2200 2250 2300      NA          NA      NA   NA   NA    NA
-#> 24 2300 2350 2400      NA          NA      NA   NA   NA    NA
-#> 25 2400 2450 2500      NA          NA      NA   NA   NA    NA
-#> 26 2500 2550 2600      NA          NA      NA   NA   NA    NA
-#> 27 2600 2650 2700      NA          NA      NA   NA   NA    NA
-#> 28 2700 2750 2800      NA          NA      NA   NA   NA    NA
+#>    zlow zmid  zup LAIlive LAIexpanded LAIdead LAImistletoe Tair Cair VPair
+#> 1     0   50  100      NA          NA      NA           NA   NA   NA    NA
+#> 2   100  150  200      NA          NA      NA           NA   NA   NA    NA
+#> 3   200  250  300      NA          NA      NA           NA   NA   NA    NA
+#> 4   300  350  400      NA          NA      NA           NA   NA   NA    NA
+#> 5   400  450  500      NA          NA      NA           NA   NA   NA    NA
+#> 6   500  550  600      NA          NA      NA           NA   NA   NA    NA
+#> 7   600  650  700      NA          NA      NA           NA   NA   NA    NA
+#> 8   700  750  800      NA          NA      NA           NA   NA   NA    NA
+#> 9   800  850  900      NA          NA      NA           NA   NA   NA    NA
+#> 10  900  950 1000      NA          NA      NA           NA   NA   NA    NA
+#> 11 1000 1050 1100      NA          NA      NA           NA   NA   NA    NA
+#> 12 1100 1150 1200      NA          NA      NA           NA   NA   NA    NA
+#> 13 1200 1250 1300      NA          NA      NA           NA   NA   NA    NA
+#> 14 1300 1350 1400      NA          NA      NA           NA   NA   NA    NA
+#> 15 1400 1450 1500      NA          NA      NA           NA   NA   NA    NA
+#> 16 1500 1550 1600      NA          NA      NA           NA   NA   NA    NA
+#> 17 1600 1650 1700      NA          NA      NA           NA   NA   NA    NA
+#> 18 1700 1750 1800      NA          NA      NA           NA   NA   NA    NA
+#> 19 1800 1850 1900      NA          NA      NA           NA   NA   NA    NA
+#> 20 1900 1950 2000      NA          NA      NA           NA   NA   NA    NA
+#> 21 2000 2050 2100      NA          NA      NA           NA   NA   NA    NA
+#> 22 2100 2150 2200      NA          NA      NA           NA   NA   NA    NA
+#> 23 2200 2250 2300      NA          NA      NA           NA   NA   NA    NA
+#> 24 2300 2350 2400      NA          NA      NA           NA   NA   NA    NA
+#> 25 2400 2450 2500      NA          NA      NA           NA   NA   NA    NA
+#> 26 2500 2550 2600      NA          NA      NA           NA   NA   NA    NA
+#> 27 2600 2650 2700      NA          NA      NA           NA   NA   NA    NA
+#> 28 2700 2750 2800      NA          NA      NA           NA   NA   NA    NA
 #> 
 #> $herbLAI
 #> [1] 0
@@ -3106,10 +3336,10 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> S1_165 165 Quercus coccifera
 #> 
 #> $above
-#>          H   CR LAI_live LAI_expanded LAI_dead Age ObsID
-#> T1_148 800 0.66     0.80         0.80        0  NA  <NA>
-#> T2_168 660 0.60     0.50         0.50        0  NA  <NA>
-#> S1_165  80 0.80     0.03         0.03        0  NA  <NA>
+#>          H   CR LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID
+#> T1_148 800 0.66     0.80         0.80        0             0  NA  <NA>
+#> T2_168 660 0.60     0.50         0.50        0             0  NA  <NA>
+#> S1_165  80 0.80     0.03         0.03        0             0  NA  <NA>
 #> 
 #> $below
 #>        Z50  Z95 Z100 poolProportions
@@ -3222,6 +3452,9 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $internalLAIDistribution$PrevLAIdead
 #> [1] NA NA NA
 #> 
+#> $internalLAIDistribution$PrevLAImistletoe
+#> [1] NA NA NA
+#> 
 #> $internalLAIDistribution$PARcohort
 #> [1] 0 0 0
 #> 
@@ -3318,12 +3551,43 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> 27      0      0      0
 #> 28      0      0      0
 #> 
+#> $internalLAIDistribution$mistletoe
+#>    T1_148 T2_168 S1_165
+#> 1       0      0      0
+#> 2       0      0      0
+#> 3       0      0      0
+#> 4       0      0      0
+#> 5       0      0      0
+#> 6       0      0      0
+#> 7       0      0      0
+#> 8       0      0      0
+#> 9       0      0      0
+#> 10      0      0      0
+#> 11      0      0      0
+#> 12      0      0      0
+#> 13      0      0      0
+#> 14      0      0      0
+#> 15      0      0      0
+#> 16      0      0      0
+#> 17      0      0      0
+#> 18      0      0      0
+#> 19      0      0      0
+#> 20      0      0      0
+#> 21      0      0      0
+#> 22      0      0      0
+#> 23      0      0      0
+#> 24      0      0      0
+#> 25      0      0      0
+#> 26      0      0      0
+#> 27      0      0      0
+#> 28      0      0      0
+#> 
 #> 
 #> $internalFCCS
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.0.0"
+#> [1] "5.1.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     

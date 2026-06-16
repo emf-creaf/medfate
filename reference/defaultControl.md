@@ -247,6 +247,35 @@ A list, with the following options (default values in brackets):
   - `lfmcComponent [= "fine"]`: Plant component used to estimate LFMC,
     either "leaf" or "fine" (for fine fuel).
 
+  - `mistletoeParams`: A list with the following elements:
+
+    - `kPAR [= 0.5]`: Mistletoe light extinction coefficient.
+
+    - `g [= 0.8]`: Mistletoe water storage capacity per LAI unit.
+
+    - `LeafWidth [=1.0]`: Mistletoe leaf width (cm).
+
+    - `Tmax_LAI [= 0.134]`: Empirical coefficient relating mistletoe LAI
+      with the ratio of maximum transpiration over potential
+      evapotranspiration.
+
+    - `Tmax_LAIsq [= -0.006]`: Empirical coefficient relating squared
+      mistletoe LAI with the ratio of maximum transpiration over
+      potential evapotranspiration.
+
+    - `Gs_P50 [= -4.0]`: Water potential corresponding to 50% reduction
+      of mistletoe stomatal conductance.
+
+    - `Gs_slope [= 30]`: Rate of decrease in mistletoe stomatal
+      conductance at Gs_P50.
+
+    - `Gsw_AC_slope [= 6]`: Slope of the Gsw vs Ac/Cs relationship
+      (Baldocchi model).
+
+    - `Vmax298 [= 80]`: Maximum Rubisco carboxylation rate at 298K.
+
+    - `Jmax298 [= 120]`: Maximum rate of electron transport at 298K.
+
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
   [`pwb`](https://emf-creaf.github.io/medfate/reference/pwb.md) or

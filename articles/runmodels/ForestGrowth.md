@@ -189,10 +189,10 @@ x$above
     ## T1_148 148 168.0000 37.55    NA 800 0.6605196 383.4520992 0.84874773
     ## T2_168 168 384.0000 14.60    NA 660 0.6055642  47.0072886 0.70557382
     ## S1_165 165 749.4923    NA  3.75  80 0.8032817   0.9753929 0.03062604
-    ##        LAI_expanded LAI_dead LAI_nocomp    Loading Age ObsID
-    ## T1_148   0.84874773        0 1.29720268 0.32447403  NA  <NA>
-    ## T2_168   0.70557382        0 1.01943205 0.20102636  NA  <NA>
-    ## S1_165   0.03062604        0 0.04412896 0.01407945  NA  <NA>
+    ##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe    Loading Age ObsID
+    ## T1_148   0.84874773        0 1.29720268             0 0.32447403  NA  <NA>
+    ## T2_168   0.70557382        0 1.01943205             0 0.20102636  NA  <NA>
+    ## S1_165   0.03062604        0 0.04412896             0 0.01407945  NA  <NA>
 
 Elements starting with `params*` contain cohort-specific model
 parameters. Some of them were already presented in previous vignettes
@@ -301,27 +301,27 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14670.5
-    ## Change in plant cohort biomass (g/m2): 390.348
+    ## Final plant cohort biomass (g/m2): 14572.8
+    ## Change in plant cohort biomass (g/m2): 292.668
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 83 Labile balance (g/m2) 89
-    ##   Plant individual balance (g/m2) 172 Mortality loss (g/m2) 22
-    ## Final plant water content (mm): 4.7054
-    ## Final soil water content (mm): 275.693
+    ##   Structural balance (g/m2) 65 Labile balance (g/m2) 87
+    ##   Plant individual balance (g/m2) 151 Mortality loss (g/m2) 22
+    ## Final plant water content (mm): 4.69904
+    ## Final soil water content (mm): 275.691
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.00687363
-    ## Plant water balance result (mm): -0.00151337
-    ## Change in soil water content (mm): -15.1821
-    ## Soil water balance result (mm): -15.1869
+    ## Change in plant water content (mm): 0.000511943
+    ## Plant water balance result (mm): -0.00152354
+    ## Change in soil water content (mm): -15.1837
+    ## Soil water balance result (mm): -15.184
     ## Change in snowpack water content (mm): 0
     ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
     ##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 245
-    ##   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 244  Mistletoe transpiration (mm) 0
+    ##   Plant extraction from soil (mm) 244  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
     ##   Runoff (mm) 21 Deep drainage (mm) 154
 
 At the end of daily simulations, the
@@ -387,7 +387,7 @@ extract(G1, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 365 × 51
+    ## # A tibble: 365 × 53
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
     ##  1 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 
@@ -401,12 +401,12 @@ extract(G1, "forest", addunits = TRUE) |>
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
     ## 10 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 
     ## # ℹ 355 more rows
-    ## # ℹ 43 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## # ℹ 45 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
     ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
     ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
-    ## #   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],
-    ## #   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …
+    ## #   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2],
+    ## #   LAI [m^2/m^2], LAIherb [m^2/m^2], LAIlive [m^2/m^2], …
 
 These data frames are easy handle in R or can be written into text files
 for post-processing with other programs.
@@ -538,9 +538,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148",
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ##  12.0000000  -0.1456519 -21.4404192   0.1456519  21.4404192   0.9794766 
+    ##  12.0000000  -0.2875399 -42.3267756   0.2875399  42.3267756   0.9954836 
     ##         NSE     NSE.abs 
-    ##   0.8690250   0.7237052
+    ##   0.5733803   0.4545503
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

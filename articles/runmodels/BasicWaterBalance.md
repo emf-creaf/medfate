@@ -242,8 +242,8 @@ sd1
     ##               0.0000000               0.0000000               0.0000000 
     ##         SoilEvaporation       HerbTranspiration         PlantExtraction 
     ##               0.5000000               0.0000000               0.8996836 
-    ##           Transpiration HydraulicRedistribution 
-    ##               0.8996836               0.0000000 
+    ##           Transpiration  MistletoeTranspiration HydraulicRedistribution 
+    ##               0.8996836               0.0000000               0.0000000 
     ## 
     ## $Soil
     ##           Psi HerbTranspiration HydraulicInput HydraulicOutput PlantExtraction
@@ -253,24 +253,28 @@ sd1
     ## 4 -0.03301525                 0              0     0.002954471     0.002954471
     ## 
     ## $Stand
-    ##         LAI     LAIherb     LAIlive LAIexpanded     LAIdead          Cm 
-    ##    1.584948    0.000000    1.584948    1.584948    0.000000    1.216848 
-    ##  LgroundPAR  LgroundSWR 
-    ##   43.636170   54.102798 
+    ##          LAI      LAIherb      LAIlive  LAIexpanded      LAIdead LAImistletoe 
+    ##     1.584948     0.000000     1.584948     1.584948     0.000000     0.000000 
+    ##           Cm   LgroundPAR   LgroundSWR 
+    ##     1.216848    43.636170    54.102798 
     ## 
     ## $Plants
     ##               LAI    LAIlive     FPAR AbsorbedSWRFraction Extraction
     ## T1_148 0.84874773 0.84874773 92.18285           35.076344 0.55258221
     ## T2_168 0.70557382 0.70557382 72.36365           30.444383 0.32034759
     ## S1_165 0.03062604 0.03062604 44.32407            2.366131 0.02675376
-    ##        Transpiration GrossPhotosynthesis PlantPsi         DDS   StemRWC
-    ## T1_148    0.55258221           3.7143297   -0.033 0.004613739 0.9998350
-    ## T2_168    0.32034759           2.9300190   -0.033 0.006282261 0.9997500
-    ## S1_165    0.02675376           0.1635903   -0.033 0.003088161 0.9983684
-    ##          LeafRWC      LFMC StemPLC      LeafPLC WaterBalance
-    ## T1_148 0.9979679 125.86544       0 0.0000000000            0
-    ## T2_168 0.9986797  93.05186       0 0.0009945146            0
-    ## S1_165 0.9987207  96.38420       0 0.0000000000            0
+    ##        Transpiration MistletoeTranspiration GrossPhotosynthesis PlantPsi
+    ## T1_148    0.55258221                      0           3.7143297   -0.033
+    ## T2_168    0.32034759                      0           2.9300190   -0.033
+    ## S1_165    0.02675376                      0           0.1635903   -0.033
+    ##                DDS   StemRWC   LeafRWC      LFMC StemPLC      LeafPLC
+    ## T1_148 0.004613739 0.9998350 0.9979679 125.86544       0 0.0000000000
+    ## T2_168 0.006282261 0.9997500 0.9986797  93.05186       0 0.0009945146
+    ## S1_165 0.003088161 0.9983684 0.9987207  96.38420       0 0.0000000000
+    ##        WaterBalance
+    ## T1_148            0
+    ## T2_168            0
+    ## S1_165            0
     ## 
     ## attr(,"class")
     ## [1] "spwb_day" "list"
@@ -332,7 +336,7 @@ S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
     ##   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 246  Mistletoe transpiration (mm) 0
     ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
     ##   Runoff (mm) 21 Deep drainage (mm) 153
 
@@ -414,13 +418,13 @@ head(S$WaterBalance)
     ## 2001-01-04                 0       0.1311630     0.1311630
     ## 2001-01-05                 0       0.3864150     0.3864150
     ## 2001-01-06                 0       0.2784142     0.2784142
-    ##            HydraulicRedistribution
-    ## 2001-01-01                       0
-    ## 2001-01-02                       0
-    ## 2001-01-03                       0
-    ## 2001-01-04                       0
-    ## 2001-01-05                       0
-    ## 2001-01-06                       0
+    ##            MistletoeTranspiration HydraulicRedistribution
+    ## 2001-01-01                      0                       0
+    ## 2001-01-02                      0                       0
+    ## 2001-01-03                      0                       0
+    ## 2001-01-04                      0                       0
+    ## 2001-01-05                      0                       0
+    ## 2001-01-06                      0                       0
 
 Element `Plants` is in turn a list with several dataframes with plant
 output variables, for example plant water potentials are in:
@@ -552,7 +556,7 @@ extract(S, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 365 × 29
+    ## # A tibble: 365 × 31
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
     ##  1 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 
@@ -566,12 +570,12 @@ extract(S, "forest", addunits = TRUE) |>
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
     ## 10 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 
     ## # ℹ 355 more rows
-    ## # ℹ 21 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
+    ## # ℹ 23 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
     ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
     ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
-    ## #   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],
-    ## #   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …
+    ## #   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2],
+    ## #   LAI [m^2/m^2], LAIherb [m^2/m^2], LAIlive [m^2/m^2], …
 
 And a similar code can be used to daily series of cohort-level
 variables:
@@ -666,19 +670,19 @@ summary(S, freq="months",FUN=mean, output="WaterBalance")
     ## 2001-10-01     0.078266659                 0       0.5537729     0.5537729
     ## 2001-11-01     0.057484048                 0       0.3948975     0.3948975
     ## 2001-12-01     0.019629302                 0       0.3691242     0.3691242
-    ##            HydraulicRedistribution
-    ## 2001-01-01            0.0009590242
-    ## 2001-02-01            0.0000000000
-    ## 2001-03-01            0.0013128385
-    ## 2001-04-01            0.0002450122
-    ## 2001-05-01            0.0032315147
-    ## 2001-06-01            0.0000000000
-    ## 2001-07-01            0.0301173825
-    ## 2001-08-01            0.0053133999
-    ## 2001-09-01            0.0007945965
-    ## 2001-10-01            0.0016798659
-    ## 2001-11-01            0.0009698733
-    ## 2001-12-01            0.0000000000
+    ##            MistletoeTranspiration HydraulicRedistribution
+    ## 2001-01-01                      0            0.0009590242
+    ## 2001-02-01                      0            0.0000000000
+    ## 2001-03-01                      0            0.0013128385
+    ## 2001-04-01                      0            0.0002450122
+    ## 2001-05-01                      0            0.0032315147
+    ## 2001-06-01                      0            0.0000000000
+    ## 2001-07-01                      0            0.0301173825
+    ## 2001-08-01                      0            0.0053133999
+    ## 2001-09-01                      0            0.0007945965
+    ## 2001-10-01                      0            0.0016798659
+    ## 2001-11-01                      0            0.0009698733
+    ## 2001-12-01                      0            0.0000000000
 
 Parameter `output` is used to indicate the element of the `spwb` object
 for which we desire summaries. Similarly, it is possible to calculate

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../../favicon.ico">
 <link rel="manifest" href="../../site.webmanifest">
 <script src="../../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Understanding model inputs">
 <meta name="description" content="Describes the information and data format required for model simulation
@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-05-12</h4>
+            <h4 data-toc-skip class="date">2026-06-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -685,8 +685,23 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
-<td align="left">LigninPercent</td>
+<td align="left">LeafLigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in leaves</td>
+<td align="left">Numeric</td>
+<td align="left">%</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">WoodLigninPercent</td>
+<td align="left">Percent of lignin+cutin over dry weight in wood</td>
+<td align="left">Numeric</td>
+<td align="left">%</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">FineRootLigninPercent</td>
+<td align="left">Percent of lignin+cutin over dry weight in fine
+roots</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
@@ -1228,7 +1243,7 @@ successful recruitment</td>
 <td align="left">Age of recruiment</td>
 <td align="left">Numeric</td>
 <td align="left">yr</td>
-<td align="left">NA</td>
+<td align="left">FALSE</td>
 </tr>
 <tr class="even">
 <td align="left">RecrTreeHeight</td>
@@ -1691,43 +1706,44 @@ parameterization is obtained using function
 <span><span class="co">##  [39] "verticalLayerSize"                  "windMeasurementHeight"             </span></span>
 <span><span class="co">##  [41] "segmentedXylemVulnerability"        "stemCavitationRecovery"            </span></span>
 <span><span class="co">##  [43] "leafCavitationRecovery"             "lfmcComponent"                     </span></span>
-<span><span class="co">##  [45] "cavitationInducedDefoliation"       "hydraulicRedistributionFraction"   </span></span>
-<span><span class="co">##  [47] "nsubsteps_canopy"                   "taper"                             </span></span>
-<span><span class="co">##  [49] "multiLayerBalance"                  "sapFluidityVariation"              </span></span>
-<span><span class="co">##  [51] "TPhase_gmin"                        "Q10_1_gmin"                        </span></span>
-<span><span class="co">##  [53] "Q10_2_gmin"                         "rootRadialConductance"             </span></span>
-<span><span class="co">##  [55] "averageFracRhizosphereResistance"   "thermalCapacityLAI"                </span></span>
-<span><span class="co">##  [57] "boundaryLayerSize"                  "cavitationRecoveryMaximumRate"     </span></span>
-<span><span class="co">##  [59] "sunlitShade"                        "numericParams"                     </span></span>
-<span><span class="co">##  [61] "leafCavitationEffects"              "stemCavitationEffects"             </span></span>
-<span><span class="co">##  [63] "stomatalSubmodel"                   "plantCapacitance"                  </span></span>
-<span><span class="co">##  [65] "cavitationFlux"                     "leafCuticularTranspiration"        </span></span>
-<span><span class="co">##  [67] "stemCuticularTranspiration"         "C_SApoInit"                        </span></span>
-<span><span class="co">##  [69] "C_LApoInit"                         "k_SSym"                            </span></span>
-<span><span class="co">##  [71] "fractionLeafSymplasm"               "gs_NightFrac"                      </span></span>
-<span><span class="co">##  [73] "JarvisPAR"                          "fTRBToLeaf"                        </span></span>
-<span><span class="co">##  [75] "subdailyCarbonBalance"              "allowDessication"                  </span></span>
-<span><span class="co">##  [77] "allowStarvation"                    "sinkLimitation"                    </span></span>
-<span><span class="co">##  [79] "shrubDynamics"                      "herbDynamics"                      </span></span>
-<span><span class="co">##  [81] "allocationStrategy"                 "phloemConductanceFactor"           </span></span>
-<span><span class="co">##  [83] "nonSugarConcentration"              "equilibriumOsmoticConcentration"   </span></span>
-<span><span class="co">##  [85] "minimumRelativeStarchForGrowth"     "constructionCosts"                 </span></span>
-<span><span class="co">##  [87] "senescenceRates"                    "maximumRelativeGrowthRates"        </span></span>
-<span><span class="co">##  [89] "mortalityMode"                      "mortalityBaselineRate"             </span></span>
-<span><span class="co">##  [91] "mortalityRelativeSugarThreshold"    "mortalityRWCThreshold"             </span></span>
-<span><span class="co">##  [93] "recrTreeDBH"                        "recrTreeDensity"                   </span></span>
-<span><span class="co">##  [95] "ingrowthTreeDBH"                    "ingrowthTreeDensity"               </span></span>
-<span><span class="co">##  [97] "decompositionAnnualBaseRates"       "decompositionAnnualTurnoverRate"   </span></span>
-<span><span class="co">##  [99] "allowSeedBankDynamics"              "allowRecruitment"                  </span></span>
-<span><span class="co">## [101] "allowResprouting"                   "recruitmentMode"                   </span></span>
-<span><span class="co">## [103] "removeEmptyCohorts"                 "minimumTreeCohortDensity"          </span></span>
-<span><span class="co">## [105] "minimumShrubCohortCover"            "dynamicallyMergeCohorts"           </span></span>
-<span><span class="co">## [107] "keepCohortsWithObsID"               "seedRain"                          </span></span>
-<span><span class="co">## [109] "seedProductionTreeHeight"           "seedProductionShrubHeight"         </span></span>
-<span><span class="co">## [111] "probRecr"                           "minTempRecr"                       </span></span>
-<span><span class="co">## [113] "minMoistureRecr"                    "minFPARRecr"                       </span></span>
-<span><span class="co">## [115] "recrAge"                            "recrTreeHeight"                    </span></span>
-<span><span class="co">## [117] "recrShrubCover"                     "recrShrubHeight"</span></span></code></pre>
+<span><span class="co">##  [45] "cavitationInducedDefoliation"       "mistletoeParams"                   </span></span>
+<span><span class="co">##  [47] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  </span></span>
+<span><span class="co">##  [49] "taper"                              "multiLayerBalance"                 </span></span>
+<span><span class="co">##  [51] "sapFluidityVariation"               "TPhase_gmin"                       </span></span>
+<span><span class="co">##  [53] "Q10_1_gmin"                         "Q10_2_gmin"                        </span></span>
+<span><span class="co">##  [55] "rootRadialConductance"              "averageFracRhizosphereResistance"  </span></span>
+<span><span class="co">##  [57] "thermalCapacityLAI"                 "boundaryLayerSize"                 </span></span>
+<span><span class="co">##  [59] "cavitationRecoveryMaximumRate"      "sunlitShade"                       </span></span>
+<span><span class="co">##  [61] "numericParams"                      "leafCavitationEffects"             </span></span>
+<span><span class="co">##  [63] "stemCavitationEffects"              "stomatalSubmodel"                  </span></span>
+<span><span class="co">##  [65] "plantCapacitance"                   "cavitationFlux"                    </span></span>
+<span><span class="co">##  [67] "leafCuticularTranspiration"         "stemCuticularTranspiration"        </span></span>
+<span><span class="co">##  [69] "C_SApoInit"                         "C_LApoInit"                        </span></span>
+<span><span class="co">##  [71] "k_SSym"                             "fractionLeafSymplasm"              </span></span>
+<span><span class="co">##  [73] "gs_NightFrac"                       "JarvisPAR"                         </span></span>
+<span><span class="co">##  [75] "fTRBToLeaf"                         "subdailyCarbonBalance"             </span></span>
+<span><span class="co">##  [77] "allowDessication"                   "allowStarvation"                   </span></span>
+<span><span class="co">##  [79] "sinkLimitation"                     "shrubDynamics"                     </span></span>
+<span><span class="co">##  [81] "herbDynamics"                       "allocationStrategy"                </span></span>
+<span><span class="co">##  [83] "phloemConductanceFactor"            "nonSugarConcentration"             </span></span>
+<span><span class="co">##  [85] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    </span></span>
+<span><span class="co">##  [87] "constructionCosts"                  "senescenceRates"                   </span></span>
+<span><span class="co">##  [89] "maximumRelativeGrowthRates"         "mortalityMode"                     </span></span>
+<span><span class="co">##  [91] "mortalityBaselineRate"              "mortalityRelativeSugarThreshold"   </span></span>
+<span><span class="co">##  [93] "mortalityRWCThreshold"              "recrTreeDBH"                       </span></span>
+<span><span class="co">##  [95] "recrTreeDensity"                    "ingrowthTreeDBH"                   </span></span>
+<span><span class="co">##  [97] "ingrowthTreeDensity"                "decompositionAnnualBaseRates"      </span></span>
+<span><span class="co">##  [99] "decompositionAnnualTurnoverRate"    "allowSeedBankDynamics"             </span></span>
+<span><span class="co">## [101] "allowRecruitment"                   "allowResprouting"                  </span></span>
+<span><span class="co">## [103] "recruitmentMode"                    "removeEmptyCohorts"                </span></span>
+<span><span class="co">## [105] "minimumTreeCohortDensity"           "minimumShrubCohortCover"           </span></span>
+<span><span class="co">## [107] "dynamicallyMergeCohorts"            "keepCohortsWithObsID"              </span></span>
+<span><span class="co">## [109] "seedRain"                           "seedProductionTreeHeight"          </span></span>
+<span><span class="co">## [111] "seedProductionShrubHeight"          "probRecr"                          </span></span>
+<span><span class="co">## [113] "minTempRecr"                        "minMoistureRecr"                   </span></span>
+<span><span class="co">## [115] "minFPARRecr"                        "recrAge"                           </span></span>
+<span><span class="co">## [117] "recrTreeHeight"                     "recrShrubCover"                    </span></span>
+<span><span class="co">## [119] "recrShrubHeight"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

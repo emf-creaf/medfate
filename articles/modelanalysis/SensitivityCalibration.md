@@ -27,7 +27,7 @@ package and the example forest data:
 library(medfate)
 ```
 
-    ## Package 'medfate' [ver. 5.0.0]
+    ## Package 'medfate' [ver. 5.1.0]
 
 ``` r
 
@@ -111,7 +111,7 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 83 Net rainfall (mm) 379
     ##   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 246
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 246  Mistletoe transpiration (mm) 0
     ##   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
     ##   Runoff (mm) 21 Deep drainage (mm) 153
 
@@ -301,7 +301,7 @@ of_transp(parMin)
 of_transp(parMax)
 ```
 
-    ## [1] 2379266
+    ## [1] 1.80536
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -338,7 +338,7 @@ of_stress(parMin)
 of_stress(parMax)
 ```
 
-    ## [1] 39.21625
+    ## [1] 4346.838
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -413,7 +413,7 @@ of_eval(parMin)
 of_eval(parMax)
 ```
 
-    ## [1] 0.3627331
+    ## [1] -58.0889
 
 ### Global sensitivity analyses
 
@@ -890,8 +890,6 @@ plot(density(unlist(lapply(MS, sf_stress))),
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ![](SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png)
 
@@ -931,19 +929,12 @@ plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress",
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ``` r
 
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
 ```
 
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf

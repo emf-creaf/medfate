@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../../favicon.ico">
 <link rel="manifest" href="../../site.webmanifest">
 <script src="../../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="Forest growth">
 <meta name="description" content="Learn how to conduct simulations including carbon balance, plant growth and mortality
@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-05-12</h4>
+            <h4 data-toc-skip class="date">2026-06-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -236,10 +236,10 @@ estimated initial amount of <em>sapwood area</em>:</p>
 <span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 383.4520992 0.84874773</span></span>
 <span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  47.0072886 0.70557382</span></span>
 <span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   0.9753929 0.03062604</span></span>
-<span><span class="co">##        LAI_expanded LAI_dead LAI_nocomp    Loading Age ObsID</span></span>
-<span><span class="co">## T1_148   0.84874773        0 1.29720268 0.32447403  NA  &lt;NA&gt;</span></span>
-<span><span class="co">## T2_168   0.70557382        0 1.01943205 0.20102636  NA  &lt;NA&gt;</span></span>
-<span><span class="co">## S1_165   0.03062604        0 0.04412896 0.01407945  NA  &lt;NA&gt;</span></span></code></pre>
+<span><span class="co">##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe    Loading Age ObsID</span></span>
+<span><span class="co">## T1_148   0.84874773        0 1.29720268             0 0.32447403  NA  &lt;NA&gt;</span></span>
+<span><span class="co">## T2_168   0.70557382        0 1.01943205             0 0.20102636  NA  &lt;NA&gt;</span></span>
+<span><span class="co">## S1_165   0.03062604        0 0.04412896             0 0.01407945  NA  &lt;NA&gt;</span></span></code></pre>
 <p>Elements starting with <code>params*</code> contain cohort-specific
 model parameters. Some of them were already presented in previous
 vignettes (<a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html"><em>Basic
@@ -324,27 +324,27 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant cohort biomass (g/m2): 14670.5</span></span>
-<span><span class="co">## Change in plant cohort biomass (g/m2): 390.348</span></span>
+<span><span class="co">## Final plant cohort biomass (g/m2): 14572.8</span></span>
+<span><span class="co">## Change in plant cohort biomass (g/m2): 292.668</span></span>
 <span><span class="co">## Plant biomass balance result (g/m2): 0</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 83 Labile balance (g/m2) 89</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 172 Mortality loss (g/m2) 22</span></span>
-<span><span class="co">## Final plant water content (mm): 4.7054</span></span>
-<span><span class="co">## Final soil water content (mm): 275.693</span></span>
+<span><span class="co">##   Structural balance (g/m2) 65 Labile balance (g/m2) 87</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 151 Mortality loss (g/m2) 22</span></span>
+<span><span class="co">## Final plant water content (mm): 4.69904</span></span>
+<span><span class="co">## Final soil water content (mm): 275.691</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.00687363</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00151337</span></span>
-<span><span class="co">## Change in soil water content (mm): -15.1821</span></span>
-<span><span class="co">## Soil water balance result (mm): -15.1869</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.000511943</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00152354</span></span>
+<span><span class="co">## Change in soil water content (mm): -15.1837</span></span>
+<span><span class="co">## Soil water balance result (mm): -15.184</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 83 Net rainfall (mm) 379</span></span>
 <span><span class="co">##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0 Woody plant transpiration (mm) 245</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 245  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
+<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 244  Mistletoe transpiration (mm) 0</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 244  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
 <span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 154</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
@@ -389,7 +389,7 @@ form of data frame:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"forest"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 365 × 51</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 365 × 53</span></span></span>
 <span><span class="co">##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494;">[L/m^2]</span>       <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^</span>… <span style="color: #949494;">[L/m^2]</span>  <span style="color: #949494;">[L/m^2]</span>      <span style="color: #949494;">[L/m^2]</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 </span></span>
@@ -403,12 +403,12 @@ form of data frame:</p>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09   1.98           0       0      0      0         0           0    </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 </span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 355 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 43 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 45 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   HydraulicRedistribution [L/m^2], LAI [m^2/m^2], LAIherb [m^2/m^2],</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   LAIlive [m^2/m^2], LAIexpanded [m^2/m^2], LAIdead [m^2/m^2], Cm [L/m^2], …</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #949494;">#   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   LAI [m^2/m^2], LAIherb [m^2/m^2], LAIlive [m^2/m^2], …</span></span></span></code></pre>
 <p>These data frames are easy handle in R or can be written into text
 files for post-processing with other programs.</p>
 </div>
@@ -491,9 +491,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.1456519 -21.4404192   0.1456519  21.4404192   0.9794766 </span></span>
+<span><span class="co">##  12.0000000  -0.2875399 -42.3267756   0.2875399  42.3267756   0.9954836 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.8690250   0.7237052</span></span></code></pre>
+<span><span class="co">##   0.5733803   0.4545503</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
