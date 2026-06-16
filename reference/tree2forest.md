@@ -18,7 +18,8 @@ tree2forest(
   Z100 = NA,
   CrownRatio = NA,
   FoliarBiomass = NA,
-  FuelLoading = NA
+  FuelLoading = NA,
+  LAIMistletoe = NA
 )
 
 shrub2forest(
@@ -31,7 +32,8 @@ shrub2forest(
   Z100 = NA,
   CrownRatio = NA,
   FoliarBiomass = NA,
-  FuelLoading = NA
+  FuelLoading = NA,
+  LAIMistletoe = NA
 )
 ```
 
@@ -81,6 +83,10 @@ shrub2forest(
 - FuelLoading:
 
   Fine fuel loading (kg/m2)
+
+- LAIMistletoe:
+
+  Leaf area index (m2/m2) of hemi-parasitic (mistletoe) plants
 
 - Cover:
 

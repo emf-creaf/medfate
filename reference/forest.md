@@ -174,6 +174,9 @@ contain additional columns (`Z100` is also commonly used for data frame
 
 - `LAI`: Leaf area index (m2/m2).
 
+- `LAIMistletoe`: Leaf area index (m2/m2) of hemi-parasitic (mistletoe)
+  plants.
+
 - `FoliarBiomass`: Standing dry biomass of leaves (kg/m2).
 
 - `FuelLoading`: Fine fuel loading (kg/m2).
