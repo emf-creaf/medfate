@@ -709,21 +709,45 @@ void innerSperry_c(ModelInput& x,
         }
 
 
-        //Balance between extraction and transpiration
-        output.plants_inst.PWB(c,n) = std::accumulate(Esoilcn.begin(), Esoilcn.end(), 0.0) - output.plants_inst.E(c,n);
 
         //Add step transpiration to daily plant cohort transpiration
         output.plants.Transpiration[c] += output.plants_inst.E(c,n);
         output.plants.NetPhotosynthesis[c] += output.plants_inst.An(c,n);
         output.plants.GrossPhotosynthesis[c] += output.plants_inst.Ag(c,n);
+
+        //Scale soil water extracted from leaf to cohort level
+        for(int lc=0;lc<input.nlayerscon[c];lc++) {
+          Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*x.above.LAI_expanded[c]; //Scale from flow to water volume in the time step
+        }
+        //Balance between extraction and transpiration (Esoilcn will change after accounting for mistletoes)
+        output.plants_inst.PWB(c,n) = std::accumulate(Esoilcn.begin(), Esoilcn.end(), 0.0) - output.plants_inst.E(c,n);
+        
+        //Add PWB
+        output.plants.WaterBalance[c] += output.plants_inst.PWB(c,n);
+        
         
         if(x.above.LAI_mistletoe[c]>0.0) {
           
           //Mistletoe transpiration
           double Emist_SL = 0.0; //Instantaneous mistletoe transpiration per leaf area
           double Emist_SH = 0.0; //Instantaneous mistletoe transpiration per leaf area
-          double Emist = 0.0; //Instantaneous mistletoe transpiration per leaf area
-
+          double Emist = x.internalWater.Emist[c]; //Previous instantaneous mistletoe transpiration per leaf area
+          if(std::isnan(Emist)) {
+            Emist_SL = Emist * (LAI_SL(c,n)/(LAI_SL(c,n)+LAI_SH(c,n))); 
+            Emist_SH = Emist * (LAI_SH(c,n)/(LAI_SL(c,n)+LAI_SH(c,n)));
+          }
+          //Mistletoe sunlit/shade leaf temperature
+          double Temp_SL_mist = leafTemperature2_c(SWR_SL(c,n)/LAI_SL(c,n), LWR_SL(c,n)/LAI_SL(c,n),
+                                                   x.canopy.Tair[input.iLayerSunlit[c]], input.zWind[input.iLayerSunlit[c]],
+                                                   Emist_SL,  x.control.mistletoe.LeafWidth);
+          double Temp_SH_mist = leafTemperature2_c(SWR_SH(c,n)/LAI_SH(c,n), LWR_SH(c,n)/LAI_SH(c,n),
+                                                   x.canopy.Tair[input.iLayerShade[c]], input.zWind[input.iLayerShade[c]],
+                                                   Emist_SH,  x.control.mistletoe.LeafWidth);
+          if(!x.control.advancedWB.sunlitShade) Temp_SH_mist = Temp_SL_mist;
+          //Mistletoe leaf VPD
+          double VPD_SL_mist = std::max(0.0,leafVapourPressure_c(Temp_SL_mist, output.sunlit_inst.Psi(c,n)) - x.canopy.VPair[input.iLayerSunlit[c]]);
+          double VPD_SH_mist = std::max(0.0,leafVapourPressure_c(Temp_SH_mist, output.shade_inst.Psi(c,n)) - x.canopy.VPair[input.iLayerShade[c]]);
+          
           //Mistletoe photosynthesis and stomatal conductance
           BaldocchiPhoto PB_SL, PB_SH;
           double gsNight = x.control.sureau.gs_NightFrac*x.paramsTranspiration.Gswmax[c]*1000.0;
@@ -733,7 +757,7 @@ void innerSperry_c(ModelInput& x,
           photosynthesisBaldocchi_inner_c(PB_SL,
                                           irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda)/LAI_SL(c,n),
                                           x.canopy.Cair[input.iLayerSunlit[c]],
-                                          std::max(0.0,output.sunlit_inst.Temp(c,n)),
+                                          std::max(0.0,Temp_SL_mist),
                                           input.zWind[input.iLayerCohort[c]],
                                           x.control.mistletoe.Vmax298,
                                           x.control.mistletoe.Jmax298,
@@ -746,7 +770,7 @@ void innerSperry_c(ModelInput& x,
           photosynthesisBaldocchi_inner_c(PB_SH,
                                           irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda)/LAI_SH(c,n),
                                           x.canopy.Cair[input.iLayerSunlit[c]],
-                                          std::max(0.0,output.shade_inst.Temp(c,n)),
+                                          std::max(0.0,Temp_SH_mist),
                                           input.zWind[input.iLayerCohort[c]],
                                           x.control.mistletoe.Vmax298,
                                           x.control.mistletoe.Jmax298,
@@ -765,8 +789,8 @@ void innerSperry_c(ModelInput& x,
           // Stomatal transpiration
           double Gwdiff_SL_mist = 1.0/(1.0/gCR + 1.0/gs_SL_mist + 1.0/gBL_mist);
           double Gwdiff_SH_mist = 1.0/(1.0/gCR + 1.0/gs_SH_mist + 1.0/gBL_mist);
-          Emist_SL = Gwdiff_SL_mist * (output.sunlit_inst.VPD(c,n)/input.Patm);
-          Emist_SH = Gwdiff_SH_mist * (output.shade_inst.VPD(c,n)/input.Patm);
+          Emist_SL = Gwdiff_SL_mist * (VPD_SL_mist/input.Patm);
+          Emist_SH = Gwdiff_SH_mist * (VPD_SH_mist/input.Patm);
           
           Emist = (Emist_SL*LAI_SL(c,n) + Emist_SH*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
           
@@ -797,15 +821,9 @@ void innerSperry_c(ModelInput& x,
           for(int lc=0;lc<input.nlayerscon[c];lc++) {
             Esoilcn[lc] = supply.ERhizo(iPM_mist,lc)*tstep*input.f_dry*0.001*0.01802*x.above.LAI_expanded[c]; //Scale from flow to water volume in the time step
           }
-        } else {
-          //Scale soil water extracted from leaf to cohort level
-          for(int lc=0;lc<input.nlayerscon[c];lc++) {
-            Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*x.above.LAI_expanded[c]; //Scale from flow to water volume in the time step
-          }
-        }
-        //Add PWB
-        output.plants.WaterBalance[c] += output.plants_inst.PWB(c,n);
-
+          
+        } 
+        
         //Copy transpiration and from connected layers to transpiration from soil layers
         //And update soil water content (soil water potential will not be updated until next day!)
         if(!plantWaterPools) {
