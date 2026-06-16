@@ -61,6 +61,7 @@ List structToList(SureauNetwork& snetwork) {
   network.push_back(params, "params");
   
   network.push_back(snetwork.LAI, "LAI");
+  network.push_back(snetwork.LAImistletoe, "LAImistletoe");
   network.push_back(snetwork.Psi_LApo, "Psi_LApo"); 
   network.push_back(snetwork.Psi_LSym, "Psi_LSym"); 
   network.push_back(snetwork.Psi_RCApo, "Psi_RCApo");
@@ -109,6 +110,8 @@ List structToList(SureauNetwork& snetwork) {
   network.push_back(snetwork.Emin_L_SH, "Emin_L_SH"); 
   network.push_back(snetwork.Emin_S, "Emin_S"); 
   network.push_back(snetwork.Emist, "Emist"); 
+  network.push_back(snetwork.Emist_SL, "Emist_SL");
+  network.push_back(snetwork.Emist_SH, "Emist_SH"); 
   
   //Diagnostics
   network.push_back(snetwork.Diag_nwhile_cavit, "Diag_nwhile_cavit");
@@ -160,6 +163,7 @@ SureauNetwork listToStruct(List network) {
   }
   
   snetwork.LAI = network["LAI"];
+  snetwork.LAImistletoe = network["LAImistletoe"];
   snetwork.Psi_LApo = network["Psi_LApo"];
   snetwork.Psi_LSym = network["Psi_LSym"];
   snetwork.Psi_RCApo = network["Psi_RCApo"];
@@ -210,6 +214,8 @@ SureauNetwork listToStruct(List network) {
   snetwork.Emin_L_SH = network["Emin_L_SH"];
   snetwork.Emin_S = network["Emin_S"];
   snetwork.Emist = network["Emist"];
+  snetwork.Emist_SL = network["Emist_SL"];
+  snetwork.Emist_SH = network["Emist_SH"];
   
   //Diagnostics
   snetwork.Diag_nwhile_cavit = network["Diag_nwhile_cavit"];
@@ -302,7 +308,7 @@ void initSureauParams_inner(SureauParams &params, int c,
   params.epsilonSym_Stem = StemEPS[c]; 
   
 }
-void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe,
+void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe, NumericVector LAImistletoe,
                              DataFrame internalWater, 
                              DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                              NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
@@ -362,6 +368,7 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
   
   //LAI
   network.LAI = LAIphe[c];
+  network.LAImistletoe = LAImistletoe[c];
   
   //Water potentials
   network.Psi_LApo = LeafPsiVEC[c]; 
@@ -420,6 +427,8 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
   network.Emin_L_SH = NA_REAL; //Leaf cuticular transpiration (shade leaves)
   network.Emin_S = Emin_S[c]; //Stem cuticular transpiration
   network.Emist = Emist[c]; //Mistletoe transpiration
+  network.Emist_SL = NA_REAL; //Mistletoe transpiration (sunlit leaves)
+  network.Emist_SH = NA_REAL; //Mistletoe transpiration (shade leaves)
   
   //Diagnostics
   network.Diag_nwhile_cavit = NA_INTEGER;
@@ -433,7 +442,7 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
 }
 
 
-List initSureauNetwork(int c, NumericVector LAIphe,
+List initSureauNetwork(int c, NumericVector LAIphe, NumericVector LAImistletoe,
                        DataFrame internalWater, 
                        DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
@@ -441,7 +450,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
                        List control, double sapFluidityDay = 1.0) {
   
   SureauNetwork snetwork;
-  initSureauNetwork_inner(snetwork, c, LAIphe,
+  initSureauNetwork_inner(snetwork, c, LAIphe, LAImistletoe,
                           internalWater, 
                           paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                           VCroot_kmax, VGrhizo_kmax,
@@ -484,6 +493,7 @@ List initSureauNetwork(int c, NumericVector LAIphe,
 List initSureauNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  NumericVector LAImistletoe = Rcpp::as<Rcpp::NumericVector>(above["LAI_mistletoe"]);
   
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
@@ -502,7 +512,7 @@ List initSureauNetworks(List x) {
   int numCohorts = internalWater.nrow();
   List networks(numCohorts);
   for(int c = 0;c<numCohorts;c++) {
-    networks[c] = initSureauNetwork(c, LAIphe,
+    networks[c] = initSureauNetwork(c, LAIphe, LAImistletoe,
                                      internalWater, 
                                      paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),

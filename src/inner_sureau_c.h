@@ -51,6 +51,7 @@ struct SureauParams {
 struct SureauNetwork {
   SureauParams params;
   double LAI;
+  double LAImistletoe;
   double Psi_LApo;
   double Psi_LSym;
   double Psi_RCApo;
@@ -88,6 +89,8 @@ struct SureauNetwork {
   double Emin_L_SH;
   double Emin_S;
   double Emist;
+  double Emist_SL;
+  double Emist_SH;
   int Diag_nwhile_cavit;
   double Diag_deltaRegulMax;
   double Diag_deltaPLCMax;
@@ -125,7 +128,7 @@ void initSureauParams_inner_c(SureauParams& params, int c,
                               double sapFluidityDay);
 
 void initSureauNetwork_inner_c(SureauNetwork& network, int c, 
-                               std::vector<double>& LAIphe,
+                               std::vector<double>& LAIphe, std::vector<double>& LAImistletoe,
                                InternalWater& internalWater, 
                                AnatomyParams& paramsAnatomy, 
                                TranspirationParams& paramsTranspiration, 

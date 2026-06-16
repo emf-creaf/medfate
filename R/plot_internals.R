@@ -540,6 +540,9 @@
     if("HerbTranspiration" %in% names(WaterBalance)) {
       df[["Herbaceous transpiration"]] <- WaterBalance$HerbTranspiration
     }
+    if("MistletoeTranspiration" %in% names(WaterBalance)) {
+      df[["Mistletoe transpiration"]] <- WaterBalance$MistletoeTranspiration
+    }
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates), , drop = FALSE]
     if(!is.null(summary.freq)) {
       date.factor = cut(as.Date(row.names(df)), breaks=summary.freq)
@@ -554,6 +557,9 @@
       }
       if("HerbTranspiration" %in% names(WaterBalance))  {
         df_summary[["Herbaceous transpiration"]] = tapply(df[["Herbaceous transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
+      }
+      if("MistletoeTranspiration" %in% names(WaterBalance))  {
+        df_summary[["Mistletoe transpiration"]] = tapply(df[["Mistletoe transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE)
       }
       df <- df_summary
     }
@@ -691,8 +697,13 @@
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     df = Stand[,c("LAI", "LAIherb", "LAIexpanded", "LAIdead")]
     names(df)<-c("Total (herb+unfolded+dead)", "Herbaceous", "Woody plants unfolded","Woody plants dead")
+    if("LAImistletoe" %in% names(Stand)) {
+      df[["Mistletoe"]] <- Stand$LAImistletoe
+    }
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    if(!is.null(summary.freq)) {
+      df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    }
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="GroundIrradiance") {

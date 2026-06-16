@@ -50,10 +50,14 @@ ControlParameters::ControlParameters(List x) {
     List mistletoeParams = x["mistletoeParams"];
     mistletoe.kPAR = mistletoeParams["kPAR"];
     mistletoe.g = mistletoeParams["g"];
+    mistletoe.LeafWidth = mistletoeParams["LeafWidth"];
     mistletoe.Tmax_LAI = mistletoeParams["Tmax_LAI"];
     mistletoe.Tmax_LAIsq = mistletoeParams["Tmax_LAIsq"];
     mistletoe.Gs_P50 = mistletoeParams["Gs_P50"];
     mistletoe.Gs_slope = mistletoeParams["Gs_slope"];
+    mistletoe.Gsw_AC_slope = mistletoeParams["Gsw_AC_slope"];
+    mistletoe.Vmax298 = mistletoeParams["Vmax298"];
+    mistletoe.Jmax298 = mistletoeParams["Jmax298"];
   }
   if(x.containsElementNamed("truncateRootDistribution")) commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
   commonWB.fullRhizosphereOverlapConductivity = 0.01;
