@@ -996,7 +996,7 @@ void innerSureau_c(ModelInput& x,
           network_n.Einst = Elim + Emin_S + Emin_L;
           network_n.Einst_SL = Elim_SL + Emin_L_SL; //For sunlit photosynthesis/transpiration
           network_n.Einst_SH = Elim_SH + Emin_L_SH; //For shade photosynthesis/transpiration
-          network_n.Emist = Emist_SL + Emist_SH; // For mistletoe transpiration
+          network_n.Emist = (Emist_SL*LAI_SL(c,n) + Emist_SH*LAI_SH(c,n))/LAI; // For mistletoe transpiration
 
           //Effects on water potentials and flows
           // Rcout<< "Entering semi-implicit\n";
