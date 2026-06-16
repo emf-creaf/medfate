@@ -97,6 +97,7 @@
 #'   \item{\code{Z100}: Depth (in mm) corresponding to 100% of fine roots (to specify a truncated root distribution).}
 #'   \item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
 #'   \item{\code{LAI}: Leaf area index (m2/m2).}
+#'   \item{\code{LAIMistletoe}: Leaf area index (m2/m2) of hemi-parasitic (mistletoe) plants.}
 #'   \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2).}
 #'   \item{\code{FuelLoading}: Fine fuel loading (kg/m2).}
 #'   \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}

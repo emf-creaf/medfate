@@ -11,6 +11,7 @@
 #' @param CrownRatio Crown ratio (fraction of total height)
 #' @param FoliarBiomass Standing dry biomass of leaves (kg/m2)
 #' @param FuelLoading Fine fuel loading (kg/m2)
+#' @param LAIMistletoe Leaf area index (m2/m2) of hemi-parasitic (mistletoe) plants
 #' @param Z50 Depth (in mm) corresponding to 50% of fine roots.
 #' @param Z95 Depth (in mm) corresponding to 95% of fine roots.
 #' @param Z100 Depth (in mm) corresponding to 100% of fine roots.
@@ -28,7 +29,7 @@
 #' oak_forest
 #' 
 tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95 = NA, Z100 = NA,
-                      CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA) {
+                      CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA, LAIMistletoe = NA) {
   f<- emptyforest(ntree = 1) 
   f$treeData[["Species"]] <- Species
   f$treeData[["Height"]] <- Height
@@ -51,6 +52,9 @@ tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95
   if(!is.na(FuelLoading)) {
     f$treeData[["FuelLoading"]] <- FuelLoading
   }
+  if(!is.na(LAIMistletoe)) {
+    f$treeData[["LAIMistletoe"]] <- LAIMistletoe
+  }
   return(f)
 }
 
@@ -58,7 +62,7 @@ tree2forest<-function(Species, Height, LAI = NA, N = NA, DBH = NA, Z50 = NA, Z95
 #' @param Cover Percent cover
 #' @export
 shrub2forest<-function(Species, Height, LAI = NA, Cover = NA, Z50 = NA, Z95 = NA, Z100 = NA,
-                       CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA) {
+                       CrownRatio = NA, FoliarBiomass = NA, FuelLoading = NA, LAIMistletoe = NA) {
   f <- emptyforest(nshrub = 1) 
   f$shrubData[["Species"]] <- Species
   f$shrubData[["Height"]] <- Height
@@ -75,10 +79,13 @@ shrub2forest<-function(Species, Height, LAI = NA, Cover = NA, Z50 = NA, Z95 = NA
     f$shrubData[["CrownRatio"]] <- CrownRatio
   }
   if(!is.na(FoliarBiomass)) {
-    f$treeData[["FoliarBiomass"]] <- FoliarBiomass
+    f$shrubData[["FoliarBiomass"]] <- FoliarBiomass
   }
   if(!is.na(FuelLoading)) {
-    f$treeData[["FuelLoading"]] <- FuelLoading
+    f$shrubData[["FuelLoading"]] <- FuelLoading
+  }
+  if(!is.na(LAIMistletoe)) {
+    f$shrubData[["LAIMistletoe"]] <- LAIMistletoe
   }
   return(f)
 }

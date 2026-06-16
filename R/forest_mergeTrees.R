@@ -58,6 +58,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
       if("FoliarBiomass" %in% names(x)) {
         y$FoliarBiomass <- as.numeric(tapply(x$FoliarBiomass, x$Species, FUN = sum))
       }
+      if("LAIMistletoe" %in% names(x)) {
+        y$LAIMistletoe <- as.numeric(tapply(x$LAIMistletoe*BA, x$Species, FUN = sum)/BAsp)
+      }
       if("FuelLoading" %in% names(x)) {
         y$FuelLoading <- as.numeric(tapply(x$FuelLoading, x$Species, FUN = sum))
       }
@@ -159,6 +162,21 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
       if("Z100" %in% names(td)) {
         td_merged$Z100 <- as.numeric(tapply(td$Z100*BA, td$Species, FUN = sum)/BAsp)
       }
+      if("LAI" %in% names(td)) {
+        td_merged$LAI <- as.numeric(tapply(td$LAI, td$Species, FUN = sum))
+      }
+      if("LAIMistletoe" %in% names(td)) {
+        td_merged$LAIMistletoe <- as.numeric(tapply(td$LAIMistletoe*BA, td$Species, FUN = sum)/BAsp)
+      }
+      if("FoliarBiomass" %in% names(td)) {
+        td_merged$FoliarBiomass <- as.numeric(tapply(td$FoliarBiomass, td$Species, FUN = sum))
+      }
+      if("FuelLoading" %in% names(td)) {
+        td_merged$FuelLoading <- as.numeric(tapply(td$FuelLoading, td$Species, FUN = sum))
+      }
+      if("Age" %in% names(td)) {
+        td_merged$Age <- as.numeric(tapply(td$Age*td$Cover, td$Species, FUN = sum)/Coversp)
+      }
       if("ObsID" %in% names(td)) {
         td_merged$ObsID <- rep(as.character(NA), nrow(td_merged)) 
       }
@@ -194,6 +212,9 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
     }
     if("LAI" %in% names(x)) {
       y$LAI <- as.numeric(tapply(x$LAI, x$Species, FUN = sum))
+    }
+    if("LAIMistletoe" %in% names(x)) {
+      y$LAIMistletoe <- as.numeric(tapply(x$LAIMistletoe*x$Cover, x$Species, FUN = sum)/Coversp)
     }
     if("FoliarBiomass" %in% names(x)) {
       y$FoliarBiomass <- as.numeric(tapply(x$FoliarBiomass, x$Species, FUN = sum))
@@ -237,6 +258,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
   if("Z100" %in% names(x)) y$Z100 <- x$Z100[nosel]
   if("LAI" %in% names(x)) y$LAI <- x$LAI[nosel]
   if("FoliarBiomass" %in% names(x)) y$FoliarBiomass <- x$FoliarBiomass[nosel]
+  if("LAIMistletoe" %in% names(x)) y$LAIMistletoe <- x$LAIMistletoe[nosel]
   if("FuelLoading" %in% names(x)) y$FuelLoading <- x$FuelLoading[nosel]
   if("Age" %in% names(x)) y$Age <- x$Age[nosel]
   if("ObsID" %in% names(x)) y$ObsID <- x$ObsID[nosel]
