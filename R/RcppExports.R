@@ -1103,6 +1103,7 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
 #'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
 #'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 #'   \item{\code{LAI_nocomp}: Leaf area index (m2/m2) (one-side leaf area relative to plot area) assuming no aboveground competition.}
+#'   \item{\code{LAI_mistletoe}: Leaf area index (m2/m2) (one-side leaf area relative to plot area) of hemi-parasitic mistletoe plants.}
 #'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
 #'   \item{\code{Age}: A numeric vector indicating age of cohorts in years. Used to track cohort age in simulations with \code{\link{fordyn}}.}
 #'   \item{\code{ObsID}: A string identifying plant cohorts at the stage of forest sampling. Used to track the fate of particular plant cohorts in simulations with \code{\link{fordyn}}.}
@@ -3957,6 +3958,7 @@ soil_temperatureGradient <- function(gradTemp, widths, Temp) {
 #'     \item{\code{"HerbTranspiration"}: Transpiration due to the herbaceous layer (in mm).}
 #'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by woody plants (in mm).}
 #'     \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
+#'     \item{\code{"MistletoeTranspiration"}: Transpiration of hemi-parasitic mistletoe plants (in mm).}
 #'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 #'   }
 #'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
@@ -3982,6 +3984,7 @@ soil_temperatureGradient <- function(gradTemp, widths, Temp) {
 #'     \item{\code{"LAIlive"}: LAI of the woody plants assuming all leaves are unfolded (in m2/m2).}
 #'     \item{\code{"LAIexpanded"}: LAI of the woody plants with leaves actually unfolded (in m2/m2).}
 #'     \item{\code{"LAIdead"}: LAI of the woody plants corresponding to dead leaves (in m2/m2).}
+#'     \item{\code{"LAImistletoe"}: LAI of hemi-parasitic mistletoe plants (in m2/m2).}
 #'     \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
 #'     \item{\code{"LgroundPAR"}: The percentage of PAR that reaches the ground (accounting for leaf phenology).}
 #'     \item{\code{"LgroundSWR"}: The percentage of SWR that reaches the ground (accounting for leaf phenology).}
