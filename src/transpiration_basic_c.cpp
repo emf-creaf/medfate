@@ -586,7 +586,8 @@ Rcpp::NumericVector copyStandBasicTranspirationResult_c(const StandBasicTranspir
   NumericVector standVEC = Rcpp::NumericVector::create(_["LAI"] = stand.LAI,
                                                        _["LAIlive"] = stand.LAIlive, 
                                                        _["LAIexpanded"] = stand.LAIexpanded, 
-                                                       _["LAIdead"] = stand.LAIdead);
+                                                       _["LAIdead"] = stand.LAIdead,
+                                                       _["LAImistletoe"] = stand.LAImistletoe);
   return(standVEC);
 }
 
