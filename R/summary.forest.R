@@ -76,7 +76,12 @@ summary.forest<-function(object, SpParams, ...) {
   s[["Shrub_lai"]] <- sum(coh_lai[selShrub], na.rm=TRUE)
   s[["Herb_lai"]] <- sum(coh_lai[selHerb], na.rm=TRUE)
   s[["Herb_lai"]] <- s[["Herb_lai"]] + herb_LAI(object, SpParams)
-  s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]]
+  s[["Mistletoe_lai"]] <- 0
+  if("LAIMistletoe" %in% names(object$treeData)) s[["Mistletoe_lai"]] <- s[["Mistletoe_lai"]] + sum(object$treeData$LAIMistletoe)
+  if("LAIMistletoe" %in% names(object$shrubData)) s[["Mistletoe_lai"]] <- s[["Mistletoe_lai"]] + sum(object$shrubData$LAIMistletoe)
+  if("herbData" %in% names(object)) if("LAIMistletoe" %in% object$herbData) s[["Mistletoe_lai"]] <- s[["Mistletoe_lai"]] + sum(object$herbData$LAIMistletoe)
+  
+  s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]] + s[["Mistletoe_lai"]]
   
   s[["Tree_fuel"]] <- sum(coh_fuel[selTree], na.rm=TRUE)
   s[["Adult_fuel"]] <- sum(coh_fuel[selAdult], na.rm=TRUE)
@@ -114,6 +119,7 @@ print.summary.forest<-function(x, digits=getOption("digits"),...) {
             " saplings:", round(x[["Sapling_lai"]], digits), 
             " shrubs:", round(x[["Shrub_lai"]], digits),
             " herbs:", round(x[["Herb_lai"]], digits),
+            " mistletoe:", round(x[["Mistletoe_lai"]], digits),
             "\n"))
   cat(paste("Fuel loading (kg/m2) total:", round(x[["Total_fuel"]], digits),
             " adult trees:", round(x[["Adult_fuel"]], digits),
