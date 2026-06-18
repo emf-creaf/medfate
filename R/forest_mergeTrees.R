@@ -175,7 +175,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
         td_merged$FuelLoading <- as.numeric(tapply(td$FuelLoading, td$Species, FUN = sum))
       }
       if("Age" %in% names(td)) {
-        td_merged$Age <- as.numeric(tapply(td$Age*td$Cover, td$Species, FUN = sum)/Coversp)
+        td_merged$Age <- as.numeric(tapply(td$Age*BA, td$Species, FUN = sum)/BAsp)
       }
       if("ObsID" %in% names(td)) {
         td_merged$ObsID <- rep(as.character(NA), nrow(td_merged)) 

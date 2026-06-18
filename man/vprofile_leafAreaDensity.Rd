@@ -90,7 +90,7 @@ vprofile_windExtinction(
 
 \item{includeHerbs}{Include herbaceous layer in the profile.}
 
-\item{includeMistletoes}{Include hemi-parasitic plants (mistletoes) layer in the profile.}
+\item{includeMistletoes}{Include hemi-parasitic plants (mistletoes) in the profile.}
 
 \item{draw}{Logical flag to indicate that a plot is desired.}
 

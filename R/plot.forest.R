@@ -13,6 +13,7 @@
 #' @param byCohorts A logical flag to separate profiles for each cohort.
 #' @param bySpecies A logical flag to aggregate results by species.
 #' @param includeHerbs A logical flag to include herbaceous layer in the profile.
+#' @param includeMistletoes Include hemi-parasitic plants (mistletoes) in the profile.
 #' @param \dots Additional parameters to vertical profiles
 #' 
 #' @return A ggplot or a shiny application, depending on the function.
@@ -30,11 +31,11 @@
 #' plot(exampleforest, SpParamsMED)
 #' 
 #' @name plot.forest
-plot.forest<-function(x, SpParams, type = "LeafAreaDensity", byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE, ...) {
+plot.forest<-function(x, SpParams, type = "LeafAreaDensity", byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE, includeMistletoes = FALSE, ...) {
   type = match.arg(type, .forest_plot_choices())
   if(type=="LeafAreaDensity") return(vprofile_leafAreaDensity(x, SpParams = SpParams, draw = TRUE, 
                                                               byCohorts = byCohorts, bySpecies = bySpecies,
-                                                              includeHerbs = includeHerbs, ...))
+                                                              includeHerbs = includeHerbs, includeMistletoes = includeMistletoes, ...))
   else if(type=="RootDistribution") return(vprofile_rootDistribution(x, SpParams = SpParams,  draw = TRUE, 
                                                                      bySpecies = bySpecies, ...))
   else if(type=="FuelBulkDensity") return(vprofile_fuelBulkDensity(x, SpParams = SpParams,  draw = TRUE, ...))
@@ -43,7 +44,7 @@ plot.forest<-function(x, SpParams, type = "LeafAreaDensity", byCohorts = FALSE, 
   else if(type=="SWRExtinction") return(vprofile_SWRExtinction(x, SpParams = SpParams,  draw = TRUE,
                                                                includeHerbs = includeHerbs, ...))
   else if(type=="WindExtinction") return(vprofile_windExtinction(x, SpParams = SpParams,  draw = TRUE,
-                                                                 includeHerbs = includeHerbs, ...))
+                                                                 includeHerbs = includeHerbs, includeMistletoes = includeMistletoes, ...))
 }
 
 
@@ -74,6 +75,11 @@ shinyplot.forest<-function(x, SpParams, ...){
           inputId = "includeherbs_check",
           label = "Include herbaceous layer",
           value = FALSE
+        ),
+        checkboxInput(
+          inputId = "includemist_check",
+          label = "Include mistletoes",
+          value = FALSE
         )
       ),
       mainPanel(
@@ -89,7 +95,8 @@ shinyplot.forest<-function(x, SpParams, ...){
            type = input$plot_main_type, 
            byCohorts = input$bycohort_check,
            bySpecies = input$byspecies_check,
-           includeHerbs = input$includeherbs_check)
+           includeHerbs = input$includeherbs_check,
+           includeMistletoes = input$includemist_check)
     })
     output$summary <- renderPrint({
       summary(x, SpParams)

@@ -12,6 +12,7 @@
   byCohorts = FALSE,
   bySpecies = FALSE,
   includeHerbs = FALSE,
+  includeMistletoes = FALSE,
   ...
 )
 
@@ -29,6 +30,8 @@
 \item{bySpecies}{A logical flag to aggregate results by species.}
 
 \item{includeHerbs}{A logical flag to include herbaceous layer in the profile.}
+
+\item{includeMistletoes}{Include hemi-parasitic plants (mistletoes) in the profile.}
 
 \item{\dots}{Additional parameters to vertical profiles}
 }

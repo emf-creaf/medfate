@@ -10,7 +10,7 @@
 #' @param byCohorts Separate profiles for each cohort.
 #' @param bySpecies Aggregate cohort profiles by species.
 #' @param includeHerbs Include herbaceous layer in the profile.
-#' @param includeMistletoes Include hemi-parasitic plants (mistletoes) layer in the profile.
+#' @param includeMistletoes Include hemi-parasitic plants (mistletoes) in the profile.
 #' @param u The value of measured wind speed (in m/s).
 #' @param windMeasurementHeight Height corresponding to wind measurement (in cm over the canopy).
 #' @param boundaryLayerSize Size of the boundary layer (in cm) over the canopy.
