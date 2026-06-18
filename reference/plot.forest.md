@@ -13,6 +13,7 @@ plot(
   byCohorts = FALSE,
   bySpecies = FALSE,
   includeHerbs = FALSE,
+  includeMistletoes = FALSE,
   ...
 )
 
@@ -49,6 +50,10 @@ shinyplot(x, SpParams, ...)
 - includeHerbs:
 
   A logical flag to include herbaceous layer in the profile.
+
+- includeMistletoes:
+
+  Include hemi-parasitic plants (mistletoes) in the profile.
 
 - ...:
 

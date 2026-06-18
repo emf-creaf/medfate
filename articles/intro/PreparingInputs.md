@@ -148,7 +148,7 @@ summary(pobl_ctl, SpParamsMED)
 #> Tree BA (m2/ha): 3.0179815  adult trees: 3.0179815  saplings: 0 
 #> Density (ind/ha) adult trees: 267  saplings: 0  shrubs (estimated): 0 
 #> Cover (%) adult trees: 42.1205627  saplings: 0  shrubs: 0  herbs: 0 
-#> LAI (m2/m2) total: 0.544959  adult trees: 0.544959  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 0.544959  adult trees: 0.544959  saplings: 0  shrubs: 0  herbs: 0  mistletoe: 0 
 #> Fuel loading (kg/m2) total: 0.1421746  adult trees: 0.1421746  saplings: 0  shrubs: 0  herbs: 0 
 #> PAR ground (%): NA  SWR ground (%): NA
 ```
@@ -184,7 +184,7 @@ summary(pobl_ctl, SpParamsMED)
 #> Tree BA (m2/ha): 42.6957047  adult trees: 42.6957047  saplings: 0 
 #> Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 
 #> Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 
-#> LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0  mistletoe: 0 
 #> Fuel loading (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 
 #> PAR ground (%): NA  SWR ground (%): NA
 ```
@@ -231,7 +231,7 @@ summary(pobl_ctl, SpParamsMED)
 #> Tree BA (m2/ha): 42.6957047  adult trees: 42.6957047  saplings: 0 
 #> Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 
 #> Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 
-#> LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0  mistletoe: 0 
 #> Fuel loading (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 
 #> PAR ground (%): 4.4052535  SWR ground (%): 9.8976935
 ```
@@ -277,7 +277,7 @@ summary(pobl_thi_bef, SpParamsMED)
 #> Tree BA (m2/ha): 40.9224267  adult trees: 40.9224267  saplings: 0 
 #> Density (ind/ha) adult trees: 3692.3946797  saplings: 0  shrubs (estimated): 0 
 #> Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 
-#> LAI (m2/m2) total: 5.5833511  adult trees: 5.5833511  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 5.5833511  adult trees: 5.5833511  saplings: 0  shrubs: 0  herbs: 0  mistletoe: 0 
 #> Fuel loading (kg/m2) total: 1.4629714  adult trees: 1.4629714  saplings: 0  shrubs: 0  herbs: 0 
 #> PAR ground (%): 4.6382035  SWR ground (%): 10.2827898
 ```
@@ -296,7 +296,7 @@ summary(pobl_thi_aft, SpParamsMED)
 #> Tree BA (m2/ha): 31.6162035  adult trees: 31.6162035  saplings: 0 
 #> Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 
 #> Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 
-#> LAI (m2/m2) total: 4.5328748  adult trees: 4.5328748  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 4.5328748  adult trees: 4.5328748  saplings: 0  shrubs: 0  herbs: 0  mistletoe: 0 
 #> Fuel loading (kg/m2) total: 1.1915321  adult trees: 1.1915321  saplings: 0  shrubs: 0  herbs: 0 
 #> PAR ground (%): 8.2654902  SWR ground (%): 15.7752682
 ```
@@ -357,7 +357,7 @@ summary(pobl_thi_aft, SpParamsMED)
 #> Tree BA (m2/ha): 31.6162035  adult trees: 31.6162035  saplings: 0 
 #> Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 
 #> Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 
-#> LAI (m2/m2) total: 4.0969956  adult trees: 4.0969956  saplings: 0  shrubs: 0  herbs: 0 
+#> LAI (m2/m2) total: 4.0969956  adult trees: 4.0969956  saplings: 0  shrubs: 0  herbs: 0  mistletoe: 0 
 #> Fuel loading (kg/m2) total: 1.0724731  adult trees: 1.0724731  saplings: 0  shrubs: 0  herbs: 0 
 #> PAR ground (%): 10.5046983  SWR ground (%): 18.8407832
 ```

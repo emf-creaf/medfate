@@ -15,6 +15,7 @@ vprofile_leafAreaDensity(
   byCohorts = FALSE,
   bySpecies = FALSE,
   includeHerbs = FALSE,
+  includeMistletoes = FALSE,
   draw = TRUE,
   xlim = NULL
 )
@@ -67,6 +68,7 @@ vprofile_windExtinction(
   z = NULL,
   gdd = NA,
   includeHerbs = FALSE,
+  includeMistletoes = FALSE,
   draw = TRUE,
   xlim = NULL
 )
@@ -103,6 +105,10 @@ vprofile_windExtinction(
 - includeHerbs:
 
   Include herbaceous layer in the profile.
+
+- includeMistletoes:
+
+  Include hemi-parasitic plants (mistletoes) in the profile.
 
 - draw:
 

@@ -329,7 +329,7 @@ summary(exampleforest, SpParamsMED)
     ## Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 
     ## Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 
     ## Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 
-    ## LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0 
+    ## LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0  mistletoe: 0 
     ## Fuel loading (kg/m2) total: 0.5395798  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0 
     ## PAR ground (%): 43.6361701  SWR ground (%): 54.1027977
 
