@@ -10,6 +10,7 @@
 #' @param byCohorts Separate profiles for each cohort.
 #' @param bySpecies Aggregate cohort profiles by species.
 #' @param includeHerbs Include herbaceous layer in the profile.
+#' @param includeMistletoes Include hemi-parasitic plants (mistletoes) layer in the profile.
 #' @param u The value of measured wind speed (in m/s).
 #' @param windMeasurementHeight Height corresponding to wind measurement (in cm over the canopy).
 #' @param boundaryLayerSize Size of the boundary layer (in cm) over the canopy.
@@ -50,7 +51,7 @@
 #' @keywords internal
 #' @name vprofile_leafAreaDensity
 vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, 
-                                   byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE,
+                                   byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE, includeMistletoes = FALSE,
                                    draw = TRUE, xlim = NULL) {
   if(!(inherits(x,"data.frame") || inherits(x, "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
   if(inherits(x, "forest")) {
@@ -72,6 +73,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
   w <- z[2:length(z)]- z[1:(length(z)-1)]
   
   lai_vect <- x$LAI_expanded
+  if(includeMistletoes && "LAI_mistletoe" %in% names(x)) lai_vect <- lai_vect + x$LAI_mistletoe
   h_vect <- x$H
   cr_vect <- x$CR
   if(includeHerbs && !is.na(herbHeight) && !is.na(herbLAI)) {
