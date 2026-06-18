@@ -70,6 +70,7 @@ vprofile_windExtinction(
   z = NULL,
   gdd = NA,
   includeHerbs = FALSE,
+  includeMistletoes = FALSE,
   draw = TRUE,
   xlim = NULL
 )

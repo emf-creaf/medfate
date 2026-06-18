@@ -220,13 +220,13 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs =
 #' @keywords internal
 vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 200,
                                   boundaryLayerSize = 2000, target = "windspeed",
-                                  z = NULL, gdd = NA, includeHerbs = FALSE,
+                                  z = NULL, gdd = NA, includeHerbs = FALSE, includeMistletoes = FALSE,
                                   draw = TRUE, xlim = NULL) {
   h <- plant_height(x, SpParams)
   if(length(h)==0) stop("The forest object does not contain plant cohorts")
   if(is.null(z)) z <- seq(0, ceiling(max(h)/100)*100 +boundaryLayerSize, by=1)
   lad <- vprofile_leafAreaDensity(x=x, SpParams = SpParams, z = z, gdd = gdd,
-                                  byCohorts = FALSE, bySpecies = FALSE, includeHerbs = includeHerbs,
+                                  byCohorts = FALSE, bySpecies = FALSE, includeHerbs = includeHerbs, includeMistletoes = includeMistletoes,
                                   draw = FALSE, xlim = xlim)
   canopyHeight <- max(plant_height(x, SpParams), na.rm=T)
   zmid <- 0.5*(z[1:(length(z)-1)] + z[2:(length(z))])
