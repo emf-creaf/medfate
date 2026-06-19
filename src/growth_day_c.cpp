@@ -402,9 +402,7 @@ void updateStructuralVariables_c(ModelInput& x,
       LAI_nocomp[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*N[j]/10000.0; //LAI without competition effect
       x.internalAllocation.leafAreaTarget[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*exp(Cfbt[j]*ltba[j]); //Include competition effect in leaf biomass estimation
       // Update LAI_live using the target and living bud percent, if buds can be formed
-      if(x.internalPhenology.budFormation[j]) {
-        LAI_live[j] = x.internalAllocation.leafAreaTarget[j]*(crownBudPercent[j]/100.0)*N[j]/10000.0;
-      }
+      LAI_live[j] = x.internalAllocation.leafAreaTarget[j]*(crownBudPercent[j]/100.0)*N[j]/10000.0;
     }
   }
   // 
@@ -1145,6 +1143,9 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         deltaLAsenescence -= LAexpanded;
         LAexpanded = 0.0;
       }
+      //Increase crown buds to new LA growth
+      crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + 10.0*(deltaLAgrowth[j]/LAexpanded));
+      
       LAdead += deltaLAsenescence;
       LAI_dead[j] = LAdead*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
@@ -1161,10 +1162,8 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       }
       //Decrease PLC due to new SA growth
       StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
-      LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaLAgrowth[j]/LAexpanded));
-      //Increase crown buds to new SA growth
-      crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + 100.0*(deltaSAgrowth[j]/SA[j]));
-
+      LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaSAgrowth[j]/SA[j]));
+      
       ///// B14a. UPDATE DERIVED HYDRAULIC PARAMETERS /////
       if(x.control.transpirationMode=="Granier") {
         Lj = coarseRootLengths_c(Vj, x.soil.getWidths(), 0.5); //Arbitrary ratio (to revise some day)
@@ -1351,6 +1350,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
           }
 
           crownBudPercent[j] = crownBudPercent[j]*(1.0 - burnRatioBuds);
+
           abovegroundFireSurvival = (burnRatioBuds < 1.0) && (bark_thickness > xn);
 
           //If does not survive set ratios to 1.0
