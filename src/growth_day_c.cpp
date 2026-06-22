@@ -1143,8 +1143,8 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         deltaLAsenescence -= LAexpanded;
         LAexpanded = 0.0;
       }
-      //Increase crown buds to new LA growth
-      crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + 10.0*(deltaLAgrowth[j]/LAexpanded));
+      //Increase crown bud percent due to new leaf area growth
+      crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + (x.paramsGrowth.RGRbud[j] - 1.0)*deltaLAgrowth[j]/x.internalAllocation.leafAreaTarget[j]);
       
       LAdead += deltaLAsenescence;
       LAI_dead[j] = LAdead*N[j]/10000.0;

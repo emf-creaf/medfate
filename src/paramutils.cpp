@@ -1324,6 +1324,18 @@ NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame 
   return(RERfineroot);
 }
 
+NumericVector RGRbudWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector RGRbud = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RGRbud", fillWithGenus);
+  CharacterVector group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
+  for(int c=0;c<RGRbud.size();c++) {
+    if(NumericVector::is_na(RGRbud[c])) {
+      if(group[c]=="Angiosperm") RGRbud[c] = 10.0;
+      else RGRbud[c] = 2.0;
+    }
+  }
+  return(RGRbud);
+}
+
 NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector WoodC = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WoodC", fillWithGenus);
   //Access internal data frame "trait_family_means"
@@ -1671,6 +1683,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "RERleaf") return(LeafRespirationRateWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "RERsapwood") return(SapwoodRespirationRateWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "RERfineroot") return(FinerootRespirationRateWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "RGRbud") return(RGRbudWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "SRsapwood") return(SapwoodSenescenceRateWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Vmax298") return(Vmax298WithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Jmax298") return(Jmax298WithImputation(SP, SpParams, fillWithGenus));

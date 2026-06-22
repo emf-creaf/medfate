@@ -734,6 +734,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector RGRsapwoodmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRsapwoodmax");
   NumericVector RGRcambiummax = speciesNumericParameterFromIndex(SP, SpParams, "RGRcambiummax");
   NumericVector RGRfinerootmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRfinerootmax");
+  NumericVector RGRbud = speciesNumericParameterWithImputation(SP, SpParams, "RGRbud");
   NumericVector SRfineroot = speciesNumericParameterFromIndex(SP, SpParams, "SRfineroot");
 
   double minimumRelativeStarchForGrowth_default = control["minimumRelativeStarchForGrowth"];
@@ -781,6 +782,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["RGRsapwoodmax"] = RGRsapwoodmax,
                                                _["RGRcambiummax"] = RGRcambiummax,
                                                _["RGRfinerootmax"] = RGRfinerootmax,
+                                               _["RGRbud"] = RGRbud,
                                                _["SRsapwood"] = SRsapwood,
                                                _["SRfineroot"] = SRfineroot,
                                                _["RSSG"] = RSSG,

@@ -1,6 +1,7 @@
 # medfate 5.1.0
 * Compilation patch for C++ 20
 + Mistletoe effects on water balance
++ Recovery from defoliation depends on relative growth rate of buds 
 
 # medfate 5.0.0
 * Partial rhizosphere overlap set to default

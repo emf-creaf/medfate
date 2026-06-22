@@ -179,6 +179,7 @@ struct GrowthParams {
   std::vector<double> RGRsapwoodmax;
   std::vector<double> RGRcambiummax;
   std::vector<double> RGRfinerootmax;
+  std::vector<double> RGRbud;
   std::vector<double> SRsapwood;
   std::vector<double> SRfineroot;
   std::vector<double> RSSG;

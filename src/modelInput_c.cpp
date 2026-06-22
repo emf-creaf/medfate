@@ -255,6 +255,11 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
     if(growthDF.containsElementNamed("RGRsapwoodmax")) paramsGrowth.RGRsapwoodmax = Rcpp::as< std::vector<double> >(growthDF["RGRsapwoodmax"]);
     if(growthDF.containsElementNamed("RGRcambiummax")) paramsGrowth.RGRcambiummax = Rcpp::as< std::vector<double> >(growthDF["RGRcambiummax"]);
     if(growthDF.containsElementNamed("RGRfinerootmax")) paramsGrowth.RGRfinerootmax = Rcpp::as< std::vector<double> >(growthDF["RGRfinerootmax"]);
+    if(growthDF.containsElementNamed("RGRbud")) {
+      paramsGrowth.RGRbud = Rcpp::as< std::vector<double> >(growthDF["RGRbud"]);
+    } else {
+      paramsGrowth.RGRbud = std::vector<double>(growthDF.nrows(), 10.0);
+    } 
     if(growthDF.containsElementNamed("SRsapwood")) paramsGrowth.SRsapwood = Rcpp::as< std::vector<double> >(growthDF["SRsapwood"]);
     if(growthDF.containsElementNamed("SRfineroot")) paramsGrowth.SRfineroot = Rcpp::as< std::vector<double> >(growthDF["SRfineroot"]);
     if(growthDF.containsElementNamed("RSSG")) paramsGrowth.RSSG = Rcpp::as< std::vector<double> >(growthDF["RSSG"]);
