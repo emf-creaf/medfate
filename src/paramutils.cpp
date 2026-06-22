@@ -1329,8 +1329,8 @@ NumericVector RGRbudWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   CharacterVector group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
   for(int c=0;c<RGRbud.size();c++) {
     if(NumericVector::is_na(RGRbud[c])) {
-      if(group[c]=="Angiosperm") RGRbud[c] = 10.0;
-      else RGRbud[c] = 2.0;
+      if(group[c]=="Angiosperm") RGRbud[c] = 20.0;
+      else RGRbud[c] = 5.0;
     }
   }
   return(RGRbud);
