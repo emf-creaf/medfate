@@ -2099,6 +2099,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xylemPsiSigmoid_c
+double xylemPsiSigmoid_c(double kxylem, double kxylemmax, double P50, double slope);
+RcppExport SEXP _medfate_xylemPsiSigmoid_c(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP P50SEXP, SEXP slopeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type kxylem(kxylemSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    rcpp_result_gen = Rcpp::wrap(xylemPsiSigmoid_c(kxylem, kxylemmax, P50, slope));
+    return rcpp_result_gen;
+END_RCPP
+}
 // psiCrit_c
 double psiCrit_c(double c, double d, double pCrit);
 RcppExport SEXP _medfate_psiCrit_c(SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
@@ -6199,6 +6213,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_xylemConductance_c", (DL_FUNC) &_medfate_xylemConductance_c, 4},
     {"_medfate_xylemConductanceSigmoid_c", (DL_FUNC) &_medfate_xylemConductanceSigmoid_c, 4},
     {"_medfate_xylemPsi_c", (DL_FUNC) &_medfate_xylemPsi_c, 4},
+    {"_medfate_xylemPsiSigmoid_c", (DL_FUNC) &_medfate_xylemPsiSigmoid_c, 4},
     {"_medfate_psiCrit_c", (DL_FUNC) &_medfate_psiCrit_c, 3},
     {"_medfate_vanGenuchtenConductance_c", (DL_FUNC) &_medfate_vanGenuchtenConductance_c, 4},
     {"_medfate_correctConductanceForViscosity_c", (DL_FUNC) &_medfate_correctConductanceForViscosity_c, 2},

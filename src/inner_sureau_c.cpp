@@ -776,6 +776,7 @@ void innerSureau_c(ModelInput& x,
       double gsNight = networks[c].params.gsNight;
       double slope_gs = networks[c].params.slope_gs;
       double P50_gs = networks[c].params.P50_gs;
+      // double P50_gs_B = 
       double LAI = networks[c].LAI;
 
       int nwhilecomp = 0;

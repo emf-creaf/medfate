@@ -1847,6 +1847,12 @@ hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
 
 #' @rdname hydraulics_conductancefunctions
 #' @keywords internal
+hydraulics_xylemPsiSigmoid <- function(kxylem, kxylemmax, P50, slope) {
+    .Call(`_medfate_xylemPsiSigmoid_c`, kxylem, kxylemmax, P50, slope)
+}
+
+#' @rdname hydraulics_conductancefunctions
+#' @keywords internal
 hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
     .Call(`_medfate_psiCrit_c`, c, d, pCrit)
 }

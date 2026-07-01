@@ -146,6 +146,12 @@ double xylemPsi_c(double kxylem, double kxylemmax, double c, double d) {
   if(psi< -40.0) psi = -40.0; //Minimum value
   return(psi);
 }
+//' @rdname hydraulics_conductancefunctions
+//' @keywords internal
+// [[Rcpp::export("hydraulics_xylemPsiSigmoid")]]
+double xylemPsiSigmoid_c(double kxylem, double kxylemmax, double P50, double slope) {
+  return(P50 + log((kxylemmax/kxylem)-1.0)*(25.0/slope));
+}
 
 //' @rdname hydraulics_conductancefunctions
 //' @keywords internal
