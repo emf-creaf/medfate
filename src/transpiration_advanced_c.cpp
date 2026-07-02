@@ -308,9 +308,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   double defaultWindSpeed = x.control.weather.defaultWindSpeed;
   double thermalCapacityLAI = x.control.advancedWB.thermalCapacityLAI;
   bool multiLayerBalance = x.control.advancedWB.multiLayerBalance;
-  std::string& stemCavitationRecovery = x.control.commonWB.stemCavitationRecovery;
-  std::string& leafCavitationRecovery = x.control.commonWB.leafCavitationRecovery;
-  double cavitationRecoveryMaximumRate = x.control.commonWB.cavitationRecoveryMaximumRate;
   bool sapFluidityVariation = x.control.advancedWB.sapFluidityVariation;
   std::string& lfmcComponent = x.control.fireHazard.lfmcComponent;
 
@@ -1266,11 +1263,11 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     }
 
     double SAmax = 10e4/x.paramsAnatomy.Al2As[c]; //cm2·m-2 of leaf area
-    double r = cavitationRecoveryMaximumRate*std::max(0.0, (x.internalWater.StemSympPsi[c] + 1.5)/1.5);
-    if(stemCavitationRecovery=="rate") {
+    double r = x.control.commonWB.cavitationRecoveryMaximumRate*std::max(0.0, (x.internalWater.StemSympPsi[c] + 1.5)/1.5);
+    if(x.control.commonWB.stemCavitationRecovery=="rate") {
       x.internalWater.StemPLC[c] = std::max(0.0, x.internalWater.StemPLC[c] - (r/SAmax));
     }
-    if(leafCavitationRecovery=="rate") {
+    if(x.control.commonWB.leafCavitationRecovery=="rate") {
       x.internalWater.LeafPLC[c] = std::max(0.0, x.internalWater.LeafPLC[c] - (r/SAmax));
     }
   }

@@ -99,7 +99,7 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{LeafWidth [=1.0]}: Mistletoe leaf width (cm).}
 \item{\code{Tmax_LAI [= 0.134]}: Empirical coefficient relating mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 \item{\code{Tmax_LAIsq [= -0.006]}: Empirical coefficient relating squared mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-\item{\code{Gs_P50 [= -4.0]}: Water potential corresponding to 50\% reduction of mistletoe stomatal conductance.}
+\item{\code{Gs_P50 [= -2.5]}: Water potential corresponding to 50\% reduction of mistletoe stomatal conductance.}
 \item{\code{Gs_slope [= 30]}: Rate of decrease in mistletoe stomatal conductance at Gs_P50.}
 \item{\code{Gsw_AC_slope [= 6]}: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).}
 \item{\code{Vmax298 [= 80]}: Maximum Rubisco carboxylation rate at 298K.}

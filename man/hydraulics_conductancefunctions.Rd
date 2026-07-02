@@ -10,6 +10,7 @@
 \alias{hydraulics_xylemConductance}
 \alias{hydraulics_xylemConductanceSigmoid}
 \alias{hydraulics_xylemPsi}
+\alias{hydraulics_xylemPsiSigmoid}
 \alias{hydraulics_psiCrit}
 \alias{hydraulics_vanGenuchtenConductance}
 \alias{hydraulics_correctConductanceForViscosity}
@@ -29,6 +30,8 @@ hydraulics_xylemConductance(psi, kxylemmax, c, d)
 hydraulics_xylemConductanceSigmoid(psi, kxylemmax, P50, slope)
 
 hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
+
+hydraulics_xylemPsiSigmoid(kxylem, kxylemmax, P50, slope)
 
 hydraulics_psiCrit(c, d, pCrit = 0.001)
 

@@ -13,7 +13,9 @@ double gmin_c(double leafTemperature, double gmin_20,
               double TPhase, double Q10_1, double Q10_2);
 
 double xylemConductance_c(double psi, double kxylemmax, double c, double d);
+double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope);
 double xylemPsi_c(double kxylem, double kxylemmax, double c, double d);
+double xylemPsiSigmoid_c(double kxylem, double kxylemmax, double P50, double slope);
 double psiCrit_c(double c, double d, double pCrit);
 double vanGenuchtenConductance_c(double psi, double krhizomax, double n, double alpha);
 double xylemConductanceSigmoid_c(double psi, double kxylemmax, double P50, double slope);

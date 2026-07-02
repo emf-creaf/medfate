@@ -522,6 +522,10 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
   
   double tcan_day = medfate::NA_DOUBLE;
 
+  // Deactivate PLC recovery during transpiration
+  x.control.commonWB.stemCavitationRecovery = "none";
+  x.control.commonWB.leafCavitationRecovery = "none";
+  
   if(x.control.transpirationMode=="Granier") {
     try {
       auto& BGROWTHres = dynamic_cast<BasicGROWTH_RESULT&>(GROWTHres);

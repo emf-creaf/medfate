@@ -774,9 +774,21 @@ void innerSureau_c(ModelInput& x,
       double fTRBToLeaf = networks[c].params.fTRBToLeaf;
       double Gsw_AC_slope = networks[c].params.Gsw_AC_slope;
       double gsNight = networks[c].params.gsNight;
-      double slope_gs = networks[c].params.slope_gs;
-      double P50_gs = networks[c].params.P50_gs;
-      // double P50_gs_B = 
+      //Use P12 as P50 for baldocchi model
+      //And a relationship with between P50 and slope
+      // double P50_gs_B = xylemPsiSigmoid_c(0.12, 1.0, networks[c].params.P50_gs, networks[c].params.slope_gs); 
+      // double P90_gs_B = -0.7497035 +  1.1525639*P50_gs_B;
+      // double slope_gs_B = -40.20194/std::pow(P90_gs_B,2.0) + -208.65225/P90_gs_B;
+      double P50_gs_B = networks[c].params.P50_gs;
+      double slope_gs_B = networks[c].params.slope_gs;
+      
+      // P12 as P50 for baldocchi model for mistletoe
+      // double mist_P50_gs_B = xylemPsiSigmoid_c(0.12, 1.0, x.control.mistletoe.Gs_P50, x.control.mistletoe.Gs_slope); 
+      // double mist_P90_gs_B = -0.7497035 +  1.1525639*mist_P50_gs_B;
+      // double mist_slope_gs_B = -40.20194/std::pow(mist_P90_gs_B,2.0) + -208.65225/mist_P90_gs_B;
+      double mist_P50_gs_B = x.control.mistletoe.Gs_P50;
+      double mist_slope_gs_B = x.control.mistletoe.Gs_slope;
+      
       double LAI = networks[c].LAI;
 
       int nwhilecomp = 0;
@@ -813,7 +825,7 @@ void innerSureau_c(ModelInput& x,
           //Current leaf water potential (same for sunlit and shade leaves)
           double Psi_LSym = network_n.Psi_LSym;
           // Current stomatal regulation ("Sigmoid")
-          double regul_ini = 1.0 - (1.0 / (1.0 + exp(slope_gs / 25.0 * (Psi_LSym - P50_gs))));
+          double regul_ini = 1.0 - (1.0 / (1.0 + exp(slope_gs_B / 25.0 * (Psi_LSym - P50_gs_B))));
 
           //Leaf temperature for sunlit and shade leaves
           double Elim_SL = network_n.Elim_SL;
@@ -859,7 +871,7 @@ void innerSureau_c(ModelInput& x,
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
 
           // Current stomatal regulation ("Sigmoid")
-          double regul = 1.0 - (1.0 / (1.0 + exp(slope_gs / 25.0 * (Psi_LSym - P50_gs))));
+          double regul = 1.0 - (1.0 / (1.0 + exp(slope_gs_B / 25.0 * (Psi_LSym - P50_gs_B))));
 
           double gs_SL, gs_SH;
           if(stomatalSubmodel=="Jarvis") {
@@ -955,7 +967,7 @@ void innerSureau_c(ModelInput& x,
             double VPD_SH_mist = std::max(0.0,leafVapourPressure_c(Temp_SH_mist, Psi_LSym) - VPair[input.iLayerShade[c]]);
             //Mistletoe photosynthesis and stomatal conductance
             // Current stomatal regulation ("Sigmoid")
-            double regul_mist = 1.0 - (1.0 / (1.0 + exp(x.control.mistletoe.Gs_slope / 25.0 * (Psi_LSym - x.control.mistletoe.Gs_P50))));
+            double regul_mist = 1.0 - (1.0 / (1.0 + exp(mist_slope_gs_B / 25.0 * (Psi_LSym - mist_P50_gs_B))));
             photosynthesisBaldocchi_inner_c(PB_SL,
                                             irradianceToPhotonFlux_c(PAR_SL(c,n), defaultLambda)/LAI_SL(c,n),
                                             Cair[input.iLayerSunlit[c]],
