@@ -407,10 +407,10 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   NumericVector VCleaf_kmax = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams, fillWithGenus);
   NumericVector Gswmax = speciesNumericParameterWithImputation(SP, SpParams, "Gswmax", fillMissingSpParams, fillWithGenus);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams, fillWithGenus);
-  NumericVector Gs_Toptim = speciesNumericParameterWithImputation(SP, SpParams, "Gs_Toptim", fillMissingSpParams, fillWithGenus);
-  NumericVector Gs_Tsens = speciesNumericParameterWithImputation(SP, SpParams, "Gs_Tsens", fillMissingSpParams, fillWithGenus);
-  NumericVector Gs_P50 = speciesNumericParameterWithImputation(SP, SpParams, "Gs_P50", fillMissingSpParams, fillWithGenus);
-  NumericVector Gs_slope = speciesNumericParameterWithImputation(SP, SpParams, "Gs_slope", fillMissingSpParams, fillWithGenus);
+  NumericVector Gsw_Toptim_Jarvis = speciesNumericParameterWithImputation(SP, SpParams, "Gsw_Toptim_Jarvis", fillMissingSpParams, fillWithGenus);
+  NumericVector Gsw_Tsens_Jarvis = speciesNumericParameterWithImputation(SP, SpParams, "Gsw_Tsens_Jarvis", fillMissingSpParams, fillWithGenus);
+  NumericVector Gsw_P50_Baldocchi = speciesNumericParameterWithImputation(SP, SpParams, "Gsw_P50_Baldocchi", fillMissingSpParams, fillWithGenus);
+  NumericVector Gsw_slope_Baldocchi = speciesNumericParameterWithImputation(SP, SpParams, "Gsw_slope_Baldocchi", fillMissingSpParams, fillWithGenus);
   
   NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams, fillWithGenus);
   NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams, fillWithGenus);
@@ -430,8 +430,9 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   NumericVector VCroot_slope = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_slope");
   
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
-  NumericVector Gsw_AC_slope(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("Gsw_AC_slope")) Gsw_AC_slope = speciesNumericParameterFromIndex(SP, SpParams, "Gsw_AC_slope");
+  NumericVector Gsw_AC_slope_Baldocchi(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("Gsw_AC_slope_Baldocchi")) Gsw_AC_slope_Baldocchi = speciesNumericParameterFromIndex(SP, SpParams, "Gsw_AC_slope_Baldocchi");
+  else if(SpParams.containsElementNamed("Gsw_AC_slope")) Gsw_AC_slope_Baldocchi = speciesNumericParameterFromIndex(SP, SpParams, "Gsw_AC_slope");
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -488,12 +489,12 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
     FR_stem[c] = (1.0/VCstem_kmax[c])/(1.0/Plant_kmax[c]);
     FR_root[c] = (1.0/VCroottot_kmax[c])/(1.0/Plant_kmax[c]);
     
-    //Slope of Gsw vs Ac/Cs relationship
-    if(NumericVector::is_na(Gsw_AC_slope[c])) {
+    //Slope of Gsw vs Ac/Cs relationship for Baldocchi
+    if(NumericVector::is_na(Gsw_AC_slope_Baldocchi[c])) {
       NumericVector LP = leafphotosynthesis(2000.0,  386.0, Gswmax[c]/1.6, 25.0, Vmax298[c], Jmax298[c]); 
       double An_max = LP[1] - 0.015*VmaxTemp_c(Vmax298[c], 25.0);
-      Gsw_AC_slope[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
-      Gsw_AC_slope[c] = std::min(10.0, std::max(3.0, Gsw_AC_slope[c]));
+      Gsw_AC_slope_Baldocchi[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
+      Gsw_AC_slope_Baldocchi[c] = std::min(10.0, std::max(3.0, Gsw_AC_slope_Baldocchi[c]));
     }
   }
   
@@ -501,13 +502,13 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   paramsTranspirationdf.push_back(Gswmin, "Gswmin");
   paramsTranspirationdf.push_back(Gswmax, "Gswmax");
   if(stomatalSubmodel=="Jarvis") {
-    paramsTranspirationdf.push_back(Gs_Toptim, "Gs_Toptim");
-    paramsTranspirationdf.push_back(Gs_Tsens, "Gs_Tsens");
+    paramsTranspirationdf.push_back(Gsw_Toptim_Jarvis, "Gsw_Toptim_Jarvis");
+    paramsTranspirationdf.push_back(Gsw_Tsens_Jarvis, "Gsw_Tsens_Jarvis");
   } else {
-    paramsTranspirationdf.push_back(Gsw_AC_slope, "Gsw_AC_slope");
+    paramsTranspirationdf.push_back(Gsw_AC_slope_Baldocchi, "Gsw_AC_slope_Baldocchi");
   }
-  paramsTranspirationdf.push_back(Gs_P50, "Gs_P50");
-  paramsTranspirationdf.push_back(Gs_slope, "Gs_slope");
+  paramsTranspirationdf.push_back(Gsw_P50_Baldocchi, "Gsw_P50_Baldocchi");
+  paramsTranspirationdf.push_back(Gsw_slope_Baldocchi, "Gsw_slope_Baldocchi");
   paramsTranspirationdf.push_back(Vmax298, "Vmax298");
   paramsTranspirationdf.push_back(Jmax298, "Jmax298");
   paramsTranspirationdf.push_back(Kmax_stemxylem, "Kmax_stemxylem");
@@ -1882,8 +1883,8 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'       \itemize{
 //'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 //'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-//'         \item{\code{Gsw_AC_slope}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
-//'         \item{\code{Gs_P50}, \code{Gs_slope}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
+//'         \item{\code{Gsw_AC_slope_Baldocchi}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
+//'         \item{\code{Gsw_P50_Baldocchi}, \code{Gsw_slope_Baldocchi}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
 //'         \item{\code{Vmax298}: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
 //'         \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
 //'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}

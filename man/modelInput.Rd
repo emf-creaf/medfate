@@ -113,8 +113,8 @@ If \code{control$transpirationMode = "Sureau"} columns are:
 \itemize{
 \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
-\item{\code{Gsw_AC_slope}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
-\item{\code{Gs_P50}, \code{Gs_slope}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
+\item{\code{Gsw_AC_slope_Baldocchi}: Slope of the Gsw vs Ac/Cs relationship (see \code{\link{photo_photosynthesisBaldocchi}}).}
+\item{\code{Gsw_P50_Baldocchi}, \code{Gsw_slope_Baldocchi}: Parameters of the curve describing the decrease in stomatal conductance as a function of leaf water potential (sigmoid).}
 \item{\code{Vmax298}: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
 \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
 \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}

@@ -128,11 +128,11 @@ struct TranspirationParams {
   std::vector<double> Exp_Extract;
   std::vector<double> Gswmin;
   std::vector<double> Gswmax;
-  std::vector<double> Gs_Toptim;
-  std::vector<double> Gs_Tsens;
-  std::vector<double> Gsw_AC_slope;
-  std::vector<double> Gs_P50;
-  std::vector<double> Gs_slope;
+  std::vector<double> Gsw_Toptim_Jarvis;
+  std::vector<double> Gsw_Tsens_Jarvis;
+  std::vector<double> Gsw_AC_slope_Baldocchi;
+  std::vector<double> Gsw_P50_Baldocchi;
+  std::vector<double> Gsw_slope_Baldocchi;
   std::vector<double> WUE;
   std::vector<double> WUE_par;
   std::vector<double> WUE_co2;

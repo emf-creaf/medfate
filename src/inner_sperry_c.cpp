@@ -753,11 +753,8 @@ void innerSperry_c(ModelInput& x,
           double gsNight = x.control.sureau.gs_NightFrac*x.paramsTranspiration.Gswmax[c]*1000.0;
           // Current stomatal regulation ("Sigmoid")
           // P12 as P50 for baldocchi model for mistletoe
-          // double mist_P50_gs_B = xylemPsiSigmoid_c(0.12, 1.0, x.control.mistletoe.Gs_P50, x.control.mistletoe.Gs_slope); 
-          // double mist_P90_gs_B = -0.7497035 +  1.1525639*mist_P50_gs_B;
-          // double mist_slope_gs_B = -40.20194/std::pow(mist_P90_gs_B,2.0) + -208.65225/mist_P90_gs_B;
-          double mist_P50_gs_B = x.control.mistletoe.Gs_P50;
-          double mist_slope_gs_B = x.control.mistletoe.Gs_slope;
+          double mist_P50_gs_B = x.control.mistletoe.Gsw_P50_Baldocchi;
+          double mist_slope_gs_B = x.control.mistletoe.Gsw_slope_Baldocchi;
           
           double regul_mist_shade = 1.0 - (1.0 / (1.0 + exp(mist_slope_gs_B / 25.0 * (output.shade_inst.Psi(c,n) - mist_P50_gs_B))));
           double regul_mist_sunlit = 1.0 - (1.0 / (1.0 + exp(mist_slope_gs_B / 25.0 * (output.sunlit_inst.Psi(c,n) - mist_P50_gs_B))));
@@ -769,7 +766,7 @@ void innerSperry_c(ModelInput& x,
                                           x.control.mistletoe.Vmax298,
                                           x.control.mistletoe.Jmax298,
                                           x.control.mistletoe.LeafWidth,
-                                          x.control.mistletoe.Gsw_AC_slope,
+                                          x.control.mistletoe.Gsw_AC_slope_Baldocchi,
                                           gsNight/1000.0);
           double gs_SL_mist = PB_SL.Gsw*1000.0; //From mmol to mol
           gs_SL_mist = std::max(gsNight, gs_SL_mist)*regul_mist_sunlit;
@@ -782,7 +779,7 @@ void innerSperry_c(ModelInput& x,
                                           x.control.mistletoe.Vmax298,
                                           x.control.mistletoe.Jmax298,
                                           x.control.mistletoe.LeafWidth,
-                                          x.control.mistletoe.Gsw_AC_slope,
+                                          x.control.mistletoe.Gsw_AC_slope_Baldocchi,
                                           gsNight/1000.0);
           double gs_SH_mist = PB_SH.Gsw*1000.0; //From mmol to mol
           gs_SH_mist = std::max(gsNight, gs_SH_mist)*regul_mist_shade;

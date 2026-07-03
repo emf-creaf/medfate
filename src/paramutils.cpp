@@ -741,6 +741,18 @@ NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams, bool f
   }
   return(leafEPS);
 }
+NumericVector PtlpWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector Ptlp = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Ptlp", fillWithGenus);
+  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams, fillWithGenus);
+  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
+  for(int c=0;c<Ptlp.size();c++) {
+    if(NumericVector::is_na(Ptlp[c])) {
+      Ptlp[c] = turgorLossPoint_c(leafPI0[c], leafEPS[c]);
+    }
+  }
+  return(Ptlp);
+}
+
 NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector leafAF = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafAF", fillWithGenus);
   //Access internal data frame "trait_family_means"
@@ -957,21 +969,42 @@ NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   }
   return(Gswmin);
 }
-NumericVector GsToptimWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_Toptim = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_Toptim", fillWithGenus);
-  for(int c=0;c<Gs_Toptim.size();c++) {
-    if(NumericVector::is_na(Gs_Toptim[c])) Gs_Toptim[c] = 25.0;
+NumericVector GswToptimJarvisWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector Gsw_Toptim_Jarvis = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gsw_Toptim_Jarvis", fillWithGenus);
+  for(int c=0;c<Gsw_Toptim_Jarvis.size();c++) {
+    if(NumericVector::is_na(Gsw_Toptim_Jarvis[c])) Gsw_Toptim_Jarvis[c] = 25.0;
   }
-  return(Gs_Toptim);
+  return(Gsw_Toptim_Jarvis);
 }
-NumericVector GsTsensWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_Tsens = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_Tsens", fillWithGenus);
-  for(int c=0;c<Gs_Tsens.size();c++) {
-    if(NumericVector::is_na(Gs_Tsens[c])) Gs_Tsens[c] = 17.0;
+NumericVector GswTsensJarvisWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector Gsw_Tsens_Jarvis = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gsw_Tsens_Jarvis", fillWithGenus);
+  for(int c=0;c<Gsw_Tsens_Jarvis.size();c++) {
+    if(NumericVector::is_na(Gsw_Tsens_Jarvis[c])) Gsw_Tsens_Jarvis[c] = 17.0;
   }
-  return(Gs_Tsens);
+  return(Gsw_Tsens_Jarvis);
 }
-
+NumericVector GswP50BaldocchiWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector Gsw_P50_Baldocchi = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gsw_P50_Baldocchi", fillWithGenus);
+  NumericVector Ptlp = PtlpWithImputation(SP, SpParams, fillWithGenus);
+  for(int c=0;c<Gsw_P50_Baldocchi.size();c++) {
+    if(NumericVector::is_na(Gsw_P50_Baldocchi[c])) {
+      Gsw_P50_Baldocchi[c] = Ptlp[c];
+    } 
+  }
+  return(Gsw_P50_Baldocchi);
+}
+NumericVector GswslopeBaldocchiWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector Gsw_slope_Baldocchi = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gsw_slope_Baldocchi", fillWithGenus);
+  NumericVector Gsw_P50_Baldocchi = GswP50BaldocchiWithImputation(SP, SpParams, fillWithGenus);
+  for(int c=0;c<Gsw_slope_Baldocchi.size();c++) {
+    if(NumericVector::is_na(Gsw_slope_Baldocchi[c])) {
+      //Relationship between Gs P90 and Gs slope
+      double P90_gs_B = -0.7497035 +  1.1525639*Gsw_P50_Baldocchi[c];
+      Gsw_slope_Baldocchi[c] = -40.20194/std::pow(P90_gs_B,2.0) + -208.65225/P90_gs_B;
+    }
+  }
+  return(Gsw_slope_Baldocchi);
+}
 NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector Kmax_stemxylem = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Kmax_stemxylem", fillWithGenus);
   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
@@ -1246,32 +1279,7 @@ NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   }
   return(VCroot_P12);
 }
-NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_P50", fillWithGenus);
-  // NumericVector VCleaf_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P50", false);
-  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams, fillWithGenus);
-  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
-  for(int c=0;c<Gs_P50.size();c++) {
-    if(NumericVector::is_na(Gs_P50[c])) {
-      // if(!NumericVector::is_na(VCleaf_P50[c])) {
-      //   Gs_P50[c] = VCleaf_P50[c]; //If P50 leaf is defined in SpParams, use this value for imputation
-      // } else {
-        //Use TLP for imputation
-        double leaf_tlp = turgorLossPoint_c(leafPI0[c], leafEPS[c]);
-        //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
-        Gs_P50[c] = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
-      // }
-    } 
-  }
-  return(Gs_P50);
-}
-NumericVector GsslopeWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_slope = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_slope", fillWithGenus);
-  for(int c=0;c<Gs_slope.size();c++) {
-    if(NumericVector::is_na(Gs_slope[c])) Gs_slope[c] = 30.0;
-  }
-  return(Gs_slope);
-}
+
 NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector RERleaf = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RERleaf", fillWithGenus);
   NumericVector Nleaf = NleafWithImputation(SP, SpParams, fillWithGenus);
@@ -1673,10 +1681,10 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "VCleaf_kmax") return(VCleafkmaxWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Gswmax") return(GswmaxWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Gswmin") return(GswminWithImputation(SP, SpParams, fillWithGenus));
-    else if(parName == "Gs_Toptim") return(GsToptimWithImputation(SP, SpParams, fillWithGenus));
-    else if(parName == "Gs_Tsens") return(GsTsensWithImputation(SP, SpParams, fillWithGenus));
-    else if(parName == "Gs_P50") return(GsP50WithImputation(SP, SpParams, fillWithGenus));
-    else if(parName == "Gs_slope") return(GsslopeWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "Gsw_Toptim_Jarvis") return(GswToptimJarvisWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "Gsw_Tsens_Jarvis") return(GswTsensJarvisWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "Gsw_P50_Baldocchi") return(GswP50BaldocchiWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "Gsw_slope_Baldocchi") return(GswslopeBaldocchiWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Nleaf") return(NleafWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Nsapwood") return(NsapwoodWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Nfineroot") return(NfinerootWithImputation(SP, SpParams, fillWithGenus));

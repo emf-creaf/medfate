@@ -444,11 +444,11 @@ void initSureauParams_inner_c(SureauParams& params, int c,
   params.Q10_1_gmin = control.advancedWB.Q10_1_gmin;
   params.Q10_2_gmin = control.advancedWB.Q10_2_gmin;
   if(control.sureau.stomatalSubmodel=="Jarvis") {
-    params.Tgs_optim = paramsTranspiration.Gs_Toptim[c];
-    params.Tgs_sens = paramsTranspiration.Gs_Tsens[c];
+    params.Tgs_optim = paramsTranspiration.Gsw_Toptim_Jarvis[c];
+    params.Tgs_sens = paramsTranspiration.Gsw_Tsens_Jarvis[c];
     params.JarvisPAR = control.sureau.JarvisPAR;
   } else {
-    params.Gsw_AC_slope = paramsTranspiration.Gsw_AC_slope[c];
+    params.Gsw_AC_slope = paramsTranspiration.Gsw_AC_slope_Baldocchi[c];
   }
   params.fTRBToLeaf = control.sureau.fTRBToLeaf;//ratio of bark area to leaf area
   params.C_SApoInit = control.sureau.C_SApoInit; //Maximum capacitance of the stem apoplasm
@@ -462,8 +462,8 @@ void initSureauParams_inner_c(SureauParams& params, int c,
     params.k_RCApoInit[l] = sapFluidityDay*VCroot_kmax[l];
     params.VGrhizo_kmax[l] = VGrhizo_kmax[l];
   }
-  params.slope_gs = paramsTranspiration.Gs_slope[c];
-  params.P50_gs = paramsTranspiration.Gs_P50[c];
+  params.slope_gs = paramsTranspiration.Gsw_slope_Baldocchi[c];
+  params.P50_gs = paramsTranspiration.Gsw_P50_Baldocchi[c];
   
   //PLANT RELATED PARAMETERS
   double gmin20 = paramsTranspiration.Gswmin[c]*1000.0; //Leaf cuticular transpiration
@@ -776,18 +776,12 @@ void innerSureau_c(ModelInput& x,
       double gsNight = networks[c].params.gsNight;
       //Use P12 as P50 for baldocchi model
       //And a relationship with between P50 and slope
-      // double P50_gs_B = xylemPsiSigmoid_c(0.12, 1.0, networks[c].params.P50_gs, networks[c].params.slope_gs); 
-      // double P90_gs_B = -0.7497035 +  1.1525639*P50_gs_B;
-      // double slope_gs_B = -40.20194/std::pow(P90_gs_B,2.0) + -208.65225/P90_gs_B;
       double P50_gs_B = networks[c].params.P50_gs;
       double slope_gs_B = networks[c].params.slope_gs;
       
       // P12 as P50 for baldocchi model for mistletoe
-      // double mist_P50_gs_B = xylemPsiSigmoid_c(0.12, 1.0, x.control.mistletoe.Gs_P50, x.control.mistletoe.Gs_slope); 
-      // double mist_P90_gs_B = -0.7497035 +  1.1525639*mist_P50_gs_B;
-      // double mist_slope_gs_B = -40.20194/std::pow(mist_P90_gs_B,2.0) + -208.65225/mist_P90_gs_B;
-      double mist_P50_gs_B = x.control.mistletoe.Gs_P50;
-      double mist_slope_gs_B = x.control.mistletoe.Gs_slope;
+      double mist_P50_gs_B = x.control.mistletoe.Gsw_P50_Baldocchi;
+      double mist_slope_gs_B = x.control.mistletoe.Gsw_slope_Baldocchi;
       
       double LAI = networks[c].LAI;
 
@@ -976,7 +970,7 @@ void innerSureau_c(ModelInput& x,
                                             x.control.mistletoe.Vmax298,
                                             x.control.mistletoe.Jmax298,
                                             x.control.mistletoe.LeafWidth,
-                                            x.control.mistletoe.Gsw_AC_slope,
+                                            x.control.mistletoe.Gsw_AC_slope_Baldocchi,
                                             gsNight/1000.0);
             double gs_SL_mist = PB_SL.Gsw*1000.0; //From mmol to mol
             gs_SL_mist = std::max(gsNight, gs_SL_mist)*regul_mist;
@@ -989,7 +983,7 @@ void innerSureau_c(ModelInput& x,
                                             x.control.mistletoe.Vmax298,
                                             x.control.mistletoe.Jmax298,
                                             x.control.mistletoe.LeafWidth,
-                                            x.control.mistletoe.Gsw_AC_slope,
+                                            x.control.mistletoe.Gsw_AC_slope_Baldocchi,
                                             gsNight/1000.0);
             double gs_SH_mist = PB_SH.Gsw*1000.0; //From mmol to mol
             gs_SH_mist = std::max(gsNight, gs_SH_mist)*regul_mist;

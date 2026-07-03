@@ -240,14 +240,14 @@ void initSureauParams_inner(SureauParams &params, int c,
   params.Q10_1_gmin = control["Q10_1_gmin"];
   params.Q10_2_gmin = control["Q10_2_gmin"];
   if(stomatalSubmodel=="Jarvis") {
-    NumericVector Gs_Toptim = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Toptim"]);
-    NumericVector Gs_Tsens = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Tsens"]);
-    params.Tgs_optim = Gs_Toptim[c];
-    params.Tgs_sens = Gs_Tsens[c];
+    NumericVector Gsw_Toptim_Jarvis = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_Toptim_Jarvis"]);
+    NumericVector Gsw_Tsens_Jarvis = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_Tsens_Jarvis"]);
+    params.Tgs_optim = Gsw_Toptim_Jarvis[c];
+    params.Tgs_sens = Gsw_Tsens_Jarvis[c];
     params.JarvisPAR = control["JarvisPAR"];
   } else {
-    NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
-    params.Gsw_AC_slope = Gsw_AC_slope[c];
+    NumericVector Gsw_AC_slope_Baldocchi = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope_Baldocchi"]);
+    params.Gsw_AC_slope = Gsw_AC_slope_Baldocchi[c];
   }
   params.fTRBToLeaf = control["fTRBToLeaf"];//ratio of bark area to leaf area
   params.C_SApoInit = control["C_SApoInit"]; //Maximum capacitance of the stem apoplasm
@@ -263,10 +263,10 @@ void initSureauParams_inner(SureauParams &params, int c,
     params.k_RCApoInit[l] = sapFluidityDay*VCroot_kmax[l];
     params.VGrhizo_kmax[l] = VGrhizo_kmax[l];
   }
-  NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
-  NumericVector Gs_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_slope"]);
-  params.slope_gs = Gs_slope[c];
-  params.P50_gs = Gs_P50[c];
+  NumericVector Gsw_P50_Baldocchi = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_P50_Baldocchi"]);
+  NumericVector Gsw_slope_Baldocchi = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_slope_Baldocchi"]);
+  params.slope_gs = Gsw_slope_Baldocchi[c];
+  params.P50_gs = Gsw_P50_Baldocchi[c];
   
   //PLANT RELATED PARAMETERS
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmax"]);
@@ -346,8 +346,8 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmax"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmin"]);
   
-  NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
-  NumericVector Gs_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_slope"]);
+  // NumericVector Gsw_P50_Baldocchi = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_P50_Baldocchi"]);
+  // NumericVector Gsw_slope_Baldocchi = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_slope_Baldocchi"]);
   
   
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);

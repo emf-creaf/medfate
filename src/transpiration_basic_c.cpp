@@ -317,7 +317,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       rootCrownPsi = averagePsi_c(psiSoil, V_c, Exp_Extract[c], Psi_Extract[c]);
       
       // Determine relative conductance  for mistletoe
-      Klcmist = xylemConductanceSigmoid_c(rootCrownPsi, 1.0, x.control.mistletoe.Gs_P50, x.control.mistletoe.Gs_slope);
+      Klcmist = xylemConductanceSigmoid_c(rootCrownPsi, 1.0, x.control.mistletoe.Gsw_P50_Baldocchi, x.control.mistletoe.Gsw_slope_Baldocchi);
       
       //Limit Mean Kl and mistletoe Kl due to previous cavitation
       if(stemCavitationRecovery!="total") {
@@ -368,7 +368,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       rootCrownPsi = averagePsiPool_c(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
       
       // Determine relative conductance  for mistletoe
-      Klcmist = xylemConductanceSigmoid_c(rootCrownPsi, 1.0, x.control.mistletoe.Gs_P50, x.control.mistletoe.Gs_slope);
+      Klcmist = xylemConductanceSigmoid_c(rootCrownPsi, 1.0, x.control.mistletoe.Gsw_P50_Baldocchi, x.control.mistletoe.Gsw_slope_Baldocchi);
       
       //Limit Mean Kl and mistletoe Kl due to previous cavitation
       if(stemCavitationRecovery!="total") {

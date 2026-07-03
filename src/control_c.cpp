@@ -53,9 +53,12 @@ ControlParameters::ControlParameters(List x) {
     mistletoe.LeafWidth = mistletoeParams["LeafWidth"];
     mistletoe.Tmax_LAI = mistletoeParams["Tmax_LAI"];
     mistletoe.Tmax_LAIsq = mistletoeParams["Tmax_LAIsq"];
-    mistletoe.Gs_P50 = mistletoeParams["Gs_P50"];
-    mistletoe.Gs_slope = mistletoeParams["Gs_slope"];
-    mistletoe.Gsw_AC_slope = mistletoeParams["Gsw_AC_slope"];
+    if(mistletoeParams.containsElementNamed("Gs_50")) mistletoe.Gsw_P50_Baldocchi = mistletoeParams["Gs_P50"];
+    else if(mistletoeParams.containsElementNamed("Gsw_50_Baldocchi")) mistletoe.Gsw_P50_Baldocchi = mistletoeParams["Gsw_P50_Baldocchi"];
+    if(mistletoeParams.containsElementNamed("Gs_slope")) mistletoe.Gsw_slope_Baldocchi = mistletoeParams["Gs_slope"];
+    else if(mistletoeParams.containsElementNamed("Gsw_slope_Baldocchi")) mistletoe.Gsw_slope_Baldocchi = mistletoeParams["Gsw_slope_Baldocchi"];
+    if(mistletoeParams.containsElementNamed("Gsw_AC_slope")) mistletoe.Gsw_AC_slope_Baldocchi = mistletoeParams["Gsw_AC_slope"];
+    else if(mistletoeParams.containsElementNamed("Gsw_AC_slope_Baldocchi")) mistletoe.Gsw_AC_slope_Baldocchi = mistletoeParams["Gsw_AC_slope_Baldocchi"];
     mistletoe.Vmax298 = mistletoeParams["Vmax298"];
     mistletoe.Jmax298 = mistletoeParams["Jmax298"];
   }

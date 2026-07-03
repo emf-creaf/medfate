@@ -92,9 +92,9 @@
 #'             \item{\code{LeafWidth [=1.0]}: Mistletoe leaf width (cm).}
 #'             \item{\code{Tmax_LAI [= 0.134]}: Empirical coefficient relating mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 #'             \item{\code{Tmax_LAIsq [= -0.006]}: Empirical coefficient relating squared mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-#'             \item{\code{Gs_P50 [= -2.5]}: Water potential corresponding to 50% reduction of mistletoe stomatal conductance.}
-#'             \item{\code{Gs_slope [= 30]}: Rate of decrease in mistletoe stomatal conductance at Gs_P50.}
-#'             \item{\code{Gsw_AC_slope [= 6]}: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).}
+#'             \item{\code{Gsw_P50_Baldocchi [= -2.5]}: Water potential corresponding to 50% reduction of mistletoe stomatal conductance.}
+#'             \item{\code{Gsw_slope_Baldocchi [= 30]}: Rate of decrease in mistletoe stomatal conductance at Gs_P50.}
+#'             \item{\code{Gsw_AC_slope_Baldocchi [= 6]}: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).}
 #'             \item{\code{Vmax298 [= 80]}: Maximum Rubisco carboxylation rate at 298K.}
 #'             \item{\code{Jmax298 [= 120]}: Maximum rate of electron transport at 298K.}
 #'           }
@@ -261,7 +261,7 @@ defaultControl<-function(transpirationMode = "Granier",
     lfmcComponent = "fine",
     cavitationInducedDefoliation = TRUE,
     mistletoeParams = list(kPAR = 0.5, g = 0.8, LeafWidth = 1.0, 
-                           Tmax_LAI = 0.134, Tmax_LAIsq = -0.006, Gs_P50 = -2.5, Gs_slope = 30, Gsw_AC_slope = 6,
+                           Tmax_LAI = 0.134, Tmax_LAIsq = -0.006, Gsw_P50_Baldocchi = -2.5, Gsw_slope_Baldocchi = 30, Gsw_AC_slope_Baldocchi = 8,
                            Vmax298 = 80.0, Jmax298 = 120.0),
       
     #spwb with granier

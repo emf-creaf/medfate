@@ -44,9 +44,9 @@ struct MistletoeParams {
   double LeafWidth = 1.0;
   double Tmax_LAI = 0.134;
   double Tmax_LAIsq = -0.006;
-  double Gs_P50 = -2.5;
-  double Gs_slope = 30.0;
-  double Gsw_AC_slope = 6.0;
+  double Gsw_P50_Baldocchi = -2.5;
+  double Gsw_slope_Baldocchi = 30.0;
+  double Gsw_AC_slope_Baldocchi = 8.0;
   double Beta_p =  1.907817;
   double Beta_q = 1.289641;
   double ClumpingIndex = 0.75;
