@@ -3,6 +3,7 @@
 * Mistletoe effects on water balance
 * Recovery from defoliation depends on relative growth rate of buds 
 * Water potential at turgor loss point as estimation of Gsw_P50_Baldocchi
+* SpParamsMED now is filled with package traits4models
 
 # medfate 5.0.0
 * Partial rhizosphere overlap set to default

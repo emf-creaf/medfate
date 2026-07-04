@@ -52,13 +52,31 @@ usethis::use_data(SpParamsDefinition, overwrite = T)
 
 
 # SpParamsMED [MODE A] -------------------------------------------------------------
-SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
-                                              sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
+SpParamsTaxonomy <-as.data.frame(readxl::read_xlsx("data-raw/InitialTaxonomySpParamsMED.xlsx", na = "NA"), stringsAsFactors=FALSE)
+
+SpParamsMED <- traits4models::init_medfate_params(SpParamsTaxonomy, complete_rows = FALSE, sort = FALSE)
+SpParamsMED$IFNcodes <- SpParamsTaxonomy$IFNcodes
+SpParamsMED <- SpParamsMED|>
+  dplyr::relocate(IFNcodes, .before=AcceptedName)
+
 MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/"
 harmonized_allometry_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_allometry_sources/"
 harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources/"
 
+# Filling structural parameters from inventory data -----------------------
+cli::cli_h2("SpParamsMED filling parameters from IFN")
+sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsES/IFN3/soilmod/IFN3_spain_soilmod_WGS84.rds")
+SpParamsMED<- traits4models::fill_medfate_inventory_traits(SpParamsMED, sf_IFN3,
+                                                           progress = TRUE)
+
+cli::cli_h2("SpParamsMED filling parameters from harmonized allometries")
+SpParamsMED <- traits4models::fill_medfate_allometries(SpParamsMED, 
+                                                       harmonized_allometry_path = harmonized_allometry_path)
+cli::cli_h2("SpParamsMED filling parameters from harmonized traits")
+SpParamsMED <- traits4models::fill_medfate_traits(SpParamsMED, harmonized_trait_path = harmonized_trait_path)
+
 # Revised hydraulic/photosynthesis parameters
+cli::cli_h2("Calibration/metamodelling parameters")
 source(paste0(MFWdir, "Metamodelling_TR_WUE/R/utils.R"))
 customParamsSpecies <- get_custom_params(paste0(MFWdir,"Metamodelling_TR_WUE/data-raw"))
 SpParamsMED <- medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
@@ -120,7 +138,15 @@ SpParamsMED[62,tree_all_cols] = SpParamsMED[116,tree_all_cols]
 pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata", "Pinus radiata", "Pinus pinaster")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
+
+# Complete strict (for taxa) -------------------------------------------------------
+cli::cli_h2("SpParamsES completing strict")
+SpParamsMED <- traits4models::complete_medfate_strict(SpParamsMED)
+
+# Complete strict for non-taxa or delete them -------------------------------------------------------
+cli::cli_h2("Cleaning and checking")
 traits4models::check_medfate_params(SpParamsMED)
+
 #Save data
 usethis::use_data(SpParamsMED, overwrite = T)
 
@@ -132,21 +158,15 @@ openxlsx::saveWorkbook(wb,"data-raw/SpParamsMED.xlsx", overwrite=TRUE)
 rm(SpParamsMED)
 
 
-# SpParamsMED [MODE B] -------------------------------------------------------------
-# SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
-#                                               sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
-# usethis::use_data(SpParamsMED, overwrite = T)
-
-
 # Trait family means ------------------------------------------------------
 harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources"
-trait_family_means <- traits4models::get_taxon_trait_means(harmonized_trait_path, taxon_level = "family", 
-                                                           traits =c("WoodDensity", "LeafDensity", "WoodC", 
-                                                                     "LeafPI0", "LeafEPS", "LeafAF",
-                                                                     "Gswmin", "Gswmax",
-                                                                     "Nleaf", "Nsapwood", "Nfineroot",
-                                                                     "Ks", "VCstem_P50", 
-                                                                     "Al2As", "conduit2sapwood")) |>
+trait_family_means <- traits4models::taxon_trait_summary(harmonized_trait_path, taxonomic_level = "family", 
+                                                         traits =c("WoodDensity", "LeafDensity", "WoodC", 
+                                                                    "Ptlp", "LeafPI0", "LeafEPS", "LeafAF",
+                                                                    "Gswmin", "Gswmax",
+                                                                    "Nleaf", "Nsapwood", "Nfineroot",
+                                                                    "Ks", "VCstem_P50", 
+                                                                    "Al2As", "conduit2sapwood")) |>
   dplyr::filter(!is.na(family)) |>
   dplyr::rename("Kmax_stemxylem" = "Ks")
 row.names(trait_family_means) <- trait_family_means$family
@@ -214,8 +234,3 @@ usethis::use_data(exampleobs, overwrite = T)
 
 #Rebuild!!!
 
-
-# Check missing
-apply(SpParamsMED,2, function(x) round(100*sum(is.na(x))/length(x),1))
-apply(SpParamsMED[SpParamsMED$GrowthForm %in% c("Tree","Tree/Shrub"), ],2, function(x) round(100*sum(is.na(x))/length(x),1))
-apply(SpParamsMED[SpParamsMED$GrowthForm %in% c("Shrub","Tree/Shrub"), ],2, function(x) round(100*sum(is.na(x))/length(x),1))
