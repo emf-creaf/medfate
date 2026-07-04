@@ -1199,7 +1199,7 @@ NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P88.size();c++) {
     if(NumericVector::is_na(VCstem_P88[c])) {
-      VCstem_P88[c] = 1.22431*VCstem_P50[c] - 1.11200; //Regression using data from XFT (R2adj = 0.783)
+      VCstem_P88[c] = 1.43637*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.91)
     }
   }
   return(VCstem_P88);
@@ -1209,7 +1209,7 @@ NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P12.size();c++) {
     if(NumericVector::is_na(VCstem_P12[c])) {
-      VCstem_P12[c] = std::min(-0.1, 0.63992*VCstem_P50[c] + 0.31503); //Regression using data from XFT (R2adj = 0.73)
+      VCstem_P12[c] = 0.626191*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.873)
     }
   }
   return(VCstem_P12);
@@ -1217,13 +1217,11 @@ NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
 
 NumericVector VCleafP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector VCleaf_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P50", fillWithGenus);
-  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams, fillWithGenus);
-  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
+  NumericVector Ptlp = PtlpWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P50.size();c++) {
     if(NumericVector::is_na(VCleaf_P50[c])) {
-      double leaf_tlp = turgorLossPoint_c(leafPI0[c], leafEPS[c]);
       //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
-      VCleaf_P50[c] = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
+      VCleaf_P50[c] = std::min(0.0, 0.9944*Ptlp[c] + 0.2486);
     }
   }
   return(VCleaf_P50);
@@ -1233,7 +1231,7 @@ NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P88.size();c++) {
     if(NumericVector::is_na(VCleaf_P88[c])) {
-      VCleaf_P88[c] = 1.22431*VCleaf_P50[c] - 1.11200; //Regression using data from XFT (R2adj = 0.783)
+      VCleaf_P88[c] = 1.28837*VCleaf_P50[c]; //Regression using data from traits4models (R2adj = 0.961)
     }
   }
   return(VCleaf_P88);
@@ -1243,7 +1241,7 @@ NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P12.size();c++) {
     if(NumericVector::is_na(VCleaf_P12[c])) {
-      VCleaf_P12[c] = std::min(-0.1, 0.63992*VCleaf_P50[c] + 0.31503); //Regression using data from XFT (R2adj = 0.73)
+      VCleaf_P12[c] = 0.76389*VCleaf_P50[c]; //Regression using data from traits4models (R2adj = 0.933)
     }
   }
   return(VCleaf_P12);
@@ -1254,7 +1252,7 @@ NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P50.size();c++) {
     if(NumericVector::is_na(VCroot_P50[c])) {
-      VCroot_P50[c] = std::min(-0.25, 0.742*VCstem_P50[c] + 0.4892); //Regression using data from Bartlett et al. 2016
+      VCroot_P50[c] = 0.6270*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.7889)
     }
   }
   return(VCroot_P50);
@@ -1264,17 +1262,17 @@ NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P88.size();c++) {
     if(NumericVector::is_na(VCroot_P88[c])) {
-      VCroot_P88[c] = 1.22431*VCroot_P50[c] - 1.11200; //Regression using data from XFT (R2adj = 0.783)
+      VCroot_P88[c] = 1.57274*VCroot_P50[c]; //Regression using data from traits4models (R2adj = 0.9165)
     }
   }
   return(VCroot_P88);
 }
 NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector VCroot_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P12", false); //If true, can lead to inconsistencies
-  NumericVector VCroot_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
+  NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P12.size();c++) {
     if(NumericVector::is_na(VCroot_P12[c])) {
-      VCroot_P12[c] = std::min(-0.1, 0.63992*VCroot_P50[c] + 0.31503); //Regression using data from XFT (R2adj = 0.73)
+      VCroot_P12[c] = 0.52103*VCroot_P50[c]; //Regression using data from traits4models (R2adj = 0.8815)
     }
   }
   return(VCroot_P12);
@@ -1667,6 +1665,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "StemAF") return(stemAFWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "LeafPI0") return(leafPI0WithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "LeafEPS") return(leafEPSWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "Ptlp") return(PtlpWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "LeafAF") return(leafAFWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Tmax_LAI") return(TmaxLAIWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "Tmax_LAIsq") return(TmaxLAIsqWithImputation(SP, SpParams, fillWithGenus));

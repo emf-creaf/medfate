@@ -51,7 +51,7 @@ usethis::use_data(SpParamsDefinition, overwrite = T)
 
 
 
-# SpParamsMED [MODE A] -------------------------------------------------------------
+# SpParamsMED -------------------------------------------------------------
 SpParamsTaxonomy <-as.data.frame(readxl::read_xlsx("data-raw/InitialTaxonomySpParamsMED.xlsx", na = "NA"), stringsAsFactors=FALSE)
 
 SpParamsMED <- traits4models::init_medfate_params(SpParamsTaxonomy, complete_rows = FALSE, sort = FALSE)
@@ -63,7 +63,7 @@ MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/"
 harmonized_allometry_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_allometry_sources/"
 harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources/"
 
-# Filling structural parameters from inventory data -----------------------
+# Filling structural parameters from inventory data 
 cli::cli_h2("SpParamsMED filling parameters from IFN")
 sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsES/IFN3/soilmod/IFN3_spain_soilmod_WGS84.rds")
 SpParamsMED<- traits4models::fill_medfate_inventory_traits(SpParamsMED, sf_IFN3,
@@ -139,13 +139,13 @@ pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
 
-# Complete strict (for taxa) -------------------------------------------------------
+# Complete strict (for taxa) 
 cli::cli_h2("SpParamsES completing strict")
 SpParamsMED <- traits4models::complete_medfate_strict(SpParamsMED)
 
-# Complete strict for non-taxa or delete them -------------------------------------------------------
+# Complete strict for non-taxa or delete them 
 cli::cli_h2("Cleaning and checking")
-traits4models::check_medfate_params(SpParamsMED)
+traits4models::check_medfate_params(SpParamsMED, check_consistency = TRUE)
 
 #Save data
 usethis::use_data(SpParamsMED, overwrite = T)
