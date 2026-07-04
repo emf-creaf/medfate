@@ -198,7 +198,7 @@ regeneration_recruitment(exampleforest, SpParamsMED, control, 0, 0.25)
 #> 
 #> $seedlingBank
 #>        Species  Percent Age      Z50  Z95 Z100
-#> 1 Quercus ilex 3.005748   1 139.3463 1004   NA
+#> 1 Quercus ilex 3.005748   1 176.6991 1400   NA
 #> 
 #> attr(,"class")
 #> [1] "forest" "list"  
@@ -214,8 +214,8 @@ regeneration_recruitment(exampleforest, SpParamsMED, control, 3, 0.25)
 #> $seedlingBank
 #>             Species  Percent Age      Z50  Z95 Z100
 #> 1  Pinus halepensis 2.473379   1 185.6251 1500   NA
-#> 2      Quercus ilex 3.005748   1 139.3463 1004   NA
-#> 3 Quercus coccifera 5.000000   1 129.0808  902   NA
+#> 2      Quercus ilex 3.005748   1 176.6991 1400   NA
+#> 3 Quercus coccifera 5.000000   1 667.5118 9000   NA
 #> 
 #> attr(,"class")
 #> [1] "forest" "list"  

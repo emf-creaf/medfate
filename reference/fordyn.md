@@ -256,42 +256,42 @@ fd$StandSummary
 #> 2    1              2              2               1               1
 #> 3    2              2              2               1               1
 #>   TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter
-#> 1        552.0000          25.03330           800.0000             37.55000
-#> 2        551.3681          25.09418           804.2767             37.62962
-#> 3        550.7349          25.15483           808.5257             37.70902
+#> 1        552.0000          25.03330                800                37.55
+#> 2        551.3698          24.99465                800                37.55
+#> 3        550.7418          24.95615                800                37.55
 #>   QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead
 #> 1                  24.02949         53.20353       3.750000    0.00000000
-#> 2                  24.07248         52.95094       3.052800    0.03892163
-#> 3                  24.11540         52.70294       3.067691    0.03916609
+#> 2                  24.02465         53.23393       3.843800    0.03865577
+#> 3                  24.01982         53.26427       3.912533    0.03849813
 #>   ShrubCoverDead BasalAreaCut ShrubCoverCut
 #> 1    0.000000000            0             0
-#> 2    0.005284283            0             0
-#> 3    0.004705828            0             0
+#> 2    0.005823228            0             0
+#> 3    0.005955947            0             0
 
 #Tree table by annual steps
 fd$TreeTable
-#>   Step Year Cohort          Species      DBH   Height        N Z50  Z95 Z100
-#> 1    0   NA T1_148 Pinus halepensis 37.55000 800.0000 168.0000 100  300   NA
-#> 2    0   NA T2_168     Quercus ilex 14.60000 660.0000 384.0000 300 1000   NA
-#> 3    1 2001 T1_148 Pinus halepensis 37.62962 804.2767 167.7002 100  300   NA
-#> 4    1 2001 T2_168     Quercus ilex 14.62362 660.7351 383.6680 300 1000   NA
-#> 5    2 2002 T1_148 Pinus halepensis 37.70902 808.5257 167.3997 100  300   NA
-#> 6    2 2002 T2_168     Quercus ilex 14.64746 661.4781 383.3352 300 1000   NA
-#>   Age ObsID
-#> 1  NA  <NA>
-#> 2  NA  <NA>
-#> 3  NA    NA
-#> 4  NA    NA
-#> 5  NA    NA
-#> 6  NA    NA
+#>   Step Year Cohort          Species   DBH Height        N Z50  Z95 Z100 Age
+#> 1    0   NA T1_148 Pinus halepensis 37.55    800 168.0000 100  300   NA  NA
+#> 2    0   NA T2_168     Quercus ilex 14.60    660 384.0000 300 1000   NA  NA
+#> 3    1 2001 T1_148 Pinus halepensis 37.55    800 167.7010 100  300   NA  NA
+#> 4    1 2001 T2_168     Quercus ilex 14.60    660 383.6688 300 1000   NA  NA
+#> 5    2 2002 T1_148 Pinus halepensis 37.55    800 167.4033 100  300   NA  NA
+#> 6    2 2002 T2_168     Quercus ilex 14.60    660 383.3385 300 1000   NA  NA
+#>   ObsID
+#> 1  <NA>
+#> 2  <NA>
+#> 3    NA
+#> 4    NA
+#> 5    NA
+#> 6    NA
 
 #Dead tree table by annual steps
 fd$DeadTreeTable
-#>   Step Year Cohort          Species      DBH   Height         N N_starvation
-#> 1    1 2001 T1_148 Pinus halepensis 37.62962 804.2767 0.2998357            0
-#> 2    1 2001 T2_168     Quercus ilex 14.62362 660.7351 0.3320154            0
-#> 3    2 2002 T1_148 Pinus halepensis 37.70902 808.5257 0.3004794            0
-#> 4    2 2002 T2_168     Quercus ilex 14.64746 661.4781 0.3328175            0
+#>   Step Year Cohort          Species   DBH Height         N N_starvation
+#> 1    1 2001 T1_148 Pinus halepensis 37.55    800 0.2989887            0
+#> 2    1 2001 T2_168     Quercus ilex 14.60    660 0.3312333            0
+#> 3    2 2002 T1_148 Pinus halepensis 37.55    800 0.2977124            0
+#> 4    2 2002 T2_168     Quercus ilex 14.60    660 0.3302594            0
 #>   N_dessication N_burnt N_resprouting_stumps Z50  Z95 Z100 Age ObsID
 #> 1             0       0                    0 100  300   NA  NA    NA
 #> 2             0       0                    0 300 1000   NA  NA    NA

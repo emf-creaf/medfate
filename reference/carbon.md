@@ -185,31 +185,31 @@ x1 <- growthInput(exampleforest, examplesoil, SpParamsMED, control)
 # Estimate carbon compartments
 carbon_carbonCompartments(x1)
 #>   LeafStorageVolume SapwoodStorageVolume LeafStarchMaximumConcentration
-#> 1        26.5664330          14.49487928                       0.925123
-#> 2         4.0406733           5.17625488                       0.925123
-#> 3         0.1679022           0.03056702                       0.925123
+#> 1        39.5098502          20.22759439                       0.925123
+#> 2         1.9930757           4.20844949                       0.925123
+#> 3         0.1889106           0.06116612                       0.925123
 #>   SapwoodStarchMaximumConcentration LeafStarchCapacity SapwoodStarchCapacity
-#> 1                          4.625615         24.5772184            67.0477318
-#> 2                          4.625615          3.7381199            23.9433625
-#> 3                          4.625615          0.1553302             0.1413913
+#> 1                          4.625615         36.5514716            93.5650651
+#> 2                          4.625615          1.8438402            19.4666673
+#> 3                          4.625615          0.1747655             0.2829309
 #>   LeafStructuralBiomass TwigStructuralBiomass TwigLivingStructuralBiomass
-#> 1            165.109206             159.20266                   12.156616
-#> 2            111.289246              89.68486                   33.738323
-#> 3              6.149703               7.92975                    2.983073
+#> 1            235.258940            226.842893                   16.825556
+#> 2             89.575518             72.186379                   26.973382
+#> 3              6.819588              8.793534                    3.285819
 #>   DeadLeafStructuralBiomass DeadTwigStructuralBiomass SapwoodStructuralBiomass
-#> 1                         0                         0              3201.235698
-#> 2                         0                         0              1146.794384
-#> 3                         0                         0                 3.738437
+#> 1                         0                         0               4503.53340
+#> 2                         0                         0                911.94903
+#> 3                         0                         0                 17.02772
 #>   SapwoodLivingStructuralBiomass HeartwoodStructuralBiomass
-#> 1                     244.444357                   6043.964
-#> 2                     431.409712                   2937.490
-#> 3                       1.406353                      0.000
+#> 1                      334.03935                   4624.499
+#> 2                      340.76165                   3123.249
+#> 3                        6.36263                      0.000
 #>   AbovegroundWoodBiomass BelowgroundWoodBiomass FineRootBiomass LabileBiomass
-#> 1            9044.808881             200.390802      23.2157679    199.895416
-#> 2            3822.186517             262.097631      20.9930167    159.784125
-#> 3               2.566923               1.171515       0.7933894      2.872282
+#> 1             8930.18145             197.851192       29.436067    263.758249
+#> 2             3776.25018             258.947653       48.165198    129.402075
+#> 3               11.69174               5.335979        2.640632      4.705064
 #>   StructuralBiomass DeadBiomass TotalLivingBiomass TotalBiomass
-#> 1        3548.76334    6043.964           644.8214   9792.62274
-#> 2        1368.76151    2937.490           757.2144   4466.03540
-#> 3          18.61128       0.000            14.2048     21.48356
+#> 1        4995.07130    4624.499          879.31817   9883.32879
+#> 2        1121.87613    3123.249          634.87782   4374.52701
+#> 3          35.28148       0.000           23.81373     39.98654
 ```

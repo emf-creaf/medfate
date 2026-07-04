@@ -140,13 +140,13 @@ data(SpParamsMED)
 # Aboveground parameters
 forest2aboveground(exampleforest, SpParamsMED)
 #>         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead
-#> T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0
-#> T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0
-#> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03062604   0.03062604        0
+#> T1_148 148 168.0000 37.55    NA 800 0.6534132 1.20935408   1.20935408        0
+#> T2_168 168 384.0000 14.60    NA 660 0.6359169 0.56790878   0.56790878        0
+#> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.04877848   0.04877848        0
 #>        LAI_nocomp LAI_mistletoe Age ObsID
-#> T1_148 1.29720268             0  NA  <NA>
-#> T2_168 1.01943205             0  NA  <NA>
-#> S1_165 0.04412896             0  NA  <NA>
+#> T1_148 1.36735252             0  NA  <NA>
+#> T2_168 0.82052990             0  NA  <NA>
+#> S1_165 0.07406522             0  NA  <NA>
 
 # Example of aboveground parameters taken from a forest
 # described using LAI and crown ratio

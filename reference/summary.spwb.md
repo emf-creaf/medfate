@@ -149,29 +149,29 @@ x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1<-spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 4.69853
+#> Initial plant water content (mm): 6.27649
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.69657
-#> Final soil water content (mm): 275.597
+#> Final plant water content (mm): 6.27316
+#> Final soil water content (mm): 273.017
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00195716
-#> Plant water balance result (mm): -0.00195716
-#> Change in soil water content (mm): -15.278
-#> Soil water balance result (mm): -15.278
+#> Change in plant water content (mm): -0.00332414
+#> Plant water balance result (mm): -0.00332414
+#> Change in soil water content (mm): -17.8575
+#> Soil water balance result (mm): -17.8575
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 83 Net rainfall (mm) 379
-#>   Infiltration (mm) 410 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 246  Mistletoe transpiration (mm) 0
-#>   Plant extraction from soil (mm) 246  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
-#>   Runoff (mm) 21 Deep drainage (mm) 153
+#>   Interception (mm) 98 Net rainfall (mm) 364
+#>   Infiltration (mm) 398 Infiltration excess (mm) 17 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 19  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 285  Mistletoe transpiration (mm) 0
+#>   Plant extraction from soil (mm) 285  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4
+#>   Runoff (mm) 17 Deep drainage (mm) 111
 
 #Queries the tables in 'Soil'
 names(S1$Soil)
@@ -181,18 +181,18 @@ names(S1$Soil)
 #Monthly summary (averages) of soil relative water content
 summary(S1, freq="months",FUN=mean, output="RWC")
 #>                    1         2         3         4   Overall
-#> 2001-01-01 0.9939254 0.9995584 0.9998243 1.0264495 1.0011086
-#> 2001-02-01 0.9402986 0.9897019 0.9954072 0.9924270 0.9798926
-#> 2001-03-01 0.9571058 0.9940808 1.0012082 1.0513934 0.9932410
-#> 2001-04-01 0.8654939 0.9684146 0.9844284 0.9752993 0.9491800
-#> 2001-05-01 0.8944921 0.9767795 0.9884316 0.9762043 0.9604679
-#> 2001-06-01 0.6637610 0.8802067 0.9547155 0.9357566 0.8546670
-#> 2001-07-01 0.8978875 0.9416216 0.9602171 0.9274586 0.9347387
-#> 2001-08-01 0.9165364 0.9816983 0.9892815 0.9796820 0.9681907
-#> 2001-09-01 0.9226619 0.9838782 0.9919070 0.9867313 0.9719187
-#> 2001-10-01 0.9541977 0.9923357 0.9931837 1.0107775 0.9855389
-#> 2001-11-01 0.9480521 0.9914508 1.0062545 1.0920598 0.9956144
-#> 2001-12-01 0.8920457 0.9803679 0.9937509 0.9898497 0.9641402
+#> 2001-01-01 0.9922841 0.9995369 0.9998012 1.0224347 1.0002910
+#> 2001-02-01 0.9237283 0.9891183 0.9949362 0.9913448 0.9755395
+#> 2001-03-01 0.9460333 0.9936564 0.9998809 1.0376451 0.9886978
+#> 2001-04-01 0.8127859 0.9623238 0.9823793 0.9711539 0.9334184
+#> 2001-05-01 0.8430044 0.9648168 0.9692545 0.9552007 0.9364210
+#> 2001-06-01 0.5924615 0.8492615 0.9325044 0.9114991 0.8172349
+#> 2001-07-01 0.8608872 0.8904710 0.9043581 0.8831814 0.8863944
+#> 2001-08-01 0.8700562 0.9425732 0.9085965 0.9059218 0.9129111
+#> 2001-09-01 0.8814436 0.9715974 0.9235005 0.9277876 0.9333788
+#> 2001-10-01 0.9100092 0.9754789 0.9540769 0.9526840 0.9521865
+#> 2001-11-01 0.9335624 0.9901299 0.9969592 1.0725127 0.9872319
+#> 2001-12-01 0.8717185 0.9795592 0.9929063 0.9880597 0.9586453
 
 #Queries the tables in 'Plants'
 names(S1$Plants)
@@ -206,17 +206,17 @@ names(S1$Plants)
 summary(S1, freq="months",FUN=mean, output="PlantStress", 
         bySpecies = TRUE)
 #>            Pinus halepensis Quercus coccifera Quercus ilex
-#> 2001-01-01      0.004784746       0.003156729  0.006375382
-#> 2001-02-01      0.007042305       0.004092019  0.007613252
-#> 2001-03-01      0.006521342       0.003859944  0.007287650
-#> 2001-04-01      0.013636609       0.006245863  0.009694499
-#> 2001-05-01      0.011813046       0.005583891  0.009022613
-#> 2001-06-01      0.144419334       0.022875553  0.019025585
-#> 2001-07-01      0.039841455       0.008460900  0.010286129
-#> 2001-08-01      0.009450930       0.004939353  0.008407302
-#> 2001-09-01      0.008676338       0.004683011  0.008253989
-#> 2001-10-01      0.006310566       0.003809713  0.007276993
-#> 2001-11-01      0.007003698       0.004047575  0.007521592
-#> 2001-12-01      0.010135072       0.005245079  0.008934919
+#> 2001-01-01      0.004834264       0.007521984  0.006402859
+#> 2001-02-01      0.008044764       0.010495855  0.007994937
+#> 2001-03-01      0.007242272       0.009717724  0.007564517
+#> 2001-04-01      0.021103273       0.018316846  0.010984798
+#> 2001-05-01      0.019491910       0.016906520  0.010478273
+#> 2001-06-01      0.249291506       0.069747516  0.024170174
+#> 2001-07-01      0.060761231       0.026505968  0.013319477
+#> 2001-08-01      0.014524272       0.016143190  0.010528102
+#> 2001-09-01      0.012194086       0.013968830  0.009515885
+#> 2001-10-01      0.009350481       0.011775533  0.008598226
+#> 2001-11-01      0.007971032       0.010438269  0.007895301
+#> 2001-12-01      0.011877493       0.013596654  0.009459432
 # }
 ```

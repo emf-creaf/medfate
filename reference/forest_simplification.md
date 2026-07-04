@@ -88,7 +88,7 @@ reduced <- forest_reduceToDominant(exampleforest, SpParamsMED)
 
 # Check that overall LAI does not change
 stand_LAI(exampleforest, SpParamsMED)
-#> [1] 1.584948
+#> [1] 1.826041
 stand_LAI(reduced, SpParamsMED)
-#> [1] 1.584948
+#> [1] 1.826041
 ```

@@ -102,6 +102,7 @@ below:
 | RLD | Fine root length density (density of root length per soil volume) | Numeric | cm/cm3 | FALSE |
 | maxFMC | Maximum fuel moisture (in percent of dry weight) | Numeric | % | FALSE |
 | minFMC | Minimum fuel moisture (in percent of dry weight) | Numeric | % | FALSE |
+| Ptlp | Leaf water potential at turgor loss point | Numeric | Mpa | FALSE |
 | LeafPI0 | Osmotic potential at full turgor of leaves | Numeric | Mpa | FALSE |
 | LeafEPS | Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves | Numeric | Mpa | FALSE |
 | LeafAF | Apoplastic fraction (proportion of water outside the living cells) in leaves | Numeric | % | FALSE |
@@ -130,11 +131,11 @@ below:
 | WUE_vpd | Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis | Numeric | NA | FALSE |
 | Gswmin | Minimum leaf conductance (cuticular+incomplete closure) at 20C | Numeric | mol H2O \* s-1 \* m-2 | FALSE |
 | Gswmax | Maximum stomatal conductance to water vapour | Numeric | mol H2O \* s-1 \* m-2 | FALSE |
-| Gsw_AC_slope | Slope of the Gsw vs Ac/Cs relationship (Baldocchi model). | Numeric | mol H2O \* mmol CO2-1 | FALSE |
-| Gs_Toptim | Temperature corresponding to maximal stomatal conductance | Numeric | Degrees C | FALSE |
-| Gs_Tsens | Stomatal sensitivity to temperature | Numeric | NA | FALSE |
-| Gs_P50 | Water potential causing 50% reduction in stomatal conductance | Numeric | MPa | FALSE |
-| Gs_slope | Rate of decrease in stomatal conductance at Gs_P50 | Numeric | %/MPa | FALSE |
+| Gsw_Toptim_Jarvis | Temperature corresponding to maximal stomatal conductance (Jarvis stomatal model) | Numeric | Degrees C | FALSE |
+| Gsw_Tsens_Jarvis | Stomatal sensitivity to temperature (Jarvis stomatal model) | Numeric | NA | FALSE |
+| Gsw_AC_slope_Baldocchi | Slope of the Gsw vs Ac/Cs relationship (Baldocchi model). | Numeric | mol H2O \* mmol CO2-1 | FALSE |
+| Gsw_P50_Baldocchi | Water potential causing 50% reduction in stomatal conductance (Baldocchi stomatal model) | Numeric | MPa | FALSE |
+| Gsw_slope_Baldocchi | Rate of decrease in stomatal conductance at Gsw_Baldocchi_P50 (Baldocchi stomatal model) | Numeric | %/MPa | FALSE |
 | VCleaf_kmax | Maximum leaf hydraulic conductance | Numeric | mmol H2O \* s-1 \* m-2 \* MPa-1 | FALSE |
 | VCleaf_P12 | 12% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE |
 | VCleaf_P50 | 50% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE |
@@ -166,6 +167,7 @@ below:
 | RGRsapwoodmax | Maximum sapwood growth rate relative to sapwood area (for shrubs) | Numeric | cm2/cm2/day | FALSE |
 | RGRcambiummax | Maximum sapwood growth rate relative to cambium perimeter (for trees) | Numeric | cm2/cm/day | FALSE |
 | RGRfinerootmax | Maximum fineroot relative growth rate | Numeric | g dry/g dry/day | FALSE |
+| RGRbud | Bud (potential leaf area) formation rate per leaf area growth | Numeric | m2/m2 | FALSE |
 | SRsapwood | Sapwood daily senescence rate | Numeric | Day-1 | FALSE |
 | SRfineroot | Fine root daily senescence rate | Numeric | Day-1 | FALSE |
 | RSSG | Minimum relative starch for sapwood growth | Numeric | \[0-1\] | FALSE |
@@ -329,9 +331,9 @@ summary(exampleforest, SpParamsMED)
     ## Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 
     ## Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 
     ## Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 
-    ## LAI (m2/m2) total: 1.5849476  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0  mistletoe: 0 
-    ## Fuel loading (kg/m2) total: 0.5395798  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0 
-    ## PAR ground (%): 43.6361701  SWR ground (%): 54.1027977
+    ## LAI (m2/m2) total: 1.8260413  adult trees: 1.7772629  saplings: 0  shrubs: 0.0487785  herbs: 0  mistletoe: 0 
+    ## Fuel loading (kg/m2) total: 0.63975  adult trees: 0.6241368  saplings: 0  shrubs: 0.0156131  herbs: 0 
+    ## PAR ground (%): 38.912485  SWR ground (%): 49.7006648
 
 Function [`plot()`](https://rdrr.io/r/graphics/plot.default.html) for
 `forest` objects allows displaying vertical profiles of several forest

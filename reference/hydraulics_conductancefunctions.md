@@ -20,6 +20,8 @@ hydraulics_xylemConductanceSigmoid(psi, kxylemmax, P50, slope)
 
 hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
 
+hydraulics_xylemPsiSigmoid(kxylem, kxylemmax, P50, slope)
+
 hydraulics_psiCrit(c, d, pCrit = 0.001)
 
 hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)

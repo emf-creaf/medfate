@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-06-18</h4>
+            <h4 data-toc-skip class="date">2026-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -232,14 +232,14 @@ that we already know, but with an additional columns that describes the
 estimated initial amount of <em>sapwood area</em>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">above</span></span></code></pre></div>
-<pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR          SA   LAI_live</span></span>
-<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 383.4520992 0.84874773</span></span>
-<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  47.0072886 0.70557382</span></span>
-<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   0.9753929 0.03062604</span></span>
+<pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR         SA   LAI_live</span></span>
+<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6534132 546.368896 1.20935408</span></span>
+<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6359169  37.835661 0.56790878</span></span>
+<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   2.671156 0.04877848</span></span>
 <span><span class="co">##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe    Loading Age ObsID</span></span>
-<span><span class="co">## T1_148   0.84874773        0 1.29720268             0 0.32447403  NA  &lt;NA&gt;</span></span>
-<span><span class="co">## T2_168   0.70557382        0 1.01943205             0 0.20102636  NA  &lt;NA&gt;</span></span>
-<span><span class="co">## S1_165   0.03062604        0 0.04412896             0 0.01407945  NA  &lt;NA&gt;</span></span></code></pre>
+<span><span class="co">## T1_148   1.20935408        0 1.36735252             0 0.46233288  NA  &lt;NA&gt;</span></span>
+<span><span class="co">## T2_168   0.56790878        0 0.82052990             0 0.16180395  NA  &lt;NA&gt;</span></span>
+<span><span class="co">## S1_165   0.04877848        0 0.07406522             0 0.01561312  NA  &lt;NA&gt;</span></span></code></pre>
 <p>Elements starting with <code>params*</code> contain cohort-specific
 model parameters. Some of them were already presented in previous
 vignettes (<a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html"><em>Basic
@@ -249,35 +249,31 @@ parameters for the forest growth model are
 <code>paramsGrowth</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></span></code></pre></div>
-<pre><code><span><span class="co">##           RERleaf RERsapwood  RERfineroot CCleaf CCsapwood CCfineroot</span></span>
-<span><span class="co">## T1_148 0.01210607   5.15e-05 0.0009610199 1.5905      1.47        1.3</span></span>
-<span><span class="co">## T2_168 0.01757808   5.15e-05 0.0072846640 1.4300      1.47        1.3</span></span>
-<span><span class="co">## S1_165 0.02647746   5.15e-05 0.0072846640 1.5320      1.47        1.3</span></span>
-<span><span class="co">##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood</span></span>
-<span><span class="co">## T1_148       0.09            NA   0.002628095            0.1  0.000135</span></span>
-<span><span class="co">## T2_168       0.09            NA   0.002500000            0.1  0.000135</span></span>
-<span><span class="co">## S1_165       0.09         0.002            NA            0.1  0.000135</span></span>
-<span><span class="co">##         SRfineroot      RSSG fHDmin fHDmax     WoodC</span></span>
-<span><span class="co">## T1_148 0.001897231 0.3725000     80    160 0.4979943</span></span>
-<span><span class="co">## T2_168 0.001897231 0.9500000     40    100 0.4740096</span></span>
-<span><span class="co">## S1_165 0.001897231 0.7804035     NA     NA 0.4749178</span></span></code></pre>
+<pre><code><span><span class="co">##            RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot</span></span>
+<span><span class="co">## T1_148 0.009615236   5.15e-05 0.000601144  1.500      1.47        1.3</span></span>
+<span><span class="co">## T2_168 0.012589729   5.15e-05 0.007229920  1.430      1.47        1.3</span></span>
+<span><span class="co">## S1_165 0.009892030   5.15e-05 0.012876076  1.532      1.47        1.3</span></span>
+<span><span class="co">##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax RGRbud SRsapwood</span></span>
+<span><span class="co">## T1_148       0.09            NA   0.002628095            0.1      5  0.000135</span></span>
+<span><span class="co">## T2_168       0.09            NA   0.002500000            0.1     20  0.000135</span></span>
+<span><span class="co">## S1_165       0.09         0.002            NA            0.1     20  0.000135</span></span>
+<span><span class="co">##         SRfineroot RSSG fHDmin fHDmax     WoodC</span></span>
+<span><span class="co">## T1_148 0.001897231 1.35     80    160 0.4981000</span></span>
+<span><span class="co">## T2_168 0.001897231 3.02     40    140 0.4751000</span></span>
+<span><span class="co">## S1_165 0.001897231 0.50     NA     NA 0.4752026</span></span></code></pre>
 <p>which includes maximum growth rates, senescence rates and maintenance
 respiration rages. Another important set of parameters is given in
 <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsAllometries</span></span></code></pre></div>
-<pre><code><span><span class="co">##              Afbt     Bfbt        Cfbt      Aash     Bash      Absh      Bbsh</span></span>
-<span><span class="co">## T1_148 0.07607828 1.462411 -0.02280106        NA       NA        NA        NA</span></span>
-<span><span class="co">## T2_168 0.07848713 1.497670 -0.01470000 1.8574862 1.885548 0.5238830 0.7337293</span></span>
-<span><span class="co">## S1_165         NA       NA          NA 0.1305509 2.408443 0.5147731 0.5311554</span></span>
-<span><span class="co">##        BTsh     Acr   B1cr     B2cr         B3cr     C1cr     C2cr       Acw</span></span>
-<span><span class="co">## T1_148   NA 1.99500 -0.649 -0.02000 -0.000120000 -0.00400 -0.15900 0.6415296</span></span>
-<span><span class="co">## T2_168    2 1.98539 -0.552 -0.01386 -0.000110736 -0.00685 -0.20101 0.5681897</span></span>
-<span><span class="co">## S1_165    2      NA     NA       NA           NA       NA       NA        NA</span></span>
-<span><span class="co">##           Bcw       Abt       Bbt</span></span>
-<span><span class="co">## T1_148 0.7310 0.5535741 1.1848613</span></span>
-<span><span class="co">## T2_168 0.7974 0.5622245 0.9626839</span></span>
-<span><span class="co">## S1_165     NA        NA        NA</span></span></code></pre>
+<pre><code><span><span class="co">##          Afbt   Bfbt    Cfbt      Aash     Bash      Absh      Bbsh BTsh   Acr</span></span>
+<span><span class="co">## T1_148 0.0527 1.5782 -0.0066        NA       NA        NA        NA   NA 1.995</span></span>
+<span><span class="co">## T2_168 0.1300 1.2285 -0.0147 1.8574862 1.885548 0.5238830 0.7337293   NA 1.506</span></span>
+<span><span class="co">## S1_165     NA     NA      NA 0.1305509 2.408443 0.5147731 0.5311554    2    NA</span></span>
+<span><span class="co">##          B1cr   B2cr     B3cr   C1cr   C2cr       Acw   Bcw       Abt       Bbt</span></span>
+<span><span class="co">## T1_148 -0.649 -0.020 -0.00012 -0.004 -0.159 0.6415296 0.731 0.5535741 1.1848613</span></span>
+<span><span class="co">## T2_168 -0.706 -0.078  0.00018 -0.007  0.000 0.8390000 0.735 0.5622245 0.9626839</span></span>
+<span><span class="co">## S1_165     NA     NA       NA     NA     NA        NA    NA        NA        NA</span></span></code></pre>
 <p>Note that in the previous models, allometries were already used to
 estimate above-ground structural parameters, but these were static
 during simulations.</p>
@@ -287,17 +283,17 @@ storage carbon levels can be seen in <code>internalCarbon</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">internalCarbon</span></span></code></pre></div>
 <pre><code><span><span class="co">##        sugarLeaf starchLeaf sugarSapwood starchSapwood</span></span>
-<span><span class="co">## T1_148 0.4029239 0.00925123    0.5738487      3.227198</span></span>
-<span><span class="co">## T2_168 0.3585751 0.00925123    1.0741383      3.100817</span></span>
-<span><span class="co">## S1_165 0.7223526 0.00925123    0.2857655      2.654773</span></span></code></pre>
+<span><span class="co">## T1_148 0.2571624 0.00925123    0.5607041      3.227198</span></span>
+<span><span class="co">## T2_168 0.5992700 0.00925123    1.0556603      3.100817</span></span>
+<span><span class="co">## S1_165 0.7223526 0.00925123    0.7825810      2.654773</span></span></code></pre>
 <p>and <code>internalAllocation</code> stores the carbon allocation
 targets:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">internalAllocation</span></span></code></pre></div>
 <pre><code><span><span class="co">##        allocationTarget leafAreaTarget sapwoodAreaTarget fineRootBiomassTarget</span></span>
-<span><span class="co">## T1_148         1317.523     50.5206982       383.4520992            1381.89095</span></span>
-<span><span class="co">## T2_168         3908.823     18.3743183        47.0072886             546.69314</span></span>
-<span><span class="co">## S1_165         4189.325      0.4086238         0.9753929              10.58569</span></span>
+<span><span class="co">## T1_148         1317.523     71.9853618        546.368896            1752.14684</span></span>
+<span><span class="co">## T2_168         3908.823     14.7892912         37.835661            1254.30202</span></span>
+<span><span class="co">## S1_165         2436.475      0.6508203          2.671156              35.23227</span></span>
 <span><span class="co">##        crownBudPercent</span></span>
 <span><span class="co">## T1_148             100</span></span>
 <span><span class="co">## T2_168             100</span></span>
@@ -316,36 +312,36 @@ model sink limitations on wood formation.</p>
 <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 14280.1</span></span>
-<span><span class="co">## Initial plant water content (mm): 4.69853</span></span>
+<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 14297.8</span></span>
+<span><span class="co">## Initial plant water content (mm): 6.27649</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant cohort biomass (g/m2): 14572.8</span></span>
-<span><span class="co">## Change in plant cohort biomass (g/m2): 292.668</span></span>
+<span><span class="co">## Final plant cohort biomass (g/m2): 14521.6</span></span>
+<span><span class="co">## Change in plant cohort biomass (g/m2): 223.791</span></span>
 <span><span class="co">## Plant biomass balance result (g/m2): 0</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 65 Labile balance (g/m2) 87</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 151 Mortality loss (g/m2) 22</span></span>
-<span><span class="co">## Final plant water content (mm): 4.69904</span></span>
-<span><span class="co">## Final soil water content (mm): 275.691</span></span>
+<span><span class="co">##   Structural balance (g/m2) -6 Labile balance (g/m2) 121</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 115 Mortality loss (g/m2) 22</span></span>
+<span><span class="co">## Final plant water content (mm): 6.26568</span></span>
+<span><span class="co">## Final soil water content (mm): 273.01</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.000511943</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00152354</span></span>
-<span><span class="co">## Change in soil water content (mm): -15.1837</span></span>
-<span><span class="co">## Soil water balance result (mm): -15.184</span></span>
+<span><span class="co">## Change in plant water content (mm): -0.0108039</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00251744</span></span>
+<span><span class="co">## Change in soil water content (mm): -17.8654</span></span>
+<span><span class="co">## Soil water balance result (mm): -17.8629</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
-<span><span class="co">##   Interception (mm) 83 Net rainfall (mm) 379</span></span>
-<span><span class="co">##   Infiltration (mm) 409 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 244  Mistletoe transpiration (mm) 0</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 244  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
-<span><span class="co">##   Runoff (mm) 21 Deep drainage (mm) 154</span></span></code></pre>
+<span><span class="co">##   Interception (mm) 98 Net rainfall (mm) 365</span></span>
+<span><span class="co">##   Infiltration (mm) 398 Infiltration excess (mm) 18 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
+<span><span class="co">##   Soil evaporation (mm) 20  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 284  Mistletoe transpiration (mm) 0</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 284  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4</span></span>
+<span><span class="co">##   Runoff (mm) 18 Deep drainage (mm) 112</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -392,16 +388,16 @@ form of data frame:</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 365 × 53</span></span></span>
 <span><span class="co">##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494;">[L/m^2]</span>       <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^2]</span> <span style="color: #949494;">[L/m^</span>… <span style="color: #949494;">[L/m^2]</span>  <span style="color: #949494;">[L/m^2]</span>      <span style="color: #949494;">[L/m^2]</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01   0.883          4.87    4.87   0      3.60      0           3.60 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2001-01-02   1.64           2.50    2.50   0      1.25      0           1.25 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01   0.883          4.87    4.87   0      3.30      0           3.30 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2001-01-02   1.64           2.50    2.50   0      0.972     0           0.972</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 2001-01-03   1.30           0       0      0      0         0           0    </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2001-01-04   0.569          5.80    5.80   0      4.54      0           4.54 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2001-01-05   1.68           1.88    1.88   0      0.822     0           0.822</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2001-01-06   1.21          13.4    13.4    0     11.9       0          11.9  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2001-01-04   0.569          5.80    5.80   0      4.24      0           4.24 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2001-01-05   1.68           1.88    1.88   0      0.733     0           0.733</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2001-01-06   1.21          13.4    13.4    0     11.6       0          11.6  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 2001-01-07   0.637          5.38    0      5.38   0         0           0    </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 2001-01-08   0.832          0       0      0      0         0           0    </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09   1.98           0       0      0      0         0           0    </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10   0.829          5.12    5.12   0      3.85      5.38        9.23 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10   0.829          5.12    5.12   0      3.55      5.38        8.92 </span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 355 more rows</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 45 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],</span></span></span>
@@ -490,15 +486,14 @@ relationship:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.2875399 -42.3267756   0.2875399  42.3267756   0.9954836 </span></span>
-<span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.5733803   0.4545503</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></span></code></pre>
+<pre><code><span><span class="co">##        n     Bias Bias.rel      MAE  MAE.rel        r      NSE  NSE.abs </span></span>
+<span><span class="co">##       12        0      NaN        0      NaN       NA      NaN      NaN</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
 together:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-28-1.png" class="r-plt" alt="" width="672"></p>
@@ -506,7 +501,7 @@ together:</p>
 resolution. For convenience, function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> also
 accepts an observed data frame as second argument, which allows
 performing model evaluation interactively:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
