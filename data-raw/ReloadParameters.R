@@ -112,10 +112,7 @@ SpParamsMED <- medfate::modifySpParams(SpParamsMED, resproutingParamsSpecies, su
 SpParamsMED <- traits4models::fill_medfate_allometries(SpParamsMED, 
                                                        harmonized_allometry_path = harmonized_allometry_path,
                                                        responses = "BarkThickness")
-# Add maturation diameter parameters from harmonized traits
-SpParamsMED <- traits4models::fill_medfate_traits(SpParamsMED, harmonized_trait_path = harmonized_trait_path,
-                                                  parameters = "SeedProductionDiameter")
-  
+
 # Manual tuning
 tree_all_cols = 31:43
 names(SpParamsMED)[tree_all_cols] # CHECK!
@@ -173,16 +170,6 @@ row.names(trait_family_means) <- trait_family_means$family
 trait_family_means <- trait_family_means |> dplyr::select(-family)
 write.table(trait_family_means, "data-raw/trait_family_means.csv", sep=";")
 usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
-
-
-# Modify exampleforest (after rebuilding) ---------------------------------
-data(exampleforest)
-data("SpParamsMED")
-exampleforest$treeData$Species[1] = "Pinus halepensis"
-exampleforest$treeData$Species[2] = "Quercus ilex"
-exampleforest$shrubData$Species[1] = "Quercus coccifera"
-usethis::use_data(exampleforest, overwrite = T)
-##Rebuild!
 
 
 # Builds a fake observed data set from simulation results -------------------------------
