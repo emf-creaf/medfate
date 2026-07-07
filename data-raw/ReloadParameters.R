@@ -163,7 +163,7 @@ trait_family_means <- traits4models::taxon_trait_summary(harmonized_trait_path, 
                                                                     "Gswmin", "Gswmax",
                                                                     "Nleaf", "Nsapwood", "Nfineroot",
                                                                     "Ks", "VCstem_P50", 
-                                                                    "Al2As", "conduit2sapwood")) |>
+                                                                    "Al2As", "conduit2sapwood", "SRL")) |>
   dplyr::filter(!is.na(family)) |>
   dplyr::rename("Kmax_stemxylem" = "Ks")
 row.names(trait_family_means) <- trait_family_means$family

@@ -618,7 +618,20 @@ NumericVector fineRootDensityWithImputation(IntegerVector SP, DataFrame SpParams
 }
 NumericVector specificRootLengthWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector specificRootLength = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SRL", fillWithGenus);
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_specific_root_length = TFM["SRL"];
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<specificRootLength.size();c++) {
+    if(NumericVector::is_na(specificRootLength[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          specificRootLength[c] = fam_specific_root_length[i];
+        }
+      }
+    }
     if(NumericVector::is_na(specificRootLength[c])) {
       specificRootLength[c] = 3870.0;
     }
@@ -1177,7 +1190,7 @@ NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P88.size();c++) {
     if(NumericVector::is_na(VCstem_P88[c])) {
-      VCstem_P88[c] = 1.43637*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.91)
+      VCstem_P88[c] = 1.43637*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.633)
     }
   }
   return(VCstem_P88);
@@ -1187,7 +1200,7 @@ NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P12.size();c++) {
     if(NumericVector::is_na(VCstem_P12[c])) {
-      VCstem_P12[c] = 0.626191*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.873)
+      VCstem_P12[c] = 0.626191*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.724)
     }
   }
   return(VCstem_P12);
@@ -1209,7 +1222,7 @@ NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P88.size();c++) {
     if(NumericVector::is_na(VCleaf_P88[c])) {
-      VCleaf_P88[c] = 1.28837*VCleaf_P50[c]; //Regression using data from traits4models (R2adj = 0.961)
+      VCleaf_P88[c] = 1.28837*VCleaf_P50[c]; //Regression using data from traits4models (R2adj = 0.765)
     }
   }
   return(VCleaf_P88);
@@ -1219,7 +1232,7 @@ NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P12.size();c++) {
     if(NumericVector::is_na(VCleaf_P12[c])) {
-      VCleaf_P12[c] = 0.76389*VCleaf_P50[c]; //Regression using data from traits4models (R2adj = 0.933)
+      VCleaf_P12[c] = 0.76389*VCleaf_P50[c]; //Regression using data from traits4models (R2adj = 0.766)
     }
   }
   return(VCleaf_P12);
@@ -1230,7 +1243,7 @@ NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P50.size();c++) {
     if(NumericVector::is_na(VCroot_P50[c])) {
-      VCroot_P50[c] = 0.6270*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.7889)
+      VCroot_P50[c] = 0.6270*VCstem_P50[c]; //Regression using data from traits4models (R2adj = 0.499)
     }
   }
   return(VCroot_P50);
@@ -1240,7 +1253,7 @@ NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P88.size();c++) {
     if(NumericVector::is_na(VCroot_P88[c])) {
-      VCroot_P88[c] = 1.57274*VCroot_P50[c]; //Regression using data from traits4models (R2adj = 0.9165)
+      VCroot_P88[c] = 1.57274*VCroot_P50[c]; //Regression using data from traits4models (R2adj = 0.742)
     }
   }
   return(VCroot_P88);
@@ -1250,7 +1263,7 @@ NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P12.size();c++) {
     if(NumericVector::is_na(VCroot_P12[c])) {
-      VCroot_P12[c] = 0.52103*VCroot_P50[c]; //Regression using data from traits4models (R2adj = 0.8815)
+      VCroot_P12[c] = 0.52103*VCroot_P50[c]; //Regression using data from traits4models (R2adj = 0.804)
     }
   }
   return(VCroot_P12);
