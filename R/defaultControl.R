@@ -93,7 +93,7 @@
 #'             \item{\code{Tmax_LAI [= 0.134]}: Empirical coefficient relating mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 #'             \item{\code{Tmax_LAIsq [= -0.006]}: Empirical coefficient relating squared mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 #'             \item{\code{Gsw_P50_Baldocchi [= -2.5]}: Water potential corresponding to 50% reduction of mistletoe stomatal conductance.}
-#'             \item{\code{Gsw_slope_Baldocchi [= 30]}: Rate of decrease in mistletoe stomatal conductance at Gs_P50.}
+#'             \item{\code{Gsw_slope_Baldocchi [= 30]}: Rate of decrease in mistletoe stomatal conductance at Gs_P50_Baldocchi.}
 #'             \item{\code{Gsw_AC_slope_Baldocchi [= 6]}: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).}
 #'             \item{\code{Vmax298 [= 80]}: Maximum Rubisco carboxylation rate at 298K.}
 #'             \item{\code{Jmax298 [= 120]}: Maximum rate of electron transport at 298K.}

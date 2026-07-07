@@ -158,7 +158,7 @@ rm(SpParamsMED)
 # Trait family means ------------------------------------------------------
 harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources"
 trait_family_means <- traits4models::taxon_trait_summary(harmonized_trait_path, taxonomic_level = "family", 
-                                                         traits =c("WoodDensity", "LeafDensity", "WoodC", 
+                                                         traits =c("WoodDensity", "LeafDensity", "FineRootDensity", "WoodC", 
                                                                     "Ptlp", "LeafPI0", "LeafEPS", "LeafAF",
                                                                     "Gswmin", "Gswmax",
                                                                     "Nleaf", "Nsapwood", "Nfineroot",
