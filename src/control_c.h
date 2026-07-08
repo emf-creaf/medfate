@@ -56,6 +56,12 @@ struct MistletoeParams {
   double Jmax298 = 120.0;
 };
 
+struct DefoliationParams {
+  bool cavitationInducedDefoliation = true;
+  double criticalLeafPLC = 0.88;
+  double cvLeafP50 = 10.0;
+};
+
 struct CommonWBParams {
   double verticalLayerSize;
   bool bareSoilEvaporation;
@@ -65,7 +71,6 @@ struct CommonWBParams {
   std::string stemCavitationRecovery;
   std::string leafCavitationRecovery;
   bool segmentedXylemVulnerability;
-  bool cavitationInducedDefoliation;
   double cavitationRecoveryMaximumRate;
   bool truncateRootDistribution;
   double fullRhizosphereOverlapConductivity;
@@ -219,6 +224,7 @@ struct ControlParameters {
   SperryWBParams sperry;
   SureauWBParams sureau;
   MistletoeParams mistletoe;
+  DefoliationParams defoliation;
   FireHazardParams fireHazard;
   GrowthControlParams growth;
   MortalityParams mortality;

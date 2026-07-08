@@ -1054,8 +1054,8 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
       if(PLCinc>0.0) {
-        double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j], 0.88, 10);
-        double BranchPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], 0.88, 10);
+        double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50);
+        double BranchPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50);
         //Force leaf defoliation following branch dessication
         LeafPDEF = std::max(LeafPDEF, BranchPDEF);
         //Senescence effects

@@ -10,16 +10,16 @@ hydraulics_proportionDefoliationSigmoid(
   psiLeaf,
   P50,
   slope,
-  PLC_crit = 0.88,
-  P50_cv = 10
+  criticalLeafPLC = 0.88,
+  cvLeafP50 = 10
 )
 
 hydraulics_proportionDefoliationWeibull(
   psiLeaf,
   c,
   d,
-  PLC_crit = 0.88,
-  P50_cv = 10
+  criticalLeafPLC = 0.88,
+  cvLeafP50 = 10
 )
 }
 \arguments{
@@ -27,9 +27,9 @@ hydraulics_proportionDefoliationWeibull(
 
 \item{P50, slope}{Parameters of the Sigmoid function.}
 
-\item{PLC_crit}{Critical leaf PLC corresponding to defoliation}
+\item{criticalLeafPLC}{Critical leaf PLC corresponding to defoliation}
 
-\item{P50_cv}{Coefficient of variation (in percent) of leaf P50, to describe the
+\item{cvLeafP50}{Coefficient of variation (in percent) of leaf P50, to describe the
 variability in hydraulic vulnerability across crown leaves.}
 
 \item{c, d}{Parameters of the Weibull function.}
@@ -43,9 +43,9 @@ Functions to calculate the proportion of crown defoliation due to hydraulic disc
 \details{
 The functions assume that crowns are made of a population of leaves whose
 hydraulic vulnerability (i.e. the water potential corresponding to 50\% loss of conductance)
-follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (\code{P50_cv}).
+follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (\code{cvLeafP50}).
 The slope parameter (or the c exponent in the case of a Weibull function) is considered constant.
-Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (\code{PLC_crit}).
+Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (\code{criticalLeafPLC}).
 }
 \seealso{
 \code{\link{hydraulics_conductancefunctions}}

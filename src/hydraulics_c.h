@@ -44,10 +44,10 @@ double E2psiTwoElements_c(double E, double psiSoil, double krhizomax, double kxy
 
 
 double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, 
-                                      double PLC_crit, double P50_cv);
+                                      double criticalLeafPLC, double cvLeafP50);
 
 double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, 
-                                      double PLC_crit, double P50_cv);
+                                      double criticalLeafPLC, double cvLeafP50);
 
 std::vector<double> rootxylemConductanceProportions_c(const std::vector<double>& L, const std::vector<double>& V);
 

@@ -90,7 +90,6 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 }
 }
 \item{\code{cavitationRecoveryMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
-\item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (88 \% PLC will correspond to 50 \% defoliation).}
 \item{\code{lfmcComponent [= "fine"]}: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).}
 \item{\code{mistletoeParams}: A list with the following elements:
 \itemize{
@@ -104,6 +103,13 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{Gsw_AC_slope_Baldocchi [= 6]}: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).}
 \item{\code{Vmax298 [= 80]}: Maximum Rubisco carboxylation rate at 298K.}
 \item{\code{Jmax298 [= 120]}: Maximum rate of electron transport at 298K.}
+}
+}
+\item{\code{defoliationParams}: A list with the following elements:
+\itemize{
+\item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (88 \% PLC will correspond to 50 \% defoliation).}
+\item{\code{criticalLeafPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 \% crown defoliation.}
+\item{\code{cvLeafP50 [= 10.0]}: Coefficient of variation (in percent) of leaf P50 within crown leaves.}
 }
 }
 }

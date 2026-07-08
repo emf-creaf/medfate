@@ -83,7 +83,6 @@
 #'           }
 #'       }
 #'       \item{\code{cavitationRecoveryMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
-#'       \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (88 % PLC will correspond to 50 % defoliation).}
 #'       \item{\code{lfmcComponent [= "fine"]}: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).}
 #'       \item{\code{mistletoeParams}: A list with the following elements:
 #'           \itemize{
@@ -97,6 +96,13 @@
 #'             \item{\code{Gsw_AC_slope_Baldocchi [= 6]}: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).}
 #'             \item{\code{Vmax298 [= 80]}: Maximum Rubisco carboxylation rate at 298K.}
 #'             \item{\code{Jmax298 [= 120]}: Maximum rate of electron transport at 298K.}
+#'           }
+#'       }
+#'       \item{\code{defoliationParams}: A list with the following elements:
+#'           \itemize{
+#'              \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (88 % PLC will correspond to 50 % defoliation).}
+#'              \item{\code{criticalLeafPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 % crown defoliation.}
+#'              \item{\code{cvLeafP50 [= 10.0]}: Coefficient of variation (in percent) of leaf P50 within crown leaves.}
 #'           }
 #'       }
 #'     }
@@ -259,11 +265,13 @@ defaultControl<-function(transpirationMode = "Granier",
     stemCavitationRecovery = "rate",
     leafCavitationRecovery = "rate",
     lfmcComponent = "fine",
-    cavitationInducedDefoliation = TRUE,
     mistletoeParams = list(kPAR = 0.5, g = 0.8, LeafWidth = 1.0, 
                            Tmax_LAI = 0.134, Tmax_LAIsq = -0.006, Gsw_P50_Baldocchi = -2.5, Gsw_slope_Baldocchi = 30, Gsw_AC_slope_Baldocchi = 8,
                            Vmax298 = 80.0, Jmax298 = 120.0),
-      
+    defoliationParams = list(cavitationInducedDefoliation = TRUE,
+                             criticalLeafPLC = 0.88,
+                             cvLeafP50 = 10.0),
+    
     #spwb with granier
     hydraulicRedistributionFraction = 0.1,
     

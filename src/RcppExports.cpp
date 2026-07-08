@@ -2301,32 +2301,32 @@ BEGIN_RCPP
 END_RCPP
 }
 // proportionDefoliationSigmoid_c
-double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, double PLC_crit, double P50_cv);
-RcppExport SEXP _medfate_proportionDefoliationSigmoid_c(SEXP psiLeafSEXP, SEXP P50SEXP, SEXP slopeSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
+double proportionDefoliationSigmoid_c(double psiLeaf, double P50, double slope, double criticalLeafPLC, double cvLeafP50);
+RcppExport SEXP _medfate_proportionDefoliationSigmoid_c(SEXP psiLeafSEXP, SEXP P50SEXP, SEXP slopeSEXP, SEXP criticalLeafPLCSEXP, SEXP cvLeafP50SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
     Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
-    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
-    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
-    rcpp_result_gen = Rcpp::wrap(proportionDefoliationSigmoid_c(psiLeaf, P50, slope, PLC_crit, P50_cv));
+    Rcpp::traits::input_parameter< double >::type criticalLeafPLC(criticalLeafPLCSEXP);
+    Rcpp::traits::input_parameter< double >::type cvLeafP50(cvLeafP50SEXP);
+    rcpp_result_gen = Rcpp::wrap(proportionDefoliationSigmoid_c(psiLeaf, P50, slope, criticalLeafPLC, cvLeafP50));
     return rcpp_result_gen;
 END_RCPP
 }
 // proportionDefoliationWeibull_c
-double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, double PLC_crit, double P50_cv);
-RcppExport SEXP _medfate_proportionDefoliationWeibull_c(SEXP psiLeafSEXP, SEXP cSEXP, SEXP dSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
+double proportionDefoliationWeibull_c(double psiLeaf, double c, double d, double criticalLeafPLC, double cvLeafP50);
+RcppExport SEXP _medfate_proportionDefoliationWeibull_c(SEXP psiLeafSEXP, SEXP cSEXP, SEXP dSEXP, SEXP criticalLeafPLCSEXP, SEXP cvLeafP50SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
-    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
-    rcpp_result_gen = Rcpp::wrap(proportionDefoliationWeibull_c(psiLeaf, c, d, PLC_crit, P50_cv));
+    Rcpp::traits::input_parameter< double >::type criticalLeafPLC(criticalLeafPLCSEXP);
+    Rcpp::traits::input_parameter< double >::type cvLeafP50(cvLeafP50SEXP);
+    rcpp_result_gen = Rcpp::wrap(proportionDefoliationWeibull_c(psiLeaf, c, d, criticalLeafPLC, cvLeafP50));
     return rcpp_result_gen;
 END_RCPP
 }

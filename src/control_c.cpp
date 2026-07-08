@@ -62,6 +62,15 @@ ControlParameters::ControlParameters(List x) {
     mistletoe.Vmax298 = mistletoeParams["Vmax298"];
     mistletoe.Jmax298 = mistletoeParams["Jmax298"];
   }
+  if(x.containsElementNamed("defoliationParams")) {
+    List defoliationParams = x["defoliationParams"];
+    defoliation.cavitationInducedDefoliation = as<bool>(defoliationParams["cavitationInducedDefoliation"]);
+    defoliation.criticalLeafPLC = as<double>(defoliationParams["criticalLeafPLC"]);
+    defoliation.cvLeafP50 = as<double>(defoliationParams["cvLeafP50"]);
+  } else if(x.containsElementNamed("cavitationInducedDefoliation")){
+    defoliation.cavitationInducedDefoliation = as<bool>(x["cavitationInducedDefoliation"]);
+  }
+  
   if(x.containsElementNamed("truncateRootDistribution")) commonWB.truncateRootDistribution = as<bool>(x["truncateRootDistribution"]);
   commonWB.fullRhizosphereOverlapConductivity = 0.01;
   if(x.containsElementNamed("fullRhizosphereOverlapConductivity")) commonWB.fullRhizosphereOverlapConductivity = as<double>(x["fullRhizosphereOverlapConductivity"]);
@@ -78,7 +87,7 @@ ControlParameters::ControlParameters(List x) {
   commonWB.stemCavitationRecovery = as<std::string>(x["stemCavitationRecovery"]);
   commonWB.leafCavitationRecovery = as<std::string>(x["leafCavitationRecovery"]);
   commonWB.segmentedXylemVulnerability = as<bool>(x["segmentedXylemVulnerability"]);
-  commonWB.cavitationInducedDefoliation = as<bool>(x["cavitationInducedDefoliation"]);
+
 
   basicWB.hydraulicRedistributionFraction = as<double>(x["hydraulicRedistributionFraction"]);
   
