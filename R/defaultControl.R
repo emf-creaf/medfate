@@ -100,7 +100,7 @@
 #'       }
 #'       \item{\code{defoliationParams}: A list with the following elements:
 #'           \itemize{
-#'              \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (88 % PLC will correspond to 50 % defoliation).}
+#'              \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation.}
 #'              \item{\code{criticalLeafPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 % crown defoliation.}
 #'              \item{\code{cvLeafP50 [= 10.0]}: Coefficient of variation (in percent) of leaf P50 within crown leaves.}
 #'           }
