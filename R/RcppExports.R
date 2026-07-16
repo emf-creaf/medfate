@@ -2043,6 +2043,7 @@ hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, criticalLeafP
 
 #' @rdname hydraulics_scalingconductance
 #' @keywords internal
+#' @param psiMin Minimum water potential  (MPa) for calculating rhizosphere resistance average.
 hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin = -2.0, psiStep = -0.01) {
     .Call(`_medfate_averageRhizosphereResistancePercent_c`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin, psiStep)
 }

@@ -145,6 +145,8 @@ hydraulics_maximumStemHydraulicConductance(
 
 \item{V}{Vector with the proportion [0-1] of fine roots within each soil layer.}
 
+\item{psiMin}{Minimum water potential  (MPa) for calculating rhizosphere resistance average.}
+
 \item{psiStep}{Water potential precision (in MPa).}
 
 \item{averageResistancePercent}{Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).}

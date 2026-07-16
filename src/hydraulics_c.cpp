@@ -527,6 +527,7 @@ std::vector<double> rootxylemConductanceProportions_c(const std::vector<double>&
 
 //' @rdname hydraulics_scalingconductance
 //' @keywords internal
+//' @param psiMin Minimum water potential  (MPa) for calculating rhizosphere resistance average.
 // [[Rcpp::export("hydraulics_averageRhizosphereResistancePercent")]]
 double averageRhizosphereResistancePercent_c(double krhizomax, double n, double alpha,
                                              double krootmax, double rootc, double rootd,
