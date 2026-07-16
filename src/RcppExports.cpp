@@ -2331,8 +2331,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // averageRhizosphereResistancePercent_c
-double averageRhizosphereResistancePercent_c(double krhizomax, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double psiStep);
-RcppExport SEXP _medfate_averageRhizosphereResistancePercent_c(SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP psiStepSEXP) {
+double averageRhizosphereResistancePercent_c(double krhizomax, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double psiMin, double psiStep);
+RcppExport SEXP _medfate_averageRhizosphereResistancePercent_c(SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP psiMinSEXP, SEXP psiStepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2348,14 +2348,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
     Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMin(psiMinSEXP);
     Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
-    rcpp_result_gen = Rcpp::wrap(averageRhizosphereResistancePercent_c(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep));
+    rcpp_result_gen = Rcpp::wrap(averageRhizosphereResistancePercent_c(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin, psiStep));
     return rcpp_result_gen;
 END_RCPP
 }
 // findRhizosphereMaximumConductance_c
-double findRhizosphereMaximumConductance_c(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double initialValue);
-RcppExport SEXP _medfate_findRhizosphereMaximumConductance_c(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP initialValueSEXP) {
+double findRhizosphereMaximumConductance_c(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double psiMin, double initialValue);
+RcppExport SEXP _medfate_findRhizosphereMaximumConductance_c(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP psiMinSEXP, SEXP initialValueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2371,8 +2372,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
     Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMin(psiMinSEXP);
     Rcpp::traits::input_parameter< double >::type initialValue(initialValueSEXP);
-    rcpp_result_gen = Rcpp::wrap(findRhizosphereMaximumConductance_c(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue));
+    rcpp_result_gen = Rcpp::wrap(findRhizosphereMaximumConductance_c(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin, initialValue));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6228,8 +6230,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_E2psiTwoElements_c", (DL_FUNC) &_medfate_E2psiTwoElements_c, 11},
     {"_medfate_proportionDefoliationSigmoid_c", (DL_FUNC) &_medfate_proportionDefoliationSigmoid_c, 5},
     {"_medfate_proportionDefoliationWeibull_c", (DL_FUNC) &_medfate_proportionDefoliationWeibull_c, 5},
-    {"_medfate_averageRhizosphereResistancePercent_c", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent_c, 13},
-    {"_medfate_findRhizosphereMaximumConductance_c", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance_c, 13},
+    {"_medfate_averageRhizosphereResistancePercent_c", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent_c, 14},
+    {"_medfate_findRhizosphereMaximumConductance_c", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance_c, 14},
     {"_medfate_taperFactorSavage_c", (DL_FUNC) &_medfate_taperFactorSavage_c, 1},
     {"_medfate_terminalConduitRadius_c", (DL_FUNC) &_medfate_terminalConduitRadius_c, 1},
     {"_medfate_referenceConductivityHeightFactor_c", (DL_FUNC) &_medfate_referenceConductivityHeightFactor_c, 2},

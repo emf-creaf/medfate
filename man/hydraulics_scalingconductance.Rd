@@ -73,6 +73,7 @@ hydraulics_averageRhizosphereResistancePercent(
   kleafmax,
   leafc,
   leafd,
+  psiMin = -2,
   psiStep = -0.01
 )
 
@@ -89,6 +90,7 @@ hydraulics_findRhizosphereMaximumConductance(
   kleafmax,
   leafc,
   leafd,
+  psiMin,
   initialValue
 )
 

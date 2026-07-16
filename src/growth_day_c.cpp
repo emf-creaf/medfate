@@ -200,6 +200,7 @@ Rcpp::DataFrame copyPlantStructureResult_c(const PlantStructure_RESULT& PSres, M
     Rcpp::Named("SapwoodBiomass") = Rcpp::wrap(PSres.SapwoodBiomass),
     Rcpp::Named("FineRootBiomass") = Rcpp::wrap(PSres.FineRootBiomass),
     Rcpp::Named("LeafArea") = Rcpp::wrap(PSres.LeafArea),
+    Rcpp::Named("CrownFoliageCompleteness") = Rcpp::wrap(PSres.CrownFoliageCompleteness),
     Rcpp::Named("SapwoodArea") = Rcpp::wrap(PSres.SapwoodArea),
     Rcpp::Named("FineRootArea") = Rcpp::wrap(PSres.FineRootArea),
     Rcpp::Named("HuberValue") = Rcpp::wrap(PSres.HuberValue),
@@ -477,12 +478,24 @@ void updateStructuralVariables_c(ModelInput& x,
         }
         std::vector<double> VGrhizo_target(nlayers,0.0);
         for(int s=0;s<nlayers;s++) {
-          VGrhizo_target[s] = x.belowLayers.V(j,s)*findRhizosphereMaximumConductance_c(x.control.advancedWB.averageFracRhizosphereResistance*100.0,
-                                              x.soil.getVG_n(s), x.soil.getVG_alpha(s),
-                                              x.paramsTranspiration.VCroot_kmax[j], x.paramsTranspiration.VCroot_c[j], x.paramsTranspiration.VCroot_d[j],
-                                              x.paramsTranspiration.VCstem_kmax[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j],
-                                              x.paramsTranspiration.VCleaf_kmax[j], x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j],
-                                              log(x.belowLayers.VGrhizo_kmax(j,s)));
+          if(x.control.transpirationMode=="Sperry") {
+            VGrhizo_target[s] = x.belowLayers.V(j,s)*findRhizosphereMaximumConductance_c(x.control.advancedWB.averageFracRhizosphereResistance*100.0,
+                                                x.soil.getVG_n(s), x.soil.getVG_alpha(s),
+                                                x.paramsTranspiration.VCroot_kmax[j], x.paramsTranspiration.VCroot_c[j], x.paramsTranspiration.VCroot_d[j],
+                                                x.paramsTranspiration.VCstem_kmax[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j],
+                                                x.paramsTranspiration.VCleaf_kmax[j], x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j],
+                                                x.paramsTranspiration.VCleaf_P50[j],
+                                                log(x.belowLayers.VGrhizo_kmax(j,s)));
+          } else if(x.control.transpirationMode=="Sureau") {
+            VGrhizo_target[s] = x.belowLayers.V(j,s)*findRhizosphereMaximumConductance_c(x.control.advancedWB.averageFracRhizosphereResistance*100.0,
+                                                x.soil.getVG_n(s), x.soil.getVG_alpha(s),
+                                                x.paramsTranspiration.VCroot_kmax[j], x.paramsTranspiration.VCroot_c[j], x.paramsTranspiration.VCroot_d[j],
+                                                x.paramsTranspiration.VCstem_kmax[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j],
+                                                x.paramsTranspiration.VCleaf_kmax[j], x.paramsTranspiration.VCleaf_c[j], x.paramsTranspiration.VCleaf_d[j],
+                                                x.paramsTranspiration.Gsw_P50_Baldocchi[j],
+                                                log(x.belowLayers.VGrhizo_kmax(j,s)));
+            
+          }
         }
         x.internalAllocation.fineRootBiomassTarget[j] = fineRootBiomassPerIndividual_c(x.soil.getKsat(), VGrhizo_target, LAI_live[j], N[j],
                                                                                        x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j], x.paramsAnatomy.RLD[j]);
@@ -1221,6 +1234,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       //INDIVIDUAL-LEVEL OUTPUT
       GROWTHres.PSres.FineRootBiomass[j] = fineRootBiomass[j];
       GROWTHres.PSres.LeafArea[j] = LAexpanded;
+      GROWTHres.PSres.CrownFoliageCompleteness[j] = LAexpanded/x.internalAllocation.leafAreaTarget[j];
       GROWTHres.PSres.SapwoodArea[j] = SA[j];
       GROWTHres.PSres.FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea_c(x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j])*1e-4;
       GROWTHres.PSres.SapwoodBiomass[j] = sapwoodStructuralBiomass_c(SA[j], H[j], Lj, Vj,WoodDensity[j]);

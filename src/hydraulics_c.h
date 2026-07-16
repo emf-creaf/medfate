@@ -55,6 +55,7 @@ double findRhizosphereMaximumConductance_c(double averageResistancePercent, doub
                                            double krootmax, double rootc, double rootd,
                                            double kstemmax, double stemc, double stemd,
                                            double kleafmax, double leafc, double leafd,
+                                           double psiMin = -2.0,
                                            double initialValue = 0.0);
 
 double taperFactorSavage_c(double height);

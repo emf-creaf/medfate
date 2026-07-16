@@ -1355,6 +1355,7 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOff
 #'     \item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
 #'     \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
 #'     \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
+#'     \item{\code{"CrownFoliageCompleteness"}: Leaf area expressed as a proportion of the maximum crown foliage for an average individual of each plant cohort.}
 #'     \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
 #'     \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
 #'     \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}
@@ -1482,6 +1483,7 @@ growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_
 #'     \item{\code{"SapwoodBiomass"}: Sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
 #'     \item{\code{"FineRootBiomass"}: Fine root biomass (in g dry) for an average individual of each plant cohort.}
 #'     \item{\code{"LeafArea"}: Leaf area (in m2) for an average individual of each plant cohort.}
+#'     \item{\code{"CrownFoliageCompleteness"}: Leaf area expressed as a proportion of the maximum crown foliage for an average individual of each plant cohort.}
 #'     \item{\code{"SapwoodArea"}: Sapwood area (in cm2) for an average individual of each plant cohort.}
 #'     \item{\code{"FineRootArea"}: Fine root area (in m2) for an average individual of each plant cohort.}
 #'     \item{\code{"HuberValue"}: Sapwood area to (target) leaf area (in cm2/m2).}
@@ -2041,14 +2043,14 @@ hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, criticalLeafP
 
 #' @rdname hydraulics_scalingconductance
 #' @keywords internal
-hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
-    .Call(`_medfate_averageRhizosphereResistancePercent_c`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
+hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin = -2.0, psiStep = -0.01) {
+    .Call(`_medfate_averageRhizosphereResistancePercent_c`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin, psiStep)
 }
 
 #' @rdname hydraulics_scalingconductance
 #' @keywords internal
-hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue) {
-    .Call(`_medfate_findRhizosphereMaximumConductance_c`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
+hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin, initialValue) {
+    .Call(`_medfate_findRhizosphereMaximumConductance_c`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiMin, initialValue)
 }
 
 #' @rdname hydraulics_scalingconductance

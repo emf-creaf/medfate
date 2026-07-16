@@ -81,6 +81,7 @@ using namespace Rcpp;
 //'     \item{\code{"SapwoodBiomass"}: Sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
 //'     \item{\code{"FineRootBiomass"}: Fine root biomass (in g dry) for an average individual of each plant cohort.}
 //'     \item{\code{"LeafArea"}: Leaf area (in m2) for an average individual of each plant cohort.}
+//'     \item{\code{"CrownFoliageCompleteness"}: Leaf area expressed as a proportion of the maximum crown foliage for an average individual of each plant cohort.}
 //'     \item{\code{"SapwoodArea"}: Sapwood area (in cm2) for an average individual of each plant cohort.}
 //'     \item{\code{"FineRootArea"}: Fine root area (in m2) for an average individual of each plant cohort.}
 //'     \item{\code{"HuberValue"}: Sapwood area to (target) leaf area (in cm2/m2).}

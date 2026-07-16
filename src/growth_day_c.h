@@ -103,6 +103,7 @@ struct PlantStructure_RESULT {
   std::vector<double> SapwoodBiomass;
   std::vector<double> FineRootBiomass;
   std::vector<double> LeafArea;
+  std::vector<double> CrownFoliageCompleteness;
   std::vector<double> SapwoodArea;
   std::vector<double> FineRootArea;
   std::vector<double> HuberValue;
@@ -114,6 +115,7 @@ struct PlantStructure_RESULT {
     SapwoodBiomass = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     FineRootBiomass = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     LeafArea = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    CrownFoliageCompleteness = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     SapwoodArea = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     FineRootArea = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     HuberValue = std::vector<double>(numCohorts, medfate::NA_DOUBLE);

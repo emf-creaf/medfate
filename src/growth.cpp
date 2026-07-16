@@ -165,6 +165,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   NumericMatrix LeafBiomass(numDays, numCohorts);
   NumericMatrix SapwoodArea(numDays, numCohorts);
   NumericMatrix LeafArea(numDays, numCohorts);
+  NumericMatrix CrownFoliageCompleteness(numDays, numCohorts);
   NumericMatrix FineRootArea(numDays, numCohorts);
   NumericMatrix FineRootBiomass(numDays, numCohorts);
   NumericMatrix HuberValue(numDays, numCohorts);
@@ -202,6 +203,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
   FineRootArea.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   SapwoodArea.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   LeafArea.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  CrownFoliageCompleteness.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   HuberValue.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   RootAreaLeafArea.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   FineRootBiomass.attr("dimnames") = List::create(dateStrings, above.attr("row.names"));
@@ -250,6 +252,7 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
                                 Named("SapwoodBiomass") = SapwoodBiomass,
                                 Named("FineRootBiomass") = FineRootBiomass,
                                 Named("LeafArea") = LeafArea,
+                                Named("CrownFoliageCompleteness") = CrownFoliageCompleteness,
                                 Named("SapwoodArea")=SapwoodArea,
                                 Named("FineRootArea") = FineRootArea,
                                 Named("HuberValue") = HuberValue,
@@ -448,6 +451,7 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     NumericMatrix SapwoodBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodBiomass"]);
     NumericMatrix FineRootBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootBiomass"]);
     NumericMatrix LeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafArea"]);
+    NumericMatrix CrownFoliageCompleteness = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["CrownFoliageCompleteness"]);
     NumericMatrix SapwoodArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodArea"]);
     NumericMatrix FineRootArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootArea"]);
     NumericMatrix HuberValue = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["HuberValue"]);
@@ -458,8 +462,9 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
     NumericVector SapwoodBiomassIN = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodBiomass"]);
     NumericVector LeafBiomassIN = Rcpp::as<Rcpp::NumericVector>(ps["LeafBiomass"]);
     NumericVector FineRootBiomassIN = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
-    NumericVector SapwoodAreaIN = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodArea"]);
     NumericVector LeafAreaIN = Rcpp::as<Rcpp::NumericVector>(ps["LeafArea"]);
+    NumericVector CrownFoliageCompletenessIN = Rcpp::as<Rcpp::NumericVector>(ps["CrownFoliageCompleteness"]);
+    NumericVector SapwoodAreaIN = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodArea"]);
     NumericVector FineRootAreaIN = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
     NumericVector HuberValueIN = Rcpp::as<Rcpp::NumericVector>(ps["HuberValue"]);
     NumericVector RootAreaLeafAreaIN = Rcpp::as<Rcpp::NumericVector>(ps["RootAreaLeafArea"]);
@@ -470,8 +475,9 @@ void fillGrowthDailyOutput(List l, List x, List sDay, int iday) {
       SapwoodBiomass(iday,i) = SapwoodBiomassIN[i];
       LeafBiomass(iday,i) = LeafBiomassIN[i];
       FineRootBiomass(iday,i) = FineRootBiomassIN[i];
-      SapwoodArea(iday,i) = SapwoodAreaIN[i];
       LeafArea(iday,i) = LeafAreaIN[i];
+      CrownFoliageCompleteness(iday,i) = CrownFoliageCompletenessIN[i];
+      SapwoodArea(iday,i) = SapwoodAreaIN[i];
       FineRootArea(iday,i) = FineRootAreaIN[i];
       HuberValue(iday,i) = HuberValueIN[i];
       RootAreaLeafArea(iday,i) = RootAreaLeafAreaIN[i];
@@ -678,6 +684,7 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
     NumericMatrix SapwoodBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodBiomass"]);
     NumericMatrix FineRootBiomass = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootBiomass"]);
     NumericMatrix LeafArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["LeafArea"]);
+    NumericVector CrownFoliageCompleteness = Rcpp::as<Rcpp::NumericVector>(plantStructure["CrownFoliageCompleteness"]);
     NumericMatrix SapwoodArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["SapwoodArea"]);
     NumericMatrix FineRootArea = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["FineRootArea"]);
     NumericMatrix HuberValue = Rcpp::as<Rcpp::NumericMatrix>(plantStructure["HuberValue"]);
@@ -690,6 +697,7 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
       FineRootBiomass(iday,i) = sDay.PSres.FineRootBiomass[i];
       SapwoodArea(iday,i) = sDay.PSres.SapwoodArea[i];
       LeafArea(iday,i) = sDay.PSres.LeafArea[i];
+      CrownFoliageCompleteness(iday,i) = sDay.PSres.CrownFoliageCompleteness[i];
       FineRootArea(iday,i) = sDay.PSres.FineRootArea[i];
       HuberValue(iday,i) = sDay.PSres.HuberValue[i];
       RootAreaLeafArea(iday,i) = sDay.PSres.RootAreaLeafArea[i];
@@ -828,6 +836,7 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
 //'     \item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
 //'     \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
 //'     \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
+//'     \item{\code{"CrownFoliageCompleteness"}: Leaf area expressed as a proportion of the maximum crown foliage for an average individual of each plant cohort.}
 //'     \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
 //'     \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
 //'     \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}

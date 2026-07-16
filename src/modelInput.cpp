@@ -638,9 +638,11 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
     NumericVector VCstem_d = paramsTranspirationdf["VCstem_d"];
     NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
     NumericVector VCleaf_c = paramsTranspirationdf["VCleaf_c"];
+    NumericVector VCleaf_P50 = paramsTranspirationdf["VCleaf_P50"];
     NumericVector VCleaf_d = paramsTranspirationdf["VCleaf_d"];
     NumericVector VGrhizotot_kmax = paramsTranspirationdf["VGrhizo_kmax"];
-    
+    NumericVector Gsw_P50_Baldocchi;
+    if(transpirationMode == "Sureau") Gsw_P50_Baldocchi = paramsTranspirationdf["Gsw_P50_Baldocchi"];
     
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
     RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
@@ -667,10 +669,19 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericV
       NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
       for(int l=0;l<nlayers;l++) {
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
-        VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance_c(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
-                     VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
-                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],0.0);
+        if(transpirationMode == "Sperry") {
+          VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance_c(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
+                       VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
+                       VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                       VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                       VCleaf_P50[c], 0.0);
+        } else if(transpirationMode == "Sureau") {
+          VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance_c(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
+                       VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
+                       VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                       VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                       Gsw_P50_Baldocchi[c], 0.0);
+        }
         VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
       }
       FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 

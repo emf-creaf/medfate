@@ -434,6 +434,9 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "SapwoodArea", "LeafArea", "FineRootArea", 
                       "DBH", "Height", "HuberValue", "RootAreaLeafArea")) {
     OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]
+  }
+  else if(type %in% c("CrownFoliageCompleteness")) {
+    OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]*100
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "DessicationRate", "MortalityRate")) {
     OM = x$GrowthMortality[[type]][,cohorts,drop=FALSE]

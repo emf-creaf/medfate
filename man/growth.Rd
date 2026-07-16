@@ -75,6 +75,7 @@ List elements are as follows:
 \item{\code{"SapwoodBiomass"}: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.}
 \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
 \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
+\item{\code{"CrownFoliageCompleteness"}: Leaf area expressed as a proportion of the maximum crown foliage for an average individual of each plant cohort.}
 \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
 \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
 \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}

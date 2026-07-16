@@ -131,6 +131,7 @@
             "Fine root biomass per individual" = "FineRootBiomass",
             "Sapwood area" ="SapwoodArea",
             "Leaf area" = "LeafArea", 
+            "Crown foliage completeness" = "CrownFoliageCompleteness", 
             "Fine root area" ="FineRootArea")
   TYPES = c(TYPES,             
             "Diameter at breast height" = "DBH",
@@ -366,6 +367,7 @@
   else if(type=="CohortBiomassBalance") ylab=expression(paste("Cohort biomass balance ", (g%.%m^{-2})))
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
+  else if(type=="CrownFoliageCompleteness")  ylab = "Crown foliage completeness (%)"
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
   else if(type=="LeafBiomass")  ylab = expression(paste("Leaf structural biomass  ", (gdry%.%ind^{-1})))
   else if(type=="SapwoodBiomass")  ylab = expression(paste("Sapwood structural biomass  ", (gdry%.%ind^{-1})))
