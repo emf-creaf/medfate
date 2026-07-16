@@ -200,20 +200,20 @@ sum(plant_basalArea(exampleforest, SpParamsMED), na.rm=TRUE)
 
 #The analogous plant-level function for LAI
 sum(plant_LAI(exampleforest, SpParamsMED))
-#> [1] 1.826041
+#> [1] 1.451663
   
 #The analogous plant-level function for fuel loading
 sum(plant_fuelLoading(exampleforest, SpParamsMED))
-#> [1] 0.63975
+#> [1] 0.4889222
       
 #Summary function for 'forest' objects can be also used
 summary(exampleforest, SpParamsMED)
 #> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 
 #> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 
 #> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 
-#> LAI (m2/m2) total: 1.8260413  adult trees: 1.7772629  saplings: 0  shrubs: 0.0487785  herbs: 0  mistletoe: 0 
-#> Fuel loading (kg/m2) total: 0.63975  adult trees: 0.6241368  saplings: 0  shrubs: 0.0156131  herbs: 0 
-#> PAR ground (%): 38.912485  SWR ground (%): 49.7006648 
+#> LAI (m2/m2) total: 1.4516629  adult trees: 1.3983416  saplings: 0  shrubs: 0.0533213  herbs: 0  mistletoe: 0 
+#> Fuel loading (kg/m2) total: 0.4889222  adult trees: 0.471855  saplings: 0  shrubs: 0.0170672  herbs: 0 
+#> PAR ground (%): 46.7337671  SWR ground (%): 56.9222511 
 
 #Cohort IDs in the models
 plant_ID(exampleforest, SpParamsMED)

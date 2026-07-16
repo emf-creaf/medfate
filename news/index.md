@@ -4,10 +4,14 @@
 
 - Compilation patch for C++ 20
 - Mistletoe effects on water balance
+- New control parameters related to cavitation-induced crown defoliation
 - Recovery from defoliation depends on relative growth rate of buds
 - Water potential at turgor loss point as estimation of
   Gsw_P50_Baldocchi
 - SpParamsMED now is filled with package traits4models
+- New output variable: CrownFoliageCompleteness
+- Rhizosphere conductance estimation with respect to resistance percent
+  up to water potential related stomatal closure
 
 ## medfate 5.0.0
 

@@ -129,6 +129,6 @@ m <- transp_maximumTranspirationModel(x2, examplemeteo[1:10,],
 # Inspect the model for first cohort
 m[[1]]
 #>         LAI    I(LAI^2) 
-#>  0.21980833 -0.01394814 
+#>  0.21438562 -0.01452477 
 # }
 ```

@@ -56,5 +56,5 @@ fccs <- fuel_FCCS(exampleforest, SpParamsMED)
 
 # Estimate wind adjustment factor
 fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
-#> [1] 0.1985037
+#> [1] 0.2083444
 ```

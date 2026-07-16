@@ -138,7 +138,6 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 <li><p>"total" - instantaneous complete recovery.</p></li>
 </ul></li>
 <li><p><code>cavitationRecoveryMaximumRate [= 0.05]</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
-<li><p><code>cavitationInducedDefoliation [= TRUE]</code>: Whether leaf hydraulic impairment induces defoliation (88 % PLC will correspond to 50 % defoliation).</p></li>
 <li><p><code>lfmcComponent [= "fine"]</code>: Plant component used to estimate LFMC, either "leaf" or "fine" (for fine fuel).</p></li>
 <li><p><code>mistletoeParams</code>: A list with the following elements:
 </p><ul><li><p><code>kPAR [= 0.5]</code>: Mistletoe light extinction coefficient.</p></li>
@@ -147,10 +146,15 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 <li><p><code>Tmax_LAI [= 0.134]</code>: Empirical coefficient relating mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
 <li><p><code>Tmax_LAIsq [= -0.006]</code>: Empirical coefficient relating squared mistletoe LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
 <li><p><code>Gsw_P50_Baldocchi [= -2.5]</code>: Water potential corresponding to 50% reduction of mistletoe stomatal conductance.</p></li>
-<li><p><code>Gsw_slope_Baldocchi [= 30]</code>: Rate of decrease in mistletoe stomatal conductance at Gs_P50.</p></li>
+<li><p><code>Gsw_slope_Baldocchi [= 30]</code>: Rate of decrease in mistletoe stomatal conductance at Gs_P50_Baldocchi.</p></li>
 <li><p><code>Gsw_AC_slope_Baldocchi [= 6]</code>: Slope of the Gsw vs Ac/Cs relationship (Baldocchi model).</p></li>
 <li><p><code>Vmax298 [= 80]</code>: Maximum Rubisco carboxylation rate at 298K.</p></li>
 <li><p><code>Jmax298 [= 120]</code>: Maximum rate of electron transport at 298K.</p></li>
+</ul></li>
+<li><p><code>defoliationParams</code>: A list with the following elements:
+</p><ul><li><p><code>cavitationInducedDefoliation [= TRUE]</code>: Whether leaf hydraulic impairment induces defoliation.</p></li>
+<li><p><code>criticalLeafPLC [= 0.88]</code>: Level of PLC (a proportion) corresponding to 50 % crown defoliation.</p></li>
+<li><p><code>cvLeafP50 [= 10.0]</code>: Coefficient of variation (in percent) of leaf P50 within crown leaves.</p></li>
 </ul></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="pwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Granier"</code> only):</p><ul><li><p><code>hydraulicRedistributionFraction [= 0.1]</code>: Fraction of plant transpiration corresponding to hydraulic redistribution.</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="pwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Sperry"</code> or <code>traspirationMode = "Sureau"</code>):</p><ul><li><p><code>nsubsteps_canopy [= 3600]</code>: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.</p></li>
@@ -252,7 +256,7 @@ The relevant parameters are different for each model function.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

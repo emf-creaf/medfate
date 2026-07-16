@@ -197,7 +197,7 @@ following an adaptation of the protocols described for the Fuel Characteristics 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 280</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyTopHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 760</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 690</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyAbsoluteBaseHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 240</span>
@@ -206,30 +206,30 @@ following an adaptation of the protocols described for the Fuel Characteristics 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 790</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyLAI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.695727</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.253562</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#Calculate fuel properties according to FCCS</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span> <span class="op">&lt;-</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc       delta        rhob     rhop</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.62413684 100.00 2.8 7.6  2.4  7.9 4.960217784  0.12582851 570.3129</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.01561312   3.75 0.0 0.1  0.1  0.8 0.642625347  0.02429584 628.1644</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.00000000   0.00 0.0  NA  0.0   NA 0.000000000  0.00000000 400.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.22731400     NA 0.0  NA  0.0   NA 0.008600605 26.43000000 730.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.23084538     NA 0.0  NA  0.0   NA 0.010374497 22.25123541 366.9009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                w  cover hbc htc habc hatc       delta        rhob     rhop</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.4718550 100.00 2.8 6.9  2.4  7.9 4.826614951  0.09776106 607.3280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.0170672   3.75 0.0 0.1  0.1  0.8 0.642625347  0.02655855 628.1644</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.0000000   0.00 0.0  NA  0.0   NA 0.000000000  0.00000000 400.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.1740125     NA 0.0  NA  0.0   NA 0.006583900 26.43000000 730.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.1811697     NA 0.0  NA  0.0   NA 0.008875105 20.41324407 366.9009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  PV         beta   betarel etabetarel     sigma        pDead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 1.138507e-03 2.295276e-04 0.1593580  0.3693686  5531.511 0.0004377814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  2.485515e-05 3.867752e-05 0.2788513  0.5735398  4141.000 0.0006800000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 8.157094e-04 1.690024e-04 0.1129683  0.2742772  5272.152 0.0004066583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  2.716995e-05 4.227961e-05 0.1704513  0.3907228  4141.000 0.0006800000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.000000e+00 0.000000e+00 1.6654521  0.8561108 11483.000 0.0000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  3.113890e-04 3.620548e-02 1.6654521  0.8561108  1601.050 1.0000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 6.291765e-04 6.064645e-02 8.7556347  0.1577217  7083.948 1.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  2.383732e-04 3.620548e-02 1.6654521  0.8561108  1601.050 1.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 4.937838e-04 5.563695e-02 9.0747984  0.1479229  7313.522 1.0000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              FAI        h           RV   MinFMC    MaxFMC ActFMC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 6.4740133 21411.15 1.094376e-03 55.01978 118.81135     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.1029252 20000.00 2.485515e-05 62.68714  98.39177     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 4.4655429 21041.57 7.769360e-04 55.65721 117.13407     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.1125108 20000.00 2.716995e-05 62.68714  98.39177     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.0000000 18608.00 0.000000e+00       NA        NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.4985494 18608.00 3.113890e-04       NA        NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 4.4570531 18608.00 6.291765e-04       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.3816475 18608.00 2.383732e-04       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 3.6112983 18608.00 4.937838e-04       NA        NA     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -243,7 +243,7 @@ following an adaptation of the protocols described for the Fuel Characteristics 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

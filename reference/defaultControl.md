@@ -240,10 +240,6 @@ A list, with the following options (default values in brackets):
     refilling of embolized conduits as sapwood area per leaf area (in
     cm2·m-2·day-1).
 
-  - `cavitationInducedDefoliation [= TRUE]`: Whether leaf hydraulic
-    impairment induces defoliation (88 % PLC will correspond to 50 %
-    defoliation).
-
   - `lfmcComponent [= "fine"]`: Plant component used to estimate LFMC,
     either "leaf" or "fine" (for fine fuel).
 
@@ -267,7 +263,7 @@ A list, with the following options (default values in brackets):
       reduction of mistletoe stomatal conductance.
 
     - `Gsw_slope_Baldocchi [= 30]`: Rate of decrease in mistletoe
-      stomatal conductance at Gs_P50.
+      stomatal conductance at Gs_P50_Baldocchi.
 
     - `Gsw_AC_slope_Baldocchi [= 6]`: Slope of the Gsw vs Ac/Cs
       relationship (Baldocchi model).
@@ -275,6 +271,17 @@ A list, with the following options (default values in brackets):
     - `Vmax298 [= 80]`: Maximum Rubisco carboxylation rate at 298K.
 
     - `Jmax298 [= 120]`: Maximum rate of electron transport at 298K.
+
+  - `defoliationParams`: A list with the following elements:
+
+    - `cavitationInducedDefoliation [= TRUE]`: Whether leaf hydraulic
+      impairment induces defoliation.
+
+    - `criticalLeafPLC [= 0.88]`: Level of PLC (a proportion)
+      corresponding to 50 % crown defoliation.
+
+    - `cvLeafP50 [= 10.0]`: Coefficient of variation (in percent) of
+      leaf P50 within crown leaves.
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),

@@ -413,9 +413,6 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$lfmcComponent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fine"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$cavitationInducedDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$kPAR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
@@ -446,6 +443,17 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$Jmax298</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cavitationInducedDefoliation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$criticalLeafPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cvLeafP50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$hydraulicRedistributionFraction</span>
@@ -777,15 +785,15 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6534132 1.20935408   1.20935408        0             0  NA  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6359169 0.56790878   0.56790878        0             0  NA  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.04877848   0.04877848        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6534132 0.75422783   0.75422783        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6359169 0.64411380   0.64411380        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.05332129   0.05332129        0             0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100 poolProportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  300   NA      0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA      0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA      0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  300   NA      0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA      0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA      0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -809,21 +817,21 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$T1_148</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$T2_168</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$S1_165</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -843,7 +851,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 3908.823     1 6.340000   0.6650000        0.89       0.6650000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2436.475     1 7.152702   0.3669009        0.73       0.3669009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              SRL RLD     r635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 3870.0000  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2115.0874  10 1.964226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  735.7025  10 1.805872</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  996.2760  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1168,9 +1176,6 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$lfmcComponent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fine"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$cavitationInducedDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$kPAR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
@@ -1201,6 +1206,17 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$Jmax298</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cavitationInducedDefoliation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$criticalLeafPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cvLeafP50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$hydraulicRedistributionFraction</span>
@@ -1532,15 +1548,15 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6534132 1.20935408   1.20935408        0             0  NA  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6359169 0.56790878   0.56790878        0             0  NA  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.04877848   0.04877848        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6534132 0.75422783   0.75422783        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6359169 0.64411380   0.64411380        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.05332129   0.05332129        0             0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100 poolProportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  300   NA      0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA      0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA      0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  300   NA      0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA      0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA      0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -1556,10 +1572,10 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1907.898 1779.971 2349.397 4300.342</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$VGrhizo_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 12670486   641770.5   23665.14   3710.341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 44953618 40439261.1 3648045.36 705612.759</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  9962311  4011237.2  522683.69 154487.113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1        2          3          4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  38422773  1946145   71763.65   11251.47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  16281121 14646130 1321234.47  255556.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 127190265 51212043 6673177.96 1972359.23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$VCroot_kmax</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               1         2           3            4</span>
@@ -1582,21 +1598,21 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$T1_148</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$T2_168</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$S1_165</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1616,15 +1632,15 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   48 3908.823 6.340000 1.7674359   0.6650000        0.89       0.6650000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   90 2436.475 7.152702 1.3200000   0.3669009        0.73       0.3669009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        conduit2sapwood       SRL RLD     r635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.9258273 3870.0000  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.9258273 2115.0874  10 1.964226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.6263370  735.7025  10 1.805872</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.6263370  996.2760  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        LeafAngle LeafAngleSD   Beta_p   Beta_q ClumpingIndex kPAR alphaSWR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     53.70    21.55000 1.907817 1.289641          0.75 0.50      0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     33.69    20.15953 1.373035 2.294912          0.75 0.55      0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     53.70    21.55000 1.907817 1.289641          0.75 0.55      0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  53.70000    21.55000 1.907817 1.289641          0.75 0.50      0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  36.00819    20.15953 1.513844 2.269906          0.75 0.55      0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  53.70000    21.55000 1.907817 1.289641          0.75 0.55      0.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gammaSWR   g</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0.14 1.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0.18 0.5</span>
@@ -1636,21 +1652,21 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.2007222 68.51600 118.7863           0.40           1.60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1800000 58.79590 104.3488           0.29           1.16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        VCleaf_kmax VCleafapo_kmax VCleaf_slope VCleaf_P50  VCleaf_c  VCleaf_d</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    4.000000          8.000    133.86620  -2.303772 11.137050 -2.380849</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.000000          8.000     19.14428  -1.964085  1.339370 -2.582279</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    6.763001         13.526     47.93469  -3.022976  4.412593 -3.284789</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    4.000000        8.00000    133.86620  -2.303772 11.137050 -2.380849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.000000        8.00000     19.14428  -1.964085  1.339370 -2.582279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    8.489906       16.97981     47.93469  -3.022976  4.412593 -3.284789</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        kleaf_symp VCstem_kmax VCstem_slope VCstem_P50  VCstem_c  VCstem_d</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148      8.000    1.339563    68.302912  -5.139633 12.709999 -5.290000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168      8.000    4.992013    14.607857  -6.964747  3.560000 -7.720000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     13.526    7.473393     9.773996  -7.000000  2.132799 -8.312465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    8.00000    1.339563    68.302912  -5.139633 12.709999 -5.290000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    8.00000    4.992013    14.607857  -6.964747  3.560000 -7.720000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   16.97981    7.473393     9.773996  -7.000000  2.132799 -8.312465</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        VCroot_kmax VCroot_slope VCroot_P50  VCroot_c  VCroot_d VGrhizo_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    3.129450    103.96607  -2.966325 11.137050 -3.065569     13339632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    3.559773     22.32794  -1.684034  1.339370 -2.214081     89746537</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    3.497202     16.46463  -4.389000  2.469094 -5.091343     14650719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    3.129450    103.96607  -2.966325 11.137050 -3.065569     40451933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    3.559773     22.32794  -1.684034  1.339370 -2.214081     32504042</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    3.497202     16.46463  -4.389000  2.469094 -5.091343    187047845</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Plant_kmax   FR_leaf   FR_stem   FR_root</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  0.7598454 0.1899614 0.5672339 0.2428047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  1.3675461 0.3418865 0.2739468 0.3841667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  1.7617598 0.2604997 0.2357376 0.5037627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  1.8603342 0.2191231 0.2489276 0.5319493</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC maxMCleaf maxMCstem   LeafPI0  LeafEPS    LeafAF     Vleaf</span>
@@ -1961,9 +1977,6 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$lfmcComponent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fine"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$cavitationInducedDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$kPAR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
@@ -1994,6 +2007,17 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$Jmax298</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cavitationInducedDefoliation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$criticalLeafPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cvLeafP50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$hydraulicRedistributionFraction</span>
@@ -2325,15 +2349,15 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead LAI_mistletoe Age ObsID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6534132 1.20935408   1.20935408        0             0  NA  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6359169 0.56790878   0.56790878        0             0  NA  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.04877848   0.04877848        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6534132 0.75422783   0.75422783        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6359169 0.64411380   0.64411380        0             0  NA  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.05332129   0.05332129        0             0  NA  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 Z100 poolProportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  300   NA      0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA      0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA      0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  300   NA      0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000   NA      0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000   NA      0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -2349,10 +2373,10 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1907.898 1779.971 2349.397 4300.342</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$VGrhizo_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 1         2          3           4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  316722291  16042245   591554.1    92746.86</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  681557925 613114142 55309324.3 10698048.15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1623856441 653831528 85197424.3 25181394.41</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1        2          3          4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  34984333  1771985   65341.55   10244.58</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  24061938 21645577 1952657.97  377687.29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 137525468 55373421 7215425.77 2132628.82</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$VCroot_kmax</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               1         2           3            4</span>
@@ -2375,21 +2399,21 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$T1_148</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$T2_168</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$RHOP$S1_165</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 1          2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.66228187 0.66228187 0.66228187 0.66228187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.31100544 0.31100544 0.31100544 0.31100544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.02671269 0.02671269 0.02671269 0.02671269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.51956127 0.51956127 0.51956127 0.51956127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.44370755 0.44370755 0.44370755 0.44370755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.03673118 0.03673118 0.03673118 0.03673118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2409,15 +2433,15 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   48 3908.823 6.340000 1.7674359   0.6650000        0.89       0.6650000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   90 2436.475 7.152702 1.3200000   0.3669009        0.73       0.3669009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        conduit2sapwood       SRL RLD     r635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.9258273 3870.0000  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.9258273 2115.0874  10 1.964226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.6263370  735.7025  10 1.805872</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.6263370  996.2760  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        LeafAngle LeafAngleSD   Beta_p   Beta_q ClumpingIndex kPAR alphaSWR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     53.70    21.55000 1.907817 1.289641          0.75 0.50      0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     33.69    20.15953 1.373035 2.294912          0.75 0.55      0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     53.70    21.55000 1.907817 1.289641          0.75 0.55      0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  53.70000    21.55000 1.907817 1.289641          0.75 0.50      0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  36.00819    20.15953 1.513844 2.269906          0.75 0.55      0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  53.70000    21.55000 1.907817 1.289641          0.75 0.55      0.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gammaSWR   g</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0.14 1.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0.18 0.5</span>
@@ -2425,29 +2449,29 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin    Gswmax Gsw_AC_slope_Baldocchi Gsw_P50_Baldocchi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.2850000               6.238912             -2.20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.2007222               4.957957             -3.09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1800000               4.898507             -3.29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.2850000               6.238912         -2.200000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.2007222               4.957957         -1.964085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1800000               4.898507         -3.022976</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Gsw_slope_Baldocchi  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148            59.78537 72.19617 124.1687           0.15           0.60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168            46.23551 68.51600 118.7863           0.40           1.60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165            43.99302 58.79590 104.3488           0.29           1.16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168            64.81348 68.51600 118.7863           0.40           1.60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165            47.03891 58.79590 104.3488           0.29           1.16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        VCleaf_kmax VCleafapo_kmax VCleaf_slope VCleaf_P50  VCleaf_c  VCleaf_d</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    4.000000          8.000    68.302912  -5.139633 12.709999 -5.290000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.000000          8.000    14.607857  -6.964747  3.560000 -7.720000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    6.763001         13.526     9.773996  -7.000000  2.132799 -8.312465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    4.000000        8.00000    68.302912  -5.139633 12.709999 -5.290000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.000000        8.00000    14.607857  -6.964747  3.560000 -7.720000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    8.489906       16.97981     9.773996  -7.000000  2.132799 -8.312465</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        kleaf_symp VCstem_kmax VCstem_slope VCstem_P50  VCstem_c  VCstem_d</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148      8.000    1.339563    68.302912  -5.139633 12.709999 -5.290000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168      8.000    4.992013    14.607857  -6.964747  3.560000 -7.720000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     13.526    7.473393     9.773996  -7.000000  2.132799 -8.312465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    8.00000    1.339563    68.302912  -5.139633 12.709999 -5.290000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    8.00000    4.992013    14.607857  -6.964747  3.560000 -7.720000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   16.97981    7.473393     9.773996  -7.000000  2.132799 -8.312465</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        kstem_symp VCroot_kmax VCroot_slope VCroot_P50  VCroot_c  VCroot_d</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.26    3.129450    68.302912  -5.139633 12.709999 -5.290000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.26    3.559773    14.607857  -6.964747  3.560000 -7.720000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.26    3.497202     9.773996  -7.000000  2.132799 -8.312465</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        VGrhizo_kmax Plant_kmax   FR_leaf   FR_stem   FR_root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    333448837  0.7598454 0.1899614 0.5672339 0.2428047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   1360679440  1.3675461 0.3418865 0.2739468 0.3841667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   2388066787  1.7617598 0.2604997 0.2357376 0.5037627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     36831905  0.7598454 0.1899614 0.5672339 0.2428047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     48037860  1.3675461 0.3418865 0.2739468 0.3841667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    202246943  1.8603342 0.2191231 0.2489276 0.5319493</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC maxMCleaf maxMCstem   LeafPI0  LeafEPS    LeafAF     Vleaf</span>
@@ -2759,9 +2783,6 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$lfmcComponent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fine"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$cavitationInducedDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$kPAR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
@@ -2792,6 +2813,17 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mistletoeParams$Jmax298</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cavitationInducedDefoliation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$criticalLeafPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defoliationParams$cvLeafP50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$hydraulicRedistributionFraction</span>
@@ -3189,7 +3221,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 3908.823     1 6.340000   0.6650000        0.89       0.6650000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2436.475     1 7.152702   0.3669009        0.73       0.3669009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              SRL RLD     r635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 3870.0000  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2115.0874  10 1.964226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  735.7025  10 1.805872</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  996.2760  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -3389,7 +3421,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

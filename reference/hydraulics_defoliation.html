@@ -58,16 +58,16 @@
 <span>  <span class="va">psiLeaf</span>,</span>
 <span>  <span class="va">P50</span>,</span>
 <span>  <span class="va">slope</span>,</span>
-<span>  PLC_crit <span class="op">=</span> <span class="fl">0.88</span>,</span>
-<span>  P50_cv <span class="op">=</span> <span class="fl">10</span></span>
+<span>  criticalLeafPLC <span class="op">=</span> <span class="fl">0.88</span>,</span>
+<span>  cvLeafP50 <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_proportionDefoliationWeibull</span><span class="op">(</span></span>
 <span>  <span class="va">psiLeaf</span>,</span>
 <span>  <span class="va">c</span>,</span>
 <span>  <span class="va">d</span>,</span>
-<span>  PLC_crit <span class="op">=</span> <span class="fl">0.88</span>,</span>
-<span>  P50_cv <span class="op">=</span> <span class="fl">10</span></span>
+<span>  criticalLeafPLC <span class="op">=</span> <span class="fl">0.88</span>,</span>
+<span>  cvLeafP50 <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -83,11 +83,11 @@
 <dd><p>Parameters of the Sigmoid function.</p></dd>
 
 
-<dt id="arg-plc-crit">PLC_crit<a class="anchor" aria-label="anchor" href="#arg-plc-crit"></a></dt>
+<dt id="arg-criticalleafplc">criticalLeafPLC<a class="anchor" aria-label="anchor" href="#arg-criticalleafplc"></a></dt>
 <dd><p>Critical leaf PLC corresponding to defoliation</p></dd>
 
 
-<dt id="arg-p-cv">P50_cv<a class="anchor" aria-label="anchor" href="#arg-p-cv"></a></dt>
+<dt id="arg-cvleafp-">cvLeafP50<a class="anchor" aria-label="anchor" href="#arg-cvleafp-"></a></dt>
 <dd><p>Coefficient of variation (in percent) of leaf P50, to describe the
 variability in hydraulic vulnerability across crown leaves.</p></dd>
 
@@ -104,9 +104,9 @@ variability in hydraulic vulnerability across crown leaves.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The functions assume that crowns are made of a population of leaves whose
 hydraulic vulnerability (i.e. the water potential corresponding to 50% loss of conductance)
-follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (<code>P50_cv</code>).
+follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (<code>cvLeafP50</code>).
 The slope parameter (or the c exponent in the case of a Weibull function) is considered constant.
-Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (<code>PLC_crit</code>).</p>
+Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (<code>criticalLeafPLC</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -127,7 +127,7 @@ Leaves are hydraulically disconnected, and shedded, when their embolism rate exc
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

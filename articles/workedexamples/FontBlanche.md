@@ -185,45 +185,45 @@ SpParamsFB
     ## 149 Phanerophyte    Needle    Small oneflush-evergreen          wind  850 1870
     ## 169 Phanerophyte     Broad   Medium oneflush-evergreen    vertebrate   48  415
     ##     Dmax Z50     Z95 fHDmin fHDmax       a_ash    b_ash     a_bsh     b_bsh
-    ## 143   NA  NA  939.28     35     90 0.008047873 2.865021 0.2502494 0.7300031
+    ## 143   NA  NA 1396.48     35     90 0.008047873 2.865021 0.2502494 0.7300031
     ## 149   NA  NA 7500.00     80    160          NA       NA        NA        NA
     ## 169  200  NA 7000.00     NA     NA 1.857486249 1.885548 0.5238830 0.7337293
-    ##        a_btsh    b_btsh cr BTsh a_fbt b_fbt c_fbt a_cr b_1cr b_2cr b_3cr c_1cr
-    ## 143 0.3105815 0.7509837 NA   NA    NA    NA    NA   NA    NA    NA    NA    NA
-    ## 149        NA        NA NA   NA    NA    NA    NA   NA    NA    NA    NA    NA
-    ## 169 0.7327147 0.7375770 NA   NA    NA    NA    NA   NA    NA    NA    NA    NA
-    ##     c_2cr      a_cw  b_cw      a_bt      b_bt LeafDuration t0gdd Sgdd Tbgdd
-    ## 143    NA        NA    NA        NA        NA     2.500000    NA   NA    NA
-    ## 149    NA 0.6415296 0.731 0.5535741 1.1848613     2.083333    NA   NA    NA
-    ## 169    NA        NA    NA 0.5622245 0.9626839     2.000000    NA   NA    NA
-    ##     Ssen Phsen Tbsen xsen ysen      SLA LeafDensity WoodDensity FineRootDensity
-    ## 143   NA    NA    NA   NA   NA 5.400000     0.56000        0.70              NA
-    ## 149   NA    NA    NA   NA   NA 5.140523     0.28812        0.60              NA
-    ## 169   NA    NA    NA   NA   NA 6.340000     0.66500        0.89              NA
-    ##     conduit2sapwood     r635   pDead    Al2As Ar2Al LeafWidth      SRL RLD
-    ## 143              NA 1.917579      NA 1700.000    NA 0.4000000 902.1171  NA
-    ## 149              NA 1.964226 0.00050  631.000    NA 0.1384772       NA  NA
-    ## 169              NA 1.805872 0.00026 1540.671    NA 1.7674359 735.7025  NA
-    ##       maxFMC   minFMC  Ptlp LeafPI0 LeafEPS LeafAF StemPI0 StemEPS StemAF  SAV
-    ## 143 106.2825 41.20000    NA   -2.13   12.38    0.5   -2.13   12.38    0.4   NA
-    ## 149 122.1644 53.74550 -2.20   -1.50    5.31    0.6   -1.65    5.00    0.4 6050
-    ## 169 109.2304 58.66087 -3.09   -2.50   15.00    0.4   -2.50   15.00    0.4 4050
-    ##     HeatContent LeafLigninPercent WoodLigninPercent FineRootLigninPercent
-    ## 143    17146.03                NA                NA                    NA
-    ## 149    22150.00                NA                NA                    NA
-    ## 169    19300.00                NA                NA                    NA
-    ##     LeafAngle LeafAngleSD ClumpingIndex gammaSWR alphaSWR kPAR  g  Tmax_LAI
-    ## 143    32.367    18.87379            NA       NA       NA   NA NA        NA
-    ## 149        NA          NA            NA       NA       NA   NA NA 0.1869849
-    ## 169    33.690    20.15953            NA       NA       NA   NA NA 0.1251027
-    ##       Tmax_LAIsq Psi_Extract Exp_Extract      WUE   WUE_par     WUE_co2
-    ## 143           NA          NA          NA       NA        NA          NA
-    ## 149 -0.008372458  -0.9218219    1.504542 8.525550 0.5239136 0.002586327
-    ## 169 -0.005601615  -1.9726871    1.149052 8.968208 0.1412266 0.002413091
-    ##        WUE_vpd Gswmin Gswmax Gsw_Toptim_Jarvis Gsw_Tsens_Jarvis
-    ## 143         NA  0.002 0.2200                NA               NA
-    ## 149 -0.2647169  0.001 0.2175                NA               NA
-    ## 169 -0.5664879  0.002 0.2200                NA               NA
+    ##        a_btsh    b_btsh cr BTsh      a_fbt    b_fbt        c_fbt a_cr b_1cr
+    ## 143 0.3105815 0.7509837 NA   NA         NA       NA           NA   NA    NA
+    ## 149        NA        NA NA   NA 0.05684887 1.521218 -0.024946517   NA    NA
+    ## 169 0.7327147 0.7375770 NA   NA 0.06310630 1.545032 -0.005288476   NA    NA
+    ##     b_2cr b_3cr c_1cr c_2cr      a_cw  b_cw      a_bt      b_bt LeafDuration
+    ## 143    NA    NA    NA    NA        NA    NA        NA        NA     2.500000
+    ## 149    NA    NA    NA    NA 0.6415296 0.731 0.5535741 1.1848613     2.083333
+    ## 169    NA    NA    NA    NA        NA    NA 0.5622245 0.9626839     2.000000
+    ##     t0gdd Sgdd Tbgdd Ssen Phsen Tbsen xsen ysen      SLA LeafDensity
+    ## 143    NA   NA    NA   NA    NA    NA   NA   NA 5.400000     0.56000
+    ## 149    NA   NA    NA   NA    NA    NA   NA   NA 5.140523     0.28812
+    ## 169    NA   NA    NA   NA    NA    NA   NA   NA 6.340000     0.66500
+    ##     WoodDensity FineRootDensity conduit2sapwood     r635   pDead    Al2As Ar2Al
+    ## 143        0.70              NA              NA 1.917579      NA 1700.000    NA
+    ## 149        0.60              NA              NA 1.964226 0.00050  631.000    NA
+    ## 169        0.89              NA              NA 1.805872 0.00026 1540.671    NA
+    ##     LeafWidth      SRL RLD   maxFMC   minFMC  Ptlp LeafPI0 LeafEPS LeafAF
+    ## 143 0.4000000 902.1171  NA 106.2825 41.20000    NA   -2.13   12.38    0.5
+    ## 149 0.1384772       NA  NA 122.1644 53.74550 -2.20   -1.50    5.31    0.6
+    ## 169 1.7674359 735.7025  NA 109.2304 58.66087 -3.09   -2.50   15.00    0.4
+    ##     StemPI0 StemEPS StemAF  SAV HeatContent LeafLigninPercent WoodLigninPercent
+    ## 143   -2.13   12.38    0.4   NA    17146.03                NA                NA
+    ## 149   -1.65    5.00    0.4 6050    22150.00                NA                NA
+    ## 169   -2.50   15.00    0.4 4050    19300.00                NA                NA
+    ##     FineRootLigninPercent LeafAngle LeafAngleSD ClumpingIndex gammaSWR alphaSWR
+    ## 143                    NA  35.14508    18.87379            NA       NA       NA
+    ## 149                    NA        NA          NA            NA       NA       NA
+    ## 169                    NA  36.00819    20.15953            NA       NA       NA
+    ##     kPAR  g  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract      WUE   WUE_par
+    ## 143   NA NA        NA           NA          NA          NA       NA        NA
+    ## 149   NA NA 0.1869849 -0.008372458  -0.9218219    1.504542 8.525550 0.5239136
+    ## 169   NA NA 0.1251027 -0.005601615  -1.9726871    1.149052 8.968208 0.1412266
+    ##         WUE_co2    WUE_vpd Gswmin Gswmax Gsw_Toptim_Jarvis Gsw_Tsens_Jarvis
+    ## 143          NA         NA  0.002 0.2200                NA               NA
+    ## 149 0.002586327 -0.2647169  0.001 0.2175                NA               NA
+    ## 169 0.002413091 -0.5664879  0.002 0.2200                NA               NA
     ##     Gsw_AC_slope_Baldocchi Gsw_P50_Baldocchi Gsw_slope_Baldocchi VCleaf_kmax
     ## 143                     NA                NA                  NA        3.00
     ## 149                     NA                NA                  NA        4.00
@@ -260,18 +260,18 @@ SpParamsFB
     ## 143                NA             NA 0.04459023   -2.570181      0.05070956
     ## 149                NA             NA 0.02473379    1.083300      0.10154153
     ## 169                NA             NA 0.03005748   -3.744526      0.09657161
-    ##     MinFPARRecr RecrAge RecrTreeHeight RecrShrubHeight RecrTreeDensity
-    ## 143   0.4943654      NA       52.54367              NA              NA
-    ## 149   4.5625766      NA       56.93647              NA              NA
-    ## 169   0.1307250      NA       47.23629              NA              NA
-    ##     RecrShrubCover RespFire RespDist RespClip IngrowthTreeDensity
-    ## 143             NA      0.9     0.95     0.96            235.1347
-    ## 149             NA       NA       NA       NA            246.2793
-    ## 169             NA      0.9     0.95     0.96            352.2668
-    ##     IngrowthTreeDBH
-    ## 143              NA
-    ## 149              NA
-    ## 169              NA
+    ##     MinFPARRecr RecrAge RecrTreeDBH RecrTreeHeight RecrShrubHeight
+    ## 143   0.4943654      NA          NA       52.54367              NA
+    ## 149   4.5625766      NA          NA       56.93647              NA
+    ## 169   0.1307250      NA          NA       47.23629              NA
+    ##     RecrTreeDensity RecrShrubCover RespFire RespDist RespClip
+    ## 143              NA             NA      0.9     0.95     0.96
+    ## 149              NA             NA       NA       NA       NA
+    ## 169              NA             NA      0.9     0.95     0.96
+    ##     IngrowthTreeDensity IngrowthTreeDBH
+    ## 143            235.1347              NA
+    ## 149            246.2793              NA
+    ## 169            352.2668              NA
 
 Note that the function returns a subset of rows for the species
 mentioned in `customParams`. Not all parameters are needed for the soil
@@ -565,22 +565,22 @@ fb_SWB <- spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
     ## 
     ##  [Year 2014]:............
     ## 
-    ## Final plant water content (mm): 31.2251
-    ## Final soil water content (mm): 234.181
+    ## Final plant water content (mm): 31.3067
+    ## Final soil water content (mm): 234.755
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.123273
-    ## Plant water balance result (mm): -1.38653e-15
-    ## Change in soil water content (mm): 20.2955
-    ## Soil water balance result (mm): 20.2955
+    ## Change in plant water content (mm): -0.0416382
+    ## Plant water balance result (mm): 2.68215e-16
+    ## Change in soil water content (mm): 20.8696
+    ## Soil water balance result (mm): 20.8696
     ## Change in snowpack water content (mm): 0
     ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 1066 Rain (mm) 1066 Snow (mm) 0
     ##   Interception (mm) 141 Net rainfall (mm) 925
-    ##   Infiltration (mm) 831 Infiltration excess (mm) 94 Saturation excess (mm) 269 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 22  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 325  Mistletoe transpiration (mm) 0
-    ##   Plant extraction from soil (mm) 325  Plant water balance (mm) -0 Hydraulic redistribution (mm) 32
-    ##   Runoff (mm) 363 Deep drainage (mm) 193
+    ##   Infiltration (mm) 832 Infiltration excess (mm) 93 Saturation excess (mm) 268 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 23  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 327  Mistletoe transpiration (mm) 0
+    ##   Plant extraction from soil (mm) 327  Plant water balance (mm) 0 Hydraulic redistribution (mm) 36
+    ##   Runoff (mm) 361 Deep drainage (mm) 193
 
 Console output provides the water balance totals for the period
 considered, which may span several years. The output of function
@@ -626,30 +626,30 @@ head(fb_SWB$WaterBalance)
     ## 2014-01-01    0.0000000                  0                0      0    0.0000000
     ## 2014-01-02    0.0000000                  0                0      0    0.0000000
     ## 2014-01-03    0.0000000                  0                0      0    0.0000000
-    ## 2014-01-04    0.7213133                  0                0      0    0.1885103
+    ## 2014-01-04    0.7213133                  0                0      0    0.1890744
     ## 2014-01-05    0.0000000                  0                0      0    0.0000000
     ## 2014-01-06    0.0000000                  0                0      0    0.0000000
     ##            CapillarityRise Evapotranspiration Interception SoilEvaporation
-    ## 2014-01-01               0          0.2370326      0.00000       0.2145403
+    ## 2014-01-01               0          0.2361114      0.00000       0.2145403
     ## 2014-01-02               0          0.1959278      0.00000       0.1959278
-    ## 2014-01-03               0          0.1966248      0.00000       0.1871830
-    ## 2014-01-04               0          2.0495751      1.86936       0.1802149
-    ## 2014-01-05               0          0.9716345      0.00000       0.2946217
-    ## 2014-01-06               0          0.6696232      0.00000       0.1404454
+    ## 2014-01-03               0          0.1966164      0.00000       0.1871830
+    ## 2014-01-04               0          2.0496595      1.86936       0.1802993
+    ## 2014-01-05               0          0.9738787      0.00000       0.2947672
+    ## 2014-01-06               0          0.6695831      0.00000       0.1403825
     ##            HerbTranspiration PlantExtraction Transpiration
-    ## 2014-01-01                 0    2.249223e-02   0.022492226
-    ## 2014-01-02                 0   -1.111307e-18   0.000000000
-    ## 2014-01-03                 0    9.441815e-03   0.009441815
-    ## 2014-01-04                 0   -1.111307e-18   0.000000000
-    ## 2014-01-05                 0    6.770128e-01   0.677012795
-    ## 2014-01-06                 0    5.291778e-01   0.529177836
+    ## 2014-01-01                 0    2.157104e-02   0.021571043
+    ## 2014-01-02                 0   -3.523657e-19   0.000000000
+    ## 2014-01-03                 0    9.433443e-03   0.009433443
+    ## 2014-01-04                 0   -2.195509e-18   0.000000000
+    ## 2014-01-05                 0    6.791115e-01   0.679111496
+    ## 2014-01-06                 0    5.292006e-01   0.529200608
     ##            MistletoeTranspiration HydraulicRedistribution
     ## 2014-01-01                      0             0.000000000
-    ## 2014-01-02                      0             0.002565311
-    ## 2014-01-03                      0             0.003647367
-    ## 2014-01-04                      0             0.004565469
+    ## 2014-01-02                      0             0.002564064
+    ## 2014-01-03                      0             0.003646811
+    ## 2014-01-04                      0             0.004565272
     ## 2014-01-05                      0             0.000000000
-    ## 2014-01-06                      0             0.001541689
+    ## 2014-01-06                      0             0.001544657
 
 ## Comparing results with observations
 
@@ -744,9 +744,9 @@ evaluation_stats(fb_SWB, fb_observed, type = "SE+TR")
 ```
 
     ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
-    ## 365.00000000  -0.37916175 -28.45751845   0.47943098  35.98310182   0.66068446 
+    ## 365.00000000  -0.37458163 -28.11376353   0.47417785  35.58883461   0.68150269 
     ##          NSE      NSE.abs 
-    ##  -0.03144474   0.03712756
+    ##  -0.00628706   0.04767776
 
 ### Soil moisture
 
@@ -777,9 +777,9 @@ evaluation_stats(fb_SWB, fb_observed, type = "SWC")
 ```
 
     ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
-    ## 364.00000000  -0.13204513 -30.78409460   0.13204513  30.78409460   0.95775054 
+    ## 364.00000000  -0.13329240 -31.07487385   0.13329240  31.07487385   0.95519253 
     ##          NSE      NSE.abs 
-    ##  -0.09277170  -0.03451756
+    ##  -0.10516414  -0.04428937
 
 ### Plant transpiration
 
@@ -813,9 +813,9 @@ evaluation_stats(fb_SWB, fb_observed, cohort = "T2_148", type="E")
 ```
 
     ##           n        Bias    Bias.rel         MAE     MAE.rel           r 
-    ## 300.0000000   0.2367952 115.1326302   0.2614539 127.1219724   0.7448315 
+    ## 300.0000000   0.2419407 117.6344214   0.2693672 130.9695180   0.7432842 
     ##         NSE     NSE.abs 
-    ##  -7.7758484  -1.6421257
+    ##  -8.4643333  -1.7220938
 
 ``` r
 
@@ -823,9 +823,9 @@ evaluation_stats(fb_SWB, fb_observed, cohort = "T3_168", type="E")
 ```
 
     ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
-    ## 309.00000000   0.03750382  12.95653908   0.08172584  28.23403166   0.90614719 
+    ## 309.00000000   0.03209984  11.08961119   0.07788813  26.90821018   0.90667188 
     ##          NSE      NSE.abs 
-    ##   0.60004418   0.44321905
+    ##   0.62729587   0.46936452
 
 ### Leaf water potentials
 
@@ -1099,57 +1099,57 @@ summary(fb_SWB, freq="months",FUN=sum, output="WaterBalance")
     ## 2014-11-01  30.12083     222.60000 222.60000    0 198.0975096        0
     ## 2014-12-01  26.01617      93.00000  93.00000    0  78.7534201        0
     ##            Infiltration InfiltrationExcess SaturationExcess     Runoff
-    ## 2014-01-01  182.5767907           0.000000        86.460833  86.460833
-    ## 2014-02-01  155.2573002           0.000000       121.928887 121.928887
+    ## 2014-01-01  182.5767907           0.000000        86.696614  86.696614
+    ## 2014-02-01  155.2573002           0.000000       122.076919 122.076919
     ## 2014-03-01   39.8917051           0.000000         0.000000   0.000000
     ## 2014-04-01    7.2713589           0.000000         0.000000   0.000000
     ## 2014-05-01   16.3281633           0.000000         0.000000   0.000000
     ## 2014-06-01   25.8839490           0.000000         0.000000   0.000000
     ## 2014-07-01    0.1428946           0.000000         0.000000   0.000000
-    ## 2014-08-01   43.7883558           9.014201         0.000000   9.014201
-    ## 2014-09-01  100.4492354          25.446489         0.000000  25.446489
-    ## 2014-10-01   32.3156833           9.591006         0.000000   9.591006
-    ## 2014-11-01  147.8631204          50.234389         8.859323  59.093712
-    ## 2014-12-01   78.7534201           0.000000        51.758043  51.758043
+    ## 2014-08-01   43.8641244           8.938432         0.000000   8.938432
+    ## 2014-09-01  101.0233304          24.872394         0.000000  24.872394
+    ## 2014-10-01   32.3395984           9.567091         0.000000   9.567091
+    ## 2014-11-01  148.2069996          49.890510         9.060547  58.951057
+    ## 2014-12-01   78.7534201           0.000000        50.210110  50.210110
     ##            DeepDrainage CapillarityRise Evapotranspiration Interception
-    ## 2014-01-01  27.43169160               0           34.39566   22.4713498
-    ## 2014-02-01  40.14784616               0           40.97328   25.8391081
-    ## 2014-03-01  39.35948838               0           47.31381    4.7207713
-    ## 2014-04-01   7.44044702               0           50.83154    7.7286411
-    ## 2014-05-01   0.00000000               0           45.74219    5.2718367
-    ## 2014-06-01   0.00000000               0           50.22416    7.7160510
-    ## 2014-07-01   0.00000000               0           26.30383    0.4571054
-    ## 2014-08-01   0.00000000               0           41.44965    7.5974432
-    ## 2014-09-01   0.00000000               0           40.22574   11.7042748
-    ## 2014-10-01   0.01608473               0           43.03740    8.6933111
-    ## 2014-11-01  34.45046912               0           39.96075   24.5024904
-    ## 2014-12-01  44.44940110               0           28.41492   14.2465799
+    ## 2014-01-01     27.43226               0           34.15932   22.4713498
+    ## 2014-02-01     40.14785               0           40.34980   25.8391081
+    ## 2014-03-01     39.78432               0           47.04269    4.7207713
+    ## 2014-04-01      7.45117               0           52.09614    7.7286411
+    ## 2014-05-01      0.00000               0           47.72911    5.2718367
+    ## 2014-06-01      0.00000               0           51.95191    7.7160510
+    ## 2014-07-01      0.00000               0           24.24042    0.4571054
+    ## 2014-08-01      0.00000               0           42.58144    7.5974432
+    ## 2014-09-01      0.00000               0           39.68645   11.7042748
+    ## 2014-10-01      0.00000               0           43.00754    8.6933111
+    ## 2014-11-01     33.76513               0           39.75339   24.5024904
+    ## 2014-12-01     44.44940               0           27.94647   14.2465799
     ##            SoilEvaporation HerbTranspiration PlantExtraction Transpiration
-    ## 2014-01-01       4.1718781                 0        7.752435      7.752435
-    ## 2014-02-01       2.8965719                 0       12.237600     12.237600
-    ## 2014-03-01       3.0531909                 0       39.539853     39.539853
-    ## 2014-04-01       0.4431895                 0       42.659708     42.659708
-    ## 2014-05-01       0.2217495                 0       40.248600     40.248600
-    ## 2014-06-01       0.1574956                 0       42.350610     42.350610
-    ## 2014-07-01       0.1228888                 0       25.723838     25.723838
-    ## 2014-08-01       0.3603358                 0       33.491875     33.491875
-    ## 2014-09-01       0.8524797                 0       27.668987     27.668987
-    ## 2014-10-01       2.8309176                 0       31.513175     31.513175
-    ## 2014-11-01       4.0884046                 0       11.369853     11.369853
-    ## 2014-12-01       3.2934211                 0       10.874917     10.874917
+    ## 2014-01-01       4.2151687                 0         7.47280       7.47280
+    ## 2014-02-01       2.9061658                 0        11.60453      11.60453
+    ## 2014-03-01       3.0583127                 0        39.26361      39.26361
+    ## 2014-04-01       0.4436067                 0        43.92389      43.92389
+    ## 2014-05-01       0.2200408                 0        42.23723      42.23723
+    ## 2014-06-01       0.1508599                 0        44.08500      44.08500
+    ## 2014-07-01       0.1172265                 0        23.66608      23.66608
+    ## 2014-08-01       0.2549165                 0        34.72908      34.72908
+    ## 2014-09-01       0.8386994                 0        27.14347      27.14347
+    ## 2014-10-01       2.8421025                 0        31.47213      31.47213
+    ## 2014-11-01       4.2636858                 0        10.98722      10.98722
+    ## 2014-12-01       3.4948016                 0        10.20509      10.20509
     ##            MistletoeTranspiration HydraulicRedistribution
-    ## 2014-01-01                      0               0.3561842
-    ## 2014-02-01                      0               0.3451767
-    ## 2014-03-01                      0               0.8151813
-    ## 2014-04-01                      0               1.2070688
-    ## 2014-05-01                      0               3.0353603
-    ## 2014-06-01                      0               3.6705539
-    ## 2014-07-01                      0               2.1086608
-    ## 2014-08-01                      0               7.2566562
-    ## 2014-09-01                      0               8.9333155
-    ## 2014-10-01                      0               3.2210552
-    ## 2014-11-01                      0               0.5039870
-    ## 2014-12-01                      0               0.6139910
+    ## 2014-01-01                      0               0.3900485
+    ## 2014-02-01                      0               0.4678481
+    ## 2014-03-01                      0               0.8975168
+    ## 2014-04-01                      0               1.4812743
+    ## 2014-05-01                      0               3.9017283
+    ## 2014-06-01                      0               4.1778300
+    ## 2014-07-01                      0               2.2033719
+    ## 2014-08-01                      0               7.5679965
+    ## 2014-09-01                      0               9.7632514
+    ## 2014-10-01                      0               3.3999496
+    ## 2014-11-01                      0               0.6338105
+    ## 2014-12-01                      0               0.7962439
 
 Parameter `output` is used to indicate the element of the `spwb` object
 for which we desire summaries. Similarly, it is possible to calculate
@@ -1161,18 +1161,18 @@ summary(fb_SWB, freq="months",FUN=mean, output="PlantStress", bySpecies = TRUE)
 ```
 
     ##            Phillyrea latifolia Pinus halepensis Quercus ilex
-    ## 2014-01-01        0.0006634614     0.0001532170  0.007309053
-    ## 2014-02-01        0.0007143853     0.0002183529  0.012911036
-    ## 2014-03-01        0.0039412857     0.0020933928  0.037264958
-    ## 2014-04-01        0.0265706998     0.0437897311  0.059545159
-    ## 2014-05-01        0.2012322969     0.3513010162  0.098549062
-    ## 2014-06-01        0.3446055429     0.5592247860  0.197978079
-    ## 2014-07-01        0.5406532952     0.6991185756  0.510881806
-    ## 2014-08-01        0.3903137406     0.4691136231  0.493829461
-    ## 2014-09-01        0.2309798307     0.3441384243  0.335932658
-    ## 2014-10-01        0.0036256215     0.0025765719  0.037677961
-    ## 2014-11-01        0.0014093942     0.0004958265  0.011492279
-    ## 2014-12-01        0.0005882449     0.0001431519  0.007575892
+    ## 2014-01-01        0.0002005823     9.213874e-05  0.007289001
+    ## 2014-02-01        0.0004241553     1.801736e-04  0.012831286
+    ## 2014-03-01        0.0021615694     1.558130e-03  0.037302946
+    ## 2014-04-01        0.0055229219     1.916886e-02  0.059477525
+    ## 2014-05-01        0.0584843596     2.475189e-01  0.098947305
+    ## 2014-06-01        0.2596275575     4.129932e-01  0.206159134
+    ## 2014-07-01        0.5508210211     5.917795e-01  0.535269874
+    ## 2014-08-01        0.3855427230     3.661730e-01  0.487188044
+    ## 2014-09-01        0.2530723414     2.897205e-01  0.328572652
+    ## 2014-10-01        0.0135198518     1.955654e-03  0.034691130
+    ## 2014-11-01        0.0083424116     2.206970e-04  0.011217083
+    ## 2014-12-01        0.0045925906     9.153584e-05  0.007592380
 
 In this case, the `summary` function aggregates the output by species
 using LAI values as weights.

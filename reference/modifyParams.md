@@ -132,14 +132,14 @@ x1m <- modifyInputParams(x1, customParams)
 # Inspect original and modified objects 
 x1$below
 #>        Z50  Z95 Z100 poolProportions
-#> T1_148 100  300   NA      0.66228187
-#> T2_168 300 1000   NA      0.31100544
-#> S1_165 200 1000   NA      0.02671269
+#> T1_148 100  300   NA      0.51956127
+#> T2_168 300 1000   NA      0.44370755
+#> S1_165 200 1000   NA      0.03673118
 x1m$below
 #>        Z50  Z95 Z100 fineRootBiomass coarseRootSoilVolume poolProportions
-#> T1_148 200 2000   NA              NA                    0      0.66228187
-#> T2_168 300 1000   NA              NA                    0      0.31100544
-#> S1_165 200 1000   NA              NA                    0      0.02671269
+#> T1_148 200 2000   NA              NA                    0      0.51956127
+#> T2_168 300 1000   NA              NA                    0      0.44370755
+#> S1_165 200 1000   NA              NA                    0      0.03673118
 
 # Inspect dependencies: fine root distribution across soil layers
 x1$belowLayers$V

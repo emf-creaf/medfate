@@ -261,12 +261,12 @@ fd$StandSummary
 #> 3        550.7418          24.95615                800                37.55
 #>   QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead
 #> 1                  24.02949         53.20353       3.750000    0.00000000
-#> 2                  24.02465         53.23393       3.843800    0.03865577
-#> 3                  24.01982         53.26427       3.912533    0.03849813
+#> 2                  24.02465         53.23393       3.854688    0.03865577
+#> 3                  24.01982         53.26427       3.959130    0.03849813
 #>   ShrubCoverDead BasalAreaCut ShrubCoverCut
 #> 1    0.000000000            0             0
-#> 2    0.005823228            0             0
-#> 3    0.005955947            0             0
+#> 2    0.005829315            0             0
+#> 3    0.005991128            0             0
 
 #Tree table by annual steps
 fd$TreeTable

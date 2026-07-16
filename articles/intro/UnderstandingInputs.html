@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-07-04</h4>
+            <h4 data-toc-skip class="date">2026-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1263,41 +1263,49 @@ successful recruitment</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="even">
+<td align="left">RecrTreeDBH</td>
+<td align="left">Recruitment tree (sapling) stem diameter at breast
+height</td>
+<td align="left">Numeric</td>
+<td align="left">cm</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree (sapling) height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree (sapling) density</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RespFire</td>
 <td align="left">Probability of resprouting after fire disturbance</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RespDist</td>
 <td align="left">Probability of resprouting after undefined disturbance
 (typically desiccation)</td>
@@ -1305,21 +1313,21 @@ successful recruitment</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RespClip</td>
 <td align="left">Probability of resprouting after clipping</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">IngrowthTreeDensity</td>
 <td align="left">Tree density when reaching DBH of ingrowth</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">IngrowthTreeDBH</td>
 <td align="left">Tree DBH of ingrowth (typically 7.5 cm)</td>
 <td align="left">Numeric</td>
@@ -1445,9 +1453,9 @@ parameters:</p>
 <pre><code><span><span class="co">## Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 </span></span>
 <span><span class="co">## Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span></span>
 <span><span class="co">## Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 0 </span></span>
-<span><span class="co">## LAI (m2/m2) total: 1.8260413  adult trees: 1.7772629  saplings: 0  shrubs: 0.0487785  herbs: 0  mistletoe: 0 </span></span>
-<span><span class="co">## Fuel loading (kg/m2) total: 0.63975  adult trees: 0.6241368  saplings: 0  shrubs: 0.0156131  herbs: 0 </span></span>
-<span><span class="co">## PAR ground (%): 38.912485  SWR ground (%): 49.7006648</span></span></code></pre>
+<span><span class="co">## LAI (m2/m2) total: 1.4516629  adult trees: 1.3983416  saplings: 0  shrubs: 0.0533213  herbs: 0  mistletoe: 0 </span></span>
+<span><span class="co">## Fuel loading (kg/m2) total: 0.4889222  adult trees: 0.471855  saplings: 0  shrubs: 0.0170672  herbs: 0 </span></span>
+<span><span class="co">## PAR ground (%): 46.7337671  SWR ground (%): 56.9222511</span></span></code></pre>
 <p>Function <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for <code>forest</code> objects allows
 displaying vertical profiles of several forest properties. For example,
 leaf area distribution can be examined using:</p>
@@ -1723,7 +1731,7 @@ parameterization is obtained using function
 <span><span class="co">##  [39] "verticalLayerSize"                  "windMeasurementHeight"             </span></span>
 <span><span class="co">##  [41] "segmentedXylemVulnerability"        "stemCavitationRecovery"            </span></span>
 <span><span class="co">##  [43] "leafCavitationRecovery"             "lfmcComponent"                     </span></span>
-<span><span class="co">##  [45] "cavitationInducedDefoliation"       "mistletoeParams"                   </span></span>
+<span><span class="co">##  [45] "mistletoeParams"                    "defoliationParams"                 </span></span>
 <span><span class="co">##  [47] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  </span></span>
 <span><span class="co">##  [49] "taper"                              "multiLayerBalance"                 </span></span>
 <span><span class="co">##  [51] "sapFluidityVariation"               "TPhase_gmin"                       </span></span>
@@ -1801,7 +1809,7 @@ simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

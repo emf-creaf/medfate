@@ -141,6 +141,10 @@ and the following:
   - `"LeafArea"`: Leaf area (in m2) for an average individual of each
     plant cohort.
 
+  - `"CrownFoliageCompleteness"`: Leaf area expressed as a proportion of
+    the maximum crown foliage for an average individual of each plant
+    cohort.
+
   - `"SapwoodArea"`: Sapwood area (in cm2) for an average individual of
     each plant cohort.
 

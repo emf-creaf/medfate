@@ -237,139 +237,139 @@ data(SpParamsMED)
 #Calculate fuel properties according to FCCS
 fccs <- fuel_FCCS(exampleforest, SpParamsMED)
 fccs
-#>                 w  cover hbc htc habc hatc       delta        rhob     rhop
-#> canopy 0.62413684 100.00 2.8 7.6  2.4  7.9 4.960217784  0.12582851 570.3129
-#> shrub  0.01561312   3.75 0.0 0.1  0.1  0.8 0.642625347  0.02429584 628.1644
-#> herb   0.00000000   0.00 0.0  NA  0.0   NA 0.000000000  0.00000000 400.0000
-#> woody  0.22731400     NA 0.0  NA  0.0   NA 0.008600605 26.43000000 730.0000
-#> litter 0.23084538     NA 0.0  NA  0.0   NA 0.010374497 22.25123541 366.9009
+#>                w  cover hbc htc habc hatc       delta        rhob     rhop
+#> canopy 0.4718550 100.00 2.8 6.9  2.4  7.9 4.826614951  0.09776106 607.3280
+#> shrub  0.0170672   3.75 0.0 0.1  0.1  0.8 0.642625347  0.02655855 628.1644
+#> herb   0.0000000   0.00 0.0  NA  0.0   NA 0.000000000  0.00000000 400.0000
+#> woody  0.1740125     NA 0.0  NA  0.0   NA 0.006583900 26.43000000 730.0000
+#> litter 0.1811697     NA 0.0  NA  0.0   NA 0.008875105 20.41324407 366.9009
 #>                  PV         beta   betarel etabetarel     sigma        pDead
-#> canopy 1.138507e-03 2.295276e-04 0.1593580  0.3693686  5531.511 0.0004377814
-#> shrub  2.485515e-05 3.867752e-05 0.2788513  0.5735398  4141.000 0.0006800000
+#> canopy 8.157094e-04 1.690024e-04 0.1129683  0.2742772  5272.152 0.0004066583
+#> shrub  2.716995e-05 4.227961e-05 0.1704513  0.3907228  4141.000 0.0006800000
 #> herb   0.000000e+00 0.000000e+00 1.6654521  0.8561108 11483.000 0.0000000000
-#> woody  3.113890e-04 3.620548e-02 1.6654521  0.8561108  1601.050 1.0000000000
-#> litter 6.291765e-04 6.064645e-02 8.7556347  0.1577217  7083.948 1.0000000000
+#> woody  2.383732e-04 3.620548e-02 1.6654521  0.8561108  1601.050 1.0000000000
+#> litter 4.937838e-04 5.563695e-02 9.0747984  0.1479229  7313.522 1.0000000000
 #>              FAI        h           RV   MinFMC    MaxFMC ActFMC
-#> canopy 6.4740133 21411.15 1.094376e-03 55.01978 118.81135     NA
-#> shrub  0.1029252 20000.00 2.485515e-05 62.68714  98.39177     NA
+#> canopy 4.4655429 21041.57 7.769360e-04 55.65721 117.13407     NA
+#> shrub  0.1125108 20000.00 2.716995e-05 62.68714  98.39177     NA
 #> herb   0.0000000 18608.00 0.000000e+00       NA        NA     NA
-#> woody  0.4985494 18608.00 3.113890e-04       NA        NA     NA
-#> litter 4.4570531 18608.00 6.291765e-04       NA        NA     NA
+#> woody  0.3816475 18608.00 2.383732e-04       NA        NA     NA
+#> litter 3.6112983 18608.00 4.937838e-04       NA        NA     NA
   
 #Calculate fire behavior according to FCCS
 fire_FCCS(fccs)
 #> $SurfaceFire
 #> $SurfaceFire$`midflame_WindSpeed [m/s]`
-#> [1] 2.183541
+#> [1] 2.291788
 #> 
 #> $SurfaceFire$phi_wind
-#> [1] 17.89203
+#> [1] 24.00006
 #> 
 #> $SurfaceFire$phi_slope
 #> [1] 0
 #> 
 #> $SurfaceFire$`I_R_surf [kJ/m2/min]`
-#> [1] 12863.26
+#> [1] 9944.641
 #> 
 #> $SurfaceFire$`I_R_litter [kJ/m2/min]`
-#> [1] 2663.147
+#> [1] 1960.213
 #> 
 #> $SurfaceFire$`q_surf [kJ/m2]`
-#> [1] 15284.06
+#> [1] 14977.29
 #> 
 #> $SurfaceFire$`q_litter [kJ/m2]`
-#> [1] 2040.776
+#> [1] 1755.889
 #> 
 #> $SurfaceFire$xi_surf
-#> [1] 0.1225445
+#> [1] 0.09156883
 #> 
 #> $SurfaceFire$xi_litter
-#> [1] 0.18
+#> [1] 0.1690924
 #> 
 #> $SurfaceFire$`ROS_surf [m/min]`
-#> [1] 1.949826
+#> [1] 1.521091
 #> 
 #> $SurfaceFire$`ROS_litter [m/min]`
-#> [1] 4.440806
+#> [1] 4.722611
 #> 
 #> $SurfaceFire$`ROS_windslopecap [m/min]`
-#> [1] 131.0124
+#> [1] 137.5073
 #> 
 #> $SurfaceFire$`ROS [m/min]`
-#> [1] 4.440806
+#> [1] 4.722611
 #> 
 #> $SurfaceFire$`I_b [kW/m]`
-#> [1] 420.665
+#> [1] 344.7192
 #> 
 #> $SurfaceFire$`t_r [s]`
-#> [1] 26.49202
+#> [1] 26.40498
 #> 
 #> $SurfaceFire$`FL [m]`
-#> [1] 1.247896
+#> [1] 1.13868
 #> 
 #> 
 #> $CrownFire
 #> $CrownFire$`I_R_canopy [kJ/m2/min]`
-#> [1] 28089.91
+#> [1] 18298.27
 #> 
 #> $CrownFire$`I_R_crown [kJ/m2/min]`
-#> [1] 40953.17
+#> [1] 28242.92
 #> 
 #> $CrownFire$`q_canopy [kJ/m2]`
-#> [1] 392.4964
+#> [1] 310.8646
 #> 
 #> $CrownFire$`q_crown [kJ/m2]`
-#> [1] 15676.55
+#> [1] 15288.16
 #> 
 #> $CrownFire$xi_crown
-#> [1] 0.09466956
+#> [1] 0.06807188
 #> 
 #> $CrownFire$`canopy_WindSpeed [m/s]`
-#> [1] 5.115045
+#> [1] 4.96174
 #> 
 #> $CrownFire$WAF
-#> [1] 2.046917
+#> [1] 2.018978
 #> 
 #> $CrownFire$`ROS_crown [m/min]`
-#> [1] 20.2336
+#> [1] 12.49535
 #> 
 #> $CrownFire$`I_b_crown [kW/m]`
-#> [1] 3147.697
+#> [1] 1406.52
 #> 
 #> $CrownFire$`t_r_crown [s]`
-#> [1] 13.66544
+#> [1] 14.3377
 #> 
 #> $CrownFire$Ic_ratio
-#> [1] 0.6430592
+#> [1] 0.5269629
 #> 
 #> $CrownFire$`FL_crown [m]`
-#> [1] 6.94952
+#> [1] 5.624276
 #> 
 #> 
 #> $FirePotentials
 #> $FirePotentials$RP
-#> [1] 2.693383
+#> [1] 2.368194
 #> 
 #> $FirePotentials$SP
 #> [1] 9
 #> 
 #> $FirePotentials$FP
-#> [1] 5.0585
+#> [1] 4.832072
 #> 
 #> $FirePotentials$SFP
 #> [1] 9
 #> 
 #> $FirePotentials$IC
-#> [1] 3.661931
+#> [1] 3.518974
 #> 
 #> $FirePotentials$TC
 #> [1] 9
 #> 
 #> $FirePotentials$RC
-#> [1] 8.14759
+#> [1] 6.402753
 #> 
 #> $FirePotentials$CFP
-#> [1] 5.462226
+#> [1] 4.746695
 #> 
 #> 
   

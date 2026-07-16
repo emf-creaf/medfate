@@ -186,13 +186,13 @@ x$above
 ```
 
     ##         SP        N   DBH Cover   H        CR         SA   LAI_live
-    ## T1_148 148 168.0000 37.55    NA 800 0.6534132 546.368896 1.20935408
-    ## T2_168 168 384.0000 14.60    NA 660 0.6359169  37.835661 0.56790878
-    ## S1_165 165 749.4923    NA  3.75  80 0.8032817   2.671156 0.04877848
-    ##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe    Loading Age ObsID
-    ## T1_148   1.20935408        0 1.36735252             0 0.46233288  NA  <NA>
-    ## T2_168   0.56790878        0 0.82052990             0 0.16180395  NA  <NA>
-    ## S1_165   0.04877848        0 0.07406522             0 0.01561312  NA  <NA>
+    ## T1_148 148 168.0000 37.55    NA 800 0.6534132 340.749359 0.75422783
+    ## T2_168 168 384.0000 14.60    NA 660 0.6359169  42.912651 0.64411380
+    ## S1_165 165 749.4923    NA  3.75  80 0.8032817   2.919924 0.05332129
+    ##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe   Loading Age ObsID
+    ## T1_148   0.75422783        0 1.19968359             0 0.2883393  NA  <NA>
+    ## T2_168   0.64411380        0 0.93063296             0 0.1835157  NA  <NA>
+    ## S1_165   0.05332129        0 0.07406522             0 0.0170672  NA  <NA>
 
 Elements starting with `params*` contain cohort-specific model
 parameters. Some of them were already presented in previous vignettes
@@ -230,14 +230,18 @@ respiration rages. Another important set of parameters is given in
 x$paramsAllometries
 ```
 
-    ##          Afbt   Bfbt    Cfbt      Aash     Bash      Absh      Bbsh BTsh   Acr
-    ## T1_148 0.0527 1.5782 -0.0066        NA       NA        NA        NA   NA 1.995
-    ## T2_168 0.1300 1.2285 -0.0147 1.8574862 1.885548 0.5238830 0.7337293   NA 1.506
-    ## S1_165     NA     NA      NA 0.1305509 2.408443 0.5147731 0.5311554    2    NA
-    ##          B1cr   B2cr     B3cr   C1cr   C2cr       Acw   Bcw       Abt       Bbt
-    ## T1_148 -0.649 -0.020 -0.00012 -0.004 -0.159 0.6415296 0.731 0.5535741 1.1848613
-    ## T2_168 -0.706 -0.078  0.00018 -0.007  0.000 0.8390000 0.735 0.5622245 0.9626839
-    ## S1_165     NA     NA       NA     NA     NA        NA    NA        NA        NA
+    ##              Afbt     Bfbt        Cfbt      Aash     Bash      Absh      Bbsh
+    ## T1_148 0.05684887 1.521218 -0.02494652        NA       NA        NA        NA
+    ## T2_168 0.06310630 1.545032 -0.01470000 1.8574862 1.885548 0.5238830 0.7337293
+    ## S1_165         NA       NA          NA 0.1305509 2.408443 0.5147731 0.5311554
+    ##        BTsh   Acr   B1cr   B2cr     B3cr   C1cr   C2cr       Acw   Bcw
+    ## T1_148   NA 1.995 -0.649 -0.020 -0.00012 -0.004 -0.159 0.6415296 0.731
+    ## T2_168   NA 1.506 -0.706 -0.078  0.00018 -0.007  0.000 0.8390000 0.735
+    ## S1_165    2    NA     NA     NA       NA     NA     NA        NA    NA
+    ##              Abt       Bbt
+    ## T1_148 0.5535741 1.1848613
+    ## T2_168 0.5622245 0.9626839
+    ## S1_165        NA        NA
 
 Note that in the previous models, allometries were already used to
 estimate above-ground structural parameters, but these were static
@@ -265,9 +269,9 @@ x$internalAllocation
 ```
 
     ##        allocationTarget leafAreaTarget sapwoodAreaTarget fineRootBiomassTarget
-    ## T1_148         1317.523     71.9853618        546.368896            1752.14684
-    ## T2_168         3908.823     14.7892912         37.835661            1254.30202
-    ## S1_165         2436.475      0.6508203          2.671156              35.23227
+    ## T1_148         1317.523     44.8945137        340.749359            1478.12411
+    ## T2_168         3908.823     16.7737969         42.912651            1422.61093
+    ## S1_165         2436.475      0.7114322          2.919924              38.51351
     ##        crownBudPercent
     ## T1_148             100
     ## T2_168             100
@@ -289,36 +293,36 @@ which has the same parameter names as
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Initial plant cohort biomass (g/m2): 14297.8
-    ## Initial plant water content (mm): 6.27649
+    ## Initial plant cohort biomass (g/m2): 14069.3
+    ## Initial plant water content (mm): 4.20666
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
     ## Performing daily simulations
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14521.6
-    ## Change in plant cohort biomass (g/m2): 223.791
+    ## Final plant cohort biomass (g/m2): 14264.5
+    ## Change in plant cohort biomass (g/m2): 195.137
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) -6 Labile balance (g/m2) 121
-    ##   Plant individual balance (g/m2) 115 Mortality loss (g/m2) 22
-    ## Final plant water content (mm): 6.26568
-    ## Final soil water content (mm): 273.01
+    ##   Structural balance (g/m2) -1 Labile balance (g/m2) 88
+    ##   Plant individual balance (g/m2) 88 Mortality loss (g/m2) 21
+    ## Final plant water content (mm): 4.2028
+    ## Final soil water content (mm): 276.706
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.0108039
-    ## Plant water balance result (mm): -0.00251744
-    ## Change in soil water content (mm): -17.8654
-    ## Soil water balance result (mm): -17.8629
+    ## Change in plant water content (mm): -0.00386439
+    ## Plant water balance result (mm): -0.00117483
+    ## Change in soil water content (mm): -14.1693
+    ## Soil water balance result (mm): -14.1696
     ## Change in snowpack water content (mm): 0
     ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 98 Net rainfall (mm) 365
-    ##   Infiltration (mm) 398 Infiltration excess (mm) 18 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 20  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 284  Mistletoe transpiration (mm) 0
-    ##   Plant extraction from soil (mm) 284  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4
-    ##   Runoff (mm) 18 Deep drainage (mm) 112
+    ##   Interception (mm) 76 Net rainfall (mm) 387
+    ##   Infiltration (mm) 416 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 28  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 223  Mistletoe transpiration (mm) 0
+    ##   Plant extraction from soil (mm) 223  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Runoff (mm) 22 Deep drainage (mm) 179
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -386,16 +390,16 @@ extract(G1, "forest", addunits = TRUE) |>
     ## # A tibble: 365 × 53
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
-    ##  1 2001-01-01   0.883          4.87    4.87   0      3.30      0           3.30 
-    ##  2 2001-01-02   1.64           2.50    2.50   0      0.972     0           0.972
+    ##  1 2001-01-01   0.883          4.87    4.87   0      3.72      0           3.72 
+    ##  2 2001-01-02   1.64           2.50    2.50   0      1.36      0           1.36 
     ##  3 2001-01-03   1.30           0       0      0      0         0           0    
-    ##  4 2001-01-04   0.569          5.80    5.80   0      4.24      0           4.24 
-    ##  5 2001-01-05   1.68           1.88    1.88   0      0.733     0           0.733
-    ##  6 2001-01-06   1.21          13.4    13.4    0     11.6       0          11.6  
+    ##  4 2001-01-04   0.569          5.80    5.80   0      4.65      0           4.65 
+    ##  5 2001-01-05   1.68           1.88    1.88   0      0.881     0           0.881
+    ##  6 2001-01-06   1.21          13.4    13.4    0     12.0       0          12.0  
     ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
     ##  8 2001-01-08   0.832          0       0      0      0         0           0    
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
-    ## 10 2001-01-10   0.829          5.12    5.12   0      3.55      5.38        8.92 
+    ## 10 2001-01-10   0.829          5.12    5.12   0      3.96      5.38        9.34 
     ## # ℹ 355 more rows
     ## # ℹ 45 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],

@@ -65,6 +65,7 @@ hydraulics_averageRhizosphereResistancePercent(
   kleafmax,
   leafc,
   leafd,
+  psiMin = -2,
   psiStep = -0.01
 )
 
@@ -81,6 +82,7 @@ hydraulics_findRhizosphereMaximumConductance(
   kleafmax,
   leafc,
   leafd,
+  psiMin,
   initialValue
 )
 
@@ -185,6 +187,11 @@ hydraulics_maximumStemHydraulicConductance(
 
   Vector with the proportion \[0-1\] of fine roots within each soil
   layer.
+
+- psiMin:
+
+  Minimum water potential (MPa) for calculating rhizosphere resistance
+  average.
 
 - psiStep:
 

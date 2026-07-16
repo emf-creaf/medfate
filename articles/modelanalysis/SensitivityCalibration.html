@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-07-04</h4>
+            <h4 data-toc-skip class="date">2026-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="d-none name"><code>SensitivityCalibration.Rmd</code></div>
@@ -154,29 +154,29 @@ simulation function <code><a href="../../reference/spwb.html">spwb()</a></code>:
 (<code><a href="../../reference/spwb.html">spwb()</a></code>) with the default parameter settings:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Initial plant water content (mm): 6.27649</span></span>
+<pre><code><span><span class="co">## Initial plant water content (mm): 4.20666</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  [Year 2001]:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant water content (mm): 6.27316</span></span>
-<span><span class="co">## Final soil water content (mm): 273.017</span></span>
+<span><span class="co">## Final plant water content (mm): 4.20517</span></span>
+<span><span class="co">## Final soil water content (mm): 276.623</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): -0.00332414</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.00332414</span></span>
-<span><span class="co">## Change in soil water content (mm): -17.8575</span></span>
-<span><span class="co">## Soil water balance result (mm): -17.8575</span></span>
+<span><span class="co">## Change in plant water content (mm): -0.0014939</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.0014939</span></span>
+<span><span class="co">## Change in soil water content (mm): -14.2514</span></span>
+<span><span class="co">## Soil water balance result (mm): -14.2514</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): -7.10543e-15</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
-<span><span class="co">##   Interception (mm) 98 Net rainfall (mm) 364</span></span>
-<span><span class="co">##   Infiltration (mm) 398 Infiltration excess (mm) 17 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
-<span><span class="co">##   Soil evaporation (mm) 19  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 285  Mistletoe transpiration (mm) 0</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 285  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4</span></span>
-<span><span class="co">##   Runoff (mm) 17 Deep drainage (mm) 111</span></span></code></pre>
+<span><span class="co">##   Interception (mm) 76 Net rainfall (mm) 386</span></span>
+<span><span class="co">##   Infiltration (mm) 415 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0</span></span>
+<span><span class="co">##   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 226  Mistletoe transpiration (mm) 0</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 226  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span>
+<span><span class="co">##   Runoff (mm) 22 Deep drainage (mm) 176</span></span></code></pre>
 <p>Function <code><a href="../../reference/spwb.html">spwb()</a></code> will be implicitly called multiple times
 in the sensitivity analyses and calibration analyses that we will
 illustrate below.</p>
@@ -215,7 +215,7 @@ soil layer 1 and 2). In total, eleven model parameters will be studied.
 The following shows the initial values for plant trait parameters:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x1</span><span class="op">$</span><span class="va">above</span><span class="op">$</span><span class="va">LAI_live</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 1.20935408 0.56790878 0.04877848</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.75422783 0.64411380 0.05332129</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">$</span><span class="va">Z50</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 100 300 200</span></span></code></pre>
@@ -273,7 +273,7 @@ over the simulated period (one year):</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sf_transp</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Transpiration</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
 <span><span class="fu">sf_transp</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 285.4075</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 226.4072</span></span></code></pre>
 <p>Another prediction function can focus on plant drought stress. We
 define a function that, given a simulation result, calculates the
 average drought stress of plants (measured using the water stress index)
@@ -286,7 +286,7 @@ over the simulated period:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">stress</span>,<span class="fl">2</span>, <span class="va">lai_p</span>, <span class="st">"*"</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu">sf_stress</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 6.530515</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 3.012606</span></span></code></pre>
 <p>Sensitivity analysis requires model output functions whose parameters
 are the input factors to be studied.
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>𝐱</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\begin{equation}
@@ -358,13 +358,13 @@ as reference:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##        dates       SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span></span>
-<span><span class="co">## 1 2001-01-01 0.3096350 2.2368938 0.16090800 0.14037218   121.7927   110.8566</span></span>
-<span><span class="co">## 2 2001-01-02 0.3111620 2.4438457 0.20760572 0.20836043   122.0531   110.3495</span></span>
-<span><span class="co">## 3 2001-01-03 0.3059256 0.4961111 0.15381307 0.16422557   121.8019   109.9891</span></span>
-<span><span class="co">## 4 2001-01-04 0.3065426 2.0314498 0.07211627 0.02000304   121.8243   108.1254</span></span>
-<span><span class="co">## 5 2001-01-05 0.3145447 2.0261489 0.27697128 0.28456505   121.8463   110.5328</span></span>
-<span><span class="co">## 6 2001-01-06 0.3036704 2.3210284 0.29409255 0.18411748   121.8150   109.5717</span></span>
+<pre><code><span><span class="co">##        dates       SWC       ETR    E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span></span>
+<span><span class="co">## 1 2001-01-01 0.3017734 2.0785388  0.08925077 0.05628449   122.5279   109.1394</span></span>
+<span><span class="co">## 2 2001-01-02 0.3144912 2.3709127  0.26413120 0.16048497   122.2444   104.1451</span></span>
+<span><span class="co">## 3 2001-01-03 0.2968755 0.5705353  0.15100910 0.11468692   122.0196   109.0215</span></span>
+<span><span class="co">## 4 2001-01-04 0.3010480 1.9943113 -0.03923472 0.12502470   121.7507   109.9618</span></span>
+<span><span class="co">## 5 2001-01-05 0.2952493 2.1105782  0.26075504 0.20046090   122.1703   108.5408</span></span>
+<span><span class="co">## 6 2001-01-06 0.3032929 2.1776517  0.16828855 0.18901425   122.2444   108.8001</span></span>
 <span><span class="co">##   BAI_T1_148 BAI_T2_168 DI_T1_148 DI_T2_168</span></span>
 <span><span class="co">## 1          0          0         0         0</span></span>
 <span><span class="co">## 2          0          0         0         0</span></span>
@@ -379,7 +379,7 @@ coefficient, which we calculate for the initial run using function
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, </span>
 <span>                  metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9303093</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.813275</span></span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient
 given a model simulation result, but is not a model output function as
 we defined above. Analogously to the measures of total transpiration and
@@ -398,10 +398,10 @@ simulation results, so that we only need to provide values for the input
 factors:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.2611858</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.2530919</span></span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -49.2236</span></span></code></pre>
+<pre><code><span><span class="co">## [1] -51.57997</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>
@@ -793,8 +793,6 @@ prediction uncertainty for the same output variables:</p>
 <pre><code><span><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span></span>
 <span><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span></span>
 <span><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span></span>
 <span><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span></span></code></pre>
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
@@ -848,7 +846,7 @@ Analysis. The Primer. Wiley.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>
