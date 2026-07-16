@@ -166,7 +166,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
         td_merged$LAI <- as.numeric(tapply(td$LAI, td$Species, FUN = sum))
       }
       if("LAIMistletoe" %in% names(td)) {
-        td_merged$LAIMistletoe <- as.numeric(tapply(td$LAIMistletoe*BA, td$Species, FUN = sum)/BAsp)
+        td_merged$LAIMistletoe <- as.numeric(tapply(td$LAIMistletoe, td$Species, FUN = sum))
       }
       if("FoliarBiomass" %in% names(td)) {
         td_merged$FoliarBiomass <- as.numeric(tapply(td$FoliarBiomass, td$Species, FUN = sum))
@@ -214,7 +214,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE, keepCohortsWithObsID = FALSE) 
       y$LAI <- as.numeric(tapply(x$LAI, x$Species, FUN = sum))
     }
     if("LAIMistletoe" %in% names(x)) {
-      y$LAIMistletoe <- as.numeric(tapply(x$LAIMistletoe*x$Cover, x$Species, FUN = sum)/Coversp)
+      y$LAIMistletoe <- as.numeric(tapply(x$LAIMistletoe, x$Species, FUN = sum))
     }
     if("FoliarBiomass" %in% names(x)) {
       y$FoliarBiomass <- as.numeric(tapply(x$FoliarBiomass, x$Species, FUN = sum))
