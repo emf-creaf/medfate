@@ -84,8 +84,8 @@ test_that("growth can be run using dates as columns",{
 
 test_that("growth can be run using species codes",{
   f <- exampleforest
-  f$treeData$Species <- c(148, 168)
-  f$shrubData$Species <- 165
+  f$treeData$Species <- c(SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"], SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"])
+  f$shrubData$Species <- SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"]
   expect_s3_class(growth(growthInput(f, examplesoil, SpParamsMED, control_granier), 
                        examplemeteo2[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
