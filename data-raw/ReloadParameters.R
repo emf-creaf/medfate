@@ -78,8 +78,8 @@ SpParamsMED <- traits4models::fill_medfate_traits(SpParamsMED, harmonized_trait_
 # Revised hydraulic/photosynthesis parameters
 cli::cli_h2("Calibration/metamodelling parameters")
 source(paste0(MFWdir, "Metamodelling_TR_WUE/R/utils.R"))
-customParamsSpecies <- get_custom_params(paste0(MFWdir,"Metamodelling_TR_WUE/data-raw"))
-SpParamsMED <- medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
+# customParamsSpecies <- get_custom_params(paste0(MFWdir,"Metamodelling_TR_WUE/data-raw"))
+# SpParamsMED <- medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
 # Results of meta-modelling exercise
 metamodellingParamsSpecies <- readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/data/SpParamsMED/metamodelling_params.rds"))
 metamodellingParamsSpecies$SpIndex <- NULL
