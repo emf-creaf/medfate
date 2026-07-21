@@ -156,16 +156,32 @@ rm(SpParamsMED)
 
 
 # Trait family means ------------------------------------------------------
-harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources"
+DB_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/"
+harmonized_trait_path <- paste0(DB_path, "data/harmonized_trait_sources")
+WFO_file <- paste0(DB_path, "data-raw/wfo_backbone/classification.csv")
 trait_family_means <- traits4models::taxon_trait_summary(harmonized_trait_path, taxonomic_level = "family", 
                                                          traits =c("WoodDensity", "LeafDensity", "FineRootDensity", "WoodC", 
                                                                     "Ptlp", "LeafPI0", "LeafEPS", "LeafAF",
-                                                                    "Gswmin", "Gswmax",
+                                                                    "Gswmin",
                                                                     "Nleaf", "Nsapwood", "Nfineroot",
                                                                     "Ks", "VCstem_P50", 
                                                                     "Al2As", "conduit2sapwood", "SRL")) |>
   dplyr::filter(!is.na(family)) |>
   dplyr::rename("Kmax_stemxylem" = "Ks")
+trait_species_Gsw_q99 <- traits4models::taxon_trait_summary(harmonized_trait_path, taxonomic_level = "species", 
+                                                         traits =c("Gsw"), summary_function = "weightedquantile", summary_params = list(probs = 0.99)) |>
+  dplyr::rename(originalName = acceptedName) |>
+  dplyr::filter(!is.na(.data[["Gsw"]]), !is.infinite(.data[["Gsw"]])) |>
+  dplyr::rename("Gsw_q99" = "Gsw")
+species_complete <- traits4models::harmonize_taxonomy_WFO(trait_species_Gsw_q99, WFO_file,
+                                                          verbose = FALSE, progress = FALSE) 
+trait_family_Gsw_q99  <- species_complete |>
+  dplyr::group_by(family) |>
+  dplyr::summarise(Gsw_q99 = mean(Gsw_q99, na.rm = TRUE)) 
+trait_family_means <- trait_family_means |>
+  dplyr::left_join(trait_family_Gsw_q99, by = "family") |>
+  dplyr::rename(Gswmax = Gsw_q99) |>
+  dplyr::relocate(Gswmax, .after = "Gswmin")
 row.names(trait_family_means) <- trait_family_means$family
 trait_family_means <- trait_family_means |> dplyr::select(-family)
 write.table(trait_family_means, "data-raw/trait_family_means.csv", sep=";")
