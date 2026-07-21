@@ -1113,8 +1113,10 @@ List growth(List x, DataFrame meteo, double latitude,
     }
     
     if(unlimitedSoilWater) {
-      NumericVector W = soil["W"];
-      for(int h=0;h<W.size();h++) W[h] = 1.0;
+      for(int h=0;h<nlayers;h++) {
+        x_c.soil.setW(h, 1.0); 
+        for(int j=0;j<numCohorts;j++) x_c.belowLayers.Wpool(j,h) = 1.0;
+      }
     }
     
     

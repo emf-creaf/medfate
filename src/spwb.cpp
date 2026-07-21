@@ -2013,7 +2013,10 @@ List spwb(List x, DataFrame meteo,
     }
     
     if(unlimitedSoilWater) {
-      for(int h=0;h<nlayers;h++) x_c.soil.setW(h, 1.0);
+      for(int h=0;h<nlayers;h++) {
+        x_c.soil.setW(h, 1.0); 
+        for(int j=0;j<numCohorts;j++) x_c.belowLayers.Wpool(j,h) = 1.0;
+      }
     }
     
     
