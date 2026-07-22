@@ -1035,14 +1035,14 @@
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafAbsorbedSWR") {
-    mSu = .extractSubdaily(x, "SunlitLeaves$Abs_SWR", dates)
-    mSh = .extractSubdaily(x, "ShadeLeaves$Abs_SWR", dates)
+    mSu = .extractSubdaily(x, "SunlitLeaves$Abs_SWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Abs_SWR", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafAbsorbedPAR") {
-    mSu = .extractSubdaily(x, "SunlitLeaves$Abs_PAR", dates)
-    mSh = .extractSubdaily(x, "ShadeLeaves$Abs_PAR", dates)
+    mSu = .extractSubdaily(x, "SunlitLeaves$Abs_PAR", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Abs_PAR", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 

@@ -295,7 +295,7 @@ void layerSunlitFraction_c(std::vector<double>& fSL,
       }
     }
     fSL[i] = exp(-1.0*s1)*exp(-1.0*s2);
-    if(fSL[i]<0.00001) fSL[i] = 0.0; //Avoids overestimation of absorbed radiation per leaf area when sunlit fraction is close to zero
+    // if(fSL[i]<0.001) fSL[i] = 0.0; //Avoids overestimation of absorbed radiation per leaf area when sunlit fraction is close to zero
   }
 }
 
@@ -358,6 +358,12 @@ void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsorti
                           LAIme, LAImd, LAIms,
                           kDIR, ClumpingIndex, 
                           kDIR_mistletoe, CI_mistletoe);
+    //If night, make sure that sunlit fraction is zero for all canopy layers
+    if(ddd.Rg[n]<0.000001) {
+      for(int i = 0;i<ncanlayers;i++) {
+        fsunlit[i] = 0.0;
+      }
+    }
 
     //Fraction of incoming diffuse/direct SWR radiation and LWR radiation reaching the ground
     res.gbf[n] = groundDirectIrradianceFraction_c(LAIme,LAImd,LAImx,LAIms,

@@ -895,6 +895,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
           outputShadeInst.Net_LWR(c,n) += Lnet_cohort_layer(i,c)*(1.0 - fsunlit[i]);
         }
         // if(outputSunlitInst.Net_LWR(c,n)!=0.0) Rcout << c << " " << n << " Net_LWR_SL " << outputSunlitInst.Net_LWR(c,n) << "\n";
+      } else {
+        outputSunlitInst.Abs_PAR(c,n) = medfate::NA_DOUBLE;
+        outputShadeInst.Abs_PAR(c,n) = medfate::NA_DOUBLE;
+        outputSunlitInst.Abs_SWR(c,n) = medfate::NA_DOUBLE;
+        outputShadeInst.Abs_SWR(c,n) = medfate::NA_DOUBLE;
+        outputSunlitInst.Net_LWR(c,n) = medfate::NA_DOUBLE;
+        outputShadeInst.Net_LWR(c,n) = medfate::NA_DOUBLE;
       }
     }
 
@@ -1028,7 +1035,14 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
       double canopyThermalCapacity =  canopyAirThermalCapacity + (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
       double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*outputEnergyBalance.Ebalcan[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
       if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
-      for(int i=0;i<ncanlayers;i++) Tair[i] = Tcannext;
+      //Assumes a linear gradient between Tcannext and T
+      for(int i=0;i<ncanlayers;i++) {
+        if(n<(ntimesteps-1)) {
+          Tair[i] = (Tatm[n+1]*std::min(1.0,zup[i]/canopyHeight) + Tcannext*(1.0 - std::min(1.0,zup[i]/canopyHeight))); 
+        } else {
+          Tair[i] = (Tatm[n]*std::min(1.0,zup[i]/canopyHeight) + Tcannext*(1.0 - std::min(1.0,zup[i]/canopyHeight))); 
+        }
+      }
 
       //Soil energy balance including exchange with canopy
       if(x.snowpack==0.0) {

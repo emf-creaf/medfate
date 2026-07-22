@@ -783,7 +783,7 @@ void innerSureau_c(ModelInput& x,
       double mist_P50_gs_B = x.control.mistletoe.Gsw_P50_Baldocchi;
       double mist_slope_gs_B = x.control.mistletoe.Gsw_slope_Baldocchi;
       
-      double LAI = networks[c].LAI;
+      double LAI = LAI_SL(c,n) + LAI_SH(c,n);
 
       int nwhilecomp = 0;
 
@@ -829,10 +829,13 @@ void innerSureau_c(ModelInput& x,
           if(std::isnan(Elim_SH)) Elim_SH = Elim * (LAI_SH(c,n)/LAI);
           if(!sunlitShade) Elim_SH = Elim_SL;
 
-          Temp_SL(c,n) = leafTemperature2_c(SWR_SL(c,n)/LAI_SL(c,n), LWR_SL(c,n)/LAI_SL(c,n),
+          //Avoid overestimation due to small LAI
+          double swr_sl_la = std::min(40.0, SWR_SL(c,n)/LAI_SL(c,n));
+          double swr_sh_la = std::min(40.0, SWR_SH(c,n)/LAI_SH(c,n));
+          Temp_SL(c,n) = leafTemperature2_c(swr_sl_la, LWR_SL(c,n)/LAI_SL(c,n),
                                             Tair[input.iLayerSunlit[c]], zWind[input.iLayerSunlit[c]],
                                             Elim_SL,  x.paramsAnatomy.LeafWidth[c]);
-          Temp_SH(c,n) = leafTemperature2_c(SWR_SH(c,n)/LAI_SH(c,n), LWR_SH(c,n)/LAI_SH(c,n),
+          Temp_SH(c,n) = leafTemperature2_c(swr_sh_la, LWR_SH(c,n)/LAI_SH(c,n),
                                             Tair[input.iLayerShade[c]], zWind[input.iLayerShade[c]],
                                             Elim_SH,  x.paramsAnatomy.LeafWidth[c]);
           if(!sunlitShade) Temp_SH(c,n) = Temp_SL(c,n);
@@ -1150,11 +1153,6 @@ void innerSureau_c(ModelInput& x,
       //Delete pointers
       deleteSureauNetworkPointers_c(network_n);
     } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI (or completely embolized)
-      output.sunlit_inst.E(c,n) = 0.0;
-      output.shade_inst.E(c,n) = 0.0;
-      output.shade_inst.Psi(c,n) = networks[c].Psi_LSym;
-      output.sunlit_inst.Psi(c,n) = networks[c].Psi_LSym;
-      output.plants_inst.dEdP(c,n) = networks[c].k_Plant;
       x.internalWater.LeafPsi[c] = networks[c].Psi_LApo;
       x.internalWater.LeafSympPsi[c] = networks[c].Psi_LSym;
       x.internalWater.StemPsi[c] = networks[c].Psi_SApo;
@@ -1166,6 +1164,23 @@ void innerSureau_c(ModelInput& x,
       output.plants_inst.An(c,n) = 0.0;
       output.plants_inst.E(c,n) = 0.0;
       output.plants_inst.PWB(c,n) = 0.0;
+      Ci_SL(c,n) = medfate::NA_DOUBLE;
+      Ci_SH(c,n) = medfate::NA_DOUBLE;
+      Ag_SL(c,n) = medfate::NA_DOUBLE;
+      Ag_SH(c,n) = medfate::NA_DOUBLE;
+      An_SL(c,n) = medfate::NA_DOUBLE;
+      An_SH(c,n) = medfate::NA_DOUBLE;
+      GSW_SL(c,n) = medfate::NA_DOUBLE;
+      GSW_SH(c,n) = medfate::NA_DOUBLE;
+      VPD_SL(c,n) = medfate::NA_DOUBLE;
+      VPD_SH(c,n) = medfate::NA_DOUBLE;
+      Temp_SL(c,n) = medfate::NA_DOUBLE;
+      Temp_SH(c,n) = medfate::NA_DOUBLE;
+      output.sunlit_inst.E(c,n) = medfate::NA_DOUBLE;
+      output.shade_inst.E(c,n) = medfate::NA_DOUBLE;
+      output.shade_inst.Psi(c,n) = medfate::NA_DOUBLE;
+      output.sunlit_inst.Psi(c,n) = medfate::NA_DOUBLE;
+      output.plants_inst.dEdP(c,n) = medfate::NA_DOUBLE;
     }
   }
 
