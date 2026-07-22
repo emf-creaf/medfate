@@ -7,6 +7,7 @@
 * SpParamsMED now is filled with package traits4models
 * New output variable: CrownFoliageCompleteness
 * Rhizosphere conductance estimation with respect to resistance percent up to water potential related stomatal closure 
+* Linear temperature gradient along the canopy between above-ground temperature and inside-canopy temperature 
 
 # medfate 5.0.0
 * Partial rhizosphere overlap set to default
