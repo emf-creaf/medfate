@@ -837,8 +837,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         Jmax298_SL(c,n) +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Vmax298_SH(c,n) +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         Jmax298_SH(c,n) +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-        // if(LAI_SL(c,n) > 0.0) Rcout<< n << " c "<< c << " l "<<i<<" LAI_SL: "<< Vmax298_SL(c,n)<<" Vmax298_SL: "<< Vmax298_SL(c,n) <<"\n";
       }
+      // if(LAI_SL(c,n) > 0.0 && c==16) Rcpp::Rcout << "TA - " << n << " c "<< c <<" LAI_SL: "<< LAI_SL(c,n)<<" LAI_SH: "<< LAI_SH(c,n) <<"\n";
     }
 
     //Determine canopy vertical layer corresponding to cohort canopy, sunlit and shade leaves for each cohort

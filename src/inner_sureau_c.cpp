@@ -783,6 +783,8 @@ void innerSureau_c(ModelInput& x,
       double mist_P50_gs_B = x.control.mistletoe.Gsw_P50_Baldocchi;
       double mist_slope_gs_B = x.control.mistletoe.Gsw_slope_Baldocchi;
       
+      // if(LAI_SL(c,n) > 0.0 && c==16) Rcpp::Rcout << " IS - " << n << " c "<< c <<" LAI_SL: "<< LAI_SL(c,n)<<" LAI_SH: "<< LAI_SH(c,n) <<" Abs_SWR: " <<SWR_SL(c,n) <<"\n";
+      
       double LAI = LAI_SL(c,n) + LAI_SH(c,n);
 
       int nwhilecomp = 0;

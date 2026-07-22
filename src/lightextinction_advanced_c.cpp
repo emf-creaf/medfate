@@ -42,7 +42,7 @@ double directionalExtinctionCoefficient_c(double p, double q, double solarElevat
     double Fi = leafAngleCDF_c(a2, p, q) - leafAngleCDF_c(a1, p, q);
     G = G + G_function1_c((a1+a2)/2.0, solarElevation)*Fi;
   }
-  return(G/mu);
+  return(std::min(G/mu, 2.0));
 }
 
 
@@ -74,7 +74,7 @@ void layerDirectIrradianceFraction_c(std::vector<double>& Ifraction,
       }
     }
     //Average gamma according to LAI
-    gamma_i = gsum/lsum;
+    gamma_i = std::min(1.0, gsum/lsum);
     if(lsum == 0.0) gamma_i = 0.0;
   }
 }
@@ -113,6 +113,7 @@ void layerDiffuseIrradianceFraction_c(arma::mat& Ifraction,
       }
       //Average gamma according to LAI
       gamma_i = gsum/lsum;
+      gamma_i = std::min(1.0, gsum/lsum);
       if(lsum == 0.0) gamma_i = 0.0;
     }
   }
@@ -397,7 +398,10 @@ void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsorti
       vparsh[c]  = 0.0;
       vswrsl[c]  = 0.0;
       vswrsh[c]  = 0.0;
+      double LAI_SL = 0.0, LAI_SH = 0.0;
       for(int i=0;i<ncanlayers;i++){
+        LAI_SL += LAIme(i,c)*fsunlit[i];
+        LAI_SH += LAIme(i,c)*(1.0 - fsunlit[i]);
         abs_PAR_sunlit(i,c)=abs_PAR_sunlit(i,c)*LAIme(i,c)*fsunlit[i];
         abs_PAR_shade(i,c)=abs_PAR_shade(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
         abs_SWR_sunlit(i,c)=abs_SWR_sunlit(i,c)*LAIme(i,c)*fsunlit[i];
@@ -407,6 +411,8 @@ void instantaneousLightExtinctionAbsortion_c(InstantaneousLightExtinctionAbsorti
         vswrsl[c]+=abs_SWR_sunlit(i,c);
         vswrsh[c]+=abs_SWR_shade(i,c);
       }
+      // if(LAI_SL > 0.0 && c==16) Rcpp::Rcout<< " LE - "<< n << " c "<< c <<" LAI_SL: "<< LAI_SL<<" LAI_SH: "<< LAI_SH << " Abs_SWR: " << vswrsl[c] << "\n";
+      
     }
     //Calculate canopy absorbed radiation (includes absortion by trunks in winter)
     double abs_dir_swr = ddd.SWR_direct[n]*1000.0*(1.0 - res.gbf[n]); //W/m2
