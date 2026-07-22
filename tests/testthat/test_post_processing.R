@@ -178,6 +178,8 @@ test_that("Can produce all advanced subdaily spwb plots",{
     expect_s3_class(plot(S2, "LeafTemperature", subdaily = TRUE), "ggplot")
     expect_s3_class(plot(S2, "Temperature", subdaily = TRUE), "ggplot")
     expect_s3_class(plot(S2, "PlantWaterBalance", subdaily = TRUE), "ggplot")
+    expect_s3_class(plot(S2, "SoilEnergyBalance", subdaily = TRUE), "ggplot")
+    expect_s3_class(plot(S2, "CanopyEnergyBalance", subdaily = TRUE), "ggplot")
     expect_type(waterUseEfficiency(S2, type = "Leaf Ci", draw=FALSE), "double")
     expect_type(waterUseEfficiency(S2, type = "Leaf iWUE", draw=FALSE), "double")
     expect_s3_class(medfate:::.extractSubdaily(S2, output="E"), "data.frame")
