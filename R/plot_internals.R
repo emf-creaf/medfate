@@ -986,6 +986,7 @@
       sm = .extractSubdaily(x, "SoilTemperature", dates)
       m = cbind(m, sm[,"1"])
     }
+    m <- m[,names(m)!="SolarHour"]
     names(m) = c("datetime", "Above-canopy","Inside-canopy", "Soil")
     if(is.null(ylab)) ylab = "Temperature (Celsius)"
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -999,7 +1000,7 @@
     df[["SWR abs."]] = ceb$SWRcan 
     df[["LWR net"]] = ceb$LWRcan
     df[["Latent heat vaporisation"]] = -ceb$LEVcan
-    df[["Latent heat fusion"]] = -seb$LEFsnow
+    df[["Latent heat fusion"]] = -ceb$LEFsnow
     df[["Convection can./atm."]] = -ceb$Hcan
     df[["Convection soil/can."]] = -seb$Hcansoil
     return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -1013,6 +1014,7 @@
     df[["LWR net"]] = seb$LWRsoil
     df[["Convection soil/can."]] = seb$Hcansoil
     df[["Latent heat vaporisation"]] = -seb$LEVsoil
+    df <- df[,names(df)!="SolarHour"]
     return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
   }
   else if(type=="PlantExtraction") {
