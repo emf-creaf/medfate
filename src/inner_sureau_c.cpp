@@ -830,12 +830,10 @@ void innerSureau_c(ModelInput& x,
           if(!sunlitShade) Elim_SH = Elim_SL;
 
           //Avoid overestimation due to small LAI
-          double swr_sl_la = std::min(40.0, SWR_SL(c,n)/LAI_SL(c,n));
-          double swr_sh_la = std::min(40.0, SWR_SH(c,n)/LAI_SH(c,n));
-          Temp_SL(c,n) = leafTemperature2_c(swr_sl_la, LWR_SL(c,n)/LAI_SL(c,n),
+          Temp_SL(c,n) = leafTemperature2_c(SWR_SL(c,n)/LAI_SL(c,n), LWR_SL(c,n)/LAI_SL(c,n),
                                             Tair[input.iLayerSunlit[c]], zWind[input.iLayerSunlit[c]],
                                             Elim_SL,  x.paramsAnatomy.LeafWidth[c]);
-          Temp_SH(c,n) = leafTemperature2_c(swr_sh_la, LWR_SH(c,n)/LAI_SH(c,n),
+          Temp_SH(c,n) = leafTemperature2_c(SWR_SH(c,n)/LAI_SH(c,n), LWR_SH(c,n)/LAI_SH(c,n),
                                             Tair[input.iLayerShade[c]], zWind[input.iLayerShade[c]],
                                             Elim_SH,  x.paramsAnatomy.LeafWidth[c]);
           if(!sunlitShade) Temp_SH(c,n) = Temp_SL(c,n);
