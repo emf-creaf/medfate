@@ -219,6 +219,9 @@ x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #Call simulation function
 S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
+#Examine daily results
+# shinyplot(S1)
+
 #Switch to 'Sperry' transpiration mode
 control <- defaultControl("Sperry")
 
@@ -228,14 +231,21 @@ x2 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #Call simulation function
 S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
+#Examine daily results
+# shinyplot(S2)
+
 #Switch to 'Sureau' transpiration mode
 control <- defaultControl("Sureau")
+control$subdailyResults <- TRUE  # To keep subdaily results
 
 #Initialize input
 x3 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
+
+#Examine daily and subdaily results
+# shinyplot(S3)
 }
                 
 }

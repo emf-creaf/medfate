@@ -150,15 +150,18 @@ using namespace Rcpp;
 //' #Simulate water balance for one day only (Sperry mode)
 //' control <- defaultControl("Sperry")
 //' x2 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
-//' sd2 <-spwb_day(x2, date, meteovec,
-//'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+//' sd2 <- spwb_day(x2, date, meteovec,
+//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' #Simulate water balance for one day only (Sureau mode)
 //' control <- defaultControl("Sureau")
+//' control$subdailyResults <- TRUE # To keep subdaily results
 //' x3 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control)
-//' sd3 <-spwb_day(x3, date, meteovec,
-//'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+//' sd3 <- spwb_day(x3, date, meteovec,
+//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
+//' #Examine subdaily results
+//' # shinyplot(sd3)
 //' 
 //' @name spwb_day
 // [[Rcpp::export("spwb_day")]]
