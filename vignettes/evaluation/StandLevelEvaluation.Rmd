@@ -19,26 +19,26 @@ medfate_ver <- sort(medfate_versions, decreasing = TRUE)[1]
 params = list(medfate_ver = medfate_ver,
               wd = wd,
               model='spwb',
-              # names = c("Wombat"),
-              # codes = c("WOMBAT"),
-              names=c("Wombat","Euc-FACE",
-                      "Soroe",
-                      "Puéchabon", "Hesse","Fontainebleau-Barbeau",  "Font-Blanche",
-                      # "Yatir",
-                      "Collelongo",
-                      "Mitra",
-                      "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)", "Prades", "Can Balasc", "Alto-Tajo Armallones", "Ronda",
-                      "Davos Seehornwald", "Lötschental",
-                      "Morgan-Monroe", "Sevilleta"),
-              codes=c("WOMBAT", "EUCFACE",
-                      "SOROE",
-                      "FRAPUE", "FRAHES", "FONTAINEBLEAU","FONBLA",
-                      # "ISRYAT",
-                      "COLLELONGO",
-                      "MITRA",
-                      "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", "PRADES", "CANBALASC", "ESPALTARM", "RONDA",
-                      "DAVOS", "LOTSCHENTAL",
-                      "USAMORSF", "SEVILLETA"),
+              names = c("Puéchabon"),
+              codes = c("FRAPUE"),
+              # names=c("Wombat","Euc-FACE",
+              #         "Soroe",
+              #         "Puéchabon", "Hesse","Fontainebleau-Barbeau",  "Font-Blanche",
+              #         # "Yatir",
+              #         "Collelongo",
+              #         "Mitra",
+              #         "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)", "Prades", "Can Balasc", "Alto-Tajo Armallones", "Ronda",
+              #         "Davos Seehornwald", "Lötschental",
+              #         "Morgan-Monroe", "Sevilleta"),
+              # codes=c("WOMBAT", "EUCFACE",
+              #         "SOROE",
+              #         "FRAPUE", "FRAHES", "FONTAINEBLEAU","FONBLA",
+              #         # "ISRYAT",
+              #         "COLLELONGO",
+              #         "MITRA",
+              #         "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", "PRADES", "CANBALASC", "ESPALTARM", "RONDA",
+              #         "DAVOS", "LOTSCHENTAL",
+              #         "USAMORSF", "SEVILLETA"),
               confs=c('granier','sperry', 'sureau'),
               save_plots = FALSE)
 
@@ -81,13 +81,15 @@ for(i in 1:n_sites) {
     df_all$Site[cnt] <- site
     df_all$Mode[cnt] <- conf
     df_all$Path[cnt] <- file.path(params$wd,'data', 'output', params$medfate_ver, params$model, conf, site)
+    file_name_data <- file.path(params$wd,'data', 'input', site,
+                       paste0(site,"_",params$medfate_ver,".rds"))
     file_name_input <- file.path(df_all$Path[cnt],
                        paste0('simulation_input.rds'))
     file_name_output <- file.path(df_all$Path[cnt],
                        paste0('simulation_result.rds'))
     df_all$InputObject[[cnt]] <- readRDS(file_name_input)
     df_all$Result[[cnt]] <-   readRDS(file_name_output)
-    site_list  <- medfatereports::load_list(site)
+    site_list  <- readRDS(file_name_data)
     df_all$SiteData[[cnt]] <- site_list
     df_general_sites$Plot[i] <- site_list$siteData$Value[1]
     col_country <- which(site_list$siteData$Attribute=="Country")
@@ -125,12 +127,10 @@ Forest water balance simulations (i.e. function `spwb()`) have been conducted us
 The set of control parameters modified from defaults in simulations are the following:
 
 ```{r}
-control_granier <- yaml::yaml.load_file(system.file("yaml_configurations", "granier.yaml",
-                                          package = "medfatereports"))
-control_sperry <- yaml::yaml.load_file(system.file("yaml_configurations", "sperry.yaml",
-                                          package = "medfatereports"))
-control_sureau <- yaml::yaml.load_file(system.file("yaml_configurations", "sureau.yaml",
-                                          package = "medfatereports"))
+yaml_path <- "~/OneDrive/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/inst/yaml_configurations/"
+control_granier <- yaml::yaml.load_file(paste0(yaml_path, "granier.yaml"))
+control_sperry <- yaml::yaml.load_file(paste0(yaml_path, "sperry.yaml"))
+control_sureau <- yaml::yaml.load_file(paste0(yaml_path, "sureau.yaml"))
 dplyr::bind_rows(as.data.frame(control_granier),
                  as.data.frame(control_sperry),
                  as.data.frame(control_sureau))|> 
