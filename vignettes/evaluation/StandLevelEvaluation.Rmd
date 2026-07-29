@@ -24,7 +24,7 @@ params = list(medfate_ver = medfate_ver,
               # names=c("Wombat","Euc-FACE",
               #         "Soroe",
               #         "Puéchabon", "Hesse","Fontainebleau-Barbeau",  "Font-Blanche",
-              #         # "Yatir",
+              #         "Yatir",
               #         "Collelongo",
               #         "Mitra",
               #         "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)", "Prades", "Can Balasc", "Alto-Tajo Armallones", "Ronda",
@@ -33,7 +33,7 @@ params = list(medfate_ver = medfate_ver,
               # codes=c("WOMBAT", "EUCFACE",
               #         "SOROE",
               #         "FRAPUE", "FRAHES", "FONTAINEBLEAU","FONBLA",
-              #         # "ISRYAT",
+              #         "ISRYAT",
               #         "COLLELONGO",
               #         "MITRA",
               #         "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", "PRADES", "CANBALASC", "ESPALTARM", "RONDA",
@@ -80,7 +80,7 @@ for(i in 1:n_sites) {
     cnt <- cnt+1
     df_all$Site[cnt] <- site
     df_all$Mode[cnt] <- conf
-    df_all$Path[cnt] <- file.path(params$wd,'data', 'output', params$medfate_ver, params$model, conf, site)
+    df_all$Path[cnt] <- file.path(params$wd,'data', 'output', params$medfate_ver, params$model, site, conf)
     file_name_data <- file.path(params$wd,'data', 'input', site,
                        paste0(site,"_",params$medfate_ver,".rds"))
     file_name_input <- file.path(df_all$Path[cnt],

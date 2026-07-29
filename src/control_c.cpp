@@ -95,6 +95,10 @@ ControlParameters::ControlParameters(List x) {
   advancedWB.ndailysteps = as<int>(x["ndailysteps"]);
   advancedWB.taper = as<bool>(x["taper"]);
   advancedWB.multiLayerBalance = as<bool>(x["multiLayerBalance"]);
+  advancedWB.leafConductanceEstimation = true;
+  if(x.containsElementNamed("leafConductanceEstimation")) advancedWB.leafConductanceEstimation = as<bool>(x["leafConductanceEstimation"]);
+  advancedWB.rootConductivityEstimation = true;
+  if(x.containsElementNamed("rootConductivityEstimation")) advancedWB.rootConductivityEstimation = as<bool>(x["rootConductivityEstimation"]);
   advancedWB.sapFluidityVariation = as<bool>(x["sapFluidityVariation"]);
   advancedWB.TPhase_gmin = as<double>(x["TPhase_gmin"]);
   advancedWB.Q10_1_gmin = as<double>(x["Q10_1_gmin"]);

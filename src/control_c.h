@@ -89,6 +89,8 @@ struct AdvancedWBParams {
   int nsubsteps_canopy;
   bool taper;
   bool multiLayerBalance;
+  bool leafConductanceEstimation;
+  bool rootConductivityEstimation;
   bool sapFluidityVariation;
   double TPhase_gmin;
   double Q10_1_gmin;

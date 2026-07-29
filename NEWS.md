@@ -8,6 +8,7 @@
 * New output variable: CrownFoliageCompleteness
 * Rhizosphere conductance estimation with respect to resistance percent up to water potential related stomatal closure 
 * Linear temperature gradient along the canopy between above-ground temperature and inside-canopy temperature 
+* Estimation of VCleaf_kmax and Kmax_rootxylem by default (control parameters)
 
 # medfate 5.0.0
 * Partial rhizosphere overlap set to default

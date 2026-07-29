@@ -277,17 +277,21 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
   bool fillWithGenus = control["fillMissingWithGenusParams"];
   bool segmentedXylemVulnerability = control["segmentedXylemVulnerability"];
   double rootRadialConductance = control["rootRadialConductance"];
-  double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
+  bool leafConductanceEstimation = true;
+  if(control.containsElementNamed("leafConductanceEstimation")) leafConductanceEstimation = as<bool>(control["leafConductanceEstimation"]);
+  bool rootConductivityEstimation = true;
+  if(control.containsElementNamed("rootConductivityEstimation")) rootConductivityEstimation = as<bool>(control["rootConductivityEstimation"]);
+  NumericVector treeSPZ95 = speciesNumericParameterFromIndex(SP, SpParams, "Z95");
   
   NumericVector widths = soil["widths"];
   
   NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams, fillWithGenus);
   NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams, fillWithGenus);
-  NumericVector VCleaf_kmax = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams, fillWithGenus);
+  NumericVector VCleaf_kmax_measured = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams, fillWithGenus);
   NumericVector Gswmax = speciesNumericParameterWithImputation(SP, SpParams, "Gswmax", fillMissingSpParams, fillWithGenus);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams, fillWithGenus);
   NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams, fillWithGenus);
-  NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams, fillWithGenus);
+  NumericVector Kmax_rootxylem_measured = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams, fillWithGenus);
   NumericVector VCstem_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P12", fillMissingSpParams, fillWithGenus);
   NumericVector VCstem_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P50", fillMissingSpParams, fillWithGenus);
   NumericVector VCstem_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P88", fillMissingSpParams, fillWithGenus);
@@ -303,25 +307,38 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, DataFram
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Hmed =  paramsAnatomydf["Hmed"];
   
-  NumericVector VCstem_kmax(numCohorts);
-  NumericVector VCroottot_kmax(numCohorts, 0.0);
-  NumericVector VGrhizotot_kmax(numCohorts, 0.0);
+  NumericVector VCstem_kmax(numCohorts, 0.0), VCleaf_kmax(numCohorts, 0.0), VCroottot_kmax(numCohorts, 0.0), VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0), FR_leaf(numCohorts, 0.0), FR_stem(numCohorts, 0.0), FR_root(numCohorts, 0.0);
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
   NumericVector VCstem_slope(numCohorts, 0.0), VCroot_slope(numCohorts, 0.0), VCleaf_slope(numCohorts, 0.0);
   NumericVector VCleafapo_kmax(numCohorts, NA_REAL);
   NumericVector kleaf_symp(numCohorts, NA_REAL);
+  NumericVector Kmax_rootxylem(numCohorts, NA_REAL);
   
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
     
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
-    double xylem_root_kmax =maximumStemHydraulicConductance_c(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]); 
+    //Root maximum conductance (in mmol·m-2·s-1·MPa-1)
+    if(rootConductivityEstimation) {
+      Kmax_rootxylem[c] = Kmax_stemxylem[c]*4.0;
+    } else {
+      Kmax_rootxylem[c] = Kmax_rootxylem_measured[c];
+    }
+    double xylem_root_kmax =maximumStemHydraulicConductance_c(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]);
     VCroottot_kmax[c] = 1.0/((1.0/xylem_root_kmax) + (1.0/rootRadialConductance));
-    kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
-    VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
-    
+    //Leaf maximum conductance (in mmol·m-2·s-1·MPa-1)
+    if(leafConductanceEstimation) {
+      double kstem = maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c], Hmed[c],control["taper"]); 
+      double kroot = maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c], std::min(200.0,treeSPZ95[c]/10.0),control["taper"]); 
+      double krootstem = 1.0/((1.0/kroot)+ (1.0/kstem));
+      double fRleaf = std::max(0.05, 0.60 - (0.60/7000.0)*Hmed[c]);
+      VCleaf_kmax[c] = krootstem*(1.0 - fRleaf)/fRleaf;
+    } else {
+      VCleaf_kmax[c] = VCleaf_kmax_measured[c];
+    }
+
     if(!segmentedXylemVulnerability) {
       VCleaf_P12[c] = VCstem_P12[c];
       VCleaf_P50[c] = VCstem_P50[c];
@@ -399,12 +416,17 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   double rootRadialConductance = control["rootRadialConductance"];
   double k_SSym = control["k_SSym"];
   double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
+  bool leafConductanceEstimation = true;
+  if(control.containsElementNamed("leafConductanceEstimation")) leafConductanceEstimation = as<bool>(control["leafConductanceEstimation"]);
+  bool rootConductivityEstimation = true;
+  if(control.containsElementNamed("rootConductivityEstimation")) rootConductivityEstimation = as<bool>(control["rootConductivityEstimation"]);
+  NumericVector treeSPZ95 = speciesNumericParameterFromIndex(SP, SpParams, "Z95");
   
   NumericVector widths = soil["widths"];
   
   NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams, fillWithGenus);
   NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams, fillWithGenus);
-  NumericVector VCleaf_kmax = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams, fillWithGenus);
+  NumericVector VCleaf_kmax_measured = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams, fillWithGenus);
   NumericVector Gswmax = speciesNumericParameterWithImputation(SP, SpParams, "Gswmax", fillMissingSpParams, fillWithGenus);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams, fillWithGenus);
   NumericVector Gsw_Toptim_Jarvis = speciesNumericParameterWithImputation(SP, SpParams, "Gsw_Toptim_Jarvis", fillMissingSpParams, fillWithGenus);
@@ -413,7 +435,7 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   NumericVector Gsw_slope_Baldocchi = speciesNumericParameterWithImputation(SP, SpParams, "Gsw_slope_Baldocchi", fillMissingSpParams, fillWithGenus);
   
   NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams, fillWithGenus);
-  NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams, fillWithGenus);
+  NumericVector Kmax_rootxylem_measured = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams, fillWithGenus);
   
   NumericVector VCstem_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P12", fillMissingSpParams, fillWithGenus);
   NumericVector VCstem_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P50", fillMissingSpParams, fillWithGenus);
@@ -438,11 +460,10 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Hmed =  paramsAnatomydf["Hmed"];
   
-  NumericVector VCstem_kmax(numCohorts, 0.0);
-  NumericVector VCroottot_kmax(numCohorts, 0.0);
-  NumericVector VGrhizotot_kmax(numCohorts, 0.0);
+  NumericVector VCstem_kmax(numCohorts, 0.0), VCleaf_kmax(numCohorts, 0.0), VCroottot_kmax(numCohorts, 0.0), VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0), FR_leaf(numCohorts, 0.0), FR_stem(numCohorts, 0.0), FR_root(numCohorts, 0.0);
   
+  NumericVector Kmax_rootxylem(numCohorts, NA_REAL);
   NumericVector kstem_symp(numCohorts, k_SSym);
   NumericVector VCleafapo_kmax(numCohorts, NA_REAL);
   NumericVector kleaf_symp(numCohorts, NA_REAL);
@@ -451,8 +472,24 @@ DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, DataFram
   for(int c=0;c<numCohorts;c++){
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
+    //Root maximum conductance (in mmol·m-2·s-1·MPa-1)
+    if(rootConductivityEstimation) {
+      Kmax_rootxylem[c] = Kmax_stemxylem[c]*4.0;
+    } else {
+      Kmax_rootxylem[c] = Kmax_rootxylem_measured[c];
+    }
     double xylem_root_kmax =maximumStemHydraulicConductance_c(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]);
     VCroottot_kmax[c] = 1.0/((1.0/xylem_root_kmax) + (1.0/rootRadialConductance));
+    //Leaf maximum conductance (in mmol·m-2·s-1·MPa-1)
+    if(leafConductanceEstimation) {
+      double kstem = maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c], Hmed[c],control["taper"]); 
+      double kroot = maximumStemHydraulicConductance_c(Kmax_stemxylem[c], Hmed[c], Al2As[c], std::min(200.0,treeSPZ95[c]/10.0),control["taper"]); 
+      double krootstem = 1.0/((1.0/kroot)+ (1.0/kstem));
+      double fRleaf = std::max(0.05, 0.60 - (0.60/7000.0)*Hmed[c]);
+      VCleaf_kmax[c] = krootstem*(1.0 - fRleaf)/fRleaf;
+    } else {
+      VCleaf_kmax[c] = VCleaf_kmax_measured[c];
+    }
     kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
     VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
     //Sigmoid slopes if missing

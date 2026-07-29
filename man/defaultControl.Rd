@@ -121,10 +121,12 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \itemize{
 \item{\code{nsubsteps_canopy [= 3600]}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
 \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
+\item{\code{leafConductanceEstimation [= TRUE]}: Flag to indicate that leaf maximum conductance should be estimated as a fraction of resistance depending on height instead of using measured \code{VCleaf_kmax} values.}
+\item{\code{rootConductivityEstimation [= TRUE]}: Flag to indicate that root maximum conductivity should be estimated from stem conductivity instead of using measured \code{Kmax_rootxylem} values.}
 \item{\code{sapFluidityVariation [= TRUE]}: Flag to indicate that temperature affects sap fluidity (and indirectly plant conductance).}
 \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
-\item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T less than or equal to TPhase.}
-\item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T greater than TPhase.}
+\item{\code{Q10_1_gmin [= 1.2]}: Temperature dependence of gmin when T less than or equal to TPhase.}
+\item{\code{Q10_2_gmin [= 4.8]}: Temperature dependence of gmin when T greater than TPhase.}
 \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
 \item{\code{rootRadialConductance [= 4]}: Radial conductance in roots (mmol·s-1·m-2·MPa-1).}

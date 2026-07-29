@@ -65,7 +65,8 @@ harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_par
 
 # Filling structural parameters from inventory data 
 cli::cli_h2("SpParamsMED filling parameters from IFN")
-sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsES/IFN3/soilmod/IFN3_spain_soilmod_WGS84.rds")
+# sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsES/IFN3/soilmod/IFN3_spain_soilmod_WGS84.rds")
+sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsMED/IFN3/Spain/IFN3_spain_final_ETRS89H30.rds")
 SpParamsMED<- traits4models::fill_medfate_inventory_traits(SpParamsMED, sf_IFN3,
                                                            progress = TRUE)
 
@@ -117,21 +118,22 @@ SpParamsMED <- traits4models::fill_medfate_allometries(SpParamsMED,
 tree_all_cols = 31:43
 names(SpParamsMED)[tree_all_cols] # CHECK!
 #Use allometries of A. alba for P. abies
-SpParamsMED[147,tree_all_cols] = SpParamsMED[1,tree_all_cols]
+SpParamsMED[SpParamsMED$Name =="Picea abies",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Abies alba",tree_all_cols]
 #Use allometries of A. alba for A. pinsapo
-SpParamsMED[2,tree_all_cols] = SpParamsMED[1,tree_all_cols]
+SpParamsMED[SpParamsMED$Name =="Abies pinsapo",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Abies alba",tree_all_cols]
 #Use allometries of A. alba for P. menziesii
-SpParamsMED[163,tree_all_cols] = SpParamsMED[1,tree_all_cols]
+SpParamsMED[SpParamsMED$Name=="Pseudotsuga menziesii",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Abies alba",tree_all_cols]
 #Use allometries of A. alba for Cedrus
-SpParamsMED[34,tree_all_cols] = SpParamsMED[1,tree_all_cols]
+SpParamsMED[SpParamsMED$Name=="Cedrus spp.",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Abies alba",tree_all_cols]
 #Use allometries of A. alba for T.baccata
-SpParamsMED[201,tree_all_cols] = SpParamsMED[1,tree_all_cols]
-#Use allometries of J. communis for J. phoenicea
-SpParamsMED[118,tree_all_cols] = SpParamsMED[116,tree_all_cols]
-#Use allometries of J. communis for J. phoenicea
-SpParamsMED[121,tree_all_cols] = SpParamsMED[116,tree_all_cols]
-#Use allometries of J. communis for Cupressus
-SpParamsMED[62,tree_all_cols] = SpParamsMED[116,tree_all_cols]
+SpParamsMED[SpParamsMED$Name=="Taxus baccata",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Abies alba",tree_all_cols]
+#Use allometries of J. oxycedrus for J. communis
+SpParamsMED[SpParamsMED$Name=="Juniperus communis",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Juniperus oxycedrus",tree_all_cols]
+#Use allometries of J. oxycedrus for J. phoenicea
+SpParamsMED[SpParamsMED$Name=="Juniperus phoenicea",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Juniperus oxycedrus",tree_all_cols]
+#Use allometries of J. oxycedrus for Cupressus
+SpParamsMED[SpParamsMED$Name=="Cupressus spp.",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Juniperus oxycedrus",tree_all_cols]
+
 pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata", "Pinus radiata", "Pinus pinaster")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
