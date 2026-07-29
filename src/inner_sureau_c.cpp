@@ -774,6 +774,7 @@ void innerSureau_c(ModelInput& x,
       double fTRBToLeaf = networks[c].params.fTRBToLeaf;
       double Gsw_AC_slope = networks[c].params.Gsw_AC_slope;
       double gsNight = networks[c].params.gsNight;
+      double gsMax = networks[c].params.gsMax;
       //Use P12 as P50 for baldocchi model
       //And a relationship with between P50 and slope
       double P50_gs_B = networks[c].params.P50_gs;
@@ -889,7 +890,8 @@ void innerSureau_c(ModelInput& x,
                                             Gsw_AC_slope,
                                             gsNight/1000.0);
             gs_SL = PB_SL.Gsw*1000.0; //From mmol to mol
-            gs_SL = std::max(gsNight, gs_SL)*regul;
+            gs_SL = std::min(gsMax,std::max(gsNight, gs_SL)*regul);
+            
             // Rcout<<c << " "<<n << " Bald gs: "<< PB_SL.Gsw << " regul: "<< regul << " gs_SL: "<< gs_SL<<"\n";
             photosynthesisBaldocchi_inner_c(PB_SH,
                                             irradianceToPhotonFlux_c(PAR_SH(c,n), defaultLambda)/LAI_SH(c,n),
@@ -902,7 +904,7 @@ void innerSureau_c(ModelInput& x,
                                             Gsw_AC_slope,
                                             gsNight/1000.0);
             gs_SH = PB_SH.Gsw*1000.0; //From mmol to mol
-            gs_SH = std::max(gsNight, gs_SH)*regul;
+            gs_SH = std::min(gsMax,std::max(gsNight, gs_SH)*regul);
           }
           if(!sunlitShade) gs_SH = gs_SL;
 
