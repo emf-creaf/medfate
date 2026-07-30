@@ -192,21 +192,21 @@ data(exampleobs)
 
 Normally growth evaluations will be at annual scale, but here we only have one year of simulated growth. Assuming we want to evaluate the predictive capacity of the model in terms of monthly basal area increment for the pine cohort, we can plot the relationship between observed and predicted values using function `evaluation_plot()`:
 ```{r, fig=TRUE, echo=TRUE, fig.width=4, fig.height=4}
-evaluation_plot(G1, exampleobs, "BAI", cohort = "T1_148", 
+evaluation_plot(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1], 
                 temporalResolution = "month", plotType = "scatter")
 ```
 
 And the following would help us quantifying the strength of the relationship:
 
 ```{r}
-evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148", 
+evaluation_stats(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1], 
                  temporalResolution = "month")
 ```
 
 The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, we also compare diameter increment values, here drawing the observed and predicted time series together: 
 
 ```{r, echo=TRUE, fig.width=7, fig.height=4}
-evaluation_plot(G1, exampleobs, "DI", cohort = "T1_148", 
+evaluation_plot(G1, exampleobs, "DI", cohort = rownames(x$cohorts)[1], 
                 temporalResolution = "day")
 ```
 

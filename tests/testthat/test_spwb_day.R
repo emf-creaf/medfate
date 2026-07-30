@@ -102,6 +102,30 @@ test_that("spwb_day does not produce NAs with deciduous species and rhizosphere 
                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
   expect_s3_class(s, "spwb_day")
   expect_false(any(is.na(s$WaterBalance)))
+  control_sperry$rhizosphereOverlap <- "partial"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  s <- spwb_day(x1, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_s3_class(s, "spwb_day")
+  expect_false(any(is.na(s$WaterBalance)))
+  control_sperry$rhizosphereOverlap <- "total"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sperry)
+  s <- spwb_day(x1, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_s3_class(s, "spwb_day")
+  expect_false(any(is.na(s$WaterBalance)))
+  control_sureau$rhizosphereOverlap <- "partial"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  s <- spwb_day(x1, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_s3_class(s, "spwb_day")
+  expect_false(any(is.na(s$WaterBalance)))
+  control_sureau$rhizosphereOverlap <- "total"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_sureau)
+  s <- spwb_day(x1, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_s3_class(s, "spwb_day")
+  expect_false(any(is.na(s$WaterBalance)))
 })
 
   
