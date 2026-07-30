@@ -18,38 +18,38 @@ A data frame containing daily 'observed' values for year 2001:
 
   Total evapotranspiration (mm).
 
-- `E_T1_148`:
+- `E_T1_158`:
 
-  Transpiration of Pinus halepensis cohort 'T1_148' (L/m2 of leaf area).
+  Transpiration of Pinus halepensis cohort 'T1_158' (L/m2 of leaf area).
 
-- `E_T2_168`:
+- `E_T2_179`:
 
-  Transpiration of Quercus ilex cohort 'T2_168' (L/m2 of leaf area).
+  Transpiration of Quercus ilex cohort 'T2_179' (L/m2 of leaf area).
 
-- `FMC_T1_148`:
+- `FMC_T1_158`:
 
-  Fuel moisture content of Pinus halepensis cohort 'T1_148' (in
+  Fuel moisture content of Pinus halepensis cohort 'T1_158' (in
   percent).
 
-- `FMC_T2_168`:
+- `FMC_T2_179`:
 
-  Fuel moisture content of Quercus ilex cohort 'T2_168' (in percent).
+  Fuel moisture content of Quercus ilex cohort 'T2_179' (in percent).
 
-- `BAI_T1_148`:
+- `BAI_T1_158`:
 
-  Basal area increment for Pinus halepensis cohort 'T1_148' (in cm2).
+  Basal area increment for Pinus halepensis cohort 'T1_158' (in cm2).
 
-- `BAI_T2_168`:
+- `BAI_T2_179`:
 
-  Basal area increment for Quercus ilex cohort 'T2_168' (in cm2).
+  Basal area increment for Quercus ilex cohort 'T2_179' (in cm2).
 
-- `DI_T1_148`:
+- `DI_T1_158`:
 
-  Diameter increment for Pinus halepensis cohort 'T1_148' (in cm).
+  Diameter increment for Pinus halepensis cohort 'T1_158' (in cm).
 
-- `DI_T2_168`:
+- `DI_T2_179`:
 
-  Diameter increment for Quercus ilex cohort 'T2_168' (in cm).
+  Diameter increment for Quercus ilex cohort 'T2_179' (in cm).
 
 ## Source
 

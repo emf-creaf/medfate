@@ -180,10 +180,10 @@ control$recruitmentMode = "annual/deterministic"
 
 #Recruitment limits
 plant_parameter(exampleforest, SpParamsMED, "MinTempRecr")
-#>    T1_148    T2_168    S1_165 
+#>    T1_158    T2_179    S1_176 
 #>  1.083300 -3.744526  1.669536 
 plant_parameter(exampleforest, SpParamsMED, "MinMoistureRecr")
-#>     T1_148     T2_168     S1_165 
+#>     T1_158     T2_179     S1_176 
 #> 0.10154153 0.09657161 0.22301894 
 
 #Compare seed recruitment outcomes

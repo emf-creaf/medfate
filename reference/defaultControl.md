@@ -305,15 +305,23 @@ A list, with the following options (default values in brackets):
     energy balance. If `FALSE`, canopy is considered a single layer for
     energy balance.
 
+  - `leafConductanceEstimation [= TRUE]`: Flag to indicate that leaf
+    maximum conductance should be estimated as a fraction of resistance
+    depending on height instead of using measured `VCleaf_kmax` values.
+
+  - `rootConductivityEstimation [= TRUE]`: Flag to indicate that root
+    maximum conductivity should be estimated from stem conductivity
+    instead of using measured `Kmax_rootxylem` values.
+
   - `sapFluidityVariation [= TRUE]`: Flag to indicate that temperature
     affects sap fluidity (and indirectly plant conductance).
 
   - `TPhase_gmin [= 37.5]`: Temperature for transition phase of gmin.
 
-  - `Q10_1_gmin [= 1.2]`: Temperature dependance of gmin when T less
+  - `Q10_1_gmin [= 1.2]`: Temperature dependence of gmin when T less
     than or equal to TPhase.
 
-  - `Q10_2_gmin [= 4.8]`: Temperature dependance of gmin when T greater
+  - `Q10_2_gmin [= 4.8]`: Temperature dependence of gmin when T greater
     than TPhase.
 
   - `taper [= TRUE]`: Whether taper of xylem conduits is accounted for

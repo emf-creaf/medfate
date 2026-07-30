@@ -68,8 +68,8 @@ QC_coh = paste0("S1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"
 ```
 
 The data set consists of a forest with two tree species (*Pinus
-halepensis*/T1_148 and *Quercus ilex*/T2_168) and one shrub species
-(*Quercus coccifera*/S1_165 or Kermes oak).
+halepensis*/T1_158 and *Quercus ilex*/T2_179) and one shrub species
+(*Quercus coccifera*/S1_176 or Kermes oak).
 
 We first define a soil with four layers (default values of texture, bulk
 density and rock content) and the species input parameters for
@@ -91,29 +91,29 @@ the default parameter settings:
 S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Initial plant water content (mm): 4.20666
+    ## Initial plant water content (mm): 4.67289
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
     ## Performing daily simulations
     ## 
     ##  [Year 2001]:............
     ## 
-    ## Final plant water content (mm): 4.20517
-    ## Final soil water content (mm): 276.623
+    ## Final plant water content (mm): 4.67119
+    ## Final soil water content (mm): 276.182
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.0014939
-    ## Plant water balance result (mm): -0.0014939
-    ## Change in soil water content (mm): -14.2514
-    ## Soil water balance result (mm): -14.2514
+    ## Change in plant water content (mm): -0.00169593
+    ## Plant water balance result (mm): -0.00169593
+    ## Change in soil water content (mm): -14.693
+    ## Soil water balance result (mm): -14.693
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 76 Net rainfall (mm) 386
-    ##   Infiltration (mm) 415 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 226  Mistletoe transpiration (mm) 0
-    ##   Plant extraction from soil (mm) 226  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
-    ##   Runoff (mm) 22 Deep drainage (mm) 176
+    ##   Interception (mm) 79 Net rainfall (mm) 383
+    ##   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
+    ##   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Runoff (mm) 21 Deep drainage (mm) 166
 
 Function
 [`spwb()`](https://emf-creaf.github.io/medfate/reference/spwb.md) will
@@ -154,7 +154,7 @@ The following shows the initial values for plant trait parameters:
 x1$above$LAI_live
 ```
 
-    ## [1] 0.75422783 0.64411380 0.05332129
+    ## [1] 0.82389823 0.62107792 0.05274013
 
 ``` r
 
@@ -168,7 +168,7 @@ x1$below$Z50
 x1$paramsTransp$Psi_Extract
 ```
 
-    ## [1] -0.9218219 -1.9726871 -1.0913031
+    ## [1] -0.9218219 -1.9726871 -1.5755945
 
 ``` r
 
@@ -193,9 +193,9 @@ parNames = c(paste0(PH_coh,"/LAI_live"), paste0(QI_coh,"/LAI_live"), paste0(QC_c
 parNames
 ```
 
-    ##  [1] "T1_148/LAI_live"    "T2_168/LAI_live"    "S1_165/LAI_live"   
-    ##  [4] "T1_148/Z50"         "T2_168/Z50"         "S1_165/Z50"        
-    ##  [7] "T1_148/Psi_Extract" "T2_168/Psi_Extract" "S1_165/Psi_Extract"
+    ##  [1] "T1_158/LAI_live"    "T2_179/LAI_live"    "S1_176/LAI_live"   
+    ##  [4] "T1_158/Z50"         "T2_179/Z50"         "S1_176/Z50"        
+    ##  [7] "T1_158/Psi_Extract" "T2_179/Psi_Extract" "S1_176/Psi_Extract"
     ## [10] "rfc@1"              "rfc@2"
 
 ``` r
@@ -234,7 +234,7 @@ sf_transp<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 sf_transp(S1)
 ```
 
-    ## [1] 226.4072
+    ## [1] 234.8147
 
 Another prediction function can focus on plant drought stress. We define
 a function that, given a simulation result, calculates the average
@@ -252,7 +252,7 @@ sf_stress<-function(x) {
 sf_stress(S1)
 ```
 
-    ## [1] 3.012606
+    ## [1] 3.341559
 
 Sensitivity analysis requires model output functions whose parameters
 are the input factors to be studied.
@@ -301,7 +301,7 @@ of_transp(parMin)
 of_transp(parMax)
 ```
 
-    ## [1] 1.808886
+    ## [1] 327.2962
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -338,7 +338,7 @@ of_stress(parMin)
 of_stress(parMax)
 ```
 
-    ## [1] 4346.846
+    ## [1] 32.87273
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -352,14 +352,14 @@ data(exampleobs)
 head(exampleobs)
 ```
 
-    ##        dates       SWC       ETR    E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168
-    ## 1 2001-01-01 0.3017734 2.0785388  0.08925077 0.05628449   122.5279   109.1394
-    ## 2 2001-01-02 0.3144912 2.3709127  0.26413120 0.16048497   122.2444   104.1451
-    ## 3 2001-01-03 0.2968755 0.5705353  0.15100910 0.11468692   122.0196   109.0215
-    ## 4 2001-01-04 0.3010480 1.9943113 -0.03923472 0.12502470   121.7507   109.9618
-    ## 5 2001-01-05 0.2952493 2.1105782  0.26075504 0.20046090   122.1703   108.5408
-    ## 6 2001-01-06 0.3032929 2.1776517  0.16828855 0.18901425   122.2444   108.8001
-    ##   BAI_T1_148 BAI_T2_168 DI_T1_148 DI_T2_168
+    ##        dates       SWC       ETR    E_T1_158  E_T2_179 FMC_T1_158 FMC_T2_179
+    ## 1 2001-01-01 0.2942650 2.0239666  0.15900351 0.1329662   122.0452   107.8310
+    ## 2 2001-01-02 0.2997981 1.9251363  0.25315836 0.2057360   122.2822   110.2095
+    ## 3 2001-01-03 0.3032342 0.7697293  0.20338022 0.1888289   121.7134   108.7048
+    ## 4 2001-01-04 0.3118604 1.4334341 -0.01634373 0.0952271   121.8370   108.3692
+    ## 5 2001-01-05 0.3137401 1.9191270  0.33221484 0.2667287   122.0364   108.3660
+    ## 6 2001-01-06 0.2975249 1.8777938  0.22567987 0.1511453   122.0503   109.4890
+    ##   BAI_T1_158 BAI_T2_179 DI_T1_158 DI_T2_179
     ## 1          0          0         0         0
     ## 2          0          0         0         0
     ## 3          0          0         0         0
@@ -378,7 +378,7 @@ evaluation_metric(S1, measuredData = exampleobs, type = "SWC",
                   metric = "NSE")
 ```
 
-    ## [1] 0.813275
+    ## [1] 0.9338757
 
 A call to
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md)
@@ -406,14 +406,14 @@ results, so that we only need to provide values for the input factors:
 of_eval(parMin)
 ```
 
-    ## [1] 0.2530919
+    ## [1] 0.4225179
 
 ``` r
 
 of_eval(parMax)
 ```
 
-    ## [1] -51.57997
+    ## [1] -9.195349
 
 ### Global sensitivity analyses
 
@@ -520,18 +520,18 @@ print(sa_stress)
     ## morris(model = of_stress, factors = parNames, r = 50, design = list(type = "oat",     levels = 10, grid.jump = 3), binf = parMin, bsup = parMax,     scale = TRUE, verbose = FALSE)
     ## 
     ## Model runs: 600 
-    ##                            mu    mu.star     sigma
-    ## T1_148/LAI_live    39.3701732 40.6280153 43.012050
-    ## T2_168/LAI_live    24.2422700 24.2422700 28.709054
-    ## S1_165/LAI_live    34.2099445 34.2099445 37.462036
-    ## T1_148/Z50          1.7496071  3.5329408  8.654708
-    ## T2_168/Z50          0.2240808  1.5457806  3.052235
-    ## S1_165/Z50         -0.2410193  0.7326172  1.020798
-    ## T1_148/Psi_Extract -0.9947753  4.5214926 14.289468
-    ## T2_168/Psi_Extract -3.1169767  3.1169767  9.000830
-    ## S1_165/Psi_Extract -1.0580752  1.0580752  1.693242
-    ## rfc@1               8.2724188  8.2724188 11.264721
-    ## rfc@2               3.2186280 11.1825579 24.324838
+    ##                            mu   mu.star    sigma
+    ## T1_158/LAI_live     24.291690 28.891419 34.27815
+    ## T2_179/LAI_live     21.136024 28.791363 47.06781
+    ## S1_176/LAI_live     18.537879 21.622788 18.83771
+    ## T1_158/Z50         -12.582348 33.966604 52.01521
+    ## T2_179/Z50          -2.258228 10.315003 22.15033
+    ## S1_176/Z50           4.319425 10.713070 21.34802
+    ## T1_158/Psi_Extract   1.531500 10.699048 21.26347
+    ## T2_179/Psi_Extract   4.306605 10.317033 20.74957
+    ## S1_176/Psi_Extract  -1.591562  7.378222 17.98461
+    ## rfc@1                9.760419 14.704693 23.59607
+    ## rfc@2                1.049136 13.318355 22.82354
 
 Again, LAI values parameters are the most relevant, but closely followed
 by the water potentials corresponding to whole-plant conductance
@@ -567,18 +567,18 @@ print(sa_eval)
     ## morris(model = of_eval, factors = parNames, r = 50, design = list(type = "oat",     levels = 10, grid.jump = 3), binf = parMin, bsup = parMax,     scale = TRUE, verbose = FALSE)
     ## 
     ## Model runs: 600 
-    ##                             mu    mu.star     sigma
-    ## T1_148/LAI_live    -12.8813849 12.8813849 6.7216712
-    ## T2_168/LAI_live     -7.1523876  7.2482813 4.3856065
-    ## S1_165/LAI_live    -10.3023170 10.3023170 5.9723072
-    ## T1_148/Z50           2.9462338  2.9655605 2.8234231
-    ## T2_168/Z50           0.7120910  0.7132248 0.4806898
-    ## S1_165/Z50           0.4317170  0.4401409 0.2578594
-    ## T1_148/Psi_Extract   0.2343639  0.3865185 0.7713386
-    ## T2_168/Psi_Extract   0.1737744  0.1996813 0.3235109
-    ## S1_165/Psi_Extract   0.1981883  0.2465299 0.5361140
-    ## rfc@1               -2.0935668  2.2512164 2.6786947
-    ## rfc@2               -1.3197193  1.6729610 1.9113855
+    ##                              mu  mu.star    sigma
+    ## T1_158/LAI_live    -5.099428062 5.838733 7.733265
+    ## T2_179/LAI_live    -1.400898106 4.822833 6.934592
+    ## S1_176/LAI_live    -1.945839381 4.728856 6.634815
+    ## T1_158/Z50         -0.827515123 5.194339 7.913212
+    ## T2_179/Z50          0.255024411 2.366398 4.994501
+    ## S1_176/Z50         -0.893808468 3.497316 9.383696
+    ## T1_158/Psi_Extract -0.005241555 1.947322 3.564852
+    ## T2_179/Psi_Extract -0.592395311 1.264655 2.295926
+    ## S1_176/Psi_Extract  0.894662968 1.551665 3.825224
+    ## rfc@1              -2.403063779 3.062993 4.853783
+    ## rfc@2               0.496800990 2.585777 4.447888
 
 Contrary to the previous cases, the contribution of LAI parameters is
 similar to that of parameters of fine root distribution (`Z50`), which
@@ -661,20 +661,20 @@ print(opt_cal)
 ```
 
     ## $par
-    ## [1] 305.8826 110.5760 187.2690
+    ## [1] 2.508173e+02 4.107477e+02 8.954737e-04
     ## 
     ## $value
-    ## [1] 909.4165
+    ## [1] 959.8876
     ## 
     ## $counts
     ## function gradient 
-    ##       25       25 
+    ##      132      132 
     ## 
     ## $convergence
-    ## [1] 0
+    ## [1] 52
     ## 
     ## $message
-    ## [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
+    ## [1] "ERROR: ABNORMAL_TERMINATION_IN_LNSRCH"
 
 Note that the optimized parameters are relatively close to those of
 `Z50` in the original `x1`.
@@ -684,10 +684,10 @@ Note that the optimized parameters are relatively close to those of
 cbind( x1$below[,"Z50", drop = FALSE], opt_cal$par)
 ```
 
-    ##        Z50 opt_cal$par
-    ## T1_148 100    305.8826
-    ## T2_168 300    110.5760
-    ## S1_165 200    187.2690
+    ##        Z50  opt_cal$par
+    ## T1_158 100 2.508173e+02
+    ## T2_179 300 4.107477e+02
+    ## S1_176 200 8.954737e-04
 
 This occurs because these default values were used to generate the
 ‘observed’ data in `exampleobs`, which contains a small amount of
@@ -756,13 +756,6 @@ correlation between parameters:
 summary(mcmc_out)
 ```
 
-    ## Parameter values  241.786576775968 295.749078259277 177.667831744866
-
-    ## Problem encountered in the calculation of the likelihood with parameter 241.786576775968295.749078259277177.667831744866
-    ##  Error message wasError in eval(expr, envir): Index out of bounds: [index='Z100'].
-    ## 
-    ##  set result of the parameter evaluation to -Inf ParameterValues
-
     ## # # # # # # # # # # # # # # # # # # # # # # # # # 
     ## ## MCMC chain summary ## 
     ## # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -770,25 +763,25 @@ summary(mcmc_out)
     ## # MCMC sampler:  DEzs 
     ## # Nr. Chains:  27 
     ## # Iterations per chain:  334 
-    ## # Rejection rate:  0.751 
-    ## # Effective sample size:  673 
-    ## # Runtime:  2212.486  sec. 
+    ## # Rejection rate:  0.735 
+    ## # Effective sample size:  709 
+    ## # Runtime:  101.75  sec. 
     ##  
     ## # Parameters
     ##              psf     MAP    2.5%  median   97.5%
-    ## T1_148/Z50 1.037 306.754 101.883 245.343 345.003
-    ## T2_168/Z50 1.034 109.695  59.929 306.980 490.651
-    ## S1_165/Z50 1.036 179.784  57.204 182.498 294.762
+    ## T1_158/Z50 1.049 265.432  56.107 177.865 294.541
+    ## T2_179/Z50 1.047 396.609 268.552 384.052 488.515
+    ## S1_176/Z50 1.048  57.239  57.042 173.294 290.494
     ## 
-    ## ## DIC:  -Inf 
+    ## ## DIC:  -1907.431 
     ## ## Convergence 
-    ##  Gelman Rubin multivariate psrf:  1.077 
+    ##  Gelman Rubin multivariate psrf:  1.067 
     ##  
     ## ## Correlations 
-    ##            T1_148/Z50 T2_168/Z50 S1_165/Z50
-    ## T1_148/Z50      1.000     -0.801     -0.128
-    ## T2_168/Z50     -0.801      1.000      0.066
-    ## S1_165/Z50     -0.128      0.066      1.000
+    ##            T1_158/Z50 T2_179/Z50 S1_176/Z50
+    ## T1_158/Z50      1.000      0.025     -0.008
+    ## T2_179/Z50      0.025      1.000     -0.119
+    ## S1_176/Z50     -0.008     -0.119      1.000
 
 According to the Gelman-Rubin diagnostic, the convergence can be
 accepted because the multivariate potential scale reduction factor was ≤
@@ -840,13 +833,13 @@ s = getSample(mcmc_out, numSamples = 100)
 head(s)
 ```
 
-    ##      T1_148/Z50 T2_168/Z50 S1_165/Z50
-    ## [1,]   217.9150  478.40434  258.52315
-    ## [2,]   260.5909  213.55127  184.20214
-    ## [3,]   243.8444  244.94568  233.38867
-    ## [4,]   166.7885   73.53628  230.78928
-    ## [5,]   313.5510  258.36418  216.23578
-    ## [6,]   276.2950  276.41855   71.93304
+    ##      T1_158/Z50 T2_179/Z50 S1_176/Z50
+    ## [1,]  166.57761   290.2396   239.4203
+    ## [2,]  282.32332   143.6187   284.0818
+    ## [3,]   92.61102   160.8757   184.9401
+    ## [4,]   51.43535   208.6051   100.5559
+    ## [5,]  469.39983   335.2635   146.4967
+    ## [6,]   82.82402   289.4179   187.4717
 
 To this aim, **medfate** includes function
 [`multiple_runs()`](https://emf-creaf.github.io/medfate/reference/optimization.md)
@@ -884,9 +877,6 @@ plot(density(unlist(lapply(MS, sf_stress))),
      xlab = "Average plant stress", main="Posterior stress")
 ```
 
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
@@ -931,15 +921,18 @@ plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress",
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
+    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ``` r
 
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
 ```
 
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf

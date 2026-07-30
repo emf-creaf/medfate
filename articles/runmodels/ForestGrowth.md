@@ -172,9 +172,9 @@ x$cohorts
 ```
 
     ##         SP              Name
-    ## T1_148 148  Pinus halepensis
-    ## T2_168 168      Quercus ilex
-    ## S1_165 165 Quercus coccifera
+    ## T1_158 158  Pinus halepensis
+    ## T2_179 179      Quercus ilex
+    ## S1_176 176 Quercus coccifera
 
 Element `above` contains the above-ground structure data that we already
 know, but with an additional columns that describes the estimated
@@ -186,13 +186,13 @@ x$above
 ```
 
     ##         SP        N   DBH Cover   H        CR         SA   LAI_live
-    ## T1_148 148 168.0000 37.55    NA 800 0.6534132 340.749359 0.75422783
-    ## T2_168 168 384.0000 14.60    NA 660 0.6359169  42.912651 0.64411380
-    ## S1_165 165 749.4923    NA  3.75  80 0.8032817   2.919924 0.05332129
-    ##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe   Loading Age ObsID
-    ## T1_148   0.75422783        0 1.19968359             0 0.2883393  NA  <NA>
-    ## T2_168   0.64411380        0 0.93063296             0 0.1835157  NA  <NA>
-    ## S1_165   0.05332129        0 0.07406522             0 0.0170672  NA  <NA>
+    ## T1_158 158 168.0000 37.55    NA 800 0.6534132 247.352395 0.82389823
+    ## T2_179 179 384.0000 14.60    NA 660 0.6359169 145.939304 0.62107792
+    ## S1_176 176 749.4923    NA  3.75  80 0.8032817   2.888099 0.05274013
+    ##        LAI_expanded LAI_dead LAI_nocomp LAI_mistletoe    Loading Age ObsID
+    ## T1_158   0.82389823        0 1.25922339             0 0.32447403  NA  <NA>
+    ## T2_179   0.62107792        0 0.89735009             0 0.20102636  NA  <NA>
+    ## S1_176   0.05274013        0 0.07406522             0 0.01688118  NA  <NA>
 
 Elements starting with `params*` contain cohort-specific model
 parameters. Some of them were already presented in previous vignettes
@@ -209,17 +209,17 @@ x$paramsGrowth
 ```
 
     ##            RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot
-    ## T1_148 0.009615236   5.15e-05 0.000601144  1.500      1.47        1.3
-    ## T2_168 0.012589729   5.15e-05 0.007229920  1.430      1.47        1.3
-    ## S1_165 0.009892030   5.15e-05 0.012876076  1.532      1.47        1.3
+    ## T1_158 0.009615236   5.15e-05 0.000601144  1.500      1.47        1.3
+    ## T2_179 0.012589729   5.15e-05 0.007229920  1.430      1.47        1.3
+    ## S1_176 0.009892030   5.15e-05 0.012876076  1.532      1.47        1.3
     ##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax RGRbud SRsapwood
-    ## T1_148       0.09            NA   0.002628095            0.1      5  0.000135
-    ## T2_168       0.09            NA   0.002500000            0.1     20  0.000135
-    ## S1_165       0.09         0.002            NA            0.1     20  0.000135
+    ## T1_158       0.09            NA   0.002628095            0.1      5  0.000135
+    ## T2_179       0.09            NA   0.002500000            0.1     20  0.000135
+    ## S1_176       0.09         0.002            NA            0.1     20  0.000135
     ##         SRfineroot RSSG fHDmin fHDmax     WoodC
-    ## T1_148 0.001897231 1.35     80    160 0.4981000
-    ## T2_168 0.001897231 3.02     40    140 0.4751000
-    ## S1_165 0.001897231 0.50     NA     NA 0.4752026
+    ## T1_158 0.001897231 1.35     80    160 0.4981000
+    ## T2_179 0.001897231 3.02     15     70 0.4751000
+    ## S1_176 0.001897231 0.50     NA     NA 0.4752026
 
 which includes maximum growth rates, senescence rates and maintenance
 respiration rages. Another important set of parameters is given in
@@ -231,17 +231,17 @@ x$paramsAllometries
 ```
 
     ##              Afbt     Bfbt        Cfbt      Aash     Bash      Absh      Bbsh
-    ## T1_148 0.05684887 1.521218 -0.02494652        NA       NA        NA        NA
-    ## T2_168 0.06310630 1.545032 -0.01470000 1.8574862 1.885548 0.5238830 0.7337293
-    ## S1_165         NA       NA          NA 0.1305509 2.408443 0.5147731 0.5311554
+    ## T1_158 0.07607828 1.462411 -0.02280106        NA       NA        NA        NA
+    ## T2_179 0.07848713 1.497670 -0.01470000 1.8574862 1.885548 0.5238830 0.7337293
+    ## S1_176         NA       NA          NA 0.1305509 2.408443 0.5147731 0.5311554
     ##        BTsh   Acr   B1cr   B2cr     B3cr   C1cr   C2cr       Acw   Bcw
-    ## T1_148   NA 1.995 -0.649 -0.020 -0.00012 -0.004 -0.159 0.6415296 0.731
-    ## T2_168   NA 1.506 -0.706 -0.078  0.00018 -0.007  0.000 0.8390000 0.735
-    ## S1_165    2    NA     NA     NA       NA     NA     NA        NA    NA
+    ## T1_158   NA 1.995 -0.649 -0.020 -0.00012 -0.004 -0.159 0.6415296 0.731
+    ## T2_179   NA 1.506 -0.706 -0.078  0.00018 -0.007  0.000 0.8390000 0.735
+    ## S1_176    2    NA     NA     NA       NA     NA     NA        NA    NA
     ##              Abt       Bbt
-    ## T1_148 0.5535741 1.1848613
-    ## T2_168 0.5622245 0.9626839
-    ## S1_165        NA        NA
+    ## T1_158 0.5535741 1.1848613
+    ## T2_179 0.5622245 0.9626839
+    ## S1_176        NA        NA
 
 Note that in the previous models, allometries were already used to
 estimate above-ground structural parameters, but these were static
@@ -257,9 +257,9 @@ x$internalCarbon
 ```
 
     ##        sugarLeaf starchLeaf sugarSapwood starchSapwood
-    ## T1_148 0.2571624 0.00925123    0.5607041      3.227198
-    ## T2_168 0.5992700 0.00925123    1.0556603      3.100817
-    ## S1_165 0.7223526 0.00925123    0.7825810      2.654773
+    ## T1_158 0.2571624 0.00925123    0.5607041      3.227198
+    ## T2_179 0.5992700 0.00925123    1.0556603      3.100817
+    ## S1_176 1.0730934 0.00925123    0.7825810      2.654773
 
 and `internalAllocation` stores the carbon allocation targets:
 
@@ -269,13 +269,13 @@ x$internalAllocation
 ```
 
     ##        allocationTarget leafAreaTarget sapwoodAreaTarget fineRootBiomassTarget
-    ## T1_148         1317.523     44.8945137        340.749359            1478.12411
-    ## T2_168         3908.823     16.7737969         42.912651            1422.61093
-    ## S1_165         2436.475      0.7114322          2.919924              38.51351
+    ## T1_158         1982.660     49.0415614        247.352395            1614.66309
+    ## T2_179         1108.262     16.1739041        145.939304            1371.73312
+    ## S1_176         2436.475      0.7036781          2.888099              38.09374
     ##        crownBudPercent
-    ## T1_148             100
-    ## T2_168             100
-    ## S1_165             100
+    ## T1_158             100
+    ## T2_179             100
+    ## S1_176             100
 
 Additional `internal*` elements are `internalMortality`, used to keep
 track of dead individuals; and `internalRings`, which stores state
@@ -293,36 +293,36 @@ which has the same parameter names as
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Initial plant cohort biomass (g/m2): 14069.3
-    ## Initial plant water content (mm): 4.20666
+    ## Initial plant cohort biomass (g/m2): 14417.1
+    ## Initial plant water content (mm): 4.67289
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
     ## Performing daily simulations
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14264.5
-    ## Change in plant cohort biomass (g/m2): 195.137
+    ## Final plant cohort biomass (g/m2): 14659.8
+    ## Change in plant cohort biomass (g/m2): 242.755
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) -1 Labile balance (g/m2) 88
-    ##   Plant individual balance (g/m2) 88 Mortality loss (g/m2) 21
-    ## Final plant water content (mm): 4.2028
-    ## Final soil water content (mm): 276.706
+    ##   Structural balance (g/m2) 10 Labile balance (g/m2) 135
+    ##   Plant individual balance (g/m2) 144 Mortality loss (g/m2) 21
+    ## Final plant water content (mm): 4.66904
+    ## Final soil water content (mm): 276.258
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.00386439
-    ## Plant water balance result (mm): -0.00117483
-    ## Change in soil water content (mm): -14.1693
-    ## Soil water balance result (mm): -14.1696
+    ## Change in plant water content (mm): -0.00384886
+    ## Plant water balance result (mm): -0.0013024
+    ## Change in soil water content (mm): -14.6169
+    ## Soil water balance result (mm): -14.6169
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): 7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 76 Net rainfall (mm) 387
-    ##   Infiltration (mm) 416 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 28  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 223  Mistletoe transpiration (mm) 0
-    ##   Plant extraction from soil (mm) 223  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
-    ##   Runoff (mm) 22 Deep drainage (mm) 179
+    ##   Interception (mm) 79 Net rainfall (mm) 383
+    ##   Infiltration (mm) 413 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 233  Mistletoe transpiration (mm) 0
+    ##   Plant extraction from soil (mm) 233  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Runoff (mm) 22 Deep drainage (mm) 167
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -390,16 +390,16 @@ extract(G1, "forest", addunits = TRUE) |>
     ## # A tibble: 365 × 53
     ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
     ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
-    ##  1 2001-01-01   0.883          4.87    4.87   0      3.72      0           3.72 
-    ##  2 2001-01-02   1.64           2.50    2.50   0      1.36      0           1.36 
+    ##  1 2001-01-01   0.883          4.87    4.87   0      3.66      0           3.66 
+    ##  2 2001-01-02   1.64           2.50    2.50   0      1.30      0           1.30 
     ##  3 2001-01-03   1.30           0       0      0      0         0           0    
-    ##  4 2001-01-04   0.569          5.80    5.80   0      4.65      0           4.65 
-    ##  5 2001-01-05   1.68           1.88    1.88   0      0.881     0           0.881
+    ##  4 2001-01-04   0.569          5.80    5.80   0      4.60      0           4.60 
+    ##  5 2001-01-05   1.68           1.88    1.88   0      0.862     0           0.862
     ##  6 2001-01-06   1.21          13.4    13.4    0     12.0       0          12.0  
     ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
     ##  8 2001-01-08   0.832          0       0      0      0         0           0    
     ##  9 2001-01-09   1.98           0       0      0      0         0           0    
-    ## 10 2001-01-10   0.829          5.12    5.12   0      3.96      5.38        9.34 
+    ## 10 2001-01-10   0.829          5.12    5.12   0      3.91      5.38        9.28 
     ## # ℹ 355 more rows
     ## # ℹ 45 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
     ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
@@ -520,7 +520,7 @@ observed and predicted values using function
 
 ``` r
 
-evaluation_plot(G1, exampleobs, "BAI", cohort = "T1_148", 
+evaluation_plot(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1], 
                 temporalResolution = "month", plotType = "scatter")
 ```
 
@@ -533,7 +533,7 @@ relationship:
 
 ``` r
 
-evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148", 
+evaluation_stats(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1], 
                  temporalResolution = "month")
 ```
 
@@ -548,7 +548,7 @@ values, here drawing the observed and predicted time series together:
 
 ``` r
 
-evaluation_plot(G1, exampleobs, "DI", cohort = "T1_148", 
+evaluation_plot(G1, exampleobs, "DI", cohort = rownames(x$cohorts)[1], 
                 temporalResolution = "day")
 ```
 

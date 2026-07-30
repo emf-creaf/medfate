@@ -115,29 +115,29 @@ x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-#> Initial plant water content (mm): 4.20666
+#> Initial plant water content (mm): 4.67289
 #> Initial soil water content (mm): 290.875
 #> Initial snowpack content (mm): 0
 #> Performing daily simulations
 #> 
 #>  [Year 2001]:............
 #> 
-#> Final plant water content (mm): 4.20517
-#> Final soil water content (mm): 276.623
+#> Final plant water content (mm): 4.67119
+#> Final soil water content (mm): 276.182
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.0014939
-#> Plant water balance result (mm): -0.0014939
-#> Change in soil water content (mm): -14.2514
-#> Soil water balance result (mm): -14.2514
+#> Change in plant water content (mm): -0.00169593
+#> Plant water balance result (mm): -0.00169593
+#> Change in soil water content (mm): -14.693
+#> Soil water balance result (mm): -14.693
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): 0
+#> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 76 Net rainfall (mm) 386
-#>   Infiltration (mm) 415 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 226  Mistletoe transpiration (mm) 0
-#>   Plant extraction from soil (mm) 226  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
-#>   Runoff (mm) 22 Deep drainage (mm) 176
+#>   Interception (mm) 79 Net rainfall (mm) 383
+#>   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+#>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
+#>   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+#>   Runoff (mm) 21 Deep drainage (mm) 166
 
 #Evaluate fire hazard
 F1 <- fireHazard(S1, SpParamsMED, exampleforest)

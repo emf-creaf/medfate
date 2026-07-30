@@ -258,7 +258,7 @@ x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 # Cohort name for Pinus halepensis
 PH_coh <- paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
 PH_coh 
-#> [1] "T1_148"
+#> [1] "T1_158"
 
 #Parameter names of interest
 parNames <- c(paste0(PH_coh,"/Z50"), paste0(PH_coh,"/Z95"))
@@ -274,13 +274,13 @@ sf<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 multiple_runs(parMatrix, 
               x1, examplemeteo, latitude = 42, elevation = 100,
               summary_function = sf)
-#> 1. Parameter values = [200, 500] f = 228.359501399573
-#> 2. Parameter values = [300, 1000] f = 229.092121937027
+#> 1. Parameter values = [200, 500] f = 237.154649455981
+#> 2. Parameter values = [300, 1000] f = 238.007908229686
 #> [[1]]
-#> [1] 228.3595
+#> [1] 237.1546
 #> 
 #> [[2]]
-#> [1] 229.0921
+#> [1] 238.0079
 #> 
 
 #Load observed data (in this case the same simulation results with some added error)  
@@ -294,9 +294,9 @@ of<-optimization_function(parNames = parNames,
 
 # Evaluate for the values of the parameter matrix
 of(parMatrix[1, ])
-#> [1] 228.4492
+#> [1] 237.2478
 of(parMatrix)
-#> [1] 228.4492 229.1820
+#> [1] 237.2478 238.1013
 
 
 # Generate a loglikelihood function for soil water content
@@ -310,8 +310,8 @@ oef<-optimization_evaluation_function(parNames = parNames,
 
 # Loglikelihood for the values of the parameter matrix
 oef(parMatrix[1, ])
-#> [1] 841.8665
+#> [1] 954.0767
 oef(parMatrix)
-#> [1] 841.8665 794.3101
+#> [1] 954.0767 923.7654
 # }
 ```

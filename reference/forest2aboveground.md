@@ -140,26 +140,26 @@ data(SpParamsMED)
 # Aboveground parameters
 forest2aboveground(exampleforest, SpParamsMED)
 #>         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead
-#> T1_148 148 168.0000 37.55    NA 800 0.6534132 0.75422783   0.75422783        0
-#> T2_168 168 384.0000 14.60    NA 660 0.6359169 0.64411380   0.64411380        0
-#> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.05332129   0.05332129        0
+#> T1_158 158 168.0000 37.55    NA 800 0.6534132 0.82389823   0.82389823        0
+#> T2_179 179 384.0000 14.60    NA 660 0.6359169 0.62107792   0.62107792        0
+#> S1_176 176 749.4923    NA  3.75  80 0.8032817 0.05274013   0.05274013        0
 #>        LAI_nocomp LAI_mistletoe Age ObsID
-#> T1_148 1.19968359             0  NA  <NA>
-#> T2_168 0.93063296             0  NA  <NA>
-#> S1_165 0.07406522             0  NA  <NA>
+#> T1_158 1.25922339             0  NA  <NA>
+#> T2_179 0.89735009             0  NA  <NA>
+#> S1_176 0.07406522             0  NA  <NA>
 
 # Example of aboveground parameters taken from a forest
 # described using LAI and crown ratio
 data(exampleforest2)
 forest2aboveground(exampleforest2, SpParamsMED)
 #>         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead LAI_nocomp
-#> T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0       0.80
-#> T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0       0.50
-#> S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0       0.03
+#> T1_158 158 NA  NA    NA 800 0.66     0.80         0.80        0       0.80
+#> T2_179 179 NA  NA    NA 660 0.60     0.50         0.50        0       0.50
+#> S1_176 176 NA  NA    NA  80 0.80     0.03         0.03        0       0.03
 #>        LAI_mistletoe Age ObsID
-#> T1_148             0  NA  <NA>
-#> T2_168             0  NA  <NA>
-#> S1_165             0  NA  <NA>
+#> T1_158             0  NA  <NA>
+#> T2_179             0  NA  <NA>
+#> S1_176             0  NA  <NA>
 
 # Define soil with default soil params (4 layers)
 examplesoil <- defaultSoilParams(4)
@@ -167,8 +167,8 @@ examplesoil <- defaultSoilParams(4)
 # Bewowground parameters (distribution of fine roots)
 forest2belowground(exampleforest, examplesoil, SpParamsMED)
 #>                1          2           3            4
-#> T1_148 0.9498377 0.04811006 0.001774047 0.0002781442
-#> T2_168 0.5008953 0.45059411 0.040648313 0.0078622840
-#> S1_165 0.6799879 0.27379114 0.035676316 0.0105446776
+#> T1_158 0.9498377 0.04811006 0.001774047 0.0002781442
+#> T2_179 0.5008953 0.45059411 0.040648313 0.0078622840
+#> S1_176 0.6799879 0.27379114 0.035676316 0.0105446776
 
 ```

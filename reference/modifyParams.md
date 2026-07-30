@@ -122,7 +122,7 @@ x1 <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 # Cohort name for Pinus halepensis
 PH_coh <- paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
 PH_coh 
-#> [1] "T1_148"
+#> [1] "T1_158"
 
 # Modify Z50 and Z95 of Pinus halepensis cohort 
 customParams <- c(200,2000)
@@ -132,26 +132,26 @@ x1m <- modifyInputParams(x1, customParams)
 # Inspect original and modified objects 
 x1$below
 #>        Z50  Z95 Z100 poolProportions
-#> T1_148 100  300   NA      0.51956127
-#> T2_168 300 1000   NA      0.44370755
-#> S1_165 200 1000   NA      0.03673118
+#> T1_158 100  300   NA       0.5501030
+#> T2_179 300 1000   NA       0.4146833
+#> S1_176 200 1000   NA       0.0352137
 x1m$below
 #>        Z50  Z95 Z100 fineRootBiomass coarseRootSoilVolume poolProportions
-#> T1_148 200 2000   NA              NA                    0      0.51956127
-#> T2_168 300 1000   NA              NA                    0      0.44370755
-#> S1_165 200 1000   NA              NA                    0      0.03673118
+#> T1_158 200 2000   NA              NA                    0       0.5501030
+#> T2_179 300 1000   NA              NA                    0       0.4146833
+#> S1_176 200 1000   NA              NA                    0       0.0352137
 
 # Inspect dependencies: fine root distribution across soil layers
 x1$belowLayers$V
 #>                1          2           3            4
-#> T1_148 0.9498377 0.04811006 0.001774047 0.0002781442
-#> T2_168 0.5008953 0.45059411 0.040648313 0.0078622840
-#> S1_165 0.6799879 0.27379114 0.035676316 0.0105446776
+#> T1_158 0.9498377 0.04811006 0.001774047 0.0002781442
+#> T2_179 0.5008953 0.45059411 0.040648313 0.0078622840
+#> S1_176 0.6799879 0.27379114 0.035676316 0.0105446776
 x1m$belowLayers$V
 #>                1         2          3           4
-#> T1_148 0.6402830 0.2655064 0.06472163 0.029488953
-#> T2_168 0.5008953 0.4505941 0.04064831 0.007862284
-#> S1_165 0.6799879 0.2737911 0.03567632 0.010544678
+#> T1_158 0.6402830 0.2655064 0.06472163 0.029488953
+#> T2_179 0.5008953 0.4505941 0.04064831 0.007862284
+#> S1_176 0.6799879 0.2737911 0.03567632 0.010544678
 
 # Modify rock fragment content and sand proportion of soil layer 1
 x1s <- modifyInputParams(x1, c("rfc@1" = 5, "sand@1" = 10))
