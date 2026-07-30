@@ -273,6 +273,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
   ParamsVolume parsVol;
   for(int c=0;c<numCohorts;c++) {
+    
     parsVol.stem_c = VCstem_c[c];
     parsVol.stem_d = VCstem_d[c];
     parsVol.leafpi0 = LeafPI0[c];
@@ -285,9 +286,9 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     parsVol.Vleaf = Vleaf[c];
     parsVol.LAI = LAIphe[c];
     parsVol.LAIlive = LAIlive[c];
-
+    
     double rootCrownPsi = NA_REAL;
-
+    
     //Cuticular transpiration
     double lvp_tmax = leafVapourPressure_c(tmax,  PlantPsi[c]);
     double lvp_tmin = leafVapourPressure_c(tmin,  PlantPsi[c]);
@@ -295,7 +296,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
     double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
     double E_gmin_day = E_gmin*LAIphe[c]*(24.0*3600.0*0.018); //L·d-1·m-2 = mm·d-1
-
+    
     //Extraction from soil (can later be modified if there are changes in plant water content)
     if(!plantWaterPools) {
       std::vector<double> psiSoil(nlayers);
@@ -326,11 +327,19 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       }
       
       //Determine plant transpiration and mistletoe transpiration according to their stomatal behaviour (and PLC effects)
-      Eplant[c] = std::max(TmaxCoh[c]*Klcmean, E_gmin_day);
-      Emistletoe[c] = TmaxMist[c]*Klcmist;
+      if(TmaxCoh[c]>0.0) {
+        Eplant[c] = std::max(TmaxCoh[c]*Klcmean, E_gmin_day);
+      } else {
+        Eplant[c] = 0.0;
+      }
+      if(TmaxMist[c]>0.0) {
+        Emistletoe[c] = TmaxMist[c]*Klcmist;
+      } else {
+        Emistletoe[c] = 0.0;
+      }
       //Soil extraction is the sum of plant transpiration and mistletoe transpiration
       Extraction[c] = Eplant[c] + Emistletoe[c];
-        
+      
       //Divide extraction among layers depending on soil conductivity
       for(int l=0;l<nlayers;l++) {
         outputExtraction(c,l) = Extraction[c]*(Kunlc[l]/sumKunlc);
@@ -338,7 +347,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       delete[] Klc;
       delete[] Kunlc;
     } else {
-      //Calculate dynamic overlap      
+      //Calculate dynamic overlap 
       arma::mat& ExtractionPoolsCoh = outputExtractionPools[c]; //this is used to store extraction of a SINGLE plant cohort from all pools
       arma::mat& RHOPcoh = RHOP[c];
       for(int l=0;l<nlayers;l++) {
@@ -377,8 +386,17 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       }
       
       //Determine plant transpiration and mistletoe transpiration according to their stomatal behaviour (and PLC effects)
-      Eplant[c] = std::max(TmaxCoh[c]*Klcmean, E_gmin_day);
-      Emistletoe[c] = TmaxMist[c]*Klcmist;
+      if(TmaxCoh[c]>0.0) {
+        Eplant[c] = std::max(TmaxCoh[c]*Klcmean, E_gmin_day);
+      } else {
+        Eplant[c] = 0.0;
+      }
+      if(TmaxMist[c]>0.0) {
+        Emistletoe[c] = TmaxMist[c]*Klcmist;
+      } else {
+        Emistletoe[c] = 0.0;
+      }
+      
       //Soil extraction is the sum of plant transpiration and mistletoe transpiration
       Extraction[c] = Eplant[c] + Emistletoe[c];
       
@@ -392,17 +410,17 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       // Rcout<< c << " : "<< psiSoilM(c,0) << " " << psiSoilM(c,1) << " " << psiSoilM(c,2) << " " << psiSoilM(c,3) << " " << rootCrownPsi<<"\n";
       // Rcout<< c << " : "<< RHOPcohV(c,0) << " " << RHOPcohV(c,1) << " " << RHOPcohV(c,2) << " " << RHOPcohV(c,3) << " " << rootCrownPsi<<"\n";
     }
-
+    
     double oldVol = plantVol_c(PlantPsi[c], parsVol);
-
+    
     //For deciduous species, make water potential follow soil during winter
     PlantPsi[c] = rootCrownPsi;
     double newVol = plantVol_c(PlantPsi[c], parsVol);
-
+    
     double volDiff = newVol - oldVol;
     //Plant transpiration and water balance
     PWB[c] = volDiff;
-
+    
     //Photosynthesis
     double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
     double fco2 = (1.0 - exp((-1.0)*WUE_co2[c]*Catm));
@@ -410,6 +428,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     if(vpd < 0.25) fvpd = 2.5 - (2.5 - pow(0.25, WUE_vpd[c]))*(vpd/0.25);
     // Rcout<<fpar<<" "<< fco2 << " "<< fvpd<< " "<< WUE[c]*fpar*fco2*fvpd<<"\n";
     Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2*fvpd;
+  
   }
   
   //Plant water status (StemPLC, RWC, DDS)

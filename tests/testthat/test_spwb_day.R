@@ -88,6 +88,20 @@ test_that("spwb_day can be run with truncated root distribution and rhizosphere 
                            latitude = 41.82592, elevation = 100, slope=0, aspect=0), "spwb_day")
 })
 
-
+test_that("spwb_day does not produce NAs with deciduous species and rhizosphere overlap", {
+  exampleforest$treeData$Species[2] <- "Populus spp."
+  control_granier$rhizosphereOverlap <- "partial"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  s <- spwb_day(x1, date, meteovec,
+                           latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_s3_class(s, "spwb_day")
+  expect_false(any(is.na(s$WaterBalance)))
+  control_granier$rhizosphereOverlap <- "total"
+  x1 <- spwbInput(exampleforest, examplesoil, SpParamsMED, control_granier)
+  s <- spwb_day(x1, date, meteovec,
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
+  expect_s3_class(s, "spwb_day")
+  expect_false(any(is.na(s$WaterBalance)))
+})
 
   
