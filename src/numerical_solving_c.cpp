@@ -1,6 +1,7 @@
 #include "numerical_solving_c.h"
 #include "algorithm"
 #include "math.h"
+#include <cmath>
 
 // a,b,c,d are input vectors
 // e,f are vectors used internally
