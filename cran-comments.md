@@ -1,10 +1,10 @@
 ## Minor change submission
 
-This submission (ver. 5.0.0) several improvements, including new dependencies.
+This submission (ver. 5.1.0) some improvements and corrections of installation issues of ver 5.0.0.
 
 ## Tested environments
 
-* local R installation (Arch Linux), R 4.6.0
+* local R installation (Arch Linux), R 4.6.1
 * windows-latest (on github actions), R release
 * macOS-latest (on github actions), R release
 * ubuntu-latest (on github actions), R release
@@ -16,9 +16,8 @@ This submission (ver. 5.0.0) several improvements, including new dependencies.
 
 ## R CMD check results
 
-In all CI tests only NOTEs are generated, except in clang18 and clang-asan, where RcppParallel could not be installed.
+In all CI tests only NOTEs are generated, except in clang18 flavor were installation problems occurred. Some memory leaks have been detected with valgrind, which we will try to solve.
 
 ## Reverse/Downstream dependencies
 
-`medfate` has a reverse dependency with `medfateland`, under our responsibility, whose current CRAN version will not pass checks with `medfate` v. 5.0.0. 
-A new version of `medfateland` complying with `medfate` ver. 5.0.0 will be submitted immediately after this submission is accepted.
+`medfate` has a reverse dependency with `medfateland`, under our responsibility, whose current CRAN version should pass checks with `medfate` v. 5.1.0.
