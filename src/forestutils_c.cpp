@@ -1,4 +1,5 @@
 #include "RcppArmadillo.h"
+#include <cmath>
 #include "medfate.h"
 #include "forestutils_c.h"
 #include "incgamma_c.h"

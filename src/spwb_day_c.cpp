@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 #include <numeric>
 #include <math.h>
+#include <cmath>
 #include "biophysicsutils_c.h"
 #include "lowlevel_structures_c.h"
 #include "lightextinction_basic_c.h"

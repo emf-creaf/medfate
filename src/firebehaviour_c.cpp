@@ -1,4 +1,5 @@
 #include "RcppArmadillo.h"
+#include <cmath>
 #include "modelInput_c.h"
 #include "lowlevel_structures_c.h"
 #include "firebehaviour_c.h"

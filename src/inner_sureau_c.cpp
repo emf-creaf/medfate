@@ -1,5 +1,6 @@
 #define STRICT_R_HEADERS
 #include <RcppArmadillo.h>
+#include <cmath>
 #include "medfate.h"
 #include "inner_sureau_c.h"
 #include "biophysicsutils_c.h"

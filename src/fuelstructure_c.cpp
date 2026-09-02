@@ -1,3 +1,4 @@
+#include <cmath>
 #include "medfate.h"
 #include "forestutils_c.h"
 #include "fuelstructure_c.h"

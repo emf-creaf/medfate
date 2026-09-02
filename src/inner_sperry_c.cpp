@@ -1,3 +1,4 @@
+#include <cmath>
 #include "inner_sperry_c.h"
 #include "hydraulics_c.h"
 #include "photosynthesis_c.h"

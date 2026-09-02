@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include <cmath>
 #include "medfate.h"
 #include "incbeta_c.h"
 #include "modelInput_c.h"

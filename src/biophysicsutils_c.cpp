@@ -1,5 +1,6 @@
 #include <numeric>
 #include <math.h>
+#include <cmath>
 #include "biophysicsutils_c.h"
 #include "meteoland/utils_c.hpp"
 #include "meteoland/radiation_c.hpp"

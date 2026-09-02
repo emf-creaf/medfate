@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include <cmath>
 #include "biophysicsutils_c.h"
 #include "meteoland/utils_c.hpp"
 #include "lowlevel_structures_c.h"

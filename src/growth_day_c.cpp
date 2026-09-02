@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include <cmath>
 #include <random>
 #include "biophysicsutils_c.h"
 #include "carbon_c.h"

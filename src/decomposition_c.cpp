@@ -1,3 +1,4 @@
+#include <cmath>
 #include "fuelmoisture.h"
 #include "communication_structures.h"
 #include "modelInput_c.h"
