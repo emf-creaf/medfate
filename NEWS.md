@@ -1,3 +1,6 @@
+# medfate 5.1.1
+* Update of trait_family_means (avoiding infinite mean values)
+
 # medfate 5.1.0
 * Compilation patch for C++ 20
 * Mistletoe effects on water balance
