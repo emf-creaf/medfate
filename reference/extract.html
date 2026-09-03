@@ -172,19 +172,360 @@ When using <code>subdaily = TRUE</code>, parameter <code>output</code> is not ta
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily forest-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"forest"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("extract"):</span> no applicable method for 'extract' applied to an object of class "c('spwb', 'list')"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          date               PET     Precipitation              Rain</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01 0.8828475 [L/m^2]  4.869109 [L/m^2]  4.869109 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02 1.6375337 [L/m^2]  2.498292 [L/m^2]  2.498292 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03 1.3017026 [L/m^2]  0.000000 [L/m^2]  0.000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04 0.5690790 [L/m^2]  5.796973 [L/m^2]  5.796973 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05 1.6760567 [L/m^2]  1.884401 [L/m^2]  1.884401 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06 1.2077028 [L/m^2] 13.359801 [L/m^2] 13.359801 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07 0.6368075 [L/m^2]  5.377400 [L/m^2]  0.000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08 0.8318207 [L/m^2]  0.000000 [L/m^2]  0.000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09 1.9823797 [L/m^2]  0.000000 [L/m^2]  0.000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10 0.8286873 [L/m^2]  5.117768 [L/m^2]  5.117768 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Snow            NetRain       Snowmelt       Infiltration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.0000 [L/m^2]  3.6578430 [L/m^2] 0.0000 [L/m^2]  3.6578430 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.0000 [L/m^2]  1.3026155 [L/m^2] 0.0000 [L/m^2]  1.3026155 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.0000 [L/m^2]  0.0000000 [L/m^2] 0.0000 [L/m^2]  0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.0000 [L/m^2]  4.5956523 [L/m^2] 0.0000 [L/m^2]  4.5956523 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.0000 [L/m^2]  0.8616218 [L/m^2] 0.0000 [L/m^2]  0.8616218 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.0000 [L/m^2] 11.9754283 [L/m^2] 0.0000 [L/m^2] 11.9754283 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  5.3774 [L/m^2]  0.0000000 [L/m^2] 0.0000 [L/m^2]  0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.0000 [L/m^2]  0.0000000 [L/m^2] 0.0000 [L/m^2]  0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.0000 [L/m^2]  0.0000000 [L/m^2] 0.0000 [L/m^2]  0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.0000 [L/m^2]  3.9064839 [L/m^2] 5.3774 [L/m^2]  9.2838835 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    InfiltrationExcess SaturationExcess    Runoff      DeepDrainage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 2.9694516 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 0.4429239 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 3.5291110 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 0.1585395 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 4.1214138 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 4.1214138 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 2.9111160 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9           0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10          0 [L/m^2]        0 [L/m^2] 0 [L/m^2] 4.1214138 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    CapillarityRise Evapotranspiration     Interception   SoilEvaporation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0 [L/m^2]  1.8996573 [L/m^2] 1.211266 [L/m^2] 0.4944700 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0 [L/m^2]  2.0553677 [L/m^2] 1.195676 [L/m^2] 0.5000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0 [L/m^2]  0.7859248 [L/m^2] 0.000000 [L/m^2] 0.5000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0 [L/m^2]  1.4819371 [L/m^2] 1.201321 [L/m^2] 0.1556520 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0 [L/m^2]  1.8909330 [L/m^2] 1.022780 [L/m^2] 0.5000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0 [L/m^2]  2.0111056 [L/m^2] 1.384372 [L/m^2] 0.3614728 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        0 [L/m^2]  0.1398797 [L/m^2] 0.000000 [L/m^2] 0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        0 [L/m^2]  0.1827071 [L/m^2] 0.000000 [L/m^2] 0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        0 [L/m^2]  0.4353967 [L/m^2] 0.000000 [L/m^2] 0.0000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       0 [L/m^2]  1.5891273 [L/m^2] 1.211284 [L/m^2] 0.1958587 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HerbTranspiration   PlantExtraction     Transpiration MistletoeTranspiration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0 [L/m^2] 0.1939214 [L/m^2] 0.1939214 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          0 [L/m^2] 0.3596916 [L/m^2] 0.3596916 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          0 [L/m^2] 0.2859248 [L/m^2] 0.2859248 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          0 [L/m^2] 0.1249645 [L/m^2] 0.1249645 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          0 [L/m^2] 0.3681534 [L/m^2] 0.3681534 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          0 [L/m^2] 0.2652605 [L/m^2] 0.2652605 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7          0 [L/m^2] 0.1398797 [L/m^2] 0.1398797 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8          0 [L/m^2] 0.1827071 [L/m^2] 0.1827071 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9          0 [L/m^2] 0.4353967 [L/m^2] 0.4353967 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         0 [L/m^2] 0.1819848 [L/m^2] 0.1819848 [L/m^2]              0 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HydraulicRedistribution                LAI     LAIherb            LAIlive</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      0.002738725 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      0.003379257 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     0.000000000 [L/m^2] 1.497716 [m^2/m^2] 0 [m^2/m^2] 1.497716 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           LAIexpanded     LAIdead LAImistletoe               Cm  LgroundPAR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1.497716 [m^2/m^2] 0 [m^2/m^2]            0 1.160807 [L/m^2] 45.7239 [%]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      LgroundSWR            SWE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  56.00854 [%] 0.0000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  56.00854 [%] 0.0000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  56.00854 [%] 0.0000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  56.00854 [%] 0.0000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  56.00854 [%] 0.0000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  56.00854 [%] 0.0000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  56.00854 [%] 5.3774 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  56.00854 [%] 5.3774 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  56.00854 [%] 5.3774 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 56.00854 [%] 0.0000 [L/m^2]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily soil layer-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"soillayer"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("extract"):</span> no applicable method for 'extract' applied to an object of class "c('spwb', 'list')"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          date soillayer       SWC       RWC       REW                ML</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01         1 0.3029947 1.0000000 1.0000000  68.17381 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02         1 0.3029947 1.0000000 1.0000000  68.17381 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03         1 0.2997714 0.9893618 0.9840456  67.44857 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04         1 0.3029947 1.0000000 1.0000000  68.17381 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05         1 0.3022611 0.9975787 0.9963687  68.00874 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06         1 0.3029947 1.0000000 1.0000000  68.17381 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07         1 0.3025286 0.9984615 0.9976927  68.06893 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08         1 0.3019201 0.9964533 0.9946810  67.93202 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09         1 0.3005935 0.9920749 0.9881145  67.63353 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10         1 0.3029947 1.0000000 1.0000000  68.17381 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 2001-01-01         2 0.3029947 1.0000000 1.0000000 116.65297 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02         2 0.3029947 1.0000000 1.0000000 116.65297 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03         2 0.3028517 0.9995278 0.9992919 116.59789 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04         2 0.3029947 1.0000000 1.0000000 116.65297 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05         2 0.3029947 1.0000000 1.0000000 116.65297 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06         2 0.3029947 1.0000000 1.0000000 116.65297 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07         2 0.3029381 0.9998130 0.9997196 116.63116 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08         2 0.3028620 0.9995618 0.9993428 116.60186 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09         2 0.3026170 0.9987534 0.9981304 116.50755 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10         2 0.3029947 1.0000000 1.0000000 116.65297 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2001-01-01         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03         3 0.3029761 0.9999385 0.9999077  75.74402 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09         3 0.3028981 0.9996810 0.9995216  75.72452 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10         3 0.3029947 1.0000000 1.0000000  75.74868 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 2001-01-01         4 0.3029947 1.0000000 1.0000000  30.29947 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 2001-01-02         4 0.3029947 1.0000000 1.0000000  30.29947 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 2001-01-03         4 0.3029853 0.9999690 0.9999535  30.29853 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 2001-01-04         4 0.3029947 1.0000000 1.0000000  30.29947 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 2001-01-05         4 0.3029947 1.0000000 1.0000000  30.29947 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 2001-01-06         4 0.3736168 1.2330803 1.3495558  37.36168 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 2001-01-07         4 0.3322709 1.0966226 1.1449071  33.22709 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 2001-01-08         4 0.3029947 1.0000000 1.0000000  30.29947 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 2001-01-09         4 0.3028104 0.9993918 0.9990879  30.28104 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 2001-01-10         4 0.3435580 1.1338744 1.2007744  34.35580 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41 2001-01-01   Overall 0.3029947 1.0000000 1.0000000 290.87494 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42 2001-01-02   Overall 0.3029947 1.0000000 1.0000000 290.87494 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43 2001-01-03   Overall 0.3021761 0.9972981 0.9959478 290.08901 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44 2001-01-04   Overall 0.3029947 1.0000000 1.0000000 290.87494 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45 2001-01-05   Overall 0.3028228 0.9994325 0.9991489 290.70987 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46 2001-01-06   Overall 0.3103512 1.0242792 1.0364121 297.93715 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47 2001-01-07   Overall 0.3059124 1.0096293 1.0144412 293.67586 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 2001-01-08   Overall 0.3026896 0.9989930 0.9984898 290.58203 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49 2001-01-09   Overall 0.3022361 0.9974962 0.9962449 290.14664 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50 2001-01-10   Overall 0.3072201 1.0139452 1.0209140 294.93126 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   Psi              PlantExt      HydraulicInput</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  -0.033000000 [MPa]  0.1527687037 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  -0.033000000 [MPa]  0.2833602530 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -0.034705611 [MPa]  0.2252477487 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -0.033000000 [MPa]  0.0850441416 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -0.033380729 [MPa]  0.2900263057 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  -0.033000000 [MPa]  0.1819907001 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  -0.033241415 [MPa]  0.1048864104 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  -0.033559159 [MPa]  0.1369046184 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  -0.034262449 [MPa]  0.2984949581 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 -0.033000000 [MPa]  0.1242970032 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 -0.033000000 [MPa]  0.0373553928 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 -0.033000000 [MPa]  0.0692879712 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 -0.033073903 [MPa]  0.0550781535 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 -0.033000000 [MPa]  0.0285837088 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 -0.033000000 [MPa]  0.0709179714 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 -0.033000000 [MPa]  0.0603519134 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 -0.033029247 [MPa]  0.0218117439 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 -0.033068580 [MPa]  0.0293036930 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 -0.033195483 [MPa]  0.0943093548 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 -0.033000000 [MPa]  0.0401102103 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 -0.033000000 [MPa]  0.0031607370 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 -0.033000000 [MPa]  0.0058626356 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 -0.033009621 [MPa]  0.0046603059 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 -0.033000000 [MPa]  0.0064840818 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 -0.033000000 [MPa]  0.0060005541 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 -0.033000000 [MPa]  0.0131984297 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 -0.033000000 [MPa] -0.0024269768 [L/m^2] 0.002738725 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 -0.033000000 [MPa] -0.0027964736 [L/m^2] 0.003379257 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 -0.033049914 [MPa]  0.0241643323 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 -0.033000000 [MPa]  0.0105003107 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 -0.033000000 [MPa]  0.0006365964 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 -0.033000000 [MPa]  0.0011807792 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 -0.033004844 [MPa]  0.0009386209 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 -0.033000000 [MPa]  0.0048525568 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 -0.033000000 [MPa]  0.0012085570 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 -0.009684429 [MPa]  0.0097194536 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 -0.020726693 [MPa]  0.0156085328 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 -0.033000000 [MPa]  0.0192952460 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 -0.033095227 [MPa]  0.0184280288 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 -0.017162304 [MPa]  0.0070772748 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41 -0.033000000 [MPa]  0.1939214299 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42 -0.033000000 [MPa]  0.3596916389 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43 -0.033432401 [MPa]  0.2859248291 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44 -0.033000000 [MPa]  0.1249644891 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45 -0.033089233 [MPa]  0.3681533882 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46 -0.030571295 [MPa]  0.2652604967 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47 -0.031789841 [MPa]  0.1398797102 [L/m^2] 0.002738725 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 -0.033158556 [MPa]  0.1827070838 [L/m^2] 0.003379257 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49 -0.033397201 [MPa]  0.4353966739 [L/m^2] 0.000000000 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50 -0.031350240 [MPa]  0.1819847991 [L/m^2] 0.000000000 [L/m^2]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Extracts daily cohort-level output as a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span> <span class="st">"cohort"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("extract"):</span> no applicable method for 'extract' applied to an object of class "c('spwb', 'list')"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          date cohort           species                  LAI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10 T1_158  Pinus halepensis 0.82389823 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 2001-01-01 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10 T2_179      Quercus ilex 0.62107792 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2001-01-01 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10 S1_176 Quercus coccifera 0.05274013 [m^2/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 LAIlive         FPAR AbsorbedSWRFraction       Transpiration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.120304166 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.223143996 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.177380851 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.077520563 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.228393461 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.164559074 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.086776787 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.113345372 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.270105015 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.82389823 [m^2/m^2] 92.06855 [%]            34.81224 0.112894793 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.064545279 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.119720638 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.095167914 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.041597419 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.122537067 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.088291861 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.046558953 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.060814148 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.144922539 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.62107792 [m^2/m^2] 75.49574 [%]            27.96302 0.060575967 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.009071984 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.016827005 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.013376065 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.005846507 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.017222861 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.012409562 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.006543971 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.008547564 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.020369120 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.05274013 [m^2/m^2] 46.97224 [%]             3.66289 0.008514039 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GrossPhotosynthesis          PlantPsi LeafPLC StemPLC     PlantWaterBalance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1.16694360 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2.02349191 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1.70651396 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   0.78213563 [L/m^2] -0.03462455 [MPa]       0       0 -6.068589e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2.10061235 [L/m^2] -0.03300000 [MPa]       0       0  6.068589e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   1.72263008 [L/m^2] -0.03336168 [MPa]       0       0 -1.351101e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   0.98837489 [L/m^2] -0.03299485 [MPa]       0       0  1.370326e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   1.17078977 [L/m^2] -0.03322767 [MPa]       0       0 -8.696912e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   2.00921705 [L/m^2] -0.03353450 [MPa]       0       0 -1.146192e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  1.11639225 [L/m^2] -0.03420904 [MPa]       0       0 -2.519803e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  0.78228374 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  1.42874621 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  1.15120639 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  0.50892440 [L/m^2] -0.03388946 [MPa]       0       0 -1.481840e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  1.46701747 [L/m^2] -0.03300000 [MPa]       0       0  1.481840e-05 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  1.09004861 [L/m^2] -0.03319078 [MPa]       0       0 -3.178435e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  0.58744269 [L/m^2] -0.03282893 [MPa]       0       0  6.028481e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  0.74832663 [L/m^2] -0.03304056 [MPa]       0       0 -3.525820e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  1.65870682 [L/m^2] -0.03331111 [MPa]       0       0 -4.507366e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  0.73754199 [L/m^2] -0.03372383 [MPa]       0       0 -6.875828e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  0.07662789 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22  0.13754284 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23  0.11252499 [L/m^2] -0.03300000 [MPa]       0       0  0.000000e+00 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24  0.05036618 [L/m^2] -0.03418295 [MPa]       0       0 -1.034878e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  0.14173928 [L/m^2] -0.03300000 [MPa]       0       0  1.034878e-06 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26  0.10893396 [L/m^2] -0.03325903 [MPa]       0       0 -2.266077e-07 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27  0.06004781 [L/m^2] -0.03278612 [MPa]       0       0  4.137207e-07 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28  0.07452055 [L/m^2] -0.03305076 [MPa]       0       0 -2.315200e-07 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29  0.15208855 [L/m^2] -0.03339924 [MPa]       0       0 -3.048585e-07 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30  0.07260908 [L/m^2] -0.03391588 [MPa]       0       0 -4.519669e-07 [L/m^2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          LeafRWC       StemRWC          LFMC PlantStress</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.9981628 [%] 0.9998346 [%] 122.02311 [%] 0.004613739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.9981628 [%] 0.9998346 [%] 122.02311 [%] 0.004613739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.9981628 [%] 0.9998346 [%] 122.02311 [%] 0.004613739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.9980724 [%] 0.9998265 [%] 122.01616 [%] 0.004958814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.9981628 [%] 0.9998346 [%] 122.02311 [%] 0.004613739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.9981427 [%] 0.9998328 [%] 122.02156 [%] 0.004689850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.9981631 [%] 0.9998347 [%] 122.02314 [%] 0.004612659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.9981501 [%] 0.9998335 [%] 122.02214 [%] 0.004661600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.9981330 [%] 0.9998320 [%] 122.02083 [%] 0.004726361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.9980955 [%] 0.9998286 [%] 122.01794 [%] 0.004869772</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 0.9991208 [%] 0.9997405 [%] 109.14738 [%] 0.006282261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.9991208 [%] 0.9997405 [%] 109.14738 [%] 0.006282261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.9991208 [%] 0.9997405 [%] 109.14738 [%] 0.006282261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 0.9990971 [%] 0.9997335 [%] 109.14514 [%] 0.006476584</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 0.9991208 [%] 0.9997405 [%] 109.14738 [%] 0.006282261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 0.9991157 [%] 0.9997390 [%] 109.14690 [%] 0.006323880</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 0.9991254 [%] 0.9997418 [%] 109.14781 [%] 0.006244971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.9991197 [%] 0.9997402 [%] 109.14728 [%] 0.006291107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 0.9991125 [%] 0.9997380 [%] 109.14660 [%] 0.006350147</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 0.9991015 [%] 0.9997348 [%] 109.14556 [%] 0.006440342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 0.9987742 [%] 0.9995054 [%]  98.30066 [%] 0.004541797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 0.9987742 [%] 0.9995054 [%]  98.30066 [%] 0.004541797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.9987742 [%] 0.9995054 [%]  98.30066 [%] 0.004541797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.9987303 [%] 0.9994876 [%]  98.29739 [%] 0.004754072</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 0.9987742 [%] 0.9995054 [%]  98.30066 [%] 0.004541797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 0.9987646 [%] 0.9995015 [%]  98.29994 [%] 0.004588090</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 0.9987821 [%] 0.9995086 [%]  98.30125 [%] 0.004503652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 0.9987723 [%] 0.9995046 [%]  98.30052 [%] 0.004550860</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 0.9987594 [%] 0.9994994 [%]  98.29955 [%] 0.004613192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 0.9987402 [%] 0.9994916 [%]  98.29813 [%] 0.004705955</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Select the output tables/variables to be extracted</span></span></span>
 <span class="r-in"><span><span class="fu">extract</span><span class="op">(</span><span class="va">S1</span>, level <span class="op">=</span><span class="st">"cohort"</span>, output<span class="op">=</span><span class="st">"Plants"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PlantStress"</span>, <span class="st">"StemPLC"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("extract"):</span> no applicable method for 'extract' applied to an object of class "c('spwb', 'list')"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          date cohort           species PlantStress StemPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2001-01-01 T1_158  Pinus halepensis 0.004613739       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2001-01-02 T1_158  Pinus halepensis 0.004613739       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2001-01-03 T1_158  Pinus halepensis 0.004613739       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2001-01-04 T1_158  Pinus halepensis 0.004958814       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2001-01-05 T1_158  Pinus halepensis 0.004613739       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2001-01-06 T1_158  Pinus halepensis 0.004689850       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2001-01-07 T1_158  Pinus halepensis 0.004612659       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2001-01-08 T1_158  Pinus halepensis 0.004661600       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2001-01-09 T1_158  Pinus halepensis 0.004726361       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 2001-01-10 T1_158  Pinus halepensis 0.004869772       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 2001-01-01 T2_179      Quercus ilex 0.006282261       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2001-01-02 T2_179      Quercus ilex 0.006282261       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 2001-01-03 T2_179      Quercus ilex 0.006282261       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 2001-01-04 T2_179      Quercus ilex 0.006476584       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2001-01-05 T2_179      Quercus ilex 0.006282261       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2001-01-06 T2_179      Quercus ilex 0.006323880       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2001-01-07 T2_179      Quercus ilex 0.006244971       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 2001-01-08 T2_179      Quercus ilex 0.006291107       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 2001-01-09 T2_179      Quercus ilex 0.006350147       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 2001-01-10 T2_179      Quercus ilex 0.006440342       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2001-01-01 S1_176 Quercus coccifera 0.004541797       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 2001-01-02 S1_176 Quercus coccifera 0.004541797       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2001-01-03 S1_176 Quercus coccifera 0.004541797       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2001-01-04 S1_176 Quercus coccifera 0.004754072       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2001-01-05 S1_176 Quercus coccifera 0.004541797       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 2001-01-06 S1_176 Quercus coccifera 0.004588090       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 2001-01-07 S1_176 Quercus coccifera 0.004503652       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2001-01-08 S1_176 Quercus coccifera 0.004550860       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 2001-01-09 S1_176 Quercus coccifera 0.004613192       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 2001-01-10 S1_176 Quercus coccifera 0.004705955       0</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -365,19 +365,19 @@ G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #> 
 #>  Year 2001:............
 #> 
-#> Final plant cohort biomass (g/m2): 25331.4
-#> Change in plant cohort biomass (g/m2): -392.691
+#> Final plant cohort biomass (g/m2): 25331.3
+#> Change in plant cohort biomass (g/m2): -392.729
 #> Plant biomass balance result (g/m2): 0
 #> Plant biomass balance components:
 #>   Structural balance (g/m2) -153 Labile balance (g/m2) -320
 #>   Plant individual balance (g/m2) -472 Mortality loss (g/m2) 34
 #> Final plant water content (mm): 12.2159
-#> Final soil water content (mm): 282.427
+#> Final soil water content (mm): 282.426
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.0354569
+#> Change in plant water content (mm): -0.0354568
 #> Plant water balance result (mm): -0.0152228
-#> Change in soil water content (mm): -8.44817
-#> Soil water balance result (mm): -8.44716
+#> Change in soil water content (mm): -8.44864
+#> Soil water balance result (mm): -8.44762
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): 0
 #> Water balance components:
