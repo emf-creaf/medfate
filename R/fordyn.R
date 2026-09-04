@@ -327,6 +327,13 @@ fordyn<-function(forest, soil, SpParams,
     }
     
     # 4. Update inputs for next year 
+    # cat("Forest\n")
+    # print(forest)
+    # cat("Recruitment\n")
+    # print(recr_forest)
+    # cat("Resprouting\n")
+    # print(resp_forest)
+    # cat("Calling next year forest")
     nyf <- .nextYearForest(forest, xo, SpParams, control, 
                            planted_forest, recr_forest, resp_forest)
 

@@ -346,7 +346,7 @@ regeneration_seedlings <- function(forest, SpParams, control,
     recr_forest$treeData$Age <- recrBankTree$Age 
   }
   if(nrow(recrBankShrub)>0) {
-    recr_forest$shrubData$Species <- recrBankTree$Species
+    recr_forest$shrubData$Species <- recrBankShrub$Species
     recr_forest$shrubData$Cover <- species_parameter(recrBankShrub$Species, SpParams, "RecrShrubCover")
     recr_forest$shrubData$Cover[is.na(recr_forest$shrubData$Cover)] <- control$recrShrubCover
     recr_forest$shrubData$Cover <- recr_forest$shrubData$Cover*(recrBankShrub$Percent/100.0) #Apply reduction due to seed bank size
@@ -448,7 +448,10 @@ regeneration_resprouting <- function(forest, internalMortality, SpParams, contro
   resp_forest$shrubData$Height <- species_parameter(resp_forest$shrubData$Species, SpParams, "RecrShrubHeight")
   resp_forest$shrubData$Height[is.na(resp_forest$shrubData$Height)] <- control$recrShrubHeight
   
+  # print(resp_forest)
   # Trim species with no resprouting
+  resp_forest$treeData <- resp_forest$treeData[!is.na(resp_forest$treeData$N), , drop = FALSE]
+  resp_forest$shrubData <- resp_forest$shrubData[!is.na(resp_forest$shrubData$Cover), , drop = FALSE]
   resp_forest$treeData <- resp_forest$treeData[resp_forest$treeData$N > 0, , drop = FALSE]
   resp_forest$shrubData <- resp_forest$shrubData[resp_forest$shrubData$Cover > 0, , drop = FALSE]
   
@@ -457,6 +460,5 @@ regeneration_resprouting <- function(forest, internalMortality, SpParams, contro
   if("herbHeight" %in% names(resp_forest)) resp_forest$herbHeight <- NULL
   if("seedBank" %in% names(resp_forest)) resp_forest$seedBank <- NULL
   if("litterData" %in% names(resp_forest)) resp_forest$litterData <- NULL
-  
   return(resp_forest)
 }

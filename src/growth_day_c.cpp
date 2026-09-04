@@ -400,7 +400,7 @@ void updateStructuralVariables_c(ModelInput& x,
   std::vector<double> ltba = largerTreeBasalArea_c(N, DBH, 1.0); //Allometries were calibrated including the target cohort
   for(int j=0;j<numCohorts;j++) {
     if(!std::isnan(DBH[j]) && N[j]>0.0) {
-      double leafBiomassNoComp = Afbt[j]*pow(std::min(100.0,DBH[j]), Bfbt[j])*exp(-0.0001*N[j]);//Correct for high density packing
+      double leafBiomassNoComp = Afbt[j]*pow(std::min(100.0,DBH[j]), Bfbt[j])*exp(-0.0001*std::min(10000.0,N[j]));//Correct for high density packing
       LAI_nocomp[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*N[j]/10000.0; //LAI without competition effect
       x.internalAllocation.leafAreaTarget[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*exp(Cfbt[j]*ltba[j]); //Include competition effect in leaf biomass estimation
       // Update LAI_live using the target and living bud percent, if buds can be formed

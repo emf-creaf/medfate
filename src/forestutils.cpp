@@ -246,7 +246,8 @@ NumericVector treeFoliarBiomassAllometric(IntegerVector SP, NumericVector N, Num
   NumericVector lb(ncoh);
   for(int i=0;i<ncoh;i++) {
     lb[i] = ((N[i]/10000.0)*afbt[i]*pow(std::min(100.0,dbh[i]), bfbt[i]));
-    lb[i] = lb[i] * exp(-0.0001*N[i]);//Correct for high density packing
+    lb[i] = lb[i] * exp(-0.0001*std::min(10000.0, N[i]));//Correct for high density packing
+    // lb[i] = lb[i] * exp(-0.0001*N[i]);//Correct for high density packing
   }
   if(competitionEffect) {
     NumericVector ltba = largerTreeBasalArea(N,dbh, 1.0); //Allometries were calibrated including the target cohort

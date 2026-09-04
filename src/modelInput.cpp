@@ -885,6 +885,9 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
         if(NumericVector::is_na(IngrowthTreeDBH[c])) IngrowthTreeDBH[c] = ingrowthTreeDBH_default;
         if(NumericVector::is_na(RespDist[c])) RespDist[c] = 0.0;
         if(NumericVector::is_na(RespFire[c])) RespFire[c] = 0.0;
+      } else {
+        if(NumericVector::is_na(RespDist[c])) RespDist[c] = 0.0;
+        if(NumericVector::is_na(RespFire[c])) RespFire[c] = 0.0;
       }
     }
   }

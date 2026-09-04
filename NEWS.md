@@ -1,5 +1,8 @@
 # medfate 5.1.1
 * Update of trait_family_means (avoiding infinite mean values)
+* Bug correction:
+    - RespDist/RespFire initialization for shrubs
+    - Resprouting for shrubs
 
 # medfate 5.1.0
 * Compilation patch for C++ 20

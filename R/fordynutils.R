@@ -170,11 +170,13 @@
   treeOffset <- treeOffset + nrow(planted_forest$treeData)
   shrubOffset <- shrubOffset + nrow(planted_forest$shrubData)
   #recruitment
+  # print(recr_forest)
   recr_above <- forest2aboveground(recr_forest, SpParams, NA, TRUE)
   row.names(recr_above) <- plant_ID(recr_forest, SpParams, treeOffset, shrubOffset)
   treeOffset <- treeOffset + nrow(recr_forest$treeData)
   shrubOffset <- shrubOffset + nrow(recr_forest$shrubData)
   #resprouting
+  # print(resp_forest)
   resp_above <- forest2aboveground(resp_forest, SpParams, NA, TRUE)
   row.names(resp_above) <- plant_ID(resp_forest, SpParams, treeOffset, shrubOffset)
   treeOffset <- treeOffset + nrow(resp_forest$treeData)
