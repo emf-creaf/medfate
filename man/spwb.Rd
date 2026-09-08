@@ -118,6 +118,7 @@ When \code{transpirationMode = "Granier"}, element \code{"Plants"} is a list wit
 \itemize{
 \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
+\item{\code{"Phenology"}: A data frame with the daily phenological status for each plant cohort, codified into an integer value.}
 \item{\code{"FPAR"}: A data frame with the fraction of PAR at the canopy level of each plant cohort. }
 \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
 \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
@@ -135,6 +136,7 @@ If \code{transpirationMode="Sperry"} or \code{transpirationMode="Sureau"}, eleme
 \itemize{
 \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
+\item{\code{"Phenology"}: A data frame with the daily phenological status for each plant cohort, codified into an integer value.}
 \item{\code{"FPAR"}: A data frame with the fraction of PAR at the canopy level of each plant cohort. }
 \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
 \item{\code{"NetLWR"}: A data frame with the daily net LWR by each plant cohort.}

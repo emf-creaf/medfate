@@ -81,6 +81,7 @@ A list with the following elements:
 \itemize{
 \item{\code{"LAI"}: Leaf area index of the plant cohort.}
 \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
+\item{\code{"Phenology"}: Phenological status of each plant cohort, codified into an integer value.}
 \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each cohort.}
 \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
 \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
@@ -91,6 +92,7 @@ When using \code{transp_transpirationSperry} or \code{transp_transpirationSureau
 \itemize{
 \item{\code{"LAI"}: Leaf area index of the plant cohort.}
 \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
+\item{\code{"Phenology"}: Phenological status of each plant cohort, codified into an integer value.}
 \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
 \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
 \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}

@@ -4008,6 +4008,7 @@ soil_temperatureGradient <- function(gradTemp, widths, Temp) {
 #'   \itemize{
 #'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 #'     \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
+#'     \item{\code{"Phenology"}: A data frame with the daily phenological status for each plant cohort, codified into an integer value.}
 #'     \item{\code{"FPAR"}: A data frame with the fraction of PAR at the canopy level of each plant cohort. }
 #'     \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
 #'     \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
@@ -4025,6 +4026,7 @@ soil_temperatureGradient <- function(gradTemp, widths, Temp) {
 #'   \itemize{
 #'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 #'     \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
+#'     \item{\code{"Phenology"}: A data frame with the daily phenological status for each plant cohort, codified into an integer value.}
 #'     \item{\code{"FPAR"}: A data frame with the fraction of PAR at the canopy level of each plant cohort. }
 #'     \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
 #'     \item{\code{"NetLWR"}: A data frame with the daily net LWR by each plant cohort.}
@@ -4497,6 +4499,7 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #'     \itemize{
 #'       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
 #'       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
+#'       \item{\code{"Phenology"}: Phenological status of each plant cohort, codified into an integer value.}
 #'       \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each cohort.}
 #'       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
 #'       \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
@@ -4507,6 +4510,7 @@ transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope
 #'     \itemize{
 #'       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
 #'       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
+#'       \item{\code{"Phenology"}: Phenological status of each plant cohort, codified into an integer value.}
 #'       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
 #'       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
 #'       \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
