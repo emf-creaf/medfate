@@ -18,6 +18,7 @@
 struct PlantsAdvancedTranspiration_RESULT {
   std::vector<double> LAI;
   std::vector<double> LAIlive;
+  std::vector<int> Phenology;
   std::vector<double> FPAR;
   std::vector<double> Extraction;
   std::vector<double> Transpiration;
@@ -40,6 +41,7 @@ struct PlantsAdvancedTranspiration_RESULT {
   PlantsAdvancedTranspiration_RESULT(size_t numCohorts = 0) {
     LAI = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     LAIlive = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
+    Phenology = std::vector<int>(numCohorts, medfate::NA_INTEGER);
     FPAR = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     Extraction = std::vector<double>(numCohorts, medfate::NA_DOUBLE);
     Transpiration = std::vector<double>(numCohorts, medfate::NA_DOUBLE);

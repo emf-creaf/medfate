@@ -355,6 +355,7 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, D
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantLAI(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
+  IntegerMatrix Phenology(numDays, numCohorts);
   NumericMatrix LeafPLC(numDays, numCohorts);
   NumericMatrix StemPLC(numDays, numCohorts);
   NumericMatrix StemRWC(numDays, numCohorts), LeafRWC(numDays, numCohorts), LFMC(numDays, numCohorts);
@@ -367,6 +368,7 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, D
   
   PlantLAI.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   PlantLAIlive.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  Phenology.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   PlantTranspiration.attr("dimnames") = List::create(dateStrings, above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   LeafPLC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
@@ -386,6 +388,7 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, D
     PlantPsi.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
     plants = List::create(Named("LAI") = PlantLAI,
                           Named("LAIlive") = PlantLAIlive,
+                          Named("Phenology") = Phenology,
                           Named("FPAR") = PlantFPAR,
                           Named("AbsorbedSWRFraction") = PlantAbsSWRFraction,
                           Named("Transpiration") = PlantTranspiration,
@@ -428,24 +431,25 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, D
     
     plants = List::create(Named("LAI") = PlantLAI,
                           Named("LAIlive") = PlantLAIlive,
+                          Named("Phenology") = Phenology,
                           Named("FPAR") = PlantFPAR,
                           Named("AbsorbedSWR") = PlantAbsSWR,
-                               Named("NetLWR") = PlantNetLWR,
-                               Named("Transpiration") = PlantTranspiration,
-                               Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
-                               Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
-                               Named("dEdP") = dEdP, 
-                               Named("PlantWaterBalance") = PlantWaterBalance,
-                               Named("LeafPsiMin") = LeafPsiMin, 
-                               Named("LeafPsiMax") = LeafPsiMax, 
-                               Named("LeafRWC") = LeafRWC, 
-                               Named("StemRWC") = StemRWC, 
-                               Named("StemPsi") = StemPsi, 
-                               Named("LeafPLC") = LeafPLC,
-                               Named("StemPLC") = StemPLC, 
-                               Named("RootPsi") = RootPsi, 
-                               Named("RhizoPsi") = RhizoPsi, 
-                               Named("LFMC") = LFMC);
+                          Named("NetLWR") = PlantNetLWR,
+                          Named("Transpiration") = PlantTranspiration,
+                          Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
+                          Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
+                          Named("dEdP") = dEdP, 
+                          Named("PlantWaterBalance") = PlantWaterBalance,
+                          Named("LeafPsiMin") = LeafPsiMin, 
+                          Named("LeafPsiMax") = LeafPsiMax, 
+                          Named("LeafRWC") = LeafRWC, 
+                          Named("StemRWC") = StemRWC, 
+                          Named("StemPsi") = StemPsi, 
+                          Named("LeafPLC") = LeafPLC,
+                          Named("StemPLC") = StemPLC, 
+                          Named("RootPsi") = RootPsi, 
+                          Named("RhizoPsi") = RhizoPsi);
+    plants.push_back(LFMC, "LFMC");
     plants.push_back(PlantStress, "PlantStress");
     
   }
@@ -988,6 +992,7 @@ void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpiration
   NumericMatrix PlantTranspiration= Rcpp::as<Rcpp::NumericMatrix>(x["Transpiration"]);
   NumericMatrix PlantLAI= Rcpp::as<Rcpp::NumericMatrix>(x["LAI"]);
   NumericMatrix PlantLAIlive= Rcpp::as<Rcpp::NumericMatrix>(x["LAIlive"]);
+  IntegerMatrix Phenology = Rcpp::as<Rcpp::IntegerMatrix>(x["Phenology"]);
   NumericMatrix LeafPLC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafPLC"]);
   NumericMatrix StemPLC= Rcpp::as<Rcpp::NumericMatrix>(x["StemPLC"]);
   NumericMatrix StemRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemRWC"]);
@@ -1002,6 +1007,7 @@ void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpiration
   PlantStress(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
   PlantLAI(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAI"]);
   PlantLAIlive(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAIlive"]);
+  Phenology(iday,_) = Rcpp::as<Rcpp::IntegerVector>(Plants["Phenology"]);
   LeafPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPLC"]); 
   StemPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
   StemRWC(iday,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
@@ -1075,6 +1081,7 @@ void fillPlantWaterDailyOutput_c(List x, SPWB_RESULT& sDay, int iday, String tra
   NumericMatrix PlantTranspiration= Rcpp::as<Rcpp::NumericMatrix>(x["Transpiration"]);
   NumericMatrix PlantLAI= Rcpp::as<Rcpp::NumericMatrix>(x["LAI"]);
   NumericMatrix PlantLAIlive= Rcpp::as<Rcpp::NumericMatrix>(x["LAIlive"]);
+  IntegerMatrix Phenology = Rcpp::as<Rcpp::IntegerMatrix>(x["Phenology"]);
   NumericMatrix LeafPLC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafPLC"]);
   NumericMatrix StemPLC= Rcpp::as<Rcpp::NumericMatrix>(x["StemPLC"]);
   NumericMatrix StemRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemRWC"]);
@@ -1094,6 +1101,7 @@ void fillPlantWaterDailyOutput_c(List x, SPWB_RESULT& sDay, int iday, String tra
         PlantStress(iday,c) = plants.DDS[c];
         PlantLAI(iday,c) = plants.LAI[c];
         PlantLAIlive(iday,c) = plants.LAIlive[c];
+        Phenology(iday,c) = plants.Phenology[c];
         LeafPLC(iday,c) = plants.LeafPLC[c]; 
         StemPLC(iday,c) = plants.StemPLC[c]; 
         StemRWC(iday,c) = plants.StemRWC[c];
@@ -1122,6 +1130,7 @@ void fillPlantWaterDailyOutput_c(List x, SPWB_RESULT& sDay, int iday, String tra
         PlantStress(iday,c) = plants.DDS[c];
         PlantLAI(iday,c) = plants.LAI[c];
         PlantLAIlive(iday,c) = plants.LAIlive[c];
+        Phenology(iday,c) = plants.Phenology[c];
         LeafPLC(iday,c) = plants.LeafPLC[c]; 
         StemPLC(iday,c) = plants.StemPLC[c]; 
         StemRWC(iday,c) = plants.StemRWC[c];
@@ -1676,6 +1685,7 @@ void printWaterBalanceResult(List outputList, List x,
 //'   \itemize{
 //'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 //'     \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
+//'     \item{\code{"Phenology"}: A data frame with the daily phenological status for each plant cohort, codified into an integer value.}
 //'     \item{\code{"FPAR"}: A data frame with the fraction of PAR at the canopy level of each plant cohort. }
 //'     \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
 //'     \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
@@ -1693,6 +1703,7 @@ void printWaterBalanceResult(List outputList, List x,
 //'   \itemize{
 //'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 //'     \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
+//'     \item{\code{"Phenology"}: A data frame with the daily phenological status for each plant cohort, codified into an integer value.}
 //'     \item{\code{"FPAR"}: A data frame with the fraction of PAR at the canopy level of each plant cohort. }
 //'     \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
 //'     \item{\code{"NetLWR"}: A data frame with the daily net LWR by each plant cohort.}

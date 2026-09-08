@@ -18,6 +18,7 @@ Rcpp::DataFrame copyPlantAdvancedTranspirationResult_c(const PlantsAdvancedTrans
   DataFrame plantsDF = DataFrame::create(
     _["LAI"] = Rcpp::wrap(plants.LAI),
     _["LAIlive"] = Rcpp::wrap(plants.LAIlive),
+    _["Phenology"] = Rcpp::wrap(plants.Phenology),
     _["FPAR"] = Rcpp::wrap(plants.FPAR),
     _["Extraction"] = Rcpp::wrap(plants.Extraction),
     _["Transpiration"] = Rcpp::wrap(plants.Transpiration),
@@ -1298,5 +1299,9 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
   for(int c =0;c<numCohorts;c++) {
     outputPlants.LAI[c] = LAIphe[c];
     outputPlants.LAIlive[c] = LAIlive[c];
+    outputPlants.Phenology[c] = ((int) x.internalPhenology.budFormation[c])*8 +
+      ((int) x.internalPhenology.leafUnfolding[c]*4) + 
+      ((int) x.internalPhenology.leafSenescence[c]*2) + 
+      ((int) x.internalPhenology.leafDormancy[c]);
   }
 }
