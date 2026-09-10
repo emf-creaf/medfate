@@ -331,11 +331,16 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   internalPhenology.gdd = Rcpp::as< std::vector<double> >(internalPhenoDF["gdd"]);
   internalPhenology.sen = Rcpp::as< std::vector<double> >(internalPhenoDF["sen"]);
   internalPhenology.budFormation = Rcpp::as< std::vector<bool> >(internalPhenoDF["budFormation"]);
+  if(internalPhenoDF.containsElementNamed("leafOrganogenesisDuration")) {
+    internalPhenology.leafOrganogenesisDuration = Rcpp::as< std::vector<int> >(internalPhenoDF["leafOrganogenesisDuration"]);
+  } else {
+    internalPhenology.leafOrganogenesisDuration = std::vector<int>(internalPhenoDF.nrows(), 0.0);
+  }
   internalPhenology.leafUnfolding = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafUnfolding"]);
   internalPhenology.leafSenescence = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafSenescence"]);
   internalPhenology.leafDormancy = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafDormancy"]);
   internalPhenology.phi = Rcpp::as< std::vector<double> >(internalPhenoDF["phi"]);
-
+  
   //Internal LAI distribution
   if(x.containsElementNamed("internalLAIDistribution")){
     Rcpp::List intLAIDist = x["internalLAIDistribution"];
@@ -409,9 +414,19 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
     Rcpp::DataFrame internalAllocationDF = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
     internalAllocation.allocationTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["allocationTarget"]);
     internalAllocation.leafAreaTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["leafAreaTarget"]);
+    if(internalAllocationDF.containsElementNamed("leafOrganogenesisEfficiency")) {
+      internalAllocation.leafOrganogenesisEfficiency = Rcpp::as< std::vector<double> >(internalAllocationDF["leafOrganogenesisEfficiency"]); 
+    } else {
+      internalAllocation.leafOrganogenesisEfficiency = std::vector<double>(internalAllocationDF.nrow(), medfate::NA_DOUBLE);
+    }
+    if(internalAllocationDF.containsElementNamed("leafAreaPreformed")) {
+      internalAllocation.leafAreaPreformed = Rcpp::as< std::vector<double> >(internalAllocationDF["leafAreaPreformed"]);
+    } else {
+      internalAllocation.leafAreaPreformed = std::vector<double>(internalAllocationDF.nrow(), 0.0);
+    }
     internalAllocation.sapwoodAreaTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["sapwoodAreaTarget"]);
     internalAllocation.fineRootBiomassTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["fineRootBiomassTarget"]);
-    internalAllocation.crownBudPercent = Rcpp::as< std::vector<double> >(internalAllocationDF["crownBudPercent"]);
+    if(internalAllocationDF.containsElementNamed("crownBudPercent")) internalAllocation.crownBudPercent = Rcpp::as< std::vector<double> >(internalAllocationDF["crownBudPercent"]);
   }
   
   //Internal snag variables
@@ -674,6 +689,12 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     leafDormancy[c] = internalPhenology.leafDormancy[c];
     phi[c] = internalPhenology.phi[c];
   }
+  if(internalPhenoDF.containsElementNamed("leafOrganogenesisDuration")) {
+    Rcpp::IntegerVector leafOrganogenesisDuration = internalPhenoDF["leafOrganogenesisDuration"];
+    for(int c = 0;c < numCohorts; c++) {
+      leafOrganogenesisDuration[c] = internalPhenology.leafOrganogenesisDuration[c];
+    }
+  }
 
   //Internal LAI distribution
   // Rcpp::Rcout<< "copy internal LAI dist\n";
@@ -832,13 +853,25 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     Rcpp::NumericVector leafAreaTarget = internalAllocationDF["leafAreaTarget"];
     Rcpp::NumericVector sapwoodAreaTarget = internalAllocationDF["sapwoodAreaTarget"];
     Rcpp::NumericVector fineRootBiomassTarget = internalAllocationDF["fineRootBiomassTarget"];
-    Rcpp::NumericVector crownBudPercent = internalAllocationDF["crownBudPercent"];
     for(int c = 0;c < numCohorts; c++) {
       allocationTarget[c] = internalAllocation.allocationTarget[c];
       leafAreaTarget[c] = internalAllocation.leafAreaTarget[c];
       sapwoodAreaTarget[c] = internalAllocation.sapwoodAreaTarget[c];
       fineRootBiomassTarget[c] = internalAllocation.fineRootBiomassTarget[c];
-      crownBudPercent[c] = internalAllocation.crownBudPercent[c];
+    }
+    if(internalAllocationDF.containsElementNamed("crownBudPercent")) {
+      Rcpp::NumericVector crownBudPercent = internalAllocationDF["crownBudPercent"];
+      for(int c = 0;c < numCohorts; c++) crownBudPercent[c] = internalAllocation.crownBudPercent[c];
+    }
+    if(internalAllocationDF.containsElementNamed("leafAreaPreformed")) {
+      Rcpp::NumericVector leafAreaPreformed = internalAllocationDF["leafAreaPreformed"];
+      for(int c = 0;c < numCohorts; c++) leafAreaPreformed[c] = internalAllocation.leafAreaPreformed[c];
+    }
+    if(internalAllocationDF.containsElementNamed("leafOrganogenesisEfficiency")) {
+      Rcpp::NumericVector leafOrganogenesisEfficiency = internalAllocationDF["leafOrganogenesisEfficiency"];
+      for(int c = 0;c < numCohorts; c++) {
+        leafOrganogenesisEfficiency[c] = internalAllocation.leafOrganogenesisEfficiency[c];
+      }
     }
   }
 

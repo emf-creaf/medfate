@@ -779,6 +779,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector CCleaf = speciesNumericParameterFromIndex(SP, SpParams, "CCleaf");
   NumericVector CCsapwood = speciesNumericParameterFromIndex(SP, SpParams, "CCsapwood");
   NumericVector CCfineroot = speciesNumericParameterFromIndex(SP, SpParams, "CCfineroot");
+
   NumericVector RGRleafmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRleafmax");
   NumericVector RGRsapwoodmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRsapwoodmax");
   NumericVector RGRcambiummax = speciesNumericParameterFromIndex(SP, SpParams, "RGRcambiummax");
@@ -964,6 +965,7 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
   NumericVector gdd(numCohorts,0.0);
   NumericVector sen(numCohorts,0.0);
   LogicalVector budFormation(numCohorts, false);
+  IntegerVector leafOrganogenesisDuration(numCohorts, 0);
   LogicalVector leafUnfolding(numCohorts, false);
   LogicalVector leafSenescence(numCohorts, false);
   LogicalVector leafDormancy(numCohorts, false);
@@ -974,6 +976,7 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
                                    Named("leafUnfolding") = leafUnfolding,
                                    Named("leafSenescence") = leafSenescence,
                                    Named("leafDormancy") = leafDormancy,
+                                   Named("leafOrganogenesisDuration") = leafOrganogenesisDuration,
                                    Named("phi") = phi);
   df.attr("row.names") = above.attr("row.names");
   return(df);
@@ -1086,6 +1089,7 @@ DataFrame internalMortalityDataFrame(DataFrame above) {
 }
 DataFrame internalAllocationDataFrame(DataFrame above, 
                                       DataFrame belowdf, 
+                                      DataFrame paramsPhenologydf,
                                       DataFrame paramsAnatomydf,
                                       DataFrame paramsTranspirationdf,
                                       List control) {
@@ -1093,12 +1097,16 @@ DataFrame internalAllocationDataFrame(DataFrame above,
 
   NumericVector allocationTarget(numCohorts,0.0);
   NumericVector leafAreaTarget(numCohorts,0.0);
+  NumericVector leafOrganogenesisEfficiency(numCohorts,medfate::NA_DOUBLE);
+  NumericVector leafAreaPreformed(numCohorts,0.0);
   NumericVector sapwoodAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
   NumericVector crownBudPercent(numCohorts, 100.0);
   
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
+  NumericVector LeafDuration = paramsPhenologydf["LeafDuration"];
+  StringVector PhenologyType = paramsPhenologydf["PhenologyType"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector fineRootBiomass = belowdf["fineRootBiomass"];
   DataFrame df;
@@ -1125,8 +1133,15 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
   }
+  for(int c=0;c<numCohorts;c++){
+    if(PhenologyType[c]!="progressive-evergreen") {
+      leafAreaPreformed[c] = leafAreaTarget[c]/LeafDuration[c]; 
+    }
+  }
   df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                          Named("leafAreaTarget") = leafAreaTarget,
+                         Named("leafOrganogenesisEfficiency") = leafOrganogenesisEfficiency,
+                         Named("leafAreaPreformed") = leafAreaPreformed,
                          Named("sapwoodAreaTarget") = sapwoodAreaTarget,
                          Named("fineRootBiomassTarget") = fineRootBiomassTarget,
                          Named("crownBudPercent") = crownBudPercent);
@@ -1666,6 +1681,8 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   double SWE = 0.0;
   
   DataFrame paramsCanopydf = paramsCanopy(above, control);
+  DataFrame paramsPhenologydf = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus);
+  
   List ctl = clone(control);
   //For backward compatibility
   if(!ctl.containsElementNamed("soilPoolResults")) ctl.push_back(false, "soilPoolResults");
@@ -1687,7 +1704,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                        _["above"] = plantsdf,
                        _["below"] = belowdf,
                        _["belowLayers"] = belowLayers,
-                       _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus),
+                       _["paramsPhenology"] = paramsPhenologydf,
                        _["paramsAnatomy"] = paramsAnatomydf,
                        _["paramsInterception"] = paramsInterception(above, SpParams, control),
                        _["paramsTranspiration"] = paramsTranspirationdf,
@@ -1704,6 +1721,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
                                           paramsWaterStoragedf,
                                           paramsGrowthdf, control), "internalCarbon");
   input.push_back(internalAllocationDataFrame(plantsdf, belowdf,
+                                              paramsPhenologydf,
                                               paramsAnatomydf,
                                               paramsTranspirationdf, control), "internalAllocation");
   
@@ -1985,7 +2003,7 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'       \item{\code{CCleaf}: Leaf construction costs (in g gluc·g dry-1).}
 //'       \item{\code{CCsapwood}: Sapwood construction costs (in g gluc·g dry-1).}
 //'       \item{\code{CCfineroot}: Fine root construction costs (in g gluc·g dry-1).}
-//'       \item{\code{RGRleafmax}: Maximum leaf relative growth rate (in m2·cm-2·day-1).}
+//'       \item{\code{RGRleafmax}: Maximum leaf relative growth (expansion) rate (in m2·cm-2·day-1).}
 //'       \item{\code{RGRsapwoodmax}: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).}
 //'       \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).}
 //'       \item{\code{SRsapwood}: Sapwood daily senescence rate (in day-1).}
@@ -2022,6 +2040,7 @@ DataFrame rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingR
 //'     \itemize{
 //'       \item{\code{allocationTarget}: Value of the allocation target variable.}
 //'       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
+//'       \item{\code{leafAreaPreformed}: Preformed (in buds) leaf area (m2) per individual.}
 //'       \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 //'       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
 //'       \item{\code{crownBudPercent}: Percentage of the crown with buds.}
@@ -2391,10 +2410,12 @@ void multiplyInputParam(List x, String paramType, String paramName,
       DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
       DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
       DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+      DataFrame paramsPhenologydf = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
       DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
       if(message) Rcerr<< "[Message] Rebuilding allocation targets for cohort " << cohNames[cohort] <<".\n";
       x["internalAllocation"]  = internalAllocationDataFrame(above, 
                                            belowdf, 
+                                           paramsPhenologydf,
                                            paramsAnatomydf,
                                            paramsTranspirationdf,
                                            control);
@@ -2533,10 +2554,12 @@ void modifyInputParam(List x, String paramType, String paramName,
   if(x.containsElementNamed("internalAllocation")) {
     DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
     DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+    DataFrame paramsPhenologydf = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
     DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
     if(message) Rcerr<< "[Message] Rebuilding allocation targets.\n";
     x["internalAllocation"]  = internalAllocationDataFrame(above, 
                                          belowdf, 
+                                         paramsPhenologydf,
                                          paramsAnatomydf,
                                          paramsTranspirationdf,
                                          control);

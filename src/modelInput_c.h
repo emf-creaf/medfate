@@ -237,6 +237,7 @@ struct InternalPhenology {
   std::vector<double> gdd;
   std::vector<double> sen;
   std::vector<bool> budFormation;
+  std::vector<int> leafOrganogenesisDuration;
   std::vector<bool> leafUnfolding;
   std::vector<bool> leafSenescence;
   std::vector<bool> leafDormancy;
@@ -286,6 +287,8 @@ struct InternalMortality {
 struct InternalAllocation {
   std::vector<double> allocationTarget;
   std::vector<double> leafAreaTarget;
+  std::vector<double> leafOrganogenesisEfficiency;
+  std::vector<double> leafAreaPreformed;
   std::vector<double> sapwoodAreaTarget;
   std::vector<double> fineRootBiomassTarget;
   std::vector<double> crownBudPercent;

@@ -60,6 +60,11 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
         x.internalPhenology.leafDormancy[j] = (x.internalPhenology.phi[j]==0.0);
         // Rcout << doy<< " "<< photoperiod<<" "<< gdd[j]<<" "<<  leafUnfolding[j] << "\n";
       }
+      if(x.internalPhenology.budFormation[j]) {
+        x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+      } else {
+        x.internalPhenology.leafOrganogenesisDuration[j] = 0;
+      }
     }
     else if(x.paramsPhenology.phenoType[j] == "oneflush-evergreen") {
       if(doy>200) {
@@ -92,12 +97,18 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
         }
         // Rcout<<j<< " phi: "<< ph<<"\n";
       }
+      if(x.internalPhenology.budFormation[j]) {
+        x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+      } else {
+        x.internalPhenology.leafOrganogenesisDuration[j] = 0;
+      }
     }
     else if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
       x.internalPhenology.leafSenescence[j] = true;
       x.internalPhenology.leafUnfolding[j] = true;
       x.internalPhenology.budFormation[j] = true;
       x.internalPhenology.leafDormancy[j] = false;
+      x.internalPhenology.leafOrganogenesisDuration[j] = medfate::NA_INTEGER;
     }
     // Rcout<< j << " phi "<< phi[j] <<" ";
   }

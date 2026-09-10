@@ -171,7 +171,7 @@ NULL
 #' 
 #' @format
 #' \itemize{
-#'   \item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.}
+#'   \item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type', 'Units', 'MinimumValue' and 'MaximumValue'.}
 #'   \item{Data frames \code{SpParamsMED} has species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.}
 #' }
 #' @details

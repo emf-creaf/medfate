@@ -164,7 +164,7 @@ Function \code{growthInput()} returns a list of class \code{growthInput} with th
 \item{\code{CCleaf}: Leaf construction costs (in g gluc·g dry-1).}
 \item{\code{CCsapwood}: Sapwood construction costs (in g gluc·g dry-1).}
 \item{\code{CCfineroot}: Fine root construction costs (in g gluc·g dry-1).}
-\item{\code{RGRleafmax}: Maximum leaf relative growth rate (in m2·cm-2·day-1).}
+\item{\code{RGRleafmax}: Maximum leaf relative growth (expansion) rate (in m2·cm-2·day-1).}
 \item{\code{RGRsapwoodmax}: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).}
 \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).}
 \item{\code{SRsapwood}: Sapwood daily senescence rate (in day-1).}
@@ -201,6 +201,7 @@ Function \code{growthInput()} returns a list of class \code{growthInput} with th
 \itemize{
 \item{\code{allocationTarget}: Value of the allocation target variable.}
 \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
+\item{\code{leafAreaPreformed}: Preformed (in buds) leaf area (m2) per individual.}
 \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
 \item{\code{crownBudPercent}: Percentage of the crown with buds.}
