@@ -200,11 +200,12 @@ Function \code{growthInput()} returns a list of class \code{growthInput} with th
 \item {\code{internalAllocation}: A data frame with internal allocation variables for each cohort:
 \itemize{
 \item{\code{allocationTarget}: Value of the allocation target variable.}
-\item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
-\item{\code{leafAreaPreformed}: Preformed (in buds) leaf area (m2) per individual.}
+\item{\code{leafAreaTarget}: Target leaf area (m2) per individual, assuming a fully-developed crown.}
+\item{\code{leafOrganogenesisEfficiency}: For species with separated phases of leaf organogenesis and leaf expansion, proportion of the target leaf area that is preformed in buds, after accounting for crown bud availability and environmental effects in organogenesis.}
+\item{\code{leafAreaPreformed}: For species with separated phases of leaf organogenesis and expansion, preformed (in buds) leaf area (m2) per individual, to be expanded.}
 \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
-\item{\code{crownBudPercent}: Percentage of the crown with buds.}
+\item{\code{crownBudPercent}: Percentage of the crown with buds available, related to availability of branches and dormant buds.}
 }
 }
 \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
