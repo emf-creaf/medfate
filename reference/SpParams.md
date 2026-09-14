@@ -7,7 +7,8 @@ guesses.
 ## Format
 
 - Data frame `SpParamsDefinition` has parameters in rows and columns
-  'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.
+  'ParameterName', 'ParameterGroup', 'Definition', 'Type', 'Units',
+  'MinimumValue' and 'MaximumValue'.
 
 - Data frames `SpParamsMED` has species or genus as rows and column
   names equal to parameter names in `SpParamsDefinition`.

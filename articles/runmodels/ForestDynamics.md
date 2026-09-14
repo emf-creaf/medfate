@@ -222,41 +222,41 @@ fd$StandSummary
     ## 10    9              2              2               1               1
     ## 11   10              2              2               1               1
     ##    TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter
-    ## 1         552.0000          25.03330                800                37.55
-    ## 2         551.3698          24.99465                800                37.55
-    ## 3         550.7418          24.95615                800                37.55
-    ## 4         550.1161          24.91781                800                37.55
-    ## 5         549.4908          24.87952                800                37.55
-    ## 6         548.8695          24.84148                800                37.55
-    ## 7         548.2504          24.80361                800                37.55
-    ## 8         547.6335          24.76588                800                37.55
-    ## 9         547.0170          24.72820                800                37.55
-    ## 10        546.4044          24.69078                800                37.55
-    ## 11        545.7973          24.65371                800                37.55
+    ## 1         552.0000          25.03330           800.0000             37.55000
+    ## 2         551.3673          25.14751           802.6528             37.59931
+    ## 3         550.7312          25.25992           805.2975             37.64859
+    ## 4         550.0917          25.37262           807.9395             37.69792
+    ## 5         549.4470          25.48540           810.5746             37.74723
+    ## 6         548.8007          25.59857           813.2082             37.79662
+    ## 7         548.1510          25.71189           815.8383             37.84606
+    ## 8         547.4979          25.82532           818.4644             37.89553
+    ## 9         546.8395          25.93872           821.0864             37.94503
+    ## 10        546.1795          26.05234           823.7061             37.99460
+    ## 11        545.5197          26.16623           826.3204             38.04418
     ##    QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead
     ## 1                   24.02949         53.20353       3.750000    0.00000000
-    ## 2                   24.02465         53.23393       3.851086    0.03865577
-    ## 3                   24.01982         53.26427       3.960670    0.03849813
-    ## 4                   24.01501         53.29456       4.073142    0.03834160
-    ## 5                   24.01020         53.32487       4.191390    0.03829058
-    ## 6                   24.00542         53.35504       4.310643    0.03803142
-    ## 7                   24.00065         53.38516       4.432626    0.03787816
-    ## 8                   23.99589         53.41522       4.558686    0.03772598
-    ## 9                   23.99114         53.44531       4.687710    0.03767760
-    ## 10                  23.98641         53.47526       4.818941    0.03742437
-    ## 11                  23.98173         53.50500       4.953072    0.03707150
+    ## 2                   24.09806         53.05811       3.859594    0.03899665
+    ## 3                   24.16580         52.91440       3.921379    0.03938876
+    ## 4                   24.23373         52.77201       3.989613    0.03978145
+    ## 5                   24.30177         52.63130       4.061031    0.04028792
+    ## 6                   24.37000         52.49173       4.132921    0.04057763
+    ## 7                   24.43835         52.35351       4.205669    0.04098032
+    ## 8                   24.50680         52.21665       4.279827    0.04138608
+    ## 9                   24.57533         52.08123       4.355399    0.04190964
+    ## 10                  24.64397         51.94694       4.430820    0.04220704
+    ## 11                  24.71271         51.81390       4.507320    0.04238723
     ##    ShrubCoverDead BasalAreaCut ShrubCoverCut
     ## 1     0.000000000            0             0
-    ## 2     0.005826990            0             0
-    ## 3     0.005988042            0             0
-    ## 4     0.006158261            0             0
-    ## 5     0.006352326            0             0
-    ## 6     0.006517360            0             0
-    ## 7     0.006702332            0             0
-    ## 8     0.006892432            0             0
-    ## 9     0.007107583            0             0
-    ## 10    0.007287972            0             0
-    ## 11    0.007449663            0             0
+    ## 2     0.005832415            0             0
+    ## 3     0.005974952            0             0
+    ## 4     0.006073624            0             0
+    ## 5     0.006197510            0             0
+    ## 6     0.006290721            0             0
+    ## 7     0.006401805            0             0
+    ## 8     0.006514596            0             0
+    ## 9     0.006647820            0             0
+    ## 10    0.006745796            0             0
+    ## 11    0.006824435            0             0
 
 Species-level analogous statistics are shown using:
 
@@ -269,70 +269,70 @@ fd$SpeciesSummary
     ## 1     0  Pinus halepensis          1        168.0000         18.604547
     ## 2     0 Quercus coccifera          1              NA                NA
     ## 3     0      Quercus ilex          1        384.0000          6.428755
-    ## 4     1  Pinus halepensis          1        167.7010         18.571436
+    ## 4     1  Pinus halepensis          1        167.6997         18.620105
     ## 5     1 Quercus coccifera          1              NA                NA
-    ## 6     1      Quercus ilex          1        383.6688          6.423209
-    ## 7     2  Pinus halepensis          1        167.4033         18.538467
+    ## 6     1      Quercus ilex          1        383.6676          6.527402
+    ## 7     2  Pinus halepensis          1        167.3978         18.635324
     ## 8     2 Quercus coccifera          1              NA                NA
-    ## 9     2      Quercus ilex          1        383.3385          6.417680
-    ## 10    3  Pinus halepensis          1        167.1069         18.505638
+    ## 9     2      Quercus ilex          1        383.3334          6.624600
+    ## 10    3  Pinus halepensis          1        167.0942         18.650307
     ## 11    3 Quercus coccifera          1              NA                NA
-    ## 12    3      Quercus ilex          1        383.0092          6.412168
-    ## 13    4  Pinus halepensis          1        166.8109         18.472860
+    ## 12    3      Quercus ilex          1        382.9975          6.722314
+    ## 13    4  Pinus halepensis          1        166.7881         18.664877
     ## 14    4 Quercus coccifera          1              NA                NA
-    ## 15    4      Quercus ilex          1        382.6800          6.406656
-    ## 16    5  Pinus halepensis          1        166.5169         18.440309
+    ## 15    4      Quercus ilex          1        382.6589          6.820526
+    ## 16    5  Pinus halepensis          1        166.4812         18.679319
     ## 17    5 Quercus coccifera          1              NA                NA
-    ## 18    5      Quercus ilex          1        382.3526          6.401175
-    ## 19    6  Pinus halepensis          1        166.2242         18.407896
+    ## 18    5      Quercus ilex          1        382.3195          6.919250
+    ## 19    6  Pinus halepensis          1        166.1726         18.693502
     ## 20    6 Quercus coccifera          1              NA                NA
-    ## 21    6      Quercus ilex          1        382.0262          6.395710
-    ## 22    7  Pinus halepensis          1        165.9328         18.375618
+    ## 21    6      Quercus ilex          1        381.9784          7.018383
+    ## 22    7  Pinus halepensis          1        165.8624         18.707414
     ## 23    7 Quercus coccifera          1              NA                NA
-    ## 24    7      Quercus ilex          1        381.7007          6.390262
-    ## 25    8  Pinus halepensis          1        165.6417         18.343389
+    ## 24    7      Quercus ilex          1        381.6355          7.117903
+    ## 25    8  Pinus halepensis          1        165.5496         18.720950
     ## 26    8 Quercus coccifera          1              NA                NA
-    ## 27    8      Quercus ilex          1        381.3753          6.384814
-    ## 28    9  Pinus halepensis          1        165.3527         18.311382
+    ## 27    8      Quercus ilex          1        381.2899          7.217769
+    ## 28    9  Pinus halepensis          1        165.2361         18.734343
     ## 29    9 Quercus coccifera          1              NA                NA
-    ## 30    9      Quercus ilex          1        381.0517          6.379396
-    ## 31   10  Pinus halepensis          1        165.0665         18.279683
+    ## 30    9      Quercus ilex          1        380.9434          7.318000
+    ## 31   10  Pinus halepensis          1        164.9226         18.747629
     ## 32   10 Quercus coccifera          1              NA                NA
-    ## 33   10      Quercus ilex          1        380.7308          6.374024
+    ## 33   10      Quercus ilex          1        380.5971          7.418597
     ##    ShrubCoverLive BasalAreaDead ShrubCoverDead BasalAreaCut ShrubCoverCut
     ## 1              NA   0.000000000             NA            0            NA
     ## 2        3.750000            NA    0.000000000           NA             0
     ## 3              NA   0.000000000             NA            0            NA
-    ## 4              NA   0.033110412             NA            0            NA
-    ## 5        3.851086            NA    0.005826990           NA             0
-    ## 6              NA   0.005545358             NA            0            NA
-    ## 7              NA   0.032969074             NA            0            NA
-    ## 8        3.960670            NA    0.005988042           NA             0
-    ## 9              NA   0.005529053             NA            0            NA
-    ## 10             NA   0.032828755             NA            0            NA
-    ## 11       4.073142            NA    0.006158261           NA             0
-    ## 12             NA   0.005512844             NA            0            NA
-    ## 13             NA   0.032778812             NA            0            NA
-    ## 14       4.191390            NA    0.006352326           NA             0
-    ## 15             NA   0.005511767             NA            0            NA
-    ## 16             NA   0.032550751             NA            0            NA
-    ## 17       4.310643            NA    0.006517360           NA             0
-    ## 18             NA   0.005480665             NA            0            NA
-    ## 19             NA   0.032413426             NA            0            NA
-    ## 20       4.432626            NA    0.006702332           NA             0
-    ## 21             NA   0.005464738             NA            0            NA
-    ## 22             NA   0.032277079             NA            0            NA
-    ## 23       4.558686            NA    0.006892432           NA             0
-    ## 24             NA   0.005448903             NA            0            NA
-    ## 25             NA   0.032229573             NA            0            NA
-    ## 26       4.687710            NA    0.007107583           NA             0
-    ## 27             NA   0.005448024             NA            0            NA
-    ## 28             NA   0.032006910             NA            0            NA
-    ## 29       4.818941            NA    0.007287972           NA             0
-    ## 30             NA   0.005417464             NA            0            NA
-    ## 31             NA   0.031699151             NA            0            NA
-    ## 32       4.953072            NA    0.007449663           NA             0
-    ## 33             NA   0.005372345             NA            0            NA
+    ## 4              NA   0.033341011             NA            0            NA
+    ## 5        3.859594            NA    0.005832415           NA             0
+    ## 6              NA   0.005655639             NA            0            NA
+    ## 7              NA   0.033613747             NA            0            NA
+    ## 8        3.921379            NA    0.005974952           NA             0
+    ## 9              NA   0.005775013             NA            0            NA
+    ## 10             NA   0.033885722             NA            0            NA
+    ## 11       3.989613            NA    0.006073624           NA             0
+    ## 12             NA   0.005895723             NA            0            NA
+    ## 13             NA   0.034253231             NA            0            NA
+    ## 14       4.061031            NA    0.006197510           NA             0
+    ## 15             NA   0.006034685             NA            0            NA
+    ## 16             NA   0.034435265             NA            0            NA
+    ## 17       4.132921            NA    0.006290721           NA             0
+    ## 18             NA   0.006142369             NA            0            NA
+    ## 19             NA   0.034712191             NA            0            NA
+    ## 20       4.205669            NA    0.006401805           NA             0
+    ## 21             NA   0.006268125             NA            0            NA
+    ## 22             NA   0.034990587             NA            0            NA
+    ## 23       4.279827            NA    0.006514596           NA             0
+    ## 24             NA   0.006395493             NA            0            NA
+    ## 25             NA   0.035367260             NA            0            NA
+    ## 26       4.355399            NA    0.006647820           NA             0
+    ## 27             NA   0.006542380             NA            0            NA
+    ## 28             NA   0.035551952             NA            0            NA
+    ## 29       4.430820            NA    0.006745796           NA             0
+    ## 30             NA   0.006655085             NA            0            NA
+    ## 31             NA   0.035637330             NA            0            NA
+    ## 32       4.507320            NA    0.006824435           NA             0
+    ## 33             NA   0.006749904             NA            0            NA
 
 Package `medfate` provides a simple `plot` function for objects of class
 `fordyn`. For example, we can show the interannual variation in
@@ -358,52 +358,52 @@ height, density, etc) for each time step:
 fd$TreeTable
 ```
 
-    ##    Step Year Cohort          Species   DBH Height        N Z50  Z95 Z100 Age
-    ## 1     0   NA T1_158 Pinus halepensis 37.55    800 168.0000 100  300   NA  40
-    ## 2     0   NA T2_179     Quercus ilex 14.60    660 384.0000 300 1000   NA  24
-    ## 3     1 2001 T1_158 Pinus halepensis 37.55    800 167.7010 100  300   NA  40
-    ## 4     1 2001 T2_179     Quercus ilex 14.60    660 383.6688 300 1000   NA  24
-    ## 5     2 2002 T1_158 Pinus halepensis 37.55    800 167.4033 100  300   NA  41
-    ## 6     2 2002 T2_179     Quercus ilex 14.60    660 383.3385 300 1000   NA  25
-    ## 7     3 2003 T1_158 Pinus halepensis 37.55    800 167.1069 100  300   NA  42
-    ## 8     3 2003 T2_179     Quercus ilex 14.60    660 383.0092 300 1000   NA  26
-    ## 9     4 2004 T1_158 Pinus halepensis 37.55    800 166.8109 100  300   NA  43
-    ## 10    4 2004 T2_179     Quercus ilex 14.60    660 382.6800 300 1000   NA  27
-    ## 11    5 2005 T1_158 Pinus halepensis 37.55    800 166.5169 100  300   NA  44
-    ## 12    5 2005 T2_179     Quercus ilex 14.60    660 382.3526 300 1000   NA  28
-    ## 13    6 2006 T1_158 Pinus halepensis 37.55    800 166.2242 100  300   NA  45
-    ## 14    6 2006 T2_179     Quercus ilex 14.60    660 382.0262 300 1000   NA  29
-    ## 15    7 2007 T1_158 Pinus halepensis 37.55    800 165.9328 100  300   NA  46
-    ## 16    7 2007 T2_179     Quercus ilex 14.60    660 381.7007 300 1000   NA  30
-    ## 17    8 2008 T1_158 Pinus halepensis 37.55    800 165.6417 100  300   NA  47
-    ## 18    8 2008 T2_179     Quercus ilex 14.60    660 381.3753 300 1000   NA  31
-    ## 19    9 2009 T1_158 Pinus halepensis 37.55    800 165.3527 100  300   NA  48
-    ## 20    9 2009 T2_179     Quercus ilex 14.60    660 381.0517 300 1000   NA  32
-    ## 21   10 2010 T1_158 Pinus halepensis 37.55    800 165.0665 100  300   NA  49
-    ## 22   10 2010 T2_179     Quercus ilex 14.60    660 380.7308 300 1000   NA  33
-    ##    ObsID
-    ## 1   <NA>
-    ## 2   <NA>
-    ## 3     NA
-    ## 4     NA
-    ## 5     NA
-    ## 6     NA
-    ## 7     NA
-    ## 8     NA
-    ## 9     NA
-    ## 10    NA
-    ## 11    NA
-    ## 12    NA
-    ## 13    NA
-    ## 14    NA
-    ## 15    NA
-    ## 16    NA
-    ## 17    NA
-    ## 18    NA
-    ## 19    NA
-    ## 20    NA
-    ## 21    NA
-    ## 22    NA
+    ##    Step Year Cohort          Species      DBH   Height        N Z50  Z95 Z100
+    ## 1     0   NA T1_158 Pinus halepensis 37.55000 800.0000 168.0000 100  300   NA
+    ## 2     0   NA T2_179     Quercus ilex 14.60000 660.0000 384.0000 300 1000   NA
+    ## 3     1 2001 T1_158 Pinus halepensis 37.59931 802.6528 167.6997 100  300   NA
+    ## 4     1 2001 T2_179     Quercus ilex 14.71796 661.8168 383.6676 300 1000   NA
+    ## 5     2 2002 T1_158 Pinus halepensis 37.64859 805.2975 167.3978 100  300   NA
+    ## 6     2 2002 T2_179     Quercus ilex 14.83360 663.5916 383.3334 300 1000   NA
+    ## 7     3 2003 T1_158 Pinus halepensis 37.69792 807.9395 167.0942 100  300   NA
+    ## 8     3 2003 T2_179     Quercus ilex 14.94915 665.3627 382.9975 300 1000   NA
+    ## 9     4 2004 T1_158 Pinus halepensis 37.74723 810.5746 166.7881 100  300   NA
+    ## 10    4 2004 T2_179     Quercus ilex 15.06462 667.1305 382.6589 300 1000   NA
+    ## 11    5 2005 T1_158 Pinus halepensis 37.79662 813.2082 166.4812 100  300   NA
+    ## 12    5 2005 T2_179     Quercus ilex 15.17998 668.8950 382.3195 300 1000   NA
+    ## 13    6 2006 T1_158 Pinus halepensis 37.84606 815.8383 166.1726 100  300   NA
+    ## 14    6 2006 T2_179     Quercus ilex 15.29517 670.6544 381.9784 300 1000   NA
+    ## 15    7 2007 T1_158 Pinus halepensis 37.89553 818.4644 165.8624 100  300   NA
+    ## 16    7 2007 T2_179     Quercus ilex 15.41014 672.4086 381.6355 300 1000   NA
+    ## 17    8 2008 T1_158 Pinus halepensis 37.94503 821.0864 165.5496 100  300   NA
+    ## 18    8 2008 T2_179     Quercus ilex 15.52490 674.1577 381.2899 300 1000   NA
+    ## 19    9 2009 T1_158 Pinus halepensis 37.99460 823.7061 165.2361 100  300   NA
+    ## 20    9 2009 T2_179     Quercus ilex 15.63943 675.9009 380.9434 300 1000   NA
+    ## 21   10 2010 T1_158 Pinus halepensis 38.04418 826.3204 164.9226 100  300   NA
+    ## 22   10 2010 T2_179     Quercus ilex 15.75372 677.6379 380.5971 300 1000   NA
+    ##    Age ObsID
+    ## 1   40  <NA>
+    ## 2   24  <NA>
+    ## 3   40    NA
+    ## 4   24    NA
+    ## 5   41    NA
+    ## 6   25    NA
+    ## 7   42    NA
+    ## 8   26    NA
+    ## 9   43    NA
+    ## 10  27    NA
+    ## 11  44    NA
+    ## 12  28    NA
+    ## 13  45    NA
+    ## 14  29    NA
+    ## 15  46    NA
+    ## 16  30    NA
+    ## 17  47    NA
+    ## 18  31    NA
+    ## 19  48    NA
+    ## 20  32    NA
+    ## 21  49    NA
+    ## 22  33    NA
 
 The same can be shown for dead trees:
 
@@ -412,27 +412,27 @@ The same can be shown for dead trees:
 fd$DeadTreeTable
 ```
 
-    ##    Step Year Cohort          Species   DBH Height         N N_starvation
-    ## 1     1 2001 T1_158 Pinus halepensis 37.55    800 0.2989887            0
-    ## 2     1 2001 T2_179     Quercus ilex 14.60    660 0.3312333            0
-    ## 3     2 2002 T1_158 Pinus halepensis 37.55    800 0.2977124            0
-    ## 4     2 2002 T2_179     Quercus ilex 14.60    660 0.3302594            0
-    ## 5     3 2003 T1_158 Pinus halepensis 37.55    800 0.2964453            0
-    ## 6     3 2003 T2_179     Quercus ilex 14.60    660 0.3292911            0
-    ## 7     4 2004 T1_158 Pinus halepensis 37.55    800 0.2959943            0
-    ## 8     4 2004 T2_179     Quercus ilex 14.60    660 0.3292268            0
-    ## 9     5 2005 T1_158 Pinus halepensis 37.55    800 0.2939349            0
-    ## 10    5 2005 T2_179     Quercus ilex 14.60    660 0.3273691            0
-    ## 11    6 2006 T1_158 Pinus halepensis 37.55    800 0.2926949            0
-    ## 12    6 2006 T2_179     Quercus ilex 14.60    660 0.3264177            0
-    ## 13    7 2007 T1_158 Pinus halepensis 37.55    800 0.2914637            0
-    ## 14    7 2007 T2_179     Quercus ilex 14.60    660 0.3254719            0
-    ## 15    8 2008 T1_158 Pinus halepensis 37.55    800 0.2910347            0
-    ## 16    8 2008 T2_179     Quercus ilex 14.60    660 0.3254193            0
-    ## 17    9 2009 T1_158 Pinus halepensis 37.55    800 0.2890240            0
-    ## 18    9 2009 T2_179     Quercus ilex 14.60    660 0.3235940            0
-    ## 19   10 2010 T1_158 Pinus halepensis 37.55    800 0.2862449            0
-    ## 20   10 2010 T2_179     Quercus ilex 14.60    660 0.3208989            0
+    ##    Step Year Cohort          Species      DBH   Height         N N_starvation
+    ## 1     1 2001 T1_158 Pinus halepensis 37.59931 802.6528 0.3002818            0
+    ## 2     1 2001 T2_179     Quercus ilex 14.71796 661.8168 0.3324271            0
+    ## 3     2 2002 T1_158 Pinus halepensis 37.64859 805.2975 0.3019463            0
+    ## 4     2 2002 T2_179     Quercus ilex 14.83360 663.5916 0.3341719            0
+    ## 5     3 2003 T1_158 Pinus halepensis 37.69792 807.9395 0.3035932            0
+    ## 6     3 2003 T2_179     Quercus ilex 14.94915 665.3627 0.3359033            0
+    ## 7     4 2004 T1_158 Pinus halepensis 37.74723 810.5746 0.3060846            0
+    ## 8     4 2004 T2_179     Quercus ilex 15.06462 667.1305 0.3385701            0
+    ## 9     5 2005 T1_158 Pinus halepensis 37.79662 813.2082 0.3069075            0
+    ## 10    5 2005 T2_179     Quercus ilex 15.17998 668.8950 0.3393934            0
+    ## 11    6 2006 T1_158 Pinus halepensis 37.84606 815.8383 0.3085680            0
+    ## 12    6 2006 T2_179     Quercus ilex 15.29517 670.6544 0.3411453            0
+    ## 13    7 2007 T1_158 Pinus halepensis 37.89553 818.4644 0.3102311            0
+    ## 14    7 2007 T2_179     Quercus ilex 15.41014 672.4086 0.3429026            0
+    ## 15    8 2008 T1_158 Pinus halepensis 37.94503 821.0864 0.3127532            0
+    ## 16    8 2008 T2_179     Quercus ilex 15.52490 674.1577 0.3456114            0
+    ## 17    9 2009 T1_158 Pinus halepensis 37.99460 823.7061 0.3135666            0
+    ## 18    9 2009 T2_179     Quercus ilex 15.63943 675.9009 0.3464350            0
+    ## 19   10 2010 T1_158 Pinus halepensis 38.04418 826.3204 0.3135010            0
+    ## 20   10 2010 T2_179     Quercus ilex 15.75372 677.6379 0.3462911            0
     ##    N_dessication N_burnt N_resprouting_stumps Z50  Z95 Z100 Age ObsID
     ## 1              0       0                    0 100  300   NA  40    NA
     ## 2              0       0                    0 300 1000   NA  24    NA
@@ -573,12 +573,12 @@ produced, corresponding to the trees and shrubs that were cut, e.g.:
 fd$CutTreeTable
 ```
 
-    ##   Step Year Cohort          Species   DBH Height          N Z50  Z95 Z100 Age
-    ## 1    1 2001 T1_158 Pinus halepensis 37.55    800   9.708976 100  300   NA  40
-    ## 2    1 2001 T2_179     Quercus ilex 14.60    660 383.668767 300 1000   NA  24
-    ##   ObsID
-    ## 1    NA
-    ## 2    NA
+    ##   Step Year Cohort          Species      DBH   Height          N Z50  Z95 Z100
+    ## 1    1 2001 T1_158 Pinus halepensis 37.59931 802.6528   9.158143 100  300   NA
+    ## 2    1 2001 T2_179     Quercus ilex 14.71796 661.8168 383.667573 300 1000   NA
+    ##   Age ObsID
+    ## 1  40    NA
+    ## 2  24    NA
 
 Management parameters were those of an irregular model with thinning
 interventions from ‘below’, indicating that smaller trees were to be cut
@@ -607,29 +607,29 @@ appearing in year 2001:
 fd$TreeTable
 ```
 
-    ##    Step Year Cohort          Species   DBH    Height         N Z50  Z95 Z100
-    ## 1     0   NA T1_158 Pinus halepensis 37.55 800.00000  168.0000 100  300   NA
-    ## 2     0   NA T2_179     Quercus ilex 14.60 660.00000  384.0000 300 1000   NA
-    ## 3     1 2001 T1_158 Pinus halepensis 37.55 800.00000  157.9920 100  300   NA
-    ## 4     1 2001 T3_179     Quercus ilex  1.00  47.23629 3000.0000 300 1000   NA
-    ## 5     2 2002 T1_158 Pinus halepensis 37.55 800.00000  157.8237 100  300   NA
-    ## 6     2 2002 T3_179     Quercus ilex  1.00  47.23629 2998.3124 300 1000   NA
-    ## 7     3 2003 T1_158 Pinus halepensis 37.55 800.00000  157.6559 100  300   NA
-    ## 8     3 2003 T3_179     Quercus ilex  1.00  47.23629 2996.6277 300 1000   NA
-    ## 9     4 2004 T1_158 Pinus halepensis 37.55 800.00000  157.4880 100  300   NA
-    ## 10    4 2004 T3_179     Quercus ilex  1.00  47.23629 2994.9414 300 1000   NA
-    ## 11    5 2005 T1_158 Pinus halepensis 37.55 800.00000  157.3209 100  300   NA
-    ## 12    5 2005 T3_179     Quercus ilex  1.00  47.23629 2993.2627 300 1000   NA
-    ## 13    6 2006 T1_158 Pinus halepensis 37.55 800.00000  157.1543 100  300   NA
-    ## 14    6 2006 T3_179     Quercus ilex  1.00  47.23629 2991.5870 300 1000   NA
-    ## 15    7 2007 T1_158 Pinus halepensis 37.55 800.00000  156.9881 100  300   NA
-    ## 16    7 2007 T3_179     Quercus ilex  1.00  47.23629 2989.9141 300 1000   NA
-    ## 17    8 2008 T1_158 Pinus halepensis 37.55 800.00000  156.8219 100  300   NA
-    ## 18    8 2008 T3_179     Quercus ilex  1.00  47.23629 2988.2397 300 1000   NA
-    ## 19    9 2009 T1_158 Pinus halepensis 37.55 800.00000  156.6565 100  300   NA
-    ## 20    9 2009 T3_179     Quercus ilex  1.00  47.23629 2986.5727 300 1000   NA
-    ## 21   10 2010 T1_158 Pinus halepensis 37.55 800.00000  156.4925 100  300   NA
-    ## 22   10 2010 T3_179     Quercus ilex  1.00  47.23629 2984.9177 300 1000   NA
+    ##    Step Year Cohort          Species      DBH    Height         N Z50  Z95 Z100
+    ## 1     0   NA T1_158 Pinus halepensis 37.55000 800.00000  168.0000 100  300   NA
+    ## 2     0   NA T2_179     Quercus ilex 14.60000 660.00000  384.0000 300 1000   NA
+    ## 3     1 2001 T1_158 Pinus halepensis 37.59931 802.65283  158.5416 100  300   NA
+    ## 4     1 2001 T3_179     Quercus ilex  1.00000  47.23629 3000.0000 300 1000   NA
+    ## 5     2 2002 T1_158 Pinus halepensis 37.71656 808.86594  158.3707 100  300   NA
+    ## 6     2 2002 T3_179     Quercus ilex  1.00000  47.23629 2998.2956 300 1000   NA
+    ## 7     3 2003 T1_158 Pinus halepensis 37.80703 813.63837  158.1989 100  300   NA
+    ## 8     3 2003 T3_179     Quercus ilex  1.00000  47.23629 2996.5831 300 1000   NA
+    ## 9     4 2004 T1_158 Pinus halepensis 37.85620 816.22405  158.0262 100  300   NA
+    ## 10    4 2004 T3_179     Quercus ilex  1.00000  47.23629 2994.8619 300 1000   NA
+    ## 11    5 2005 T1_158 Pinus halepensis 37.90537 818.80343  157.8538 100  300   NA
+    ## 12    5 2005 T3_179     Quercus ilex  1.00000  47.23629 2993.1435 300 1000   NA
+    ## 13    6 2006 T1_158 Pinus halepensis 37.95455 821.37809  157.6813 100  300   NA
+    ## 14    6 2006 T3_179     Quercus ilex  1.00000  47.23629 2991.4231 300 1000   NA
+    ## 15    7 2007 T1_158 Pinus halepensis 38.00377 823.94880  157.5086 100  300   NA
+    ## 16    7 2007 T3_179     Quercus ilex  1.00000  47.23629 2989.7009 300 1000   NA
+    ## 17    8 2008 T1_158 Pinus halepensis 38.05290 826.50895  157.3352 100  300   NA
+    ## 18    8 2008 T3_179     Quercus ilex  1.00000  47.23629 2987.9719 300 1000   NA
+    ## 19    9 2009 T1_158 Pinus halepensis 38.10207 829.06562  157.1622 100  300   NA
+    ## 20    9 2009 T3_179     Quercus ilex  1.00000  47.23629 2986.2459 300 1000   NA
+    ## 21   10 2010 T1_158 Pinus halepensis 38.15125 831.61694  156.9900 100  300   NA
+    ## 22   10 2010 T3_179     Quercus ilex  1.00000  47.23629 2984.5274 300 1000   NA
     ##    Age ObsID
     ## 1   40  <NA>
     ## 2   24  <NA>

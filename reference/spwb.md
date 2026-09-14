@@ -252,6 +252,9 @@ the following subelements:
 - `"LAIlive"`: A data frame with the daily leaf area index for each
   plant cohort, assuming all leaves are unfolded (in m2/m2).
 
+- `"Phenology"`: A data frame with the daily phenological status for
+  each plant cohort, codified into an integer value.
+
 - `"FPAR"`: A data frame with the fraction of PAR at the canopy level of
   each plant cohort.
 
@@ -296,6 +299,9 @@ If `transpirationMode="Sperry"` or `transpirationMode="Sureau"`, element
 
 - `"LAIlive"`: A data frame with the daily leaf area index for each
   plant cohort, assuming all leaves are unfolded (in m2/m2).
+
+- `"Phenology"`: A data frame with the daily phenological status for
+  each plant cohort, codified into an integer value.
 
 - `"FPAR"`: A data frame with the fraction of PAR at the canopy level of
   each plant cohort.

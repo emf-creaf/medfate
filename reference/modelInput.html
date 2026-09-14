@@ -9,7 +9,7 @@ and a soil data input to create input objects for simulation functions spwb (or 
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -203,7 +203,7 @@ If <code>control$transpirationMode = "Sureau"</code> columns are:
 <li><p><code>CCleaf</code>: Leaf construction costs (in g gluc·g dry-1).</p></li>
 <li><p><code>CCsapwood</code>: Sapwood construction costs (in g gluc·g dry-1).</p></li>
 <li><p><code>CCfineroot</code>: Fine root construction costs (in g gluc·g dry-1).</p></li>
-<li><p><code>RGRleafmax</code>: Maximum leaf relative growth rate (in m2·cm-2·day-1).</p></li>
+<li><p><code>RGRleafmax</code>: Maximum leaf relative growth (expansion) rate (in m2·cm-2·day-1).</p></li>
 <li><p><code>RGRsapwoodmax</code>: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).</p></li>
 <li><p><code>RGRfinerootmax</code>: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).</p></li>
 <li><p><code>SRsapwood</code>: Sapwood daily senescence rate (in day-1).</p></li>
@@ -234,6 +234,7 @@ If <code>control$transpirationMode = "Sureau"</code> columns are:
 <li><p><code>internalAllocation</code>: A data frame with internal allocation variables for each cohort:
 </p><ul><li><p><code>allocationTarget</code>: Value of the allocation target variable.</p></li>
 <li><p><code>leafAreaTarget</code>: Target leaf area (m2) per individual.</p></li>
+<li><p><code>leafAreaPreformed</code>: Preformed (in buds) leaf area (m2) per individual.</p></li>
 <li><p><code>sapwoodAreaTarget</code>: Target sapwood area (cm2) per individual.</p></li>
 <li><p><code>fineRootBiomassTarget</code>: Target fine root biomass (g dry) per individual.</p></li>
 <li><p><code>crownBudPercent</code>: Percentage of the crown with buds.</p></li>
@@ -888,10 +889,14 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_176 -2.5168 22.41056 0.6263370 0.3874813</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        leafOrganogenesisDuration phi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176                         0   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        PlantPsi LeafPLC StemPLC</span>
@@ -1041,7 +1046,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
@@ -1691,10 +1696,14 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_176 -2.5168 22.41056 0.6263370 3.649952</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        leafOrganogenesisDuration phi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176                         0   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Einst Emist RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC</span>
@@ -1848,7 +1857,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
@@ -2502,10 +2511,14 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_176 -2.5168 22.41056 0.6263370 3.649952</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        leafOrganogenesisDuration phi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176                         0   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Einst Emist Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi</span>
@@ -2659,7 +2672,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
@@ -3276,10 +3289,14 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_176 -2.5168 22.41056 0.6263370 0.3874813</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176   0   0        FALSE         FALSE          FALSE        FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        leafOrganogenesisDuration phi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_158                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_179                         0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_176                         0   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        PlantPsi LeafPLC StemPLC</span>
@@ -3429,7 +3446,7 @@ also distinguishing mortality due to starvation or dessication, the number of re
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5.1.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>

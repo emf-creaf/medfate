@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-09-03</h4>
+            <h4 data-toc-skip class="date">2026-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="d-none name"><code>ForestGrowth.Rmd</code></div>
@@ -258,8 +258,8 @@ parameters for the forest growth model are
 <span><span class="co">## T2_179       0.09            NA   0.002500000            0.1     20  0.000135</span></span>
 <span><span class="co">## S1_176       0.09         0.002            NA            0.1     20  0.000135</span></span>
 <span><span class="co">##         SRfineroot RSSG fHDmin fHDmax     WoodC</span></span>
-<span><span class="co">## T1_158 0.001897231 1.35     80    160 0.4981000</span></span>
-<span><span class="co">## T2_179 0.001897231 3.02     15     70 0.4751000</span></span>
+<span><span class="co">## T1_158 0.001897231 0.32     80    160 0.4981000</span></span>
+<span><span class="co">## T2_179 0.001897231 0.32     15     70 0.4751000</span></span>
 <span><span class="co">## S1_176 0.001897231 0.50     NA     NA 0.4752026</span></span></code></pre>
 <p>which includes maximum growth rates, senescence rates and maintenance
 respiration rages. Another important set of parameters is given in
@@ -294,10 +294,14 @@ storage carbon levels can be seen in <code>internalCarbon</code>:</p>
 targets:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">internalAllocation</span></span></code></pre></div>
-<pre><code><span><span class="co">##        allocationTarget leafAreaTarget sapwoodAreaTarget fineRootBiomassTarget</span></span>
-<span><span class="co">## T1_158         1982.660     49.0415614        247.352395            1614.66309</span></span>
-<span><span class="co">## T2_179         1108.262     16.1739041        145.939304            1371.73312</span></span>
-<span><span class="co">## S1_176         2436.475      0.7036781          2.888099              38.09374</span></span>
+<pre><code><span><span class="co">##        allocationTarget leafAreaTarget leafOrganogenesisEfficiency</span></span>
+<span><span class="co">## T1_158         1982.660     49.0415614                         NaN</span></span>
+<span><span class="co">## T2_179         1108.262     16.1739041                         NaN</span></span>
+<span><span class="co">## S1_176         2436.475      0.7036781                         NaN</span></span>
+<span><span class="co">##        leafAreaPreformed sapwoodAreaTarget fineRootBiomassTarget</span></span>
+<span><span class="co">## T1_158        23.5399495        247.352395            1614.66309</span></span>
+<span><span class="co">## T2_179         8.0869521        145.939304            1371.73312</span></span>
+<span><span class="co">## S1_176         0.5244805          2.888099              38.09374</span></span>
 <span><span class="co">##        crownBudPercent</span></span>
 <span><span class="co">## T1_158             100</span></span>
 <span><span class="co">## T2_179             100</span></span>
@@ -324,21 +328,21 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:............</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant cohort biomass (g/m2): 14659.8</span></span>
-<span><span class="co">## Change in plant cohort biomass (g/m2): 242.755</span></span>
+<span><span class="co">## Final plant cohort biomass (g/m2): 14800.9</span></span>
+<span><span class="co">## Change in plant cohort biomass (g/m2): 383.826</span></span>
 <span><span class="co">## Plant biomass balance result (g/m2): 0</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 10 Labile balance (g/m2) 135</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 144 Mortality loss (g/m2) 21</span></span>
-<span><span class="co">## Final plant water content (mm): 4.66904</span></span>
-<span><span class="co">## Final soil water content (mm): 276.258</span></span>
+<span><span class="co">##   Structural balance (g/m2) 116 Labile balance (g/m2) 149</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 265 Mortality loss (g/m2) 22</span></span>
+<span><span class="co">## Final plant water content (mm): 4.68986</span></span>
+<span><span class="co">## Final soil water content (mm): 276.25</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): -0.00384886</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.0013024</span></span>
-<span><span class="co">## Change in soil water content (mm): -14.6169</span></span>
-<span><span class="co">## Soil water balance result (mm): -14.6169</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0169729</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00131932</span></span>
+<span><span class="co">## Change in soil water content (mm): -14.625</span></span>
+<span><span class="co">## Soil water balance result (mm): -14.6324</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 0</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51</span></span>
 <span><span class="co">##   Interception (mm) 79 Net rainfall (mm) 383</span></span>
@@ -490,14 +494,15 @@ relationship:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">cohorts</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></span></code></pre>
-<pre><code><span><span class="co">##        n     Bias Bias.rel      MAE  MAE.rel        r      NSE  NSE.abs </span></span>
-<span><span class="co">##       12        0      NaN        0      NaN       NA      NaN      NaN</span></span></code></pre>
+<pre><code><span><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span></span>
+<span><span class="co">##  12.00000000  -0.02898143 -10.67316857   0.04131852  15.21662441   0.96950045 </span></span>
+<span><span class="co">##          NSE      NSE.abs </span></span>
+<span><span class="co">##   0.90717380   0.81448798</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
 together:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">cohorts</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, </span>
 <span>                temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-28-1.png" class="r-plt" alt="" width="672"></p>
@@ -505,7 +510,7 @@ together:</p>
 resolution. For convenience, function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> also
 accepts an observed data frame as second argument, which allows
 performing model evaluation interactively:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">

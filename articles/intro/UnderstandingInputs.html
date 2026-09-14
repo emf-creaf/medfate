@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-09-03</h4>
+            <h4 data-toc-skip class="date">2026-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -122,10 +122,12 @@ which we reproduce below:</p>
 <table class="table">
 <colgroup>
 <col width="5%">
-<col width="83%">
+<col width="78%">
 <col width="1%">
-<col width="7%">
+<col width="6%">
 <col width="1%">
+<col width="2%">
+<col width="2%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">ParameterName</th>
@@ -133,6 +135,8 @@ which we reproduce below:</p>
 <th align="left">Type</th>
 <th align="left">Units</th>
 <th align="left">Strict</th>
+<th align="right">MinimumValue</th>
+<th align="right">MaximumValue</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -142,6 +146,8 @@ vegetation data</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SpIndex</td>
@@ -149,6 +155,8 @@ vegetation data</td>
 <td align="left">Integer</td>
 <td align="left">NA</td>
 <td align="left">TRUE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">AcceptedName</td>
@@ -157,6 +165,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Species</td>
@@ -164,6 +174,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Genus</td>
@@ -171,6 +183,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Family</td>
@@ -178,6 +192,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Order</td>
@@ -185,6 +201,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Group</td>
@@ -192,6 +210,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">GrowthForm</td>
@@ -200,6 +220,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">Categorical</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">LifeForm</td>
@@ -207,6 +229,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">Categorical</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafShape</td>
@@ -214,6 +238,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">Categorical</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">LeafSize</td>
@@ -222,6 +248,8 @@ subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">Categorical</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">PhenologyType</td>
@@ -234,6 +262,8 @@ produced).</td>
 <td align="left">String</td>
 <td align="left">Categorical</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">DispersalType</td>
@@ -242,6 +272,8 @@ animal-dispersed</td>
 <td align="left">String</td>
 <td align="left">Categorical</td>
 <td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Hmed</td>
@@ -249,6 +281,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">TRUE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Hmax</td>
@@ -256,6 +290,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">TRUE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Dmax</td>
@@ -263,6 +299,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Z50</td>
@@ -270,6 +308,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Z95</td>
@@ -277,6 +317,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 <td align="left">TRUE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">fHDmin</td>
@@ -284,6 +326,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">fHDmax</td>
@@ -291,6 +335,8 @@ animal-dispersed</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">a_ash</td>
@@ -299,6 +345,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">b_ash</td>
@@ -307,6 +355,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">a_bsh</td>
@@ -315,6 +365,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">b_bsh</td>
@@ -323,6 +375,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">a_btsh</td>
@@ -331,6 +385,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">b_btsh</td>
@@ -339,6 +395,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">cr</td>
@@ -347,6 +405,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">BTsh</td>
@@ -354,6 +414,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">a_fbt</td>
@@ -361,6 +423,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">b_fbt</td>
@@ -368,6 +432,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">c_fbt</td>
@@ -375,6 +441,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">a_cr</td>
@@ -382,6 +450,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">b_1cr</td>
@@ -389,6 +459,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">b_2cr</td>
@@ -396,6 +468,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">b_3cr</td>
@@ -403,6 +477,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">c_1cr</td>
@@ -410,6 +486,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">c_2cr</td>
@@ -417,6 +495,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">a_cw</td>
@@ -424,6 +504,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">b_cw</td>
@@ -431,6 +513,8 @@ weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">a_bt</td>
@@ -439,6 +523,8 @@ function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">b_bt</td>
@@ -447,6 +533,8 @@ function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafDuration</td>
@@ -454,6 +542,8 @@ function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">years</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">t0gdd</td>
@@ -461,6 +551,8 @@ function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">days</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">365</td>
 </tr>
 <tr class="odd">
 <td align="left">Sgdd</td>
@@ -468,6 +560,8 @@ function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Tbgdd</td>
@@ -476,6 +570,8 @@ leaf budburst</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Ssen</td>
@@ -483,6 +579,8 @@ leaf budburst</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Phsen</td>
@@ -491,6 +589,8 @@ senescence</td>
 <td align="left">Numeric</td>
 <td align="left">hours</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Tbsen</td>
@@ -499,6 +599,8 @@ senescence</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">xsen</td>
@@ -508,6 +610,8 @@ senescence</td>
 <td align="left">Integer</td>
 <td align="left">{0,1,2}</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="left">ysen</td>
@@ -517,6 +621,8 @@ senescence</td>
 <td align="left">Integer</td>
 <td align="left">{0,1,2}</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">2</td>
 </tr>
 <tr class="even">
 <td align="left">SLA</td>
@@ -524,6 +630,8 @@ senescence</td>
 <td align="left">Numeric</td>
 <td align="left">m2/kg</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafDensity</td>
@@ -531,6 +639,8 @@ senescence</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">WoodDensity</td>
@@ -538,6 +648,8 @@ senescence</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">FineRootDensity</td>
@@ -546,6 +658,8 @@ volume).</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">conduit2sapwood</td>
@@ -554,6 +668,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">[0,1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">r635</td>
@@ -562,6 +678,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">&gt;=1</td>
 <td align="left">FALSE</td>
+<td align="right">1</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">pDead</td>
@@ -569,6 +687,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">[0,1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">Al2As</td>
@@ -576,6 +696,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">m2 / m2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Ar2Al</td>
@@ -583,6 +705,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">m2 / m2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafWidth</td>
@@ -590,6 +714,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SRL</td>
@@ -597,6 +723,8 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">cm/g</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RLD</td>
@@ -605,6 +733,8 @@ soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">cm/cm3</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">maxFMC</td>
@@ -612,6 +742,8 @@ soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">minFMC</td>
@@ -619,6 +751,8 @@ soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Ptlp</td>
@@ -626,6 +760,8 @@ soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafPI0</td>
@@ -633,6 +769,8 @@ soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">LeafEPS</td>
@@ -642,14 +780,18 @@ leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the
 living cells) in leaves</td>
 <td align="left">Numeric</td>
-<td align="left">%</td>
+<td align="left">[0,1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">StemPI0</td>
@@ -658,6 +800,8 @@ tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">StemEPS</td>
@@ -667,14 +811,18 @@ xylem tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">StemAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the
 living cells) in stem xylem</td>
 <td align="left">Numeric</td>
-<td align="left">%</td>
+<td align="left">[0,1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">SAV</td>
@@ -683,6 +831,8 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">m2/m3</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">HeatContent</td>
@@ -690,6 +840,8 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">kJ/kg</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafLigninPercent</td>
@@ -697,6 +849,8 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">WoodLigninPercent</td>
@@ -704,6 +858,8 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">FineRootLigninPercent</td>
@@ -712,6 +868,8 @@ roots</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">LeafAngle</td>
@@ -720,6 +878,8 @@ plane (i.e. leaf zenith angle)</td>
 <td align="left">Numeric</td>
 <td align="left">degrees</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">90</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafAngleSD</td>
@@ -727,6 +887,8 @@ plane (i.e. leaf zenith angle)</td>
 <td align="left">Numeric</td>
 <td align="left">degrees</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">ClumpingIndex</td>
@@ -734,6 +896,8 @@ plane (i.e. leaf zenith angle)</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">gammaSWR</td>
@@ -742,6 +906,8 @@ plane (i.e. leaf zenith angle)</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">alphaSWR</td>
@@ -750,6 +916,8 @@ alphaSWR*1.35)</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">kPAR</td>
@@ -758,6 +926,8 @@ coefficient for SWR is kPAR/1.35)</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">g</td>
@@ -765,6 +935,8 @@ coefficient for SWR is kPAR/1.35)</td>
 <td align="left">Numeric</td>
 <td align="left">mm/LAI</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Tmax_LAI</td>
@@ -773,6 +945,8 @@ maximum transpiration over potential evapotranspiration.</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Tmax_LAIsq</td>
@@ -781,6 +955,8 @@ ratio of maximum transpiration over potential evapotranspiration.</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Psi_Extract</td>
@@ -789,6 +965,8 @@ transpiration</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">Exp_Extract</td>
@@ -797,6 +975,8 @@ transpiration reduction</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">WUE</td>
@@ -806,6 +986,8 @@ transpiration) under no light, water or CO2 limitations and VPD =
 <td align="left">Numeric</td>
 <td align="left">g C * mm H2O-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">WUE_par</td>
@@ -814,6 +996,8 @@ photosynthesis</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">WUE_co2</td>
@@ -822,6 +1006,8 @@ concentration on gross photosynthesis</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">WUE_vpd</td>
@@ -830,6 +1016,8 @@ deficit (VPD) on gross photosynthesis</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Gswmin</td>
@@ -838,6 +1026,8 @@ at 20C</td>
 <td align="left">Numeric</td>
 <td align="left">mol H2O * s-1 * m-2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Gswmax</td>
@@ -845,6 +1035,8 @@ at 20C</td>
 <td align="left">Numeric</td>
 <td align="left">mol H2O * s-1 * m-2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Gsw_Toptim_Jarvis</td>
@@ -853,6 +1045,8 @@ conductance (Jarvis stomatal model)</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Gsw_Tsens_Jarvis</td>
@@ -861,6 +1055,8 @@ model)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Gsw_AC_slope_Baldocchi</td>
@@ -869,6 +1065,8 @@ model).</td>
 <td align="left">Numeric</td>
 <td align="left">mol H2O * mmol CO2-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Gsw_P50_Baldocchi</td>
@@ -877,6 +1075,8 @@ conductance (Baldocchi stomatal model)</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">Gsw_slope_Baldocchi</td>
@@ -885,6 +1085,8 @@ Gsw_Baldocchi_P50 (Baldocchi stomatal model)</td>
 <td align="left">Numeric</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">VCleaf_kmax</td>
@@ -892,6 +1094,8 @@ Gsw_Baldocchi_P50 (Baldocchi stomatal model)</td>
 <td align="left">Numeric</td>
 <td align="left">mmol H2O * s-1 * m-2 * MPa-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">VCleaf_P12</td>
@@ -900,6 +1104,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">VCleaf_P50</td>
@@ -908,6 +1114,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">VCleaf_P88</td>
@@ -916,6 +1124,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">VCleaf_slope</td>
@@ -924,6 +1134,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Kmax_stemxylem</td>
@@ -932,6 +1144,8 @@ xylem</td>
 <td align="left">Numeric</td>
 <td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">VCstem_P12</td>
@@ -940,6 +1154,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">VCstem_P50</td>
@@ -948,6 +1164,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">VCstem_P88</td>
@@ -956,6 +1174,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">VCstem_slope</td>
@@ -964,6 +1184,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Kmax_rootxylem</td>
@@ -972,6 +1194,8 @@ xylem</td>
 <td align="left">Numeric</td>
 <td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">VCroot_P12</td>
@@ -980,6 +1204,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">VCroot_P50</td>
@@ -988,6 +1214,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">VCroot_P88</td>
@@ -996,6 +1224,8 @@ curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">VCroot_slope</td>
@@ -1004,6 +1234,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">%/MPa</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Vmax298</td>
@@ -1011,6 +1243,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">mmol CO2 * s-1* m-2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Jmax298</td>
@@ -1018,6 +1252,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">mmol electrons * s-1 * m-2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Nleaf</td>
@@ -1025,6 +1261,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">mg N / g dry</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">Nsapwood</td>
@@ -1032,6 +1270,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">mg N / g dry</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">Nfineroot</td>
@@ -1039,6 +1279,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">mg N / g dry</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">WoodC</td>
@@ -1046,6 +1288,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">g C / g dry</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RERleaf</td>
@@ -1053,6 +1297,8 @@ VCleaf_P50</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1 * day-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RERsapwood</td>
@@ -1061,6 +1307,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1 * day-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RERfineroot</td>
@@ -1068,6 +1316,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1 * day-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">CCleaf</td>
@@ -1075,6 +1325,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">CCsapwood</td>
@@ -1082,6 +1334,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">CCfineroot</td>
@@ -1089,6 +1343,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc * g dry-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RGRleafmax</td>
@@ -1096,6 +1352,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">m2/cm2/day</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RGRsapwoodmax</td>
@@ -1104,6 +1362,8 @@ sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">cm2/cm2/day</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RGRcambiummax</td>
@@ -1112,6 +1372,8 @@ perimeter (for trees)</td>
 <td align="left">Numeric</td>
 <td align="left">cm2/cm/day</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RGRfinerootmax</td>
@@ -1119,6 +1381,8 @@ perimeter (for trees)</td>
 <td align="left">Numeric</td>
 <td align="left">g dry/g dry/day</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RGRbud</td>
@@ -1127,6 +1391,8 @@ growth</td>
 <td align="left">Numeric</td>
 <td align="left">m2/m2</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SRsapwood</td>
@@ -1134,6 +1400,8 @@ growth</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">SRfineroot</td>
@@ -1141,6 +1409,8 @@ growth</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RSSG</td>
@@ -1148,6 +1418,8 @@ growth</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">MortalityBaselineRate</td>
@@ -1156,6 +1428,8 @@ baseline reduction of cohort’s density occurring in a year</td>
 <td align="left">Numeric</td>
 <td align="left">Year-1</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SurvivalModelStep</td>
@@ -1164,6 +1438,8 @@ depending on stand basal area (e.g. 10)</td>
 <td align="left">Numeric</td>
 <td align="left">Year</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">SurvivalB0</td>
@@ -1172,6 +1448,8 @@ depending on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SurvivalB1</td>
@@ -1180,6 +1458,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">SeedProductionHeight</td>
@@ -1187,6 +1467,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SeedProductionDiameter</td>
@@ -1194,6 +1476,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">SeedMass</td>
@@ -1201,6 +1485,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">mg</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SeedLongevity</td>
@@ -1208,6 +1494,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">yr</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">DispersalDistance</td>
@@ -1215,6 +1503,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">m</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">DispersalShape</td>
@@ -1222,6 +1512,8 @@ on stand basal area</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">ProbRecr</td>
@@ -1230,6 +1522,8 @@ envelope</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">MinTempRecr</td>
@@ -1238,6 +1532,8 @@ successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 <td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">MinMoistureRecr</td>
@@ -1246,6 +1542,8 @@ precipitation over annual PET) for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">MinFPARRecr</td>
@@ -1254,6 +1552,8 @@ successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">100</td>
 </tr>
 <tr class="odd">
 <td align="left">RecrAge</td>
@@ -1261,6 +1561,8 @@ successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">yr</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RecrTreeDBH</td>
@@ -1269,6 +1571,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RecrTreeHeight</td>
@@ -1276,6 +1580,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RecrShrubHeight</td>
@@ -1283,6 +1589,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">RecrTreeDensity</td>
@@ -1290,6 +1598,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">RecrShrubCover</td>
@@ -1297,6 +1607,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">100</td>
 </tr>
 <tr class="odd">
 <td align="left">RespFire</td>
@@ -1304,6 +1616,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">RespDist</td>
@@ -1312,6 +1626,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">RespClip</td>
@@ -1319,6 +1635,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">IngrowthTreeDensity</td>
@@ -1326,6 +1644,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">IngrowthTreeDBH</td>
@@ -1333,6 +1653,8 @@ height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 <td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>

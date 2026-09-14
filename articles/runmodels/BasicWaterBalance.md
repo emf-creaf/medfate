@@ -259,10 +259,10 @@ sd1
     ##     1.160807    45.723900    56.008543 
     ## 
     ## $Plants
-    ##               LAI    LAIlive     FPAR AbsorbedSWRFraction Extraction
-    ## T1_158 0.82389823 0.82389823 92.06855            34.81224 0.53176459
-    ## T2_179 0.62107792 0.62107792 75.49574            27.96302 0.28530096
-    ## S1_176 0.05274013 0.05274013 46.97224             3.66289 0.04009969
+    ##               LAI    LAIlive Phenology     FPAR AbsorbedSWRFraction Extraction
+    ## T1_158 0.82389823 0.82389823         1 92.06855            34.81224 0.53176459
+    ## T2_179 0.62107792 0.62107792         1 75.49574            27.96302 0.28530096
+    ## S1_176 0.05274013 0.05274013         1 46.97224             3.66289 0.04009969
     ##        Transpiration MistletoeTranspiration GrossPhotosynthesis PlantPsi
     ## T1_158    0.53176459                      0           3.5720759   -0.033
     ## T2_179    0.28530096                      0           2.6251315   -0.033
@@ -582,19 +582,19 @@ extract(S, "cohort", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 1,095 × 17
-    ##    date       cohort species               LAI LAIlive FPAR AbsorbedSWRFraction
-    ##    <date>     <chr>  <chr>            [m^2/m^… [m^2/m…  [%]               <dbl>
-    ##  1 2001-01-01 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  2 2001-01-02 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  3 2001-01-03 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  4 2001-01-04 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  5 2001-01-05 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  6 2001-01-06 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  7 2001-01-07 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  8 2001-01-08 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ##  9 2001-01-09 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
-    ## 10 2001-01-10 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8
+    ## # A tibble: 1,095 × 18
+    ##    date       cohort species     LAI LAIlive Phenology FPAR AbsorbedSWRFraction
+    ##    <date>     <chr>  <chr>     [m^2… [m^2/m…     <int>  [%]               <dbl>
+    ##  1 2001-01-01 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  2 2001-01-02 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  3 2001-01-03 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  4 2001-01-04 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  5 2001-01-05 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  6 2001-01-06 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  7 2001-01-07 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  8 2001-01-08 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ##  9 2001-01-09 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
+    ## 10 2001-01-10 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8
     ## # ℹ 1,085 more rows
     ## # ℹ 10 more variables: Transpiration [L/m^2], GrossPhotosynthesis [L/m^2],
     ## #   PlantPsi [MPa], LeafPLC <dbl>, StemPLC <dbl>, PlantWaterBalance [L/m^2],

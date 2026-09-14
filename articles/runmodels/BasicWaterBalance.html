@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-09-03</h4>
+            <h4 data-toc-skip class="date">2026-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="d-none name"><code>BasicWaterBalance.Rmd</code></div>
@@ -315,10 +315,10 @@ leaves), canopy water retention capacity and the proportion of light
 <span><span class="co">##     1.160807    45.723900    56.008543 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $Plants</span></span>
-<span><span class="co">##               LAI    LAIlive     FPAR AbsorbedSWRFraction Extraction</span></span>
-<span><span class="co">## T1_158 0.82389823 0.82389823 92.06855            34.81224 0.53176459</span></span>
-<span><span class="co">## T2_179 0.62107792 0.62107792 75.49574            27.96302 0.28530096</span></span>
-<span><span class="co">## S1_176 0.05274013 0.05274013 46.97224             3.66289 0.04009969</span></span>
+<span><span class="co">##               LAI    LAIlive Phenology     FPAR AbsorbedSWRFraction Extraction</span></span>
+<span><span class="co">## T1_158 0.82389823 0.82389823         1 92.06855            34.81224 0.53176459</span></span>
+<span><span class="co">## T2_179 0.62107792 0.62107792         1 75.49574            27.96302 0.28530096</span></span>
+<span><span class="co">## S1_176 0.05274013 0.05274013         1 46.97224             3.66289 0.04009969</span></span>
 <span><span class="co">##        Transpiration MistletoeTranspiration GrossPhotosynthesis PlantPsi</span></span>
 <span><span class="co">## T1_158    0.53176459                      0           3.5720759   -0.033</span></span>
 <span><span class="co">## T2_179    0.28530096                      0           2.6251315   -0.033</span></span>
@@ -544,19 +544,19 @@ variables:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/extract.html">extract</a></span><span class="op">(</span><span class="va">S</span>, <span class="st">"cohort"</span>, addunits <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,095 × 17</span></span></span>
-<span><span class="co">##    date       cohort species               LAI LAIlive FPAR AbsorbedSWRFraction</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494;">[m^2/m^</span>… <span style="color: #949494;">[m^2/m</span>…  <span style="color: #949494;">[%]</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2001-01-02 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 2001-01-03 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2001-01-04 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2001-01-05 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2001-01-06 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 2001-01-07 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 2001-01-08 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10 T1_158 Pinus halepensis    0.824   0.824 92.1                34.8</span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,095 × 18</span></span></span>
+<span><span class="co">##    date       cohort species     LAI LAIlive Phenology FPAR AbsorbedSWRFraction</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494;">[m^2</span>… <span style="color: #949494;">[m^2/m</span>…     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494;">[%]</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2001-01-01 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2001-01-02 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 2001-01-03 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2001-01-04 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2001-01-05 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2001-01-06 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 2001-01-07 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 2001-01-08 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2001-01-09 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2001-01-10 T1_158 Pinus ha… 0.824   0.824         1 92.1                34.8</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1,085 more rows</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 10 more variables: Transpiration [L/m^2], GrossPhotosynthesis [L/m^2],</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   PlantPsi [MPa], LeafPLC &lt;dbl&gt;, StemPLC &lt;dbl&gt;, PlantWaterBalance [L/m^2],</span></span></span>

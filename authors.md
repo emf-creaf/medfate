@@ -37,7 +37,7 @@
 - **Shengli Huang**. Contributor.
   [](https://orcid.org/0000-0003-3927-7042)
 
-- **John Burkardt**. Copyright holder.  
+- **John Burkardt**. Copyright holder.\
   Copyright holder of C++ code in 'incgamma.cpp'
 
 ## Citation

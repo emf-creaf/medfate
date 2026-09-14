@@ -351,7 +351,8 @@ same elements as `spwbInput`, but with additional information.
 
   - `CCfineroot`: Fine root construction costs (in g gluc·g dry-1).
 
-  - `RGRleafmax`: Maximum leaf relative growth rate (in m2·cm-2·day-1).
+  - `RGRleafmax`: Maximum leaf relative growth (expansion) rate (in
+    m2·cm-2·day-1).
 
   - `RGRsapwoodmax`: Maximum sapwood relative growth rate (in
     cm2·cm-2·day-1).
@@ -424,6 +425,9 @@ same elements as `spwbInput`, but with additional information.
   - `allocationTarget`: Value of the allocation target variable.
 
   - `leafAreaTarget`: Target leaf area (m2) per individual.
+
+  - `leafAreaPreformed`: Preformed (in buds) leaf area (m2) per
+    individual.
 
   - `sapwoodAreaTarget`: Target sapwood area (cm2) per individual.
 
@@ -1103,10 +1107,14 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 0.3874813
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0
+#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
+#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
+#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
+#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
+#>        leafOrganogenesisDuration phi
+#> T1_158                         0   0
+#> T2_179                         0   0
+#> S1_176                         0   0
 #> 
 #> $internalWater
 #>        PlantPsi LeafPLC StemPLC
@@ -1256,7 +1264,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.0"
+#> [1] "5.1.1"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -1906,10 +1914,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 3.649952
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0
+#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
+#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
+#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
+#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
+#>        leafOrganogenesisDuration phi
+#> T1_158                         0   0
+#> T2_179                         0   0
+#> S1_176                         0   0
 #> 
 #> $internalWater
 #>        Einst Emist RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC
@@ -2063,7 +2075,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.0"
+#> [1] "5.1.1"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2717,10 +2729,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 3.649952
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0
+#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
+#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
+#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
+#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
+#>        leafOrganogenesisDuration phi
+#> T1_158                         0   0
+#> T2_179                         0   0
+#> S1_176                         0   0
 #> 
 #> $internalWater
 #>        Einst Emist Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi
@@ -2874,7 +2890,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.0"
+#> [1] "5.1.1"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -3491,10 +3507,14 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 0.3874813
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE   0
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE   0
+#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
+#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
+#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
+#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
+#>        leafOrganogenesisDuration phi
+#> T1_158                         0   0
+#> T2_179                         0   0
+#> S1_176                         0   0
 #> 
 #> $internalWater
 #>        PlantPsi LeafPLC StemPLC
@@ -3644,7 +3664,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.0"
+#> [1] "5.1.1"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     

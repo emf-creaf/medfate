@@ -632,10 +632,10 @@ variables can be inspected in this element.
 sd1$Plants
 ```
 
-    ##               LAI    LAIlive     FPAR Extraction Transpiration
-    ## T1_158 0.82389823 0.82389823 92.06855 0.14711563    0.14711563
-    ## T2_179 0.62107792 0.62107792 75.49574 0.38574189    0.38574189
-    ## S1_176 0.05274013 0.05274013 46.97224 0.03049062    0.03049062
+    ##               LAI    LAIlive Phenology     FPAR Extraction Transpiration
+    ## T1_158 0.82389823 0.82389823         1 92.06855 0.14711563    0.14711563
+    ## T2_179 0.62107792 0.62107792         1 75.49574 0.38574189    0.38574189
+    ## S1_176 0.05274013 0.05274013         1 46.97224 0.03049062    0.03049062
     ##        MistletoeTranspiration GrossPhotosynthesis NetPhotosynthesis    RootPsi
     ## T1_158                      0           1.8229094         1.7251782 -0.1743804
     ## T2_179                      0           1.2319704         1.1785982 -0.5408911

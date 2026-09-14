@@ -1,6 +1,17 @@
 # Changelog
 
+## medfate 5.1.1
+
+- Update of trait_family_means (avoiding infinite mean values)
+- Preformed leaf area in growth
+- Minimum and maximum values added to SpParamsDefinition
+- Bug correction:
+  - RespDist/RespFire initialization for shrubs
+  - Resprouting for shrubs
+
 ## medfate 5.1.0
+
+CRAN release: 2026-09-03
 
 - Compilation patch for C++ 20
 - Mistletoe effects on water balance

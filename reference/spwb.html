@@ -13,7 +13,7 @@ and photosynthesis processes are conducted with different level of detail depend
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -171,6 +171,7 @@ function <code><a href="extract.html">extract</a></code> to reshape simulation r
 <li><p><code>"subdaily"</code>: A list of objects of class <code><a href="spwb_day.html">spwb_day</a></code>, one per day simulated (only if required in <code>control</code> parameters, see <code><a href="defaultControl.html">defaultControl</a></code>).</p></li>
 </ul><p>When <code>transpirationMode = "Granier"</code>, element <code>"Plants"</code> is a list with the following subelements:</p><ul><li><p><code>"LAI"</code>: A data frame with the daily leaf area index for each plant cohort.</p></li>
 <li><p><code>"LAIlive"</code>: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).</p></li>
+<li><p><code>"Phenology"</code>: A data frame with the daily phenological status for each plant cohort, codified into an integer value.</p></li>
 <li><p><code>"FPAR"</code>: A data frame with the fraction of PAR at the canopy level of each plant cohort.</p></li>
 <li><p><code>"AbsorbedSWRFraction"</code>: A data frame with the fraction of SWR absorbed by each plant cohort.</p></li>
 <li><p><code>"Transpiration"</code>: A data frame with the amount of daily transpiration (in mm) for each plant cohort.</p></li>
@@ -185,6 +186,7 @@ function <code><a href="extract.html">extract</a></code> to reshape simulation r
 <li><p><code>"PlantStress"</code>: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).</p></li>
 </ul><p>If <code>transpirationMode="Sperry"</code> or <code>transpirationMode="Sureau"</code>, element <code>"Plants"</code> is a list with the following subelements:</p><ul><li><p><code>"LAI"</code>: A data frame with the daily leaf area index for each plant cohort.</p></li>
 <li><p><code>"LAIlive"</code>: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).</p></li>
+<li><p><code>"Phenology"</code>: A data frame with the daily phenological status for each plant cohort, codified into an integer value.</p></li>
 <li><p><code>"FPAR"</code>: A data frame with the fraction of PAR at the canopy level of each plant cohort.</p></li>
 <li><p><code>"AbsorbedSWR"</code>: A data frame with the daily SWR absorbed by each plant cohort.</p></li>
 <li><p><code>"NetLWR"</code>: A data frame with the daily net LWR by each plant cohort.</p></li>

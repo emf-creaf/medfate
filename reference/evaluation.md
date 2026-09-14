@@ -301,13 +301,13 @@ data(exampleobs)
 #Evaluation statistics for soil water content
 evaluation_stats(S1, exampleobs)
 #>             n          Bias      Bias.rel           MAE       MAE.rel 
-#> 365.000000000  -0.001705445  -0.615977945   0.005721926   2.066663245 
+#> 365.000000000  -0.001966536  -0.709610458   0.005739439   2.071035630 
 #>             r           NSE       NSE.abs 
-#>   0.968794129   0.933875734   0.718770545 
+#>   0.969936906   0.934652153   0.717878024 
 
 #NSE only
 evaluation_metric(S1, exampleobs, metric="NSE")
-#> [1] 0.9338757
+#> [1] 0.9346522
 
 #Comparison of temporal dynamics
 evaluation_plot(S1, exampleobs)
@@ -315,6 +315,6 @@ evaluation_plot(S1, exampleobs)
 
 #Loglikelihood value
 evaluation_metric(S1, exampleobs)
-#> [1] 958.7242
+#> [1] 960.2376
 # }
 ```

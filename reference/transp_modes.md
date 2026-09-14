@@ -120,6 +120,9 @@ A list with the following elements:
   - `"LAIlive"`: Leaf area index of the plant cohort, assuming all
     leaves are unfolded.
 
+  - `"Phenology"`: Phenological status of each plant cohort, codified
+    into an integer value.
+
   - `"AbsorbedSWRFraction"`: Fraction of SWR absorbed by each cohort.
 
   - `"Transpiration"`: Transpirated water (in mm) corresponding to each
@@ -141,6 +144,9 @@ A list with the following elements:
 
   - `"LAIlive"`: Leaf area index of the plant cohort, assuming all
     leaves are unfolded.
+
+  - `"Phenology"`: Phenological status of each plant cohort, codified
+    into an integer value.
 
   - `"Extraction"`: Water extracted from the soil (in mm) for each
     cohort.

@@ -35,167 +35,167 @@ tables. Not all parameters are needed for all models. You can find
 parameter definitions in table `SpParamsDefinition`, which we reproduce
 below:
 
-| ParameterName | Definition | Type | Units | Strict |
-|:---|:---|:---|:---|:---|
-| Name | Plant names (species binomials, genus or other) used in vegetation data | String | NA | TRUE |
-| SpIndex | Internal species codification (0,1,2,) | Integer | NA | TRUE |
-| AcceptedName | Accepted scientific name of a taxon (genus, species, subspecies or variety) used for parameterization | String | NA | FALSE |
-| Species | Taxonomic species of accepted name | String | NA | FALSE |
-| Genus | Taxonomic genus of accepted name | String | NA | TRUE |
-| Family | Taxonomic family of accepted name | String | NA | TRUE |
-| Order | Taxonomic order of accepted name | String | NA | TRUE |
-| Group | Either “Gymnosperm” or “Angiosperm” | String | NA | TRUE |
-| GrowthForm | Growth form: Either “Shrub”, “Tree” or “Tree/Shrub” | String | Categorical | TRUE |
-| LifeForm | Raunkiaer life form | String | Categorical | TRUE |
-| LeafShape | Broad/Needle/Linear/Scale/Spines/Succulent | String | Categorical | TRUE |
-| LeafSize | Either “Small” (\< 225 mm), “Medium” (\> 225 mm & \< 2025 mm) or “Large” (\> 2025 mm) | String | Categorical | TRUE |
-| PhenologyType | Leaf phenology type, either “oneflush-evergreen” (new leaves develop in spring-summer), “progressive-evergreen” (new leaves develop during any season), “winter-deciduous” (leaf senescence in autumn, new leaves in spring-summer) or “winter-semideciduous” (same as before, but abscission of senescent leaves occurs when new leaves are produced). | String | Categorical | TRUE |
-| DispersalType | Dispersal type, either wind-dispersed or animal-dispersed | String | Categorical | TRUE |
-| Hmed | Median plant height | Numeric | cm | TRUE |
-| Hmax | Maximum plant height | Numeric | cm | TRUE |
-| Dmax | Maximum tree diameter | Numeric | cm | FALSE |
-| Z50 | Depth corresponding to 50% of fine roots | Numeric | mm | FALSE |
-| Z95 | Depth corresponding to 95% of fine roots | Numeric | mm | TRUE |
-| fHDmin | Minimum value of height-diameter ratio | Numeric | NA | FALSE |
-| fHDmax | Maximum value of height-diameter ratio | Numeric | NA | FALSE |
-| a_ash | Allometric coefficient for shrub area as function of height | Numeric | NA | FALSE |
-| b_ash | Allometric coefficient for shrub area as function of height | Numeric | NA | FALSE |
-| a_bsh | Allometric coefficient for fine fuel shrub biomass (dry weight) | Numeric | NA | FALSE |
-| b_bsh | Allometric coefficient for fine fuel shrub biomass (dry weight) | Numeric | NA | FALSE |
-| a_btsh | Allometric coefficient for total fuel shrub biomass (dry weight) | Numeric | NA | FALSE |
-| b_btsh | Allometric coefficient for total fuel shrub biomass (dry weight) | Numeric | NA | FALSE |
-| cr | Proportion of total height corresponding to the crown (i.e. Crown length divided by total height) | Numeric | \[0-1\] | FALSE |
-| BTsh | Shrub bark thickness | Numeric | mm | FALSE |
-| a_fbt | Regression coefficient for tree foliar biomass | Numeric | NA | FALSE |
-| b_fbt | Regression coefficient for tree foliar biomass | Numeric | NA | FALSE |
-| c_fbt | Regression coefficient for tree foliar biomass | Numeric | NA | FALSE |
-| a_cr | Regression coefficient for crown ratio | Numeric | NA | FALSE |
-| b_1cr | Regression coefficient for crown ratio | Numeric | NA | FALSE |
-| b_2cr | Regression coefficient for crown ratio | Numeric | NA | FALSE |
-| b_3cr | Regression coefficient for crown ratio | Numeric | NA | FALSE |
-| c_1cr | Regression coefficient for crown ratio | Numeric | NA | FALSE |
-| c_2cr | Regression coefficient for crown ratio | Numeric | NA | FALSE |
-| a_cw | Regression coefficient for crown width | Numeric | NA | FALSE |
-| b_cw | Regression coefficient for crown width | Numeric | NA | FALSE |
-| a_bt | Regression coefficient for bark thickness (mm) as function of DBH (cm) | Numeric | NA | FALSE |
-| b_bt | Regression coefficient for bark thickness (mm) as function of DBH (cm) | Numeric | NA | FALSE |
-| LeafDuration | Duration of leaves in year | Numeric | years | FALSE |
-| t0gdd | Date to start the accumulation of degree days | Numeric | days | FALSE |
-| Sgdd | Degree days for leaf budburst | Numeric | Degrees C | FALSE |
-| Tbgdd | Base temperature for the calculation of degree days to leaf budburst | Numeric | Degrees C | FALSE |
-| Ssen | Degree days corresponding to senescence | Numeric | Degrees C | FALSE |
-| Phsen | Photoperiod corresponding to start counting senescence | Numeric | hours | FALSE |
-| Tbsen | Base temperature for the calculation of degree days to senescence | Numeric | Degrees C | FALSE |
-| xsen | Discrete values, to allow for any absent/proportional/more than proportional effects of temperature on senescence | Integer | {0,1,2} | FALSE |
-| ysen | Discrete values, to allow for any absent/proportional/more than proportional effects of photoperiod on senescence | Integer | {0,1,2} | FALSE |
-| SLA | Specific leaf area (mm2/mg = m2/kg) | Numeric | m2/kg | FALSE |
-| LeafDensity | Density of leaf tissue (dry weight over volume) | Numeric | g/cm3 | FALSE |
-| WoodDensity | Wood tissue density (at 0% humidity!) | Numeric | g/cm3 | FALSE |
-| FineRootDensity | Density of fine root tissue (dry weight over volume). | Numeric | g/cm3 | FALSE |
-| conduit2sapwood | Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue. | Numeric | \[0,1\] | FALSE |
-| r635 | Ratio of foliar (photosynthetic) + small branches (\<6.35 mm) dry biomass to foliar (photosynthetic) dry biomass | Numeric | \>=1 | FALSE |
-| pDead | Proportion of total fine fuels that are dead | Numeric | \[0,1\] | FALSE |
-| Al2As | Leaf area to sapwood area ratio | Numeric | m2 / m2 | FALSE |
-| Ar2Al | Root area to leaf area ratio | Numeric | m2 / m2 | FALSE |
-| LeafWidth | Leaf width | Numeric | cm | FALSE |
-| SRL | Specific root length | Numeric | cm/g | FALSE |
-| RLD | Fine root length density (density of root length per soil volume) | Numeric | cm/cm3 | FALSE |
-| maxFMC | Maximum fuel moisture (in percent of dry weight) | Numeric | % | FALSE |
-| minFMC | Minimum fuel moisture (in percent of dry weight) | Numeric | % | FALSE |
-| Ptlp | Leaf water potential at turgor loss point | Numeric | Mpa | FALSE |
-| LeafPI0 | Osmotic potential at full turgor of leaves | Numeric | Mpa | FALSE |
-| LeafEPS | Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves | Numeric | Mpa | FALSE |
-| LeafAF | Apoplastic fraction (proportion of water outside the living cells) in leaves | Numeric | % | FALSE |
-| StemPI0 | Osmotic potential at full turgor of symplastic xylem tissue | Numeric | Mpa | FALSE |
-| StemEPS | Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue | Numeric | Mpa | FALSE |
-| StemAF | Apoplastic fraction (proportion of water outside the living cells) in stem xylem | Numeric | % | FALSE |
-| SAV | Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches \< 6.35mm) | Numeric | m2/m3 | FALSE |
-| HeatContent | High fuel heat content | Numeric | kJ/kg | FALSE |
-| LeafLigninPercent | Percent of lignin+cutin over dry weight in leaves | Numeric | % | FALSE |
-| WoodLigninPercent | Percent of lignin+cutin over dry weight in wood | Numeric | % | FALSE |
-| FineRootLigninPercent | Percent of lignin+cutin over dry weight in fine roots | Numeric | % | FALSE |
-| LeafAngle | The angle between the leaf plane and the horizontal plane (i.e. leaf zenith angle) | Numeric | degrees | FALSE |
-| LeafAngleSD | Standard deviation of the leaf angle | Numeric | degrees | FALSE |
-| ClumpingIndex | Canopy clumping index | Numeric | \[0-1\] | FALSE |
-| gammaSWR | Reflectance (albedo) coefficient for SWR (gammaPAR is 0.8\*gammaSWR) | Numeric | unitless | FALSE |
-| alphaSWR | Absorbance coefficient for SWR (alphaPAR is alphaSWR\*1.35) | Numeric | unitless | FALSE |
-| kPAR | Light extinction coeficient for PAR (extinction coefficient for SWR is kPAR/1.35) | Numeric | unitless | FALSE |
-| g | Canopy water storage capacity per LAI unit | Numeric | mm/LAI | FALSE |
-| Tmax_LAI | Empirical coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration. | Numeric | NA | FALSE |
-| Tmax_LAIsq | Empirical coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration. | Numeric | NA | FALSE |
-| Psi_Extract | Water potential corresponding to 50% reduction of transpiration | Numeric | MPa | FALSE |
-| Exp_Extract | Parameter of the Weibull function regulating transpiration reduction | Numeric | NA | FALSE |
-| WUE | Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa | Numeric | g C \* mm H2O-1 | FALSE |
-| WUE_par | Coefficient regulating the influence of % PAR on gross photosynthesis | Numeric | NA | FALSE |
-| WUE_co2 | Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis | Numeric | NA | FALSE |
-| WUE_vpd | Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis | Numeric | NA | FALSE |
-| Gswmin | Minimum leaf conductance (cuticular+incomplete closure) at 20C | Numeric | mol H2O \* s-1 \* m-2 | FALSE |
-| Gswmax | Maximum stomatal conductance to water vapour | Numeric | mol H2O \* s-1 \* m-2 | FALSE |
-| Gsw_Toptim_Jarvis | Temperature corresponding to maximal stomatal conductance (Jarvis stomatal model) | Numeric | Degrees C | FALSE |
-| Gsw_Tsens_Jarvis | Stomatal sensitivity to temperature (Jarvis stomatal model) | Numeric | NA | FALSE |
-| Gsw_AC_slope_Baldocchi | Slope of the Gsw vs Ac/Cs relationship (Baldocchi model). | Numeric | mol H2O \* mmol CO2-1 | FALSE |
-| Gsw_P50_Baldocchi | Water potential causing 50% reduction in stomatal conductance (Baldocchi stomatal model) | Numeric | MPa | FALSE |
-| Gsw_slope_Baldocchi | Rate of decrease in stomatal conductance at Gsw_Baldocchi_P50 (Baldocchi stomatal model) | Numeric | %/MPa | FALSE |
-| VCleaf_kmax | Maximum leaf hydraulic conductance | Numeric | mmol H2O \* s-1 \* m-2 \* MPa-1 | FALSE |
-| VCleaf_P12 | 12% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE |
-| VCleaf_P50 | 50% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE |
-| VCleaf_P88 | 88% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE |
-| VCleaf_slope | Slope of the rate of leaf embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE |
-| Kmax_stemxylem | Maximum sapwood-specific hydraulic conductivity of stem xylem | Numeric | kg H2O \* s-1 \* m-1 \* Mpa-1 | FALSE |
-| VCstem_P12 | 12% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE |
-| VCstem_P50 | 50% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE |
-| VCstem_P88 | 88% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE |
-| VCstem_slope | Slope of the rate of stem embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE |
-| Kmax_rootxylem | Maximum sapwood-specific hydraulic conductivity of root xylem | Numeric | kg H2O \* s-1 \* m-1 \* Mpa-1 | FALSE |
-| VCroot_P12 | 12% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE |
-| VCroot_P50 | 50% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE |
-| VCroot_P88 | 88% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE |
-| VCroot_slope | Slope of the rate of root embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE |
-| Vmax298 | Maximum Rubisco carboxilation rate | Numeric | mmol CO2 \* s-1\* m-2 | FALSE |
-| Jmax298 | Maximum rate of electron transport at 298K | Numeric | mmol electrons \* s-1 \* m-2 | FALSE |
-| Nleaf | Nitrogen mass per leaf dry mass | Numeric | mg N / g dry | FALSE |
-| Nsapwood | Nitrogen mass per sapwood dry mass | Numeric | mg N / g dry | FALSE |
-| Nfineroot | Nitrogen mass per fine root dry mass | Numeric | mg N / g dry | FALSE |
-| WoodC | Wood carbon content per dry mass | Numeric | g C / g dry | FALSE |
-| RERleaf | Maintenance respiration rates for leaves. | Numeric | g gluc \* g dry-1 \* day-1 | FALSE |
-| RERsapwood | Maintenance respiration rates for living cells of sapwood. | Numeric | g gluc \* g dry-1 \* day-1 | FALSE |
-| RERfineroot | Maintenance respiration rates for fine roots. | Numeric | g gluc \* g dry-1 \* day-1 | FALSE |
-| CCleaf | Leaf construction costs | Numeric | g gluc \* g dry-1 | FALSE |
-| CCsapwood | Sapwood construction costs | Numeric | g gluc \* g dry-1 | FALSE |
-| CCfineroot | Fine root construction costs | Numeric | g gluc \* g dry-1 | FALSE |
-| RGRleafmax | Maximum leaf relative growth rate | Numeric | m2/cm2/day | FALSE |
-| RGRsapwoodmax | Maximum sapwood growth rate relative to sapwood area (for shrubs) | Numeric | cm2/cm2/day | FALSE |
-| RGRcambiummax | Maximum sapwood growth rate relative to cambium perimeter (for trees) | Numeric | cm2/cm/day | FALSE |
-| RGRfinerootmax | Maximum fineroot relative growth rate | Numeric | g dry/g dry/day | FALSE |
-| RGRbud | Bud (potential leaf area) formation rate per leaf area growth | Numeric | m2/m2 | FALSE |
-| SRsapwood | Sapwood daily senescence rate | Numeric | Day-1 | FALSE |
-| SRfineroot | Fine root daily senescence rate | Numeric | Day-1 | FALSE |
-| RSSG | Minimum relative starch for sapwood growth | Numeric | \[0-1\] | FALSE |
-| MortalityBaselineRate | Deterministic proportion or probability specifying the baseline reduction of cohort’s density occurring in a year | Numeric | Year-1 | FALSE |
-| SurvivalModelStep | Time step in years of the empirical survival model depending on stand basal area (e.g. 10) | Numeric | Year | FALSE |
-| SurvivalB0 | Intercept of the logistic baseline survival model depending on stand basal area | Numeric | NA | FALSE |
-| SurvivalB1 | Slope of the logistic baseline survival model depending on stand basal area | Numeric | NA | FALSE |
-| SeedProductionHeight | Minimum shrub height for seed production | Numeric | cm | FALSE |
-| SeedProductionDiameter | Minimum tree diameter for seed production | Numeric | cm | FALSE |
-| SeedMass | Seed dry mass | Numeric | mg | FALSE |
-| SeedLongevity | Seedbank average longevity | Numeric | yr | FALSE |
-| DispersalDistance | Distance parameter for dispersal kernel | Numeric | m | FALSE |
-| DispersalShape | Shape parameter for dispersal kernel | Numeric | NA | FALSE |
-| ProbRecr | Probability of recruitment within the bioclimatic envelope | Numeric | \[0-1\] | FALSE |
-| MinTempRecr | Minimum average temperature of the coldest month for successful recruitment | Numeric | Degrees C | FALSE |
-| MinMoistureRecr | Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment | Numeric | unitless | FALSE |
-| MinFPARRecr | Minimum percentage of PAR at the ground level for successful recruitment | Numeric | % | FALSE |
-| RecrAge | Age of recruiment | Numeric | yr | FALSE |
-| RecrTreeDBH | Recruitment tree (sapling) stem diameter at breast height | Numeric | cm | FALSE |
-| RecrTreeHeight | Recruitment tree (sapling) height | Numeric | cm | FALSE |
-| RecrShrubHeight | Recruitment shrub height | Numeric | cm | FALSE |
-| RecrTreeDensity | Recruitment tree (sapling) density | Numeric | ind/ha | FALSE |
-| RecrShrubCover | Recruitment shrub cover | Numeric | % | FALSE |
-| RespFire | Probability of resprouting after fire disturbance | Numeric | \[0-1\] | FALSE |
-| RespDist | Probability of resprouting after undefined disturbance (typically desiccation) | Numeric | \[0-1\] | FALSE |
-| RespClip | Probability of resprouting after clipping | Numeric | \[0-1\] | FALSE |
-| IngrowthTreeDensity | Tree density when reaching DBH of ingrowth | Numeric | ind/ha | FALSE |
-| IngrowthTreeDBH | Tree DBH of ingrowth (typically 7.5 cm) | Numeric | cm | FALSE |
+| ParameterName | Definition | Type | Units | Strict | MinimumValue | MaximumValue |
+|:---|:---|:---|:---|:---|---:|---:|
+| Name | Plant names (species binomials, genus or other) used in vegetation data | String | NA | TRUE | NA | NA |
+| SpIndex | Internal species codification (0,1,2,) | Integer | NA | TRUE | 0 | NA |
+| AcceptedName | Accepted scientific name of a taxon (genus, species, subspecies or variety) used for parameterization | String | NA | FALSE | NA | NA |
+| Species | Taxonomic species of accepted name | String | NA | FALSE | NA | NA |
+| Genus | Taxonomic genus of accepted name | String | NA | TRUE | NA | NA |
+| Family | Taxonomic family of accepted name | String | NA | TRUE | NA | NA |
+| Order | Taxonomic order of accepted name | String | NA | TRUE | NA | NA |
+| Group | Either “Gymnosperm” or “Angiosperm” | String | NA | TRUE | NA | NA |
+| GrowthForm | Growth form: Either “Shrub”, “Tree” or “Tree/Shrub” | String | Categorical | TRUE | NA | NA |
+| LifeForm | Raunkiaer life form | String | Categorical | TRUE | NA | NA |
+| LeafShape | Broad/Needle/Linear/Scale/Spines/Succulent | String | Categorical | TRUE | NA | NA |
+| LeafSize | Either “Small” (\< 225 mm), “Medium” (\> 225 mm & \< 2025 mm) or “Large” (\> 2025 mm) | String | Categorical | TRUE | NA | NA |
+| PhenologyType | Leaf phenology type, either “oneflush-evergreen” (new leaves develop in spring-summer), “progressive-evergreen” (new leaves develop during any season), “winter-deciduous” (leaf senescence in autumn, new leaves in spring-summer) or “winter-semideciduous” (same as before, but abscission of senescent leaves occurs when new leaves are produced). | String | Categorical | TRUE | NA | NA |
+| DispersalType | Dispersal type, either wind-dispersed or animal-dispersed | String | Categorical | TRUE | NA | NA |
+| Hmed | Median plant height | Numeric | cm | TRUE | 0 | NA |
+| Hmax | Maximum plant height | Numeric | cm | TRUE | 0 | NA |
+| Dmax | Maximum tree diameter | Numeric | cm | FALSE | 0 | NA |
+| Z50 | Depth corresponding to 50% of fine roots | Numeric | mm | FALSE | 0 | NA |
+| Z95 | Depth corresponding to 95% of fine roots | Numeric | mm | TRUE | 0 | NA |
+| fHDmin | Minimum value of height-diameter ratio | Numeric | NA | FALSE | 0 | NA |
+| fHDmax | Maximum value of height-diameter ratio | Numeric | NA | FALSE | 0 | NA |
+| a_ash | Allometric coefficient for shrub area as function of height | Numeric | NA | FALSE | NA | NA |
+| b_ash | Allometric coefficient for shrub area as function of height | Numeric | NA | FALSE | NA | NA |
+| a_bsh | Allometric coefficient for fine fuel shrub biomass (dry weight) | Numeric | NA | FALSE | NA | NA |
+| b_bsh | Allometric coefficient for fine fuel shrub biomass (dry weight) | Numeric | NA | FALSE | NA | NA |
+| a_btsh | Allometric coefficient for total fuel shrub biomass (dry weight) | Numeric | NA | FALSE | NA | NA |
+| b_btsh | Allometric coefficient for total fuel shrub biomass (dry weight) | Numeric | NA | FALSE | NA | NA |
+| cr | Proportion of total height corresponding to the crown (i.e. Crown length divided by total height) | Numeric | \[0-1\] | FALSE | 0 | 1 |
+| BTsh | Shrub bark thickness | Numeric | mm | FALSE | 0 | NA |
+| a_fbt | Regression coefficient for tree foliar biomass | Numeric | NA | FALSE | NA | NA |
+| b_fbt | Regression coefficient for tree foliar biomass | Numeric | NA | FALSE | NA | NA |
+| c_fbt | Regression coefficient for tree foliar biomass | Numeric | NA | FALSE | NA | NA |
+| a_cr | Regression coefficient for crown ratio | Numeric | NA | FALSE | NA | NA |
+| b_1cr | Regression coefficient for crown ratio | Numeric | NA | FALSE | NA | NA |
+| b_2cr | Regression coefficient for crown ratio | Numeric | NA | FALSE | NA | NA |
+| b_3cr | Regression coefficient for crown ratio | Numeric | NA | FALSE | NA | NA |
+| c_1cr | Regression coefficient for crown ratio | Numeric | NA | FALSE | NA | NA |
+| c_2cr | Regression coefficient for crown ratio | Numeric | NA | FALSE | NA | NA |
+| a_cw | Regression coefficient for crown width | Numeric | NA | FALSE | NA | NA |
+| b_cw | Regression coefficient for crown width | Numeric | NA | FALSE | NA | NA |
+| a_bt | Regression coefficient for bark thickness (mm) as function of DBH (cm) | Numeric | NA | FALSE | NA | NA |
+| b_bt | Regression coefficient for bark thickness (mm) as function of DBH (cm) | Numeric | NA | FALSE | NA | NA |
+| LeafDuration | Duration of leaves in year | Numeric | years | FALSE | 0 | NA |
+| t0gdd | Date to start the accumulation of degree days | Numeric | days | FALSE | 0 | 365 |
+| Sgdd | Degree days for leaf budburst | Numeric | Degrees C | FALSE | 0 | NA |
+| Tbgdd | Base temperature for the calculation of degree days to leaf budburst | Numeric | Degrees C | FALSE | NA | NA |
+| Ssen | Degree days corresponding to senescence | Numeric | Degrees C | FALSE | NA | NA |
+| Phsen | Photoperiod corresponding to start counting senescence | Numeric | hours | FALSE | NA | NA |
+| Tbsen | Base temperature for the calculation of degree days to senescence | Numeric | Degrees C | FALSE | NA | NA |
+| xsen | Discrete values, to allow for any absent/proportional/more than proportional effects of temperature on senescence | Integer | {0,1,2} | FALSE | 0 | 2 |
+| ysen | Discrete values, to allow for any absent/proportional/more than proportional effects of photoperiod on senescence | Integer | {0,1,2} | FALSE | 0 | 2 |
+| SLA | Specific leaf area (mm2/mg = m2/kg) | Numeric | m2/kg | FALSE | 0 | NA |
+| LeafDensity | Density of leaf tissue (dry weight over volume) | Numeric | g/cm3 | FALSE | 0 | NA |
+| WoodDensity | Wood tissue density (at 0% humidity!) | Numeric | g/cm3 | FALSE | 0 | NA |
+| FineRootDensity | Density of fine root tissue (dry weight over volume). | Numeric | g/cm3 | FALSE | 0 | NA |
+| conduit2sapwood | Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue. | Numeric | \[0,1\] | FALSE | 0 | 1 |
+| r635 | Ratio of foliar (photosynthetic) + small branches (\<6.35 mm) dry biomass to foliar (photosynthetic) dry biomass | Numeric | \>=1 | FALSE | 1 | NA |
+| pDead | Proportion of total fine fuels that are dead | Numeric | \[0,1\] | FALSE | 0 | 1 |
+| Al2As | Leaf area to sapwood area ratio | Numeric | m2 / m2 | FALSE | 0 | NA |
+| Ar2Al | Root area to leaf area ratio | Numeric | m2 / m2 | FALSE | 0 | NA |
+| LeafWidth | Leaf width | Numeric | cm | FALSE | 0 | NA |
+| SRL | Specific root length | Numeric | cm/g | FALSE | 0 | NA |
+| RLD | Fine root length density (density of root length per soil volume) | Numeric | cm/cm3 | FALSE | 0 | NA |
+| maxFMC | Maximum fuel moisture (in percent of dry weight) | Numeric | % | FALSE | 0 | NA |
+| minFMC | Minimum fuel moisture (in percent of dry weight) | Numeric | % | FALSE | 0 | NA |
+| Ptlp | Leaf water potential at turgor loss point | Numeric | Mpa | FALSE | NA | 0 |
+| LeafPI0 | Osmotic potential at full turgor of leaves | Numeric | Mpa | FALSE | NA | 0 |
+| LeafEPS | Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves | Numeric | Mpa | FALSE | 0 | NA |
+| LeafAF | Apoplastic fraction (proportion of water outside the living cells) in leaves | Numeric | \[0,1\] | FALSE | 0 | 1 |
+| StemPI0 | Osmotic potential at full turgor of symplastic xylem tissue | Numeric | Mpa | FALSE | NA | 0 |
+| StemEPS | Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue | Numeric | Mpa | FALSE | 0 | NA |
+| StemAF | Apoplastic fraction (proportion of water outside the living cells) in stem xylem | Numeric | \[0,1\] | FALSE | 0 | 1 |
+| SAV | Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches \< 6.35mm) | Numeric | m2/m3 | FALSE | 0 | NA |
+| HeatContent | High fuel heat content | Numeric | kJ/kg | FALSE | 0 | NA |
+| LeafLigninPercent | Percent of lignin+cutin over dry weight in leaves | Numeric | % | FALSE | 0 | NA |
+| WoodLigninPercent | Percent of lignin+cutin over dry weight in wood | Numeric | % | FALSE | 0 | NA |
+| FineRootLigninPercent | Percent of lignin+cutin over dry weight in fine roots | Numeric | % | FALSE | 0 | NA |
+| LeafAngle | The angle between the leaf plane and the horizontal plane (i.e. leaf zenith angle) | Numeric | degrees | FALSE | 0 | 90 |
+| LeafAngleSD | Standard deviation of the leaf angle | Numeric | degrees | FALSE | 0 | NA |
+| ClumpingIndex | Canopy clumping index | Numeric | \[0-1\] | FALSE | 0 | NA |
+| gammaSWR | Reflectance (albedo) coefficient for SWR (gammaPAR is 0.8\*gammaSWR) | Numeric | unitless | FALSE | 0 | NA |
+| alphaSWR | Absorbance coefficient for SWR (alphaPAR is alphaSWR\*1.35) | Numeric | unitless | FALSE | 0 | NA |
+| kPAR | Light extinction coeficient for PAR (extinction coefficient for SWR is kPAR/1.35) | Numeric | unitless | FALSE | 0 | NA |
+| g | Canopy water storage capacity per LAI unit | Numeric | mm/LAI | FALSE | 0 | NA |
+| Tmax_LAI | Empirical coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration. | Numeric | NA | FALSE | NA | NA |
+| Tmax_LAIsq | Empirical coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration. | Numeric | NA | FALSE | NA | NA |
+| Psi_Extract | Water potential corresponding to 50% reduction of transpiration | Numeric | MPa | FALSE | NA | 0 |
+| Exp_Extract | Parameter of the Weibull function regulating transpiration reduction | Numeric | NA | FALSE | 0 | NA |
+| WUE | Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa | Numeric | g C \* mm H2O-1 | FALSE | 0 | NA |
+| WUE_par | Coefficient regulating the influence of % PAR on gross photosynthesis | Numeric | NA | FALSE | NA | NA |
+| WUE_co2 | Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis | Numeric | NA | FALSE | NA | NA |
+| WUE_vpd | Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis | Numeric | NA | FALSE | NA | NA |
+| Gswmin | Minimum leaf conductance (cuticular+incomplete closure) at 20C | Numeric | mol H2O \* s-1 \* m-2 | FALSE | 0 | NA |
+| Gswmax | Maximum stomatal conductance to water vapour | Numeric | mol H2O \* s-1 \* m-2 | FALSE | 0 | NA |
+| Gsw_Toptim_Jarvis | Temperature corresponding to maximal stomatal conductance (Jarvis stomatal model) | Numeric | Degrees C | FALSE | NA | NA |
+| Gsw_Tsens_Jarvis | Stomatal sensitivity to temperature (Jarvis stomatal model) | Numeric | NA | FALSE | NA | NA |
+| Gsw_AC_slope_Baldocchi | Slope of the Gsw vs Ac/Cs relationship (Baldocchi model). | Numeric | mol H2O \* mmol CO2-1 | FALSE | 0 | NA |
+| Gsw_P50_Baldocchi | Water potential causing 50% reduction in stomatal conductance (Baldocchi stomatal model) | Numeric | MPa | FALSE | NA | 0 |
+| Gsw_slope_Baldocchi | Rate of decrease in stomatal conductance at Gsw_Baldocchi_P50 (Baldocchi stomatal model) | Numeric | %/MPa | FALSE | 0 | NA |
+| VCleaf_kmax | Maximum leaf hydraulic conductance | Numeric | mmol H2O \* s-1 \* m-2 \* MPa-1 | FALSE | 0 | NA |
+| VCleaf_P12 | 12% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleaf_P50 | 50% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleaf_P88 | 88% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleaf_slope | Slope of the rate of leaf embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| Kmax_stemxylem | Maximum sapwood-specific hydraulic conductivity of stem xylem | Numeric | kg H2O \* s-1 \* m-1 \* Mpa-1 | FALSE | 0 | NA |
+| VCstem_P12 | 12% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCstem_P50 | 50% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCstem_P88 | 88% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCstem_slope | Slope of the rate of stem embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| Kmax_rootxylem | Maximum sapwood-specific hydraulic conductivity of root xylem | Numeric | kg H2O \* s-1 \* m-1 \* Mpa-1 | FALSE | 0 | NA |
+| VCroot_P12 | 12% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCroot_P50 | 50% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCroot_P88 | 88% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCroot_slope | Slope of the rate of root embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| Vmax298 | Maximum Rubisco carboxilation rate | Numeric | mmol CO2 \* s-1\* m-2 | FALSE | 0 | NA |
+| Jmax298 | Maximum rate of electron transport at 298K | Numeric | mmol electrons \* s-1 \* m-2 | FALSE | 0 | NA |
+| Nleaf | Nitrogen mass per leaf dry mass | Numeric | mg N / g dry | FALSE | 0 | NA |
+| Nsapwood | Nitrogen mass per sapwood dry mass | Numeric | mg N / g dry | FALSE | 0 | NA |
+| Nfineroot | Nitrogen mass per fine root dry mass | Numeric | mg N / g dry | FALSE | 0 | NA |
+| WoodC | Wood carbon content per dry mass | Numeric | g C / g dry | FALSE | 0 | NA |
+| RERleaf | Maintenance respiration rates for leaves. | Numeric | g gluc \* g dry-1 \* day-1 | FALSE | 0 | NA |
+| RERsapwood | Maintenance respiration rates for living cells of sapwood. | Numeric | g gluc \* g dry-1 \* day-1 | FALSE | 0 | NA |
+| RERfineroot | Maintenance respiration rates for fine roots. | Numeric | g gluc \* g dry-1 \* day-1 | FALSE | 0 | NA |
+| CCleaf | Leaf construction costs | Numeric | g gluc \* g dry-1 | FALSE | 0 | NA |
+| CCsapwood | Sapwood construction costs | Numeric | g gluc \* g dry-1 | FALSE | 0 | NA |
+| CCfineroot | Fine root construction costs | Numeric | g gluc \* g dry-1 | FALSE | 0 | NA |
+| RGRleafmax | Maximum leaf relative growth rate | Numeric | m2/cm2/day | FALSE | 0 | NA |
+| RGRsapwoodmax | Maximum sapwood growth rate relative to sapwood area (for shrubs) | Numeric | cm2/cm2/day | FALSE | 0 | NA |
+| RGRcambiummax | Maximum sapwood growth rate relative to cambium perimeter (for trees) | Numeric | cm2/cm/day | FALSE | 0 | NA |
+| RGRfinerootmax | Maximum fineroot relative growth rate | Numeric | g dry/g dry/day | FALSE | 0 | NA |
+| RGRbud | Bud (potential leaf area) formation rate per leaf area growth | Numeric | m2/m2 | FALSE | 0 | NA |
+| SRsapwood | Sapwood daily senescence rate | Numeric | Day-1 | FALSE | 0 | NA |
+| SRfineroot | Fine root daily senescence rate | Numeric | Day-1 | FALSE | 0 | NA |
+| RSSG | Minimum relative starch for sapwood growth | Numeric | \[0-1\] | FALSE | 0 | 1 |
+| MortalityBaselineRate | Deterministic proportion or probability specifying the baseline reduction of cohort’s density occurring in a year | Numeric | Year-1 | FALSE | 0 | NA |
+| SurvivalModelStep | Time step in years of the empirical survival model depending on stand basal area (e.g. 10) | Numeric | Year | FALSE | 0 | NA |
+| SurvivalB0 | Intercept of the logistic baseline survival model depending on stand basal area | Numeric | NA | FALSE | NA | NA |
+| SurvivalB1 | Slope of the logistic baseline survival model depending on stand basal area | Numeric | NA | FALSE | NA | NA |
+| SeedProductionHeight | Minimum shrub height for seed production | Numeric | cm | FALSE | 0 | NA |
+| SeedProductionDiameter | Minimum tree diameter for seed production | Numeric | cm | FALSE | 0 | NA |
+| SeedMass | Seed dry mass | Numeric | mg | FALSE | 0 | NA |
+| SeedLongevity | Seedbank average longevity | Numeric | yr | FALSE | 0 | NA |
+| DispersalDistance | Distance parameter for dispersal kernel | Numeric | m | FALSE | 0 | NA |
+| DispersalShape | Shape parameter for dispersal kernel | Numeric | NA | FALSE | NA | NA |
+| ProbRecr | Probability of recruitment within the bioclimatic envelope | Numeric | \[0-1\] | FALSE | 0 | 1 |
+| MinTempRecr | Minimum average temperature of the coldest month for successful recruitment | Numeric | Degrees C | FALSE | NA | NA |
+| MinMoistureRecr | Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment | Numeric | unitless | FALSE | 0 | NA |
+| MinFPARRecr | Minimum percentage of PAR at the ground level for successful recruitment | Numeric | % | FALSE | 0 | 100 |
+| RecrAge | Age of recruiment | Numeric | yr | FALSE | 0 | NA |
+| RecrTreeDBH | Recruitment tree (sapling) stem diameter at breast height | Numeric | cm | FALSE | 0 | NA |
+| RecrTreeHeight | Recruitment tree (sapling) height | Numeric | cm | FALSE | 0 | NA |
+| RecrShrubHeight | Recruitment shrub height | Numeric | cm | FALSE | 0 | NA |
+| RecrTreeDensity | Recruitment tree (sapling) density | Numeric | ind/ha | FALSE | 0 | NA |
+| RecrShrubCover | Recruitment shrub cover | Numeric | % | FALSE | 0 | 100 |
+| RespFire | Probability of resprouting after fire disturbance | Numeric | \[0-1\] | FALSE | 0 | 1 |
+| RespDist | Probability of resprouting after undefined disturbance (typically desiccation) | Numeric | \[0-1\] | FALSE | 0 | 1 |
+| RespClip | Probability of resprouting after clipping | Numeric | \[0-1\] | FALSE | 0 | 1 |
+| IngrowthTreeDensity | Tree density when reaching DBH of ingrowth | Numeric | ind/ha | FALSE | 0 | NA |
+| IngrowthTreeDBH | Tree DBH of ingrowth (typically 7.5 cm) | Numeric | cm | FALSE | 0 | NA |
 
 In order to understand the role of parameters in the model, you should
 read the details of model design and formulation included in the

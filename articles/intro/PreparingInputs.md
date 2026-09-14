@@ -17,7 +17,7 @@ We begin by loading packages **medfate** and **meteoland**:
 ``` r
 
 library(medfate)
-#> Package 'medfate' [ver. 5.1.0]
+#> Package 'medfate' [ver. 5.1.1]
 library(meteoland)
 #> Package 'meteoland' [ver. 2.2.8]
 ```
@@ -544,6 +544,9 @@ from **meteoland**:
 ``` r
 
 meteo <- interpolate_data(pobl_spt, meteoland_interpolator_example)
+#> Registered S3 method overwritten by 'stars':
+#>   method                  from
+#>   st_interpolate_aw.stars sf
 #> ℹ Starting interpolation...
 #> ℹ Temperature interpolation is needed also...
 #> • Interpolating temperature...

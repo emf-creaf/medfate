@@ -196,11 +196,11 @@ summary(S1, freq="months",FUN=mean, output="RWC")
 
 #Queries the tables in 'Plants'
 names(S1$Plants)
-#>  [1] "LAI"                 "LAIlive"             "FPAR"               
-#>  [4] "AbsorbedSWRFraction" "Transpiration"       "GrossPhotosynthesis"
-#>  [7] "PlantPsi"            "LeafPLC"             "StemPLC"            
-#> [10] "PlantWaterBalance"   "LeafRWC"             "StemRWC"            
-#> [13] "LFMC"                "PlantStress"        
+#>  [1] "LAI"                 "LAIlive"             "Phenology"          
+#>  [4] "FPAR"                "AbsorbedSWRFraction" "Transpiration"      
+#>  [7] "GrossPhotosynthesis" "PlantPsi"            "LeafPLC"            
+#> [10] "StemPLC"             "PlantWaterBalance"   "LeafRWC"            
+#> [13] "StemRWC"             "LFMC"                "PlantStress"        
 
 #Monthly summary (averages) of plant stress
 summary(S1, freq="months",FUN=mean, output="PlantStress", 

@@ -217,8 +217,8 @@ x$paramsGrowth
     ## T2_179       0.09            NA   0.002500000            0.1     20  0.000135
     ## S1_176       0.09         0.002            NA            0.1     20  0.000135
     ##         SRfineroot RSSG fHDmin fHDmax     WoodC
-    ## T1_158 0.001897231 1.35     80    160 0.4981000
-    ## T2_179 0.001897231 3.02     15     70 0.4751000
+    ## T1_158 0.001897231 0.32     80    160 0.4981000
+    ## T2_179 0.001897231 0.32     15     70 0.4751000
     ## S1_176 0.001897231 0.50     NA     NA 0.4752026
 
 which includes maximum growth rates, senescence rates and maintenance
@@ -268,10 +268,14 @@ and `internalAllocation` stores the carbon allocation targets:
 x$internalAllocation
 ```
 
-    ##        allocationTarget leafAreaTarget sapwoodAreaTarget fineRootBiomassTarget
-    ## T1_158         1982.660     49.0415614        247.352395            1614.66309
-    ## T2_179         1108.262     16.1739041        145.939304            1371.73312
-    ## S1_176         2436.475      0.7036781          2.888099              38.09374
+    ##        allocationTarget leafAreaTarget leafOrganogenesisEfficiency
+    ## T1_158         1982.660     49.0415614                         NaN
+    ## T2_179         1108.262     16.1739041                         NaN
+    ## S1_176         2436.475      0.7036781                         NaN
+    ##        leafAreaPreformed sapwoodAreaTarget fineRootBiomassTarget
+    ## T1_158        23.5399495        247.352395            1614.66309
+    ## T2_179         8.0869521        145.939304            1371.73312
+    ## S1_176         0.5244805          2.888099              38.09374
     ##        crownBudPercent
     ## T1_158             100
     ## T2_179             100
@@ -301,21 +305,21 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14659.8
-    ## Change in plant cohort biomass (g/m2): 242.755
+    ## Final plant cohort biomass (g/m2): 14800.9
+    ## Change in plant cohort biomass (g/m2): 383.826
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 10 Labile balance (g/m2) 135
-    ##   Plant individual balance (g/m2) 144 Mortality loss (g/m2) 21
-    ## Final plant water content (mm): 4.66904
-    ## Final soil water content (mm): 276.258
+    ##   Structural balance (g/m2) 116 Labile balance (g/m2) 149
+    ##   Plant individual balance (g/m2) 265 Mortality loss (g/m2) 22
+    ## Final plant water content (mm): 4.68986
+    ## Final soil water content (mm): 276.25
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): -0.00384886
-    ## Plant water balance result (mm): -0.0013024
-    ## Change in soil water content (mm): -14.6169
-    ## Soil water balance result (mm): -14.6169
+    ## Change in plant water content (mm): 0.0169729
+    ## Plant water balance result (mm): -0.00131932
+    ## Change in soil water content (mm): -14.625
+    ## Soil water balance result (mm): -14.6324
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 7.10543e-15
+    ## Snowpack water balance result (mm): 0
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
     ##   Interception (mm) 79 Net rainfall (mm) 383
@@ -537,10 +541,10 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1],
                  temporalResolution = "month")
 ```
 
-    ## Warning in cor(obs, pred): the standard deviation is zero
-
-    ##        n     Bias Bias.rel      MAE  MAE.rel        r      NSE  NSE.abs 
-    ##       12        0      NaN        0      NaN       NA      NaN      NaN
+    ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
+    ##  12.00000000  -0.02898143 -10.67316857   0.04131852  15.21662441   0.96950045 
+    ##          NSE      NSE.abs 
+    ##   0.90717380   0.81448798
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
