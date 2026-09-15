@@ -831,7 +831,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
             x.internalAllocation.leafOrganogenesisEfficiency[j] = (dailyOrganogenesisEfficiency + x.internalAllocation.leafOrganogenesisEfficiency[j]*((double) x.internalPhenology.leafOrganogenesisDuration[j] - 1))/((double) x.internalPhenology.leafOrganogenesisDuration[j]);
           }
           //Set leaf area preformed according to current organogenesis efficiency average
-          x.internalAllocation.leafAreaPreformed[j] = (LAlive*(1.0 - 1.0/x.paramsPhenology.leafDuration[j]))*x.internalAllocation.leafOrganogenesisEfficiency[j];
+          x.internalAllocation.leafAreaPreformed[j] = (LAlive/x.paramsPhenology.leafDuration[j])*x.internalAllocation.leafOrganogenesisEfficiency[j];
         }
       } 
       
