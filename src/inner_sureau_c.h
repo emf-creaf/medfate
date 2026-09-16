@@ -36,8 +36,8 @@ struct SureauParams {
   double gsMax;
   double gmin_S;
   double gsNight;
-  double VCleaf_P50;
-  double VCleaf_slope;
+  double VCleafapo_P50;
+  double VCleafapo_slope;
   double VCstem_P50;
   double VCstem_slope;
   double VCroot_P50;

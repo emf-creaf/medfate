@@ -224,11 +224,21 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(transpDF.containsElementNamed("Kmax_stemxylem")) paramsTranspiration.Kmax_stemxylem = Rcpp::as< std::vector<double> >(transpDF["Kmax_stemxylem"]);
   if(transpDF.containsElementNamed("Kmax_rootxylem")) paramsTranspiration.Kmax_rootxylem = Rcpp::as< std::vector<double> >(transpDF["Kmax_rootxylem"]);
   if(transpDF.containsElementNamed("VCleaf_kmax")) paramsTranspiration.VCleaf_kmax = Rcpp::as< std::vector<double> >(transpDF["VCleaf_kmax"]);
-  if(transpDF.containsElementNamed("VCleafapo_kmax")) paramsTranspiration.VCleafapo_kmax = Rcpp::as< std::vector<double> >(transpDF["VCleafapo_kmax"]);
   if(transpDF.containsElementNamed("VCleaf_slope")) paramsTranspiration.VCleaf_slope = Rcpp::as< std::vector<double> >(transpDF["VCleaf_slope"]);
   if(transpDF.containsElementNamed("VCleaf_P50")) paramsTranspiration.VCleaf_P50 = Rcpp::as< std::vector<double> >(transpDF["VCleaf_P50"]);
   if(transpDF.containsElementNamed("VCleaf_c")) paramsTranspiration.VCleaf_c = Rcpp::as< std::vector<double> >(transpDF["VCleaf_c"]);
   if(transpDF.containsElementNamed("VCleaf_d")) paramsTranspiration.VCleaf_d = Rcpp::as< std::vector<double> >(transpDF["VCleaf_d"]);
+  if(transpDF.containsElementNamed("VCleafapo_kmax")) paramsTranspiration.VCleafapo_kmax = Rcpp::as< std::vector<double> >(transpDF["VCleafapo_kmax"]);
+  //Copy if existing. Otherwise copy stem VC values
+  if(transpDF.containsElementNamed("VCleafapo_slope")) paramsTranspiration.VCleafapo_slope = Rcpp::as< std::vector<double> >(transpDF["VCleafapo_slope"]);
+  else if(transpDF.containsElementNamed("VCstem_slope")) paramsTranspiration.VCleafapo_slope = Rcpp::as< std::vector<double> >(transpDF["VCstem_slope"]);
+  if(transpDF.containsElementNamed("VCleafapo_P50")) paramsTranspiration.VCleafapo_P50 = Rcpp::as< std::vector<double> >(transpDF["VCleafapo_P50"]);
+  else if(transpDF.containsElementNamed("VCstem_P50")) paramsTranspiration.VCleafapo_P50 = Rcpp::as< std::vector<double> >(transpDF["VCstem_P50"]);
+  if(transpDF.containsElementNamed("VCleafapo_c")) paramsTranspiration.VCleafapo_c = Rcpp::as< std::vector<double> >(transpDF["VCleafapo_c"]);
+  else if(transpDF.containsElementNamed("VCstem_c")) paramsTranspiration.VCleafapo_c = Rcpp::as< std::vector<double> >(transpDF["VCstem_c"]);
+  if(transpDF.containsElementNamed("VCleafapo_d")) paramsTranspiration.VCleafapo_d = Rcpp::as< std::vector<double> >(transpDF["VCleafapo_d"]);
+  else if(transpDF.containsElementNamed("VCstem_d")) paramsTranspiration.VCleafapo_d = Rcpp::as< std::vector<double> >(transpDF["VCstem_d"]);
+  
   if(transpDF.containsElementNamed("kleaf_symp")) paramsTranspiration.kleaf_symp = Rcpp::as< std::vector<double> >(transpDF["kleaf_symp"]);
   if(transpDF.containsElementNamed("VCstem_kmax")) paramsTranspiration.VCstem_kmax = Rcpp::as< std::vector<double> >(transpDF["VCstem_kmax"]);
   if(transpDF.containsElementNamed("VCstem_slope")) paramsTranspiration.VCstem_slope = Rcpp::as< std::vector<double> >(transpDF["VCstem_slope"]);

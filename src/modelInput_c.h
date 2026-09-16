@@ -142,11 +142,15 @@ struct TranspirationParams {
   std::vector<double> Kmax_stemxylem;
   std::vector<double> Kmax_rootxylem;
   std::vector<double> VCleaf_kmax;
-  std::vector<double> VCleafapo_kmax;
   std::vector<double> VCleaf_slope;
   std::vector<double> VCleaf_P50;
   std::vector<double> VCleaf_c;
   std::vector<double> VCleaf_d;
+  std::vector<double> VCleafapo_kmax;
+  std::vector<double> VCleafapo_slope;
+  std::vector<double> VCleafapo_P50;
+  std::vector<double> VCleafapo_c;
+  std::vector<double> VCleafapo_d;
   std::vector<double> kleaf_symp;
   std::vector<double> VCstem_kmax;
   std::vector<double> VCstem_slope;

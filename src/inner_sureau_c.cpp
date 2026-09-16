@@ -199,13 +199,13 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
   
   
   
-  double VCleaf_slope = params.VCleaf_slope;
+  double VCleafapo_slope = params.VCleafapo_slope;
+  double VCleafapo_P50 = params.VCleafapo_P50;
   double VCstem_slope = params.VCstem_slope;
-  double VCleaf_P50 = params.VCleaf_P50;
   double VCstem_P50 = params.VCstem_P50;
   
   //Compute K_L_Cav et K_S_Cav
-  double PLC_prime_L = PLC_derivative_c(PLC_Leaf, VCleaf_slope);
+  double PLC_prime_L = PLC_derivative_c(PLC_Leaf, VCleafapo_slope);
   double K_L_Cav = -1.0 * opt.Lcav * Q_LApo_sat_mmol_perLeafArea * PLC_prime_L / dt;  // avec WBveg$Q_LSym_sat en l/m2 sol # changed by NM (25/10/2021)
   double PLC_prime_S = PLC_derivative_c(PLC_Stem, VCstem_slope);
   double K_S_Cav = -1.0 * opt.Scav * Q_SApo_sat_mmol_perLeafArea * PLC_prime_S / dt;  // opt$Scav * WBveg$K_S_Cav #FP corrected a bug sign herehanged by NM (25/10/2021)
@@ -315,11 +315,11 @@ void semi_implicit_integration_inner_c(SureauNetwork& network,
   if(leafCavitationRecovery!="total") {
     if(psirefL < Psi_LApo_cav) {
       network.Psi_LApo_cav = psirefL;
-      network.PLC_Leaf = PLC_c(psirefL, VCleaf_slope, VCleaf_P50);
+      network.PLC_Leaf = PLC_c(psirefL, VCleafapo_slope, VCleafapo_P50);
     }
   } else { //Immediate refilling
     network.Psi_LApo_cav = psirefL;
-    network.PLC_Leaf = PLC_c(psirefL, VCleaf_slope, VCleaf_P50);
+    network.PLC_Leaf = PLC_c(psirefL, VCleafapo_slope, VCleafapo_P50);
   }
 }
 
@@ -353,8 +353,8 @@ void copyParams_c(SureauParams& params, SureauParams& sinkParams) {
   sinkParams.gmin_S = params.gmin_S;
   sinkParams.gsNight = params.gsNight;
   
-  sinkParams.VCleaf_P50 = params.VCleaf_P50; 
-  sinkParams.VCleaf_slope = params.VCleaf_slope; 
+  sinkParams.VCleafapo_P50 = params.VCleafapo_P50; 
+  sinkParams.VCleafapo_slope = params.VCleafapo_slope; 
   sinkParams.VCstem_P50 = params.VCstem_P50; 
   sinkParams.VCstem_slope = params.VCstem_slope; 
   sinkParams.VCroot_P50 = params.VCroot_P50; 
@@ -479,8 +479,8 @@ void initSureauParams_inner_c(SureauParams& params, int c,
   double gs_NightFrac = control.sureau.gs_NightFrac;
   params.gsNight = gs_NightFrac*paramsTranspiration.Gswmax[c]*1000.0; 
   
-  params.VCleaf_P50 = paramsTranspiration.VCleaf_P50[c]; 
-  params.VCleaf_slope = paramsTranspiration.VCleaf_slope[c]; 
+  params.VCleafapo_P50 = paramsTranspiration.VCleafapo_P50[c]; 
+  params.VCleafapo_slope = paramsTranspiration.VCleafapo_slope[c]; 
   params.VCstem_P50 = paramsTranspiration.VCstem_P50[c]; 
   params.VCstem_slope = paramsTranspiration.VCstem_slope[c]; 
   params.VCroot_P50 = paramsTranspiration.VCroot_P50[c]; 
@@ -520,7 +520,7 @@ void initSureauNetwork_inner_c(SureauNetwork& network, int c,
   network.Psi_SApo = internalWater.StemPsi[c]; 
   network.Psi_SSym = internalWater.StemSympPsi[c];
   network.Psi_SApo_cav = std::min(0.0, invPLC_c(internalWater.StemPLC[c]*100.0, paramsTranspiration.VCstem_slope[c], paramsTranspiration.VCstem_P50[c])); //Sureau operates with %
-  network.Psi_LApo_cav = std::min(0.0, invPLC_c(internalWater.LeafPLC[c]*100.0, paramsTranspiration.VCleaf_slope[c], paramsTranspiration.VCleaf_P50[c])); //Sureau operates with %
+  network.Psi_LApo_cav = std::min(0.0, invPLC_c(internalWater.LeafPLC[c]*100.0, paramsTranspiration.VCleafapo_slope[c], paramsTranspiration.VCleafapo_P50[c])); //Sureau operates with %
   
   //PLC levels
   network.PLC_Stem = internalWater.StemPLC[c]*100.0; //Sureau operates with %

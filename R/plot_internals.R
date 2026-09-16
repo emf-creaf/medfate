@@ -87,8 +87,8 @@
               "Soil-plant conductance" = "SoilPlantConductance")
   }
   TYPES <-c(TYPES,
-            "Plant stress (conductance reduction)" = "PlantStress",
-            "Leaf percent conductance loss" = "LeafPLC",
+            "Plant drought stress" = "PlantStress",
+            "Leaf apoplasm percent conductance loss" = "LeafPLC",
             "Stem percent conductance loss" = "StemPLC")
   return(TYPES)
 }
@@ -384,7 +384,7 @@
   else if(type=="MortalityRate") ylab = expression(paste("Mortality rate ",(ind %.% d^{-1})))
   else if(type=="LeafPI0")  ylab = expression(paste("Leaf osmotic potential at full turgor  ",(MPa)))
   else if(type=="StemPI0")  ylab = expression(paste("Stem osmotic potential at full turgor  ",(MPa)))
-  else if(type=="LeafPLC") ylab = "Percent loss conductance in leaves [%]"
+  else if(type=="LeafPLC") ylab = "Percent loss conductance in leaf apoplasm [%]"
   else if(type=="StemPLC") ylab = "Percent loss conductance in stem [%]"
   else if(type=="StemRWC") ylab = "Relative water content in stem [%]"
   else if(type=="StemSympRWC") ylab = "Relative water content in stem symplasm [%]"
@@ -394,7 +394,7 @@
   else if(type=="LeafSympRWC") ylab = "Relative water content in leaf symplasm [%]"
   else if(type=="LeafSympPsi") ylab = "Leaf symplastic water potential (MPa)"
   else if(type=="PlantPsi") ylab = "Plant water potential (MPa)"
-  else if(type=="PlantStress") ylab = "Drought stress [%]"
+  else if(type=="PlantStress") ylab = "Whole-plant drought stress (conductance reduction) [%]"
   else if(type=="StemPsi") ylab = "Stem water potential (MPa)"
   else if(type=="RootPsi") ylab = "Root crown water potential (MPa)"
   else if(type=="LeafPsiAverage") ylab = "Average leaf water potential (MPa)"

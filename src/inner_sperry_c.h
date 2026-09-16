@@ -65,6 +65,8 @@ struct SperryNetwork {
   double kleafsymp;
   double leafc;
   double leafd;
+  double leafapoc;
+  double leafapod;
   double PLCstem;
   double PLCleaf;
   

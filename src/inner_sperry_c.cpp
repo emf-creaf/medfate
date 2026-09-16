@@ -204,13 +204,15 @@ void E2psiAboveground_c(NetworkSteadyState& nss, SperryNetwork& hydraulicNetwork
   double kleafmax = hydraulicNetwork.kleafmax;
   double leafc = hydraulicNetwork.leafc;
   double leafd = hydraulicNetwork.leafd;
+  double leafapoc = hydraulicNetwork.leafapoc;
+  double leafapod = hydraulicNetwork.leafapod;
   double PLCstem = hydraulicNetwork.PLCstem;
   double PLCleaf = hydraulicNetwork.PLCleaf;
 
   double psiPLCStem =  0.0;
   double psiPLCLeaf= 0.0;
   if(hydraulicNetwork.sperryParams.stemCavitationEffects) psiPLCStem = apoplasticWaterPotential_c(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
-  if(hydraulicNetwork.sperryParams.leafCavitationEffects) psiPLCLeaf = apoplasticWaterPotential_c(std::max(0.0001,1.0 - PLCleaf), leafc, leafd);
+  if(hydraulicNetwork.sperryParams.leafCavitationEffects) psiPLCLeaf = apoplasticWaterPotential_c(std::max(0.0001,1.0 - PLCleaf), leafapoc, leafapod);
   nss.psiStem = E2psiXylem_c(nss.E, nss.psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
   nss.psiLeaf = E2psiXylem_c(nss.E, nss.psiStem, kleafmax, leafc, leafd, psiPLCLeaf); 
 }
@@ -328,6 +330,8 @@ void initSperryNetwork_inner_c(SperryNetwork& network,
   network.stemd = paramsTranspiration.VCstem_d[c];
   network.leafc = paramsTranspiration.VCleaf_c[c];
   network.leafd = paramsTranspiration.VCleaf_d[c];
+  network.leafapoc = paramsTranspiration.VCleafapo_c[c];
+  network.leafapod = paramsTranspiration.VCleafapo_d[c];
   network.rootc = paramsTranspiration.VCroot_c[c];
   network.rootd = paramsTranspiration.VCroot_d[c];
   if(control.sperry.leafCavitationEffects) {
@@ -703,9 +707,9 @@ void innerSperry_c(ModelInput& x,
         }
         if(x.control.sperry.leafCavitationEffects) {
           if(x.control.commonWB.leafCavitationRecovery!="total") {
-            x.internalWater.LeafPLC[c] = std::max(x.internalWater.LeafPLC[c], 1.0 - xylemConductance_c(x.internalWater.LeafPsi[c], 1.0, x.paramsTranspiration.VCleaf_c[c], x.paramsTranspiration.VCleaf_d[c]));
+            x.internalWater.LeafPLC[c] = std::max(x.internalWater.LeafPLC[c], 1.0 - xylemConductance_c(x.internalWater.LeafPsi[c], 1.0, x.paramsTranspiration.VCleafapo_c[c], x.paramsTranspiration.VCleafapo_d[c]));
           } else { //Immediate refilling
-            x.internalWater.LeafPLC[c] = 1.0 - xylemConductance_c(x.internalWater.LeafPsi[c], 1.0, x.paramsTranspiration.VCleaf_c[c], x.paramsTranspiration.VCleaf_d[c]);
+            x.internalWater.LeafPLC[c] = 1.0 - xylemConductance_c(x.internalWater.LeafPsi[c], 1.0, x.paramsTranspiration.VCleafapo_c[c], x.paramsTranspiration.VCleafapo_d[c]);
           }
         }
 

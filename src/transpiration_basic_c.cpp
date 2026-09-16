@@ -120,8 +120,6 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   const std::vector<double>& Exp_Extract = x.paramsTranspiration.Exp_Extract;
   const std::vector<double>& VCstem_c = x.paramsTranspiration.VCstem_c;
   const std::vector<double>& VCstem_d = x.paramsTranspiration.VCstem_d;
-  const std::vector<double>& VCleaf_c = x.paramsTranspiration.VCleaf_c;
-  const std::vector<double>& VCleaf_d = x.paramsTranspiration.VCleaf_d;
   const std::vector<double>& WUE = x.paramsTranspiration.WUE;
   const std::vector<double>& WUE_par = x.paramsTranspiration.WUE_par;
   const std::vector<double>& WUE_co2 = x.paramsTranspiration.WUE_co2;
@@ -435,14 +433,14 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   //Plant water status (StemPLC, RWC, DDS)
   for(int c=0;c<numCohorts;c++) {
     if(stemCavitationRecovery!="total") {
-      StemPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
+      StemPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, x.paramsTranspiration.VCstem_c[c], x.paramsTranspiration.VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
     } else {
-      StemPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
+      StemPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, x.paramsTranspiration.VCstem_c[c], x.paramsTranspiration.VCstem_d[c]);
     }
     if(leafCavitationRecovery!="total") {
-      LeafPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
+      LeafPLC[c] = std::max(1.0 - xylemConductance_c(PlantPsi[c], 1.0, x.paramsTranspiration.VCleafapo_c[c], x.paramsTranspiration.VCleafapo_d[c]), LeafPLC[c]); //Track current embolism if no refill
     } else {
-      LeafPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
+      LeafPLC[c] = 1.0 - xylemConductance_c(PlantPsi[c], 1.0, x.paramsTranspiration.VCleafapo_c[c], x.paramsTranspiration.VCleafapo_d[c]);
     }
 
     //Relative water content and fuel moisture from plant water potential
