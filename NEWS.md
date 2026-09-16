@@ -1,5 +1,6 @@
 # medfate 5.1.1
 * Leaf apoplastic VCs (related to PLC) made explicitly different from whole-leaf VCs (which include symplasmic tissues)
+* Control option 'segmentedXylemVulnerability' removed
 * Update of trait_family_means (avoiding infinite mean values)
 * Preformed leaf area in growth
 * Minimum and maximum values added to SpParamsDefinition

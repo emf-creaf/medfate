@@ -70,7 +70,6 @@ struct CommonWBParams {
   std::string infiltrationMode;
   std::string stemCavitationRecovery;
   std::string leafCavitationRecovery;
-  bool segmentedXylemVulnerability;
   double cavitationRecoveryMaximumRate;
   bool truncateRootDistribution;
   double fullRhizosphereOverlapConductivity;

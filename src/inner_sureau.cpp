@@ -47,8 +47,8 @@ List structToList(SureauNetwork& snetwork) {
   params.push_back(snetwork.params.gsMax, "gsMax"); 
   params.push_back(snetwork.params.gmin_S, "gmin_S");
   params.push_back(snetwork.params.gsNight, "gsNight"); 
-  params.push_back(snetwork.params.VCleaf_P50, "VCleaf_P50"); 
-  params.push_back(snetwork.params.VCleaf_slope, "VCleaf_slope"); 
+  params.push_back(snetwork.params.VCleafapo_P50, "VCleafapo_P50"); 
+  params.push_back(snetwork.params.VCleafapo_slope, "VCleafapo_slope"); 
   params.push_back(snetwork.params.VCstem_P50, "VCstem_P50"); 
   params.push_back(snetwork.params.VCstem_slope, "VCstem_slope"); 
   params.push_back(snetwork.params.VCroot_P50, "VCroot_P50"); 
@@ -143,8 +143,8 @@ SureauNetwork listToStruct(List network) {
   snetwork.params.gsMax = params["gsMax"];
   snetwork.params.gmin_S = params["gmin_S"];
   snetwork.params.gsNight = params["gsNight"];
-  snetwork.params.VCleaf_P50 = params["VCleaf_P50"];
-  snetwork.params.VCleaf_slope = params["VCleaf_slope"];
+  snetwork.params.VCleafapo_P50 = params["VCleafapo_P50"];
+  snetwork.params.VCleafapo_slope = params["VCleafapo_slope"];
   snetwork.params.VCstem_P50 = params["VCstem_P50"];
   snetwork.params.VCstem_slope = params["VCstem_slope"];
   snetwork.params.VCroot_P50 = params["VCroot_P50"];
@@ -277,8 +277,8 @@ void initSureauParams_inner(SureauParams &params, int c,
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
   NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
-  NumericVector VCleaf_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_P50"]);
-  NumericVector VCleaf_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_slope"]);
+  NumericVector VCleafapo_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_P50"]);
+  NumericVector VCleafapo_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_slope"]);
   NumericVector VCstem_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_P50"]);
   NumericVector VCstem_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_slope"]);
   NumericVector VCroot_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_P50"]);
@@ -296,8 +296,8 @@ void initSureauParams_inner(SureauParams &params, int c,
   double gs_NightFrac = control["gs_NightFrac"];
   params.gsNight = gs_NightFrac*Gswmax[c]*1000.0; 
   
-  params.VCleaf_P50 = VCleaf_P50[c]; 
-  params.VCleaf_slope = VCleaf_slope[c]; 
+  params.VCleafapo_P50 = VCleafapo_P50[c]; 
+  params.VCleafapo_slope = VCleafapo_slope[c]; 
   params.VCstem_P50 = VCstem_P50[c]; 
   params.VCstem_slope = VCstem_slope[c]; 
   params.VCroot_P50 = VCroot_P50[c]; 
@@ -334,8 +334,8 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
   NumericVector Vmax298 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Vmax298"]);
   NumericVector Jmax298 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Jmax298"]);
   NumericVector VCleafapo_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_kmax"]);
-  NumericVector VCleaf_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_P50"]);
-  NumericVector VCleaf_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_slope"]);
+  NumericVector VCleafapo_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_P50"]);
+  NumericVector VCleafapo_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_slope"]);
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
   NumericVector VCstem_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_P50"]);
   NumericVector VCstem_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_slope"]);
@@ -378,7 +378,7 @@ void initSureauNetwork_inner(SureauNetwork &network, int c, NumericVector LAIphe
   network.Psi_SApo = StemPsiVEC[c]; 
   network.Psi_SSym = StemSympPsiVEC[c];
   network.Psi_SApo_cav = std::min(0.0, invPLC_c(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c])); //Sureau operates with %
-  network.Psi_LApo_cav = std::min(0.0, invPLC_c(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c])); //Sureau operates with %
+  network.Psi_LApo_cav = std::min(0.0, invPLC_c(LeafPLCVEC[c]*100.0, VCleafapo_slope[c], VCleafapo_P50[c])); //Sureau operates with %
   
   //PLC levels
   network.PLC_Stem = StemPLCVEC[c]*100.0; //Sureau operates with %

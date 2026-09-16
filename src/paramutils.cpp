@@ -1238,6 +1238,47 @@ NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCleaf_P12);
 }
 
+NumericVector VCleafapoP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector VCleafapo_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleafapo_P50", false);
+  NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
+  for(int c=0;c<VCleafapo_P50.size();c++) {
+    if(NumericVector::is_na(VCleafapo_P50[c])) {
+      VCleafapo_P50[c] = VCstem_P50[c];
+    }
+  }
+  return(VCleafapo_P50);
+}
+NumericVector VCleafapoP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector VCleafapo_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleafapo_P50", false);
+  NumericVector VCleafapo_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleafapo_P88", false);
+  NumericVector VCstem_P88 = VCstemP88WithImputation(SP, SpParams, fillWithGenus);
+  for(int c=0;c<VCleafapo_P88.size();c++) {
+    if(NumericVector::is_na(VCleafapo_P88[c])) {
+      if(!NumericVector::is_na(VCleafapo_P50[c])) {
+        VCleafapo_P88[c] = 1.43637*VCleafapo_P50[c]; //Regression for stem
+      } else {
+        VCleafapo_P88[c] = VCstem_P88[c];
+      }
+    }
+  }
+  return(VCleafapo_P88);
+}
+NumericVector VCleafapoP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  NumericVector VCleafapo_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleafapo_P50", false);
+  NumericVector VCleafapo_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleafapo_P12", false); //If true, can lead to inconsistencies
+  NumericVector VCstem_P12 = VCstemP12WithImputation(SP, SpParams, fillWithGenus);
+  for(int c=0;c<VCleafapo_P12.size();c++) {
+    if(NumericVector::is_na(VCleafapo_P12[c])) {
+      if(!NumericVector::is_na(VCleafapo_P50[c])) {
+        VCleafapo_P12[c] = 0.626191*VCleafapo_P50[c]; //Regression for stem
+      } else {
+        VCleafapo_P12[c] = VCstem_P12[c];
+      }
+    }
+  }
+  return(VCleafapo_P12);
+}
+
 NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector VCroot_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P50", fillWithGenus);
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
@@ -1268,6 +1309,7 @@ NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   }
   return(VCroot_P12);
 }
+
 NumericVector GswToptimJarvisWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector Gsw_Toptim_Jarvis = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gsw_Toptim_Jarvis", fillWithGenus);
   for(int c=0;c<Gsw_Toptim_Jarvis.size();c++) {
@@ -1727,6 +1769,9 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "VCleaf_P12") return(VCleafP12WithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "VCleaf_P50") return(VCleafP50WithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "VCleaf_P88") return(VCleafP88WithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "VCleafapo_P12") return(VCleafapoP12WithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "VCleafapo_P50") return(VCleafapoP50WithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "VCleafapo_P88") return(VCleafapoP88WithImputation(SP, SpParams, fillWithGenus));    
     else if(parName == "VCroot_P12") return(VCrootP12WithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "VCroot_P50") return(VCrootP50WithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "VCroot_P88") return(VCrootP88WithImputation(SP, SpParams, fillWithGenus));

@@ -86,7 +86,6 @@ ControlParameters::ControlParameters(List x) {
   commonWB.cavitationRecoveryMaximumRate = as<double>(x["cavitationRecoveryMaximumRate"]);
   commonWB.stemCavitationRecovery = as<std::string>(x["stemCavitationRecovery"]);
   commonWB.leafCavitationRecovery = as<std::string>(x["leafCavitationRecovery"]);
-  commonWB.segmentedXylemVulnerability = as<bool>(x["segmentedXylemVulnerability"]);
 
 
   basicWB.hydraulicRedistributionFraction = as<double>(x["hydraulicRedistributionFraction"]);
