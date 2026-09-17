@@ -103,10 +103,50 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
         x.internalPhenology.leafOrganogenesisDuration[j] = 0;
       }
     }
+    else if(x.paramsPhenology.phenoType[j] == "polycyclic-evergreen") {
+      if(doy>200) {
+        x.internalPhenology.gdd[j] = 0.0;
+        x.internalPhenology.leafSenescence[j] = false;
+        if(photoperiod>x.paramsPhenology.Phsen[j]) { //Primary growth still possible until decrease of photoperiod
+          x.internalPhenology.sen[j] = 0.0;
+          x.internalPhenology.leafUnfolding[j] = true;
+          x.internalPhenology.leafDormancy[j] = false;
+          x.internalPhenology.budFormation[j] = false;
+        } else {
+          x.internalPhenology.leafUnfolding[j] = false;
+          if (!x.internalPhenology.leafDormancy[j]){
+            double rsen = 0.0;
+            if(tmean-x.paramsPhenology.Tbsen[j]<0.0) {
+              rsen = pow(x.paramsPhenology.Tbsen[j]-tmean,2.0);
+              // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Phsen[j],2.0);
+            }
+            x.internalPhenology.sen[j] = x.internalPhenology.sen[j] + rsen;
+            x.internalPhenology.leafDormancy[j] = leafSenescenceStatus_c(x.paramsPhenology.Ssen[j],x.internalPhenology.sen[j]);
+            x.internalPhenology.budFormation[j] = !x.internalPhenology.leafDormancy[j];
+          }
+        }
+      } else if (doy<=200) { //Only increase in the first part of the year
+        x.internalPhenology.sen[j] = 0.0;
+        x.internalPhenology.budFormation[j] = false;
+        if(!x.internalPhenology.leafUnfolding[j]) { //Check until unfolding starts
+          if(tmean-x.paramsPhenology.Tbgdd[j]>0.0) x.internalPhenology.gdd[j] = x.internalPhenology.gdd[j] + (tmean - x.paramsPhenology.Tbgdd[j]);
+          double ph = leafDevelopmentStatus_c(x.paramsPhenology.Sgdd[j], x.internalPhenology.gdd[j],unfoldingDD);
+          x.internalPhenology.leafSenescence[j] = (ph>0.0);
+          x.internalPhenology.leafUnfolding[j] = (ph>0.0);
+          x.internalPhenology.leafDormancy[j] = (ph==0.0);
+        }
+        // Rcout<<j<< " phi: "<< ph<<"\n";
+      }
+      if(x.internalPhenology.budFormation[j]) {
+        x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+      } else {
+        x.internalPhenology.leafOrganogenesisDuration[j] = 0;
+      }
+    }
     else if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
       x.internalPhenology.leafSenescence[j] = true;
       x.internalPhenology.leafUnfolding[j] = true;
-      x.internalPhenology.budFormation[j] = true;
+      x.internalPhenology.budFormation[j] = false;
       x.internalPhenology.leafDormancy[j] = false;
       x.internalPhenology.leafOrganogenesisDuration[j] = medfate::NA_INTEGER;
     }

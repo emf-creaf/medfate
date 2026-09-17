@@ -864,8 +864,10 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
           double deltaLApheno = 0.0;
           if(x.paramsPhenology.phenoType[j]=="progressive-evergreen") {
             deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
-          } else {
+          } else if((x.paramsPhenology.phenoType[j]=="oneflush-evergreen") || (x.internalAllocation.leafAreaPreformed[j] > 0.0)) {
             deltaLApheno = x.internalAllocation.leafAreaPreformed[j];
+          } else { // For polycyclic or deciduous species, once leaf area preformed is elongated they can continue growing
+            deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
           }
           double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*x.paramsGrowth.RGRleafmax[j]*(rleafcell/rcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*x.paramsGrowth.RGRleafmax[j]); //Deactivates temperature and turgor limitation
@@ -980,8 +982,10 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
             double deltaLApheno = 0.0;
             if(x.paramsPhenology.phenoType[j]=="progressive-evergreen") {
               deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
-            } else {
+            } else if((x.paramsPhenology.phenoType[j]=="oneflush-evergreen") || (x.internalAllocation.leafAreaPreformed[j] > 0.0)) {
               deltaLApheno = x.internalAllocation.leafAreaPreformed[j];
+            } else { // For polycyclic or deciduous species, once leaf area preformed is elongated they can continue growing
+              deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
             }
             double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) ntimesteps))*SA[j]*x.paramsGrowth.RGRleafmax[j]*(rleafcell/rcellmax));
             if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) ntimesteps))*SA[j]*x.paramsGrowth.RGRleafmax[j]); //Deactivates temperature and turgor limitation
@@ -1084,15 +1088,17 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
 
       ///// B8. LEAF SENESCENCE /////
       double propLeafSenescence = 0.0;
-      //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
-      if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
-        propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
-      } else if((x.paramsPhenology.phenoType[j] == "oneflush-evergreen") && (x.internalPhenology.leafSenescence[j])) {
-        propLeafSenescence = std::min(1.0,(LAexpanded/(LAlive*x.paramsPhenology.leafDuration[j]))); // Fraction of old leaves that die
-        x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
-      } else if(((x.paramsPhenology.phenoType[j] == "winter-deciduous") || (x.paramsPhenology.phenoType[j] == "winter-semideciduous")) && x.internalPhenology.leafSenescence[j]) {
-        propLeafSenescence = 1.0;
-        x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
+      //Leaf senescence due to age (Ca+ accumulation)
+      if(x.internalPhenology.leafSenescence[j]) {
+        if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
+          propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
+        } else if((x.paramsPhenology.phenoType[j] == "oneflush-evergreen" || x.paramsPhenology.phenoType[j] == "polycyclic-evergreen") && (x.internalPhenology.leafSenescence[j])) {
+          propLeafSenescence = std::min(1.0,(LAexpanded/(LAlive*x.paramsPhenology.leafDuration[j]))); // Fraction of old leaves that die
+          x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
+        } else if(((x.paramsPhenology.phenoType[j] == "winter-deciduous") || (x.paramsPhenology.phenoType[j] == "winter-semideciduous")) && x.internalPhenology.leafSenescence[j]) {
+          propLeafSenescence = 1.0;
+          x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
+        }
       }
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
@@ -1186,7 +1192,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       ///// C13. UPDATE INDIVIDUAL LEAF AREA, DEAD LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS /////
       // Rcout<<"-update";
       if(x.paramsPhenology.phenoType[j]!="progressive-evergreen") {
-        x.internalAllocation.leafAreaPreformed[j] -= deltaLAgrowth[j]; 
+        if(x.internalAllocation.leafAreaPreformed[j] > 0.0) x.internalAllocation.leafAreaPreformed[j] = std::max(0.0, x.internalAllocation.leafAreaPreformed[j] - deltaLAgrowth[j]); 
       }
       LAexpanded += deltaLAgrowth[j] - deltaLAsenescence;
       if(LAexpanded < 0.0) {
