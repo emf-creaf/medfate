@@ -4,9 +4,7 @@
 * Update of trait_family_means (avoiding infinite mean values)
 * Preformed leaf area in growth
 * Minimum and maximum values added to SpParamsDefinition
-* Bug correction:
-    - RespDist/RespFire initialization for shrubs
-    - Resprouting for shrubs
+* New phenology type 'evergreen-polycyclic'
 
 # medfate 5.1.0
 * Compilation patch for C++ 20

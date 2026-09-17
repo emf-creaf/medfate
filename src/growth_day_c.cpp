@@ -831,7 +831,8 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
             x.internalAllocation.leafOrganogenesisEfficiency[j] = (dailyOrganogenesisEfficiency + x.internalAllocation.leafOrganogenesisEfficiency[j]*((double) x.internalPhenology.leafOrganogenesisDuration[j] - 1))/((double) x.internalPhenology.leafOrganogenesisDuration[j]);
           }
           //Set leaf area preformed according to current organogenesis efficiency average
-          x.internalAllocation.leafAreaPreformed[j] = (LAlive/x.paramsPhenology.leafDuration[j])*x.internalAllocation.leafOrganogenesisEfficiency[j];
+          double maxSenescenceNextYear = LAlive/x.paramsPhenology.leafDuration[j];
+          x.internalAllocation.leafAreaPreformed[j] = maxSenescenceNextYear*x.internalAllocation.leafOrganogenesisEfficiency[j];
         }
       } 
       
@@ -1092,10 +1093,12 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       if(x.internalPhenology.leafSenescence[j]) {
         if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
           propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
-        } else if((x.paramsPhenology.phenoType[j] == "oneflush-evergreen" || x.paramsPhenology.phenoType[j] == "polycyclic-evergreen") && (x.internalPhenology.leafSenescence[j])) {
-          propLeafSenescence = std::min(1.0,(LAexpanded/(LAlive*x.paramsPhenology.leafDuration[j]))); // Fraction of old leaves that die
+        } else if((x.paramsPhenology.phenoType[j] == "oneflush-evergreen" || x.paramsPhenology.phenoType[j] == "polycyclic-evergreen")) {
+          double maxSenescence = 1.0/x.paramsPhenology.leafDuration[j];
+          double alreadyLost = (LAlive - LAexpanded)/LAlive; //If defoliation occurred previously then aging senescence is reduced
+          propLeafSenescence = std::min(1.0,std::max(0.0, maxSenescence - alreadyLost)); // Fraction of old leaves that die
           x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
-        } else if(((x.paramsPhenology.phenoType[j] == "winter-deciduous") || (x.paramsPhenology.phenoType[j] == "winter-semideciduous")) && x.internalPhenology.leafSenescence[j]) {
+        } else if((x.paramsPhenology.phenoType[j] == "winter-deciduous") || (x.paramsPhenology.phenoType[j] == "winter-semideciduous")) {
           propLeafSenescence = 1.0;
           x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
         }
@@ -1216,9 +1219,10 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         x.belowLayers.V(j,s) = newFRB[s]/fineRootBiomass[j];
         Vj[s] = x.belowLayers.V(j,s);
       }
-      //Decrease PLC due to new SA growth
+      //Decrease Stem PLC due to new SA growth
       StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
-      LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaSAgrowth[j]/SA[j]));
+      //Decrease Leaf PLC due to new LA growth
+      LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaLAgrowth[j]/LAexpanded));
       
       ///// B14a. UPDATE DERIVED HYDRAULIC PARAMETERS /////
       if(x.control.transpirationMode=="Granier") {
