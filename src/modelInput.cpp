@@ -30,6 +30,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   int numCohorts = SP.size();
   
   NumericVector leafDuration  = speciesNumericParameterWithImputation(SP, SpParams, "LeafDuration", fillMissingSpParams, fillWithGenus);
+  IntegerVector budFormationDays(SP.size(), 20);
   NumericVector t0gdd  = speciesNumericParameterWithImputation(SP, SpParams, "t0gdd", fillMissingSpParams, fillWithGenus);
   NumericVector Sgdd  = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd", fillMissingSpParams, fillWithGenus);
   NumericVector Tbgdd = speciesNumericParameterWithImputation(SP, SpParams, "Tbgdd", fillMissingSpParams, fillWithGenus);
@@ -40,19 +41,32 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   NumericVector ysen  = speciesNumericParameterWithImputation(SP, SpParams, "ysen", fillMissingSpParams, fillWithGenus);
   
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  CharacterVector growthDeterminacy(SP.size(), NA_STRING);
+  if(SpParams.containsElementNamed("GrowthDeterminacy")) {
+    growthDeterminacy = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthDeterminacy"); 
+  }
   for(int j=0; j<numCohorts;j++) {
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { 
       LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
       if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
-    }
-    if(phenoType[j]=="oneflush-evergreen" || phenoType[j] == "polycyclic-evergreen") {
+      if(CharacterVector::is_na(growthDeterminacy[j])) {
+        growthDeterminacy[j] = "determinate";
+      }
+    } else {
+      //For back-compatibility
+      phenoType[j] = "evergreen";
       //Do not allow flushing all leaves at once (i.e. limit leaf duration to 1.25 yrs)
       leafDuration[j] = std::max(leafDuration[j], 1.25);
+      if(CharacterVector::is_na(growthDeterminacy[j])) {
+        growthDeterminacy[j] = "intermediate";
+      }
     }
   } 
   DataFrame paramsPhenologydf = DataFrame::create(
     _["PhenologyType"] = phenoType,
+    _["GrowthDeterminacy"] = growthDeterminacy,
     _["LeafDuration"] = leafDuration,
+    _["BudFormationDays"] = budFormationDays,
     _["t0gdd"] = t0gdd,_["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
     _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen 
   );
@@ -795,6 +809,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector RSSG = speciesNumericParameterFromIndex(SP, SpParams, "RSSG");
 
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
+  
   double RGRleafmax_default = maximumRelativeGrowthRates["leaf"];
   double RGRsapwoodmax_default = maximumRelativeGrowthRates["sapwood"];
   double RGRcambiummax_default = maximumRelativeGrowthRates["cambium"];
@@ -966,6 +981,7 @@ DataFrame paramsLitterDecomposition(DataFrame internalLitter, DataFrame SpParams
 DataFrame internalPhenologyDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector phi(numCohorts,0.0);
+  NumericVector phiPrev(numCohorts,0.0);
   NumericVector gdd(numCohorts,0.0);
   NumericVector sen(numCohorts,0.0);
   LogicalVector budFormation(numCohorts, false);
@@ -981,7 +997,8 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
                                    Named("leafSenescence") = leafSenescence,
                                    Named("leafDormancy") = leafDormancy,
                                    Named("leafOrganogenesisDuration") = leafOrganogenesisDuration,
-                                   Named("phi") = phi);
+                                   Named("phi") = phi,
+                                   Named("phiPrev") = phiPrev);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
@@ -1103,6 +1120,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   NumericVector leafAreaTarget(numCohorts,0.0);
   NumericVector leafOrganogenesisEfficiency(numCohorts,medfate::NA_DOUBLE);
   NumericVector leafAreaPreformed(numCohorts,0.0);
+  NumericVector leafAreaSenescence(numCohorts,0.0);
   NumericVector sapwoodAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
   NumericVector crownBudPercent(numCohorts, 100.0);
@@ -1110,7 +1128,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
   NumericVector LeafDuration = paramsPhenologydf["LeafDuration"];
-  StringVector PhenologyType = paramsPhenologydf["PhenologyType"];
+  StringVector GrowthDeterminacy = paramsPhenologydf["GrowthDeterminacy"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector fineRootBiomass = belowdf["fineRootBiomass"];
   DataFrame df;
@@ -1138,14 +1156,17 @@ DataFrame internalAllocationDataFrame(DataFrame above,
     }
   }
   for(int c=0;c<numCohorts;c++){
-    if(PhenologyType[c]!="progressive-evergreen") {
-      leafAreaPreformed[c] = leafAreaTarget[c]/LeafDuration[c]; 
+    if(GrowthDeterminacy[c]!="indeterminate") {
+      //Set maximum preformation to the expected defoliation next year + 10% to counterbalance potential sink limitations
+      double maxPreformation = 1.1*leafAreaTarget[c]/LeafDuration[c];
+      leafAreaPreformed[c] = maxPreformation; 
     }
   }
   df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                          Named("leafAreaTarget") = leafAreaTarget,
                          Named("leafOrganogenesisEfficiency") = leafOrganogenesisEfficiency,
                          Named("leafAreaPreformed") = leafAreaPreformed,
+                         Named("leafAreaSenescence") = leafAreaSenescence,
                          Named("sapwoodAreaTarget") = sapwoodAreaTarget,
                          Named("fineRootBiomassTarget") = fineRootBiomassTarget,
                          Named("crownBudPercent") = crownBudPercent);

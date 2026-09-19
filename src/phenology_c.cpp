@@ -26,15 +26,19 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
   int numCohorts = x.cohorts.CohortCode.size();
   
   for(int j=0;j<numCohorts;j++) {
+    //Copy previous expansion level
+    x.internalPhenology.phiPrev[j] = x.internalPhenology.phi[j];
+    
     if(x.paramsPhenology.phenoType[j] == "winter-deciduous" || x.paramsPhenology.phenoType[j] == "winter-semideciduous") {
       if(doy>200) {
         x.internalPhenology.gdd[j] = 0.0;
         if(photoperiod>x.paramsPhenology.Phsen[j]) { //Primary growth still possible until decrease of photoperiod
           x.internalPhenology.sen[j] = 0.0;
-          x.internalPhenology.leafUnfolding[j] = true;
+          if(x.paramsPhenology.growthDeterminacy[j] == "intermediate") x.internalPhenology.leafUnfolding[j] = true;
           x.internalPhenology.leafSenescence[j] = false;
           x.internalPhenology.budFormation[j] = false;
           x.internalPhenology.leafDormancy[j] = false;
+          x.internalPhenology.leafOrganogenesisDuration[j] = 0;
         } else { //Start (or continue) accumulation
           x.internalPhenology.leafUnfolding[j] = false; //Primary growth has arrested
           if(!x.internalPhenology.leafDormancy[j]) { // Check temperature accumulation until dormancy occurs
@@ -47,7 +51,16 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
             x.internalPhenology.leafDormancy[j] = x.internalPhenology.leafSenescence[j];
           }
           if(x.internalPhenology.leafDormancy[j]) x.internalPhenology.phi[j] = 0.0;
-          x.internalPhenology.budFormation[j] = !x.internalPhenology.leafDormancy[j]; //Buds can be formed (i.e target leaf area) until dormancy occurs
+          x.internalPhenology.budFormation[j] = false;
+          if(x.paramsPhenology.growthDeterminacy[j] == "intermediate") {
+            x.internalPhenology.budFormation[j] = true;
+            if(x.internalPhenology.leafOrganogenesisDuration[j] < x.paramsPhenology.budFormationDays[j]) {
+              x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+            } else {
+              //Stops bud formation after organogenesis
+              x.internalPhenology.budFormation[j] = false;
+            }
+          } 
         }
         // Rcout << doy<< " "<< photoperiod<<" "<< rsen <<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
       } else if (doy<=200) { //Only increase in the first part of the year and if doy > t0gdd
@@ -58,99 +71,86 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
         x.internalPhenology.phi[j] = leafDevelopmentStatus_c(x.paramsPhenology.Sgdd[j], x.internalPhenology.gdd[j], unfoldingDD);
         x.internalPhenology.leafUnfolding[j] = (x.internalPhenology.phi[j]>0.0);
         x.internalPhenology.leafDormancy[j] = (x.internalPhenology.phi[j]==0.0);
+        if(x.paramsPhenology.growthDeterminacy[j] == "determinate") {
+          if(x.internalPhenology.phi[j]==1.0) {
+            x.internalPhenology.budFormation[j] = true;
+            if(x.internalPhenology.leafOrganogenesisDuration[j] < x.paramsPhenology.budFormationDays[j]) {
+              x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+            } else {
+              //Stops bud formation after organogenesis
+              x.internalPhenology.budFormation[j] = false;
+            }
+          }
+        }
         // Rcout << doy<< " "<< photoperiod<<" "<< gdd[j]<<" "<<  leafUnfolding[j] << "\n";
       }
-      if(x.internalPhenology.budFormation[j]) {
-        x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
-      } else {
-        x.internalPhenology.leafOrganogenesisDuration[j] = 0;
-      }
     }
-    else if(x.paramsPhenology.phenoType[j] == "oneflush-evergreen") {
-      if(doy>200) {
-        x.internalPhenology.gdd[j] = 0.0;
-        x.internalPhenology.leafUnfolding[j] = false;
-        x.internalPhenology.leafSenescence[j] = false;
-        if(photoperiod>x.paramsPhenology.Phsen[j]) {
-          x.internalPhenology.sen[j] = 0.0;
-          x.internalPhenology.budFormation[j] = true;
-          x.internalPhenology.leafDormancy[j] = false;
-        } else if (!x.internalPhenology.leafDormancy[j]){
-          double rsen = 0.0;
-          if(tmean-x.paramsPhenology.Tbsen[j]<0.0) {
-            rsen = pow(x.paramsPhenology.Tbsen[j]-tmean,2.0);
-            // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Phsen[j],2.0);
-          }
-          x.internalPhenology.sen[j] = x.internalPhenology.sen[j] + rsen;
-          x.internalPhenology.leafDormancy[j] = leafSenescenceStatus_c(x.paramsPhenology.Ssen[j],x.internalPhenology.sen[j]);
-          x.internalPhenology.budFormation[j] = !x.internalPhenology.leafDormancy[j];
-        }
-      } else if (doy<=200) { //Only increase in the first part of the year
-        x.internalPhenology.sen[j] = 0.0;
+    else if(x.paramsPhenology.phenoType[j] == "evergreen") {
+      if(x.paramsPhenology.growthDeterminacy[j] == "indeterminate") {
+        x.internalPhenology.leafSenescence[j] = true;
+        x.internalPhenology.leafUnfolding[j] = true;
         x.internalPhenology.budFormation[j] = false;
-        if(!x.internalPhenology.leafUnfolding[j]) { //Check until unfolding starts
-          if(tmean-x.paramsPhenology.Tbgdd[j]>0.0) x.internalPhenology.gdd[j] = x.internalPhenology.gdd[j] + (tmean - x.paramsPhenology.Tbgdd[j]);
-          double ph = leafDevelopmentStatus_c(x.paramsPhenology.Sgdd[j], x.internalPhenology.gdd[j],unfoldingDD);
-          x.internalPhenology.leafSenescence[j] = (ph>0.0);
-          x.internalPhenology.leafUnfolding[j] = (ph>0.0);
-          x.internalPhenology.leafDormancy[j] = (ph==0.0);
-        }
-        // Rcout<<j<< " phi: "<< ph<<"\n";
-      }
-      if(x.internalPhenology.budFormation[j]) {
-        x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+        x.internalPhenology.leafDormancy[j] = false;
+        x.internalPhenology.leafOrganogenesisDuration[j] = medfate::NA_INTEGER;
       } else {
-        x.internalPhenology.leafOrganogenesisDuration[j] = 0;
-      }
-    }
-    else if(x.paramsPhenology.phenoType[j] == "polycyclic-evergreen") {
-      if(doy>200) {
-        x.internalPhenology.gdd[j] = 0.0;
-        x.internalPhenology.leafSenescence[j] = false;
-        if(photoperiod>x.paramsPhenology.Phsen[j]) { //Primary growth still possible until decrease of photoperiod
-          x.internalPhenology.sen[j] = 0.0;
-          x.internalPhenology.leafUnfolding[j] = true;
-          x.internalPhenology.leafDormancy[j] = false;
-          x.internalPhenology.budFormation[j] = false;
-        } else {
-          x.internalPhenology.leafUnfolding[j] = false;
-          if (!x.internalPhenology.leafDormancy[j]){
-            double rsen = 0.0;
-            if(tmean-x.paramsPhenology.Tbsen[j]<0.0) {
-              rsen = pow(x.paramsPhenology.Tbsen[j]-tmean,2.0);
-              // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Phsen[j],2.0);
+        if(doy>200) {
+          x.internalPhenology.leafUnfolding[j] = false; //Primary growth has arrested
+          x.internalPhenology.leafSenescence[j] = false;
+          x.internalPhenology.gdd[j] = 0.0;
+          x.internalPhenology.phi[j] = 0.0;
+          if(photoperiod>x.paramsPhenology.Phsen[j]) {
+            x.internalPhenology.sen[j] = 0.0;
+            if(x.paramsPhenology.growthDeterminacy[j] == "intermediate") x.internalPhenology.leafUnfolding[j] = true;
+            x.internalPhenology.budFormation[j] = false;
+            x.internalPhenology.leafDormancy[j] = false;
+            x.internalPhenology.leafOrganogenesisDuration[j] = 0;
+          } else {
+            if(!x.internalPhenology.leafDormancy[j]) { // Check temperature accumulation until dormancy occurs
+              double rsen = 0.0;
+              if(tmean-x.paramsPhenology.Tbsen[j]<0.0) {
+                rsen = pow(x.paramsPhenology.Tbsen[j]-tmean, x.paramsPhenology.xsen[j])*pow(photoperiod/x.paramsPhenology.Phsen[j], x.paramsPhenology.ysen[j]);
+              }
+              x.internalPhenology.sen[j] = x.internalPhenology.sen[j] + rsen;
+              x.internalPhenology.leafDormancy[j] = leafSenescenceStatus_c(x.paramsPhenology.Ssen[j],x.internalPhenology.sen[j]);
             }
-            x.internalPhenology.sen[j] = x.internalPhenology.sen[j] + rsen;
-            x.internalPhenology.leafDormancy[j] = leafSenescenceStatus_c(x.paramsPhenology.Ssen[j],x.internalPhenology.sen[j]);
-            x.internalPhenology.budFormation[j] = !x.internalPhenology.leafDormancy[j];
+            x.internalPhenology.budFormation[j] = false;
+            if(x.paramsPhenology.growthDeterminacy[j] == "intermediate") {
+              x.internalPhenology.budFormation[j] = true;
+              if(x.internalPhenology.leafOrganogenesisDuration[j] < x.paramsPhenology.budFormationDays[j]) {
+                x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+              } else {
+                //Stops bud formation after organogenesis
+                x.internalPhenology.budFormation[j] = false;
+              }
+            } 
           }
+        } else if (doy<=200) { //Only increase in the first part of the year
+          x.internalPhenology.sen[j] = 0.0;
+          x.internalPhenology.budFormation[j] = false;
+          if(x.internalPhenology.phi[j] < 1.0) {
+            if((tmean-x.paramsPhenology.Tbgdd[j]>0.0) && (doy >= ((int) x.paramsPhenology.t0gdd[j]))) x.internalPhenology.gdd[j] = x.internalPhenology.gdd[j] + (tmean - x.paramsPhenology.Tbgdd[j]);
+            x.internalPhenology.phi[j] = leafDevelopmentStatus_c(x.paramsPhenology.Sgdd[j], x.internalPhenology.gdd[j],unfoldingDD);
+            x.internalPhenology.leafSenescence[j] = (x.internalPhenology.phi[j]>0.0 && x.internalPhenology.phi[j]<1.0);
+            x.internalPhenology.leafUnfolding[j] = (x.internalPhenology.phi[j]>0.0);
+            x.internalPhenology.leafDormancy[j] = (x.internalPhenology.phi[j]==0.0);
+          } else {
+            x.internalPhenology.leafUnfolding[j] = false;
+            x.internalPhenology.leafSenescence[j] = false;
+            x.internalPhenology.leafDormancy[j] = false;
+            if(x.paramsPhenology.growthDeterminacy[j] == "determinate") {
+              x.internalPhenology.budFormation[j] = true;
+              if(x.internalPhenology.leafOrganogenesisDuration[j] < x.paramsPhenology.budFormationDays[j]) {
+                x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
+              } else {
+                //Stops bud formation after organogenesis
+                x.internalPhenology.budFormation[j] = false;
+              }
+            }
+          }
+          // Rcout<<j<< " phi: "<< ph<<"\n";
         }
-      } else if (doy<=200) { //Only increase in the first part of the year
-        x.internalPhenology.sen[j] = 0.0;
-        x.internalPhenology.budFormation[j] = false;
-        if(!x.internalPhenology.leafUnfolding[j]) { //Check until unfolding starts
-          if(tmean-x.paramsPhenology.Tbgdd[j]>0.0) x.internalPhenology.gdd[j] = x.internalPhenology.gdd[j] + (tmean - x.paramsPhenology.Tbgdd[j]);
-          double ph = leafDevelopmentStatus_c(x.paramsPhenology.Sgdd[j], x.internalPhenology.gdd[j],unfoldingDD);
-          x.internalPhenology.leafSenescence[j] = (ph>0.0);
-          x.internalPhenology.leafUnfolding[j] = (ph>0.0);
-          x.internalPhenology.leafDormancy[j] = (ph==0.0);
-        }
-        // Rcout<<j<< " phi: "<< ph<<"\n";
-      }
-      if(x.internalPhenology.budFormation[j]) {
-        x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
-      } else {
-        x.internalPhenology.leafOrganogenesisDuration[j] = 0;
-      }
-    }
-    else if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
-      x.internalPhenology.leafSenescence[j] = true;
-      x.internalPhenology.leafUnfolding[j] = true;
-      x.internalPhenology.budFormation[j] = false;
-      x.internalPhenology.leafDormancy[j] = false;
-      x.internalPhenology.leafOrganogenesisDuration[j] = medfate::NA_INTEGER;
-    }
-    // Rcout<< j << " phi "<< phi[j] <<" ";
+      } 
+    }    
   }
   // Rcout<<"\n";
 }
@@ -161,6 +161,7 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
   int numCohorts = x.cohorts.CohortCode.size();
   
   for(int j=0;j<numCohorts;j++) {
+    //Leaf fall
     bool leafFall = true;
     if(x.paramsPhenology.phenoType[j] == "winter-semideciduous") leafFall = x.internalPhenology.leafUnfolding[j];
     if(leafFall) {

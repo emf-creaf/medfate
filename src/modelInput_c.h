@@ -64,7 +64,9 @@ struct CanopyParams {
 };
 struct PhenologyParams {
   std::vector<std::string> phenoType;
+  std::vector<std::string> growthDeterminacy;
   std::vector<double> leafDuration;
+  std::vector<int> budFormationDays;
   std::vector<double> t0gdd;
   std::vector<double> Sgdd;
   std::vector<double> Tbgdd;
@@ -246,6 +248,7 @@ struct InternalPhenology {
   std::vector<bool> leafSenescence;
   std::vector<bool> leafDormancy;
   std::vector<double> phi;
+  std::vector<double> phiPrev;
 };
 
 struct InternalWater {
@@ -293,6 +296,7 @@ struct InternalAllocation {
   std::vector<double> leafAreaTarget;
   std::vector<double> leafOrganogenesisEfficiency;
   std::vector<double> leafAreaPreformed;
+  std::vector<double> leafAreaSenescence;
   std::vector<double> sapwoodAreaTarget;
   std::vector<double> fineRootBiomassTarget;
   std::vector<double> crownBudPercent;

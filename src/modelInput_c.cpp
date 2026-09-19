@@ -143,7 +143,24 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   //Phenology parameters
   Rcpp::DataFrame phenoDF = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   paramsPhenology.phenoType = Rcpp::as< std::vector<std::string> >(phenoDF["PhenologyType"]);
+  for(int c = 0; c < phenoDF.nrows(); c++) {
+    if(paramsPhenology.phenoType[c]=="oneflush-evergreen" || paramsPhenology.phenoType[c] == "progressive-evergreen")
+      paramsPhenology.phenoType[c] = "evergreen";
+  }
+  if(phenoDF.containsElementNamed("GrowthDeterminacy")) paramsPhenology.growthDeterminacy = Rcpp::as< std::vector<std::string> >(phenoDF["GrowthDeterminacy"]);
+  else {
+    paramsPhenology.growthDeterminacy = std::vector<std::string>(phenoDF.nrows());
+    for(int c = 0; c < phenoDF.nrows(); c++) {
+      if(paramsPhenology.phenoType[c]=="winter-deciduous" || paramsPhenology.phenoType[c]=="winter-deciduous") {
+        paramsPhenology.growthDeterminacy[c] = "determinate";
+      } else {
+        paramsPhenology.growthDeterminacy[c] = "intermediate";
+      }
+    }
+  }
   paramsPhenology.leafDuration = Rcpp::as< std::vector<double> >(phenoDF["LeafDuration"]);
+  if(phenoDF.containsElementNamed("BudFormationDays")) paramsPhenology.budFormationDays = Rcpp::as< std::vector<int> >(phenoDF["BudFormationDays"]);
+  else paramsPhenology.budFormationDays = std::vector<int>(phenoDF.nrows(), 20);
   paramsPhenology.t0gdd = Rcpp::as< std::vector<double> >(phenoDF["t0gdd"]);
   paramsPhenology.Sgdd = Rcpp::as< std::vector<double> >(phenoDF["Sgdd"]);
   paramsPhenology.Tbgdd = Rcpp::as< std::vector<double> >(phenoDF["Tbgdd"]);
@@ -350,7 +367,11 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   internalPhenology.leafSenescence = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafSenescence"]);
   internalPhenology.leafDormancy = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafDormancy"]);
   internalPhenology.phi = Rcpp::as< std::vector<double> >(internalPhenoDF["phi"]);
-  
+  if(internalPhenoDF.containsElementNamed("phiPrev")) {
+    internalPhenology.phiPrev = Rcpp::as< std::vector<double> >(internalPhenoDF["phiPrev"]);
+  } else {
+    internalPhenology.phiPrev = std::vector<double>(internalPhenoDF.nrows(), 0.0);
+  }
   //Internal LAI distribution
   if(x.containsElementNamed("internalLAIDistribution")){
     Rcpp::List intLAIDist = x["internalLAIDistribution"];
@@ -433,6 +454,11 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
       internalAllocation.leafAreaPreformed = Rcpp::as< std::vector<double> >(internalAllocationDF["leafAreaPreformed"]);
     } else {
       internalAllocation.leafAreaPreformed = std::vector<double>(internalAllocationDF.nrow(), 0.0);
+    }
+    if(internalAllocationDF.containsElementNamed("leafAreaSenescence")) {
+      internalAllocation.leafAreaSenescence = Rcpp::as< std::vector<double> >(internalAllocationDF["leafAreaSenescence"]);
+    } else {
+      internalAllocation.leafAreaSenescence = std::vector<double>(internalAllocationDF.nrow(), 0.0);
     }
     internalAllocation.sapwoodAreaTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["sapwoodAreaTarget"]);
     internalAllocation.fineRootBiomassTarget = Rcpp::as< std::vector<double> >(internalAllocationDF["fineRootBiomassTarget"]);
@@ -705,7 +731,12 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       leafOrganogenesisDuration[c] = internalPhenology.leafOrganogenesisDuration[c];
     }
   }
-
+  if(internalPhenoDF.containsElementNamed("phiPrev")) {
+    Rcpp::NumericVector phiPrev = internalPhenoDF["phiPrev"];
+    for(int c = 0;c < numCohorts; c++) {
+      phiPrev[c] = internalPhenology.phiPrev[c];
+    }
+  }
   //Internal LAI distribution
   // Rcpp::Rcout<< "copy internal LAI dist\n";
   if(x.containsElementNamed("internalLAIDistribution")){
@@ -881,6 +912,12 @@ void ModelInput::copyStateToList(Rcpp::List x) {
       Rcpp::NumericVector leafOrganogenesisEfficiency = internalAllocationDF["leafOrganogenesisEfficiency"];
       for(int c = 0;c < numCohorts; c++) {
         leafOrganogenesisEfficiency[c] = internalAllocation.leafOrganogenesisEfficiency[c];
+      }
+    }
+    if(internalAllocationDF.containsElementNamed("leafAreaSenescence")) {
+      Rcpp::NumericVector leafAreaSenescence = internalAllocationDF["leafAreaSenescence"];
+      for(int c = 0;c < numCohorts; c++) {
+        leafAreaSenescence[c] = internalAllocation.leafAreaSenescence[c];
       }
     }
   }

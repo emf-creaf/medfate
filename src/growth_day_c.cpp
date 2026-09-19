@@ -796,17 +796,17 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       // if(subdailyCarbonBalance) k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
 
       //Xylogenesis
-      double rleafcell = medfate::NA_DOUBLE, rbudcell = medfate::NA_DOUBLE, rcambiumcell = medfate::NA_DOUBLE;
+      double rleafcell = medfate::NA_DOUBLE, rcambiumcell = medfate::NA_DOUBLE, rleafturgorcell = medfate::NA_DOUBLE;
       std::vector<double> rfineroot(nlayers);
       double relative_hormone_factor = std::max(0.0, std::min(1.0, LAI_expanded[j]/LAI_nocomp[j]));
       if(x.control.transpirationMode=="Granier") {
-        rbudcell = std::min(rcellmax, relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,30.0, -1.0, 0.5,0.05,5.0));
+        rleafturgorcell = std::min(rcellmax, relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,30.0, -1.0, 0.5,0.05,5.0));
         rleafcell = std::min(rcellmax, relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(x.internalWater.PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(x.soil.getPsi(l) ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
-        rbudcell = std::min(rcellmax, relative_expansion_rate_c(psiRootCrown[j] ,30.0, -1.0, 0.5,0.05,5.0));
+        rleafturgorcell = std::min(rcellmax, relative_expansion_rate_c(psiRootCrown[j] ,30.0, -1.0, 0.5,0.05,5.0));
         rleafcell = std::min(rcellmax, relative_expansion_rate_c(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
         rcambiumcell = std::min(rcellmax, relative_hormone_factor*relative_expansion_rate_c(psiRootCrown[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
         for(int l=0;l<nlayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate_c(x.belowLayers.RhizoPsi(j,l), x.soil.getTemp(l), -1.0, 0.5,0.05,5.0));
@@ -822,18 +822,16 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       
       ///// (B4A). LEAF/TWIG PREFORMATION /////
       if(x.internalPhenology.budFormation[j]) {
-        //Progressive-evergreens generate new buds and leaves all year long
-        if(x.paramsPhenology.phenoType[j] != "progressive-evergreen") {
-          double dailyOrganogenesisEfficiency = rbudcell/rcellmax;
-          if(x.internalPhenology.leafOrganogenesisDuration[j]==1) {
-            x.internalAllocation.leafOrganogenesisEfficiency[j] = dailyOrganogenesisEfficiency;
-          } else if (x.internalPhenology.leafOrganogenesisDuration[j]>1) { //Update efficiency average
-            x.internalAllocation.leafOrganogenesisEfficiency[j] = (dailyOrganogenesisEfficiency + x.internalAllocation.leafOrganogenesisEfficiency[j]*((double) x.internalPhenology.leafOrganogenesisDuration[j] - 1))/((double) x.internalPhenology.leafOrganogenesisDuration[j]);
-          }
-          //Set leaf area preformed according to current organogenesis efficiency average
-          double maxSenescenceNextYear = LAlive/x.paramsPhenology.leafDuration[j];
-          x.internalAllocation.leafAreaPreformed[j] = maxSenescenceNextYear*x.internalAllocation.leafOrganogenesisEfficiency[j];
+        double dailyOrganogenesisEfficiency = rleafturgorcell/rcellmax;
+        if(x.internalPhenology.leafOrganogenesisDuration[j]==1) {
+          x.internalAllocation.leafOrganogenesisEfficiency[j] = dailyOrganogenesisEfficiency;
+        } else if (x.internalPhenology.leafOrganogenesisDuration[j]>1) { //Update efficiency average
+          x.internalAllocation.leafOrganogenesisEfficiency[j] = (dailyOrganogenesisEfficiency + x.internalAllocation.leafOrganogenesisEfficiency[j]*((double) x.internalPhenology.leafOrganogenesisDuration[j] - 1))/((double) x.internalPhenology.leafOrganogenesisDuration[j]);
         }
+        //Set maximum preformation to the expected defoliation next year + 10% to counterbalance potential sink limitations
+        double maxPreformation = 1.1*LAlive/x.paramsPhenology.leafDuration[j];
+        //Set leaf area preformed according to current organogenesis efficiency average
+        x.internalAllocation.leafAreaPreformed[j] = maxPreformation*x.internalAllocation.leafOrganogenesisEfficiency[j];
       } 
       
       if(!subdailyCarbonBalance) {
@@ -863,15 +861,23 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         ///// B4B. LEAF/TWIG EXPANSION /////
         if(x.internalPhenology.leafUnfolding[j]) {
           double deltaLApheno = 0.0;
-          if(x.paramsPhenology.phenoType[j]=="progressive-evergreen") {
+          double deltaLAsink = 0.0;
+          if(x.internalAllocation.leafAreaPreformed[j] > 0.0) {
+            if(x.internalPhenology.phi[j] > x.internalPhenology.phiPrev[j]) {
+              deltaLApheno = x.internalAllocation.leafAreaPreformed[j] * (x.internalPhenology.phi[j] - x.internalPhenology.phiPrev[j]);
+              //Do not allow overgrowing beyond LAlive
+              deltaLApheno = std::min(deltaLApheno, std::max(LAlive - LAexpanded, 0.0));
+              //Account for turgor limitations only to elongation
+              deltaLAsink = deltaLApheno*(rleafturgorcell/rcellmax);
+              if(!sinkLimitation) deltaLAsink = deltaLApheno;
+              // if(j==0) Rcpp::Rcout << "determinate " << deltaLAsink <<"\n"; 
+            } 
+          } else if(x.paramsPhenology.growthDeterminacy[j] == "intermediate" || x.paramsPhenology.growthDeterminacy[j] == "indeterminate") {
             deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
-          } else if((x.paramsPhenology.phenoType[j]=="oneflush-evergreen") || (x.internalAllocation.leafAreaPreformed[j] > 0.0)) {
-            deltaLApheno = x.internalAllocation.leafAreaPreformed[j];
-          } else { // For polycyclic or deciduous species, once leaf area preformed is elongated they can continue growing
-            deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
+            deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*x.paramsGrowth.RGRleafmax[j]*(rleafcell/rcellmax));
+            if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*x.paramsGrowth.RGRleafmax[j]); //Deactivates temperature and turgor limitation
+            // if(j==0) Rcpp::Rcout << "indeterminate " << deltaLAsink <<"\n"; 
           }
-          double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*x.paramsGrowth.RGRleafmax[j]*(rleafcell/rcellmax));
-          if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*x.paramsGrowth.RGRleafmax[j]); //Deactivates temperature and turgor limitation
           double deltaLAavailable = 0.0;
           deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
           deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
@@ -879,7 +885,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
           synthesisRespLA = growthCostLA*(x.paramsGrowth.CCleaf[j] - 1.0)/x.paramsGrowth.CCleaf[j];
           twigGrowthCostLA = deltaLAgrowth[j]*twigCostPerLA;
           twigSynthesisRespLA = twigGrowthCostLA*(x.paramsGrowth.CCsapwood[j] - 1.0)/x.paramsGrowth.CCsapwood[j];
-        }
+        } 
 
         ///// B5. SAPWOOD GROWTH /////
         if(SA[j]*(1.0 - StemPLC[j]) < x.internalAllocation.sapwoodAreaTarget[j]) {
@@ -981,15 +987,18 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
           //B.4B Leaf growth
           if(x.internalPhenology.leafUnfolding[j]) {
             double deltaLApheno = 0.0;
-            if(x.paramsPhenology.phenoType[j]=="progressive-evergreen") {
+            double deltaLAsink = 0.0;
+            if(x.internalAllocation.leafAreaPreformed[j] > 0.0) {
+              if(x.internalPhenology.phi[j] > x.internalPhenology.phiPrev[j]) {
+                deltaLApheno = x.internalAllocation.leafAreaPreformed[j] * (x.internalPhenology.phi[j] - x.internalPhenology.phiPrev[j])*(1.0/((double) ntimesteps));
+                deltaLAsink = deltaLApheno*(rleafturgorcell/rcellmax);
+                if(!sinkLimitation) deltaLAsink = deltaLApheno;
+              }
+            } else if(x.paramsPhenology.growthDeterminacy[j] == "intermediate" || x.paramsPhenology.growthDeterminacy[j] == "indeterminate") { // For intermediate or indeterminate growth species, once leaf area preformed is elongated they can continue growing
               deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
-            } else if((x.paramsPhenology.phenoType[j]=="oneflush-evergreen") || (x.internalAllocation.leafAreaPreformed[j] > 0.0)) {
-              deltaLApheno = x.internalAllocation.leafAreaPreformed[j];
-            } else { // For polycyclic or deciduous species, once leaf area preformed is elongated they can continue growing
-              deltaLApheno = std::max(LAlive - LAexpanded, 0.0);
+              deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) ntimesteps))*SA[j]*x.paramsGrowth.RGRleafmax[j]*(rleafcell/rcellmax));
+              if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) ntimesteps))*SA[j]*x.paramsGrowth.RGRleafmax[j]); //Deactivates temperature and turgor limitation
             }
-            double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) ntimesteps))*SA[j]*x.paramsGrowth.RGRleafmax[j]*(rleafcell/rcellmax));
-            if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) ntimesteps))*SA[j]*x.paramsGrowth.RGRleafmax[j]); //Deactivates temperature and turgor limitation
             //Grow at expense of stem sugar
             double deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
@@ -1091,23 +1100,30 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation)
       if(x.internalPhenology.leafSenescence[j]) {
-        if(x.paramsPhenology.phenoType[j] == "progressive-evergreen") {
-          propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
-        } else if((x.paramsPhenology.phenoType[j] == "oneflush-evergreen" || x.paramsPhenology.phenoType[j] == "polycyclic-evergreen")) {
-          double maxSenescence = 1.0/x.paramsPhenology.leafDuration[j];
-          double alreadyLost = (LAlive - LAexpanded)/LAlive; //If defoliation occurred previously then aging senescence is reduced
-          propLeafSenescence = std::min(1.0,std::max(0.0, maxSenescence - alreadyLost)); // Fraction of old leaves that die
-          x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
-        } else if((x.paramsPhenology.phenoType[j] == "winter-deciduous") || (x.paramsPhenology.phenoType[j] == "winter-semideciduous")) {
+        if(x.paramsPhenology.phenoType[j] == "evergreen") {
+          if(x.paramsPhenology.growthDeterminacy[j]=="indeterminate") {
+            propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
+          } else {
+            if(x.internalAllocation.leafAreaSenescence[j] == 0.0) {
+              double maxSenescence = LAexpanded/x.paramsPhenology.leafDuration[j];
+              double alreadyLost = (LAlive - LAexpanded); //If defoliation occurred previously then aging senescence is reduced
+              x.internalAllocation.leafAreaSenescence[j] = std::max(0.0, maxSenescence - alreadyLost);
+            }
+            double leafAreaSenescenceDay = x.internalAllocation.leafAreaSenescence[j]*(x.internalPhenology.phi[j] - x.internalPhenology.phiPrev[j]);
+            propLeafSenescence = std::min(1.0,std::max(0.0, leafAreaSenescenceDay/LAexpanded)); // Fraction of old leaves that die in the current day
+          }  
+        } else {
           propLeafSenescence = 1.0;
-          x.internalPhenology.leafSenescence[j] = false; //To prevent further loss
         }
+      } else {
+        // Set senescence target to zero once senescence period is over
+        x.internalAllocation.leafAreaSenescence[j] = 0.0;
       }
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
       if(PLCinc>0.0) {
         double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50);
-        double BranchPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50);
+        double BranchPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.control.defoliation.criticalBranchPLC, x.control.defoliation.cvBranchP50);
         //Force leaf defoliation following branch dessication
         LeafPDEF = std::max(LeafPDEF, BranchPDEF);
         //Senescence effects
@@ -1115,14 +1131,14 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         if(LApdef<LAexpanded) {
           propLeafSenescence = std::max((LAexpanded-LApdef)/LAexpanded, propLeafSenescence);
         }
-        //Bud availability effects
+        //Bud availability effects due to branch senescence
         if((1.0 - BranchPDEF) < crownBudPercent[j]/100.0) {
           crownBudPercent[j] = (1.0 - BranchPDEF)*100.0;
         }
       }
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
-
+      // if(j==1) Rcpp::Rcout << "Sen: "<< deltaLAsenescence << "\n";
       ///// B9. SAPWOOD AREA SENESCENCE /////
       //Define sapwood senescence as maximum of turnover and sapwood exceeding the target
       double propSASenescence = x.paramsGrowth.SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
@@ -1194,9 +1210,6 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
 
       ///// C13. UPDATE INDIVIDUAL LEAF AREA, DEAD LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS /////
       // Rcout<<"-update";
-      if(x.paramsPhenology.phenoType[j]!="progressive-evergreen") {
-        if(x.internalAllocation.leafAreaPreformed[j] > 0.0) x.internalAllocation.leafAreaPreformed[j] = std::max(0.0, x.internalAllocation.leafAreaPreformed[j] - deltaLAgrowth[j]); 
-      }
       LAexpanded += deltaLAgrowth[j] - deltaLAsenescence;
       if(LAexpanded < 0.0) {
         deltaLAsenescence -= LAexpanded;

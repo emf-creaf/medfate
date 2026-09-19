@@ -1,10 +1,10 @@
-# medfate 5.1.1
+# medfate 5.2.0
+* Revision of leaf phenology and primary growth determinacy
 * Leaf apoplastic VCs (related to PLC) made explicitly different from whole-leaf VCs (which include symplasmic tissues)
 * Control option 'segmentedXylemVulnerability' removed
 * Update of trait_family_means (avoiding infinite mean values)
 * Preformed leaf area in growth
 * Minimum and maximum values added to SpParamsDefinition
-* New phenology type 'evergreen-polycyclic'
 
 # medfate 5.1.0
 * Compilation patch for C++ 20
