@@ -5,6 +5,7 @@
 * Update of trait_family_means (avoiding infinite mean values)
 * Preformed leaf area in growth
 * Minimum and maximum values added to SpParamsDefinition
+* Day of the year depends on latitude to allow simulations in the southern hemisphere
 
 # medfate 5.1.0
 * Compilation patch for C++ 20

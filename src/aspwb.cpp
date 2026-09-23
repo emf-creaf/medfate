@@ -405,7 +405,7 @@ List aspwb(List x, DataFrame meteo, double latitude,
   }
   
   CharacterVector dateStrings = getWeatherDates(meteo);
-  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!doy_input) DOY = date2doy(dateStrings, latitude);
   
   //Define output list
   List outputList = defineASPWBDailyOutput(latitude, elevation, slope, aspect,

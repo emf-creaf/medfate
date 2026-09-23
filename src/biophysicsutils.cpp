@@ -11,7 +11,7 @@ using namespace Rcpp;
 /**
  * Transforms dates (yyyy-mm-dd) into day of the year (DOY)
  */
-IntegerVector date2doy(CharacterVector dateStrings) {
+IntegerVector date2doy(CharacterVector dateStrings, double latitude) {
   IntegerVector doy(dateStrings.size());
   //Derive doy from date  
   for(int i=0;i<dateStrings.size();i++) {
@@ -19,6 +19,10 @@ IntegerVector date2doy(CharacterVector dateStrings) {
     int J = julianDay_c(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
     int J0101 = julianDay_c(std::atoi(c.substr(0, 4).c_str()),1,1);
     doy[i] = J - J0101+1;
+    if(latitude < 0.0) {
+      doy[i] = doy[i] - 181; //Shift DOY 1 from Jan 1st to Jul 1st
+      if(doy[i]<1) doy[i] = doy[i] + 365; //Avoid negative or zero values
+    }
   }
   return(doy);
 }

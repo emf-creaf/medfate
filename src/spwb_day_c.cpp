@@ -1016,6 +1016,10 @@ void wb_day_inner_c(WB_RESULT& WBres, WBCommunicationStructures& WBcomm, WaterBa
   //Derive doy from date  
   int J0101 = julianDay_c(std::atoi(date.substr(0, 4).c_str()),1,1);
   int doy = J - J0101+1;
+  if(latitude < 0.0) {
+    doy = doy - 181; //Shift DOY 1 from Jan 1st to Jul 1st
+    if(doy<1) doy = doy + 365; //Avoid negative or zero values
+  }
   
   std::vector<double> defaultRainfallIntensityPerMonth = x.control.weather.defaultRainfallIntensityPerMonth;
   if(std::isnan(meteovec.rint)) meteovec.rint = rainfallIntensity_c(month, meteovec.prec, defaultRainfallIntensityPerMonth);

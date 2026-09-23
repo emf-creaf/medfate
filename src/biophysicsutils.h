@@ -4,7 +4,7 @@
 #define BIOPHYSICS_UTILS_H
 using namespace Rcpp;
 
-IntegerVector date2doy(CharacterVector dateStrings);
+IntegerVector date2doy(CharacterVector dateStrings, double latitude);
 NumericVector date2photoperiod(CharacterVector dateStrings, double latitude);
 IntegerVector dateStringToJulianDays(CharacterVector dateStrings);
 

@@ -1024,7 +1024,7 @@ List growth(List x, DataFrame meteo, double latitude,
   
   // Dates
   CharacterVector dateStrings = getWeatherDates(meteo);
-  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!doy_input) DOY = date2doy(dateStrings, latitude);
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Soil params 

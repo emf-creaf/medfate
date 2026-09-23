@@ -1932,7 +1932,7 @@ List spwb(List x, DataFrame meteo,
   
   // Dates
   CharacterVector dateStrings = getWeatherDates(meteo);
-  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!doy_input) DOY = date2doy(dateStrings, latitude);
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Soil
@@ -2341,7 +2341,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   
   // Dates
   CharacterVector dateStrings = getWeatherDates(meteo);
-  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!doy_input) DOY = date2doy(dateStrings, latitude);
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
   
