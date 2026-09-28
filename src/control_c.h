@@ -59,9 +59,9 @@ struct MistletoeParams {
 struct DefoliationParams {
   bool cavitationInducedDefoliation = true;
   double criticalLeafPLC = 0.50;
-  double criticalBranchPLC = 0.88;
+  double criticalBudPLC = 0.88;
   double cvLeafP50 = 10.0;
-  double cvBranchP50 = 10.0;
+  double cvBudP50 = 10.0;
 };
 
 struct CommonWBParams {

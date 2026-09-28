@@ -66,9 +66,9 @@ ControlParameters::ControlParameters(List x) {
     List defoliationParams = x["defoliationParams"];
     defoliation.cavitationInducedDefoliation = as<bool>(defoliationParams["cavitationInducedDefoliation"]);
     defoliation.criticalLeafPLC = as<double>(defoliationParams["criticalLeafPLC"]);
-    if(defoliationParams.containsElementNamed("criticalBranchPLC")) defoliation.criticalBranchPLC = as<double>(defoliationParams["criticalBranchPLC"]);
+    if(defoliationParams.containsElementNamed("criticalBudPLC")) defoliation.criticalBudPLC = as<double>(defoliationParams["criticalBudPLC"]);
     defoliation.cvLeafP50 = as<double>(defoliationParams["cvLeafP50"]);
-    if(defoliationParams.containsElementNamed("cvBranchP50")) defoliation.cvBranchP50 = as<double>(defoliationParams["cvBranchP50"]);
+    if(defoliationParams.containsElementNamed("cvBudP50")) defoliation.cvBudP50 = as<double>(defoliationParams["cvBudP50"]);
   } else if(x.containsElementNamed("cavitationInducedDefoliation")){
     defoliation.cavitationInducedDefoliation = as<bool>(x["cavitationInducedDefoliation"]);
   }

@@ -22,7 +22,7 @@ base_pools = "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_desi
 
 By default, simulations in **medfate** assume that soil moisture under all plant cohorts is the same (i.e. water sources corresponding to vertical soil layers are shared among cohorts). Therefore, the models neglect spatial variation in soil moisture observed in mixed forest stands (Schume et al. 2004). Variations in soil moisture beneath plant cohorts (and, implicitly, horizontal variation of soil moisture) can be simulated in **medfate** if required by the user (see control parameter `rhizosphereOverlap`). This involves considering that a given plant cohort will perform water uptake from the **water pool** surrounding its roots, whereas it may not have access to the water beneath other plants. However, there can exist some degree of horizontal overlap between water pools exploited by different plants.
 
-The aim of this vignette is to illustrate the sensitivity of the advanced water balance model (De Cáceres et al. 2021) to the consideration of independent water pools. 
+The aim of this vignette is to illustrate the sensitivity of the basic (De Cáceres et al. 2015) and advanced (De Cáceres et al. 2021) water balance models to the consideration of independent water pools. 
 
 ```{r, echo = FALSE}
 WB_FB_sperry_total = readRDS(paste0(base_pools,"data/site_output/fb_sperry_total.rds"))
@@ -127,6 +127,11 @@ Recovery from embolism was assumed to depend on soil moisture (`stemCavitationRe
 
 ## Results 
 ### Results with Granier
+#### Leaf area index (m2·m-2)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "PlantLAI", transpirationMode = "Granier")
+```
+
 #### Transpiration per leaf area unit (l·m-2)
 ```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
 plot_several(type = "TranspirationPerLeaf", transpirationMode = "Granier", ylim = c(0,3.5))
@@ -148,6 +153,11 @@ plot_several(type = "StemPLC", transpirationMode = "Granier", ylim = c(0,100))
 ```
 
 ### Results with Sperry
+#### Leaf area index (m2·m-2)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "PlantLAI", transpirationMode = "Sperry")
+```
+
 #### Transpiration per leaf area unit (l·m-2)
 
 ```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
@@ -175,6 +185,11 @@ plot_several(type = "StemPLC", transpirationMode = "Sperry", ylim = c(0,100))
 ```
 
 ### Results with Sureau
+#### Leaf area index (m2·m-2)
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
+plot_several(type = "PlantLAI", transpirationMode = "Sureau")
+```
+
 #### Transpiration per leaf area unit (l·m-2)
 ```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 8, warning = FALSE, message = FALSE}
 plot_several(type = "TranspirationPerLeaf", transpirationMode = "Sureau", ylim = c(0,3.5))

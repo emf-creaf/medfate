@@ -203,6 +203,7 @@ Function \code{growthInput()} returns a list of class \code{growthInput} with th
 \item{\code{leafAreaTarget}: Target leaf area (m2) per individual, assuming a fully-developed crown.}
 \item{\code{leafOrganogenesisEfficiency}: For species with separated phases of leaf organogenesis and leaf expansion, proportion of the target leaf area that is preformed in buds, after accounting for crown bud availability and environmental effects in organogenesis.}
 \item{\code{leafAreaPreformed}: For species with separated phases of leaf organogenesis and expansion, preformed (in buds) leaf area (m2) per individual, to be expanded.}
+\item{\code{leafAreaSenescence}: Leaf area (m2) that is programmed to enter senescence.}
 \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
 \item{\code{crownBudPercent}: Percentage of the crown with buds available, related to availability of branches and dormant buds.}

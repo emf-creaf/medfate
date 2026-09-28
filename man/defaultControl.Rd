@@ -106,11 +106,11 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 }
 \item{\code{defoliationParams}: A list with the following elements:
 \itemize{
-\item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation.}
+\item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (and bud senescence in the growth model).}
 \item{\code{criticalLeafPLC [= 0.50]}: Level of PLC (a proportion) corresponding to 50 \% crown defoliation.}
-\item{\code{criticalBranchPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 \% crown branch senescence.}
+\item{\code{criticalBudPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 \% crown bud senescence.}
 \item{\code{cvLeafP50 [= 10.0]}: Coefficient of variation (in percent) of leaf P50 within crown.}
-\item{\code{cvBranchP50 [= 10.0]}: Coefficient of variation (in percent) of branch P50 within crown.}
+\item{\code{cvBudP50 [= 10.0]}: Coefficient of variation (in percent) of bud P50 within crown.}
 }
 }
 }

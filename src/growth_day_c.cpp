@@ -1120,20 +1120,19 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         x.internalAllocation.leafAreaSenescence[j] = 0.0;
       }
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
-      double PLCinc = (StemPLC[j]-StemPLCprev[j]);
-      if(PLCinc>0.0) {
+      if(((StemPLC[j]-StemPLCprev[j])>0.0) && x.control.defoliation.cavitationInducedDefoliation) {
         double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50);
-        double BranchPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.control.defoliation.criticalBranchPLC, x.control.defoliation.cvBranchP50);
-        //Force leaf defoliation following branch dessication
-        LeafPDEF = std::max(LeafPDEF, BranchPDEF);
+        double BudPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.control.defoliation.criticalBudPLC, x.control.defoliation.cvBudP50);
+        //Force leaf defoliation to be at least equal bud dessication
+        LeafPDEF = std::max(LeafPDEF, BudPDEF);
         //Senescence effects
         double LApdef = std::min(LAexpanded, (1.0 - LeafPDEF)*x.internalAllocation.leafAreaTarget[j]);
         if(LApdef<LAexpanded) {
           propLeafSenescence = std::max((LAexpanded-LApdef)/LAexpanded, propLeafSenescence);
         }
-        //Bud availability effects due to branch senescence
-        if((1.0 - BranchPDEF) < crownBudPercent[j]/100.0) {
-          crownBudPercent[j] = (1.0 - BranchPDEF)*100.0;
+        //Bud availability effects due to bud senescence
+        if((1.0 - BudPDEF) < crownBudPercent[j]/100.0) {
+          crownBudPercent[j] = (1.0 - BudPDEF)*100.0;
         }
       }
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
@@ -1215,7 +1214,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         deltaLAsenescence -= LAexpanded;
         LAexpanded = 0.0;
       }
-      //Increase crown bud percent due to new leaf area growth
+      //Increase crown branch percent due to new leaf area growth
       crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + (x.paramsGrowth.RGRbud[j] - 1.0)*deltaLAgrowth[j]/x.internalAllocation.leafAreaTarget[j]);
       
       LAdead += deltaLAsenescence;
