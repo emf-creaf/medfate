@@ -35,7 +35,7 @@
                   "Date" = as.Date(rownames(x)),
                   "Cohort" = gl(length(colnames(x)), nrow(x), labels=labels))
   g <- ggplot(df,
-              aes(Date, Cohort, fill = factor(Y))) +
+              aes(.data$Date, .data$Cohort, fill = factor(.data$Y))) +
     geom_tile()
   if(!is.null(legendLabel)) {
     g <- g +
