@@ -12,6 +12,9 @@ IntegerVector speciesIndex(CharacterVector species, DataFrame SpParams);
 
 void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
 
+IntegerVector speciesIntegerParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName);
+IntegerVector speciesIntegerParameter(CharacterVector species, DataFrame SpParams, String parName);
+
 NumericVector speciesNumericParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName);
 NumericVector speciesNumericParameter(CharacterVector species, DataFrame SpParams, String parName);
 
@@ -20,6 +23,9 @@ CharacterVector speciesCharacterParameter(CharacterVector species, DataFrame SpP
 
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
+
+IntegerVector speciesIntegerParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true, bool fillWithGenus = true);
+IntegerVector speciesIntegerParameterWithImputation(CharacterVector species, DataFrame SpParams, String parName, bool fillMissing = true, bool fillWithGenus = true);
 
 NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true, bool fillWithGenus = true);
 NumericVector speciesNumericParameterWithImputation(CharacterVector species, DataFrame SpParams, String parName, bool fillMissing = true, bool fillWithGenus = true);

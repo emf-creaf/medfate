@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 
-DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus) {
+DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus, List control) {
   IntegerVector SP = above["SP"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_live = above["LAI_live"];
@@ -31,14 +31,18 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   
   NumericVector leafDuration  = speciesNumericParameterWithImputation(SP, SpParams, "LeafDuration", fillMissingSpParams, fillWithGenus);
   IntegerVector budFormationDays(SP.size(), 20);
+  if(SpParams.containsElementNamed("BudFormationDays")) budFormationDays = speciesIntegerParameterWithImputation(SP, SpParams, "BudFormationDays", true, true);
   NumericVector t0gdd  = speciesNumericParameterWithImputation(SP, SpParams, "t0gdd", fillMissingSpParams, fillWithGenus);
   NumericVector Sgdd  = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd", fillMissingSpParams, fillWithGenus);
+  NumericVector Ugdd(SP.size(), 300.0);
+  if(SpParams.containsElementNamed("Ugdd")) Ugdd = speciesNumericParameterWithImputation(SP, SpParams, "Ugdd", true, true);
   NumericVector Tbgdd = speciesNumericParameterWithImputation(SP, SpParams, "Tbgdd", fillMissingSpParams, fillWithGenus);
   NumericVector Ssen = speciesNumericParameterWithImputation(SP, SpParams, "Ssen", fillMissingSpParams, fillWithGenus);
   NumericVector Phsen = speciesNumericParameterWithImputation(SP, SpParams, "Phsen", fillMissingSpParams, fillWithGenus);
   NumericVector Tbsen  = speciesNumericParameterWithImputation(SP, SpParams, "Tbsen", fillMissingSpParams, fillWithGenus);
   NumericVector xsen  = speciesNumericParameterWithImputation(SP, SpParams, "xsen", fillMissingSpParams, fillWithGenus);
   NumericVector ysen  = speciesNumericParameterWithImputation(SP, SpParams, "ysen", fillMissingSpParams, fillWithGenus);
+
   
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
   CharacterVector growthDeterminacy(SP.size(), NA_STRING);
@@ -67,7 +71,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
     _["GrowthDeterminacy"] = growthDeterminacy,
     _["LeafDuration"] = leafDuration,
     _["BudFormationDays"] = budFormationDays,
-    _["t0gdd"] = t0gdd,_["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
+    _["t0gdd"] = t0gdd, _["Tbgdd"] = Tbgdd, _["Sgdd"] = Sgdd, _["Ugdd"] = Ugdd,
     _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen 
   );
   paramsPhenologydf.attr("row.names") = above.attr("row.names");
@@ -1574,7 +1578,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                             _["above"] = plantsdf,
                             _["below"] = belowdf,
                             _["belowLayers"] = belowLayers,
-                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus),
+                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus, control),
                             _["paramsAnatomy"] = paramsAnatomydf,
                             _["paramsInterception"] = paramsInterception(above, SpParams, control),
                             _["paramsTranspiration"] = paramsTranspirationdf,
@@ -1706,7 +1710,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   double SWE = 0.0;
   
   DataFrame paramsCanopydf = paramsCanopy(above, control);
-  DataFrame paramsPhenologydf = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus);
+  DataFrame paramsPhenologydf = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus, control);
   
   List ctl = clone(control);
   //For backward compatibility

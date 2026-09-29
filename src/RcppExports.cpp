@@ -3648,6 +3648,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// speciesIntegerParameterFromIndex
+IntegerVector speciesIntegerParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName);
+RcppExport SEXP _medfate_speciesIntegerParameterFromIndex(SEXP SPSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesIntegerParameterFromIndex(SP, SpParams, parName));
+    return rcpp_result_gen;
+END_RCPP
+}
 // speciesCharacterParameterFromIndex
 CharacterVector speciesCharacterParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName);
 RcppExport SEXP _medfate_speciesCharacterParameterFromIndex(SEXP SPSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
@@ -3732,15 +3745,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafDevelopmentStatus
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD);
-RcppExport SEXP _medfate_leafDevelopmentStatus(SEXP SgddSEXP, SEXP gddSEXP, SEXP unfoldingDDSEXP) {
+NumericVector leafDevelopmentStatus(NumericVector gdd, NumericVector Sgdd, double Ugdd);
+RcppExport SEXP _medfate_leafDevelopmentStatus(SEXP gddSEXP, SEXP SgddSEXP, SEXP UgddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type Sgdd(SgddSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gdd(gddSEXP);
-    Rcpp::traits::input_parameter< double >::type unfoldingDD(unfoldingDDSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafDevelopmentStatus(Sgdd, gdd, unfoldingDD));
+    Rcpp::traits::input_parameter< NumericVector >::type Sgdd(SgddSEXP);
+    Rcpp::traits::input_parameter< double >::type Ugdd(UgddSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafDevelopmentStatus(gdd, Sgdd, Ugdd));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -6297,6 +6310,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_testModelInputToStructure", (DL_FUNC) &_medfate_testModelInputToStructure, 1},
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
     {"_medfate_speciesNumericParameterFromIndex", (DL_FUNC) &_medfate_speciesNumericParameterFromIndex, 3},
+    {"_medfate_speciesIntegerParameterFromIndex", (DL_FUNC) &_medfate_speciesIntegerParameterFromIndex, 3},
     {"_medfate_speciesCharacterParameterFromIndex", (DL_FUNC) &_medfate_speciesCharacterParameterFromIndex, 3},
     {"_medfate_speciesCharacterParameter", (DL_FUNC) &_medfate_speciesCharacterParameter, 3},
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},

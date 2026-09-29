@@ -57,7 +57,6 @@
 #'       \item{\code{leafPhenology [= TRUE]}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
 #'       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
 #'       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
-#'       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
 #'       \item{\code{interceptionMode [= "Gash1995"]}: Infiltration model, either "Gash1995" or "Liu2001".}
 #'       \item{\code{infiltrationMode [= "GreenAmpt1911"]}: Infiltration model, either "GreenAmpt1911" or "Boughton1989".}
 #'       \item{\code{infiltrationCorrection [= 5.0]}: Factor to correct infiltration amount in the GreenAmpt1911 model in single-domain simulations.}
@@ -261,7 +260,6 @@ defaultControl<-function(transpirationMode = "Granier",
     interceptionMode = "Gash1995",
     infiltrationMode = "GreenAmpt1911",
     infiltrationCorrection = 5.0,
-    unfoldingDD = 300,
     verticalLayerSize = 100,
     windMeasurementHeight = 200,
     stemCavitationRecovery = "rate",

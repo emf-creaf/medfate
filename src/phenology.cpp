@@ -26,9 +26,9 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
 //' Function \code{pheno_leafSenescenceStatus} returns the 0/1 senescence status of leaves according to the one-phase senescence model of Delpierre et al. (2009) on the basis of photoperiod and temperature.
 //' Function \code{pheno_updateLeaves} updates the status of expanded leaves and dead leaves of object \code{x} given the photoperiod, temperature and wind of a given day. It applies the development model for 1 < doy < 180 and the senescence model for 181 > doy > 365.
 //' 
-//' @param Sgdd Degree days required for leaf budburst (in Celsius).
 //' @param gdd Cumulative degree days (in Celsius)
-//' @param unfoldingDD Degree-days for complete leaf unfolding after budburst has occurred.
+//' @param Sgdd Degree days required for leaf budburst (in Celsius).
+//' @param Ugdd Degree-days for complete leaf unfolding after budburst has occurred (in Celsius).
 //' 
 //' @return Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1, 
 //' whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values. 
@@ -48,9 +48,9 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
 //' @name pheno_updateLeaves
 //' @keywords internal
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD = 300.0) {
+NumericVector leafDevelopmentStatus(NumericVector gdd, NumericVector Sgdd, double Ugdd = 300.0) {
   NumericVector phe(Sgdd.size());
-  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus_c(Sgdd[i], gdd[i], unfoldingDD);
+  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus_c(gdd[i], Sgdd[i], Ugdd);
   return(phe);
 }
 

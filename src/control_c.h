@@ -35,7 +35,6 @@ struct WeatherParams {
 
 struct PhenologyControlParams {
   bool leafPhenology;
-  double unfoldingDD;
 };
 
 struct MistletoeParams {

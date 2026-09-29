@@ -162,8 +162,17 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   if(phenoDF.containsElementNamed("BudFormationDays")) paramsPhenology.budFormationDays = Rcpp::as< std::vector<int> >(phenoDF["BudFormationDays"]);
   else paramsPhenology.budFormationDays = std::vector<int>(phenoDF.nrows(), 20);
   paramsPhenology.t0gdd = Rcpp::as< std::vector<double> >(phenoDF["t0gdd"]);
-  paramsPhenology.Sgdd = Rcpp::as< std::vector<double> >(phenoDF["Sgdd"]);
   paramsPhenology.Tbgdd = Rcpp::as< std::vector<double> >(phenoDF["Tbgdd"]);
+  paramsPhenology.Sgdd = Rcpp::as< std::vector<double> >(phenoDF["Sgdd"]);
+  if(phenoDF.containsElementNamed("Ugdd")) paramsPhenology.Ugdd = Rcpp::as< std::vector<double> >(phenoDF["Ugdd"]);
+  else {
+    paramsPhenology.Ugdd = std::vector<double>(phenoDF.nrows());
+    Rcpp::List control = x["control"];
+    double unfoldingDD = Rcpp::as<double>(control["unfoldingDD"]);
+    for(int c = 0; c < phenoDF.nrows(); c++) {
+      paramsPhenology.Ugdd[c] = unfoldingDD;
+    }
+  }
   paramsPhenology.Ssen = Rcpp::as< std::vector<double> >(phenoDF["Ssen"]);
   paramsPhenology.Phsen = Rcpp::as< std::vector<double> >(phenoDF["Phsen"]);
   paramsPhenology.Tbsen = Rcpp::as< std::vector<double> >(phenoDF["Tbsen"]);

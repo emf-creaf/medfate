@@ -5,10 +5,10 @@
 #include "carbon_c.h"
 #include "decomposition_c.h"
 
-double leafDevelopmentStatus_c(double Sgdd, double gdd, double unfoldingDD) {
+double leafDevelopmentStatus_c(double gdd, double Sgdd, double Ugdd) {
   double ds = 0.0;
   if(Sgdd>0.0) {
-    if(gdd>Sgdd) ds = std::min(1.0, (gdd - Sgdd)/unfoldingDD);
+    if(gdd>Sgdd) ds = std::min(1.0, (gdd - Sgdd)/Ugdd);
   } else {
     ds = 1.0;
   }
@@ -18,8 +18,7 @@ double leafDevelopmentStatus_c(double Sgdd, double gdd, double unfoldingDD) {
 
 void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean) {
 
-  double unfoldingDD = x.control.phenology.unfoldingDD;
-  
+
   int numCohorts = x.cohorts.CohortCode.size();
   
   for(int j=0;j<numCohorts;j++) {
@@ -90,7 +89,7 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
           //Set GDD if DOY is large enough and temperature is large enough
           if(doy >= ((int) x.paramsPhenology.t0gdd[j])) x.internalPhenology.gdd[j] = x.internalPhenology.gdd[j] + std::max(0.0, tmean - x.paramsPhenology.Tbgdd[j]);
           //Update phi
-          x.internalPhenology.phi[j] = leafDevelopmentStatus_c(x.paramsPhenology.Sgdd[j], x.internalPhenology.gdd[j],unfoldingDD);
+          x.internalPhenology.phi[j] = leafDevelopmentStatus_c(x.internalPhenology.gdd[j], x.paramsPhenology.Sgdd[j], x.paramsPhenology.Ugdd[j]);
           // Rcpp::Rcout << " DOY: "<< doy << " GDD: " << x.internalPhenology.gdd[j] << " PHI: " <<x.internalPhenology.phi[j] <<"\n";
           //Force senescence for evergreen (determinate or intermediate) species during leaf elongation 
           if(x.paramsPhenology.phenoType[j] == "evergreen") {

@@ -3045,6 +3045,10 @@ resetInputs <- function(x) {
     .Call(`_medfate_speciesNumericParameterFromIndex`, SP, SpParams, parName)
 }
 
+.speciesIntegerParameterFromSpIndex <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesIntegerParameterFromIndex`, SP, SpParams, parName)
+}
+
 .speciesCharacterParameterFromSpIndex <- function(SP, SpParams, parName) {
     .Call(`_medfate_speciesCharacterParameterFromIndex`, SP, SpParams, parName)
 }
@@ -3079,9 +3083,9 @@ plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE, fillWithGe
 #' Function \code{pheno_leafSenescenceStatus} returns the 0/1 senescence status of leaves according to the one-phase senescence model of Delpierre et al. (2009) on the basis of photoperiod and temperature.
 #' Function \code{pheno_updateLeaves} updates the status of expanded leaves and dead leaves of object \code{x} given the photoperiod, temperature and wind of a given day. It applies the development model for 1 < doy < 180 and the senescence model for 181 > doy > 365.
 #' 
-#' @param Sgdd Degree days required for leaf budburst (in Celsius).
 #' @param gdd Cumulative degree days (in Celsius)
-#' @param unfoldingDD Degree-days for complete leaf unfolding after budburst has occurred.
+#' @param Sgdd Degree days required for leaf budburst (in Celsius).
+#' @param Ugdd Degree-days for complete leaf unfolding after budburst has occurred (in Celsius).
 #' 
 #' @return Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1, 
 #' whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values. 
@@ -3100,8 +3104,8 @@ plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE, fillWithGe
 #' 
 #' @name pheno_updateLeaves
 #' @keywords internal
-pheno_leafDevelopmentStatus <- function(Sgdd, gdd, unfoldingDD = 300.0) {
-    .Call(`_medfate_leafDevelopmentStatus`, Sgdd, gdd, unfoldingDD)
+pheno_leafDevelopmentStatus <- function(gdd, Sgdd, Ugdd = 300.0) {
+    .Call(`_medfate_leafDevelopmentStatus`, gdd, Sgdd, Ugdd)
 }
 
 #' @param Ssen Threshold to start leaf senescence.

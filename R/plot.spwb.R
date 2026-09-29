@@ -34,6 +34,7 @@
 #'   \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
 #'   \item{\code{"LAI"}: Expanded and dead leaf area index of the whole stand.}
 #'   \item{\code{"PlantLAI"}: Plant cohort leaf area index (expanded leaves).}
+#'   \item{\code{"Phenology"}: Plant cohort phenological status.}
 #'   \item{\code{"PlantLAIlive"}: Plant cohort leaf area index ("live" leaves).}
 #'   \item{\code{"PlantStress"}: Plant cohort average daily drought stress.}
 #'   \item{\code{"PlantTranspiration"}: Plant cohort transpiration.}
@@ -107,6 +108,7 @@
 #'     \item{\code{"FineRootBiomass"}: Fine root dry biomass per individual.}
 #'     \item{\code{"SapwoodArea"}:  Sapwood area per individual.}
 #'     \item{\code{"LeafArea"}:  Leaf area per individual.}
+#'     \item{\code{"CrownFoliageCompleteness"}: Crown foliage completeness (in percent), i.e. leaf area expressed as a percent of maximum (i.e. target) crown foliage.}
 #'     \item{\code{"FineRootArea"}: Fine root area per individual (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
 #'     \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
 #'     \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}

@@ -42,8 +42,7 @@ ControlParameters::ControlParameters(List x) {
   weather.defaultRainfallIntensityPerMonth = as< std::vector<double> >(x["defaultRainfallIntensityPerMonth"]);
   
   phenology.leafPhenology = as<bool>(x["leafPhenology"]);
-  phenology.unfoldingDD = as<double>(x["unfoldingDD"]);
-  
+
   fireHazard.lfmcComponent = as<std::string>(x["lfmcComponent"]);
 
   if(x.containsElementNamed("mistletoeParams")) {

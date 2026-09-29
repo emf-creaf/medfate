@@ -68,8 +68,9 @@ struct PhenologyParams {
   std::vector<double> leafDuration;
   std::vector<int> budFormationDays;
   std::vector<double> t0gdd;
-  std::vector<double> Sgdd;
   std::vector<double> Tbgdd;
+  std::vector<double> Sgdd;
+  std::vector<double> Ugdd;
   std::vector<double> Ssen;
   std::vector<double> Phsen;
   std::vector<double> Tbsen;

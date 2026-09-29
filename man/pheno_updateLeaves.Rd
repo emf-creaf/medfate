@@ -7,7 +7,7 @@
 \alias{pheno_updatePhenology}
 \title{Leaf phenology}
 \usage{
-pheno_leafDevelopmentStatus(Sgdd, gdd, unfoldingDD = 300)
+pheno_leafDevelopmentStatus(gdd, Sgdd, Ugdd = 300)
 
 pheno_leafSenescenceStatus(Ssen, sen)
 
@@ -16,11 +16,11 @@ pheno_updatePhenology(x, doy, photoperiod, tmean)
 pheno_updateLeaves(x, wind, fromGrowthModel)
 }
 \arguments{
-\item{Sgdd}{Degree days required for leaf budburst (in Celsius).}
-
 \item{gdd}{Cumulative degree days (in Celsius)}
 
-\item{unfoldingDD}{Degree-days for complete leaf unfolding after budburst has occurred.}
+\item{Sgdd}{Degree days required for leaf budburst (in Celsius).}
+
+\item{Ugdd}{Degree-days for complete leaf unfolding after budburst has occurred (in Celsius).}
 
 \item{Ssen}{Threshold to start leaf senescence.}
 
