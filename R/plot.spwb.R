@@ -272,6 +272,13 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                           xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                           summary.freq = summary.freq, ...))
   } 
+  else if(type %in% "Phenology") {
+    OM = x$Plants[["Phenology"]][,cohorts,drop=FALSE]
+    return(.plot_plant_phenology(OM, 
+                                 type, dates = dates, 
+                                 xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                                 summary.freq = summary.freq, ...))
+  }
   else if(type %in% c("PlantLAI","PlantLAIlive","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
                       "PlantAbsorbedSWR","PlantNetLWR")) {
     subtype = substr(type,6,nchar(type))

@@ -45,6 +45,7 @@
 .getPlantPlotTypes<-function(transpirationMode = "Granier") {
   TYPES = c("Plant LAI" = "PlantLAI",
             "Plant LAI (live)" = "PlantLAIlive",
+            "Phenological status" = "Phenology",
             "Transpiration per ground area" = "PlantTranspiration",
             "Transpiration per leaf area" = "TranspirationPerLeaf",
             "Water balance per ground area" = "PlantWaterBalance",
@@ -342,6 +343,7 @@
   else if(type=="WaterBalancePerLeaf") ylab = expression(paste("Water balance per leaf area ",(L%.%m^{-2})))
   else if(type=="PlantLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="PlantLAIlive") ylab = expression(paste("(Live) leaf area index ",(m^{-2}%.%m^{-2})))
+  else if(type=="Phenology") ylab = "Phenological status"
   else if(type=="AbsorbedSWRPerLeaf") ylab = expression(paste("Absorbed SWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="AbsorbedPARPerLeaf") ylab = expression(paste("Absorbed PAR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="LeafLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
@@ -716,6 +718,38 @@
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
+}
+.mode <- function(x, na.rm = TRUE, ...) {
+  if(na.rm) x <- x[!is.na(x)]
+  freq <- table(x)
+  return(names(freq)[which.max(freq)])
+}
+.plot_plant_phenology<-function(OM,
+                                type,
+                                dates = NULL, 
+                                xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                                summary.freq = NULL, ...) {
+  OM = as.data.frame(OM)
+  OM[OM=="0"] <- "Leaves unfolded"
+  OM[OM=="1"] <- "Bud dormancy"
+  OM[OM=="2"] <- "Leaf senescence"
+  OM[OM=="3"] <- "Bud dormancy / leaf senescence"
+  OM[OM=="4"] <- "Leaf growth"
+  OM[OM=="5"] <- "Leaf growth / bud dormancy"
+  OM[OM=="6"] <- "Leaf growth / leaf senescence"
+  OM[OM=="7"] <- "Leaf growth / leaf senescence / bud dormancy"
+  OM[OM=="8"] <- "Bud formation"
+  OM[OM=="9"] <- "Bud formation / bud dormancy"
+  OM[OM=="10"] <- "Bud formation / leaf senescence"
+  OM[OM=="11"] <- "Leaf growth / bud dormancy / bud formation"
+  OM[OM=="12"] <- "Bud formation / leaf growth"
+  OM[OM=="13"] <- "Bud formation / leaf growth / bud dormancy"
+  OM[OM=="14"] <- "Bud formation / leaf growth / leaf senescence"
+  OM[OM=="15"] <- "Bud formation / leaf growth / leaf senescence / bud dormancy"
+  if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),,drop =FALSE]
+  if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, .mode, na.rm=TRUE)
+  if(is.null(ylab)) ylab = .getYLab(type)
+  return(.multiple_heatmap(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim, legendLabel = "Status"))
 }
 .plot_plant_om<-function(OM, PlantsLAIlive, spnames,
                          type,  bySpecies = FALSE,

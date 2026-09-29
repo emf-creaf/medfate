@@ -1,5 +1,6 @@
 # medfate 5.2.0
 * Revision of leaf phenology and primary growth determinacy
+* Novel plot for leaf phenological status
 * Leaf apoplastic VCs (related to PLC) made explicitly different from whole-leaf VCs (which include symplasmic tissues)
 * Control option 'segmentedXylemVulnerability' removed
 * Update of trait_family_means (avoiding infinite mean values)

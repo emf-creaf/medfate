@@ -138,10 +138,10 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
             x.internalPhenology.leafUnfolding[j] = (x.internalPhenology.phi[j]>0.0);
             x.internalPhenology.leafDormancy[j] = (x.internalPhenology.phi[j]==0.0);
           } else {
-            x.internalPhenology.leafUnfolding[j] = false;
             x.internalPhenology.leafSenescence[j] = false;
             x.internalPhenology.leafDormancy[j] = false;
             if(x.paramsPhenology.growthDeterminacy[j] == "determinate") {
+              x.internalPhenology.leafUnfolding[j] = false;
               x.internalPhenology.budFormation[j] = true;
               if(x.internalPhenology.leafOrganogenesisDuration[j] < x.paramsPhenology.budFormationDays[j]) {
                 x.internalPhenology.leafOrganogenesisDuration[j] = x.internalPhenology.leafOrganogenesisDuration[j] + 1;
@@ -149,6 +149,8 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
                 //Stops bud formation after organogenesis, if finishes before DOY 200
                 x.internalPhenology.budFormation[j] = false;
               }
+            } else { // Plants with intermediate strategy can continue growth
+              x.internalPhenology.leafUnfolding[j] = true;
             }
           }
           // Rcout<<j<< " phi: "<< ph<<"\n";
