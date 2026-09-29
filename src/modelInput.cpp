@@ -988,14 +988,14 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
   IntegerVector leafOrganogenesisDuration(numCohorts, 0);
   LogicalVector leafUnfolding(numCohorts, false);
   LogicalVector leafSenescence(numCohorts, false);
-  LogicalVector leafDormancy(numCohorts, false);
+  LogicalVector budDormancy(numCohorts, false);
   
   DataFrame df = DataFrame::create(Named("gdd") = gdd,
                                    Named("sen") = sen,
                                    Named("budFormation") = budFormation,
+                                   Named("budDormancy") = budDormancy,
                                    Named("leafUnfolding") = leafUnfolding,
                                    Named("leafSenescence") = leafSenescence,
-                                   Named("leafDormancy") = leafDormancy,
                                    Named("leafOrganogenesisDuration") = leafOrganogenesisDuration,
                                    Named("phi") = phi,
                                    Named("phiPrev") = phiPrev);

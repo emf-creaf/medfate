@@ -572,7 +572,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
     outputPlants.Phenology[c] = ((int) x.internalPhenology.budFormation[c])*8 +
       ((int) x.internalPhenology.leafUnfolding[c]*4) + 
       ((int) x.internalPhenology.leafSenescence[c]*2) + 
-      ((int) x.internalPhenology.leafDormancy[c]);
+      ((int) x.internalPhenology.budDormancy[c]);
     outputPlants.FPAR[c] = PARcohort[c];
     outputPlants.AbsorbedSWRFraction[c] = 100.0*CohASWRF[c];
     outputPlants.PlantPsi[c] = PlantPsi[c];

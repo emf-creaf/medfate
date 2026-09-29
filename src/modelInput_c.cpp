@@ -365,7 +365,11 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   }
   internalPhenology.leafUnfolding = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafUnfolding"]);
   internalPhenology.leafSenescence = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafSenescence"]);
-  internalPhenology.leafDormancy = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafDormancy"]);
+  if(internalPhenoDF.containsElementNamed("leafDormancy")) {
+    internalPhenology.budDormancy = Rcpp::as< std::vector<bool> >(internalPhenoDF["leafDormancy"]);
+  } else {
+    internalPhenology.budDormancy = Rcpp::as< std::vector<bool> >(internalPhenoDF["budDormancy"]);
+  }
   internalPhenology.phi = Rcpp::as< std::vector<double> >(internalPhenoDF["phi"]);
   if(internalPhenoDF.containsElementNamed("phiPrev")) {
     internalPhenology.phiPrev = Rcpp::as< std::vector<double> >(internalPhenoDF["phiPrev"]);
@@ -714,7 +718,13 @@ void ModelInput::copyStateToList(Rcpp::List x) {
   Rcpp::LogicalVector budFormation = internalPhenoDF["budFormation"];
   Rcpp::LogicalVector leafUnfolding = internalPhenoDF["leafUnfolding"];
   Rcpp::LogicalVector leafSenescence = internalPhenoDF["leafSenescence"];
-  Rcpp::LogicalVector leafDormancy = internalPhenoDF["leafDormancy"];
+  Rcpp::LogicalVector budDormancy;
+  if(internalPhenoDF.containsElementNamed("leafDormancy")) {
+    budDormancy = internalPhenoDF["leafDormancy"];
+  } else {
+    budDormancy = internalPhenoDF["budDormancy"];
+  }
+  
   Rcpp::NumericVector phi = internalPhenoDF["phi"];
   for(int c = 0;c < numCohorts; c++) {
     gdd[c] = internalPhenology.gdd[c];
@@ -722,7 +732,7 @@ void ModelInput::copyStateToList(Rcpp::List x) {
     budFormation[c] = internalPhenology.budFormation[c];
     leafUnfolding[c] = internalPhenology.leafUnfolding[c];
     leafSenescence[c] = internalPhenology.leafSenescence[c];
-    leafDormancy[c] = internalPhenology.leafDormancy[c];
+    budDormancy[c] = internalPhenology.budDormancy[c];
     phi[c] = internalPhenology.phi[c];
   }
   if(internalPhenoDF.containsElementNamed("leafOrganogenesisDuration")) {

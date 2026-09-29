@@ -1302,6 +1302,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     outputPlants.Phenology[c] = ((int) x.internalPhenology.budFormation[c])*8 +
       ((int) x.internalPhenology.leafUnfolding[c]*4) + 
       ((int) x.internalPhenology.leafSenescence[c]*2) + 
-      ((int) x.internalPhenology.leafDormancy[c]);
+      ((int) x.internalPhenology.budDormancy[c]);
   }
 }

@@ -61,7 +61,7 @@ NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, doubl
 // [[Rcpp::export("pheno_leafSenescenceStatus")]]
 LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
   LogicalVector phe(Ssen.size());
-  for(int i=0;i<Ssen.size();i++) phe[i] = leafSenescenceStatus_c(Ssen[i], sen[i]);
+  for(int i=0;i<Ssen.size();i++) phe[i] = (sen[i] > Ssen[i]);
   return(phe);
 }
 

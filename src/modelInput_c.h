@@ -246,7 +246,7 @@ struct InternalPhenology {
   std::vector<int> leafOrganogenesisDuration;
   std::vector<bool> leafUnfolding;
   std::vector<bool> leafSenescence;
-  std::vector<bool> leafDormancy;
+  std::vector<bool> budDormancy;
   std::vector<double> phi;
   std::vector<double> phiPrev;
 };
