@@ -822,7 +822,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       
       ///// (B4A). LEAF/TWIG PREFORMATION /////
       if(x.internalPhenology.budFormation[j]) {
-        double dailyOrganogenesisEfficiency = rleafturgorcell/rcellmax;
+        double dailyOrganogenesisEfficiency = std::pow(rleafturgorcell/rcellmax, x.control.growth.organogenesisEfficiencyModulator);
         if(x.internalPhenology.leafOrganogenesisDuration[j]==1) {
           x.internalAllocation.leafOrganogenesisEfficiency[j] = dailyOrganogenesisEfficiency;
         } else if (x.internalPhenology.leafOrganogenesisDuration[j]>1) { //Update efficiency average
@@ -868,7 +868,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
               //Do not allow overgrowing beyond LAlive
               deltaLApheno = std::min(deltaLApheno, std::max(LAlive - LAexpanded, 0.0));
               //Account for turgor limitations only to elongation
-              deltaLAsink = deltaLApheno*(rleafturgorcell/rcellmax);
+              deltaLAsink = deltaLApheno*std::pow(rleafturgorcell/rcellmax, x.control.growth.elongationEfficiencyModulator);
               if(!sinkLimitation) deltaLAsink = deltaLApheno;
               // if(j==0) Rcpp::Rcout << "determinate " << deltaLAsink <<"\n"; 
             } 
@@ -991,7 +991,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
             if(x.internalAllocation.leafAreaPreformed[j] > 0.0) {
               if(x.internalPhenology.phi[j] > x.internalPhenology.phiPrev[j]) {
                 deltaLApheno = x.internalAllocation.leafAreaPreformed[j] * (x.internalPhenology.phi[j] - x.internalPhenology.phiPrev[j])*(1.0/((double) ntimesteps));
-                deltaLAsink = deltaLApheno*(rleafturgorcell/rcellmax);
+                deltaLAsink = deltaLApheno*std::pow(rleafturgorcell/rcellmax, x.control.growth.elongationEfficiencyModulator);
                 if(!sinkLimitation) deltaLAsink = deltaLApheno;
               }
             } else if(x.paramsPhenology.growthDeterminacy[j] == "intermediate" || x.paramsPhenology.growthDeterminacy[j] == "indeterminate") { // For intermediate or indeterminate growth species, once leaf area preformed is elongated they can continue growing

@@ -170,6 +170,8 @@ struct GrowthControlParams {
   ConstructionCosts constructionCosts;
   SenescenceRates senescenceRates;
   MaximumRelativeGrowthRates maximumRelativeGrowthRates;
+  double organogenesisEfficiencyModulator;
+  double elongationEfficiencyModulator;
 };
 
 struct MortalityParams {

@@ -157,6 +157,10 @@ ControlParameters::ControlParameters(List x) {
   growth.maximumRelativeGrowthRates.cambium = as<double>(maximumRelativeGrowthRates["cambium"]);
   growth.maximumRelativeGrowthRates.sapwood = as<double>(maximumRelativeGrowthRates["sapwood"]);
   growth.maximumRelativeGrowthRates.fineroot = as<double>(maximumRelativeGrowthRates["fineroot"]);
+  if(x.containsElementNamed("organogenesisEfficiencyModulator")) growth.organogenesisEfficiencyModulator = as<double>(x["organogenesisEfficiencyModulator"]);
+  else growth.organogenesisEfficiencyModulator = 1.0;
+  if(x.containsElementNamed("elongationEfficiencyModulator")) growth.elongationEfficiencyModulator = as<double>(x["elongationEfficiencyModulator"]);
+  else growth.elongationEfficiencyModulator = 1.0;
   
   mortality.mortalityMode = as<std::string>(x["mortalityMode"]);
   mortality.mortalityBaselineRate = as<double>(x["mortalityBaselineRate"]);
