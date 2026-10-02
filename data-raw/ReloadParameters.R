@@ -115,7 +115,7 @@ SpParamsMED <- traits4models::fill_medfate_allometries(SpParamsMED,
                                                        responses = "BarkThickness")
 
 # Manual tuning
-tree_all_cols = 31:43
+tree_all_cols = 34:46
 names(SpParamsMED)[tree_all_cols] # CHECK!
 #Use allometries of A. alba for P. abies
 SpParamsMED[SpParamsMED$Name =="Picea abies",tree_all_cols] = SpParamsMED[SpParamsMED$Name=="Abies alba",tree_all_cols]

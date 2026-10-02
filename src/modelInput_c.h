@@ -64,6 +64,8 @@ struct CanopyParams {
 };
 struct PhenologyParams {
   std::vector<std::string> phenoType;
+  std::vector<std::string> senescencePeriod;
+  std::vector<std::string> growthPeriod;
   std::vector<std::string> growthDeterminacy;
   std::vector<double> leafDuration;
   std::vector<int> budFormationDays;
@@ -76,7 +78,7 @@ struct PhenologyParams {
   std::vector<double> Tbsen;
   std::vector<double> xsen;
   std::vector<double> ysen;
-  
+  std::vector<double> Fsen;
 };
 
 struct InterceptionParams {

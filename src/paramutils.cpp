@@ -1592,6 +1592,17 @@ NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
   }
   return(ysen);
 }
+NumericVector FsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector Fsen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Fsen", fillWithGenus);
+  for(int c=0;c<Fsen.size();c++) {
+    if(NumericVector::is_na(Fsen[c])) {
+      Fsen[c] = 100.0; //
+    }
+  }
+  return(Fsen);
+}
+
 NumericVector seedMassWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector seedMass = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SeedMass", fillWithGenus);
   for(int c=0;c<seedMass.size();c++) {
@@ -1853,6 +1864,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "Tbsen") return(TbsenWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "xsen") return(xsenWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "ysen") return(ysenWithImputation(SP, SpParams, fillWithGenus));
+    else if(parName == "Fsen") return(FsenWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "SeedMass") return(seedMassWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "SeedLongevity") return(seedLongevityWithImputation(SP, SpParams, fillWithGenus));
     else if(parName == "DispersalDistance") return(dispersalDistanceWithImputation(SP, SpParams, fillWithGenus));

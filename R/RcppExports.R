@@ -2769,15 +2769,23 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
 #'       }
 #'     }
-#'     \item{\code{paramsPhenology}: A data frame with leaf phenology parameters:
+#'     \item{\code{paramsPhenology}: A data frame with leaf phenology parameters (some are only relevant for \code{\link{growth}} simulations):
 #'       \itemize{
 #'         \item{\code{PhenologyType}: Leaf phenology type.}
+#'         \item{\code{SenescencePeriod}: Leaf senescence period ("whole-year", "spring" or "autumn").}
+#'         \item{\code{GrowthPeriod}: Leaf growth period ("whole-year" or "spring").}
+#'         \item{\code{GrowthDeterminacy}: Primary growth determinacy type ("determinate", "indeterminate" or "intermediate").}
 #'         \item{\code{LeafDuration}: Leaf duration (in years).}
-#'         \item{\code{Sgdd}: Degree days needed for leaf budburst (for winter decideous species).}
+#'         \item{\code{BudFormationDays}: Number of days required to complete bud formation.}
+#'         \item{\code{t0gdd}: Date to start the accumulation of growth degree days.}
 #'         \item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
-#'         \item{\code{Ssen}: Degree days corresponding to leaf senescence.}
+#'         \item{\code{Sgdd}: Degree days needed for leaf budburst.}
+#'         \item{\code{Ugdd}: Degree days needed to complete leaf unfolding.} 
+#'         \item{\code{Ssen}: Degree days corresponding to leaf senescence (pigment degradation and nutrient translocation).}
 #'         \item{\code{Phsen}: Photoperiod corresponding to start counting senescence degree-days.}
 #'         \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
+#'         \item{\code{xsen, ysen}: Discrete values, to allow for any absent/proportional/more than proportional effects of photoperiod  on senescence.}
+#'         \item{\code{Fsen}: Degree days required to for leaves to be ready for abscission.}
 #'       }
 #'     }
 #'     \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort:

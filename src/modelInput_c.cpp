@@ -158,6 +158,20 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
       }
     }
   }
+  if(phenoDF.containsElementNamed("SenescencePeriod")) paramsPhenology.senescencePeriod = Rcpp::as< std::vector<std::string> >(phenoDF["SenescencePeriod"]);
+  else {
+    paramsPhenology.senescencePeriod = std::vector<std::string>(phenoDF.nrows());
+    for(int c = 0; c < phenoDF.nrows(); c++) {
+      paramsPhenology.senescencePeriod[c] = "autumn";
+    }
+  }
+  if(phenoDF.containsElementNamed("GrowthPeriod")) paramsPhenology.growthPeriod = Rcpp::as< std::vector<std::string> >(phenoDF["GrowthPeriod"]);
+  else {
+    paramsPhenology.growthPeriod = std::vector<std::string>(phenoDF.nrows());
+    for(int c = 0; c < phenoDF.nrows(); c++) {
+      paramsPhenology.growthPeriod[c] = "spring";
+    }
+  }
   paramsPhenology.leafDuration = Rcpp::as< std::vector<double> >(phenoDF["LeafDuration"]);
   if(phenoDF.containsElementNamed("BudFormationDays")) paramsPhenology.budFormationDays = Rcpp::as< std::vector<int> >(phenoDF["BudFormationDays"]);
   else paramsPhenology.budFormationDays = std::vector<int>(phenoDF.nrows(), 20);
@@ -178,7 +192,14 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   paramsPhenology.Tbsen = Rcpp::as< std::vector<double> >(phenoDF["Tbsen"]);
   paramsPhenology.xsen = Rcpp::as< std::vector<double> >(phenoDF["xsen"]);
   paramsPhenology.ysen = Rcpp::as< std::vector<double> >(phenoDF["ysen"]);
-
+  if(phenoDF.containsElementNamed("Fsen")) paramsPhenology.Fsen = Rcpp::as< std::vector<double> >(phenoDF["Fsen"]);
+  else {
+    paramsPhenology.Fsen = std::vector<double>(phenoDF.nrows());
+    for(int c = 0; c < phenoDF.nrows(); c++) {
+      paramsPhenology.Fsen[c] = 100.0;
+    }
+  }
+  
   //Interception parameters
   Rcpp::DataFrame intercDF = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   if(intercDF.containsElementNamed("LeafAngle")) paramsInterception.LeafAngle = Rcpp::as< std::vector<double> >(intercDF["LeafAngle"]);
