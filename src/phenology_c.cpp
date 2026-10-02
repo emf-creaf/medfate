@@ -46,7 +46,7 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
           }
         } else { // After photoperiod has decreased below threshold
           //Address senescence model
-          if(x.internalPhenology.sen[j] <= x.paramsPhenology.Ssen[j]) { 
+          if(x.internalPhenology.sen[j] < (x.paramsPhenology.Ssen[j] + x.paramsPhenology.Fsen[j])) { 
             //Start bud formation for intermediate species if it has not yet occurred
             if(x.paramsPhenology.growthDeterminacy[j] == "intermediate" && !x.internalPhenology.budFormation[j] && x.internalPhenology.leafOrganogenesisDuration[j]==0) {
               x.internalPhenology.budFormation[j] = true;
@@ -57,16 +57,23 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
               rsen = pow(x.paramsPhenology.Tbsen[j]-tmean, x.paramsPhenology.xsen[j])*pow(photoperiod/x.paramsPhenology.Phsen[j], x.paramsPhenology.ysen[j]);
             }
             x.internalPhenology.sen[j] = x.internalPhenology.sen[j] + rsen;
-            bool ecoDormancy = (x.internalPhenology.sen[j] > x.paramsPhenology.Ssen[j]); //Eco-dormancy
+            bool ecoDormancy = (x.internalPhenology.sen[j] >= x.paramsPhenology.Ssen[j]) && (x.internalPhenology.sen[j] < (x.paramsPhenology.Ssen[j] + x.paramsPhenology.Fsen[j])); //Eco-dormancy
+            bool completeAbscission = (x.internalPhenology.sen[j] >= (x.paramsPhenology.Ssen[j] + x.paramsPhenology.Fsen[j])); //Abscission
             if(ecoDormancy) {
               //If para-dormancy was no active then activate eco-dormancy
               if(!x.internalPhenology.budDormancy[j]) x.internalPhenology.budDormancy[j] = true;
               //Sets bud formation to false when dormancy starts
               x.internalPhenology.budFormation[j] = false;
-              x.internalPhenology.phi[j] = 0.0;
-              //Trigger senescence for winter (semi) deciduous
-              if(x.paramsPhenology.phenoType[j] == "winter-deciduous" || x.paramsPhenology.phenoType[j] == "winter-semideciduous") {
+              //Trigger senescence for winter (semi) deciduous and evergreens with autumn senescence
+              if(x.paramsPhenology.senescencePeriod[j]=="autumn") {
+                x.internalPhenology.phi[j] = 1.0 - (x.internalPhenology.sen[j] - x.paramsPhenology.Ssen[j])/x.paramsPhenology.Fsen[j];
+                // Rcpp::Rcout<< "j" <<j << "phi " << x.internalPhenology.phi[j] <<"\n";
                 x.internalPhenology.leafSenescence[j] = true;
+              }
+            } else if(completeAbscission) {
+              if(x.paramsPhenology.senescencePeriod[j]=="autumn") {
+                x.internalPhenology.phi[j] = 0.0;
+                x.internalPhenology.leafSenescence[j] = false;
               }
             }
           } 
@@ -92,7 +99,7 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
           x.internalPhenology.phi[j] = leafDevelopmentStatus_c(x.internalPhenology.gdd[j], x.paramsPhenology.Sgdd[j], x.paramsPhenology.Ugdd[j]);
           // Rcpp::Rcout << " DOY: "<< doy << " GDD: " << x.internalPhenology.gdd[j] << " PHI: " <<x.internalPhenology.phi[j] <<"\n";
           //Force senescence for evergreen (determinate or intermediate) species during leaf elongation 
-          if(x.paramsPhenology.phenoType[j] == "evergreen") {
+          if((x.paramsPhenology.phenoType[j] == "evergreen") && (x.paramsPhenology.senescencePeriod[j]=="spring")) {
             x.internalPhenology.leafSenescence[j] = (x.internalPhenology.phi[j]>0.0 && x.internalPhenology.phi[j]<1.0);
           }
           x.internalPhenology.leafUnfolding[j] = (x.internalPhenology.phi[j]>0.0);
@@ -150,28 +157,61 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
       if(x.paramsPhenology.phenoType[j] == "winter-deciduous" || x.paramsPhenology.phenoType[j] == "winter-semideciduous") {
         if((x.internalPhenology.leafSenescence[j]) && (x.above.LAI_expanded[j]>0.0)) {
           double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
-          x.above.LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
-          x.above.LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased
-          x.internalPhenology.leafSenescence[j] = false;
+          double LAI_exp_new = x.above.LAI_live[j]*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          if(LAI_exp_new < x.above.LAI_expanded[j]) { // Previous drought defoliation may have reduced LAI
+            x.above.LAI_expanded[j] = LAI_exp_new;
+            x.above.LAI_dead[j] += (LAI_exp_prev - x.above.LAI_expanded[j]); 
+          }
         } else {
           if(x.control.defoliation.cavitationInducedDefoliation) {
             double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
-            x.above.LAI_expanded[j] = x.above.LAI_live[j]*std::min(x.internalPhenology.phi[j], 1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50)); //Update expanded leaf area (will decrease if LAI_live decreases)
-            x.above.LAI_dead[j] += std::max(0.0, LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
+            double LAI_exp_new = x.above.LAI_live[j]*std::min(x.internalPhenology.phi[j], 1.0 - 
+                                                              proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], 
+                                                                                             x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
+            x.above.LAI_expanded[j] = LAI_exp_new;
+            if(LAI_exp_new < x.above.LAI_expanded[j]) {
+              x.above.LAI_dead[j] += std::max(0.0, LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
+            }
           } else {
             x.above.LAI_expanded[j] = x.above.LAI_live[j]*x.internalPhenology.phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          }
+        }
+      } else if((x.paramsPhenology.phenoType[j] == "evergreen") && (x.paramsPhenology.senescencePeriod[j]=="autumn") && (x.paramsPhenology.growthPeriod[j]=="spring")) {
+        if(x.internalPhenology.leafSenescence[j] && (x.above.LAI_expanded[j]>0.0)) {
+          double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
+          double LAI_exp_new = x.above.LAI_live[j]*((1.0 - (1.0/x.paramsPhenology.leafDuration[j])) + 
+                                                    (x.internalPhenology.phi[j]/x.paramsPhenology.leafDuration[j])); //Update expanded leaf area (will decrease if LAI_live decreases)
+          if(LAI_exp_new < x.above.LAI_expanded[j]) { // Previous drought defoliation may have reduced LAI
+            x.above.LAI_expanded[j] = LAI_exp_new;
+            x.above.LAI_dead[j] += (LAI_exp_prev - x.above.LAI_expanded[j]); 
+          }
+        } else {
+          if(x.control.defoliation.cavitationInducedDefoliation) {
+            double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
+            double LAI_exp_new = x.above.LAI_live[j]*std::min(1.0 - (1.0/x.paramsPhenology.leafDuration[j]) + (x.internalPhenology.phi[j]/x.paramsPhenology.leafDuration[j]), 
+                                                              1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], 
+                                                                                             x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
+            x.above.LAI_expanded[j] = LAI_exp_new;
+            if(LAI_exp_new < x.above.LAI_expanded[j]) {
+              x.above.LAI_dead[j] += std::max(0.0, LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
+            }
+          } else {
+            x.above.LAI_expanded[j] =x.above.LAI_live[j]*((1.0 - (1.0/x.paramsPhenology.leafDuration[j])) + (x.internalPhenology.phi[j]/x.paramsPhenology.leafDuration[j]));
           }
         }
       } else {
         //Apply defoliation effects to evergreens
         if(x.control.defoliation.cavitationInducedDefoliation) {
           double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
-          x.above.LAI_expanded[j] = x.above.LAI_live[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
-          x.above.LAI_dead[j] += std::max(0.0, LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
+          double LAI_exp_new = x.above.LAI_live[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
+          if(LAI_exp_new < x.above.LAI_expanded[j]) {
+            x.above.LAI_expanded[j] = LAI_exp_new;
+            x.above.LAI_dead[j] += (LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
+          }
         } else {
           x.above.LAI_expanded[j] = x.above.LAI_live[j];
         }
-      } 
+      }
     }
   }    
 }

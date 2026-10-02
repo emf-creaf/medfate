@@ -162,7 +162,11 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
   else {
     paramsPhenology.senescencePeriod = std::vector<std::string>(phenoDF.nrows());
     for(int c = 0; c < phenoDF.nrows(); c++) {
-      paramsPhenology.senescencePeriod[c] = "autumn";
+      if(paramsPhenology.phenoType[c]=="winter-deciduous" || paramsPhenology.phenoType[c]=="winter-deciduous") {
+        paramsPhenology.senescencePeriod[c] = "autumn";
+      } else {
+        paramsPhenology.senescencePeriod[c] = "spring";
+      }
     }
   }
   if(phenoDF.containsElementNamed("GrowthPeriod")) paramsPhenology.growthPeriod = Rcpp::as< std::vector<std::string> >(phenoDF["GrowthPeriod"]);

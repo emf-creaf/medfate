@@ -1597,7 +1597,7 @@ NumericVector FsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
   NumericVector Fsen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Fsen", fillWithGenus);
   for(int c=0;c<Fsen.size();c++) {
     if(NumericVector::is_na(Fsen[c])) {
-      Fsen[c] = 100.0; //
+      Fsen[c] = 1000.0; //
     }
   }
   return(Fsen);

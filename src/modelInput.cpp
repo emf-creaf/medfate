@@ -42,7 +42,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   NumericVector Tbsen  = speciesNumericParameterWithImputation(SP, SpParams, "Tbsen", fillMissingSpParams, fillWithGenus);
   NumericVector xsen  = speciesNumericParameterWithImputation(SP, SpParams, "xsen", fillMissingSpParams, fillWithGenus);
   NumericVector ysen  = speciesNumericParameterWithImputation(SP, SpParams, "ysen", fillMissingSpParams, fillWithGenus);
-  NumericVector Fsen(SP.size(), 100.0);
+  NumericVector Fsen(SP.size(), 1000.0);
   if(SpParams.containsElementNamed("Fsen")) Fsen  = speciesNumericParameterWithImputation(SP, SpParams, "Fsen", fillMissingSpParams, fillWithGenus);
   
   
@@ -74,13 +74,16 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
       //Do not allow flushing all leaves at once (i.e. limit leaf duration to 1.25 yrs)
       leafDuration[j] = std::max(leafDuration[j], 1.25);
       if(CharacterVector::is_na(senescencePeriod[j])) {
-        senescencePeriod[j] = "autumn";
+        senescencePeriod[j] = "spring";
       }
       if(CharacterVector::is_na(growthPeriod[j])) {
         growthPeriod[j] = "spring";
       }
       if(CharacterVector::is_na(growthDeterminacy[j])) {
         growthDeterminacy[j] = "intermediate";
+      }
+      if((senescencePeriod[j]=="autumn") && (growthPeriod[j]=="spring")) {
+        LAI_expanded[j] = LAI_live[j]*(1.0 - (1.0/leafDuration[j]));
       }
     }
   } 
