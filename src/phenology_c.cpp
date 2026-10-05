@@ -71,10 +71,8 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
                 x.internalPhenology.leafSenescence[j] = true;
               }
             } else if(completeAbscission) {
-              if(x.paramsPhenology.senescencePeriod[j]=="autumn") {
-                x.internalPhenology.phi[j] = 0.0;
-                x.internalPhenology.leafSenescence[j] = false;
-              }
+              x.internalPhenology.leafSenescence[j] = true; //This forces remaining senescence
+              x.internalPhenology.phi[j] = 0.0;
             }
           } 
         }
@@ -91,6 +89,7 @@ void updatePhenology_c(ModelInput& x, int doy, double photoperiod, double tmean)
       } else if (doy<=212) {
         x.internalPhenology.sen[j] = 0.0;
         x.internalPhenology.budFormation[j] = false;
+        x.internalPhenology.leafSenescence[j] = false;
         if(doy==212) x.internalPhenology.phi[j] = 1.0; //Force remaining flush
         if(x.internalPhenology.phi[j] < 1.0) {
           //Set GDD if DOY is large enough and temperature is large enough

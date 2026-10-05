@@ -42,7 +42,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   NumericVector Tbsen  = speciesNumericParameterWithImputation(SP, SpParams, "Tbsen", fillMissingSpParams, fillWithGenus);
   NumericVector xsen  = speciesNumericParameterWithImputation(SP, SpParams, "xsen", fillMissingSpParams, fillWithGenus);
   NumericVector ysen  = speciesNumericParameterWithImputation(SP, SpParams, "ysen", fillMissingSpParams, fillWithGenus);
-  NumericVector Fsen(SP.size(), 1000.0);
+  NumericVector Fsen(SP.size(), 4000.0);
   if(SpParams.containsElementNamed("Fsen")) Fsen  = speciesNumericParameterWithImputation(SP, SpParams, "Fsen", fillMissingSpParams, fillWithGenus);
   
   

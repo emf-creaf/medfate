@@ -1100,20 +1100,31 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation)
       if(x.internalPhenology.leafSenescence[j]) {
-        if(x.paramsPhenology.phenoType[j] == "evergreen") {
-          if(x.paramsPhenology.growthDeterminacy[j]=="indeterminate") {
-            propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
-          } else {
-            if(x.internalAllocation.leafAreaSenescence[j] == 0.0) {
-              double maxSenescence = LAexpanded/x.paramsPhenology.leafDuration[j];
-              double alreadyLost = (LAlive - LAexpanded); //If defoliation occurred previously then aging senescence is reduced
-              x.internalAllocation.leafAreaSenescence[j] = std::max(0.0, maxSenescence - alreadyLost);
-            }
-            double leafAreaSenescenceDay = x.internalAllocation.leafAreaSenescence[j]*(x.internalPhenology.phi[j] - x.internalPhenology.phiPrev[j]);
-            propLeafSenescence = std::min(1.0,std::max(0.0, leafAreaSenescenceDay/LAexpanded)); // Fraction of old leaves that die in the current day
-          }  
-        } else {
-          propLeafSenescence = 1.0;
+        if(x.paramsPhenology.senescencePeriod[j]=="whole-year") {
+          propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*x.paramsPhenology.leafDuration[j])));
+        } else if(x.paramsPhenology.senescencePeriod[j]=="autumn") {
+          if(x.internalAllocation.leafAreaSenescence[j] == 0.0) {
+            double maxSenescence;
+            if(x.paramsPhenology.phenoType[j]=="evergreen") maxSenescence = LAexpanded/x.paramsPhenology.leafDuration[j];
+            else maxSenescence  = LAexpanded; //Winter-deciduous
+            double alreadyLost = (LAlive - LAexpanded); //If defoliation occurred previously then aging senescence is reduced
+            x.internalAllocation.leafAreaSenescence[j] = std::max(0.0, maxSenescence - alreadyLost);
+          }
+          double leafAreaSenescenceDay = x.internalAllocation.leafAreaSenescence[j]*(x.internalPhenology.phiPrev[j] - x.internalPhenology.phi[j]);
+          propLeafSenescence = std::min(1.0,std::max(0.0, leafAreaSenescenceDay/LAexpanded)); // Fraction of old leaves that die in the current day
+          if((x.internalPhenology.phi[j]==0.0) && (x.paramsPhenology.phenoType[j]!="evergreen")) propLeafSenescence = 1.0;
+          // if(j==0) Rcpp::Rcout << "phi " << x.internalPhenology.phi[j]<< " propLeafSenescence "<< propLeafSenescence<<"\n";
+        } else { //Senescence in spring for evergreen species
+          if(x.internalAllocation.leafAreaSenescence[j] == 0.0) {
+            double maxSenescence;
+            if(x.paramsPhenology.phenoType[j]=="evergreen") maxSenescence = LAexpanded/x.paramsPhenology.leafDuration[j];
+            else maxSenescence  = LAexpanded; //Winter-deciduous
+            double alreadyLost = (LAlive - LAexpanded); //If defoliation occurred previously then aging senescence is reduced
+            x.internalAllocation.leafAreaSenescence[j] = std::max(0.0, maxSenescence - alreadyLost);
+          }
+          double leafAreaSenescenceDay = x.internalAllocation.leafAreaSenescence[j]*(x.internalPhenology.phi[j] - x.internalPhenology.phiPrev[j]);
+          propLeafSenescence = std::min(1.0,std::max(0.0, leafAreaSenescenceDay/LAexpanded)); // Fraction of old leaves that die in the current day
+          if(x.internalPhenology.phi[j]==1.0) propLeafSenescence = 1.0;
         }
       } else {
         // Set senescence target to zero once senescence period is over
