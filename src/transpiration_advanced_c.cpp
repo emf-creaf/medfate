@@ -1275,7 +1275,6 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     outputPlants.DDS[c] = (1.0 - (outputPlants.dEdP[c]/(sapFluidityDay*x.paramsTranspiration.Plant_kmax[c])));
     if(x.paramsPhenology.phenoType[c] == "winter-deciduous" || x.paramsPhenology.phenoType[c] == "winter-semideciduous") {
       outputPlants.DDS[c] = x.internalPhenology.phi[c]*outputPlants.DDS[c];
-      if(x.internalPhenology.phi[c] == 0.0) outputPlants.DDS[c] = 0.0;
     }
 
     double SAmax = 10e4/x.paramsAnatomy.Al2As[c]; //cm2·m-2 of leaf area

@@ -141,7 +141,6 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
   
   //Internal state variables
-  std::vector<double>& phi = x.internalPhenology.phi;
   std::vector<double>& PlantPsi = x.internalWater.PlantPsi;
   std::vector<double>& StemPLC = x.internalWater.StemPLC;
   std::vector<double>& LeafPLC = x.internalWater.LeafPLC;
@@ -460,7 +459,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
 
     //Daily drought stress from plant WP
     DDS[c] = (1.0 - Psi2K_c(PlantPsi[c],Psi_Extract[c],Exp_Extract[c]));
-    if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = phi[c]*DDS[c];
+    if(phenoType[c] == "winter-deciduous" || phenoType[c] == "winter-semideciduous") DDS[c] = x.internalPhenology.phi[c]*DDS[c];
 
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
     double r = cavitationRecoveryMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);

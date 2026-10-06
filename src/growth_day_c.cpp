@@ -417,30 +417,26 @@ void updateStructuralVariables_c(ModelInput& x,
     }
     for(int j=0;j<numCohorts; j++) {
       if((ctype[j]=="shrub") && N[j]>0.0) {
-        // Current live leaf area
-        double LAlive = LAI_live[j]*(10000.0/N[j]);
-        if(x.internalPhenology.budFormation[j]) {
-          // Update leaf area live according to current sapwood area
-          LAlive = (x.paramsAnatomy.Al2As[j]*SA[j])/10000.0;
-          //Calculates the biomass (kg dry weight) of leaves corresponding to the target leaf area
-          //Correct leaf biomass depending on tree leaf area
-          double Wleaves = LAlive/x.paramsAnatomy.SLA[j];  
-          Wleaves = Wleaves/exp(-0.235*treeLAI); 
-          double PV = pow(Wleaves*x.paramsAnatomy.r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
-          H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
-          // Rcout<< j << " " << Wleaves << " " << PV << " " << H[j]<<"\n";
-          if(H[j]> x.paramsAnatomy.Hmax[j]) { //Limit height (and update the former variables)
-            H[j] = x.paramsAnatomy.Hmax[j];
-            PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
-            Wleaves = (Absh[j]/x.paramsAnatomy.r635[j])*pow(PV, Bbsh[j]); //recalculate Wleaves from phytovolume
-            Wleaves = Wleaves*exp(-0.235*treeLAI); //Correct depending on tree leaf area
-            LAlive = Wleaves * x.paramsAnatomy.SLA[j]; //recalculate leaf area live/target from Wleaves
-          }
-          // Updates shrub cover according to current density and mean height using height-crown area allometry
-          Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); 
-          // Update LAI_live from LAlive and density
-          LAI_live[j] = LAlive*N[j]/10000.0;
+        // Update leaf area live according to current sapwood area
+        double LAlive = (x.paramsAnatomy.Al2As[j]*SA[j])/10000.0;
+        //Calculates the biomass (kg dry weight) of leaves corresponding to the target leaf area
+        //Correct leaf biomass depending on tree leaf area
+        double Wleaves = LAlive/x.paramsAnatomy.SLA[j];  
+        Wleaves = Wleaves/exp(-0.235*treeLAI); 
+        double PV = pow(Wleaves*x.paramsAnatomy.r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
+        H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
+        // Rcout<< j << " " << Wleaves << " " << PV << " " << H[j]<<"\n";
+        if(H[j]> x.paramsAnatomy.Hmax[j]) { //Limit height (and update the former variables)
+          H[j] = x.paramsAnatomy.Hmax[j];
+          PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
+          Wleaves = (Absh[j]/x.paramsAnatomy.r635[j])*pow(PV, Bbsh[j]); //recalculate Wleaves from phytovolume
+          Wleaves = Wleaves*exp(-0.235*treeLAI); //Correct depending on tree leaf area
+          LAlive = Wleaves * x.paramsAnatomy.SLA[j]; //recalculate leaf area live/target from Wleaves
         }
+        // Updates shrub cover according to current density and mean height using height-crown area allometry
+        Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); 
+        // Update LAI_live from LAlive and density
+        LAI_live[j] = LAlive*N[j]/10000.0;
         // Update leaf area target according to LAlive and crown bud percent
         x.internalAllocation.leafAreaTarget[j] = LAlive*(100.0/crownBudPercent[j]);
         //Update LAI without tree competition effect
@@ -470,7 +466,7 @@ void updateStructuralVariables_c(ModelInput& x,
       double LAlive = (LAI_live[j] * 10000.0)/N[j];
       if(x.control.transpirationMode=="Granier") {
         x.internalAllocation.sapwoodAreaTarget[j] = 10000.0*LAlive/x.paramsAnatomy.Al2As[j];
-        x.internalAllocation.fineRootBiomassTarget[j] = (x.paramsAnatomy.Ar2Al[j]*x.internalAllocation.leafAreaTarget[j]*(crownBudPercent[j]/100.0))/(specificRootSurfaceArea_c(x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j])*1e-4);
+        x.internalAllocation.fineRootBiomassTarget[j] = (x.paramsAnatomy.Ar2Al[j]*LAlive)/(specificRootSurfaceArea_c(x.paramsAnatomy.SRL[j], x.paramsAnatomy.FineRootDensity[j])*1e-4);
       } else {
         if(allocationStrategy == "Plant_kmax") {
           x.internalAllocation.sapwoodAreaTarget[j] = 10000.0*(LAlive/x.paramsAnatomy.Al2As[j])*(x.internalAllocation.allocationTarget[j]/x.paramsTranspiration.Plant_kmax[j]);
