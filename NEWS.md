@@ -7,6 +7,7 @@
 * Preformed leaf area in growth
 * Minimum and maximum values added to SpParamsDefinition
 * Day of the year depends on latitude to allow simulations in the southern hemisphere
+* Subdaily LFMC now generated as subdaily output
 
 # medfate 5.1.0
 * Compilation patch for C++ 20
