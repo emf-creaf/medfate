@@ -68,7 +68,7 @@ Rcpp::DataFrame copyPlantAdvancedTranspirationResult_c(const PlantsAdvancedTrans
 struct PlantsAdvancedTranspirationInst_RESULT {
   arma::mat E, Ag, An, dEdP, RootPsi, StemPsi, LeafPsi;
   arma::mat StemSympPsi, LeafSympPsi, StemPLC, LeafPLC, StemRWC, LeafRWC, StemSympRWC, LeafSympRWC;
-  arma::mat PWB;
+  arma::mat LFMC, PWB;
   
   PlantsAdvancedTranspirationInst_RESULT(size_t numCohorts, size_t ntimesteps) : 
     E(numCohorts, ntimesteps),
@@ -86,6 +86,7 @@ struct PlantsAdvancedTranspirationInst_RESULT {
     LeafRWC(numCohorts, ntimesteps),
     StemSympRWC(numCohorts, ntimesteps),
     LeafSympRWC(numCohorts, ntimesteps),
+    LFMC(numCohorts, ntimesteps),
     PWB(numCohorts, ntimesteps) {
     
   }

@@ -24,6 +24,7 @@
 #'   \item{\code{"LeafRWC"}: Relative water content in the leaf.}
 #'   \item{\code{"StemSympRWC"}: (Average) relative water content in the stem symplasm.}
 #'   \item{\code{"LeafSympRWC"}: Relative water content in the leaf symplasm.}
+#'   \item{\code{"LFMC"}: Live fuel moisture content.}
 #'   \item{\code{"SoilPlantConductance"}: Overall soil plant conductance (calculated as the derivative of the supply function).}
 #'   \item{\code{"PlantExtraction"}:  Water extracted from each soil layer.}
 #'   \item{\code{"PlantTranspiration"}: Plant cohort transpiration per ground area.}
@@ -248,6 +249,17 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   }
   else if(type=="LeafSympRWC") {
     OM = PlantsInst$LeafSympRWC*100
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="LFMC") {
+    OM = PlantsInst$LFMC
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")

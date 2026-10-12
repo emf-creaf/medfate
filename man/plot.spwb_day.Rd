@@ -76,6 +76,7 @@ The following plots are available for \code{spwb_day} and \code{pwb_day}:
 \item{\code{"LeafRWC"}: Relative water content in the leaf.}
 \item{\code{"StemSympRWC"}: (Average) relative water content in the stem symplasm.}
 \item{\code{"LeafSympRWC"}: Relative water content in the leaf symplasm.}
+\item{\code{"LFMC"}: Live fuel moisture content.}
 \item{\code{"SoilPlantConductance"}: Overall soil plant conductance (calculated as the derivative of the supply function).}
 \item{\code{"PlantExtraction"}:  Water extracted from each soil layer.}
 \item{\code{"PlantTranspiration"}: Plant cohort transpiration per ground area.}

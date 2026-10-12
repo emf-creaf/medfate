@@ -256,6 +256,7 @@
             "Leaf relative water content" = "LeafRWC",
             "Stem symplastic relative water content" = "StemSympRWC", 
             "Leaf symplastic relative water content" = "LeafSympRWC",
+            "Live fuel moisture content" = "LFMC",
             "Soil-plant conductance" = "SoilPlantConductance",
             "Transpiration per ground area" = "PlantTranspiration", 
             "Transpiration per leaf area" = "TranspirationPerLeaf",
@@ -991,7 +992,7 @@
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("StemPsi", "RootPsi", "LeafSympPsi", "StemSympPsi")) {
+  else if(type %in% c("StemPsi", "RootPsi", "LeafSympPsi", "StemSympPsi", "LFMC")) {
     m = .extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))

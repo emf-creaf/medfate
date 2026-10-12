@@ -76,6 +76,8 @@ Rcpp::List copyPlantAdvancedTranspirationInstResult_c(const PlantsAdvancedTransp
   LeafRWC.attr("dimnames") = List::create(x.cohorts.CohortCode, Rcpp::seq(1,ntimesteps));
   NumericMatrix StemRWC = copyNumericMatrix_c(plants_inst.StemRWC, numCohorts, ntimesteps);
   StemRWC.attr("dimnames") = List::create(x.cohorts.CohortCode, Rcpp::seq(1,ntimesteps));
+  NumericMatrix LFMC = copyNumericMatrix_c(plants_inst.LFMC, numCohorts, ntimesteps);
+  LFMC.attr("dimnames") = List::create(x.cohorts.CohortCode, Rcpp::seq(1,ntimesteps));
   NumericMatrix PWB = copyNumericMatrix_c(plants_inst.PWB, numCohorts, ntimesteps);
   PWB.attr("dimnames") = List::create(x.cohorts.CohortCode, Rcpp::seq(1,ntimesteps));
   
@@ -93,6 +95,7 @@ Rcpp::List copyPlantAdvancedTranspirationInstResult_c(const PlantsAdvancedTransp
     _["LeafRWC"] = LeafRWC,
     _["StemSympRWC"] = StemSympRWC,
     _["LeafSympRWC"] = LeafSympRWC,
+    _["LFMC"] = LFMC,
     _["PWB"] = PWB);
   return(PlantsInst);
 }
@@ -991,6 +994,16 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         outputPlantsInst.LeafSympRWC(c,n) = symplasticRelativeWaterContent_c(x.internalWater.LeafSympPsi[c], x.paramsWaterStorage.LeafPI0[c], x.paramsWaterStorage.LeafEPS[c]);
         outputPlantsInst.StemRWC(c,n) = outputPlantsInst.StemSympRWC(c,n)*(1.0 - x.paramsWaterStorage.StemAF[c]) + (1.0 - x.internalWater.StemPLC[c])*x.paramsWaterStorage.StemAF[c];
         outputPlantsInst.LeafRWC(c,n) = outputPlantsInst.LeafSympRWC(c,n)*(1.0 - x.paramsWaterStorage.LeafAF[c]) + (1.0 - x.internalWater.LeafPLC[c])*x.paramsWaterStorage.LeafAF[c];
+        
+      }
+      
+      // The fraction of leaves will decrease due to phenology or processes leading to defoliation
+      double fleaf = (1.0/x.paramsAnatomy.r635[c])*(LAIphe[c]/LAIlive[c]);
+      if(LAIlive[c]==0.0) fleaf = 0.0;
+      if(lfmcComponent=="fine") { //fine fuel moisture
+        outputPlantsInst.LFMC(c,n) = x.paramsWaterStorage.maxMCleaf[c]*outputPlantsInst.LeafRWC(c,n)*fleaf + x.paramsWaterStorage.maxMCstem[c]*outputPlantsInst.StemRWC(c,n)*(1.0 - fleaf);
+      } else { //"leaf"
+        outputPlantsInst.LFMC(c,n) = x.paramsWaterStorage.maxFMC[c]*outputPlantsInst.LeafRWC(c,n);
       }
     }
 

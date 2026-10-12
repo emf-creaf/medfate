@@ -4,7 +4,7 @@
   shadeTypes = paste("ShadeLeaves",leafTypes, sep="$")
   plantTypes = c("E","Ag","An","dEdP","RootPsi",
                 "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
-                "LeafSympPsi", "StemSympPsi","PWB")
+                "LeafSympPsi", "StemSympPsi", "LFMC", "PWB")
   PWBTYPES = c("PlantLAI","Temperature", "SoilTemperature","CanopyEnergyBalance", "SoilEnergyBalance",
                "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
   CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation", "LabileCarbonBalance",
