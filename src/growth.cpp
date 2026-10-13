@@ -782,7 +782,8 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 //' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
-//' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+//' @param runon A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.
+//' @param waterTableDepth A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //' 
 //' @details
 //' Detailed model description is available in the medfate book. 
@@ -912,7 +913,9 @@ void fillGrowthDailyOutput_c(List l, ModelInput& x, GROWTH_RESULT& sDay, int ida
 // [[Rcpp::export("growth")]]
 List growth(List x, DataFrame meteo, double latitude, 
             double elevation, double slope = NA_REAL, double aspect = NA_REAL,
-            NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
+            NumericVector CO2ByYear = NumericVector(0), 
+            NumericVector runon = NumericVector(0),
+            NumericVector waterTableDepth = NumericVector(0)) {
   
   //Clone input
   x = clone(x);
@@ -1020,6 +1023,26 @@ List growth(List x, DataFrame meteo, double latitude,
     if(verbose) {
       Rcout<<"Julian day taken from input column 'JulianDay'\n";
     }
+  }
+  
+  
+  if(runon.size()==0) {
+    runon = NumericVector(numDays, 0.0);
+  } else if(runon.size()==1) {
+    double runon1 = runon[0];
+    runon = NumericVector(numDays, runon1);
+  } else if(runon.size()!=numDays) {
+    stop("Input vector 'runon' should be of size 1 or equal to the number of rows in 'meteo'");
+  }
+  
+  
+  if(waterTableDepth.size()==0) {
+    waterTableDepth = NumericVector(numDays, NA_REAL);
+  } else if(waterTableDepth.size()==1) {
+    double waterTableDepth1 = waterTableDepth[0];
+    waterTableDepth = NumericVector(numDays, waterTableDepth1);
+  } else if(waterTableDepth.size()!=numDays) {
+    stop("Input vector 'waterTableDepth' should be of size 1 or equal to the number of rows in 'meteo'");
   }
   
   // Dates
@@ -1193,7 +1216,7 @@ List growth(List x, DataFrame meteo, double latitude,
                             meteovec, 
                             latitude, elevation, slope, aspect,
                             solarConstant, delta, 
-                            0.0, lateralFlows, waterTableDepth);
+                            runon[i], lateralFlows, waterTableDepth[i]);
         fillGrowthDailyOutput_c(outputList, x_c, BGROWTHres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
@@ -1230,7 +1253,7 @@ List growth(List x, DataFrame meteo, double latitude,
                             meteovec, 
                             latitude, elevation, slope, aspect,
                             solarConstant, delta, 
-                            0.0, lateralFlows, waterTableDepth);
+                            runon[i], lateralFlows, waterTableDepth[i]);
         fillGrowthDailyOutput_c(outputList, x_c, AGROWTHres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";

@@ -285,9 +285,9 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
 //' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
-//' @param runon Surface water amount running on the target area from upslope (in mm).
+//' @param runon A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.
 //' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
-//' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+//' @param waterTableDepth A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 //' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //'   
@@ -321,7 +321,8 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
 // [[Rcpp::export("aspwb")]]
 List aspwb(List x, DataFrame meteo, double latitude, 
            double elevation, double slope = NA_REAL, double aspect = NA_REAL, 
-           double waterTableDepth = NA_REAL) {
+           NumericVector runon = NumericVector(0),
+           NumericVector waterTableDepth = NumericVector(0)) {
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
@@ -402,6 +403,26 @@ List aspwb(List x, DataFrame meteo, double latitude,
     if(verbose) {
       Rcout<<"Julian day taken from input column 'JulianDay'\n";
     }
+  }
+  
+  
+  if(runon.size()==0) {
+    runon = NumericVector(numDays, 0.0);
+  } else if(runon.size()==1) {
+    double runon1 = runon[0];
+    runon = NumericVector(numDays, runon1);
+  } else if(runon.size()!=numDays) {
+    stop("Input vector 'runon' should be of size 1 or equal to the number of rows in 'meteo'");
+  }
+  
+  
+  if(waterTableDepth.size()==0) {
+    waterTableDepth = NumericVector(numDays, NA_REAL);
+  } else if(waterTableDepth.size()==1) {
+    double waterTableDepth1 = waterTableDepth[0];
+    waterTableDepth = NumericVector(numDays, waterTableDepth1);
+  } else if(waterTableDepth.size()!=numDays) {
+    stop("Input vector 'waterTableDepth' should be of size 1 or equal to the number of rows in 'meteo'");
   }
   
   CharacterVector dateStrings = getWeatherDates(meteo);
@@ -493,8 +514,8 @@ List aspwb(List x, DataFrame meteo, double latitude,
       aspwbDay_c(AgrWBres, WBcomm.AgrWBcomm, x_c, 
                  meteovec, 
                  elevation, slope, aspect,
-                 0.0, 
-                 lateralFlows, waterTableDepth);
+                 runon[i], 
+                 lateralFlows, waterTableDepth[i]);
       //Fill output list      
       fillASPWBDailyOutput_c(outputList, x_c, AgrWBres,i);
     } catch(std::exception& ex) {

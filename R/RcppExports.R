@@ -33,9 +33,9 @@ aspwbInput <- function(crop_factor, control, soil) {
 #' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
-#' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param runon A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.
 #' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
-#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+#' @param waterTableDepth A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 #' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #'   
@@ -66,8 +66,8 @@ aspwbInput <- function(crop_factor, control, soil) {
 #' 
 #' @name aspwb
 #' @keywords internal
-aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, waterTableDepth = NA_real_) {
-    .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect, waterTableDepth)
+aspwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, runon = numeric(0), waterTableDepth = numeric(0)) {
+    .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect, runon, waterTableDepth)
 }
 
 #' Physical and biophysical utility functions
@@ -1301,7 +1301,8 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOff
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
-#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+#' @param runon A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.
+#' @param waterTableDepth A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' 
 #' @details
 #' Detailed model description is available in the medfate book. 
@@ -1428,8 +1429,8 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), loadingOff
 #' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #' }
 #'       
-growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
-    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
+growth <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), runon = numeric(0), waterTableDepth = numeric(0)) {
+    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, runon, waterTableDepth)
 }
 
 #' Single-day forest growth
@@ -3928,7 +3929,8 @@ soil_temperatureGradient <- function(gradTemp, widths, Temp) {
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 #' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
-#' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+#' @param runon A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.
+#' @param waterTableDepth A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' 
 #' @details 
 #' Detailed model description is available in the medfate book. 
@@ -4157,8 +4159,8 @@ soil_temperatureGradient <- function(gradTemp, widths, Temp) {
 #' }
 #'                 
 #' @name spwb
-spwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), waterTableDepth = NA_real_) {
-    .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, waterTableDepth)
+spwb <- function(x, meteo, latitude, elevation, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0), runon = numeric(0), waterTableDepth = numeric(0)) {
+    .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear, runon, waterTableDepth)
 }
 
 #' Plant water balance
@@ -4223,7 +4225,7 @@ pwb <- function(x, meteo, W, latitude, elevation, slope = NA_real_, aspect = NA_
 #' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
-#' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param runon Surface water amount running on the target area from upslope (in mm). Conceptually, runon can also represent an irrigation term.
 #' @param lateralFlows Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.
 #' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.

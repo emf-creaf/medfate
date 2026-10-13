@@ -29,7 +29,7 @@ spwb_day(
 
 \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
-\item{runon}{Surface water amount running on the target area from upslope (in mm).}
+\item{runon}{Surface water amount running on the target area from upslope (in mm). Conceptually, runon can also represent an irrigation term.}
 
 \item{lateralFlows}{Lateral source/sink terms for each soil layer (interflow/to from adjacent locations) as mm/day.}
 

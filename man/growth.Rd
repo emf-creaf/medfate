@@ -12,7 +12,8 @@ growth(
   slope = NA_real_,
   aspect = NA_real_,
   CO2ByYear = numeric(0),
-  waterTableDepth = NA_real_
+  runon = numeric(0),
+  waterTableDepth = numeric(0)
 )
 }
 \arguments{
@@ -26,7 +27,9 @@ growth(
 
 \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).}
 
-\item{waterTableDepth}{Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
+\item{runon}{A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.}
+
+\item{waterTableDepth}{A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.}
 }
 \value{
 Function \code{growth} returns a list of class 'growth'. Since lists are difficult to handle, we recommend using

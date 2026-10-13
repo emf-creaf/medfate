@@ -8,6 +8,7 @@
 * Minimum and maximum values added to SpParamsDefinition
 * Day of the year depends on latitude to allow simulations in the southern hemisphere
 * Subdaily LFMC now generated as subdaily output
+* Functions spwb, growth and aspwb now accept a temporal series of runon and waterTableDepth
 
 # medfate 5.1.0
 * Compilation patch for C++ 20

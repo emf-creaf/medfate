@@ -108,17 +108,17 @@ namespace medfate {
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
     }
 
-    inline List aspwb(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, double waterTableDepth = NA_REAL) {
-        typedef SEXP(*Ptr_aspwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline List aspwb(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, NumericVector runon = NumericVector(0), NumericVector waterTableDepth = NumericVector(0)) {
+        typedef SEXP(*Ptr_aspwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_aspwb p_aspwb = NULL;
         if (p_aspwb == NULL) {
-            validateSignature("List(*aspwb)(List,DataFrame,double,double,double,double,double)");
+            validateSignature("List(*aspwb)(List,DataFrame,double,double,double,double,NumericVector,NumericVector)");
             p_aspwb = (Ptr_aspwb)R_GetCCallable("medfate", "_medfate_aspwb");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_aspwb(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
+            rcpp_result_gen = p_aspwb(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -191,17 +191,17 @@ namespace medfate {
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
     }
 
-    inline List growth(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
-        typedef SEXP(*Ptr_growth)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline List growth(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, NumericVector CO2ByYear = NumericVector(0), NumericVector runon = NumericVector(0), NumericVector waterTableDepth = NumericVector(0)) {
+        typedef SEXP(*Ptr_growth)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_growth p_growth = NULL;
         if (p_growth == NULL) {
-            validateSignature("List(*growth)(List,DataFrame,double,double,double,double,NumericVector,double)");
+            validateSignature("List(*growth)(List,DataFrame,double,double,double,double,NumericVector,NumericVector,NumericVector)");
             p_growth = (Ptr_growth)R_GetCCallable("medfate", "_medfate_growth");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_growth(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
+            rcpp_result_gen = p_growth(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -1154,17 +1154,17 @@ namespace medfate {
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
     }
 
-    inline List spwb(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
-        typedef SEXP(*Ptr_spwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline List spwb(List x, DataFrame meteo, double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL, NumericVector CO2ByYear = NumericVector(0), NumericVector runon = NumericVector(0), NumericVector waterTableDepth = NumericVector(0)) {
+        typedef SEXP(*Ptr_spwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_spwb p_spwb = NULL;
         if (p_spwb == NULL) {
-            validateSignature("List(*spwb)(List,DataFrame,double,double,double,double,NumericVector,double)");
+            validateSignature("List(*spwb)(List,DataFrame,double,double,double,double,NumericVector,NumericVector,NumericVector)");
             p_spwb = (Ptr_spwb)R_GetCCallable("medfate", "_medfate_spwb");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_spwb(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
+            rcpp_result_gen = p_spwb(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(waterTableDepth)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

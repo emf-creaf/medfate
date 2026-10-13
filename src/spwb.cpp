@@ -184,14 +184,14 @@ DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String tran
   
   NumericVector PET(numDays), Precipitation(numDays), Evapotranspiration(numDays);
   NumericVector Runoff(numDays),Rain(numDays),Snow(numDays);
-  NumericVector Snowmelt(numDays),NetRain(numDays);
+  NumericVector Snowmelt(numDays),Runon(numDays),NetRain(numDays);
   NumericVector Interception(numDays),Infiltration(numDays), InfiltrationExcess(numDays), DeepDrainage(numDays), SaturationExcess(numDays), CapillarityRise(numDays);
   NumericVector SoilEvaporation(numDays), HerbTranspiration(numDays), Transpiration(numDays),MistletoeTranspiration(numDays),PlantExtraction(numDays);
   NumericVector HydraulicRedistribution(numDays, 0.0);
   
   DataFrame DWB = DataFrame::create(_["PET"]=PET, 
                           _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
-                          _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration,
+                          _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Runon"] = Runon, _["Infiltration"]=Infiltration,
                           _["InfiltrationExcess"] = InfiltrationExcess, _["SaturationExcess"] = SaturationExcess, _["Runoff"]=Runoff, 
                           _["DeepDrainage"]=DeepDrainage, _["CapillarityRise"] = CapillarityRise,
                           _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, 
@@ -583,7 +583,8 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   NumericVector Rain = DWB["Rain"];
   NumericVector Snow = DWB["Snow"];
   NumericVector Snowmelt = DWB["Snowmelt"];
-
+  NumericVector Runon = DWB["Runon"];
+  
   
   NumericVector NetRain = DWB["NetRain"];
   NumericVector PlantExtraction = DWB["PlantExtraction"];
@@ -604,6 +605,7 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   Precipitation[iday] = Rain[iday]+Snow[iday];
   PET[iday] = db["PET"];
   Snowmelt[iday] = db["Snowmelt"];
+  Runon[iday] = db["Runon"];
   NetRain[iday] = db["NetRain"];
   PlantExtraction[iday] = db["PlantExtraction"];
   NumericVector HydraulicRedistribution = DWB["HydraulicRedistribution"];
@@ -628,6 +630,7 @@ void fillWaterBalanceDailyOutput_c(DataFrame DWB, StandWB_RESULT& db, int iday) 
   NumericVector Rain = DWB["Rain"];
   NumericVector Snow = DWB["Snow"];
   NumericVector Snowmelt = DWB["Snowmelt"];
+  NumericVector Runon = DWB["Runon"];
   NumericVector NetRain = DWB["NetRain"];
   NumericVector PlantExtraction = DWB["PlantExtraction"];
   NumericVector Transpiration = DWB["Transpiration"];
@@ -649,6 +652,7 @@ void fillWaterBalanceDailyOutput_c(DataFrame DWB, StandWB_RESULT& db, int iday) 
   Precipitation[iday] = Rain[iday]+Snow[iday];
   PET[iday] = db.PET;
   Snowmelt[iday] = db.Snowmelt;
+  Runon[iday] = db.Runon;
   NetRain[iday] = db.NetRain;
   PlantExtraction[iday] = db.PlantExtraction;
   HydraulicRedistribution[iday] = db.HydraulicRedistribution;
@@ -1504,6 +1508,7 @@ void printWaterBalanceResult(List outputList, List x,
   NumericVector Rain = DWB["Rain"];
   NumericVector Snow = DWB["Snow"];
   NumericVector Snowmelt = DWB["Snowmelt"];
+  NumericVector Runon = DWB["Runon"];
   NumericVector NetRain = DWB["NetRain"];
   NumericVector PlantExtraction = DWB["PlantExtraction"];
   NumericVector Transpiration = DWB["Transpiration"];
@@ -1530,6 +1535,7 @@ void printWaterBalanceResult(List outputList, List x,
   double Transpirationsum = sum(Transpiration);
   double MistletoeTranspirationsum = sum(MistletoeTranspiration);
   double Snowmeltsum = sum(Snowmelt);
+  double Runonsum = sum(Runon);
   double Snowsum = sum(Snow);
   double HerbTranspirationsum = sum(HerbTranspiration);
   
@@ -1545,7 +1551,7 @@ void printWaterBalanceResult(List outputList, List x,
   Rcout<<"Snowpack water balance result (mm): "<< snowpack_wb<<"\n";
   Rcout<<"Water balance components:\n";
   Rcout<<"  Precipitation (mm) "  <<round(Precipitationsum) << " Rain (mm) "  <<round(Rainfallsum) <<" Snow (mm) "  <<round(Snowsum) <<"\n";
-  Rcout<<"  Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
+  Rcout<<"  Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<" Runon (mm) " << round(Runonsum) <<"\n";
   Rcout<<"  Infiltration (mm) " << round(Infiltrationsum)  << " Infiltration excess (mm) " << round(InfiltrationExcesssum) << " Saturation excess (mm) " << round(SaturationExcesssum) << " Capillarity rise (mm) " << round(CapillarityRisesum)  <<"\n";
   Rcout<<"  Soil evaporation (mm) " << round(SoilEvaporationsum);
   Rcout<<"  Herbaceous transpiration (mm) " << round(HerbTranspirationsum);
@@ -1590,7 +1596,8 @@ void printWaterBalanceResult(List outputList, List x,
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 //' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
-//' @param waterTableDepth Water table depth (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
+//' @param runon A single value or a vector (with length equal to the number of rows in meteo) of daily runon values (in mm). Conceptually, runon can also represent an irrigation term.
+//' @param waterTableDepth A single value or a vector (with length equal to the number of rows in meteo) of daily water table depth values (in mm). When not missing, capillarity rise will be allowed if lower than total soil depth.
 //' 
 //' @details 
 //' Detailed model description is available in the medfate book. 
@@ -1822,7 +1829,9 @@ void printWaterBalanceResult(List outputList, List x,
 // [[Rcpp::export("spwb")]]
 List spwb(List x, DataFrame meteo, 
           double latitude, double elevation, double slope = NA_REAL, double aspect = NA_REAL,
-          NumericVector CO2ByYear = NumericVector(0), double waterTableDepth = NA_REAL) {
+          NumericVector CO2ByYear = NumericVector(0), 
+          NumericVector runon = NumericVector(0),
+          NumericVector waterTableDepth = NumericVector(0)) {
   
   //Clone input
   x = clone(x);
@@ -1928,6 +1937,26 @@ List spwb(List x, DataFrame meteo,
     if(verbose) {
       Rcout<<"Julian day taken from input column 'JulianDay'\n";
     }
+  }
+  
+  
+  if(runon.size()==0) {
+    runon = NumericVector(numDays, 0.0);
+  } else if(runon.size()==1) {
+    double runon1 = runon[0];
+    runon = NumericVector(numDays, runon1);
+  } else if(runon.size()!=numDays) {
+    stop("Input vector 'runon' should be of size 1 or equal to the number of rows in 'meteo'");
+  }
+  
+  
+  if(waterTableDepth.size()==0) {
+    waterTableDepth = NumericVector(numDays, NA_REAL);
+  } else if(waterTableDepth.size()==1) {
+    double waterTableDepth1 = waterTableDepth[0];
+    waterTableDepth = NumericVector(numDays, waterTableDepth1);
+  } else if(waterTableDepth.size()!=numDays) {
+    stop("Input vector 'waterTableDepth' should be of size 1 or equal to the number of rows in 'meteo'");
   }
   
   // Dates
@@ -2112,7 +2141,7 @@ List spwb(List x, DataFrame meteo,
         spwbDay_basic_c(BSPWBres, WBcomm.BSPWBcomm, x_c, 
                         meteovec, 
                         elevation, slope, aspect,
-                        0.0, lateralFlows, waterTableDepth);
+                        runon[i], lateralFlows, waterTableDepth[i]);
         fillSPWBDailyOutput_c(outputList, x_c, BSPWBres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
@@ -2149,8 +2178,8 @@ List spwb(List x, DataFrame meteo,
                            meteovec, 
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
-                           0.0, 
-                           lateralFlows, waterTableDepth);
+                           runon[i], 
+                           lateralFlows, waterTableDepth[i]);
         fillSPWBDailyOutput_c(outputList, x_c, ASPWBres ,i);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
