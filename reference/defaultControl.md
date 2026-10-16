@@ -173,9 +173,6 @@ A list, with the following options (default values in brackets):
     simulation of plant transpiration assuming that soil water is always
     at field capacity.
 
-  - `unfoldingDD [= 300]`: Degree-days for complete leaf unfolding after
-    budburst has occurred.
-
   - `interceptionMode [= "Gash1995"]`: Infiltration model, either
     "Gash1995" or "Liu2001".
 
@@ -210,16 +207,9 @@ A list, with the following options (default values in brackets):
   - `windMeasurementHeight [= 200]`: Height (in cm) over the canopy
     corresponding to wind measurements.
 
-  - `segmentedXylemVulnerability [= TRUE/FALSE]`: If `FALSE` leaf and
-    root vulnerability curves will be equal to those of stem. By
-    default, `segmentedXylemVulnerability = TRUE` for
-    `transpirationMode = "Sperry"` and
-    `segmentedXylemVulnerability = FALSE` for
-    `transpirationMode = "Sureau"`.
-
-  - `leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]`: A
-    flag indicating whether cavitation effects on conductance of leaves
-    and stem are applied. Only relevant for
+  - `leafCavitationEffects, stemCavitationEffects [= TRUE/TRUE]`: A flag
+    indicating whether cavitation effects on conductance of leaf
+    apoplasm and stem are applied. Only relevant for
     `transpirationMode = "Sperry"`.
 
   - `leafCavitationRecovery, stemCavitationRecovery [= "rate"]`: A
@@ -275,13 +265,20 @@ A list, with the following options (default values in brackets):
   - `defoliationParams`: A list with the following elements:
 
     - `cavitationInducedDefoliation [= TRUE]`: Whether leaf hydraulic
-      impairment induces defoliation.
+      impairment induces defoliation (and bud senescence in the growth
+      model).
 
-    - `criticalLeafPLC [= 0.88]`: Level of PLC (a proportion)
+    - `criticalLeafPLC [= 0.50]`: Level of PLC (a proportion)
       corresponding to 50 % crown defoliation.
 
+    - `criticalBudPLC [= 0.88]`: Level of PLC (a proportion)
+      corresponding to 50 % crown bud senescence.
+
     - `cvLeafP50 [= 10.0]`: Coefficient of variation (in percent) of
-      leaf P50 within crown leaves.
+      leaf P50 within crown.
+
+    - `cvBudP50 [= 10.0]`: Coefficient of variation (in percent) of bud
+      P50 within crown.
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
@@ -458,13 +455,19 @@ A list, with the following options (default values in brackets):
     equivalent to 9%, 5% and 50% annual turnover for gymnosperm sapwood,
     angiosperm sapwood and fine roots, respectively.
 
-  - `maximumRelativeGrowthRates [= c(leaf = 0.09, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]`:
+  - `maximumRelativeGrowthRates [= c(leaf = 0.05, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]`:
     Default maximum relative growth rates for leaves (m2 leaf ·cm-2
     sapwood· day-1), tree sapwood (cm2 sapwood· cm-1 cambium · day-1),
     shrub sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g
     dw · g dw -1 · day -1) when not specified via SpParams
     (`RGRleafmax`, `RGRcambiummax` , `RGRsapwoodmax` and
     `RGRfinerootmax`, respectively).
+
+  - `organogenesisEfficiencyModulator [= 1]`: Exponent relating
+    turgor-related relative growth rate with organogenesis efficiency.
+
+  - `elongationEfficiencyModulator [= 1]`: Exponent relating
+    turgor-related relative growth rate with leaf elongation efficiency.
 
   - `mortalityMode [= "density/deterministic"]`: String describing how
     mortality is applied. Current accepted values are combinations of

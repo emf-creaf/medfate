@@ -93,25 +93,50 @@ function
   - `RhizoPsi`: A matrix with the water potential around the rhizosphere
     of each cohort (in rows) in each soil layer (in columns).
 
-- `paramsPhenology`: A data frame with leaf phenology parameters:
+- `paramsPhenology`: A data frame with leaf phenology parameters (some
+  are only relevant for
+  [`growth`](https://emf-creaf.github.io/medfate/reference/growth.md)
+  simulations):
 
   - `PhenologyType`: Leaf phenology type.
 
+  - `SenescencePeriod`: Leaf senescence period ("whole-year", "spring"
+    or "autumn").
+
+  - `GrowthPeriod`: Leaf growth period ("whole-year" or "spring").
+
+  - `GrowthDeterminacy`: Primary growth determinacy type ("determinate",
+    "indeterminate" or "intermediate").
+
   - `LeafDuration`: Leaf duration (in years).
 
-  - `Sgdd`: Degree days needed for leaf budburst (for winter decideous
-    species).
+  - `BudFormationDays`: Number of days required to complete bud
+    formation.
+
+  - `t0gdd`: Date to start the accumulation of growth degree days.
 
   - `Tbgdd`: Base temperature for the calculation of degree days to leaf
     budburst.
 
-  - `Ssen`: Degree days corresponding to leaf senescence.
+  - `Sgdd`: Degree days needed for leaf budburst.
+
+  - `Ugdd`: Degree days needed to complete leaf unfolding.
+
+  - `Ssen`: Degree days corresponding to leaf senescence (pigment
+    degradation and nutrient translocation).
 
   - `Phsen`: Photoperiod corresponding to start counting senescence
     degree-days.
 
   - `Tbsen`: Base temperature for the calculation of degree days to leaf
     senescence.
+
+  - `xsen, ysen`: Discrete values, to allow for any
+    absent/proportional/more than proportional effects of photoperiod on
+    senescence.
+
+  - `Fsen`: Degree days required to for leaves to be ready for
+    abscission.
 
 - `paramsAnatomy`: A data frame with plant anatomy parameters for each
   cohort:
@@ -424,17 +449,28 @@ same elements as `spwbInput`, but with additional information.
 
   - `allocationTarget`: Value of the allocation target variable.
 
-  - `leafAreaTarget`: Target leaf area (m2) per individual.
+  - `leafAreaTarget`: Target leaf area (m2) per individual, assuming a
+    fully-developed crown.
 
-  - `leafAreaPreformed`: Preformed (in buds) leaf area (m2) per
-    individual.
+  - `leafOrganogenesisEfficiency`: For species with separated phases of
+    leaf organogenesis and leaf expansion, proportion of the target leaf
+    area that is preformed in buds, after accounting for crown bud
+    availability and environmental effects in organogenesis.
+
+  - `leafAreaPreformed`: For species with separated phases of leaf
+    organogenesis and expansion, preformed (in buds) leaf area (m2) per
+    individual, to be expanded.
+
+  - `leafAreaSenescence`: Leaf area (m2) that is programmed to enter
+    senescence.
 
   - `sapwoodAreaTarget`: Target sapwood area (cm2) per individual.
 
   - `fineRootBiomassTarget`: Target fine root biomass (g dry) per
     individual.
 
-  - `crownBudPercent`: Percentage of the crown with buds.
+  - `crownBudPercent`: Percentage of the crown with buds available,
+    related to availability of branches and dormant buds.
 
 - `internalCarbon`: A data frame with the concentration (mol·gluc·l-1)
   of metabolic and storage carbon compartments for leaves and sapwood.
@@ -611,17 +647,11 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $control$infiltrationCorrection
 #> [1] 5
 #> 
-#> $control$unfoldingDD
-#> [1] 300
-#> 
 #> $control$verticalLayerSize
 #> [1] 100
 #> 
 #> $control$windMeasurementHeight
 #> [1] 200
-#> 
-#> $control$segmentedXylemVulnerability
-#> [1] TRUE
 #> 
 #> $control$stemCavitationRecovery
 #> [1] "rate"
@@ -669,9 +699,15 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$defoliationParams$criticalLeafPLC
+#> [1] 0.5
+#> 
+#> $control$defoliationParams$criticalBudPLC
 #> [1] 0.88
 #> 
 #> $control$defoliationParams$cvLeafP50
+#> [1] 10
+#> 
+#> $control$defoliationParams$cvBudP50
 #> [1] 10
 #> 
 #> 
@@ -738,7 +774,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $control$leafCavitationEffects
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $control$stemCavitationEffects
 #> [1] TRUE
@@ -838,7 +874,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 
 #> $control$maximumRelativeGrowthRates
 #> $control$maximumRelativeGrowthRates$leaf
-#> [1] 0.09
+#> [1] 0.05
 #> 
 #> $control$maximumRelativeGrowthRates$cambium
 #> [1] 0.0025
@@ -849,6 +885,12 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> $control$maximumRelativeGrowthRates$fineroot
 #> [1] 0.1
 #> 
+#> 
+#> $control$organogenesisEfficiencyModulator
+#> [1] 1
+#> 
+#> $control$elongationEfficiencyModulator
+#> [1] 1
 #> 
 #> $control$mortalityMode
 #> [1] "density/deterministic"
@@ -1061,14 +1103,18 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd Sgdd Tbgdd Ssen Phsen Tbsen xsen
-#> T1_158 oneflush-evergreen     2.083333    50  200     0 8268  12.5  28.5    2
-#> T2_179 oneflush-evergreen     2.000000    50  200     0 8268  12.5  28.5    2
-#> S1_176 oneflush-evergreen     1.341667    50  200     0 8268  12.5  28.5    2
-#>        ysen
-#> T1_158    2
-#> T2_179    2
-#> S1_176    2
+#>        PhenologyType SenescencePeriod GrowthPeriod GrowthDeterminacy
+#> T1_158     evergreen           spring       spring      intermediate
+#> T2_179     evergreen           spring       spring      intermediate
+#> S1_176     evergreen           spring       spring      intermediate
+#>        LeafDuration BudFormationDays t0gdd Tbgdd Sgdd Ugdd Ssen Phsen Tbsen
+#> T1_158     2.083333               20    50     0  200  300 8268  12.5  28.5
+#> T2_179     2.000000               20    50     0  200  300 8268  12.5  28.5
+#> S1_176     1.341667               20    50     0  200  300 8268  12.5  28.5
+#>        xsen ysen Fsen
+#> T1_158    2    2 4000
+#> T2_179    2    2 4000
+#> S1_176    2    2 4000
 #> 
 #> $paramsAnatomy
 #>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity
@@ -1087,14 +1133,14 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> S1_176 0.55 0.4074074 0.5
 #> 
 #> $paramsTranspiration
-#>              Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract VCleaf_c
-#> T1_158 0.0006655459 0.1869849 -0.008372458  -0.9218219    1.504542 4.412593
-#> T2_179 0.0028095533 0.1251027 -0.005601615  -1.9726871    1.149052 4.412593
-#> S1_176 0.0104552469 0.1340000 -0.006000000  -1.5755945    1.300000 4.412593
-#>         VCleaf_d VCstem_c  VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
-#> T1_158 -2.107019 5.760425 -5.477666 8.525550 0.5239136 0.002586327 -0.2647169
-#> T2_179 -3.803127 8.087529 -7.198963 8.968208 0.1412266 0.002413091 -0.5664879
-#> S1_176 -3.284789 3.071843 -7.887063 7.900000 0.3643000 0.002757000 -0.4636000
+#>              Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract VCleafapo_c
+#> T1_158 0.0006655459 0.1869849 -0.008372458  -0.9218219    1.504542    5.760425
+#> T2_179 0.0028095533 0.1251027 -0.005601615  -1.9726871    1.149052    8.087529
+#> S1_176 0.0104552469 0.1340000 -0.006000000  -1.5755945    1.300000    3.071843
+#>        VCleafapo_d VCstem_c  VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
+#> T1_158   -5.477666 5.760425 -5.477666 8.525550 0.5239136 0.002586327 -0.2647169
+#> T2_179   -7.198963 8.087529 -7.198963 8.968208 0.1412266 0.002413091 -0.5664879
+#> S1_176   -7.887063 3.071843 -7.887063 7.900000 0.3643000 0.002757000 -0.4636000
 #> 
 #> $paramsWaterStorage
 #>           maxFMC maxMCleaf maxMCstem   LeafPI0  LeafEPS    LeafAF     Vleaf
@@ -1107,14 +1153,14 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 0.3874813
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
-#>        leafOrganogenesisDuration phi
-#> T1_158                         0   0
-#> T2_179                         0   0
-#> S1_176                         0   0
+#>        gdd sen budFormation budDormancy leafUnfolding leafSenescence
+#> T1_158   0   0        FALSE       FALSE         FALSE          FALSE
+#> T2_179   0   0        FALSE       FALSE         FALSE          FALSE
+#> S1_176   0   0        FALSE       FALSE         FALSE          FALSE
+#>        leafOrganogenesisDuration phi phiPrev
+#> T1_158                         0   0       0
+#> T2_179                         0   0       0
+#> S1_176                         0   0       0
 #> 
 #> $internalWater
 #>        PlantPsi LeafPLC StemPLC
@@ -1264,7 +1310,7 @@ spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.1"
+#> [1] "5.2.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -1384,17 +1430,11 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$infiltrationCorrection
 #> [1] 5
 #> 
-#> $control$unfoldingDD
-#> [1] 300
-#> 
 #> $control$verticalLayerSize
 #> [1] 100
 #> 
 #> $control$windMeasurementHeight
 #> [1] 200
-#> 
-#> $control$segmentedXylemVulnerability
-#> [1] TRUE
 #> 
 #> $control$stemCavitationRecovery
 #> [1] "rate"
@@ -1442,9 +1482,15 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$defoliationParams$criticalLeafPLC
+#> [1] 0.5
+#> 
+#> $control$defoliationParams$criticalBudPLC
 #> [1] 0.88
 #> 
 #> $control$defoliationParams$cvLeafP50
+#> [1] 10
+#> 
+#> $control$defoliationParams$cvBudP50
 #> [1] 10
 #> 
 #> 
@@ -1511,7 +1557,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $control$leafCavitationEffects
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $control$stemCavitationEffects
 #> [1] TRUE
@@ -1611,7 +1657,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> $control$maximumRelativeGrowthRates
 #> $control$maximumRelativeGrowthRates$leaf
-#> [1] 0.09
+#> [1] 0.05
 #> 
 #> $control$maximumRelativeGrowthRates$cambium
 #> [1] 0.0025
@@ -1622,6 +1668,12 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$maximumRelativeGrowthRates$fineroot
 #> [1] 0.1
 #> 
+#> 
+#> $control$organogenesisEfficiencyModulator
+#> [1] 1
+#> 
+#> $control$elongationEfficiencyModulator
+#> [1] 1
 #> 
 #> $control$mortalityMode
 #> [1] "density/deterministic"
@@ -1852,14 +1904,18 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd Sgdd Tbgdd Ssen Phsen Tbsen xsen
-#> T1_158 oneflush-evergreen     2.083333    50  200     0 8268  12.5  28.5    2
-#> T2_179 oneflush-evergreen     2.000000    50  200     0 8268  12.5  28.5    2
-#> S1_176 oneflush-evergreen     1.341667    50  200     0 8268  12.5  28.5    2
-#>        ysen
-#> T1_158    2
-#> T2_179    2
-#> S1_176    2
+#>        PhenologyType SenescencePeriod GrowthPeriod GrowthDeterminacy
+#> T1_158     evergreen           spring       spring      intermediate
+#> T2_179     evergreen           spring       spring      intermediate
+#> S1_176     evergreen           spring       spring      intermediate
+#>        LeafDuration BudFormationDays t0gdd Tbgdd Sgdd Ugdd Ssen Phsen Tbsen
+#> T1_158     2.083333               20    50     0  200  300 8268  12.5  28.5
+#> T2_179     2.000000               20    50     0  200  300 8268  12.5  28.5
+#> S1_176     1.341667               20    50     0  200  300 8268  12.5  28.5
+#>        xsen ysen Fsen
+#> T1_158    2    2 4000
+#> T2_179    2    2 4000
+#> S1_176    2    2 4000
 #> 
 #> $paramsAnatomy
 #>        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity
@@ -1886,22 +1942,26 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> T1_158 0.0006655459 0.04554533 69.30208 119.93960      0.4152667       1.661067
 #> T2_179 0.0028095533 0.21575000 39.44837  93.30728      0.8268000       3.307200
 #> S1_176 0.0104552469 0.17847825 58.79590 104.34879      0.2900000       1.160000
-#>        VCleaf_kmax VCleafapo_kmax VCleaf_slope VCleaf_P50 VCleaf_c  VCleaf_d
-#> T1_158    1.261346             NA     74.72896  -1.939080 4.412593 -2.107019
-#> T2_179    5.334302             NA     41.40155  -3.500000 4.412593 -3.803127
-#> S1_176    2.191344             NA     47.93469  -3.022976 4.412593 -3.284789
-#>        kleaf_symp VCstem_kmax VCstem_slope VCstem_P50 VCstem_c  VCstem_d
-#> T1_158         NA    2.423697     43.65232      -5.14 5.760425 -5.477666
-#> T2_179         NA   11.288633     21.11111      -6.88 8.087529 -7.198963
-#> S1_176         NA    7.473393     12.20615      -7.00 3.071843 -7.887063
-#>        VCroot_kmax VCroot_slope VCroot_P50 VCroot_c   VCroot_d VGrhizo_kmax
-#> T1_158    3.466961    102.98940     -0.880 3.193046 -0.9870361      4538581
-#> T2_179    3.792592     11.52311     -2.390 1.036296 -3.4040609    199111395
-#> S1_176    3.497202     16.46463     -4.389 2.469094 -5.0913431    109959756
-#>        Plant_kmax   FR_leaf   FR_stem   FR_root
-#> T1_158  0.6694187 0.5307175 0.2761973 0.1930852
-#> T2_179  1.8528039 0.3473376 0.1641301 0.4885323
-#> S1_176  1.1414327 0.5208826 0.1527329 0.3263846
+#>        VCleaf_kmax VCleaf_slope VCleaf_P50 VCleaf_c  VCleaf_d VCleafapo_kmax
+#> T1_158    1.261346     74.72896  -1.939080 4.412593 -2.107019             NA
+#> T2_179    5.334302     41.40155  -3.500000 4.412593 -3.803127             NA
+#> S1_176    2.191344     47.93469  -3.022976 4.412593 -3.284789             NA
+#>        VCleafapo_slope VCleafapo_P50 VCleafapo_c VCleafapo_d kleaf_symp
+#> T1_158        43.65232         -5.14    5.760425   -5.477666         NA
+#> T2_179        21.11111         -6.88    8.087529   -7.198963         NA
+#> S1_176        12.20615         -7.00    3.071843   -7.887063         NA
+#>        VCstem_kmax VCstem_slope VCstem_P50 VCstem_c  VCstem_d VCroot_kmax
+#> T1_158    2.423697     43.65232      -5.14 5.760425 -5.477666    3.466961
+#> T2_179   11.288633     21.11111      -6.88 8.087529 -7.198963    3.792592
+#> S1_176    7.473393     12.20615      -7.00 3.071843 -7.887063    3.497202
+#>        VCroot_slope VCroot_P50 VCroot_c   VCroot_d VGrhizo_kmax Plant_kmax
+#> T1_158    102.98940     -0.880 3.193046 -0.9870361      4538581  0.6694187
+#> T2_179     11.52311     -2.390 1.036296 -3.4040609    199111395  1.8528039
+#> S1_176     16.46463     -4.389 2.469094 -5.0913431    109959756  1.1414327
+#>          FR_leaf   FR_stem   FR_root
+#> T1_158 0.5307175 0.2761973 0.1930852
+#> T2_179 0.3473376 0.1641301 0.4885323
+#> S1_176 0.5208826 0.1527329 0.3263846
 #> 
 #> $paramsWaterStorage
 #>           maxFMC maxMCleaf maxMCstem   LeafPI0  LeafEPS    LeafAF     Vleaf
@@ -1914,14 +1974,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 3.649952
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
-#>        leafOrganogenesisDuration phi
-#> T1_158                         0   0
-#> T2_179                         0   0
-#> S1_176                         0   0
+#>        gdd sen budFormation budDormancy leafUnfolding leafSenescence
+#> T1_158   0   0        FALSE       FALSE         FALSE          FALSE
+#> T2_179   0   0        FALSE       FALSE         FALSE          FALSE
+#> S1_176   0   0        FALSE       FALSE         FALSE          FALSE
+#>        leafOrganogenesisDuration phi phiPrev
+#> T1_158                         0   0       0
+#> T2_179                         0   0       0
+#> S1_176                         0   0       0
 #> 
 #> $internalWater
 #>        Einst Emist RootCrownPsi LeafPsi StemPsi LeafSympPsi StemSympPsi LeafPLC
@@ -2075,7 +2135,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.1"
+#> [1] "5.2.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -2195,17 +2255,11 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$infiltrationCorrection
 #> [1] 5
 #> 
-#> $control$unfoldingDD
-#> [1] 300
-#> 
 #> $control$verticalLayerSize
 #> [1] 100
 #> 
 #> $control$windMeasurementHeight
 #> [1] 200
-#> 
-#> $control$segmentedXylemVulnerability
-#> [1] FALSE
 #> 
 #> $control$stemCavitationRecovery
 #> [1] "rate"
@@ -2253,9 +2307,15 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$defoliationParams$criticalLeafPLC
+#> [1] 0.5
+#> 
+#> $control$defoliationParams$criticalBudPLC
 #> [1] 0.88
 #> 
 #> $control$defoliationParams$cvLeafP50
+#> [1] 10
+#> 
+#> $control$defoliationParams$cvBudP50
 #> [1] 10
 #> 
 #> 
@@ -2322,7 +2382,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $control$leafCavitationEffects
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $control$stemCavitationEffects
 #> [1] TRUE
@@ -2422,7 +2482,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> $control$maximumRelativeGrowthRates
 #> $control$maximumRelativeGrowthRates$leaf
-#> [1] 0.09
+#> [1] 0.05
 #> 
 #> $control$maximumRelativeGrowthRates$cambium
 #> [1] 0.0025
@@ -2433,6 +2493,12 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> $control$maximumRelativeGrowthRates$fineroot
 #> [1] 0.1
 #> 
+#> 
+#> $control$organogenesisEfficiencyModulator
+#> [1] 1
+#> 
+#> $control$elongationEfficiencyModulator
+#> [1] 1
 #> 
 #> $control$mortalityMode
 #> [1] "density/deterministic"
@@ -2618,10 +2684,10 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_176  1907.898 1779.971 2349.397 4300.342
 #> 
 #> $belowLayers$VGrhizo_kmax
-#>                1         2          3           4
-#> T1_158  21553222   1091688   40255.76    6311.503
-#> T2_179 114793085 103265271 9315610.19 1801845.304
-#> S1_176  88793115  35751768 4658629.02 1376928.653
+#>                1          2          3           4
+#> T1_158  18725764   948475.4   34974.81    5483.529
+#> T2_179 109536327 98536409.7 8889017.34 1719332.800
+#> S1_176  77144796 31061674.1 4047487.03 1196296.345
 #> 
 #> $belowLayers$VCroot_kmax
 #>               1         2           3            4
@@ -2663,14 +2729,18 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd Sgdd Tbgdd Ssen Phsen Tbsen xsen
-#> T1_158 oneflush-evergreen     2.083333    50  200     0 8268  12.5  28.5    2
-#> T2_179 oneflush-evergreen     2.000000    50  200     0 8268  12.5  28.5    2
-#> S1_176 oneflush-evergreen     1.341667    50  200     0 8268  12.5  28.5    2
-#>        ysen
-#> T1_158    2
-#> T2_179    2
-#> S1_176    2
+#>        PhenologyType SenescencePeriod GrowthPeriod GrowthDeterminacy
+#> T1_158     evergreen           spring       spring      intermediate
+#> T2_179     evergreen           spring       spring      intermediate
+#> S1_176     evergreen           spring       spring      intermediate
+#>        LeafDuration BudFormationDays t0gdd Tbgdd Sgdd Ugdd Ssen Phsen Tbsen
+#> T1_158     2.083333               20    50     0  200  300 8268  12.5  28.5
+#> T2_179     2.000000               20    50     0  200  300 8268  12.5  28.5
+#> S1_176     1.341667               20    50     0  200  300 8268  12.5  28.5
+#>        xsen ysen Fsen
+#> T1_158    2    2 4000
+#> T2_179    2    2 4000
+#> S1_176    2    2 4000
 #> 
 #> $paramsAnatomy
 #>        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity
@@ -2701,22 +2771,26 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> T1_158            65.39617 69.30208 119.93960      0.4152667       1.661067
 #> T2_179            46.23551 39.44837  93.30728      0.8268000       3.307200
 #> S1_176            47.03891 58.79590 104.34879      0.2900000       1.160000
-#>        VCleaf_kmax VCleafapo_kmax VCleaf_slope VCleaf_P50 VCleaf_c  VCleaf_d
-#> T1_158    1.261346       2.522693     43.65232      -5.14 5.760425 -5.477666
-#> T2_179    5.334302      10.668605     21.11111      -6.88 8.087529 -7.198963
-#> S1_176    2.191344       4.382687     12.20615      -7.00 3.071843 -7.887063
-#>        kleaf_symp VCstem_kmax VCstem_slope VCstem_P50 VCstem_c  VCstem_d
-#> T1_158   2.522693    2.423697     43.65232      -5.14 5.760425 -5.477666
-#> T2_179  10.668605   11.288633     21.11111      -6.88 8.087529 -7.198963
-#> S1_176   4.382687    7.473393     12.20615      -7.00 3.071843 -7.887063
-#>        kstem_symp VCroot_kmax VCroot_slope VCroot_P50 VCroot_c  VCroot_d
-#> T1_158       0.26    3.466961     43.65232      -5.14 5.760425 -5.477666
-#> T2_179       0.26    3.792592     21.11111      -6.88 8.087529 -7.198963
-#> S1_176       0.26    3.497202     12.20615      -7.00 3.071843 -7.887063
-#>        VGrhizo_kmax Plant_kmax   FR_leaf   FR_stem   FR_root
-#> T1_158     22691478  0.6694187 0.5307175 0.2761973 0.1930852
-#> T2_179    229175811  1.8528039 0.3473376 0.1641301 0.4885323
-#> S1_176    130580441  1.1414327 0.5208826 0.1527329 0.3263846
+#>        VCleaf_kmax VCleaf_slope VCleaf_P50 VCleaf_c  VCleaf_d VCleafapo_kmax
+#> T1_158    1.261346     74.72896  -1.939080 4.412593 -2.107019       2.522693
+#> T2_179    5.334302     41.40155  -3.500000 4.412593 -3.803127      10.668605
+#> S1_176    2.191344     47.93469  -3.022976 4.412593 -3.284789       4.382687
+#>        VCleafapo_slope VCleafapo_P50 VCleafapo_c VCleafapo_d kleaf_symp
+#> T1_158        43.65232         -5.14    5.760425   -5.477666   2.522693
+#> T2_179        21.11111         -6.88    8.087529   -7.198963  10.668605
+#> S1_176        12.20615         -7.00    3.071843   -7.887063   4.382687
+#>        VCstem_kmax VCstem_slope VCstem_P50 VCstem_c  VCstem_d kstem_symp
+#> T1_158    2.423697     43.65232      -5.14 5.760425 -5.477666       0.26
+#> T2_179   11.288633     21.11111      -6.88 8.087529 -7.198963       0.26
+#> S1_176    7.473393     12.20615      -7.00 3.071843 -7.887063       0.26
+#>        VCroot_kmax VCroot_slope VCroot_P50 VCroot_c  VCroot_d VGrhizo_kmax
+#> T1_158    3.466961     43.65232      -5.14 5.760425 -5.477666     19714698
+#> T2_179    3.792592     21.11111      -6.88 8.087529 -7.198963    218681086
+#> S1_176    3.497202     12.20615      -7.00 3.071843 -7.887063    113450253
+#>        Plant_kmax   FR_leaf   FR_stem   FR_root
+#> T1_158  0.6694187 0.5307175 0.2761973 0.1930852
+#> T2_179  1.8528039 0.3473376 0.1641301 0.4885323
+#> S1_176  1.1414327 0.5208826 0.1527329 0.3263846
 #> 
 #> $paramsWaterStorage
 #>           maxFMC maxMCleaf maxMCstem   LeafPI0  LeafEPS    LeafAF     Vleaf
@@ -2729,14 +2803,14 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 3.649952
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
-#>        leafOrganogenesisDuration phi
-#> T1_158                         0   0
-#> T2_179                         0   0
-#> S1_176                         0   0
+#>        gdd sen budFormation budDormancy leafUnfolding leafSenescence
+#> T1_158   0   0        FALSE       FALSE         FALSE          FALSE
+#> T2_179   0   0        FALSE       FALSE         FALSE          FALSE
+#> S1_176   0   0        FALSE       FALSE         FALSE          FALSE
+#>        leafOrganogenesisDuration phi phiPrev
+#> T1_158                         0   0       0
+#> T2_179                         0   0       0
+#> S1_176                         0   0       0
 #> 
 #> $internalWater
 #>        Einst Emist Elim Emin_L Emin_S RootCrownPsi LeafPsi StemPsi LeafSympPsi
@@ -2890,7 +2964,7 @@ spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.1"
+#> [1] "5.2.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     
@@ -3011,17 +3085,11 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$infiltrationCorrection
 #> [1] 5
 #> 
-#> $control$unfoldingDD
-#> [1] 300
-#> 
 #> $control$verticalLayerSize
 #> [1] 100
 #> 
 #> $control$windMeasurementHeight
 #> [1] 200
-#> 
-#> $control$segmentedXylemVulnerability
-#> [1] TRUE
 #> 
 #> $control$stemCavitationRecovery
 #> [1] "rate"
@@ -3069,9 +3137,15 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> [1] TRUE
 #> 
 #> $control$defoliationParams$criticalLeafPLC
+#> [1] 0.5
+#> 
+#> $control$defoliationParams$criticalBudPLC
 #> [1] 0.88
 #> 
 #> $control$defoliationParams$cvLeafP50
+#> [1] 10
+#> 
+#> $control$defoliationParams$cvBudP50
 #> [1] 10
 #> 
 #> 
@@ -3138,7 +3212,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $control$leafCavitationEffects
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $control$stemCavitationEffects
 #> [1] TRUE
@@ -3238,7 +3312,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> 
 #> $control$maximumRelativeGrowthRates
 #> $control$maximumRelativeGrowthRates$leaf
-#> [1] 0.09
+#> [1] 0.05
 #> 
 #> $control$maximumRelativeGrowthRates$cambium
 #> [1] 0.0025
@@ -3249,6 +3323,12 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> $control$maximumRelativeGrowthRates$fineroot
 #> [1] 0.1
 #> 
+#> 
+#> $control$organogenesisEfficiencyModulator
+#> [1] 1
+#> 
+#> $control$elongationEfficiencyModulator
+#> [1] 1
 #> 
 #> $control$mortalityMode
 #> [1] "density/deterministic"
@@ -3461,14 +3541,18 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> 
 #> 
 #> $paramsPhenology
-#>             PhenologyType LeafDuration t0gdd Sgdd Tbgdd Ssen Phsen Tbsen xsen
-#> T1_158 oneflush-evergreen     2.083333    50  200     0 8268  12.5  28.5    2
-#> T2_179 oneflush-evergreen     2.000000    50  200     0 8268  12.5  28.5    2
-#> S1_176 oneflush-evergreen     1.341667    50  200     0 8268  12.5  28.5    2
-#>        ysen
-#> T1_158    2
-#> T2_179    2
-#> S1_176    2
+#>        PhenologyType SenescencePeriod GrowthPeriod GrowthDeterminacy
+#> T1_158     evergreen           spring       spring      intermediate
+#> T2_179     evergreen           spring       spring      intermediate
+#> S1_176     evergreen           spring       spring      intermediate
+#>        LeafDuration BudFormationDays t0gdd Tbgdd Sgdd Ugdd Ssen Phsen Tbsen
+#> T1_158     2.083333               20    50     0  200  300 8268  12.5  28.5
+#> T2_179     2.000000               20    50     0  200  300 8268  12.5  28.5
+#> S1_176     1.341667               20    50     0  200  300 8268  12.5  28.5
+#>        xsen ysen Fsen
+#> T1_158    2    2 4000
+#> T2_179    2    2 4000
+#> S1_176    2    2 4000
 #> 
 #> $paramsAnatomy
 #>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity
@@ -3487,14 +3571,14 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> S1_176 0.55 0.4074074 0.5
 #> 
 #> $paramsTranspiration
-#>              Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract VCleaf_c
-#> T1_158 0.0006655459 0.1869849 -0.008372458  -0.9218219    1.504542 4.412593
-#> T2_179 0.0028095533 0.1251027 -0.005601615  -1.9726871    1.149052 4.412593
-#> S1_176 0.0104552469 0.1340000 -0.006000000  -1.5755945    1.300000 4.412593
-#>         VCleaf_d VCstem_c  VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
-#> T1_158 -2.107019 5.760425 -5.477666 8.525550 0.5239136 0.002586327 -0.2647169
-#> T2_179 -3.803127 8.087529 -7.198963 8.968208 0.1412266 0.002413091 -0.5664879
-#> S1_176 -3.284789 3.071843 -7.887063 7.900000 0.3643000 0.002757000 -0.4636000
+#>              Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract VCleafapo_c
+#> T1_158 0.0006655459 0.1869849 -0.008372458  -0.9218219    1.504542    5.760425
+#> T2_179 0.0028095533 0.1251027 -0.005601615  -1.9726871    1.149052    8.087529
+#> S1_176 0.0104552469 0.1340000 -0.006000000  -1.5755945    1.300000    3.071843
+#>        VCleafapo_d VCstem_c  VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd
+#> T1_158   -5.477666 5.760425 -5.477666 8.525550 0.5239136 0.002586327 -0.2647169
+#> T2_179   -7.198963 8.087529 -7.198963 8.968208 0.1412266 0.002413091 -0.5664879
+#> S1_176   -7.887063 3.071843 -7.887063 7.900000 0.3643000 0.002757000 -0.4636000
 #> 
 #> $paramsWaterStorage
 #>           maxFMC maxMCleaf maxMCstem   LeafPI0  LeafEPS    LeafAF     Vleaf
@@ -3507,14 +3591,14 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> S1_176 -2.5168 22.41056 0.6263370 0.3874813
 #> 
 #> $internalPhenology
-#>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy
-#> T1_158   0   0        FALSE         FALSE          FALSE        FALSE
-#> T2_179   0   0        FALSE         FALSE          FALSE        FALSE
-#> S1_176   0   0        FALSE         FALSE          FALSE        FALSE
-#>        leafOrganogenesisDuration phi
-#> T1_158                         0   0
-#> T2_179                         0   0
-#> S1_176                         0   0
+#>        gdd sen budFormation budDormancy leafUnfolding leafSenescence
+#> T1_158   0   0        FALSE       FALSE         FALSE          FALSE
+#> T2_179   0   0        FALSE       FALSE         FALSE          FALSE
+#> S1_176   0   0        FALSE       FALSE         FALSE          FALSE
+#>        leafOrganogenesisDuration phi phiPrev
+#> T1_158                         0   0       0
+#> T2_179                         0   0       0
+#> S1_176                         0   0       0
 #> 
 #> $internalWater
 #>        PlantPsi LeafPLC StemPLC
@@ -3664,7 +3748,7 @@ spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #> data frame with 0 columns and 0 rows
 #> 
 #> $version
-#> [1] "5.1.1"
+#> [1] "5.2.0"
 #> 
 #> attr(,"class")
 #> [1] "spwbInput" "list"     

@@ -310,8 +310,8 @@ oef<-optimization_evaluation_function(parNames = parNames,
 
 # Loglikelihood for the values of the parameter matrix
 oef(parMatrix[1, ])
-#> [1] 956.6937
+#> [1] 966.6513
 oef(parMatrix)
-#> [1] 956.6937 927.1568
+#> [1] 966.6513 935.3681
 # }
 ```

@@ -27,7 +27,7 @@ package and the example forest data:
 library(medfate)
 ```
 
-    ## Package 'medfate' [ver. 5.1.1]
+    ## Package 'medfate' [ver. 5.2.0]
 
 ``` r
 
@@ -109,7 +109,7 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
     ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 79 Net rainfall (mm) 383
+    ##   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
     ##   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
     ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
     ##   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
@@ -301,7 +301,7 @@ of_transp(parMin)
 of_transp(parMax)
 ```
 
-    ## [1] 327.2962
+    ## [1] 327.6971
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -338,7 +338,7 @@ of_stress(parMin)
 of_stress(parMax)
 ```
 
-    ## [1] 32.87273
+    ## [1] 33.15621
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -352,20 +352,20 @@ data(exampleobs)
 head(exampleobs)
 ```
 
-    ##        dates       SWC       ETR   E_T1_158    E_T2_179 FMC_T1_158 FMC_T2_179
-    ## 1 2001-01-01 0.3010337 1.8426955 0.19717729 0.056892949   121.9043   109.1904
-    ## 2 2001-01-02 0.2975154 2.1814795 0.31506176 0.264666121   121.6966   109.4922
-    ## 3 2001-01-03 0.2906191 0.8284561 0.24035527 0.084024904   122.4953   109.1267
-    ## 4 2001-01-04 0.3057732 1.5276181 0.09572414 0.004180956   121.6448   108.0847
-    ## 5 2001-01-05 0.3083098 1.9739996 0.26268082 0.253231549   122.2123   109.4637
-    ## 6 2001-01-06 0.3015072 1.8901251 0.30566987 0.152838903   122.1231   108.5011
+    ##        dates       SWC       ETR   E_T1_158  E_T2_179 FMC_T1_158 FMC_T2_179
+    ## 1 2001-01-01 0.3016244 1.9474160 0.07394303 0.1822289   122.0455   109.1398
+    ## 2 2001-01-02 0.3040070 1.9651707 0.35351052 0.1962037   121.9423   109.0370
+    ## 3 2001-01-03 0.3031827 0.7190161 0.21687296 0.1250338   121.9851   109.2762
+    ## 4 2001-01-04 0.3046733 1.5775066 0.10947125 0.1828698   122.0633   108.7878
+    ## 5 2001-01-05 0.2998204 1.7896973 0.25503207 0.1672164   122.0393   109.1758
+    ## 6 2001-01-06 0.2967922 1.9895665 0.18644647 0.1326796   121.9381   109.1323
     ##     BAI_T1_158   BAI_T2_179    DI_T1_158    DI_T2_179
-    ## 1 2.659656e-06 0.000000e+00 4.886300e-08 0.000000e+00
+    ## 1 1.312317e-05 0.000000e+00 1.082987e-07 0.000000e+00
     ## 2 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-    ## 3 1.961974e-13 4.217944e-14 0.000000e+00 2.341613e-15
-    ## 4 1.691142e-11 1.523420e-11 6.548002e-13 9.205072e-13
-    ## 5 2.430537e-03 8.255776e-04 2.345584e-05 2.755643e-05
-    ## 6 8.413923e-04 3.895132e-04 1.093742e-05 1.099504e-05
+    ## 3 1.448968e-13 5.770858e-14 0.000000e+00 1.705665e-15
+    ## 4 2.662335e-11 1.322628e-11 2.698039e-13 4.199475e-13
+    ## 5 1.662930e-03 5.140984e-04 1.811618e-05 2.245547e-05
+    ## 6 8.502825e-04 3.013046e-04 2.762166e-05 1.864255e-05
 
 where soil water content dynamics is in column `SWC`. The model fit to
 observed data can be measured using the Nash-Sutcliffe coefficient,
@@ -378,7 +378,7 @@ evaluation_metric(S1, measuredData = exampleobs, type = "SWC",
                   metric = "NSE")
 ```
 
-    ## [1] 0.9346522
+    ## [1] 0.9276811
 
 A call to
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md)
@@ -406,14 +406,14 @@ results, so that we only need to provide values for the input factors:
 of_eval(parMin)
 ```
 
-    ## [1] 0.4269419
+    ## [1] 0.4288197
 
 ``` r
 
 of_eval(parMax)
 ```
 
-    ## [1] -9.324562
+    ## [1] -9.550698
 
 ### Global sensitivity analyses
 

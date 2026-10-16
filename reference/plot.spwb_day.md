@@ -112,6 +112,8 @@ The following plots are available for `spwb_day` and `pwb_day`:
 
 - `"LeafSympRWC"`: Relative water content in the leaf symplasm.
 
+- `"LFMC"`: Live fuel moisture content.
+
 - `"SoilPlantConductance"`: Overall soil plant conductance (calculated
   as the derivative of the supply function).
 

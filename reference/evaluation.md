@@ -289,7 +289,7 @@ S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 79 Net rainfall (mm) 383
+#>   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
 #>   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
 #>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
 #>   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
@@ -301,13 +301,13 @@ data(exampleobs)
 #Evaluation statistics for soil water content
 evaluation_stats(S1, exampleobs)
 #>             n          Bias      Bias.rel           MAE       MAE.rel 
-#> 365.000000000  -0.001966536  -0.709610458   0.005739439   2.071035630 
+#> 365.000000000  -0.001314795  -0.475552878   0.005860409   2.119671714 
 #>             r           NSE       NSE.abs 
-#>   0.969936906   0.934652153   0.717878024 
+#>   0.966757978   0.927681121   0.702358870 
 
 #NSE only
 evaluation_metric(S1, exampleobs, metric="NSE")
-#> [1] 0.9346522
+#> [1] 0.9276811
 
 #Comparison of temporal dynamics
 evaluation_plot(S1, exampleobs)
@@ -315,6 +315,6 @@ evaluation_plot(S1, exampleobs)
 
 #Loglikelihood value
 evaluation_metric(S1, exampleobs)
-#> [1] 960.2376
+#> [1] 970.073
 # }
 ```

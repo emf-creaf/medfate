@@ -60,11 +60,9 @@ needed.
   `usethis::create_from_github("emf-creaf/medfate", fork = TRUE)`.
 
 - Install all development dependences with
-  [`devtools::install_dev_deps()`](https://devtools.r-lib.org/reference/install_deps.html),
-  and then make sure the package passes R CMD check by running
-  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html).
-  If R CMD check doesn’t pass cleanly, it’s a good idea to ask for help
-  before continuing.
+  `devtools::install_dev_deps()`, and then make sure the package passes
+  R CMD check by running `devtools::check()`. If R CMD check doesn’t
+  pass cleanly, it’s a good idea to ask for help before continuing.
 
 - Create a Git branch for your pull request (PR). We recommend using
   `usethis::pr_init("brief-description-of-change")`.

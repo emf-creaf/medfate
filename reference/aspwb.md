@@ -16,7 +16,8 @@ aspwb(
   elevation,
   slope = NA_real_,
   aspect = NA_real_,
-  waterTableDepth = NA_real_
+  runon = numeric(0),
+  waterTableDepth = numeric(0)
 )
 
 aspwb_day(
@@ -69,6 +70,12 @@ aspwb_day(
   Elevation above sea level (in m), slope (in degrees) and aspect (in
   degrees from North).
 
+- runon:
+
+  A single value or a vector (with length equal to the number of rows in
+  meteo) of daily runon values (in mm). Conceptually, runon can also
+  represent an irrigation term.
+
 - waterTableDepth:
 
   Water table depth (in mm). When not missing, capillarity rise will be
@@ -83,10 +90,6 @@ aspwb_day(
   A named numerical vector with weather data. See variable names in
   parameter `meteo` of
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md).
-
-- runon:
-
-  Surface water amount running on the target area from upslope (in mm).
 
 - lateralFlows:
 

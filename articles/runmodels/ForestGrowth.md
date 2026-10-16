@@ -213,9 +213,9 @@ x$paramsGrowth
     ## T2_179 0.012589729   5.15e-05 0.007229920  1.430      1.47        1.3
     ## S1_176 0.009892030   5.15e-05 0.012876076  1.532      1.47        1.3
     ##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax RGRbud SRsapwood
-    ## T1_158       0.09            NA   0.002628095            0.1      5  0.000135
-    ## T2_179       0.09            NA   0.002500000            0.1     20  0.000135
-    ## S1_176       0.09         0.002            NA            0.1     20  0.000135
+    ## T1_158       0.05            NA   0.002628095            0.1      5  0.000135
+    ## T2_179       0.05            NA   0.002500000            0.1     20  0.000135
+    ## S1_176       0.05         0.002            NA            0.1     20  0.000135
     ##         SRfineroot RSSG fHDmin fHDmax     WoodC
     ## T1_158 0.001897231 0.32     80    160 0.4981000
     ## T2_179 0.001897231 0.32     15     70 0.4751000
@@ -272,14 +272,14 @@ x$internalAllocation
     ## T1_158         1982.660     49.0415614                         NaN
     ## T2_179         1108.262     16.1739041                         NaN
     ## S1_176         2436.475      0.7036781                         NaN
-    ##        leafAreaPreformed sapwoodAreaTarget fineRootBiomassTarget
-    ## T1_158        23.5399495        247.352395            1614.66309
-    ## T2_179         8.0869521        145.939304            1371.73312
-    ## S1_176         0.5244805          2.888099              38.09374
-    ##        crownBudPercent
-    ## T1_158             100
-    ## T2_179             100
-    ## S1_176             100
+    ##        leafAreaPreformed leafAreaSenescence sapwoodAreaTarget
+    ## T1_158        25.8939444                  0        247.352395
+    ## T2_179         8.8956473                  0        145.939304
+    ## S1_176         0.5769286                  0          2.888099
+    ##        fineRootBiomassTarget crownBudPercent
+    ## T1_158            1614.66309             100
+    ## T2_179            1371.73312             100
+    ## S1_176              38.09374             100
 
 Additional `internal*` elements are `internalMortality`, used to keep
 track of dead individuals; and `internalRings`, which stores state
@@ -305,24 +305,24 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14800.9
-    ## Change in plant cohort biomass (g/m2): 383.826
+    ## Final plant cohort biomass (g/m2): 14794.8
+    ## Change in plant cohort biomass (g/m2): 377.741
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 116 Labile balance (g/m2) 149
-    ##   Plant individual balance (g/m2) 265 Mortality loss (g/m2) 22
-    ## Final plant water content (mm): 4.68986
-    ## Final soil water content (mm): 276.25
+    ##   Structural balance (g/m2) 112 Labile balance (g/m2) 148
+    ##   Plant individual balance (g/m2) 260 Mortality loss (g/m2) 22
+    ## Final plant water content (mm): 4.69056
+    ## Final soil water content (mm): 276.399
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.0169729
-    ## Plant water balance result (mm): -0.00131932
-    ## Change in soil water content (mm): -14.625
-    ## Soil water balance result (mm): -14.6324
+    ## Change in plant water content (mm): 0.0176761
+    ## Plant water balance result (mm): -0.00135788
+    ## Change in soil water content (mm): -14.4761
+    ## Soil water balance result (mm): -14.4831
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 0
+    ## Snowpack water balance result (mm): 7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 79 Net rainfall (mm) 383
+    ##   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
     ##   Infiltration (mm) 413 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
     ##   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 233  Mistletoe transpiration (mm) 0
     ##   Plant extraction from soil (mm) 233  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
@@ -391,26 +391,26 @@ extract(G1, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 365 × 53
-    ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
-    ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
-    ##  1 2001-01-01   0.883          4.87    4.87   0      3.66      0           3.66 
-    ##  2 2001-01-02   1.64           2.50    2.50   0      1.30      0           1.30 
-    ##  3 2001-01-03   1.30           0       0      0      0         0           0    
-    ##  4 2001-01-04   0.569          5.80    5.80   0      4.60      0           4.60 
-    ##  5 2001-01-05   1.68           1.88    1.88   0      0.862     0           0.862
-    ##  6 2001-01-06   1.21          13.4    13.4    0     12.0       0          12.0  
-    ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
-    ##  8 2001-01-08   0.832          0       0      0      0         0           0    
-    ##  9 2001-01-09   1.98           0       0      0      0         0           0    
-    ## 10 2001-01-10   0.829          5.12    5.12   0      3.91      5.38        9.28 
+    ## # A tibble: 365 × 54
+    ##    date           PET Precipitation    Rain    Snow NetRain Snowmelt   Runon
+    ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^2] [L/m^2]  [L/m^2] [L/m^2]
+    ##  1 2001-01-01   0.883          4.87    4.87    0      3.66      0          0
+    ##  2 2001-01-02   1.64           2.50    2.50    0      1.30      0          0
+    ##  3 2001-01-03   1.30           0       0       0      0         0          0
+    ##  4 2001-01-04   0.569          5.80    5.80    0      4.60      0          0
+    ##  5 2001-01-05   1.68           1.88    1.88    0      0.862     0          0
+    ##  6 2001-01-06   1.21          13.4    13.4     0     12.0       0          0
+    ##  7 2001-01-07   0.637          5.38    0       5.38   0         0          0
+    ##  8 2001-01-08   0.832          0       0       0      0         0          0
+    ##  9 2001-01-09   1.98           0       0       0      0         0          0
+    ## 10 2001-01-10   0.829          5.12    5.12    0      3.91      5.38       0
     ## # ℹ 355 more rows
-    ## # ℹ 45 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
-    ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
-    ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
-    ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
-    ## #   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2],
-    ## #   LAI [m^2/m^2], LAIherb [m^2/m^2], LAIlive [m^2/m^2], …
+    ## # ℹ 46 more variables: Infiltration [L/m^2], InfiltrationExcess [L/m^2],
+    ## #   SaturationExcess [L/m^2], Runoff [L/m^2], DeepDrainage [L/m^2],
+    ## #   CapillarityRise [L/m^2], Evapotranspiration [L/m^2], Interception [L/m^2],
+    ## #   SoilEvaporation [L/m^2], HerbTranspiration [L/m^2],
+    ## #   PlantExtraction [L/m^2], Transpiration [L/m^2],
+    ## #   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2], …
 
 These data frames are easy handle in R or can be written into text files
 for post-processing with other programs.
@@ -542,9 +542,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1],
 ```
 
     ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
-    ##  12.00000000  -0.02898143 -10.67316857   0.04131852  15.21662441   0.96950045 
+    ##  12.00000000  -0.03278331 -11.92618000   0.04148885  15.09315130   0.98725324 
     ##          NSE      NSE.abs 
-    ##   0.90717380   0.81448798
+    ##   0.94165006   0.81658133
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

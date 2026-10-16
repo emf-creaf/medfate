@@ -15,9 +15,9 @@ roots, whereas it may not have access to the water beneath other plants.
 However, there can exist some degree of horizontal overlap between water
 pools exploited by different plants.
 
-The aim of this vignette is to illustrate the sensitivity of the
-advanced water balance model (De Cáceres et al. 2021) to the
-consideration of independent water pools.
+The aim of this vignette is to illustrate the sensitivity of the basic
+(De Cáceres et al. 2015) and advanced (De Cáceres et al. 2021) water
+balance models to the consideration of independent water pools.
 
 ## Simulations
 
@@ -51,65 +51,77 @@ Recovery from embolism was assumed to depend on soil moisture
 
 ### Results with Granier
 
-#### Transpiration per leaf area unit (l·m-2)
+#### Leaf area index (m2·m-2)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-4-1.png)
 
-#### Soil water potential (MPa)
+#### Transpiration per leaf area unit (l·m-2)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-5-1.png)
 
-#### Plant water potential (MPa)
+#### Soil water potential (MPa)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-6-1.png)
 
-#### Stem percent loss conductance (%)
+#### Plant water potential (MPa)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-7-1.png)
 
-### Results with Sperry
-
-#### Transpiration per leaf area unit (l·m-2)
+#### Stem percent loss conductance (%)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-8-1.png)
 
-#### Soil water potential (MPa)
+### Results with Sperry
+
+#### Leaf area index (m2·m-2)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-9-1.png)
 
-#### Root-crown water potential (MPa)
+#### Transpiration per leaf area unit (l·m-2)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-10-1.png)
 
-#### Range of leaf water potential (MPa)
+#### Soil water potential (MPa)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-11-1.png)
 
-#### Stem percent loss conductance (%)
+#### Root-crown water potential (MPa)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-12-1.png)
 
-### Results with Sureau
-
-#### Transpiration per leaf area unit (l·m-2)
+#### Range of leaf water potential (MPa)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-13-1.png)
 
-#### Soil water potential (MPa)
+#### Stem percent loss conductance (%)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-14-1.png)
 
-#### Root-crown water potential (MPa)
+### Results with Sureau
+
+#### Leaf area index (m2·m-2)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-15-1.png)
 
-#### Range of leaf water potential (MPa)
+#### Transpiration per leaf area unit (l·m-2)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-16-1.png)
 
-#### Stem percent loss conductance (%)
+#### Soil water potential (MPa)
 
 ![](PlantWaterPools_files/figure-html/unnamed-chunk-17-1.png)
+
+#### Root-crown water potential (MPa)
+
+![](PlantWaterPools_files/figure-html/unnamed-chunk-18-1.png)
+
+#### Range of leaf water potential (MPa)
+
+![](PlantWaterPools_files/figure-html/unnamed-chunk-19-1.png)
+
+#### Stem percent loss conductance (%)
+
+![](PlantWaterPools_files/figure-html/unnamed-chunk-20-1.png)
 
 ## Bibliography
 

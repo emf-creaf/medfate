@@ -18,7 +18,8 @@ spwb(
   slope = NA_real_,
   aspect = NA_real_,
   CO2ByYear = numeric(0),
-  waterTableDepth = NA_real_
+  runon = numeric(0),
+  waterTableDepth = numeric(0)
 )
 ```
 
@@ -86,10 +87,17 @@ spwb(
   CO2 concentration along the simulation (as an alternative to
   specifying daily values in `meteo`).
 
+- runon:
+
+  A single value or a vector (with length equal to the number of rows in
+  meteo) of daily runon values (in mm). Conceptually, runon can also
+  represent an irrigation term.
+
 - waterTableDepth:
 
-  Water table depth (in mm). When not missing, capillarity rise will be
-  allowed if lower than total soil depth.
+  A single value or a vector (with length equal to the number of rows in
+  meteo) of daily water table depth values (in mm). When not missing,
+  capillarity rise will be allowed if lower than total soil depth.
 
 ## Value
 
@@ -345,7 +353,7 @@ If `transpirationMode="Sperry"` or `transpirationMode="Sureau"`, element
   of each plant (in MPa).
 
 - `"LeafPLC"`: A data frame with the average daily proportion of leaf
-  conductance loss of each plant (\[0-1\]).
+  apoplasmic conductance loss of each plant (\[0-1\]).
 
 - `"StemPLC"`: A data frame with the average daily proportion of stem
   conductance loss of each plant (\[0-1\]).
@@ -534,7 +542,7 @@ S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 79 Net rainfall (mm) 383
+#>   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
 #>   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
 #>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
 #>   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
@@ -559,20 +567,20 @@ S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #>  [Year 2001]:............
 #> 
 #> Final plant water content (mm): 12.2492
-#> Final soil water content (mm): 270.482
+#> Final soil water content (mm): 270.483
 #> Final snowpack content (mm): 0
-#> Change in plant water content (mm): -0.00213478
-#> Plant water balance result (mm): -2.17855e-15
-#> Change in soil water content (mm): -20.3932
-#> Soil water balance result (mm): -20.3932
+#> Change in plant water content (mm): -0.00214016
+#> Plant water balance result (mm): -6.5323e-16
+#> Change in soil water content (mm): -20.3918
+#> Soil water balance result (mm): -20.3918
 #> Change in snowpack water content (mm): 0
-#> Snowpack water balance result (mm): -7.10543e-15
+#> Snowpack water balance result (mm): 0
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 79 Net rainfall (mm) 383
+#>   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
 #>   Infiltration (mm) 412 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
-#>   Soil evaporation (mm) 32  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 202  Mistletoe transpiration (mm) 0
-#>   Plant extraction from soil (mm) 202  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4
+#>   Soil evaporation (mm) 32  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 203  Mistletoe transpiration (mm) 0
+#>   Plant extraction from soil (mm) 203  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4
 #>   Runoff (mm) 22 Deep drainage (mm) 197
 
 #Examine daily results
@@ -598,14 +606,14 @@ S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Final soil water content (mm): 282.509
 #> Final snowpack content (mm): 0
 #> Change in plant water content (mm): -0.015533
-#> Plant water balance result (mm): -0.692192
-#> Change in soil water content (mm): -8.36642
-#> Soil water balance result (mm): -8.36642
+#> Plant water balance result (mm): -0.692193
+#> Change in soil water content (mm): -8.3664
+#> Soil water balance result (mm): -8.3664
 #> Change in snowpack water content (mm): 0
 #> Snowpack water balance result (mm): 0
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 79 Net rainfall (mm) 383
+#>   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
 #>   Infiltration (mm) 410 Infiltration excess (mm) 24 Saturation excess (mm) 0 Capillarity rise (mm) 0
 #>   Soil evaporation (mm) 40  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 125  Mistletoe transpiration (mm) 0
 #>   Plant extraction from soil (mm) 124  Plant water balance (mm) -1 Hydraulic redistribution (mm) 0

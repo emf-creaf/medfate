@@ -1,13 +1,20 @@
 # Changelog
 
-## medfate 5.1.1
+## medfate 5.2.0
 
+- Revision of leaf phenology and primary growth determinacy
+- Novel plot for leaf phenological status
+- Leaf apoplastic VCs (related to PLC) made explicitly different from
+  whole-leaf VCs (which include symplasmic tissues)
+- Control option ‘segmentedXylemVulnerability’ removed
 - Update of trait_family_means (avoiding infinite mean values)
 - Preformed leaf area in growth
 - Minimum and maximum values added to SpParamsDefinition
-- Bug correction:
-  - RespDist/RespFire initialization for shrubs
-  - Resprouting for shrubs
+- Day of the year depends on latitude to allow simulations in the
+  southern hemisphere
+- Subdaily LFMC now generated as subdaily output
+- Functions spwb, growth and aspwb now accept a temporal series of runon
+  and waterTableDepth
 
 ## medfate 5.1.0
 

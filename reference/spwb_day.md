@@ -51,6 +51,7 @@ spwb_day(
 - runon:
 
   Surface water amount running on the target area from upslope (in mm).
+  Conceptually, runon can also represent an irrigation term.
 
 - lateralFlows:
 

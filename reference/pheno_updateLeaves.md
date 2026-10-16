@@ -15,7 +15,7 @@ senescence model for 181 \> doy \> 365.
 ## Usage
 
 ``` r
-pheno_leafDevelopmentStatus(Sgdd, gdd, unfoldingDD = 300)
+pheno_leafDevelopmentStatus(gdd, Sgdd, Ugdd = 300)
 
 pheno_leafSenescenceStatus(Ssen, sen)
 
@@ -26,17 +26,18 @@ pheno_updateLeaves(x, wind, fromGrowthModel)
 
 ## Arguments
 
-- Sgdd:
-
-  Degree days required for leaf budburst (in Celsius).
-
 - gdd:
 
   Cumulative degree days (in Celsius)
 
-- unfoldingDD:
+- Sgdd:
 
-  Degree-days for complete leaf unfolding after budburst has occurred.
+  Degree days required for leaf budburst (in Celsius).
+
+- Ugdd:
+
+  Degree-days for complete leaf unfolding after budburst has occurred
+  (in Celsius).
 
 - Ssen:
 

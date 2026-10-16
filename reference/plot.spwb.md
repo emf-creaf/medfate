@@ -191,6 +191,8 @@ them also for
 
 - `"PlantLAI"`: Plant cohort leaf area index (expanded leaves).
 
+- `"Phenology"`: Plant cohort phenological status.
+
 - `"PlantLAIlive"`: Plant cohort leaf area index ("live" leaves).
 
 - `"PlantStress"`: Plant cohort average daily drought stress.
@@ -347,6 +349,10 @@ In addition to the former, the following plots are available for objects
 
 - `"LeafArea"`: Leaf area per individual.
 
+- `"CrownFoliageCompleteness"`: Crown foliage completeness (in percent),
+  i.e. leaf area expressed as a percent of maximum (i.e. target) crown
+  foliage.
+
 - `"FineRootArea"`: Fine root area per individual (only for
   `transpirationMode = "Sperry"` or `transpirationMode = "Sureau"`).
 
@@ -438,7 +444,7 @@ S1 <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 #> Snowpack water balance result (mm): -7.10543e-15
 #> Water balance components:
 #>   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-#>   Interception (mm) 79 Net rainfall (mm) 383
+#>   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
 #>   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
 #>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
 #>   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1

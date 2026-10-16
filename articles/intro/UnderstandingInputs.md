@@ -38,7 +38,7 @@ below:
 | ParameterName | Definition | Type | Units | Strict | MinimumValue | MaximumValue |
 |:---|:---|:---|:---|:---|---:|---:|
 | Name | Plant names (species binomials, genus or other) used in vegetation data | String | NA | TRUE | NA | NA |
-| SpIndex | Internal species codification (0,1,2,) | Integer | NA | TRUE | 0 | NA |
+| SpIndex | Internal species codification (0,1,2,) | Integer | NA | TRUE | 0 | NA |
 | AcceptedName | Accepted scientific name of a taxon (genus, species, subspecies or variety) used for parameterization | String | NA | FALSE | NA | NA |
 | Species | Taxonomic species of accepted name | String | NA | FALSE | NA | NA |
 | Genus | Taxonomic genus of accepted name | String | NA | TRUE | NA | NA |
@@ -49,8 +49,11 @@ below:
 | LifeForm | Raunkiaer life form | String | Categorical | TRUE | NA | NA |
 | LeafShape | Broad/Needle/Linear/Scale/Spines/Succulent | String | Categorical | TRUE | NA | NA |
 | LeafSize | Either “Small” (\< 225 mm), “Medium” (\> 225 mm & \< 2025 mm) or “Large” (\> 2025 mm) | String | Categorical | TRUE | NA | NA |
-| PhenologyType | Leaf phenology type, either “oneflush-evergreen” (new leaves develop in spring-summer), “progressive-evergreen” (new leaves develop during any season), “winter-deciduous” (leaf senescence in autumn, new leaves in spring-summer) or “winter-semideciduous” (same as before, but abscission of senescent leaves occurs when new leaves are produced). | String | Categorical | TRUE | NA | NA |
-| DispersalType | Dispersal type, either wind-dispersed or animal-dispersed | String | Categorical | TRUE | NA | NA |
+| PhenologyType | Leaf phenology type, either “evergreen” , “winter-deciduous” or “winter-semideciduous”. | String | Categorical | TRUE | NA | NA |
+| SenescencePeriod | Period of senescence for evergreen plants, either whole-year, spring or autumn | String | Categorical | FALSE | NA | NA |
+| GrowthPeriod | Period of primary growth for evergreen plants, either whole-year or spring | String | Categorical | FALSE | NA | NA |
+| GrowthDeterminacy | Primary growth determinacy type, either determinate, indeterminate or intermediate | String | Categorical | FALSE | NA | NA |
+| DispersalType | Dispersal type, either wind-dispersed or animal-dispersed | String | Categorical | TRUE | NA | NA |
 | Hmed | Median plant height | Numeric | cm | TRUE | 0 | NA |
 | Hmax | Maximum plant height | Numeric | cm | TRUE | 0 | NA |
 | Dmax | Maximum tree diameter | Numeric | cm | FALSE | 0 | NA |
@@ -80,15 +83,18 @@ below:
 | a_bt | Regression coefficient for bark thickness (mm) as function of DBH (cm) | Numeric | NA | FALSE | NA | NA |
 | b_bt | Regression coefficient for bark thickness (mm) as function of DBH (cm) | Numeric | NA | FALSE | NA | NA |
 | LeafDuration | Duration of leaves in year | Numeric | years | FALSE | 0 | NA |
+| BudFormationDays | Number of days required to complete bud formation | Integer | days | FALSE | 0 | NA |
 | t0gdd | Date to start the accumulation of degree days | Numeric | days | FALSE | 0 | 365 |
 | Sgdd | Degree days for leaf budburst | Numeric | Degrees C | FALSE | 0 | NA |
 | Tbgdd | Base temperature for the calculation of degree days to leaf budburst | Numeric | Degrees C | FALSE | NA | NA |
-| Ssen | Degree days corresponding to senescence | Numeric | Degrees C | FALSE | NA | NA |
-| Phsen | Photoperiod corresponding to start counting senescence | Numeric | hours | FALSE | NA | NA |
+| Ugdd | Degree days to complete leaf unfolding after budburst has occurred | Numeric | Degrees C | FALSE | 0 | NA |
+| Ssen | Degree days corresponding to senescence | Numeric | Degrees C | FALSE | 0 | NA |
+| Phsen | Photoperiod corresponding to start counting senescence | Numeric | hours | FALSE | 0 | NA |
 | Tbsen | Base temperature for the calculation of degree days to senescence | Numeric | Degrees C | FALSE | NA | NA |
 | xsen | Discrete values, to allow for any absent/proportional/more than proportional effects of temperature on senescence | Integer | {0,1,2} | FALSE | 0 | 2 |
 | ysen | Discrete values, to allow for any absent/proportional/more than proportional effects of photoperiod on senescence | Integer | {0,1,2} | FALSE | 0 | 2 |
-| SLA | Specific leaf area (mm2/mg = m2/kg) | Numeric | m2/kg | FALSE | 0 | NA |
+| Fsen | Degree days corresponding to leaf fall | Numeric | Degrees C | FALSE | 0 | NA |
+| SLA | Specificleafarea(mm2/mg=m2/kg) | Numeric | m2/kg | FALSE | 0 | NA |
 | LeafDensity | Density of leaf tissue (dry weight over volume) | Numeric | g/cm3 | FALSE | 0 | NA |
 | WoodDensity | Wood tissue density (at 0% humidity!) | Numeric | g/cm3 | FALSE | 0 | NA |
 | FineRootDensity | Density of fine root tissue (dry weight over volume). | Numeric | g/cm3 | FALSE | 0 | NA |
@@ -136,21 +142,25 @@ below:
 | Gsw_AC_slope_Baldocchi | Slope of the Gsw vs Ac/Cs relationship (Baldocchi model). | Numeric | mol H2O \* mmol CO2-1 | FALSE | 0 | NA |
 | Gsw_P50_Baldocchi | Water potential causing 50% reduction in stomatal conductance (Baldocchi stomatal model) | Numeric | MPa | FALSE | NA | 0 |
 | Gsw_slope_Baldocchi | Rate of decrease in stomatal conductance at Gsw_Baldocchi_P50 (Baldocchi stomatal model) | Numeric | %/MPa | FALSE | 0 | NA |
-| VCleaf_kmax | Maximum leaf hydraulic conductance | Numeric | mmol H2O \* s-1 \* m-2 \* MPa-1 | FALSE | 0 | NA |
-| VCleaf_P12 | 12% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
-| VCleaf_P50 | 50% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
-| VCleaf_P88 | 88% of maximum conductance of the leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
-| VCleaf_slope | Slope of the rate of leaf embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| VCleaf_kmax | Maximum whole-leaf hydraulic conductance | Numeric | mmol H2O \* s-1 \* m-2 \* MPa-1 | FALSE | 0 | NA |
+| VCleaf_P12 | 12% of maximum conductance of the whole-leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleaf_P50 | 50% of maximum conductance of the whole-leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleaf_P88 | 88% of maximum conductance of the whole-leaf vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleaf_slope | Slope of the rate of whole-leaf embolism increase at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| VCleafapo_P12 | 12% of maximum conductance of the leaf apoplasm vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleafapo_P50 | 50% of maximum conductance of the leaf apoplasm vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleafapo_P88 | 88% of maximum conductance of the leaf apoplasm vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
+| VCleafapo_slope | Slope of the rate of leaf apoplasm embolism increase at VCleafapo_P50 | Numeric | %/MPa | FALSE | 0 | NA |
 | Kmax_stemxylem | Maximum sapwood-specific hydraulic conductivity of stem xylem | Numeric | kg H2O \* s-1 \* m-1 \* Mpa-1 | FALSE | 0 | NA |
 | VCstem_P12 | 12% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
 | VCstem_P50 | 50% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
 | VCstem_P88 | 88% of maximum conductance of the stem vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
-| VCstem_slope | Slope of the rate of stem embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| VCstem_slope | Slope of the rate of stem embolism increase at VCstem_P50 | Numeric | %/MPa | FALSE | 0 | NA |
 | Kmax_rootxylem | Maximum sapwood-specific hydraulic conductivity of root xylem | Numeric | kg H2O \* s-1 \* m-1 \* Mpa-1 | FALSE | 0 | NA |
 | VCroot_P12 | 12% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
 | VCroot_P50 | 50% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
 | VCroot_P88 | 88% of maximum conductance of the root vulnerability curve | Numeric | MPa | FALSE | NA | 0 |
-| VCroot_slope | Slope of the rate of root embolism spread at VCleaf_P50 | Numeric | %/MPa | FALSE | 0 | NA |
+| VCroot_slope | Slope of the rate of root embolism increase at VCroot_P50 | Numeric | %/MPa | FALSE | 0 | NA |
 | Vmax298 | Maximum Rubisco carboxilation rate | Numeric | mmol CO2 \* s-1\* m-2 | FALSE | 0 | NA |
 | Jmax298 | Maximum rate of electron transport at 298K | Numeric | mmol electrons \* s-1 \* m-2 | FALSE | 0 | NA |
 | Nleaf | Nitrogen mass per leaf dry mass | Numeric | mg N / g dry | FALSE | 0 | NA |
@@ -163,7 +173,7 @@ below:
 | CCleaf | Leaf construction costs | Numeric | g gluc \* g dry-1 | FALSE | 0 | NA |
 | CCsapwood | Sapwood construction costs | Numeric | g gluc \* g dry-1 | FALSE | 0 | NA |
 | CCfineroot | Fine root construction costs | Numeric | g gluc \* g dry-1 | FALSE | 0 | NA |
-| RGRleafmax | Maximum leaf relative growth rate | Numeric | m2/cm2/day | FALSE | 0 | NA |
+| RGRleafmax | Maximum leaf growth rate relative to sapwood area | Numeric | m2/cm2/day | FALSE | 0 | NA |
 | RGRsapwoodmax | Maximum sapwood growth rate relative to sapwood area (for shrubs) | Numeric | cm2/cm2/day | FALSE | 0 | NA |
 | RGRcambiummax | Maximum sapwood growth rate relative to cambium perimeter (for trees) | Numeric | cm2/cm/day | FALSE | 0 | NA |
 | RGRfinerootmax | Maximum fineroot relative growth rate | Numeric | g dry/g dry/day | FALSE | 0 | NA |
@@ -663,34 +673,34 @@ names(control)
     ##  [31] "defaultRainfallIntensityPerMonth"   "leafPhenology"                     
     ##  [33] "bareSoilEvaporation"                "unlimitedSoilWater"                
     ##  [35] "interceptionMode"                   "infiltrationMode"                  
-    ##  [37] "infiltrationCorrection"             "unfoldingDD"                       
-    ##  [39] "verticalLayerSize"                  "windMeasurementHeight"             
-    ##  [41] "segmentedXylemVulnerability"        "stemCavitationRecovery"            
-    ##  [43] "leafCavitationRecovery"             "lfmcComponent"                     
-    ##  [45] "mistletoeParams"                    "defoliationParams"                 
-    ##  [47] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  
-    ##  [49] "taper"                              "multiLayerBalance"                 
-    ##  [51] "leafConductanceEstimation"          "rootConductivityEstimation"        
-    ##  [53] "sapFluidityVariation"               "TPhase_gmin"                       
-    ##  [55] "Q10_1_gmin"                         "Q10_2_gmin"                        
-    ##  [57] "rootRadialConductance"              "averageFracRhizosphereResistance"  
-    ##  [59] "thermalCapacityLAI"                 "boundaryLayerSize"                 
-    ##  [61] "cavitationRecoveryMaximumRate"      "sunlitShade"                       
-    ##  [63] "numericParams"                      "leafCavitationEffects"             
-    ##  [65] "stemCavitationEffects"              "stomatalSubmodel"                  
-    ##  [67] "plantCapacitance"                   "cavitationFlux"                    
-    ##  [69] "leafCuticularTranspiration"         "stemCuticularTranspiration"        
-    ##  [71] "C_SApoInit"                         "C_LApoInit"                        
-    ##  [73] "k_SSym"                             "fractionLeafSymplasm"              
-    ##  [75] "gs_NightFrac"                       "JarvisPAR"                         
-    ##  [77] "fTRBToLeaf"                         "subdailyCarbonBalance"             
-    ##  [79] "allowDessication"                   "allowStarvation"                   
-    ##  [81] "sinkLimitation"                     "shrubDynamics"                     
-    ##  [83] "herbDynamics"                       "allocationStrategy"                
-    ##  [85] "phloemConductanceFactor"            "nonSugarConcentration"             
-    ##  [87] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    
-    ##  [89] "constructionCosts"                  "senescenceRates"                   
-    ##  [91] "maximumRelativeGrowthRates"         "mortalityMode"                     
+    ##  [37] "infiltrationCorrection"             "verticalLayerSize"                 
+    ##  [39] "windMeasurementHeight"              "stemCavitationRecovery"            
+    ##  [41] "leafCavitationRecovery"             "lfmcComponent"                     
+    ##  [43] "mistletoeParams"                    "defoliationParams"                 
+    ##  [45] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  
+    ##  [47] "taper"                              "multiLayerBalance"                 
+    ##  [49] "leafConductanceEstimation"          "rootConductivityEstimation"        
+    ##  [51] "sapFluidityVariation"               "TPhase_gmin"                       
+    ##  [53] "Q10_1_gmin"                         "Q10_2_gmin"                        
+    ##  [55] "rootRadialConductance"              "averageFracRhizosphereResistance"  
+    ##  [57] "thermalCapacityLAI"                 "boundaryLayerSize"                 
+    ##  [59] "cavitationRecoveryMaximumRate"      "sunlitShade"                       
+    ##  [61] "numericParams"                      "leafCavitationEffects"             
+    ##  [63] "stemCavitationEffects"              "stomatalSubmodel"                  
+    ##  [65] "plantCapacitance"                   "cavitationFlux"                    
+    ##  [67] "leafCuticularTranspiration"         "stemCuticularTranspiration"        
+    ##  [69] "C_SApoInit"                         "C_LApoInit"                        
+    ##  [71] "k_SSym"                             "fractionLeafSymplasm"              
+    ##  [73] "gs_NightFrac"                       "JarvisPAR"                         
+    ##  [75] "fTRBToLeaf"                         "subdailyCarbonBalance"             
+    ##  [77] "allowDessication"                   "allowStarvation"                   
+    ##  [79] "sinkLimitation"                     "shrubDynamics"                     
+    ##  [81] "herbDynamics"                       "allocationStrategy"                
+    ##  [83] "phloemConductanceFactor"            "nonSugarConcentration"             
+    ##  [85] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    
+    ##  [87] "constructionCosts"                  "senescenceRates"                   
+    ##  [89] "maximumRelativeGrowthRates"         "organogenesisEfficiencyModulator"  
+    ##  [91] "elongationEfficiencyModulator"      "mortalityMode"                     
     ##  [93] "mortalityBaselineRate"              "mortalityRelativeSugarThreshold"   
     ##  [95] "mortalityRWCThreshold"              "recrTreeDBH"                       
     ##  [97] "recrTreeDensity"                    "ingrowthTreeDBH"                   

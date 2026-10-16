@@ -330,7 +330,7 @@ S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## Snowpack water balance result (mm): -7.10543e-15
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 79 Net rainfall (mm) 383
+    ##   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
     ##   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
     ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
     ##   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
@@ -386,13 +386,13 @@ case in form of a data frame with days in rows:
 head(S$WaterBalance)
 ```
 
-    ##                  PET Precipitation      Rain Snow    NetRain Snowmelt
-    ## 2001-01-01 0.8828475      4.869109  4.869109    0  3.6578430        0
-    ## 2001-01-02 1.6375337      2.498292  2.498292    0  1.3026155        0
-    ## 2001-01-03 1.3017026      0.000000  0.000000    0  0.0000000        0
-    ## 2001-01-04 0.5690790      5.796973  5.796973    0  4.5956523        0
-    ## 2001-01-05 1.6760567      1.884401  1.884401    0  0.8616218        0
-    ## 2001-01-06 1.2077028     13.359801 13.359801    0 11.9754283        0
+    ##                  PET Precipitation      Rain Snow    NetRain Snowmelt Runon
+    ## 2001-01-01 0.8828475      4.869109  4.869109    0  3.6578430        0     0
+    ## 2001-01-02 1.6375337      2.498292  2.498292    0  1.3026155        0     0
+    ## 2001-01-03 1.3017026      0.000000  0.000000    0  0.0000000        0     0
+    ## 2001-01-04 0.5690790      5.796973  5.796973    0  4.5956523        0     0
+    ## 2001-01-05 1.6760567      1.884401  1.884401    0  0.8616218        0     0
+    ## 2001-01-06 1.2077028     13.359801 13.359801    0 11.9754283        0     0
     ##            Infiltration InfiltrationExcess SaturationExcess Runoff DeepDrainage
     ## 2001-01-01    3.6578430                  0                0      0    2.9694516
     ## 2001-01-02    1.3026155                  0                0      0    0.4429239
@@ -552,26 +552,26 @@ extract(S, "forest", addunits = TRUE) |>
   tibble::as_tibble()
 ```
 
-    ## # A tibble: 365 × 31
-    ##    date           PET Precipitation    Rain   Snow NetRain Snowmelt Infiltration
-    ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^… [L/m^2]  [L/m^2]      [L/m^2]
-    ##  1 2001-01-01   0.883          4.87    4.87   0      3.66      0           3.66 
-    ##  2 2001-01-02   1.64           2.50    2.50   0      1.30      0           1.30 
-    ##  3 2001-01-03   1.30           0       0      0      0         0           0    
-    ##  4 2001-01-04   0.569          5.80    5.80   0      4.60      0           4.60 
-    ##  5 2001-01-05   1.68           1.88    1.88   0      0.862     0           0.862
-    ##  6 2001-01-06   1.21          13.4    13.4    0     12.0       0          12.0  
-    ##  7 2001-01-07   0.637          5.38    0      5.38   0         0           0    
-    ##  8 2001-01-08   0.832          0       0      0      0         0           0    
-    ##  9 2001-01-09   1.98           0       0      0      0         0           0    
-    ## 10 2001-01-10   0.829          5.12    5.12   0      3.91      5.38        9.28 
+    ## # A tibble: 365 × 32
+    ##    date           PET Precipitation    Rain    Snow NetRain Snowmelt   Runon
+    ##    <date>     [L/m^2]       [L/m^2] [L/m^2] [L/m^2] [L/m^2]  [L/m^2] [L/m^2]
+    ##  1 2001-01-01   0.883          4.87    4.87    0      3.66      0          0
+    ##  2 2001-01-02   1.64           2.50    2.50    0      1.30      0          0
+    ##  3 2001-01-03   1.30           0       0       0      0         0          0
+    ##  4 2001-01-04   0.569          5.80    5.80    0      4.60      0          0
+    ##  5 2001-01-05   1.68           1.88    1.88    0      0.862     0          0
+    ##  6 2001-01-06   1.21          13.4    13.4     0     12.0       0          0
+    ##  7 2001-01-07   0.637          5.38    0       5.38   0         0          0
+    ##  8 2001-01-08   0.832          0       0       0      0         0          0
+    ##  9 2001-01-09   1.98           0       0       0      0         0          0
+    ## 10 2001-01-10   0.829          5.12    5.12    0      3.91      5.38       0
     ## # ℹ 355 more rows
-    ## # ℹ 23 more variables: InfiltrationExcess [L/m^2], SaturationExcess [L/m^2],
-    ## #   Runoff [L/m^2], DeepDrainage [L/m^2], CapillarityRise [L/m^2],
-    ## #   Evapotranspiration [L/m^2], Interception [L/m^2], SoilEvaporation [L/m^2],
-    ## #   HerbTranspiration [L/m^2], PlantExtraction [L/m^2], Transpiration [L/m^2],
-    ## #   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2],
-    ## #   LAI [m^2/m^2], LAIherb [m^2/m^2], LAIlive [m^2/m^2], …
+    ## # ℹ 24 more variables: Infiltration [L/m^2], InfiltrationExcess [L/m^2],
+    ## #   SaturationExcess [L/m^2], Runoff [L/m^2], DeepDrainage [L/m^2],
+    ## #   CapillarityRise [L/m^2], Evapotranspiration [L/m^2], Interception [L/m^2],
+    ## #   SoilEvaporation [L/m^2], HerbTranspiration [L/m^2],
+    ## #   PlantExtraction [L/m^2], Transpiration [L/m^2],
+    ## #   MistletoeTranspiration [L/m^2], HydraulicRedistribution [L/m^2], …
 
 And a similar code can be used to daily series of cohort-level
 variables:
@@ -627,19 +627,19 @@ summary(S, freq="months",FUN=mean, output="WaterBalance")
     ## 2001-10-01 2.405506    1.33598175 1.33598175 0.0000000 1.09482469 0.00000000
     ## 2001-11-01 1.716591    2.20566281 1.47764599 0.7280168 1.35693642 0.72801682
     ## 2001-12-01 1.608082    0.05046181 0.05046181 0.0000000 0.02307311 0.00000000
-    ##            Infiltration InfiltrationExcess SaturationExcess     Runoff
-    ## 2001-01-01   1.84350049         0.00000000                0 0.00000000
-    ## 2001-02-01   0.23845253         0.00000000                0 0.00000000
-    ## 2001-03-01   2.01794132         0.00000000                0 0.00000000
-    ## 2001-04-01   0.49146494         0.00000000                0 0.00000000
-    ## 2001-05-01   0.60312887         0.00000000                0 0.00000000
-    ## 2001-06-01   0.16640364         0.00000000                0 0.00000000
-    ## 2001-07-01   2.60039972         0.28906846                0 0.28906846
-    ## 2001-08-01   1.56079752         0.04493462                0 0.04493462
-    ## 2001-09-01   1.08679369         0.00000000                0 0.00000000
-    ## 2001-10-01   0.98276002         0.11206467                0 0.11206467
-    ## 2001-11-01   1.83385259         0.25110065                0 0.25110065
-    ## 2001-12-01   0.02307311         0.00000000                0 0.00000000
+    ##            Runon Infiltration InfiltrationExcess SaturationExcess     Runoff
+    ## 2001-01-01     0   1.84350049         0.00000000                0 0.00000000
+    ## 2001-02-01     0   0.23845253         0.00000000                0 0.00000000
+    ## 2001-03-01     0   2.01794132         0.00000000                0 0.00000000
+    ## 2001-04-01     0   0.49146494         0.00000000                0 0.00000000
+    ## 2001-05-01     0   0.60312887         0.00000000                0 0.00000000
+    ## 2001-06-01     0   0.16640364         0.00000000                0 0.00000000
+    ## 2001-07-01     0   2.60039972         0.28906846                0 0.28906846
+    ## 2001-08-01     0   1.56079752         0.04493462                0 0.04493462
+    ## 2001-09-01     0   1.08679369         0.00000000                0 0.00000000
+    ## 2001-10-01     0   0.98276002         0.11206467                0 0.11206467
+    ## 2001-11-01     0   1.83385259         0.25110065                0 0.25110065
+    ## 2001-12-01     0   0.02307311         0.00000000                0 0.00000000
     ##            DeepDrainage CapillarityRise Evapotranspiration Interception
     ## 2001-01-01   1.50422719               0          0.8593736   0.45301063
     ## 2001-02-01   0.01261102               0          0.6125900   0.04764393
