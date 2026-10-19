@@ -103,6 +103,9 @@
 #'              \item{\code{criticalBudPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 % crown bud senescence.}
 #'              \item{\code{cvLeafP50 [= 10.0]}: Coefficient of variation (in percent) of leaf P50 within crown.}
 #'              \item{\code{cvBudP50 [= 10.0]}: Coefficient of variation (in percent) of bud P50 within crown.}
+#'              \item{\code{temperatureInducedDefoliation [=TRUE]}: Whether heat stress induces defoliation.}
+#'              \item{\code{criticalLeafSenescenceTemperature [= 50.0]}: Leaf temperature corresponding to 50 % crown senescence.}
+#'              \item{\code{cvLeafTS50} [=5.0]: Coefficient of variation (in percent) of leaf senescence temperature within crown.}
 #'           }
 #'       }
 #'     }
@@ -274,7 +277,10 @@ defaultControl<-function(transpirationMode = "Granier",
                              criticalLeafPLC = 0.50,
                              criticalBudPLC = 0.88,
                              cvLeafP50 = 10.0,
-                             cvBudP50 = 10.0),
+                             cvBudP50 = 10.0,
+                             temperatureInducedDefoliation = TRUE,
+                             criticalLeafSenescenceTemperature = 50.0,
+                             cvLeafTS50 = 5.0),
     
     #spwb with granier
     hydraulicRedistributionFraction = 0.1,

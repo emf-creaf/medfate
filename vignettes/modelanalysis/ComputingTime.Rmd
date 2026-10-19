@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The aim of this vignette is to provide users with a rough estimation of computing times for simulation models included in package **medfate**.
 
-The results presented here were obtained using **1 year of simulation** with the **example data sets** on a laptop (16 GiB memory and 11th Gen Inter Core I5 processor @ 2.40 GHz x 8) with Ubuntu Linux OS. 
+The results presented here were obtained using **1 year of simulation** with the **example data sets** on a laptop (32 GiB memory and Intel® Core™ Ultra 9 185H × 22) with Ubuntu Linux OS 26.04.1 LTS. 
 
 ```{r, include = FALSE, echo = FALSE}
 medfate_ver <- packageVersion("medfate")
