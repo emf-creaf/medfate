@@ -1436,7 +1436,7 @@ NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame Sp
 
 NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector RERfineroot = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RERfineroot", fillWithGenus);
-  NumericVector Nfineroot = NsapwoodWithImputation(SP, SpParams, fillWithGenus);
+  NumericVector Nfineroot = NfinerootWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<RERfineroot.size();c++) {
     if(NumericVector::is_na(RERfineroot[c])) {
       //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.

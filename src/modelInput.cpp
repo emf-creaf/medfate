@@ -167,14 +167,14 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
     if(transpirationMode=="Granier") {
       paramsAnatomydf = DataFrame::create(
         _["Al2As"] = Al2As, _["Ar2Al"] = Ar2Al, _["SLA"] = SLA,
-          _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+          _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = FineRootDensity, 
             _["SRL"] = SRL, _["RLD"] = RLD,  
             _["r635"] = r635);
     } else {
       paramsAnatomydf = DataFrame::create(
         _["Hmed"] = Hmed,
         _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-        _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+        _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = FineRootDensity, 
           _["conduit2sapwood"] = conduit2sapwood,
           _["SRL"] = SRL, _["RLD"] = RLD,  
           _["r635"] = r635);
@@ -184,7 +184,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
       paramsAnatomydf = DataFrame::create(
         _["Hmax"] = Hmax,_["Hmed"] = Hmed,
         _["Al2As"] = Al2As, _["Ar2Al"] = Ar2Al, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-          _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+          _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = FineRootDensity, 
             _["conduit2sapwood"] = conduit2sapwood,
             _["SRL"] = SRL, _["RLD"] = RLD,  
             _["r635"] = r635);
@@ -192,7 +192,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
       paramsAnatomydf = DataFrame::create(
         _["Hmax"] = Hmax,_["Hmed"] = Hmed,
         _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-        _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+        _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = FineRootDensity, 
           _["conduit2sapwood"] = conduit2sapwood,
           _["SRL"] = SRL, _["RLD"] = RLD,  
           _["r635"] = r635);

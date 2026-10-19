@@ -68,6 +68,8 @@ ControlParameters::ControlParameters(List x) {
     if(defoliationParams.containsElementNamed("criticalBudPLC")) defoliation.criticalBudPLC = as<double>(defoliationParams["criticalBudPLC"]);
     defoliation.cvLeafP50 = as<double>(defoliationParams["cvLeafP50"]);
     if(defoliationParams.containsElementNamed("cvBudP50")) defoliation.cvBudP50 = as<double>(defoliationParams["cvBudP50"]);
+    if(defoliationParams.containsElementNamed("temperatureInducedDefoliation")) defoliation.temperatureInducedDefoliation = as<bool>(defoliationParams["temperatureInducedDefoliation"]);
+    if(defoliationParams.containsElementNamed("criticalLeafSenescenceTemperature")) defoliation.criticalLeafSenescenceTemperature = as<double>(defoliationParams["criticalLeafSenescenceTemperature"]);
   } else if(x.containsElementNamed("cavitationInducedDefoliation")){
     defoliation.cavitationInducedDefoliation = as<bool>(x["cavitationInducedDefoliation"]);
   }

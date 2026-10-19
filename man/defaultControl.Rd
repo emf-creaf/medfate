@@ -112,7 +112,6 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{cvBudP50 [= 10.0]}: Coefficient of variation (in percent) of bud P50 within crown.}
 \item{\code{temperatureInducedDefoliation [=TRUE]}: Whether heat stress induces defoliation.}
 \item{\code{criticalLeafSenescenceTemperature [= 50.0]}: Leaf temperature corresponding to 50 \% crown senescence.}
-\item{\code{cvLeafTS50} \link{=5.0}: Coefficient of variation (in percent) of leaf senescence temperature within crown.}
 }
 }
 }
@@ -133,7 +132,7 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
 \item{\code{rootRadialConductance [= 4]}: Radial conductance in roots (mmol·s-1·m-2·MPa-1).}
-\item{\code{averageFracRhizosphereResistance [= 0.15]}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
+\item{\code{averageFracRhizosphereResistance [= 0.25]}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values down to stomatal closure).}
 \item{\code{boundaryLayerSize [= 2000]}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
 }
 
@@ -180,7 +179,7 @@ By default synoptic storms (1.5 mm/h) are assumed between December and June, and
 \item{\code{minimumRelativeStarchForGrowth [= 0.50]}: Default minimum concentration of storage carbon (starch), relative to the maximum storage capacity, for sapwood growth to occur, when not specified via SpParams (\code{RSSG}). }
 \item{\code{constructionCosts [= c(leaf = 1.5, sapwood = 1.47, fineroot = 1.30)]}: Default construction costs, including respiration and structural carbon, per dry weight of new tissue (g gluc · g dry -1) when not specified via SpParams (\code{CCleaf}, \code{CCsapwood} and \code{CCfineroot}).}
 \item{\code{senescenceRates [= c(sapwood = 0.0001261398, fineroot = 0.001897231)]}: Default senescence rates (day-1) for sapwood and fineroots when not specified via SpParams (\code{SRsapwood} and \code{SRfineroot}). Defaults are equivalent to 9\%, 5\% and 50\% annual turnover for gymnosperm sapwood, angiosperm sapwood and fine roots, respectively.}
-\item{\code{maximumRelativeGrowthRates [=   c(leaf = 0.05, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]}: Default maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), tree sapwood (cm2 sapwood· cm-1 cambium · day-1), shrub sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1) when not specified via SpParams (\code{RGRleafmax}, \code{RGRcambiummax} , \code{RGRsapwoodmax} and \code{RGRfinerootmax}, respectively).}
+\item{\code{maximumRelativeGrowthRates [=   c(leaf = 0.001, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]}: Default maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), tree sapwood (cm2 sapwood· cm-1 cambium · day-1), shrub sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1) when not specified via SpParams (\code{RGRleafmax}, \code{RGRcambiummax} , \code{RGRsapwoodmax} and \code{RGRfinerootmax}, respectively).}
 \item{\code{organogenesisEfficiencyModulator [= 1]}: Exponent relating turgor-related relative growth rate with organogenesis efficiency.}
 \item{\code{elongationEfficiencyModulator [= 1]}: Exponent relating turgor-related relative growth rate with leaf elongation efficiency.}
 \item{\code{mortalityMode [= "density/deterministic"]}: String describing how mortality is applied. Current accepted values are combinations of "cohort" vs "density" (for whole-cohort mortality vs reduction of stem density) and "deterministic" vs. "stochastic".}
