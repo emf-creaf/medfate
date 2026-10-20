@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 
-DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus, List control) {
+DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingSpParams, bool fillWithGenus, List control, String model = "spwb") {
   IntegerVector SP = above["SP"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_live = above["LAI_live"];
@@ -111,17 +111,30 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
     if(NumericVector::is_na(budPLCCrit[j])) budPLCCrit[j] = defaultBudPLCCrit;
     if(NumericVector::is_na(leafTSCrit[j])) leafTSCrit[j] = defaultLeafTSCrit;
   } 
-  DataFrame paramsPhenologydf = DataFrame::create(
-    _["PhenologyType"] = phenoType,
-    _["SenescencePeriod"] = senescencePeriod,
-    _["GrowthPeriod"] = growthPeriod,
-    _["GrowthDeterminacy"] = growthDeterminacy,
-    _["LeafDuration"] = leafDuration,
-    _["BudFormationDays"] = budFormationDays,
-    _["t0gdd"] = t0gdd, _["Tbgdd"] = Tbgdd, _["Sgdd"] = Sgdd, _["Ugdd"] = Ugdd,
-    _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen, _["Fsen"] = Fsen,
-    _["LeafPLCCrit"] = leafPLCCrit, _["BudPLCCrit"] = budPLCCrit, _["LeafTSCrit"] = leafTSCrit
-  );
+  DataFrame paramsPhenologydf;
+  if(model=="spwb") {
+    paramsPhenologydf = DataFrame::create(
+      _["PhenologyType"] = phenoType,
+      _["SenescencePeriod"] = senescencePeriod,
+      _["GrowthPeriod"] = growthPeriod,
+      _["LeafDuration"] = leafDuration,
+      _["BudFormationDays"] = budFormationDays,
+      _["t0gdd"] = t0gdd, _["Tbgdd"] = Tbgdd, _["Sgdd"] = Sgdd, _["Ugdd"] = Ugdd,
+      _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen, _["Fsen"] = Fsen,
+      _["LeafPLCCrit"] = leafPLCCrit);
+  } else if(model=="growth"){
+    paramsPhenologydf = DataFrame::create(
+      _["PhenologyType"] = phenoType,
+      _["SenescencePeriod"] = senescencePeriod,
+      _["GrowthPeriod"] = growthPeriod,
+      _["GrowthDeterminacy"] = growthDeterminacy,
+      _["LeafDuration"] = leafDuration,
+      _["BudFormationDays"] = budFormationDays,
+      _["t0gdd"] = t0gdd, _["Tbgdd"] = Tbgdd, _["Sgdd"] = Sgdd, _["Ugdd"] = Ugdd,
+      _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen, _["Fsen"] = Fsen,
+      _["LeafPLCCrit"] = leafPLCCrit, _["BudPLCCrit"] = budPLCCrit, _["LeafTSCrit"] = leafTSCrit
+    );
+  }
   paramsPhenologydf.attr("row.names") = above.attr("row.names");
   return(paramsPhenologydf);
 }
@@ -1626,7 +1639,7 @@ List spwbInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Numer
                             _["above"] = plantsdf,
                             _["below"] = belowdf,
                             _["belowLayers"] = belowLayers,
-                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus, control),
+                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus, control, "spwb"),
                             _["paramsAnatomy"] = paramsAnatomydf,
                             _["paramsInterception"] = paramsInterception(above, SpParams, control),
                             _["paramsTranspiration"] = paramsTranspirationdf,
@@ -1758,7 +1771,7 @@ List growthInputInner(DataFrame above, NumericVector Z50, NumericVector Z95, Num
   double SWE = 0.0;
   
   DataFrame paramsCanopydf = paramsCanopy(above, control);
-  DataFrame paramsPhenologydf = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus, control);
+  DataFrame paramsPhenologydf = paramsPhenology(above, SpParams, fillMissingSpParams, fillWithGenus, control, "growth");
   
   List ctl = clone(control);
   //For backward compatibility
