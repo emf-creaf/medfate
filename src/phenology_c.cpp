@@ -166,7 +166,7 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
             double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
             double LAI_exp_new = x.above.LAI_live[j]*std::min(x.internalPhenology.phi[j], 1.0 - 
                                                               proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], 
-                                                                                             x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
+                                                                                             x.paramsTranspiration.VCleafapo_d[j], x.paramsPhenology.LeafPLCCrit[j], x.control.defoliation.cvLeafP50));
             x.above.LAI_expanded[j] = LAI_exp_new;
             if(LAI_exp_new < x.above.LAI_expanded[j]) {
               x.above.LAI_dead[j] += std::max(0.0, LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
@@ -189,7 +189,7 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
             double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
             double LAI_exp_new = x.above.LAI_live[j]*std::min(1.0 - (1.0/x.paramsPhenology.leafDuration[j]) + (x.internalPhenology.phi[j]/x.paramsPhenology.leafDuration[j]), 
                                                               1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], 
-                                                                                             x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
+                                                                                             x.paramsTranspiration.VCleafapo_d[j], x.paramsPhenology.LeafPLCCrit[j], x.control.defoliation.cvLeafP50));
             x.above.LAI_expanded[j] = LAI_exp_new;
             if(LAI_exp_new < x.above.LAI_expanded[j]) {
               x.above.LAI_dead[j] += std::max(0.0, LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead
@@ -202,7 +202,7 @@ void updateLeaves_c(ModelInput& x, double wind, bool fromGrowthModel) {
         //Apply defoliation effects to evergreens
         if(x.control.defoliation.cavitationInducedDefoliation) {
           double LAI_exp_prev= x.above.LAI_expanded[j]; //Store previous value
-          double LAI_exp_new = x.above.LAI_live[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50));
+          double LAI_exp_new = x.above.LAI_live[j]*(1.0 - proportionDefoliationWeibull_c(psiLeafPLC, x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.paramsPhenology.LeafPLCCrit[j], x.control.defoliation.cvLeafP50));
           if(LAI_exp_new < x.above.LAI_expanded[j]) {
             x.above.LAI_expanded[j] = LAI_exp_new;
             x.above.LAI_dead[j] += (LAI_exp_prev - x.above.LAI_expanded[j]); // Add senescence leaves to dead

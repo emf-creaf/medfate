@@ -99,12 +99,13 @@
 #'       \item{\code{defoliationParams}: A list with the following elements:
 #'           \itemize{
 #'              \item{\code{cavitationInducedDefoliation [= TRUE]}: Whether leaf hydraulic impairment induces defoliation (and bud senescence in the growth model).}
-#'              \item{\code{criticalLeafPLC [= 0.50]}: Level of PLC (a proportion) corresponding to 50 % crown defoliation.}
-#'              \item{\code{criticalBudPLC [= 0.88]}: Level of PLC (a proportion) corresponding to 50 % crown bud senescence.}
+#'              \item{\code{criticalLeafPLC [= 0.50]}: Default value of PLC (a proportion) associated to cavitation-induced leaf senescence.}
+#'              \item{\code{criticalBudPLC [= 0.88]}: Default value of PLC (a proportion) associated to cavitation-induced bud (branch) senescence.}
 #'              \item{\code{cvLeafP50 [= 10.0]}: Coefficient of variation (in percent) of leaf P50 within crown.}
-#'              \item{\code{cvBudP50 [= 10.0]}: Coefficient of variation (in percent) of bud P50 within crown.}
+#'              \item{\code{cvBudP50 [= 10.0]}: Coefficient of variation (in percent) of bud (branch) P50 within crown.}
 #'              \item{\code{temperatureInducedDefoliation [=TRUE]}: Whether heat stress induces defoliation.}
-#'              \item{\code{criticalLeafSenescenceTemperature [= 50.0]}: Leaf temperature corresponding to 50 % crown senescence.}
+#'              \item{\code{criticalLeafTS [= 50.0]}: Default value for critical leaf temperature associated to heat-induced leaf senescence.}
+#'              \item{\code{cvLeafTS [= 5.0]}: Coefficient of variation (in percent) of leaf critical senescence temperature within crown.}
 #'           }
 #'       }
 #'     }
@@ -278,7 +279,8 @@ defaultControl<-function(transpirationMode = "Granier",
                              cvLeafP50 = 10.0,
                              cvBudP50 = 10.0,
                              temperatureInducedDefoliation = TRUE,
-                             criticalLeafSenescenceTemperature = 50.0),
+                             criticalLeafTS = 50.0,
+                             cvLeafTS = 5.0),
     
     #spwb with granier
     hydraulicRedistributionFraction = 0.1,

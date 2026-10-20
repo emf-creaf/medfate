@@ -9,6 +9,7 @@
 * Day of the year depends on latitude to allow simulations in the southern hemisphere
 * Subdaily LFMC now generated as subdaily output
 * Functions spwb, growth and aspwb now accept a temporal series of runon and waterTableDepth
+* Heat-induced leaf defoliation in growth simulations (advanced model)
 
 # medfate 5.1.0
 * Compilation patch for C++ 20

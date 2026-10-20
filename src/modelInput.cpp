@@ -45,6 +45,15 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   NumericVector Fsen(SP.size(), 4000.0);
   if(SpParams.containsElementNamed("Fsen")) Fsen  = speciesNumericParameterWithImputation(SP, SpParams, "Fsen", fillMissingSpParams, fillWithGenus);
   
+  double defaultLeafPLCCrit = 0.50;
+  double defaultBudPLCCrit = 0.50;
+  double defaultLeafTSCrit = 50.0;
+  if(control.containsElementNamed("defoliationParams")) {
+    List defoliationParams = control["defoliationParams"];
+    if(defoliationParams.containsElementNamed("criticalLeafPLC")) defaultLeafPLCCrit = defoliationParams["criticalLeafPLC"];
+    if(defoliationParams.containsElementNamed("criticalBudPLC")) defaultBudPLCCrit = defoliationParams["criticalBudPLC"];
+    if(defoliationParams.containsElementNamed("criticalLeafTS")) defaultLeafTSCrit = defoliationParams["criticalLeafTS"];
+  }
   
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
   CharacterVector growthDeterminacy(SP.size(), NA_STRING);
@@ -58,6 +67,18 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   CharacterVector growthPeriod(SP.size(), NA_STRING);
   if(SpParams.containsElementNamed("GrowthPeriod")) {
     growthPeriod = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthPeriod"); 
+  }
+  NumericVector leafPLCCrit(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("LeafPLCCrit")) {
+    leafPLCCrit = speciesNumericParameterFromIndex(SP, SpParams, "LeafPLCCrit"); 
+  }
+  NumericVector budPLCCrit(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("BudPLCCrit")) {
+    budPLCCrit = speciesNumericParameterFromIndex(SP, SpParams, "BudPLCCrit"); 
+  }
+  NumericVector leafTSCrit(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("LeafTSCrit")) {
+    leafTSCrit = speciesNumericParameterFromIndex(SP, SpParams, "LeafTSCrit"); 
   }
   for(int j=0; j<numCohorts;j++) {
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { 
@@ -86,6 +107,9 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
         LAI_expanded[j] = LAI_live[j]*(1.0 - (1.0/leafDuration[j]));
       }
     }
+    if(NumericVector::is_na(leafPLCCrit[j])) leafPLCCrit[j] = defaultLeafPLCCrit;
+    if(NumericVector::is_na(budPLCCrit[j])) budPLCCrit[j] = defaultBudPLCCrit;
+    if(NumericVector::is_na(leafTSCrit[j])) leafTSCrit[j] = defaultLeafTSCrit;
   } 
   DataFrame paramsPhenologydf = DataFrame::create(
     _["PhenologyType"] = phenoType,
@@ -95,7 +119,8 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
     _["LeafDuration"] = leafDuration,
     _["BudFormationDays"] = budFormationDays,
     _["t0gdd"] = t0gdd, _["Tbgdd"] = Tbgdd, _["Sgdd"] = Sgdd, _["Ugdd"] = Ugdd,
-    _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen, _["Fsen"] = Fsen 
+    _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen, _["Fsen"] = Fsen,
+    _["LeafPLCCrit"] = leafPLCCrit, _["BudPLCCrit"] = budPLCCrit, _["LeafTSCrit"] = leafTSCrit
   );
   paramsPhenologydf.attr("row.names") = above.attr("row.names");
   return(paramsPhenologydf);

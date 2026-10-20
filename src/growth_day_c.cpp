@@ -1134,8 +1134,8 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       }
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
       if(((StemPLC[j]-StemPLCprev[j])>0.0) && x.control.defoliation.cavitationInducedDefoliation) {
-        double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.control.defoliation.criticalLeafPLC, x.control.defoliation.cvLeafP50);
-        double BudPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.control.defoliation.criticalBudPLC, x.control.defoliation.cvBudP50);
+        double LeafPDEF = proportionDefoliationWeibull_c(psiApoLeaf[j], x.paramsTranspiration.VCleafapo_c[j], x.paramsTranspiration.VCleafapo_d[j], x.paramsPhenology.LeafPLCCrit[j], x.control.defoliation.cvLeafP50);
+        double BudPDEF = proportionDefoliationWeibull_c(psiApoStem[j], x.paramsTranspiration.VCstem_c[j], x.paramsTranspiration.VCstem_d[j], x.paramsPhenology.BudPLCCrit[j], x.control.defoliation.cvBudP50);
         //Force leaf defoliation to be at least equal bud dessication
         LeafPDEF = std::max(LeafPDEF, BudPDEF);
         //Senescence effects
@@ -1158,9 +1158,15 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
           arma::mat& LAIShade = AGROWTHres.ASPWBres.ATres.shade_inst.LAI; //Instantaneous LAI for shade leaves
           //LAI above temperature limits for each time step
           std::vector<double> LAIaboveTemp(ntimesteps, 0.0);
+          double TScrit = x.paramsPhenology.LeafTSCrit[j];
+          double TScritSD = (x.control.defoliation.cvLeafTS/100.0)*TScrit;
           for(int n=0; n<ntimesteps;n++) {
-            if(TempSunlit(j,n) > x.control.defoliation.criticalLeafSenescenceTemperature) LAIaboveTemp[n] += LAISunlit(j,n);
-            if(TempShade(j,n) > x.control.defoliation.criticalLeafSenescenceTemperature) LAIaboveTemp[n] +=  LAIShade(j,n);
+            if(TempSunlit(j,n) > (TScrit - 2.0*TScritSD)) {
+              LAIaboveTemp[n] += LAISunlit(j,n)*normal_cdf(TempSunlit(j,n), TScrit, TScritSD);
+            }
+            if(TempShade(j,n) > (TScrit - 2.0*TScritSD)) {
+              LAIaboveTemp[n] += LAIShade(j,n)*normal_cdf(TempShade(j,n), TScrit, TScritSD);
+            }
           }
           //Number of time steps with at least as many hours
           std::vector<int> hoursMin(ntimesteps);
@@ -1798,7 +1804,7 @@ void growthDay_inner_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures& 
   if(leafPhenology) {
     // Rcpp::Rcout<< "about to enter phenology\n";
     updatePhenology_c(x, doy, photoperiod, meteovec.tday);
-    updateLeaves_c(x, meteovec.wind, false);
+    updateLeaves_c(x, meteovec.wind, true);
   }
   
   meteovec.tminPrev = meteovec.tmin;

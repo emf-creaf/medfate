@@ -79,6 +79,9 @@ struct PhenologyParams {
   std::vector<double> xsen;
   std::vector<double> ysen;
   std::vector<double> Fsen;
+  std::vector<double> LeafPLCCrit;
+  std::vector<double> BudPLCCrit;
+  std::vector<double> LeafTSCrit;
 };
 
 struct InterceptionParams {

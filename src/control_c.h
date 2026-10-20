@@ -62,7 +62,8 @@ struct DefoliationParams {
   double cvLeafP50 = 10.0;
   double cvBudP50 = 10.0;
   bool temperatureInducedDefoliation = true;
-  double criticalLeafSenescenceTemperature = 50.0;
+  double criticalLeafTS = 50.0;
+  double cvLeafTS = 5.0;
 };
 
 struct CommonWBParams {

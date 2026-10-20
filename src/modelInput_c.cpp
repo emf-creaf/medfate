@@ -203,6 +203,12 @@ ModelInput::ModelInput(Rcpp::List x) : WaterBalanceModelInput(x){
       paramsPhenology.Fsen[c] = 100.0;
     }
   }
+  if(phenoDF.containsElementNamed("LeafPLCCrit")) paramsPhenology.LeafPLCCrit = Rcpp::as< std::vector<double> >(phenoDF["LeafPLCCrit"]);
+  else paramsPhenology.LeafPLCCrit = std::vector<double>(phenoDF.nrows(), 0.50);
+  if(phenoDF.containsElementNamed("BudPLCCrit")) paramsPhenology.BudPLCCrit = Rcpp::as< std::vector<double> >(phenoDF["BudPLCCrit"]);
+  else paramsPhenology.BudPLCCrit = std::vector<double>(phenoDF.nrows(), 0.88);
+  if(phenoDF.containsElementNamed("LeafTSCrit")) paramsPhenology.LeafTSCrit = Rcpp::as< std::vector<double> >(phenoDF["LeafTSCrit"]);
+  else paramsPhenology.LeafTSCrit = std::vector<double>(phenoDF.nrows(), 50.0);
   
   //Interception parameters
   Rcpp::DataFrame intercDF = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
