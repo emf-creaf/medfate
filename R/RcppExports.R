@@ -2787,6 +2787,9 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
 #'         \item{\code{xsen, ysen}: Discrete values, to allow for any absent/proportional/more than proportional effects of photoperiod  on senescence.}
 #'         \item{\code{Fsen}: Degree days required to for leaves to be ready for abscission.}
+#'         \item{\code{LeafPLCCrit}: Leaf PLC (a proportion) associated to cavitation-induced leaf senescence.}
+#'         \item{\code{BudPLCCrit}: Stem PLC (a proportion) associated to cavitation-induced bud (branch) senescence.}
+#'         \item{\code{LeafTSCrit}: Critical leaf temperature associated to heat-induced leaf senescence.}
 #'       }
 #'     }
 #'     \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort:
