@@ -173,6 +173,8 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
     input = x$growthInput
   }
   TYPES = .getDailySPWBPlotTypes(input$control$transpirationMode)  
+  TYPES_FIREHAZARD = .getFireHazardPlotTypes()
+  if("FireHazard" %in% names(x)) TYPES <- c(TYPES, TYPES_FIREHAZARD)
   
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""
@@ -181,6 +183,12 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
                     type = type, dates = dates, 
                     xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                     summary.freq = summary.freq, ...))
+  } 
+  else if(type %in% TYPES_FIREHAZARD) {
+    return(.plot_fire_hazard(FireHazard = x$FireHazard,
+                             type = type, dates = dates, 
+                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                             summary.freq = summary.freq, ...))
   } 
   return(plot.pwb(x, type=type, cohorts = cohorts, bySpecies = bySpecies,
                   dates = dates, xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
@@ -385,6 +393,8 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   
   TYPES_GROWTH = .getDailyGROWTHPlotTypes(transpMode)
   TYPES_SWB = .getDailySPWBPlotTypes(transpMode)  
+  TYPES_FIREHAZARD = .getFireHazardPlotTypes()
+  if("FireHazard" %in% names(x)) TYPES_GROWTH <- c(TYPES_GROWTH, TYPES_FIREHAZARD)
   
   type = match.arg(type,TYPES_GROWTH)  
   
@@ -406,6 +416,12 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   if(type %in% TYPES_SWB) {
     return(plot.spwb(x,type, cohorts, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, 
                      summary.freq, ...))
+  } 
+  else if(type %in% TYPES_FIREHAZARD) {
+    return(.plot_fire_hazard(FireHazard = x$FireHazard,
+                             type = type, dates = dates, 
+                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                             summary.freq = summary.freq, ...))
   } 
   else if(type == "BiomassBalance") {
     return(.plot_biomass(BiomassBalance= x$BiomassBalance,
@@ -466,6 +482,8 @@ plot.fordyn<-function(x, type="StandBasalArea",
   TYPES_GROWTH = .getDailyGROWTHPlotTypes(input_control$transpirationMode)
   TYPES_GROWTH_UNIQUE = .getUniqueDailyGROWTHPlotTypes(input_control$transpirationMode)
   TYPES_FORDYN_UNIQUE = .getUniqueFORDYNPlotTypes(input_control$transpirationMode)  
+  TYPES_FIREHAZARD = .getFireHazardPlotTypes()
+  if("FireHazard" %in% names(x$GrowthResults[[1]])) TYPES_GROWTH <- c(TYPES_GROWTH, TYPES_FIREHAZARD)
   
   type = match.arg(type,c(TYPES_GROWTH, TYPES_FORDYN_UNIQUE))  
   
@@ -529,6 +547,12 @@ plot.fordyn<-function(x, type="StandBasalArea",
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
     } 
+    else if(type %in% TYPES_FIREHAZARD) {
+      FireHazard = summary(x, freq = "days", output = "FireHazard")
+      return(.plot_fire_hazard(FireHazard = FireHazard, 
+                               type=type, dates = dates, ylim = ylim, xlab = xlab, ylab = ylab,
+                               summary.freq = summary.freq,...))
+    }
     else if(type %in% c("PlantLAI","PlantLAIlive","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
                         "PlantAbsorbedSWR","PlantNetLWR")) {
       subtype = substr(type,6,nchar(type))

@@ -330,7 +330,7 @@ void updateStructuralVariables_c(ModelInput& x,
   // Control params
   bool treeDynamics = x.control.growth.treeDynamics;
   bool shrubDynamics = x.control.growth.shrubDynamics;
-  bool herbDynamics = x.control.growth.herbDynamics;
+  // bool herbDynamics = x.control.growth.herbDynamics;
   bool herbLayerDynamics = x.control.growth.herbLayerDynamics;
   int numCohorts = x.cohorts.CohortCode.size();
   std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);

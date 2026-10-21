@@ -126,6 +126,16 @@
   }
   return(TYPES)
 }
+.getFireHazardPlotTypes<-function() {
+  TYPES = c("Fuel loading" = "FuelLoading",
+            "Fuel moisture" = "FuelMoisture",
+            "Rate of spread" = "RateOfSpread",
+            "Fireline intensity" = "FirelineIntensity",
+            "Flame length" = "FlameLength",
+            "Residence time" = "ResidenceTime",
+            "Fire potential" = "FirePotential")
+  return(TYPES)
+}
 .getStructuralGROWTHPlotTypes<-function(transpirationMode = "Granier"){
   TYPES = c("Leaf biomass per individual" = "LeafBiomass",
             "Sapwood biomass per individual" = "SapwoodBiomass",
@@ -444,6 +454,13 @@
   else if(type=="CohortLAI") ylab = expression(paste("Cohort leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="CohortDensity") ylab = expression(paste("Cohort tree density ",(ind%.%ha^{-1})))
   else if(type=="CohortShrubCover") ylab = expression(paste("Shrub cover by cohort (%)"))
+  else if(type=="FuelLoading") ylab  = expression(paste("Fuel loading ",(kg%.%m^{-2})))
+  else if(type=="FuelMoisture") ylab  = expression(paste("Fuel moisture (%)"))
+  else if(type=="RateOfSpread") ylab  = expression(paste("Rate of spread ",(m%.%min^{-1})))
+  else if(type=="FirelineIntensity") ylab  = expression(paste("Byram's fireline intensity ",(kW%.%m^{-1})))
+  else if(type=="FlameLength") ylab  = expression(paste("Flame length ",(m)))
+  else if(type=="ResidenceTime") ylab  = expression(paste("Residence time ",(s)))
+  else if(type=="FirePotential") ylab  = expression(paste("Fire potential [0-9] "))
   return(ylab)
 }
 
@@ -628,6 +645,41 @@
       theme_bw()
     return(g)
   } 
+}
+
+.plot_fire_hazard <- function(FireHazard, type,
+                              dates = NULL, 
+                              xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                              summary.freq = NULL, ...) {
+  if(is.null(ylab)) ylab = .getYLab(type)
+  if(type=="FuelLoading") {
+    df = FireHazard[,c("Loading_understory","Loading_overstory")]
+    names(df)<- c("Understory", "Overstory")
+  } else if(type=="FuelMoisture") {
+    df = FireHazard[,c("CFMC_understory","CFMC_overstory", "DFMC")]
+    names(df)<- c("Understory CFMC", "Overstory CFMC", "Downed DFMC")
+  } else if(type=="RateOfSpread") {
+    df = FireHazard[,c("ROS_surface","ROS_crown")]
+    names(df)<- c("Surface fire", "Crown fire")
+  } else if(type=="FirelineIntensity") {
+    df = FireHazard[,c("I_b_surface","I_b_crown")]
+    names(df)<- c("Surface fire", "Crown fire")
+  } else if(type=="FlameLength") {
+    df = FireHazard[,c("FL_surface","FL_crown")]
+    names(df)<- c("Surface fire", "Crown fire")
+  } else if(type=="ResidenceTime") {
+    df = FireHazard[,c("t_r_surface","t_r_crown")]
+    names(df)<- c("Surface fire", "Crown fire")
+  } else if(type=="FirePotential") {
+    df = FireHazard[,c("SFP","CFP")]
+    names(df)<- c("Surface fire", "Crown fire")
+  }
+  
+  if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
+  if(!is.null(summary.freq)) {
+    df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+  }
+  return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
 }
 .plot_soil<-function(Soil, input_soil, input_control, type,  
                      dates = NULL, 

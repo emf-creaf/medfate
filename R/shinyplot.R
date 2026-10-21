@@ -132,6 +132,7 @@
     plant_structure_plot_choices = .getStructuralGROWTHPlotTypes(transpirationMode)
     plant_growthmortality_plot_choices = .getGrowthMortalityGROWTHPlotTypes(transpirationMode)
     forest_dynamics_plot_choices = .getUniqueFORDYNPlotTypes(transpirationMode)
+    fire_hazard_plot_choices = .getFireHazardPlotTypes()
   }
   
   plot_main_choices <- c("Water balance", "Soil")
@@ -139,6 +140,9 @@
     plot_main_choices <- c(plot_main_choices, "Stand", "Plants")
     if(transpirationMode %in% c("Sperry","Sureau")) {
       plot_main_choices = c(plot_main_choices,"Sunlit/Shade", "Energy balance")
+    }
+    if("FireHazard" %in% names(out) || "FireHazard" %in% names(out_1)) {
+      plot_main_choices = c(plot_main_choices, "Fire hazard")
     }
     if(type_out %in% c("growth", "fordyn")) {
       plot_main_choices = c(plot_main_choices, 
@@ -326,6 +330,7 @@
       else if(main_plot=="Stand") sub_choices = stand_plot_choices
       else if(main_plot=="Plants") sub_choices = plant_plot_choices
       else if(main_plot=="Sunlit/Shade") sub_choices = sunlitshade_plot_choices
+      else if(main_plot=="Fire hazard") sub_choices = fire_hazard_plot_choices
       else if(main_plot=="Labile carbon balance") sub_choices = labile_plot_choices
       else if(main_plot=="Biomass balance") sub_choices = plant_balance_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
