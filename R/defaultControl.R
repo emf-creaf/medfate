@@ -164,8 +164,10 @@
 #'       \item{\code{allowDessication [= TRUE]}: Boolean flag to indicate that mortality by dessication is allowed.}
 #'       \item{\code{allowStarvation [= TRUE]}: Boolean flag to indicate that mortality by starvation is allowed.}
 #'       \item{\code{sinkLimitation [= TRUE]}: Boolean flag to indicate that temperature and turgor limitations to growth are applied.}
-#'       \item{\code{shrubDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to shrubs.}
-#'       \item{\code{herbDynamics [= TRUE]}: Boolean flag to allow dynamic herb leaf area as a function of shading due to leaf area of woody cohorts.}
+#'       \item{\code{treeDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to tree cohorts.}
+#'       \item{\code{shrubDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to shrub cohorts.}
+#'       \item{\code{herbDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to herb cohorts.}
+#'       \item{\code{herbLayerDynamics [= TRUE]}: Boolean flag to allow dynamic herb leaf area as a function of shading due to leaf area of woody cohorts.}
 #'       \item{\code{allocationStrategy [= "Al2As"]}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}
 #'       \item{\code{phloemConductanceFactor [= 0.2])}: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").}
 #'       \item{\code{nonSugarConcentration [= 0.25]}: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.}
@@ -326,6 +328,7 @@ defaultControl<-function(transpirationMode = "Granier",
     allowDessication = TRUE,
     allowStarvation = TRUE,
     sinkLimitation = TRUE,
+    treeDynamics = TRUE,
     shrubDynamics = TRUE,
     herbDynamics = TRUE,
     allocationStrategy = "Al2As",

@@ -328,8 +328,10 @@ void updateStructuralVariables_c(ModelInput& x,
                                  const std::vector<double>& PARcohort) {
   
   // Control params
+  bool treeDynamics = x.control.growth.treeDynamics;
   bool shrubDynamics = x.control.growth.shrubDynamics;
   bool herbDynamics = x.control.growth.herbDynamics;
+  bool herbLayerDynamics = x.control.growth.herbLayerDynamics;
   int numCohorts = x.cohorts.CohortCode.size();
   std::vector<std::string> ctype = cohortType_c(x.cohorts.CohortCode);
   
@@ -362,51 +364,55 @@ void updateStructuralVariables_c(ModelInput& x,
   
   std::vector<double>& crownBudPercent = x.internalAllocation.crownBudPercent;
   
-  //
-  // Update tree DBH
-  //
-  std::vector<double> deltaDBH(numCohorts, 0.0);
-  for(int j=0;j<numCohorts; j++) {
-    if(!std::isnan(DBH[j]) && N[j]>0.0) {
-      deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(deltaSAgrowth[j]/M_PI)) - DBH[j];
-      DBH[j] = DBH[j] + deltaDBH[j];
-      // Rcout<< DBH[j]<<"\n";
+
+  if(treeDynamics) {
+    //
+    // Update tree DBH
+    //
+    std::vector<double> deltaDBH(numCohorts, 0.0);
+    for(int j=0;j<numCohorts; j++) {
+      if(!std::isnan(DBH[j]) && N[j]>0.0) {
+        deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(deltaSAgrowth[j]/M_PI)) - DBH[j];
+        DBH[j] = DBH[j] + deltaDBH[j];
+        // Rcout<< DBH[j]<<"\n";
+      }
+    }
+    //
+    // Update tree height
+    //
+    for(int j=0;j<numCohorts; j++) {
+      if(!std::isnan(DBH[j]) && N[j]>0.0) {
+        double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(x.paramsAnatomy.Hmax[j]-137.0)))));
+        double fHD = (x.paramsGrowth.fHDmin[j]*(PARcohort[j]/100.0) + x.paramsGrowth.fHDmax[j]*(1.0-(PARcohort[j]/100.0)))*fHmod;
+        H[j] = H[j] + fHD*deltaDBH[j];
+      }
+    }
+    //
+    //  Update tree crown ratio
+    //
+    std::vector<double> crNew = treeCrownRatioAllometric_c(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+    for(int j=0;j<numCohorts; j++) {
+      if(!std::isnan(DBH[j]) && N[j]>0.0) {
+        CR[j] = crNew[j];
+      }
+    }
+    //
+    // Update tree leaf area target (and LAI_live) using leaf biomass allometries, which include larger tree competition effects
+    // Store leaf biomass without competition (open crown) for hormonal regulation of cambium growth
+    //
+    std::vector<double> ltba = largerTreeBasalArea_c(N, DBH, 1.0); //Allometries were calibrated including the target cohort
+    for(int j=0;j<numCohorts;j++) {
+      if(!std::isnan(DBH[j]) && N[j]>0.0) {
+        double leafBiomassNoComp = Afbt[j]*pow(std::min(100.0,DBH[j]), Bfbt[j])*exp(-0.0001*std::min(10000.0,N[j]));//Correct for high density packing
+        LAI_nocomp[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*N[j]/10000.0; //LAI without competition effect
+        x.internalAllocation.leafAreaTarget[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*exp(Cfbt[j]*ltba[j]); //Include competition effect in leaf biomass estimation
+        // Update LAI_live using the target and living bud percent, if buds can be formed
+        LAI_live[j] = x.internalAllocation.leafAreaTarget[j]*(crownBudPercent[j]/100.0)*N[j]/10000.0;
+      }
     }
   }
   
-  //
-  // Update tree height
-  //
-  for(int j=0;j<numCohorts; j++) {
-    if(!std::isnan(DBH[j]) && N[j]>0.0) {
-      double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(x.paramsAnatomy.Hmax[j]-137.0)))));
-      double fHD = (x.paramsGrowth.fHDmin[j]*(PARcohort[j]/100.0) + x.paramsGrowth.fHDmax[j]*(1.0-(PARcohort[j]/100.0)))*fHmod;
-      H[j] = H[j] + fHD*deltaDBH[j];
-    }
-  }
-  //
-  //  Update tree crown ratio
-  //
-  std::vector<double> crNew = treeCrownRatioAllometric_c(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
-  for(int j=0;j<numCohorts; j++) {
-    if(!std::isnan(DBH[j]) && N[j]>0.0) {
-      CR[j] = crNew[j];
-    }
-  }
-  //
-  // Update tree leaf area target (and LAI_live) using leaf biomass allometries, which include larger tree competition effects
-  // Store leaf biomass without competition (open crown) for hormonal regulation of cambium growth
-  //
-  std::vector<double> ltba = largerTreeBasalArea_c(N, DBH, 1.0); //Allometries were calibrated including the target cohort
-  for(int j=0;j<numCohorts;j++) {
-    if(!std::isnan(DBH[j]) && N[j]>0.0) {
-      double leafBiomassNoComp = Afbt[j]*pow(std::min(100.0,DBH[j]), Bfbt[j])*exp(-0.0001*std::min(10000.0,N[j]));//Correct for high density packing
-      LAI_nocomp[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*N[j]/10000.0; //LAI without competition effect
-      x.internalAllocation.leafAreaTarget[j] = x.paramsAnatomy.SLA[j]*leafBiomassNoComp*exp(Cfbt[j]*ltba[j]); //Include competition effect in leaf biomass estimation
-      // Update LAI_live using the target and living bud percent, if buds can be formed
-      LAI_live[j] = x.internalAllocation.leafAreaTarget[j]*(crownBudPercent[j]/100.0)*N[j]/10000.0;
-    }
-  }
+  
   // 
   // Update shrub height, shrub cover and leaf area target
   //
@@ -447,7 +453,7 @@ void updateStructuralVariables_c(ModelInput& x,
   //
   // Update herb layer variables
   //
-  if(herbDynamics) {
+  if(herbLayerDynamics) {
     double woodyLAI = std::accumulate(LAI_live.begin(), LAI_live.end(), 0.0);
     double herbLAImax = x.herbLAImax;
     x.herbLAI = herbLAImax*exp(-0.235*woodyLAI);
@@ -1420,16 +1426,17 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       //MORTALITY Death by carbon starvation or dessication
       double Ndead_day = 0.0, N_resprouting_stump_day = 0.0, Cover_resprouting_stump_day = 0.0;
       bool dynamicCohort = true;
-      if((ctype[j] == "shrub") && (!x.control.growth.shrubDynamics)) dynamicCohort = false;
+      if((ctype[j] == "tree") && (!x.control.growth.treeDynamics)) dynamicCohort = false;
+      else if((ctype[j] == "shrub") && (!x.control.growth.shrubDynamics)) dynamicCohort = false;
       else if(ctype[j] =="herb") dynamicCohort = false;
-      double stemSympRWC = NA_REAL;
-      if(x.control.transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent_c(x.internalWater.PlantPsi[j], x.paramsWaterStorage.StemPI0[j], x.paramsWaterStorage.StemEPS[j]);
-      else stemSympRWC = symplasticRelativeWaterContent_c(psiSympStem[j], x.paramsWaterStorage.StemPI0[j], x.paramsWaterStorage.StemEPS[j]);
-      if(std::isnan(stemSympRWC)) throw medfate::MedfateInternalError("Missing value for stem symp RWC");
 
-      //Sapwood sugar relative to equilibrium, indicator of starvation
-      double relativeSugarSapwood = (sugarSapwood[j]/equilibriumSapwoodSugarConc);
       if(dynamicCohort) {
+        double stemSympRWC = NA_REAL;
+        if(x.control.transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent_c(x.internalWater.PlantPsi[j], x.paramsWaterStorage.StemPI0[j], x.paramsWaterStorage.StemEPS[j]);
+        else stemSympRWC = symplasticRelativeWaterContent_c(psiSympStem[j], x.paramsWaterStorage.StemPI0[j], x.paramsWaterStorage.StemEPS[j]);
+        if(std::isnan(stemSympRWC)) throw medfate::MedfateInternalError("Missing value for stem symp RWC");
+        //Sapwood sugar relative to equilibrium, indicator of starvation
+        double relativeSugarSapwood = (sugarSapwood[j]/equilibriumSapwoodSugarConc);
         std::string cause = "undertermined";
         //Determine fire severity if fire occurred
         double burnRatioLeaves = 0.0, burnRatioBuds = 0.0;

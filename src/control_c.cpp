@@ -138,8 +138,14 @@ ControlParameters::ControlParameters(List x) {
   growth.allowDessication = as<bool>(x["allowDessication"]);
   growth.allowStarvation = as<bool>(x["allowStarvation"]);
   growth.sinkLimitation = as<bool>(x["sinkLimitation"]);
-  growth.shrubDynamics = as<bool>(x["shrubDynamics"]);
-  growth.herbDynamics = as<bool>(x["herbDynamics"]);
+  if(x.containsElementNamed("treeDynamics")) growth.treeDynamics = as<bool>(x["treeDynamics"]);
+  else growth.treeDynamics = true;
+  if(x.containsElementNamed("shrubDynamics")) growth.shrubDynamics = as<bool>(x["shrubDynamics"]);
+  else growth.shrubDynamics = true;
+  if(x.containsElementNamed("herbDynamics")) growth.herbDynamics = as<bool>(x["herbDynamics"]);
+  else growth.herbDynamics = true;
+  if(x.containsElementNamed("herbLayerDynamics")) growth.herbLayerDynamics = as<bool>(x["herbLayerDynamics"]);
+  else growth.herbLayerDynamics = true;
   growth.allocationStrategy = as<std::string>(x["allocationStrategy"]);
   growth.phloemConductanceFactor = as<double>(x["phloemConductanceFactor"]);
   growth.nonSugarConcentration = as<double>(x["nonSugarConcentration"]);

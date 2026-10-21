@@ -163,8 +163,10 @@ struct GrowthControlParams {
   bool allowDessication;
   bool allowStarvation;
   bool sinkLimitation;
+  bool treeDynamics;
   bool shrubDynamics;
   bool herbDynamics;
+  bool herbLayerDynamics;
   std::string allocationStrategy;
   double phloemConductanceFactor;
   double nonSugarConcentration;

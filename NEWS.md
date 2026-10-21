@@ -10,6 +10,7 @@
 * Subdaily LFMC now generated as subdaily output
 * Functions spwb, growth and aspwb now accept a temporal series of runon and waterTableDepth
 * Heat-induced leaf defoliation in growth simulations (advanced model)
+* Tree dynamics (structure update and mortality) can now be turned off in growth simulations
 
 # medfate 5.1.0
 * Compilation patch for C++ 20
