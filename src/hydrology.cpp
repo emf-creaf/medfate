@@ -445,6 +445,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                 _["CapillarityRise"] = SWBres.capillarityRise_mm,
                                 _["Correction"] = SWBres.correction_mm,
                                 _["VolumeChange"] = SWBres.volumeChange_mm,
+                                _["FlowBalance"] = SWBres.flowBalance_mm,
                                 _["Substeps"] = SWBres.substeps);
   } else if(soilDomains == "dual") {
     res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,
@@ -472,6 +473,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
     res.push_back(SWBres.capillarityRise_mm, "CapillarityRise");
     res.push_back(SWBres.correction_mm, "Correction");
     res.push_back(SWBres.volumeChange_mm, "VolumeChange");
+    res.push_back(SWBres.flowBalance_mm, "FlowBalance");
     res.push_back((double) SWBres.substeps, "Substeps");
   }
   if(modifySoil) {

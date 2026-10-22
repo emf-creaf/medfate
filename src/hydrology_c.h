@@ -211,6 +211,7 @@ struct SoilWaterBalance_RESULT {
   double correction_mm;
   double correctionMatrix_mm;
   double correctionMacropores_mm;
+  double flowBalance_mm;
   double volumeChange_mm;
   double matrixVolumeChange_mm;
   double macroporeVolumeChange_mm;

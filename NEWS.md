@@ -11,6 +11,7 @@
 * Functions spwb, growth and aspwb now accept a temporal series of runon and waterTableDepth
 * Heat-induced leaf defoliation in growth simulations (advanced model)
 * Tree dynamics (structure update and mortality) can now be turned off in growth simulations
+* Modification in soil water balance for "single" and "dual" to avoid gross errors
 
 # medfate 5.1.0
 * Compilation patch for C++ 20

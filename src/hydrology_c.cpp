@@ -454,9 +454,12 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   }
   
   //Add lateral flows to matrix def source/sinks
-  for(int l=0;l<nlayers;l++) {
+  for(int l=0;l<nlayers;l++) { 
     if(!std::isnan(lateralFlows[l])) source_sink_def_mm[l] += lateralFlows[l];
   }
+  
+  
+  
   
   //Main soil water balance calculation
   if(soilDomains == "buckets") {
@@ -811,6 +814,8 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       nsubsteps = 1;
       cont = true;
 
+      double max_abs_correction_step_mm;
+      double max_abs_correction_previous_step_mm = -1.0;
       while(cont) {
         saturation_excess_macropores_step_mm = 0.0;
         infiltration_excess_macropores_step_mm = 0.0;
@@ -1224,7 +1229,6 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
           Vfin_mm += Theta[l]*widths[l]*lambda[l];
         }
 
-        double max_abs_correction_step_mm;
         double sum_source_sink_def_m3s = std::accumulate(source_sink_def_m3s.begin(), source_sink_def_m3s.end(), 0.0);
         if(soilDomains=="single") {
           // Rcout << s << " "<< nsubsteps<< " sat_ex " << saturation_excess_matrix_mm << " dr " << drainage_matrix_step_m3*m3_2_mm << " cap " << capillarity_matrix_step_m3*m3_2_mm<<"\n";
@@ -1249,14 +1253,21 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
           //   " lat " << sum(lateral_flows_step_mm) << " bal "<< balance_macro_step_mm<<  " corr "<< macropore_correction_step_mm<< "\n";
           max_abs_correction_step_mm = std::max(std::abs(matrix_correction_step_mm), std::abs(macropore_correction_step_mm));
         }
-        if((max_abs_correction_step_mm > 0.001)) {
-          nsubsteps = nsubsteps*2;
-          if(nsubsteps >= max_nsubsteps) {
-            nsubsteps = max_nsubsteps;
+        if(max_abs_correction_step_mm < 0.001) { // Correction is acceptable
+          cont = false; 
+        } else { // Correction is not acceptable
+          if((max_abs_correction_previous_step_mm < 0.0) || (max_abs_correction_step_mm < max_abs_correction_previous_step_mm)) { //First trial or correction improvement with respect to previous trial for this step
+            nsubsteps = nsubsteps*2;
+            if(nsubsteps >= max_nsubsteps) {
+              nsubsteps = max_nsubsteps;
+              cont = false;
+            } else {
+              cont = true;
+              max_abs_correction_previous_step_mm = max_abs_correction_step_mm;
+            }
+          } else {
             cont = false;
           }
-        } else {
-          cont = false;
         }
       }
 
@@ -1322,7 +1333,11 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
     double dif_mm = std::min(capillarity_matrix_mm,  drainage_matrix_mm);
     capillarity_matrix_mm -= dif_mm;
     drainage_matrix_mm  -= dif_mm;
-
+    //Correct overestimation of capillarity by using saturation excess
+    dif_mm = std::min(capillarity_matrix_mm,  saturation_excess_matrix_mm);
+    capillarity_matrix_mm -= dif_mm;
+    saturation_excess_matrix_mm  -= dif_mm;
+    
     //Output
     if(soilDomains=="dual") {
       double drainage_macropores_mm = drainage_macropores_m3*1000.0; //m3/m2 to mm/m2
@@ -1346,7 +1361,6 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       SWBres.drainageMatrix_mm = drainage_matrix_mm;
       SWBres.drainageMacropores_mm = drainage_macropores_mm;
       SWBres.deepDrainage_mm = drainage_matrix_mm + drainage_macropores_mm;
-      SWBres.runoff_mm = runoff_mm;
       SWBres.capillarityMatrix_mm = capillarity_matrix_mm;
       SWBres.capillarityMacropores_mm = capillarity_macropores_mm;
       SWBres.capillarityRise_mm = capillarity_matrix_mm + capillarity_macropores_mm;
@@ -1356,6 +1370,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       SWBres.matrixVolumeChange_mm = Vfin_micro_mm - Vini0_micro_mm;
       SWBres.macroporeVolumeChange_mm = Vfin_macro_mm - Vini0_macro_mm;
       SWBres.volumeChange_mm = Vfin_micro_mm - Vini0_micro_mm  + Vfin_macro_mm - Vini0_macro_mm;
+      SWBres.flowBalance_mm = (SWBres.infiltration_mm + SWBres.capillarityRise_mm + SWBres.localSourceSinks_mm + SWBres.lateralSourceSinks_mm) - (SWBres.infiltrationExcess_mm + SWBres.saturationExcess_mm + SWBres.deepDrainage_mm);
       SWBres.substeps = total_nsubsteps;
     } else if(soilDomains=="single") {
       double runoff_mm = infiltration_excess_matrix_mm  + saturation_excess_matrix_mm;
@@ -1369,6 +1384,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       SWBres.capillarityRise_mm = capillarity_matrix_mm;
       SWBres.correction_mm = matrix_correction_mm;
       SWBres.volumeChange_mm = Vfin_mm - Vini0_mm;
+      SWBres.flowBalance_mm = (SWBres.infiltration_mm + SWBres.capillarityRise_mm + SWBres.localSourceSinks_mm + SWBres.lateralSourceSinks_mm) - (SWBres.infiltrationExcess_mm + SWBres.saturationExcess_mm + SWBres.deepDrainage_mm);
       SWBres.substeps = total_nsubsteps;
     }
   }
