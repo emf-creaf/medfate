@@ -70,6 +70,7 @@
   if(inherits(out, c("spwb_day", "pwb_day", "growth_day"))) return(.shinyplot_day(out))
   if(!inherits(out, c("aspwb","growth", "pwb" , "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
   type_out = class(out)[1] #growth, spwb, fordyn
+  out_1 <- out
   if(type_out=="aspwb") {
     transpirationMode = NA
     subdaily_out = FALSE

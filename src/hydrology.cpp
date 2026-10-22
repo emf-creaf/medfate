@@ -354,6 +354,7 @@ NumericVector agricultureWaterInputs(List x,
 //'   \itemize{
 //'     \item{\code{Correction}: Amount of water (mm) added to deep drainage to correct the water balance.}
 //'     \item{\code{VolumeChange}: Change in soil water volume (mm).}
+//'     \item{\code{FlowBalance}: Balance of water fluxes, to be compared with volume change (mm).}
 //'     \item{\code{Substep}: Time step of the moisture solving (seconds).}
 //'   }
 //'  If \code{soilDomains == "dual"} the named vector contains the following additional elements:
