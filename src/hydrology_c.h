@@ -266,6 +266,6 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
                               double runon, const std::vector<double> &lateralFlows, double waterTableDepth,
                               std::string infiltrationMode, double infiltrationCorrection, 
                               std::string soilDomains, 
-                              int nsteps, int max_nsubsteps, double correction_threshold_mm);
+                              int nsteps, int max_nsubsteps, double richards_tolerance);
 
 #endif

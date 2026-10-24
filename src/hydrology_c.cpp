@@ -390,7 +390,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
                               double runon, const std::vector<double> &lateralFlows, double waterTableDepth,
                               std::string infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, 
                               std::string soilDomains = "buckets", 
-                              int nsteps = 24, int max_nsubsteps = 3600, double correction_threshold_mm = 0.0001) {
+                              int nsteps = 24, int max_nsubsteps = 3600, double richards_tolerance = 0.001) {
   
   if((soilDomains!="single") && (soilDomains!="dual")  && (soilDomains!="buckets") ) throw medfate::MedfateInternalError("Unrecognized soilDomain value");
 
@@ -1253,7 +1253,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
           //   " lat " << sum(lateral_flows_step_mm) << " bal "<< balance_macro_step_mm<<  " corr "<< macropore_correction_step_mm<< "\n";
           max_abs_correction_step_mm = std::max(std::abs(matrix_correction_step_mm), std::abs(macropore_correction_step_mm));
         }
-        if(max_abs_correction_step_mm < correction_threshold_mm) { // Correction is acceptable
+        if(max_abs_correction_step_mm < richards_tolerance) { // Correction is acceptable
           cont = false; 
         } else { // Correction is not acceptable
           if((max_abs_correction_previous_step_mm < 0.0) || (max_abs_correction_step_mm < max_abs_correction_previous_step_mm)) { //First trial or correction improvement with respect to previous trial for this step

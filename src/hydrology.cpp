@@ -314,7 +314,7 @@ NumericVector agricultureWaterInputs(List x,
 //' @param soilDomains Either "buckets" (multi-bucket domain), "single" (for single-domain Richards) or "dual" (for dual-permeability model).
 //' @param nsteps Number of time steps per day
 //' @param max_nsubsteps Maximum number of substeps per time step
-//' @param correction_threshold_mm Threshold for Richards solving correction
+//' @param richards_tolerance Error tolerance for Richards solving (in mm)
 //' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 //' 
 //' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
@@ -406,7 +406,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", 
-                               int nsteps = 24, int max_nsubsteps = 3600, double correction_threshold_mm= 0.0001, bool modifySoil = true) {
+                               int nsteps = 24, int max_nsubsteps = 3600, double richards_tolerance= 0.001, bool modifySoil = true) {
   std::string infiltrationMode_str = infiltrationMode.get_cstring();
   std::string soilDomains_str = soilDomains.get_cstring();
   SoilWaterBalance_COMM SWBcomm = SoilWaterBalance_COMM(soil.nrow());
@@ -426,7 +426,7 @@ NumericVector soilWaterBalance(DataFrame soil, String soilFunctions,
                            runon, lateralFlows_c, waterTableDepth,
                            infiltrationMode_str, infiltrationCorrection,
                            soilDomains_str,
-                           nsteps, max_nsubsteps, correction_threshold_mm);
+                           nsteps, max_nsubsteps, richards_tolerance);
   NumericVector res;
   if(soilDomains== "buckets") {
     res = NumericVector::create(_["Local source/sinks"] = SWBres.localSourceSinks_mm,

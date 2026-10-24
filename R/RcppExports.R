@@ -2266,7 +2266,7 @@ hydrology_agricultureWaterInputs <- function(x, prec, tday, rad, elevation, Lgro
 #' @param soilDomains Either "buckets" (multi-bucket domain), "single" (for single-domain Richards) or "dual" (for dual-permeability model).
 #' @param nsteps Number of time steps per day
 #' @param max_nsubsteps Maximum number of substeps per time step
-#' @param correction_threshold_mm Threshold for Richards solving correction
+#' @param richards_tolerance Error tolerance for Richards solving (in mm)
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_waterInputs}}, \code{\link{hydrology_infiltration}}
@@ -2353,8 +2353,8 @@ hydrology_agricultureWaterInputs <- function(x, prec, tday, rad, elevation, Lgro
 #'   
 #' @name hydrology_soilWaterBalance
 #' @keywords internal
-hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "buckets", nsteps = 24L, max_nsubsteps = 3600L, correction_threshold_mm = 0.0001, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, infiltrationCorrection, soilDomains, nsteps, max_nsubsteps, correction_threshold_mm, modifySoil)
+hydrology_soilWaterBalance <- function(soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon = 0.0, lateralFlows = NULL, waterTableDepth = NA_real_, infiltrationMode = "GreenAmpt1911", infiltrationCorrection = 5.0, soilDomains = "buckets", nsteps = 24L, max_nsubsteps = 3600L, richards_tolerance = 0.001, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterBalance`, soil, soilFunctions, rainfallInput, rainfallIntensity, snowmelt, sourceSink, runon, lateralFlows, waterTableDepth, infiltrationMode, infiltrationCorrection, soilDomains, nsteps, max_nsubsteps, richards_tolerance, modifySoil)
 }
 
 #' @rdname hydrology_soilEvaporation

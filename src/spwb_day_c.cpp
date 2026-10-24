@@ -78,7 +78,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
   std::string& soilDomains = x.control.soilDomains;
   int ndailysteps = x.control.advancedWB.ndailysteps; // MAYBE CHANGE TO COMMONWB parameters
   int max_nsubsteps_soil = x.control.commonWB.max_nsubsteps_soil;
-  double correction_threshold_mm = x.control.commonWB.correction_threshold_mm;
+  double richards_tolerance = x.control.commonWB.richards_tolerance;
   bool fireHazardResults = x.control.results.fireHazardResults;
 
   //Soil
@@ -217,7 +217,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
                                runon, lateralFlows, waterTableDepth,
                                infiltrationMode, infiltrationCorrection,
                                soilDomains,
-                               ndailysteps, max_nsubsteps_soil, correction_threshold_mm);
+                               ndailysteps, max_nsubsteps_soil, richards_tolerance);
       DeepDrainage = SWBres.deepDrainage_mm;
       Infiltration = SWBres.infiltration_mm;
       Runoff = SWBres.runoff_mm;
@@ -255,7 +255,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
                                  runon, lateralFlows, waterTableDepth,
                                  infiltrationMode, infiltrationCorrection,
                                  soilDomains,
-                                 ndailysteps, max_nsubsteps_soil, correction_threshold_mm);
+                                 ndailysteps, max_nsubsteps_soil, richards_tolerance);
 
         DeepDrainage +=  SWBres.deepDrainage_mm*poolProportions[c];
         Runoff += SWBres.runoff_mm*poolProportions[c];
@@ -383,7 +383,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
   std::string& soilDomains = x.control.soilDomains;
   int ndailysteps = x.control.advancedWB.ndailysteps; // MAYBE CHANGE TO COMMONWB parameters
   int max_nsubsteps_soil = x.control.commonWB.max_nsubsteps_soil;
-  double correction_threshold_mm = x.control.commonWB.correction_threshold_mm;
+  double richards_tolerance = x.control.commonWB.richards_tolerance;
   bool fireHazardResults = x.control.results.fireHazardResults;
   
   //Soil
@@ -521,7 +521,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
                                runon, lateralFlows, waterTableDepth,
                                infiltrationMode, infiltrationCorrection,
                                soilDomains,
-                               ndailysteps, max_nsubsteps_soil, correction_threshold_mm);
+                               ndailysteps, max_nsubsteps_soil, richards_tolerance);
       DeepDrainage = SWBres.deepDrainage_mm;
       Infiltration = SWBres.infiltration_mm;
       Runoff = SWBres.runoff_mm;
@@ -558,7 +558,7 @@ void spwbDay_advanced_c(AdvancedSPWB_RESULT& ASPWBres, AdvancedSPWB_COMM& ASPWB_
                                  runon, lateralFlows, waterTableDepth,
                                  infiltrationMode, infiltrationCorrection,
                                  soilDomains,
-                                 ndailysteps, max_nsubsteps_soil, correction_threshold_mm);
+                                 ndailysteps, max_nsubsteps_soil, richards_tolerance);
         
         DeepDrainage +=  SWBres.deepDrainage_mm*poolProportions[c];
         Runoff += SWBres.runoff_mm*poolProportions[c];
@@ -705,7 +705,7 @@ void aspwbDay_c(AgricultureWB_RESULT& AgrWBres, AgricultureWB_COMM& AgrWBcomm, A
                              x.control.commonWB.infiltrationMode, x.control.commonWB.infiltrationCorrection,
                              x.control.soilDomains,
                              x.control.advancedWB.ndailysteps, x.control.commonWB.max_nsubsteps_soil,
-                             x.control.commonWB.correction_threshold_mm);
+                             x.control.commonWB.richards_tolerance);
     
     DeepDrainage = SWBres.deepDrainage_mm;
     Infiltration = SWBres.infiltration_mm;

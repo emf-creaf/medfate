@@ -57,7 +57,7 @@ Only simulations with 'Granier' are allowed to use Saxton functions.}
 \item{\code{VG_PTF}: String indicating the pedotransfer functions for van Genuchten parameters (either 'Toth' or 'Carsel').}
 \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of soil water balance, stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
 \item{\code{max_nsubsteps_soil [= 300]}: Maximum number of substeps for soil water balance solving.}
-\item{\code{correction_threshold_mm [= 0.0001]}: Threshold for Richards solving correction.}
+\item{\code{richards_tolerance [= 0.001]}: Error tolerance for Richards solving (mm).}
 \item{\code{defaultWindSpeed [= 2.5]}: Default wind speed value (in m/s) to be used when missing from data. }
 \item{\code{defaultCO2 [= 386]}: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input. }
 \item{\code{defaultRainfallIntensityPerMonth [= c(1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5.6, 5.6, 5.6, 5.6, 5.6, 1.5)]}: A vector of twelve values indicating the rainfall intensity (mm/h) per month.
