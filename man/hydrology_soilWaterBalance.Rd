@@ -19,6 +19,7 @@ hydrology_soilWaterBalance(
   soilDomains = "buckets",
   nsteps = 24L,
   max_nsubsteps = 3600L,
+  correction_threshold_mm = 1e-04,
   modifySoil = TRUE
 )
 }
@@ -51,6 +52,8 @@ as mm/day.}
 \item{nsteps}{Number of time steps per day}
 
 \item{max_nsubsteps}{Maximum number of substeps per time step}
+
+\item{correction_threshold_mm}{Threshold for Richards solving correction}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }

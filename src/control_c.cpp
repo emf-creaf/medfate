@@ -81,6 +81,8 @@ ControlParameters::ControlParameters(List x) {
   commonWB.soilFunctions = as<std::string>(x["soilFunctions"]);
   commonWB.VG_PTF = as<std::string>(x["VG_PTF"]);
   commonWB.max_nsubsteps_soil = as<int>(x["max_nsubsteps_soil"]);
+  if(x.containsElementNamed("correction_threshold_mm")) commonWB.correction_threshold_mm = as<double>(x["correction_threshold_mm"]);
+  else commonWB.correction_threshold_mm = 0.0001;
   commonWB.infiltrationCorrection = as<double>(x["infiltrationCorrection"]);
   commonWB.verticalLayerSize = as<double>(x["verticalLayerSize"]);
   commonWB.bareSoilEvaporation = as<bool>(x["bareSoilEvaporation"]);

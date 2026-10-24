@@ -80,6 +80,7 @@ struct CommonWBParams {
   std::string soilFunctions;
   std::string VG_PTF;
   int max_nsubsteps_soil;
+  double correction_threshold_mm;
   double infiltrationCorrection;
 };
 

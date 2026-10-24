@@ -32,4 +32,4 @@ NumericVector soilWaterBalance_inner(List SWBcommunication, DataFrame soil, Stri
                                double rainfallInput, double rainfallIntensity, double snowmelt, NumericVector sourceSink, 
                                double runon = 0.0, Nullable<NumericVector> lateralFlows = R_NilValue, double waterTableDepth = NA_REAL,
                                String infiltrationMode = "GreenAmpt1911", double infiltrationCorrection = 5.0, String soilDomains = "buckets", 
-                               int nsteps = 24, int max_nsubsteps = 3600, bool modifySoil = true);
+                               int nsteps = 24, int max_nsubsteps = 3600, double correction_threshold_mm = 0.0001, bool modifySoil = true);
