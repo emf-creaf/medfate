@@ -565,15 +565,33 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
       //This is better than assuming weights equal to layer widths, which can result
       //In water leaving bottom layers when rain fills the top layers
       int nlayers = x_iCell.soil.getNlayers();
-      std::vector<double> wl(nlayers);
       std::vector<double> lateralFlows_c(nlayers);
-      double wsum = 0.0;
-      for(int l=0;l<nlayers;l++) {
-        wl[l] = x_iCell.soil.getWater(l);
-        wsum += wl[l];
-      }
-      for(int l=0;l<nlayers;l++) {
-        lateralFlows_c[l] = InterflowBalance[iCell]*(wl[l]/wsum);
+      if(InterflowBalance[iCell]<0.0) { //Remove more water from layers with larger excess
+        std::vector<double> wel(nlayers);
+        double wesum = 0.0;
+        for(int l=0;l<nlayers;l++) {
+          wel[l] = std::max(0.0, x_iCell.soil.getWater(l) - x_iCell.soil.getWaterFC(l));
+          wesum += wel[l];
+        }
+        if(wesum==0.0) { //Set equal weights if all layers above FC
+          for(int l=0;l<nlayers;l++) {
+            wel[l] = 1.0;
+            wesum += wel[l];
+          }
+        }
+        for(int l=0;l<nlayers;l++) {
+          lateralFlows_c[l] = InterflowBalance[iCell]*(wel[l]/wesum);
+        }
+      } else { // Add more water to those layers with larger deficit
+        std::vector<double> wdl(nlayers);
+        double wdsum = 0.0;
+        for(int l=0;l<nlayers;l++) {
+          wdl[l] = x_iCell.soil.getWaterSAT(l) - x_iCell.soil.getWater(l);
+          wdsum += wdl[l];
+        }
+        for(int l=0;l<nlayers;l++) {
+          lateralFlows_c[l] = InterflowBalance[iCell]*(wdl[l]/wdsum);
+        }
       }
       if((input_class_iCell == "spwbInput") || (input_class_iCell == "aspwbInput")) {
         WaterBalanceModelInput& x_iCell = dynamic_cast<WaterBalanceModelInput&>(*p_x_vec[iCell]);
