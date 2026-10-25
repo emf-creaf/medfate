@@ -811,7 +811,6 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
       infiltration_target_macropores_step_mm = std::min(infiltration_target_macropores_mm, rainfallIntensity_step);
       infiltration_target_macropores_mm -= infiltration_target_macropores_step_mm;
 
-      nsubsteps = 1;
       cont = true;
 
       double max_abs_correction_step_mm;
