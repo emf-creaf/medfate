@@ -1,6 +1,6 @@
 ## Minor change submission
 
-This submission (ver. 5.1.0) some improvements and corrections of installation issues of ver 5.0.0.
+This submission (ver. 5.2.0) some improvements.
 
 ## Tested environments
 
@@ -16,8 +16,8 @@ This submission (ver. 5.1.0) some improvements and corrections of installation i
 
 ## R CMD check results
 
-In all CI tests only NOTEs are generated, except in clang18 flavor were installation problems occurred. Some memory leaks have been detected with valgrind, which we will try to solve.
+In all CI tests only NOTEs are generated, except in clang18 and clang-asan flavor were installation problems occurred. Some memory leaks have been detected with valgrind, which we will try to solve.
 
 ## Reverse/Downstream dependencies
 
-`medfate` has a reverse dependency with `medfateland`, under our responsibility, whose current CRAN version should pass checks with `medfate` v. 5.1.0.
+`medfate` has a reverse dependency with `medfateland`, under our responsibility, whose current CRAN version should pass checks with `medfate` v. 5.2.0.
