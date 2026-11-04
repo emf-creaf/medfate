@@ -116,7 +116,7 @@ test_that("DAYCENT can be run", {
   skip_on_ci()
   skip_on_cran()
   
-  load("/home/miquel/OneDrive/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/Rdata/RC2m_Process.RData")
+  load("/home/miquel/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/Rdata/RC2m_Process.RData")
   duke_tree <- tree$`3`
   
   environmentalConditions <- env_daily(out_duke)
