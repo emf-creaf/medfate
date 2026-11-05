@@ -32,7 +32,7 @@ The Font-Blanche research forest, located in southeastern France (43º14′27″
 Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. Since FontBlanche is one of the sites used for evaluating the model, and much of the data can be found in Moreno et al. (2021). We can use a data list `fb` with all the necessary inputs:
 
 ```{r initialization}
-fb <- readRDS(paste0("~/OneDrive/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/data/input/FONBLA/FONBLA_", as.character(packageVersion("medfate")), ".rds"))
+fb <- readRDS(paste0("~/mcaceres_work/model_development/medfate_evaluation/StandLevelEvaluation/data/input/FONBLA/FONBLA_", as.character(packageVersion("medfate")), ".rds"))
 ```
 
 ### Soil

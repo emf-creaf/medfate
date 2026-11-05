@@ -1,3 +1,6 @@
+# medfate 5.2.1
+* IA-based optimization of soilWaterBalance_inner_c
+
 # medfate 5.2.0
 * Revision of leaf phenology and primary growth determinacy
 * Novel plot for leaf phenological status

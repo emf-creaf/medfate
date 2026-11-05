@@ -59,14 +59,14 @@ SpParamsMED$IFNcodes <- SpParamsTaxonomy$IFNcodes
 SpParamsMED <- SpParamsMED|>
   dplyr::relocate(IFNcodes, .before=AcceptedName)
 
-MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/"
-harmonized_allometry_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_allometry_sources/"
-harmonized_trait_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources/"
+MFWdir = "~/mcaceres_work/model_development/medfate_parameterization/"
+harmonized_allometry_path <- "~/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_allometry_sources/"
+harmonized_trait_path <- "~/mcaceres_work/model_development/medfate_parameterization/traits_and_models/data/harmonized_trait_sources/"
 
 # Filling structural parameters from inventory data 
 cli::cli_h2("SpParamsMED filling parameters from IFN")
-# sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsES/IFN3/soilmod/IFN3_spain_soilmod_WGS84.rds")
-sf_IFN3 <- readRDS("~/OneDrive/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsMED/IFN3/Spain/IFN3_spain_final_ETRS89H30.rds")
+# sf_IFN3 <- readRDS("~/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsES/IFN3/soilmod/IFN3_spain_soilmod_WGS84.rds")
+sf_IFN3 <- readRDS("~/mcaceres_work/model_initialisation/medfate_initialisation/IFN2medfate/data/SpParamsMED/IFN3/Spain/IFN3_spain_final_ETRS89H30.rds")
 SpParamsMED<- traits4models::fill_medfate_inventory_traits(SpParamsMED, sf_IFN3,
                                                            progress = TRUE)
 
@@ -158,7 +158,7 @@ rm(SpParamsMED)
 
 
 # Trait family means ------------------------------------------------------
-DB_path <- "~/OneDrive/mcaceres_work/model_development/medfate_parameterization/traits_and_models/"
+DB_path <- "~/mcaceres_work/model_development/medfate_parameterization/traits_and_models/"
 harmonized_trait_path <- paste0(DB_path, "data/harmonized_trait_sources")
 WFO_file <- paste0(DB_path, "data-raw/wfo_backbone/classification.csv")
 trait_family_means <- traits4models::taxon_trait_summary(harmonized_trait_path, taxonomic_level = "family", 

@@ -28,7 +28,7 @@ library(cowplot)
 
 ```{r, include=FALSE}
 #' Load data
-wd <- '/home/miquel/OneDrive/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/'
+wd <- '/home/miquel/mcaceres_work/model_development/medfate_evaluation/RcenturyBenchmark/'
 file_cent <- paste0(wd,"Rdata/RC2m_Process.RData")
 if(!file.exists(file_cent)) stop("File does not exist")
 load(file_cent)
