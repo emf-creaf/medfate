@@ -573,7 +573,13 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
     for(int i=0;i<ncanlayers;i++) Tair[i] = Tatm[0];
   }
   if(std::isnan(x.soil.getTemp(0))) {//If missing initialize soil temperature with atmospheric air temperature
-    for(int l=0;l<nlayers; l++) x.soil.setTemp(l, Tatm[0]);
+    double soilDepth = 0.0, cumDepth = 0.0;
+    for(int l=0;l<nlayers; l++) soilDepth += x.soil.getWidth(l);
+    for(int l=0;l<nlayers; l++) {
+      double w = (cumDepth + x.soil.getWidth(l)/2.0)/soilDepth;
+      x.soil.setTemp(l, Tatm[0]*(1.0 - w) + 15.0*w); 
+      cumDepth += x.soil.getWidth(l);
+    }
   }
   //Take initial canopy air temperature from previous day
   double numSum = 0.0;
@@ -1083,6 +1089,8 @@ void transpirationAdvanced_c(AdvancedTranspiration_RESULT& ATres, AdvancedTransp
         x.soil.setTemp(l, x.soil.getTemp(l) + std::max(-3.0, std::min(3.0, ATcomm.SEBcomm.tempch[l])));
         if(n<(ntimesteps-1)) outputEnergyBalance.SoilTemperature(n+1,l)= x.soil.getTemp(l);
       }
+      //Boundary conditions of zero heat flux at the bottom
+      // x.soil.setTemp(nlayers-1, 15.0);
     } else { //Multilayer canopy balance
       double moistureAtm = 0.622*(vpatm/Patm)*airDensity_c(Tatm[n],Patm);
       double CO2Atm = 0.409*Catm*44.01; //mg/m3

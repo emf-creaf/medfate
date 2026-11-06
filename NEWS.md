@@ -1,5 +1,6 @@
 # medfate 5.2.1
 * IA-based optimization of soilWaterBalance_inner_c
+* Bug correction: soil energy balance for the bottom layer
 
 # medfate 5.2.0
 * Revision of leaf phenology and primary growth determinacy

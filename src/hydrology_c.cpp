@@ -915,7 +915,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
             K_up = 0.0;
             K_down = K_step_ms[l];
             drain_below[l] = K_down;
-            if(prop_saturated[l]==1.0) {
+            if(prop_saturated[l+1]==1.0) {
               drain_below[l] = 0.0;
             }
             a[l] = 0.0;
@@ -930,6 +930,8 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
             drain_below[l] = K_down;
             if(prop_saturated[l]==1.0) {
               drain_above[l] = 0.0;
+            }
+            if(prop_saturated[l+1]==1.0) {
               drain_below[l] = 0.0;
             }
             a[l] = -1.0*K_up/dZUp[l];
@@ -943,11 +945,12 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
             drain_above[l] = K_up;
             if(prop_saturated[l]==1.0) {
               drain_above[l] = 0.0;
-              drain_below[l] = 0.0;
+              // drain_below[l] = 0.0;
             }
             a[l] = -1.0*K_up/dZUp[l];
             c[l] = 0.0;
             double bc_cond = (!freeDrainage && num_saturated < nlayers) ? (K_down/dZDown[l]) : 0.0;
+            // Rcpp::Rcout <<" temp:"<< soil.getTemp(l) << " fluidity: " << waterFluidity[l]<< " Psi:"<< Psi[l]<< " K:"<< K[l]<< " drain:"<< drain_below[l] << " bc:"<< bc_cond << "\n";
             b[l] = c_term - a[l] + bc_cond;
             d[l] = c_term*Psi_step_m[l] - mass_defect + drain_above[l] - drain_below[l] + bc_cond*(Psi_bc/mTOMPa) + finalSourceSinks_m3s[l];
           }

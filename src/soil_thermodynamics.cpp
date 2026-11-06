@@ -211,6 +211,7 @@ NumericVector temperatureChange_inner(List SEBcommunication, NumericVector width
       b[l] = (Cv[l]*dZ_m[l]/tstep) - a[l] - c[l];
       d[l] = (k_up[l]/dZUp[l])*(Temp[l-1] - Temp[l]) - (k_down[l]/dZDown[l])*(Temp[l] - Temp[l+1]);
     } else { // last layer
+      k_up[l] = k_down[l-1];
       a[l] = -1.0*(k_up[l]/dZUp[l]);
       c[l] = 0.0;
       b[l] = (Cv[l]*dZ_m[l]/tstep) - a[l];
