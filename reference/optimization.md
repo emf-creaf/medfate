@@ -274,8 +274,8 @@ sf<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 multiple_runs(parMatrix, 
               x1, examplemeteo, latitude = 42, elevation = 100,
               summary_function = sf)
-#> 1. Parameter values = [200, 500] f = 237.154649455981
-#> 2. Parameter values = [300, 1000] f = 238.007908229686
+#> 1. Parameter values = [200, 500] f = 237.154649969768
+#> 2. Parameter values = [300, 1000] f = 238.007909431352
 #> [[1]]
 #> [1] 237.1546
 #> 

@@ -22,6 +22,7 @@ hydrology_soilWaterBalance(
   soilDomains = "buckets",
   nsteps = 24L,
   max_nsubsteps = 3600L,
+  richards_tolerance = 0.001,
   modifySoil = TRUE
 )
 ```
@@ -92,6 +93,10 @@ hydrology_soilWaterBalance(
 
   Maximum number of substeps per time step
 
+- richards_tolerance:
+
+  Error tolerance for Richards solving (in mm)
+
 - modifySoil:
 
   Boolean flag to indicate that the input `soil` object should be
@@ -132,6 +137,9 @@ additional elements:
   the water balance.
 
 - `VolumeChange`: Change in soil water volume (mm).
+
+- `FlowBalance`: Balance of water fluxes, to be compared with volume
+  change (mm).
 
 - `Substep`: Time step of the moisture solving (seconds).
 
@@ -242,13 +250,13 @@ hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1),
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
                            soilDomains = "single", modifySoil = FALSE)
 #>   Local source/sinks Lateral source/sinks         Infiltration 
-#>         -4.000000000          0.000000000         10.000000000 
+#>        -4.000000e+00         0.000000e+00         1.000000e+01 
 #>   InfiltrationExcess     SaturationExcess               Runoff 
-#>          0.000000000          0.000000000          0.000000000 
+#>         0.000000e+00         0.000000e+00         0.000000e+00 
 #>         DeepDrainage      CapillarityRise           Correction 
-#>          0.005785380          0.000000000         -0.001286961 
-#>         VolumeChange             Substeps 
-#>          5.994214620         24.000000000 
+#>         7.022170e-03         0.000000e+00        -1.136868e-13 
+#>         VolumeChange          FlowBalance             Substeps 
+#>         5.992978e+00         5.992978e+00         7.200000e+01 
                     
 # Water balance in a dual-permeability model (MACRO)
 hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1), 
@@ -256,28 +264,30 @@ hydrology_soilWaterBalance(examplesoil, "VG", 10, 5, 0, c(-1,-1,-1,-1),
 #>           Local source/sinks         Lateral source/sinks 
 #>                -4.000000e+00                 0.000000e+00 
 #>        Matrix-macropore flow           InfiltrationMatrix 
-#>                 4.836043e+00                 4.481027e+00 
+#>                 4.856877e+00                 4.483066e+00 
 #>       InfiltrationMacropores     InfiltrationExcessMatrix 
-#>                 5.518973e+00                 5.518973e+00 
+#>                 5.516934e+00                 5.516934e+00 
 #> InfiltrationExcessMacropores       SaturationExcessMatrix 
 #>                 0.000000e+00                 0.000000e+00 
 #>   SaturationExcessMacropores               DrainageMatrix 
-#>                 0.000000e+00                 2.379449e-02 
+#>                 0.000000e+00                 2.819606e-02 
 #>           DrainageMacropores            CapillarityMatrix 
-#>                 3.889382e-06                 0.000000e+00 
+#>                 4.327962e-17                 0.000000e+00 
 #>        CapillarityMacropores             CorrectionMatrix 
-#>                 0.000000e+00                -4.573672e-03 
+#>                 0.000000e+00                -1.705303e-13 
 #>         CorrectionMacropores           MatrixVolumeChange 
-#>                 3.889382e-06                 5.293276e+00 
+#>                -4.330377e-09                 5.311748e+00 
 #>        MacroporeVolumeChange                 Infiltration 
-#>                 6.829261e-01                 1.000000e+01 
+#>                 6.600564e-01                 1.000000e+01 
 #>           InfiltrationExcess             SaturationExcess 
 #>                 0.000000e+00                 0.000000e+00 
 #>                       Runoff                 DeepDrainage 
-#>                 0.000000e+00                 2.379838e-02 
+#>                 0.000000e+00                 2.819606e-02 
 #>              CapillarityRise                   Correction 
-#>                 0.000000e+00                -4.569782e-03 
-#>                 VolumeChange                     Substeps 
-#>                 5.976202e+00                 2.400000e+01 
+#>                 0.000000e+00                -4.330547e-09 
+#>                 VolumeChange                  FlowBalance 
+#>                 5.971804e+00                 5.971804e+00 
+#>                     Substeps 
+#>                 7.200000e+01 
   
 ```

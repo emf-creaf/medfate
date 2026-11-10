@@ -301,13 +301,13 @@ data(exampleobs)
 #Evaluation statistics for soil water content
 evaluation_stats(S1, exampleobs)
 #>             n          Bias      Bias.rel           MAE       MAE.rel 
-#> 365.000000000  -0.001314795  -0.475552878   0.005860409   2.119671714 
+#> 365.000000000  -0.001314776  -0.475545920   0.005860398   2.119667622 
 #>             r           NSE       NSE.abs 
-#>   0.966757978   0.927681121   0.702358870 
+#>   0.966758072   0.927681352   0.702359445 
 
 #NSE only
 evaluation_metric(S1, exampleobs, metric="NSE")
-#> [1] 0.9276811
+#> [1] 0.9276814
 
 #Comparison of temporal dynamics
 evaluation_plot(S1, exampleobs)

@@ -1,6 +1,13 @@
 # Changelog
 
+## medfate 5.2.1
+
+- IA-based optimization of soilWaterBalance_inner_c
+- Bug correction: soil energy balance for the bottom layer
+
 ## medfate 5.2.0
+
+CRAN release: 2026-10-27
 
 - Revision of leaf phenology and primary growth determinacy
 - Novel plot for leaf phenological status
@@ -15,6 +22,11 @@
 - Subdaily LFMC now generated as subdaily output
 - Functions spwb, growth and aspwb now accept a temporal series of runon
   and waterTableDepth
+- Heat-induced leaf defoliation in growth simulations (advanced model)
+- Tree dynamics (structure update and mortality) can now be turned off
+  in growth simulations
+- Modification in soil water balance for “single” and “dual” to avoid
+  gross errors
 
 ## medfate 5.1.0
 

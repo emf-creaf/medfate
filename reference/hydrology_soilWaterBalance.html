@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,7 @@
 <span>  soilDomains <span class="op">=</span> <span class="st">"buckets"</span>,</span>
 <span>  nsteps <span class="op">=</span> <span class="fl">24L</span>,</span>
 <span>  max_nsubsteps <span class="op">=</span> <span class="fl">3600L</span>,</span>
+<span>  richards_tolerance <span class="op">=</span> <span class="fl">0.001</span>,</span>
 <span>  modifySoil <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -134,6 +135,10 @@ as mm/day.</p></dd>
 <dd><p>Maximum number of substeps per time step</p></dd>
 
 
+<dt id="arg-richards-tolerance">richards_tolerance<a class="anchor" aria-label="anchor" href="#arg-richards-tolerance"></a></dt>
+<dd><p>Error tolerance for Richards solving (in mm)</p></dd>
+
+
 <dt id="arg-modifysoil">modifySoil<a class="anchor" aria-label="anchor" href="#arg-modifysoil"></a></dt>
 <dd><p>Boolean flag to indicate that the input <code>soil</code> object should be modified during the simulation.</p></dd>
 
@@ -151,6 +156,7 @@ as mm/day.</p></dd>
 <li><p><code>CapillarityRise</code>: Water entering the soil via capillarity rise (mm) from the water table, if <code>waterTableDepth</code> is supplied.</p></li>
 </ul><p>If <code>soilDomains == "single"</code> the named vector contains the following additional elements:</p><ul><li><p><code>Correction</code>: Amount of water (mm) added to deep drainage to correct the water balance.</p></li>
 <li><p><code>VolumeChange</code>: Change in soil water volume (mm).</p></li>
+<li><p><code>FlowBalance</code>: Balance of water fluxes, to be compared with volume change (mm).</p></li>
 <li><p><code>Substep</code>: Time step of the moisture solving (seconds).</p></li>
 </ul><p>If <code>soilDomains == "dual"</code> the named vector contains the following additional elements:</p><ul><li><p><code>Lateral flows</code>: Sum of water circulating between micropores and macropores, positive when filling micropores (mm).</p></li>
 <li><p><code>InfiltrationMatrix</code>: Water infiltrated into the soil matrix (mm).</p></li>
@@ -213,13 +219,13 @@ dual-permeability model extra infiltration through macropores is simulated expli
 <span class="r-in"><span><span class="fu">hydrology_soilWaterBalance</span><span class="op">(</span><span class="va">examplesoil</span>, <span class="st">"VG"</span>, <span class="fl">10</span>, <span class="fl">5</span>, <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>                           soilDomains <span class="op">=</span> <span class="st">"single"</span>, modifySoil <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Local source/sinks Lateral source/sinks         Infiltration </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         -4.000000000          0.000000000         10.000000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        -4.000000e+00         0.000000e+00         1.000000e+01 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   InfiltrationExcess     SaturationExcess               Runoff </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          0.000000000          0.000000000          0.000000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         0.000000e+00         0.000000e+00         0.000000e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         DeepDrainage      CapillarityRise           Correction </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          0.005785380          0.000000000         -0.001286961 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         VolumeChange             Substeps </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          5.994214620         24.000000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         7.022170e-03         0.000000e+00        -1.136868e-13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         VolumeChange          FlowBalance             Substeps </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         5.992978e+00         5.992978e+00         7.200000e+01 </span>
 <span class="r-in"><span>                    </span></span>
 <span class="r-in"><span><span class="co"># Water balance in a dual-permeability model (MACRO)</span></span></span>
 <span class="r-in"><span><span class="fu">hydrology_soilWaterBalance</span><span class="op">(</span><span class="va">examplesoil</span>, <span class="st">"VG"</span>, <span class="fl">10</span>, <span class="fl">5</span>, <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span></span>
@@ -227,29 +233,31 @@ dual-permeability model extra infiltration through macropores is simulated expli
 <span class="r-out co"><span class="r-pr">#&gt;</span>           Local source/sinks         Lateral source/sinks </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                -4.000000e+00                 0.000000e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Matrix-macropore flow           InfiltrationMatrix </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 4.836043e+00                 4.481027e+00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 4.856877e+00                 4.483066e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       InfiltrationMacropores     InfiltrationExcessMatrix </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 5.518973e+00                 5.518973e+00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 5.516934e+00                 5.516934e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> InfiltrationExcessMacropores       SaturationExcessMatrix </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                 0.000000e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   SaturationExcessMacropores               DrainageMatrix </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                 2.379449e-02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                 2.819606e-02 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           DrainageMacropores            CapillarityMatrix </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 3.889382e-06                 0.000000e+00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 4.327962e-17                 0.000000e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        CapillarityMacropores             CorrectionMatrix </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                -4.573672e-03 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                -1.705303e-13 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         CorrectionMacropores           MatrixVolumeChange </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 3.889382e-06                 5.293276e+00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                -4.330377e-09                 5.311748e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        MacroporeVolumeChange                 Infiltration </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 6.829261e-01                 1.000000e+01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 6.600564e-01                 1.000000e+01 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           InfiltrationExcess             SaturationExcess </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                 0.000000e+00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Runoff                 DeepDrainage </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                 2.379838e-02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                 2.819606e-02 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              CapillarityRise                   Correction </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                -4.569782e-03 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 VolumeChange                     Substeps </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 5.976202e+00                 2.400000e+01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.000000e+00                -4.330547e-09 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 VolumeChange                  FlowBalance </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 5.971804e+00                 5.971804e+00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     Substeps </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 7.200000e+01 </span>
 <span class="r-in"><span>  </span></span>
 </code></pre></div>
     </div>

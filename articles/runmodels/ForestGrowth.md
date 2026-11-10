@@ -209,13 +209,13 @@ x$paramsGrowth
 ```
 
     ##            RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot
-    ## T1_158 0.009615236   5.15e-05 0.000601144  1.500      1.47        1.3
-    ## T2_179 0.012589729   5.15e-05 0.007229920  1.430      1.47        1.3
-    ## S1_176 0.009892030   5.15e-05 0.012876076  1.532      1.47        1.3
+    ## T1_158 0.009615236   5.15e-05 0.022180095  1.500      1.47        1.3
+    ## T2_179 0.012589729   5.15e-05 0.002358571  1.430      1.47        1.3
+    ## S1_176 0.009892030   5.15e-05 0.023797039  1.532      1.47        1.3
     ##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax RGRbud SRsapwood
-    ## T1_158       0.05            NA   0.002628095            0.1      5  0.000135
-    ## T2_179       0.05            NA   0.002500000            0.1     20  0.000135
-    ## S1_176       0.05         0.002            NA            0.1     20  0.000135
+    ## T1_158      0.001            NA   0.002628095            0.1      5  0.000135
+    ## T2_179      0.001            NA   0.002500000            0.1     20  0.000135
+    ## S1_176      0.001         0.002            NA            0.1     20  0.000135
     ##         SRfineroot RSSG fHDmin fHDmax     WoodC
     ## T1_158 0.001897231 0.32     80    160 0.4981000
     ## T2_179 0.001897231 0.32     15     70 0.4751000
@@ -277,9 +277,9 @@ x$internalAllocation
     ## T2_179         8.8956473                  0        145.939304
     ## S1_176         0.5769286                  0          2.888099
     ##        fineRootBiomassTarget crownBudPercent
-    ## T1_158            1614.66309             100
-    ## T2_179            1371.73312             100
-    ## S1_176              38.09374             100
+    ## T1_158            1822.74507             100
+    ## T2_179            1099.98376             100
+    ## S1_176              41.12508             100
 
 Additional `internal*` elements are `internalMortality`, used to keep
 track of dead individuals; and `internalRings`, which stores state
@@ -297,7 +297,7 @@ which has the same parameter names as
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-    ## Initial plant cohort biomass (g/m2): 14417.1
+    ## Initial plant cohort biomass (g/m2): 14410.3
     ## Initial plant water content (mm): 4.67289
     ## Initial soil water content (mm): 290.875
     ## Initial snowpack content (mm): 0
@@ -305,28 +305,28 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
     ## 
     ##  Year 2001:............
     ## 
-    ## Final plant cohort biomass (g/m2): 14794.8
-    ## Change in plant cohort biomass (g/m2): 377.741
+    ## Final plant cohort biomass (g/m2): 14663.6
+    ## Change in plant cohort biomass (g/m2): 253.249
     ## Plant biomass balance result (g/m2): 0
     ## Plant biomass balance components:
-    ##   Structural balance (g/m2) 112 Labile balance (g/m2) 148
-    ##   Plant individual balance (g/m2) 260 Mortality loss (g/m2) 22
+    ##   Structural balance (g/m2) 53 Labile balance (g/m2) 140
+    ##   Plant individual balance (g/m2) 193 Mortality loss (g/m2) 22
     ## Final plant water content (mm): 4.69056
-    ## Final soil water content (mm): 276.399
+    ## Final soil water content (mm): 276.143
     ## Final snowpack content (mm): 0
-    ## Change in plant water content (mm): 0.0176761
-    ## Plant water balance result (mm): -0.00135788
-    ## Change in soil water content (mm): -14.4761
-    ## Soil water balance result (mm): -14.4831
+    ## Change in plant water content (mm): 0.0176779
+    ## Plant water balance result (mm): -0.00166477
+    ## Change in soil water content (mm): -14.7314
+    ## Soil water balance result (mm): -14.7388
     ## Change in snowpack water content (mm): 0
-    ## Snowpack water balance result (mm): 7.10543e-15
+    ## Snowpack water balance result (mm): -1.42109e-14
     ## Water balance components:
     ##   Precipitation (mm) 513 Rain (mm) 462 Snow (mm) 51
-    ##   Interception (mm) 79 Net rainfall (mm) 383 Runon (mm) 0
-    ##   Infiltration (mm) 413 Infiltration excess (mm) 22 Saturation excess (mm) 0 Capillarity rise (mm) 0
-    ##   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 233  Mistletoe transpiration (mm) 0
-    ##   Plant extraction from soil (mm) 233  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
-    ##   Runoff (mm) 22 Deep drainage (mm) 167
+    ##   Interception (mm) 80 Net rainfall (mm) 383 Runon (mm) 0
+    ##   Infiltration (mm) 413 Infiltration excess (mm) 21 Saturation excess (mm) 0 Capillarity rise (mm) 0
+    ##   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 0  Woody plant transpiration (mm) 235  Mistletoe transpiration (mm) 0
+    ##   Plant extraction from soil (mm) 235  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1
+    ##   Runoff (mm) 21 Deep drainage (mm) 166
 
 At the end of daily simulations, the
 [`growth()`](https://emf-creaf.github.io/medfate/reference/growth.md)
@@ -542,9 +542,9 @@ evaluation_stats(G1, exampleobs, "BAI", cohort = rownames(x$cohorts)[1],
 ```
 
     ##            n         Bias     Bias.rel          MAE      MAE.rel            r 
-    ##  12.00000000  -0.03278331 -11.92618000   0.04148885  15.09315130   0.98725324 
+    ##  12.00000000  -0.03227555 -11.74146436   0.04069439  14.80413585   0.98832232 
     ##          NSE      NSE.abs 
-    ##   0.94165006   0.81658133
+    ##   0.94351071   0.82009357
 
 The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment

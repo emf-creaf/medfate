@@ -150,6 +150,9 @@ A list, with the following options (default values in brackets):
   - `max_nsubsteps_soil [= 300]`: Maximum number of substeps for soil
     water balance solving.
 
+  - `richards_tolerance [= 0.001]`: Error tolerance for Richards solving
+    (mm).
+
   - `defaultWindSpeed [= 2.5]`: Default wind speed value (in m/s) to be
     used when missing from data.
 
@@ -268,17 +271,26 @@ A list, with the following options (default values in brackets):
       impairment induces defoliation (and bud senescence in the growth
       model).
 
-    - `criticalLeafPLC [= 0.50]`: Level of PLC (a proportion)
-      corresponding to 50 % crown defoliation.
+    - `criticalLeafPLC [= 0.50]`: Default value of PLC (a proportion)
+      associated to cavitation-induced leaf senescence.
 
-    - `criticalBudPLC [= 0.88]`: Level of PLC (a proportion)
-      corresponding to 50 % crown bud senescence.
+    - `criticalBudPLC [= 0.88]`: Default value of PLC (a proportion)
+      associated to cavitation-induced bud (branch) senescence.
 
     - `cvLeafP50 [= 10.0]`: Coefficient of variation (in percent) of
       leaf P50 within crown.
 
     - `cvBudP50 [= 10.0]`: Coefficient of variation (in percent) of bud
-      P50 within crown.
+      (branch) P50 within crown.
+
+    - `temperatureInducedDefoliation [=TRUE]`: Whether heat stress
+      induces defoliation.
+
+    - `criticalLeafTS [= 50.0]`: Default value for critical leaf
+      temperature associated to heat-induced leaf senescence.
+
+    - `cvLeafTS [= 5.0]`: Coefficient of variation (in percent) of leaf
+      critical senescence temperature within crown.
 
   **Water balance** (functions
   [`spwb`](https://emf-creaf.github.io/medfate/reference/spwb.md),
@@ -331,9 +343,10 @@ A list, with the following options (default values in brackets):
   - `rootRadialConductance [= 4]`: Radial conductance in roots
     (mmol·s-1·m-2·MPa-1).
 
-  - `averageFracRhizosphereResistance [= 0.15]`: Fraction to total
+  - `averageFracRhizosphereResistance [= 0.25]`: Fraction to total
     continuum (leaf+stem+root+rhizosphere) resistance that corresponds
-    to rhizosphere (averaged across soil water potential values).
+    to rhizosphere (averaged across soil water potential values down to
+    stomatal closure).
 
   - `boundaryLayerSize [= 2000]`: Size of the boundary layer (in cm)
     over the canopy (relevant for multi-layer canopy energy balance).
@@ -415,11 +428,18 @@ A list, with the following options (default values in brackets):
   - `sinkLimitation [= TRUE]`: Boolean flag to indicate that temperature
     and turgor limitations to growth are applied.
 
-  - `shrubDynamics [= TRUE]`: Boolean flag to allow the application of
-    demographic processes to shrubs.
+  - `treeDynamics [= TRUE]`: Boolean flag to allow the application of
+    demographic processes to tree cohorts.
 
-  - `herbDynamics [= TRUE]`: Boolean flag to allow dynamic herb leaf
-    area as a function of shading due to leaf area of woody cohorts.
+  - `shrubDynamics [= TRUE]`: Boolean flag to allow the application of
+    demographic processes to shrub cohorts.
+
+  - `herbDynamics [= TRUE]`: Boolean flag to allow the application of
+    demographic processes to herb cohorts.
+
+  - `herbLayerDynamics [= TRUE]`: Boolean flag to allow dynamic herb
+    leaf area as a function of shading due to leaf area of woody
+    cohorts.
 
   - `allocationStrategy [= "Al2As"]`: Strategy for allocation (either
     "Plant_kmax", for constant maximum plant conductance, or "Al2As" for
@@ -455,7 +475,7 @@ A list, with the following options (default values in brackets):
     equivalent to 9%, 5% and 50% annual turnover for gymnosperm sapwood,
     angiosperm sapwood and fine roots, respectively.
 
-  - `maximumRelativeGrowthRates [= c(leaf = 0.05, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]`:
+  - `maximumRelativeGrowthRates [= c(leaf = 0.001, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]`:
     Default maximum relative growth rates for leaves (m2 leaf ·cm-2
     sapwood· day-1), tree sapwood (cm2 sapwood· cm-1 cambium · day-1),
     shrub sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g

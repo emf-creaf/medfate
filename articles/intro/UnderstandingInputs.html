@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">medfate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2026-10-16</h4>
+            <h4 data-toc-skip class="date">2026-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="d-none name"><code>UnderstandingInputs.Rmd</code></div>
@@ -678,6 +678,36 @@ senescence</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
+<td align="left">LeafPLCCrit</td>
+<td align="left">Critical proportion loss of conductance associated with
+cavitation-induced leaf senescence</td>
+<td align="left">Numeric</td>
+<td align="left">[0,1]</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">BudPLCCrit</td>
+<td align="left">Critical proportion loss of conductance associated with
+cavitation-induced bud (branch) senescence</td>
+<td align="left">Numeric</td>
+<td align="left">[0,1]</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">LeafTSCrit</td>
+<td align="left">Critical temperature associated to heat-induced leaf
+senescence</td>
+<td align="left">Numeric</td>
+<td align="left">Degrees C</td>
+<td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
 <td align="left">SLA</td>
 <td align="left">Specificleafarea(mm2/mg=m2/kg)</td>
 <td align="left">Numeric</td>
@@ -686,7 +716,7 @@ senescence</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafDensity</td>
 <td align="left">Density of leaf tissue (dry weight over volume)</td>
 <td align="left">Numeric</td>
@@ -695,7 +725,7 @@ senescence</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WoodDensity</td>
 <td align="left">Wood tissue density (at 0% humidity!)</td>
 <td align="left">Numeric</td>
@@ -704,7 +734,7 @@ senescence</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">FineRootDensity</td>
 <td align="left">Density of fine root tissue (dry weight over
 volume).</td>
@@ -714,7 +744,7 @@ volume).</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">conduit2sapwood</td>
 <td align="left">Proportion of sapwood corresponding to conducive
 elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
@@ -724,7 +754,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">r635</td>
 <td align="left">Ratio of foliar (photosynthetic) + small branches
 (&lt;6.35 mm) dry biomass to foliar (photosynthetic) dry biomass</td>
@@ -734,7 +764,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">1</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">pDead</td>
 <td align="left">Proportion of total fine fuels that are dead</td>
 <td align="left">Numeric</td>
@@ -743,7 +773,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Al2As</td>
 <td align="left">Leaf area to sapwood area ratio</td>
 <td align="left">Numeric</td>
@@ -752,7 +782,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Ar2Al</td>
 <td align="left">Root area to leaf area ratio</td>
 <td align="left">Numeric</td>
@@ -761,7 +791,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafWidth</td>
 <td align="left">Leaf width</td>
 <td align="left">Numeric</td>
@@ -770,7 +800,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRL</td>
 <td align="left">Specific root length</td>
 <td align="left">Numeric</td>
@@ -779,7 +809,7 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RLD</td>
 <td align="left">Fine root length density (density of root length per
 soil volume)</td>
@@ -789,7 +819,7 @@ soil volume)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">maxFMC</td>
 <td align="left">Maximum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
@@ -798,7 +828,7 @@ soil volume)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">minFMC</td>
 <td align="left">Minimum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
@@ -807,7 +837,7 @@ soil volume)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Ptlp</td>
 <td align="left">Leaf water potential at turgor loss point</td>
 <td align="left">Numeric</td>
@@ -816,7 +846,7 @@ soil volume)</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafPI0</td>
 <td align="left">Osmotic potential at full turgor of leaves</td>
 <td align="left">Numeric</td>
@@ -825,7 +855,7 @@ soil volume)</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to
 resist changes in volume in response to changes in turgor) of
@@ -836,7 +866,7 @@ leaves</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the
 living cells) in leaves</td>
@@ -846,7 +876,7 @@ living cells) in leaves</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">StemPI0</td>
 <td align="left">Osmotic potential at full turgor of symplastic xylem
 tissue</td>
@@ -856,7 +886,7 @@ tissue</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StemEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to
 resist changes in volume in response to changes in turgor) of symplastic
@@ -867,7 +897,7 @@ xylem tissue</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">StemAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the
 living cells) in stem xylem</td>
@@ -877,7 +907,7 @@ living cells) in stem xylem</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SAV</td>
 <td align="left">Surface-area-to-volume ratio of the small fuel (1h)
 fraction (leaves and branches &lt; 6.35mm)</td>
@@ -887,7 +917,7 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">HeatContent</td>
 <td align="left">High fuel heat content</td>
 <td align="left">Numeric</td>
@@ -896,7 +926,7 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafLigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in leaves</td>
 <td align="left">Numeric</td>
@@ -905,7 +935,7 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WoodLigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in wood</td>
 <td align="left">Numeric</td>
@@ -914,7 +944,7 @@ fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">FineRootLigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in fine
 roots</td>
@@ -924,7 +954,7 @@ roots</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafAngle</td>
 <td align="left">The angle between the leaf plane and the horizontal
 plane (i.e. leaf zenith angle)</td>
@@ -934,7 +964,7 @@ plane (i.e. leaf zenith angle)</td>
 <td align="right">0</td>
 <td align="right">90</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafAngleSD</td>
 <td align="left">Standard deviation of the leaf angle</td>
 <td align="left">Numeric</td>
@@ -943,7 +973,7 @@ plane (i.e. leaf zenith angle)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">ClumpingIndex</td>
 <td align="left">Canopy clumping index</td>
 <td align="left">Numeric</td>
@@ -952,7 +982,7 @@ plane (i.e. leaf zenith angle)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gammaSWR</td>
 <td align="left">Reflectance (albedo) coefficient for SWR (gammaPAR is
 0.8*gammaSWR)</td>
@@ -962,7 +992,7 @@ plane (i.e. leaf zenith angle)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">alphaSWR</td>
 <td align="left">Absorbance coefficient for SWR (alphaPAR is
 alphaSWR*1.35)</td>
@@ -972,7 +1002,7 @@ alphaSWR*1.35)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">kPAR</td>
 <td align="left">Light extinction coeficient for PAR (extinction
 coefficient for SWR is kPAR/1.35)</td>
@@ -982,7 +1012,7 @@ coefficient for SWR is kPAR/1.35)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">g</td>
 <td align="left">Canopy water storage capacity per LAI unit</td>
 <td align="left">Numeric</td>
@@ -991,7 +1021,7 @@ coefficient for SWR is kPAR/1.35)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Tmax_LAI</td>
 <td align="left">Empirical coefficient relating LAI with the ratio of
 maximum transpiration over potential evapotranspiration.</td>
@@ -1001,7 +1031,7 @@ maximum transpiration over potential evapotranspiration.</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Tmax_LAIsq</td>
 <td align="left">Empirical coefficient relating squared LAI with the
 ratio of maximum transpiration over potential evapotranspiration.</td>
@@ -1011,7 +1041,7 @@ ratio of maximum transpiration over potential evapotranspiration.</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Psi_Extract</td>
 <td align="left">Water potential corresponding to 50% reduction of
 transpiration</td>
@@ -1021,7 +1051,7 @@ transpiration</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Exp_Extract</td>
 <td align="left">Parameter of the Weibull function regulating
 transpiration reduction</td>
@@ -1031,7 +1061,7 @@ transpiration reduction</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">WUE</td>
 <td align="left">Daily water use efficiency (gross photosynthesis over
 transpiration) under no light, water or CO2 limitations and VPD =
@@ -1042,7 +1072,7 @@ transpiration) under no light, water or CO2 limitations and VPD =
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WUE_par</td>
 <td align="left">Coefficient regulating the influence of % PAR on gross
 photosynthesis</td>
@@ -1052,7 +1082,7 @@ photosynthesis</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">WUE_co2</td>
 <td align="left">Coefficient regulating the influence of atmospheric CO2
 concentration on gross photosynthesis</td>
@@ -1062,7 +1092,7 @@ concentration on gross photosynthesis</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WUE_vpd</td>
 <td align="left">Coefficient regulating the influence of vapor pressure
 deficit (VPD) on gross photosynthesis</td>
@@ -1072,7 +1102,7 @@ deficit (VPD) on gross photosynthesis</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Gswmin</td>
 <td align="left">Minimum leaf conductance (cuticular+incomplete closure)
 at 20C</td>
@@ -1082,7 +1112,7 @@ at 20C</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Gswmax</td>
 <td align="left">Maximum stomatal conductance to water vapour</td>
 <td align="left">Numeric</td>
@@ -1091,7 +1121,7 @@ at 20C</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Gsw_Toptim_Jarvis</td>
 <td align="left">Temperature corresponding to maximal stomatal
 conductance (Jarvis stomatal model)</td>
@@ -1101,7 +1131,7 @@ conductance (Jarvis stomatal model)</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Gsw_Tsens_Jarvis</td>
 <td align="left">Stomatal sensitivity to temperature (Jarvis stomatal
 model)</td>
@@ -1111,7 +1141,7 @@ model)</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Gsw_AC_slope_Baldocchi</td>
 <td align="left">Slope of the Gsw vs Ac/Cs relationship (Baldocchi
 model).</td>
@@ -1121,7 +1151,7 @@ model).</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Gsw_P50_Baldocchi</td>
 <td align="left">Water potential causing 50% reduction in stomatal
 conductance (Baldocchi stomatal model)</td>
@@ -1131,7 +1161,7 @@ conductance (Baldocchi stomatal model)</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Gsw_slope_Baldocchi</td>
 <td align="left">Rate of decrease in stomatal conductance at
 Gsw_Baldocchi_P50 (Baldocchi stomatal model)</td>
@@ -1141,7 +1171,7 @@ Gsw_Baldocchi_P50 (Baldocchi stomatal model)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_kmax</td>
 <td align="left">Maximum whole-leaf hydraulic conductance</td>
 <td align="left">Numeric</td>
@@ -1150,7 +1180,7 @@ Gsw_Baldocchi_P50 (Baldocchi stomatal model)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleaf_P12</td>
 <td align="left">12% of maximum conductance of the whole-leaf
 vulnerability curve</td>
@@ -1160,7 +1190,7 @@ vulnerability curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_P50</td>
 <td align="left">50% of maximum conductance of the whole-leaf
 vulnerability curve</td>
@@ -1170,7 +1200,7 @@ vulnerability curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleaf_P88</td>
 <td align="left">88% of maximum conductance of the whole-leaf
 vulnerability curve</td>
@@ -1180,7 +1210,7 @@ vulnerability curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_slope</td>
 <td align="left">Slope of the rate of whole-leaf embolism increase at
 VCleaf_P50</td>
@@ -1190,7 +1220,7 @@ VCleaf_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleafapo_P12</td>
 <td align="left">12% of maximum conductance of the leaf apoplasm
 vulnerability curve</td>
@@ -1200,7 +1230,7 @@ vulnerability curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleafapo_P50</td>
 <td align="left">50% of maximum conductance of the leaf apoplasm
 vulnerability curve</td>
@@ -1210,7 +1240,7 @@ vulnerability curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleafapo_P88</td>
 <td align="left">88% of maximum conductance of the leaf apoplasm
 vulnerability curve</td>
@@ -1220,7 +1250,7 @@ vulnerability curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleafapo_slope</td>
 <td align="left">Slope of the rate of leaf apoplasm embolism increase at
 VCleafapo_P50</td>
@@ -1230,7 +1260,7 @@ VCleafapo_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Kmax_stemxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of stem
 xylem</td>
@@ -1240,7 +1270,7 @@ xylem</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCstem_P12</td>
 <td align="left">12% of maximum conductance of the stem vulnerability
 curve</td>
@@ -1250,7 +1280,7 @@ curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCstem_P50</td>
 <td align="left">50% of maximum conductance of the stem vulnerability
 curve</td>
@@ -1260,7 +1290,7 @@ curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCstem_P88</td>
 <td align="left">88% of maximum conductance of the stem vulnerability
 curve</td>
@@ -1270,7 +1300,7 @@ curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCstem_slope</td>
 <td align="left">Slope of the rate of stem embolism increase at
 VCstem_P50</td>
@@ -1280,7 +1310,7 @@ VCstem_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Kmax_rootxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of root
 xylem</td>
@@ -1290,7 +1320,7 @@ xylem</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCroot_P12</td>
 <td align="left">12% of maximum conductance of the root vulnerability
 curve</td>
@@ -1300,7 +1330,7 @@ curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCroot_P50</td>
 <td align="left">50% of maximum conductance of the root vulnerability
 curve</td>
@@ -1310,7 +1340,7 @@ curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCroot_P88</td>
 <td align="left">88% of maximum conductance of the root vulnerability
 curve</td>
@@ -1320,7 +1350,7 @@ curve</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCroot_slope</td>
 <td align="left">Slope of the rate of root embolism increase at
 VCroot_P50</td>
@@ -1330,7 +1360,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Vmax298</td>
 <td align="left">Maximum Rubisco carboxilation rate</td>
 <td align="left">Numeric</td>
@@ -1339,7 +1369,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Jmax298</td>
 <td align="left">Maximum rate of electron transport at 298K</td>
 <td align="left">Numeric</td>
@@ -1348,7 +1378,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Nleaf</td>
 <td align="left">Nitrogen mass per leaf dry mass</td>
 <td align="left">Numeric</td>
@@ -1357,7 +1387,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Nsapwood</td>
 <td align="left">Nitrogen mass per sapwood dry mass</td>
 <td align="left">Numeric</td>
@@ -1366,7 +1396,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Nfineroot</td>
 <td align="left">Nitrogen mass per fine root dry mass</td>
 <td align="left">Numeric</td>
@@ -1375,7 +1405,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WoodC</td>
 <td align="left">Wood carbon content per dry mass</td>
 <td align="left">Numeric</td>
@@ -1384,7 +1414,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RERleaf</td>
 <td align="left">Maintenance respiration rates for leaves.</td>
 <td align="left">Numeric</td>
@@ -1393,7 +1423,7 @@ VCroot_P50</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RERsapwood</td>
 <td align="left">Maintenance respiration rates for living cells of
 sapwood.</td>
@@ -1403,7 +1433,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RERfineroot</td>
 <td align="left">Maintenance respiration rates for fine roots.</td>
 <td align="left">Numeric</td>
@@ -1412,7 +1442,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">CCleaf</td>
 <td align="left">Leaf construction costs</td>
 <td align="left">Numeric</td>
@@ -1421,7 +1451,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">CCsapwood</td>
 <td align="left">Sapwood construction costs</td>
 <td align="left">Numeric</td>
@@ -1430,7 +1460,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">CCfineroot</td>
 <td align="left">Fine root construction costs</td>
 <td align="left">Numeric</td>
@@ -1439,7 +1469,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRleafmax</td>
 <td align="left">Maximum leaf growth rate relative to sapwood area</td>
 <td align="left">Numeric</td>
@@ -1448,7 +1478,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RGRsapwoodmax</td>
 <td align="left">Maximum sapwood growth rate relative to sapwood area
 (for shrubs)</td>
@@ -1458,7 +1488,7 @@ sapwood.</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRcambiummax</td>
 <td align="left">Maximum sapwood growth rate relative to cambium
 perimeter (for trees)</td>
@@ -1468,7 +1498,7 @@ perimeter (for trees)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RGRfinerootmax</td>
 <td align="left">Maximum fineroot relative growth rate</td>
 <td align="left">Numeric</td>
@@ -1477,7 +1507,7 @@ perimeter (for trees)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRbud</td>
 <td align="left">Bud (potential leaf area) formation rate per leaf area
 growth</td>
@@ -1487,7 +1517,7 @@ growth</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRsapwood</td>
 <td align="left">Sapwood daily senescence rate</td>
 <td align="left">Numeric</td>
@@ -1496,7 +1526,7 @@ growth</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SRfineroot</td>
 <td align="left">Fine root daily senescence rate</td>
 <td align="left">Numeric</td>
@@ -1505,7 +1535,7 @@ growth</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RSSG</td>
 <td align="left">Minimum relative starch for sapwood growth</td>
 <td align="left">Numeric</td>
@@ -1514,7 +1544,7 @@ growth</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MortalityBaselineRate</td>
 <td align="left">Deterministic proportion or probability specifying the
 baseline reduction of cohort’s density occurring in a year</td>
@@ -1524,7 +1554,7 @@ baseline reduction of cohort’s density occurring in a year</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SurvivalModelStep</td>
 <td align="left">Time step in years of the empirical survival model
 depending on stand basal area (e.g. 10)</td>
@@ -1534,7 +1564,7 @@ depending on stand basal area (e.g. 10)</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SurvivalB0</td>
 <td align="left">Intercept of the logistic baseline survival model
 depending on stand basal area</td>
@@ -1544,7 +1574,7 @@ depending on stand basal area</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SurvivalB1</td>
 <td align="left">Slope of the logistic baseline survival model depending
 on stand basal area</td>
@@ -1554,7 +1584,7 @@ on stand basal area</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SeedProductionHeight</td>
 <td align="left">Minimum shrub height for seed production</td>
 <td align="left">Numeric</td>
@@ -1563,7 +1593,7 @@ on stand basal area</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SeedProductionDiameter</td>
 <td align="left">Minimum tree diameter for seed production</td>
 <td align="left">Numeric</td>
@@ -1572,7 +1602,7 @@ on stand basal area</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SeedMass</td>
 <td align="left">Seed dry mass</td>
 <td align="left">Numeric</td>
@@ -1581,7 +1611,7 @@ on stand basal area</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SeedLongevity</td>
 <td align="left">Seedbank average longevity</td>
 <td align="left">Numeric</td>
@@ -1590,7 +1620,7 @@ on stand basal area</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">DispersalDistance</td>
 <td align="left">Distance parameter for dispersal kernel</td>
 <td align="left">Numeric</td>
@@ -1599,7 +1629,7 @@ on stand basal area</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">DispersalShape</td>
 <td align="left">Shape parameter for dispersal kernel</td>
 <td align="left">Numeric</td>
@@ -1608,7 +1638,7 @@ on stand basal area</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">ProbRecr</td>
 <td align="left">Probability of recruitment within the bioclimatic
 envelope</td>
@@ -1618,7 +1648,7 @@ envelope</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinTempRecr</td>
 <td align="left">Minimum average temperature of the coldest month for
 successful recruitment</td>
@@ -1628,7 +1658,7 @@ successful recruitment</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinMoistureRecr</td>
 <td align="left">Minimum value of the moisture index (annual
 precipitation over annual PET) for successful recruitment</td>
@@ -1638,7 +1668,7 @@ precipitation over annual PET) for successful recruitment</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinFPARRecr</td>
 <td align="left">Minimum percentage of PAR at the ground level for
 successful recruitment</td>
@@ -1648,7 +1678,7 @@ successful recruitment</td>
 <td align="right">0</td>
 <td align="right">100</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrAge</td>
 <td align="left">Age of recruiment</td>
 <td align="left">Numeric</td>
@@ -1657,7 +1687,7 @@ successful recruitment</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDBH</td>
 <td align="left">Recruitment tree (sapling) stem diameter at breast
 height</td>
@@ -1667,7 +1697,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree (sapling) height</td>
 <td align="left">Numeric</td>
@@ -1676,7 +1706,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
@@ -1685,7 +1715,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree (sapling) density</td>
 <td align="left">Numeric</td>
@@ -1694,7 +1724,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
@@ -1703,7 +1733,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">100</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RespFire</td>
 <td align="left">Probability of resprouting after fire disturbance</td>
 <td align="left">Numeric</td>
@@ -1712,7 +1742,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RespDist</td>
 <td align="left">Probability of resprouting after undefined disturbance
 (typically desiccation)</td>
@@ -1722,7 +1752,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RespClip</td>
 <td align="left">Probability of resprouting after clipping</td>
 <td align="left">Numeric</td>
@@ -1731,7 +1761,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">IngrowthTreeDensity</td>
 <td align="left">Tree density when reaching DBH of ingrowth</td>
 <td align="left">Numeric</td>
@@ -1740,7 +1770,7 @@ height</td>
 <td align="right">0</td>
 <td align="right">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">IngrowthTreeDBH</td>
 <td align="left">Tree DBH of ingrowth (typically 7.5 cm)</td>
 <td align="left">Numeric</td>
@@ -2138,53 +2168,54 @@ parameterization is obtained using function
 <span><span class="co">##  [23] "truncateRootDistribution"           "fullRhizosphereOverlapConductivity"</span></span>
 <span><span class="co">##  [25] "soilFunctions"                      "VG_PTF"                            </span></span>
 <span><span class="co">##  [27] "ndailysteps"                        "max_nsubsteps_soil"                </span></span>
-<span><span class="co">##  [29] "defaultWindSpeed"                   "defaultCO2"                        </span></span>
-<span><span class="co">##  [31] "defaultRainfallIntensityPerMonth"   "leafPhenology"                     </span></span>
-<span><span class="co">##  [33] "bareSoilEvaporation"                "unlimitedSoilWater"                </span></span>
-<span><span class="co">##  [35] "interceptionMode"                   "infiltrationMode"                  </span></span>
-<span><span class="co">##  [37] "infiltrationCorrection"             "verticalLayerSize"                 </span></span>
-<span><span class="co">##  [39] "windMeasurementHeight"              "stemCavitationRecovery"            </span></span>
-<span><span class="co">##  [41] "leafCavitationRecovery"             "lfmcComponent"                     </span></span>
-<span><span class="co">##  [43] "mistletoeParams"                    "defoliationParams"                 </span></span>
-<span><span class="co">##  [45] "hydraulicRedistributionFraction"    "nsubsteps_canopy"                  </span></span>
-<span><span class="co">##  [47] "taper"                              "multiLayerBalance"                 </span></span>
-<span><span class="co">##  [49] "leafConductanceEstimation"          "rootConductivityEstimation"        </span></span>
-<span><span class="co">##  [51] "sapFluidityVariation"               "TPhase_gmin"                       </span></span>
-<span><span class="co">##  [53] "Q10_1_gmin"                         "Q10_2_gmin"                        </span></span>
-<span><span class="co">##  [55] "rootRadialConductance"              "averageFracRhizosphereResistance"  </span></span>
-<span><span class="co">##  [57] "thermalCapacityLAI"                 "boundaryLayerSize"                 </span></span>
-<span><span class="co">##  [59] "cavitationRecoveryMaximumRate"      "sunlitShade"                       </span></span>
-<span><span class="co">##  [61] "numericParams"                      "leafCavitationEffects"             </span></span>
-<span><span class="co">##  [63] "stemCavitationEffects"              "stomatalSubmodel"                  </span></span>
-<span><span class="co">##  [65] "plantCapacitance"                   "cavitationFlux"                    </span></span>
-<span><span class="co">##  [67] "leafCuticularTranspiration"         "stemCuticularTranspiration"        </span></span>
-<span><span class="co">##  [69] "C_SApoInit"                         "C_LApoInit"                        </span></span>
-<span><span class="co">##  [71] "k_SSym"                             "fractionLeafSymplasm"              </span></span>
-<span><span class="co">##  [73] "gs_NightFrac"                       "JarvisPAR"                         </span></span>
-<span><span class="co">##  [75] "fTRBToLeaf"                         "subdailyCarbonBalance"             </span></span>
-<span><span class="co">##  [77] "allowDessication"                   "allowStarvation"                   </span></span>
-<span><span class="co">##  [79] "sinkLimitation"                     "shrubDynamics"                     </span></span>
-<span><span class="co">##  [81] "herbDynamics"                       "allocationStrategy"                </span></span>
-<span><span class="co">##  [83] "phloemConductanceFactor"            "nonSugarConcentration"             </span></span>
-<span><span class="co">##  [85] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    </span></span>
-<span><span class="co">##  [87] "constructionCosts"                  "senescenceRates"                   </span></span>
-<span><span class="co">##  [89] "maximumRelativeGrowthRates"         "organogenesisEfficiencyModulator"  </span></span>
-<span><span class="co">##  [91] "elongationEfficiencyModulator"      "mortalityMode"                     </span></span>
-<span><span class="co">##  [93] "mortalityBaselineRate"              "mortalityRelativeSugarThreshold"   </span></span>
-<span><span class="co">##  [95] "mortalityRWCThreshold"              "recrTreeDBH"                       </span></span>
-<span><span class="co">##  [97] "recrTreeDensity"                    "ingrowthTreeDBH"                   </span></span>
-<span><span class="co">##  [99] "ingrowthTreeDensity"                "decompositionAnnualBaseRates"      </span></span>
-<span><span class="co">## [101] "decompositionAnnualTurnoverRate"    "allowSeedBankDynamics"             </span></span>
-<span><span class="co">## [103] "allowRecruitment"                   "allowResprouting"                  </span></span>
-<span><span class="co">## [105] "recruitmentMode"                    "removeEmptyCohorts"                </span></span>
-<span><span class="co">## [107] "minimumTreeCohortDensity"           "minimumShrubCohortCover"           </span></span>
-<span><span class="co">## [109] "dynamicallyMergeCohorts"            "keepCohortsWithObsID"              </span></span>
-<span><span class="co">## [111] "seedRain"                           "seedProductionTreeHeight"          </span></span>
-<span><span class="co">## [113] "seedProductionShrubHeight"          "probRecr"                          </span></span>
-<span><span class="co">## [115] "minTempRecr"                        "minMoistureRecr"                   </span></span>
-<span><span class="co">## [117] "minFPARRecr"                        "recrAge"                           </span></span>
-<span><span class="co">## [119] "recrTreeHeight"                     "recrShrubCover"                    </span></span>
-<span><span class="co">## [121] "recrShrubHeight"</span></span></code></pre>
+<span><span class="co">##  [29] "richards_tolerance"                 "defaultWindSpeed"                  </span></span>
+<span><span class="co">##  [31] "defaultCO2"                         "defaultRainfallIntensityPerMonth"  </span></span>
+<span><span class="co">##  [33] "leafPhenology"                      "bareSoilEvaporation"               </span></span>
+<span><span class="co">##  [35] "unlimitedSoilWater"                 "interceptionMode"                  </span></span>
+<span><span class="co">##  [37] "infiltrationMode"                   "infiltrationCorrection"            </span></span>
+<span><span class="co">##  [39] "verticalLayerSize"                  "windMeasurementHeight"             </span></span>
+<span><span class="co">##  [41] "stemCavitationRecovery"             "leafCavitationRecovery"            </span></span>
+<span><span class="co">##  [43] "lfmcComponent"                      "mistletoeParams"                   </span></span>
+<span><span class="co">##  [45] "defoliationParams"                  "hydraulicRedistributionFraction"   </span></span>
+<span><span class="co">##  [47] "nsubsteps_canopy"                   "taper"                             </span></span>
+<span><span class="co">##  [49] "multiLayerBalance"                  "leafConductanceEstimation"         </span></span>
+<span><span class="co">##  [51] "rootConductivityEstimation"         "sapFluidityVariation"              </span></span>
+<span><span class="co">##  [53] "TPhase_gmin"                        "Q10_1_gmin"                        </span></span>
+<span><span class="co">##  [55] "Q10_2_gmin"                         "rootRadialConductance"             </span></span>
+<span><span class="co">##  [57] "averageFracRhizosphereResistance"   "thermalCapacityLAI"                </span></span>
+<span><span class="co">##  [59] "boundaryLayerSize"                  "cavitationRecoveryMaximumRate"     </span></span>
+<span><span class="co">##  [61] "sunlitShade"                        "numericParams"                     </span></span>
+<span><span class="co">##  [63] "leafCavitationEffects"              "stemCavitationEffects"             </span></span>
+<span><span class="co">##  [65] "stomatalSubmodel"                   "plantCapacitance"                  </span></span>
+<span><span class="co">##  [67] "cavitationFlux"                     "leafCuticularTranspiration"        </span></span>
+<span><span class="co">##  [69] "stemCuticularTranspiration"         "C_SApoInit"                        </span></span>
+<span><span class="co">##  [71] "C_LApoInit"                         "k_SSym"                            </span></span>
+<span><span class="co">##  [73] "fractionLeafSymplasm"               "gs_NightFrac"                      </span></span>
+<span><span class="co">##  [75] "JarvisPAR"                          "fTRBToLeaf"                        </span></span>
+<span><span class="co">##  [77] "subdailyCarbonBalance"              "allowDessication"                  </span></span>
+<span><span class="co">##  [79] "allowStarvation"                    "sinkLimitation"                    </span></span>
+<span><span class="co">##  [81] "treeDynamics"                       "shrubDynamics"                     </span></span>
+<span><span class="co">##  [83] "herbDynamics"                       "allocationStrategy"                </span></span>
+<span><span class="co">##  [85] "phloemConductanceFactor"            "nonSugarConcentration"             </span></span>
+<span><span class="co">##  [87] "equilibriumOsmoticConcentration"    "minimumRelativeStarchForGrowth"    </span></span>
+<span><span class="co">##  [89] "constructionCosts"                  "senescenceRates"                   </span></span>
+<span><span class="co">##  [91] "maximumRelativeGrowthRates"         "organogenesisEfficiencyModulator"  </span></span>
+<span><span class="co">##  [93] "elongationEfficiencyModulator"      "mortalityMode"                     </span></span>
+<span><span class="co">##  [95] "mortalityBaselineRate"              "mortalityRelativeSugarThreshold"   </span></span>
+<span><span class="co">##  [97] "mortalityRWCThreshold"              "recrTreeDBH"                       </span></span>
+<span><span class="co">##  [99] "recrTreeDensity"                    "ingrowthTreeDBH"                   </span></span>
+<span><span class="co">## [101] "ingrowthTreeDensity"                "decompositionAnnualBaseRates"      </span></span>
+<span><span class="co">## [103] "decompositionAnnualTurnoverRate"    "allowSeedBankDynamics"             </span></span>
+<span><span class="co">## [105] "allowRecruitment"                   "allowResprouting"                  </span></span>
+<span><span class="co">## [107] "recruitmentMode"                    "removeEmptyCohorts"                </span></span>
+<span><span class="co">## [109] "minimumTreeCohortDensity"           "minimumShrubCohortCover"           </span></span>
+<span><span class="co">## [111] "dynamicallyMergeCohorts"            "keepCohortsWithObsID"              </span></span>
+<span><span class="co">## [113] "seedRain"                           "seedProductionTreeHeight"          </span></span>
+<span><span class="co">## [115] "seedProductionShrubHeight"          "probRecr"                          </span></span>
+<span><span class="co">## [117] "minTempRecr"                        "minMoistureRecr"                   </span></span>
+<span><span class="co">## [119] "minFPARRecr"                        "recrAge"                           </span></span>
+<span><span class="co">## [121] "recrTreeHeight"                     "recrShrubCover"                    </span></span>
+<span><span class="co">## [123] "recrShrubHeight"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

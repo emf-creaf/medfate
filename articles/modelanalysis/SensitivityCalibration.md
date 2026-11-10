@@ -27,7 +27,7 @@ package and the example forest data:
 library(medfate)
 ```
 
-    ## Package 'medfate' [ver. 5.2.0]
+    ## Package 'medfate' [ver. 5.2.1]
 
 ``` r
 
@@ -301,7 +301,7 @@ of_transp(parMin)
 of_transp(parMax)
 ```
 
-    ## [1] 327.6971
+    ## [1] 303.5366
 
 It is important to understand the steps that are done when we call
 `of_transp()`:
@@ -331,14 +331,14 @@ of_stress<-optimization_function(parNames = parNames,
 of_stress(parMin)
 ```
 
-    ## [1] 0.6671768
+    ## [1] 0.6671779
 
 ``` r
 
 of_stress(parMax)
 ```
 
-    ## [1] 33.15621
+    ## [1] 35.07564
 
 As mentioned above, another kind of output function can be the
 evaluation of model performance. Here we will assume that performance in
@@ -378,7 +378,7 @@ evaluation_metric(S1, measuredData = exampleobs, type = "SWC",
                   metric = "NSE")
 ```
 
-    ## [1] 0.9276811
+    ## [1] 0.9276814
 
 A call to
 [`evaluation_metric()`](https://emf-creaf.github.io/medfate/reference/evaluation.md)
@@ -413,7 +413,7 @@ of_eval(parMin)
 of_eval(parMax)
 ```
 
-    ## [1] -9.550698
+    ## [1] -12.05816
 
 ### Global sensitivity analyses
 
@@ -773,7 +773,7 @@ summary(mcmc_out)
     ## T2_179/Z50 1.047 396.609 268.552 384.052 488.515
     ## S1_176/Z50 1.048  57.239  57.042 173.294 290.494
     ## 
-    ## ## DIC:  -1907.431 
+    ## ## DIC:  -1907.43 
     ## ## Convergence 
     ##  Gelman Rubin multivariate psrf:  1.067 
     ##  
@@ -878,9 +878,6 @@ plot(density(unlist(lapply(MS, sf_stress))),
 ```
 
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ![](SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png)
 
@@ -915,27 +912,9 @@ legend("topleft", legend = c("Prior", "Posterior"),
 plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress", 
      xlab = "Average plant stress",
      xlim = c(0,30), ylim = c(0,2))
-```
-
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-
-``` r
-
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
 ```
 
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
-    ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
     ## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf
 
 ``` r

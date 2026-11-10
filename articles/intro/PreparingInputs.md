@@ -17,7 +17,7 @@ We begin by loading packages **medfate** and **meteoland**:
 ``` r
 
 library(medfate)
-#> Package 'medfate' [ver. 5.2.0]
+#> Package 'medfate' [ver. 5.2.1]
 library(meteoland)
 #> Package 'meteoland' [ver. 2.2.8]
 ```
