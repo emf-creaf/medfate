@@ -229,7 +229,9 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
   // Maximum canopy transpiration
   // Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
   // Fraction of Tmax attributed to each plant cohort
-  double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
+  // Communication structures are dimensioned using the maximum number of plant cohorts when using medfate runners
+  // Therefore, accumulate cannot be done until the end of vector.
+  double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.begin() + numCohorts, 0.0);
   // Cohort absorption includes expanded leaves, but also dead leaves and mistletoe
   // Therefore, we use fractions to determine which part belongs to each component
   double mistletoe_fraction;

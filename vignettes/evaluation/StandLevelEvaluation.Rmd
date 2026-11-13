@@ -19,24 +19,24 @@ medfate_ver <- sort(medfate_versions, decreasing = TRUE)[1]
 params = list(medfate_ver = medfate_ver,
               wd = wd,
               model='spwb',
-              names = c("Puéchabon", "Font-Blanche",
+              names = c("Wombat","Puéchabon", "Hesse", "Font-Blanche",
                         "Yatir",
                         "Mitra",
                         "Prades"),
-              codes = c("FRAPUE", "FONBLA",
+              codes = c("WOMBAT", "FRAPUE", "FRAHES", "FONBLA",
                         "YATIR",
                         "MITRA",
                         "PRADES"),
-              # names=c("Wombat","Euc-FACE",
+              # names=c("Euc-FACE",
               #         "Soroe",
-              #         "Puéchabon", "Hesse","Fontainebleau-Barbeau",  "Font-Blanche",
+              #         "Fontainebleau-Barbeau",  "Font-Blanche",
               #         "Yatir",
               #         "Collelongo",
               #         "Mitra",
               #         "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)", "Prades", "Can Balasc", "Alto-Tajo Armallones", "Ronda",
               #         "Davos Seehornwald", "Lötschental",
               #         "Morgan-Monroe", "Sevilleta"),
-              # codes=c("WOMBAT", "EUCFACE",
+              # codes=c("EUCFACE",
               #         "SOROE",
               #         "FRAPUE", "FRAHES", "FONTAINEBLEAU","FONBLA",
               #         "ISRYAT",
@@ -81,6 +81,7 @@ df_general_sites <- data.frame(Country = rep("", n_sites),
 
 for(i in 1:n_sites) {
   site <- params$codes[i]
+  if(site=="YATIR") site = "ISRYAT"
   for(j in 1:n_confs) {
     conf <- params$confs[j]
     cnt <- cnt+1
@@ -173,6 +174,7 @@ The following contains as many sections as forest stands included in the evaluat
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
  for(i_code in 1:length(params$codes)) {
    site_code <- params$codes[i_code]
+   if(site_code=="YATIR") site_code = "ISRYAT"
    site_name <- params$names[i_code]
    df_site <- df_all[df_all$Site==site_code,, drop = FALSE]
    res <- knitr::knit_child(file.path(this_path,'_Stand_Evaluation_child.Rmd'), quiet = TRUE)

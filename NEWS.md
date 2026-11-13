@@ -1,6 +1,7 @@
 # medfate 5.2.1
-* IA-based optimization of soilWaterBalance_inner_c
+* IA-assisted optimization of soilWaterBalance_inner_c, securing convergence of Richards solution (Celia et al 1990)
 * Bug correction: soil energy balance for the bottom layer
+* Bug correction: watershed_runner and accumulate() in communication structures
 
 # medfate 5.2.0
 * Revision of leaf phenology and primary growth determinacy

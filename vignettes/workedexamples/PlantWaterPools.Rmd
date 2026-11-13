@@ -37,6 +37,12 @@ WB_PU_sperry_none = readRDS(paste0(base_pools,"data/site_output/pu_sperry_none.r
 WB_ES_sperry_total = readRDS(paste0(base_pools,"data/site_output/es_sperry_total.rds"))
 WB_ES_sperry_partial = readRDS(paste0(base_pools,"data/site_output/es_sperry_partial_Kfull_0.01.rds"))
 WB_ES_sperry_none = readRDS(paste0(base_pools,"data/site_output/es_sperry_none.rds"))
+WB_CB_sperry_total = readRDS(paste0(base_pools,"data/site_output/cb_sperry_total.rds"))
+WB_CB_sperry_partial = readRDS(paste0(base_pools,"data/site_output/cb_sperry_partial_Kfull_0.01.rds"))
+WB_CB_sperry_none = readRDS(paste0(base_pools,"data/site_output/cb_sperry_none.rds"))
+WB_RO_sperry_total = readRDS(paste0(base_pools,"data/site_output/ro_sperry_total.rds"))
+WB_RO_sperry_partial = readRDS(paste0(base_pools,"data/site_output/ro_sperry_partial_Kfull_0.01.rds"))
+WB_RO_sperry_none = readRDS(paste0(base_pools,"data/site_output/ro_sperry_none.rds"))
 
 WB_FB_granier_total = readRDS(paste0(base_pools,"data/site_output/fb_granier_total.rds"))
 WB_FB_granier_partial = readRDS(paste0(base_pools,"data/site_output/fb_granier_partial_Kfull_0.01.rds"))
@@ -47,10 +53,16 @@ WB_PR_granier_none = readRDS(paste0(base_pools,"data/site_output/pr_granier_none
 WB_PU_granier_total = readRDS(paste0(base_pools,"data/site_output/pu_granier_total.rds"))
 WB_PU_granier_partial = readRDS(paste0(base_pools,"data/site_output/pu_granier_partial_Kfull_0.01.rds"))
 WB_PU_granier_none = readRDS(paste0(base_pools,"data/site_output/pu_granier_none.rds"))
-
 WB_ES_granier_total = readRDS(paste0(base_pools,"data/site_output/es_granier_total.rds"))
 WB_ES_granier_partial = readRDS(paste0(base_pools,"data/site_output/es_granier_partial_Kfull_0.01.rds"))
 WB_ES_granier_none = readRDS(paste0(base_pools,"data/site_output/es_granier_none.rds"))
+WB_CB_granier_total = readRDS(paste0(base_pools,"data/site_output/cb_granier_total.rds"))
+WB_CB_granier_partial = readRDS(paste0(base_pools,"data/site_output/cb_granier_partial_Kfull_0.01.rds"))
+WB_CB_granier_none = readRDS(paste0(base_pools,"data/site_output/cb_granier_none.rds"))
+WB_RO_granier_total = readRDS(paste0(base_pools,"data/site_output/ro_granier_total.rds"))
+WB_RO_granier_partial = readRDS(paste0(base_pools,"data/site_output/ro_granier_partial_Kfull_0.01.rds"))
+WB_RO_granier_none = readRDS(paste0(base_pools,"data/site_output/ro_granier_none.rds"))
+
 
 WB_FB_sureau_total = readRDS(paste0(base_pools,"data/site_output/fb_sureau_total.rds"))
 WB_FB_sureau_partial = readRDS(paste0(base_pools,"data/site_output/fb_sureau_partial_Kfull_0.01.rds"))
@@ -64,6 +76,13 @@ WB_PU_sureau_none = readRDS(paste0(base_pools,"data/site_output/pu_sureau_none.r
 WB_ES_sureau_total = readRDS(paste0(base_pools,"data/site_output/es_sureau_total.rds"))
 WB_ES_sureau_partial = readRDS(paste0(base_pools,"data/site_output/es_sureau_partial_Kfull_0.01.rds"))
 WB_ES_sureau_none = readRDS(paste0(base_pools,"data/site_output/es_sureau_none.rds"))
+WB_CB_sureau_total = readRDS(paste0(base_pools,"data/site_output/cb_sureau_total.rds"))
+WB_CB_sureau_partial = readRDS(paste0(base_pools,"data/site_output/cb_sureau_partial_Kfull_0.01.rds"))
+WB_CB_sureau_none = readRDS(paste0(base_pools,"data/site_output/cb_sureau_none.rds"))
+WB_RO_sureau_total = readRDS(paste0(base_pools,"data/site_output/ro_sureau_total.rds"))
+WB_RO_sureau_partial = readRDS(paste0(base_pools,"data/site_output/ro_sureau_partial_Kfull_0.01.rds"))
+WB_RO_sureau_none = readRDS(paste0(base_pools,"data/site_output/ro_sureau_none.rds"))
+
 ```
 
 ```{r, echo = FALSE, warning = FALSE}
@@ -87,22 +106,30 @@ plot_several<-function(type, transpirationMode, ylim = NULL) {
      pr_plot = plot_one("PRADES - SPERRY", WB_PR_sperry_total, WB_PR_sperry_partial, WB_PR_sperry_none, type, ylim)
      pu_plot = plot_one("PUECHABON - SPERRY", WB_PU_sperry_total, WB_PU_sperry_partial, WB_PU_sperry_none, type, ylim)
      es_plot = plot_one("ARMALLON. - SPERRY", WB_ES_sperry_total, WB_ES_sperry_partial, WB_ES_sperry_none, type, ylim)
+     cb_plot = plot_one("CANBALASC - SPERRY", WB_CB_sperry_total, WB_CB_sperry_partial, WB_CB_sperry_none, type, ylim)
+     ro_plot = plot_one("RONDA - SPERRY", WB_RO_sperry_total, WB_RO_sperry_partial, WB_RO_sperry_none, type, ylim)
   } else if(transpirationMode =="Granier") {
     fb_plot = plot_one("FONTBL. - GRANIER", WB_FB_granier_total, WB_FB_granier_partial, WB_FB_granier_none, type, ylim)
     pr_plot = plot_one("PRADES - GRANIER", WB_PR_granier_total, WB_PR_granier_partial, WB_PR_granier_none, type, ylim)
     pu_plot = plot_one("PUECHABON - GRANIER", WB_PU_granier_total, WB_PU_granier_partial, WB_PU_granier_none, type, ylim)
     es_plot = plot_one("ARMALLON. - GRANIER", WB_ES_granier_total, WB_ES_granier_partial, WB_ES_granier_none, type, ylim)
+    cb_plot = plot_one("CANBALASC - GRANIER", WB_CB_granier_total, WB_CB_granier_partial, WB_CB_granier_none, type, ylim)
+    ro_plot = plot_one("RONDA - GRANIER", WB_RO_granier_total, WB_RO_granier_partial, WB_RO_granier_none, type, ylim)
   } else if(transpirationMode =="Sureau") {
     fb_plot = plot_one("FONTBL. - SUREAU", WB_FB_sureau_total, WB_FB_sureau_partial, WB_FB_sureau_none, type, ylim)
     pr_plot = plot_one("PRADES - SUREAU", WB_PR_sureau_total, WB_PR_sureau_partial, WB_PR_sureau_none, type, ylim)
     pu_plot = plot_one("PUECHABON - SUREAU", WB_PU_sureau_total, WB_PU_sureau_partial, WB_PU_sureau_none, type, ylim)
     es_plot = plot_one("ARMALLON. - SUREAU", WB_ES_sureau_total, WB_ES_sureau_partial, WB_ES_sureau_none, type, ylim)
+    cb_plot = plot_one("CANBALASC - SUREAU", WB_CB_sureau_total, WB_CB_sureau_partial, WB_CB_sureau_none, type, ylim)
+    ro_plot = plot_one("RONDA - SUREAU", WB_RO_sureau_total, WB_RO_sureau_partial, WB_RO_sureau_none, type, ylim)
   }
    cowplot::plot_grid(fb_plot,  
                       pr_plot, 
                       pu_plot, 
                       es_plot, 
-                      nrow = 4)
+                      cb_plot, 
+                      ro_plot,
+                      nrow = 6)
 }
 
 ```

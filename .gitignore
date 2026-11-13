@@ -15,5 +15,6 @@ src-x64/*.*
 inst/doc/*.*
 tests/testthat/*.pdf
 pkgdown/favicon/*.*
+richards_audit_bundle
 CRAN-SUBMISSION
 .positai

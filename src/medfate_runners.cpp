@@ -384,9 +384,9 @@ watershed_runner::watershed_runner(List input_vec,
       ntimesteps_max = std::max(ntimesteps_max, (size_t) x_i.control.advancedWB.ndailysteps);
     } else if (input_class_i == "growthInput") {
       ModelInput x_i = ModelInput(input_i);
-      p_x_vec[i] = std::make_unique<ModelInput>(x_i);
       x_i.snowpack = snowpack[i];
       x_i.soil.setKsatMultiplier(KsatMultiplier);
+      p_x_vec[i] = std::make_unique<ModelInput>(x_i);
       int numCohorts_i = x_i.cohorts.SpeciesIndex.size();
       int nlayers_i = x_i.soil.getNlayers();
       int ncanlayers_i = x_i.canopy.zlow.size();
@@ -691,6 +691,7 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
           SaturationExcess[iCell] = BGROWTHres_iCell.BSPWBres.WaterBalance.SaturationExcess;
           DeepDrainage[iCell] = BGROWTHres_iCell.BSPWBres.WaterBalance.DeepDrainage;
           CapillarityRise[iCell] = BGROWTHres_iCell.BSPWBres.WaterBalance.CapillarityRise;   
+          Transpiration[iCell] = BGROWTHres_iCell.BSPWBres.WaterBalance.Transpiration;
           HerbTranspiration[iCell] = BGROWTHres_iCell.BSPWBres.WaterBalance.HerbTranspiration; 
           if(standSummary) {
             LAI[iCell] =  BGROWTHres_iCell.BSPWBres.Stand.LAI;
@@ -734,6 +735,7 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
           SaturationExcess[iCell] = AGROWTHres_iCell.ASPWBres.WaterBalance.SaturationExcess;
           DeepDrainage[iCell] = AGROWTHres_iCell.ASPWBres.WaterBalance.DeepDrainage;
           CapillarityRise[iCell] = AGROWTHres_iCell.ASPWBres.WaterBalance.CapillarityRise;   
+          Transpiration[iCell] = AGROWTHres_iCell.ASPWBres.WaterBalance.Transpiration;
           HerbTranspiration[iCell] = AGROWTHres_iCell.ASPWBres.WaterBalance.HerbTranspiration;   
           if(standSummary) {
             LAI[iCell] =  AGROWTHres_iCell.ASPWBres.Stand.LAI;
