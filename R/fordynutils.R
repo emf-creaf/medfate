@@ -17,12 +17,21 @@
   if(nrow(oldSnagData)>0) {
     oldSnagData$DeathAge <- oldSnagData$DeathAge + 1
   }
+  ## Creates new snags
   newSnagData <- data.frame(Species = xo$cohorts$Name,
                             DBH = xo$above$DBH,
                             Height = xo$above$H,
                             DeathAge = rep(1, nrow(xo$above)),
                             SmallBranches = xo$internalMortality$Snag_smallbranches,
                             LargeWood = xo$internalMortality$Snag_largewood)
+  if(nrow(newSnagData)>0) {
+    ## Sets missing values for small branches or large wood to zero
+    newSnagData$SmallBranches[is.na(newSnagData$SmallBranches)] <-0
+    newSnagData$LargeWood[is.na(newSnagData$LargeWood)] <-0
+    ## Removes cohorts with zero necromass
+    newSnagData <- newSnagData[newSnagData$SmallBranches > 0 | newSnagData$LargeWood > 0, , drop = FALSE]
+  }
+  
   mergedSnagData <- rbind(oldSnagData, newSnagData)
   row.names(mergedSnagData) <- NULL
   return(mergedSnagData)
@@ -45,7 +54,7 @@
       } else if(ageSnag >= 10 && ageSnag < 20) { # Class 3 : dead tree without branches or bark
         decayClass <- 3
         if(ageSnag == 10) smallBranchFallAmount <- snagData$SmallBranches[s] # All branches fall at age 10  
-      } else if(ageSnag >= 20) { # Class 4/5: Broken stem
+      } else if(ageSnag >= 20 && ageSnag < 30) { # Class 4/5: Broken stem
         decayClass <- 4
         if(ageSnag == 20) largeWoodFallAmount <- snagData$LargeWood[s]/2 # 50% of large wood falls
       } else if(ageSnag >= 30) {

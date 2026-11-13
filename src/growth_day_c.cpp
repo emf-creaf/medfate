@@ -1265,7 +1265,7 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
       //For shrubs, convert SA senescence into mass of standing dead branches (g C/m2)
       if(ctype[j]=="shrub") {
         double sh_wood_biomass = (deltaSASenescence/SA[j])*(N[j]/10000.0)*AbovegroundWoodBiomass[j]*x.paramsGrowth.WoodC[j]; //Aboveground necromass
-        x.internalMortality.Snag_smallbranches[j] += sh_wood_biomass;
+        if(!std::isnan(sh_wood_biomass)) x.internalMortality.Snag_smallbranches[j] += sh_wood_biomass;
       }
 
 
@@ -1627,17 +1627,25 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         double snag_wood_biomass = (Ndead_day/10000.0)*AbovegroundWoodBiomass[j]*x.paramsGrowth.WoodC[j]; //Aboveground necromass (includes burning and dessication)
         if(cause != "burnt") {
           if(ctype[j]=="tree") { // 20% goes to small branches (diameter < 7.5) SHOULD depend on size allometry
-            x.internalMortality.Snag_smallbranches[j] += 0.2*snag_wood_biomass;
-            x.internalMortality.Snag_largewood[j] += 0.8*snag_wood_biomass;
+            if(!std::isnan(snag_wood_biomass)) {
+              x.internalMortality.Snag_smallbranches[j] += 0.2*snag_wood_biomass;
+              x.internalMortality.Snag_largewood[j] += 0.8*snag_wood_biomass; 
+            }
           } else if(ctype[j] =="shrub") { // For shrubs 100% goes to small branches
-            x.internalMortality.Snag_smallbranches[j] += snag_wood_biomass;
+            if(!std::isnan(snag_wood_biomass)) {
+                x.internalMortality.Snag_smallbranches[j] += snag_wood_biomass;
+            }
           }
         } else { // burnt
           if(ctype[j]=="tree") {
-            fireCombustion += 0.2*snag_wood_biomass; //20% goes to fire emissions
-            x.internalMortality.Snag_largewood[j] += 0.8*snag_wood_biomass;
+            if(!std::isnan(snag_wood_biomass)) {
+              fireCombustion += 0.2*snag_wood_biomass; //20% goes to fire emissions
+              x.internalMortality.Snag_largewood[j] += 0.8*snag_wood_biomass;
+            }
           } else if(ctype[j] =="shrub") { // For shrubs 100% goes to fire emissions
-            fireCombustion += snag_wood_biomass;
+            if(!std::isnan(snag_wood_biomass)) {
+              fireCombustion += snag_wood_biomass;
+            }
           }
         }
         //Fine root and coarse root litter corresponding to non-resprouting trees
