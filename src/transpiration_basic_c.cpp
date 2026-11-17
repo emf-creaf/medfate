@@ -348,6 +348,10 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       //Divide extraction among layers depending on soil conductivity
       for(int l=0;l<nlayers;l++) {
         outputExtraction(c,l) = Extraction[c]*(Kunlc[l]/sumKunlc);
+        if(std::isnan(outputExtraction(c,l))) {
+          Rcpp::Rcout << "coh: "<< c << " layer: " << l << " outputExtraction: "<< outputExtraction(c,l)<<"\n";
+          throw medfate::MedfateInternalError("Missing value for outputExtraction");
+        }
       }
       delete[] Klc;
       delete[] Kunlc;

@@ -525,8 +525,9 @@ double psi2thetaSaxton_c(double clay, double sand, double psi, double om) {
 //' @keywords internal
 // [[Rcpp::export("soil_psi2kVG")]]
 double psi2kVanGenuchten_c(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi){
+  psi = std::abs(std::min(psi, 0.0));
   double m = 1.0 - (1.0/n);
-  double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
+  double Se = pow(1.0 + pow(alpha*psi,n),-m);
   double k = ksat*pow(Se,0.5)*pow(1.0 - pow(1.0 - pow(Se, 1.0/m), m), 2.0);
   return(k);
 }
@@ -534,8 +535,10 @@ double psi2kVanGenuchten_c(double ksat, double n, double alpha, double theta_res
 double psi2kVanGenuchtenMicropores_c(double k_b, double n, double alpha, double theta_res, double theta_sat, 
                                    double psi, double psi_b){
   double m = 1.0 - (1.0/n);
-  double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
-  double Se_b = pow(1.0 + pow(alpha*std::abs(psi_b),n),-m);
+  psi = std::abs(std::min(psi, 0.0));
+  psi_b = std::abs(std::min(psi_b, 0.0));
+  double Se = pow(1.0 + pow(alpha*psi,n),-m);
+  double Se_b = pow(1.0 + pow(alpha*psi_b,n),-m);
   //For pressure heads above psi_b, micropore conductivity set to k_b (MACRO 5.0 Larsbo & Jarvis)
   Se = std::min(Se, Se_b);
   double k = k_b*pow(Se/Se_b,0.5)*std::pow(1.0 - std::pow(1.0 - std::pow(Se, 1.0/m), m), 2.0)/std::pow(1.0 - std::pow(1.0 - std::pow(Se_b, 1.0/m), m), 2.0);
@@ -547,7 +550,7 @@ double psi2DVanGenuchten_c(double k_sat, double n, double alpha, double theta_re
                            double psi){
   double m = 1.0 - (1.0/n);
   double l = 0.5;
-  double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
+  double Se = pow(1.0 + pow(alpha*std::abs(std::min(psi, 0.0)),n),-m);
   double f_1 = ((1.0 - m)*k_sat)/(alpha*m*(theta_sat - theta_res));
   double f_2 = pow(Se, l - 1.0/m);
   double f_3 = pow(1.0 - pow(Se, 1.0/m),-1.0*m) + pow(1.0 - pow(Se, 1.0/m), m) - 2.0;
@@ -561,8 +564,9 @@ double psi2DVanGenuchten_c(double k_sat, double n, double alpha, double theta_re
 // [[Rcpp::export("soil_psi2cVG")]]
 double psi2cVanGenuchten_c(double n, double alpha, double theta_res, double theta_sat, double psi){
   double m = 1.0 - (1.0/n);
-  double num = alpha*m*n*(theta_sat - theta_res)*pow(alpha*std::abs(psi), n - 1.0);
-  double den = pow(1.0 + pow(alpha*std::abs(psi),n),m + 1.0);
+  psi = std::abs(std::min(psi, 0.0));
+  double num = alpha*m*n*(theta_sat - theta_res)*pow(alpha*psi, n - 1.0);
+  double den = pow(1.0 + pow(alpha*psi,n),m + 1.0);
   double c = num/den;
   return(c);
 }
