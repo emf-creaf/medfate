@@ -565,6 +565,9 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
       //and leave faster from soil layers that have more water
       int nlayers = x_iCell.soil.getNlayers();
       std::vector<double> lateralFlows_c(nlayers);
+      if(std::isnan(InterflowBalance[iCell])) {
+        throw medfate::MedfateInternalError("Missing value for InterflowBalance");
+      }
       if(InterflowBalance[iCell]<0.0) { //Remove more water from layers with larger excess
         std::vector<double> wel(nlayers);
         double wesum = 0.0;
@@ -580,6 +583,10 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
         }
         for(int l=0;l<nlayers;l++) {
           lateralFlows_c[l] = InterflowBalance[iCell]*(wel[l]/wesum);
+          if(std::isnan(lateralFlows_c[l])) {
+            Rcpp::Rcout << "Layer: "<< l << " wel: "<< wel[l] <<" wesum: "<<wesum <<"\n";
+            throw medfate::MedfateInternalError("Missing value for lateralFlows_c in medfate_runners");
+          }
         }
       } else { // Add more water to those layers with larger deficit
         std::vector<double> wdl(nlayers);
@@ -596,6 +603,10 @@ void watershed_runner::run_day(Rcpp::CharacterVector date, DataFrame gridMeteo,
         }
         for(int l=0;l<nlayers;l++) {
           lateralFlows_c[l] = InterflowBalance[iCell]*(wdl[l]/wdsum);
+          if(std::isnan(lateralFlows_c[l])) {
+            Rcpp::Rcout << "Layer: "<< l << " wdl: "<< wdl[l] <<" wdsum: "<<wdsum <<"\n";
+            throw medfate::MedfateInternalError("Missing value for lateralFlows_c in medfate_runners");
+          }
         }
       }
       if((input_class_iCell == "spwbInput") || (input_class_iCell == "aspwbInput")) {
