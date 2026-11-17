@@ -445,6 +445,10 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   //Copy sinks
   std::vector<double>& source_sink_def_mm = SWBcomm.source_sink_def_mm;
   for(int l=0;l<nlayers;l++) {
+    if(std::isnan(sourceSink[l])) {
+      Rcpp::Rcout << "Layer: "<< l << " sourceSink: "<< sourceSink[l] <<"\n";
+      throw medfate::MedfateInternalError("Missing value for sourceSink");
+    }
     source_sink_def_mm[l] = sourceSink[l];
   }
   
@@ -464,6 +468,10 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
   //Add lateral flows to matrix def source/sinks
   for(int l=0;l<nlayers;l++) { 
     if(!std::isnan(lateralFlows[l])) source_sink_def_mm[l] += lateralFlows[l];
+    else {
+      Rcpp::Rcout << "Layer: "<< l << " lateralFlows: "<< lateralFlows[l] <<"\n";
+      throw medfate::MedfateInternalError("Missing value for lateralFlows");
+    }
   }
   
   
@@ -1193,6 +1201,10 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
     
     // This effectively changes soil moisture states in the soil object
     for(int l=0; l< nlayers;l++) {
+      if(std::isnan(Theta[l])) {
+        Rcpp::Rcout << "Layer: "<< l << " Theta: "<< Theta[l] <<"\n";
+        throw medfate::MedfateInternalError("Missing value for Theta");
+      }
       soil.setW(l,Theta[l]/soil.getThetaFC(l));
     }
     
