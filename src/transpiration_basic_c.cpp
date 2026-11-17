@@ -519,7 +519,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
         sumDonor += DonorDiff[l];
         sumReceiver += ReceiverDiff[l];
       }
-      if(sumDonor>0.0) {
+      if((sumDonor>0.0) && (sumReceiver > 0.0)) {
         for(int c=0;c<numCohorts;c++) {
           double redAmount = Eplant[c]*hydraulicRedistributionFraction;
           // Rcout<<c<< "red amount"<< redAmount;
@@ -562,7 +562,7 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
           }
           double redAmount = 0.0;
           for(int l=0;l<nlayers;l++) redAmount += ExtractionPoolsCoh(j,l)*hydraulicRedistributionFraction;
-          if(sumDonor>0.0) {
+          if((sumDonor>0.0) && (sumReceiver >0.0)) {
             double hd = 0.0;
             for(int l=0;l<nlayers;l++) {
               if(WDiff[l]>0.0) {
