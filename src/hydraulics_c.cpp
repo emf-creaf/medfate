@@ -90,7 +90,7 @@
 //' @keywords internal
 // [[Rcpp::export("hydraulics_psi2K")]]
 double Psi2K_c(double psi, double psi_extract, double exp_extract = 3.0) {
-  return(std::exp(-0.6931472*std::pow(std::abs(psi/psi_extract),exp_extract)));
+  return(std::exp(-0.6931472*std::pow(std::abs(std::min(psi,0.0)/psi_extract),exp_extract)));
 }
 
 /**
@@ -101,6 +101,7 @@ double Psi2K_c(double psi, double psi_extract, double exp_extract = 3.0) {
 //' @keywords internal
 // [[Rcpp::export("hydraulics_K2Psi")]]
 double K2Psi_c(double K, double psi_extract, double exp_extract = 3.0) {
+  K = std::max(std::min(K, 1.0),0.0);
   double psi = psi_extract*pow(log(K)/(-0.6931472),1.0/exp_extract);
   if(psi>0.0) psi = -psi; //Usually psi_extr is a positive number
   if(psi< -40.0) psi = -40.0; //Minimum value

@@ -66,6 +66,9 @@ void herbaceousTranspiration_c(std::vector<double>& EherbVec,
     double psi0 = soil.getPsi(0);
     for(int l=0;l<nlayers;l++) {
       EherbVec[l] = V[l]*Tmax_herb*Psi2K_c(psi0, -1.5, 2.0); 
+      if(std::isnan(EherbVec[l])) {
+        throw medfate::MedfateInternalError("Missing value for EherbVec");
+      }
       if(modifySoil) {
         soil.setW(l, soil.getW(l) - (EherbVec[l]/soil.getWaterFC(l)));
       }

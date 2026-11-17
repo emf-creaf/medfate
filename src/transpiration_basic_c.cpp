@@ -421,6 +421,10 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
         for(int j = 0;j<numCohorts;j++) {
           ExtractionPoolsCoh(j,l) = Extraction[c]*(Kunlc(j,l)/sumKunlc);
           outputExtraction(c,l) += ExtractionPoolsCoh(j,l); // Sum extraction from all pools (layer l)
+          if(std::isnan(ExtractionPoolsCoh(j,l))) {
+            Rcpp::Rcout << "coh: "<< c << " pool: " << j << " layer: " << l << " ExtractionPoolsCoh: "<< ExtractionPoolsCoh(j,l)<<"\n";
+            throw medfate::MedfateInternalError("Missing value for ExtractionPoolsCoh");
+          }
         }
       }
       // Rcout<< c << " : "<< psiSoilM(c,0) << " " << psiSoilM(c,1) << " " << psiSoilM(c,2) << " " << psiSoilM(c,3) << " " << rootCrownPsi<<"\n";
@@ -525,6 +529,10 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
               hrd = redAmount*DonorDiff[l]/sumDonor;
             } else{
               hrd = -redAmount*ReceiverDiff[l]/sumReceiver;
+            }
+            if(std::isnan(hrd)) {
+              Rcpp::Rcout << "coh: "<< c << " layer: " << l << " hrd: "<< hrd<<"\n";
+              throw medfate::MedfateInternalError("Missing value for hrd");
             }
             // Rcout<< c <<" "<<l<<" "<<hrd << "\n";
             outputExtraction(c,l) += hrd;
