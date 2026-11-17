@@ -236,9 +236,18 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
           }
         }
       }
+      //Modify lateral flows depending
+      // arma::mat LateralFlowsMat(numCohorts, nlayers);
+      // LateralFlowsMat.fill(0.0);
+      // for(int l = 0; l<nlayers;l++) {
+      //   if(lateralFlows[l]>0.0) {
+      //     
+      //   }
+      // }
       //Create vector to store averaged soil moisture
       //Set Wsoil to zero
       double* Wsoil = new double[nlayers];
+      // double* lateralFlows_c = new double[nlayers];
       for(int l = 0; l<nlayers;l++) Wsoil[l] = 0.0;
       for(int c=0;c<numCohorts;c++) {
         for(int l = 0; l<nlayers;l++) {
@@ -248,6 +257,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
         for(int l=0;l<nlayers;l++) {
           sourceSinkVec[l] -= (ExtractionPoolMat(c,l) + EherbPools(c,l));
           if(l ==0) sourceSinkVec[l] -= EsoilPools[c];
+          // lateralFlows_c[l] = LateralFlowsMat(c,l);
           // Rcout << c << "" << l << " SS " << sourceSinkVec[l] <<"\n";
         }
         soilWaterBalance_inner_c(SWBres, SWBcomm, soil,
@@ -275,6 +285,7 @@ void spwbDay_basic_c(BasicSPWB_RESULT& BSPWBres, BasicSPWB_COMM& BSPWB_comm, Mod
       //Copy averaged soil moisture
       for(int l = 0; l<nlayers;l++) soil.setW(l, Wsoil[l]);
       delete[] Wsoil;
+      // delete[] lateralFlows_c;
     }
   }
   //STEP 6 - Fire hazard

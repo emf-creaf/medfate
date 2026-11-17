@@ -316,7 +316,12 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
       }
       // Rcout<< c << " : Tmax[c] = " << Tmax[c]<<" TmaxCoh[c] = "<< TmaxCoh[c]<<  " sumKunlc = "  <<sumKunlc<<"  Klcmean = " << Klcmean<< "\n";
       rootCrownPsi = averagePsi_c(psiSoil, V_c, Exp_Extract[c], Psi_Extract[c]);
-      
+      if(std::isnan(rootCrownPsi)) {
+        for(int l=0;l<nlayers;l++) {
+          Rcpp::Rcout << "coh: "<< c << " layer: " << l << " psiSoil: "<< psiSoil[l] << " V: "<< V_c[l] <<"\n";
+        }
+        throw medfate::MedfateInternalError("Missing value for root crown psi");
+      }
       // Determine relative conductance  for mistletoe
       Klcmist = xylemConductanceSigmoid_c(rootCrownPsi, 1.0, x.control.mistletoe.Gsw_P50_Baldocchi, x.control.mistletoe.Gsw_slope_Baldocchi);
       
@@ -375,7 +380,14 @@ void transpirationBasic_c(BasicTranspiration_RESULT& BTres, BasicTranspiration_C
         }
       }
       rootCrownPsi = averagePsiPool_c(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
-      
+      if(std::isnan(rootCrownPsi)) {
+        for(int j = 0;j<numCohorts;j++) {
+          for(int l=0;l<nlayers;l++) {
+            Rcpp::Rcout << "coh: "<< c << " pool: "<< j <<" layer: " << l << " psiSoilM: "<< psiSoilM(c,l) << " V: "<< RHOPcohV(j,l) <<"\n";
+         }
+        }
+        throw medfate::MedfateInternalError("Missing value for root crown psi");
+      }
       // Determine relative conductance  for mistletoe
       Klcmist = xylemConductanceSigmoid_c(rootCrownPsi, 1.0, x.control.mistletoe.Gsw_P50_Baldocchi, x.control.mistletoe.Gsw_slope_Baldocchi);
       

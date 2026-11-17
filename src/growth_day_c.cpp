@@ -1437,7 +1437,9 @@ void growthDay_private_c(GROWTH_RESULT& GROWTHres, GROWTHCommunicationStructures
         } else {
           stemSympRWC = symplasticRelativeWaterContent_c(psiSympStem[j], x.paramsWaterStorage.StemPI0[j], x.paramsWaterStorage.StemEPS[j]); 
         }
-        if(std::isnan(stemSympRWC)) throw medfate::MedfateInternalError("Missing value for stem symp RWC");
+        if(std::isnan(stemSympRWC)) {
+          throw medfate::MedfateInternalError("Missing value for stem symp RWC");
+        }
         //Sapwood sugar relative to equilibrium, indicator of starvation
         double relativeSugarSapwood = (sugarSapwood[j]/equilibriumSapwoodSugarConc);
         std::string cause = "undertermined";
