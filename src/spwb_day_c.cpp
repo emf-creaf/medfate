@@ -784,21 +784,21 @@ void nswbDay_c(NSWB_RESULT& NSWBres, NonSoilWaterBalanceModelInput& x,
   }
   if(x.land_cover_type=="rock") {
     //Part of the water is allowed to infiltrate (draining to the aquifer)
-    NSWBres.WaterBalance.Infiltration = std::min(rock_max_infiltration, NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain);
+    NSWBres.WaterBalance.Infiltration = std::min(rock_max_infiltration, NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain + runon);
     NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Infiltration;
-    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain - NSWBres.WaterBalance.Infiltration;
+    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt+NSWBres.WaterBalance.Rain + runon - NSWBres.WaterBalance.Infiltration;
     NSWBres.WaterBalance.Runoff = NSWBres.WaterBalance.InfiltrationExcess;
   } else if(x.land_cover_type=="artificial") {
     //all Precipitation becomes surface runoff if cell is rock artificial
     NSWBres.WaterBalance.Infiltration = 0.0;
     NSWBres.WaterBalance.DeepDrainage = 0.0;
-    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt + NSWBres.WaterBalance.Rain;
+    NSWBres.WaterBalance.InfiltrationExcess = NSWBres.WaterBalance.Snowmelt + NSWBres.WaterBalance.Rain + runon;
     NSWBres.WaterBalance.Runoff = NSWBres.WaterBalance.InfiltrationExcess;
   } else if(x.land_cover_type=="water") {
     // water cells receive water from Precipitation
     // but do not export to the atmosphere contribute nor to other cells.
     // any received water drains directly to the aquifer so that it can feed base flow
-    NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Snowmelt+ NSWBres.WaterBalance.Rain;
+    NSWBres.WaterBalance.DeepDrainage = NSWBres.WaterBalance.Snowmelt+ NSWBres.WaterBalance.Rain + runon;
     NSWBres.WaterBalance.Infiltration = NSWBres.WaterBalance.DeepDrainage;
     NSWBres.WaterBalance.InfiltrationExcess = 0.0;
     NSWBres.WaterBalance.Runoff = 0.0;
