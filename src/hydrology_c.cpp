@@ -603,8 +603,10 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
         prop_saturated[i] = std::min(1.0, std::max(0.0,((sZ + widths[i]) - waterTableDepth)/widths[i]));
         if(prop_saturated[i]==1.0) num_saturated++;
         sZ += widths[i];
+        // Rcpp::Rcout << i <<" "<< prop_saturated[i] << "\n";
       }
     }
+    // Rcout << " num_saturated " << num_saturated << "\n";
     
     //boundary condition of water table (if freeDrainage = FALSE)
     double Psi_bc = 0.0;

@@ -19,6 +19,7 @@
 ^vignettes/workedexamples/*$
 ^vignettes/parametrization/*$
 ^initialized_objects/*$
+^richards_audit_bundle/*$
 ^cran-comments\.md$
 ^figures/*$
 ^man/figures/*$
