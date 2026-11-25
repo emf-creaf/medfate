@@ -606,7 +606,7 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
         // Rcpp::Rcout << i <<" "<< prop_saturated[i] << "\n";
       }
     }
-    // Rcout << " num_saturated " << num_saturated << "\n";
+    // Rcpp::Rcout << " num_saturated " << num_saturated << "\n";
     
     //boundary condition of water table (if freeDrainage = FALSE)
     double Psi_bc = 0.0;
@@ -958,7 +958,9 @@ void soilWaterBalance_inner_c(SoilWaterBalance_RESULT &SWBres, SoilWaterBalance_
             drain_above[l] = K_up;
             if(prop_saturated[l]==1.0) {
               drain_above[l] = 0.0;
-              // drain_below[l] = 0.0;
+            }
+            if(!freeDrainage) {
+              drain_below[l] = 0.0;
             }
             a[l] = -1.0*K_up/dZUp[l];
             c[l] = 0.0;
